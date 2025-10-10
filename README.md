@@ -1,11 +1,14 @@
-# Vendor Domain
+# Vendor Domain — Iter I–II (Core + Legal)
 
-Isolated contract park for SmartResponsor platform.
+High-level package for SmartResponsor.
 
 Includes:
-- Vendor (root aggregate)
-- VendorBilling
-- VendorPassport
-- VendorSecurity
+- Entities: Vendor, VendorPassport, VendorDocument
+- DTO: VendorCreateDTO, VendorUpdateDTO, VendorDocumentDTO
+- Services: VendorService, VendorPassportService, VendorDocumentService
+- Events: VendorCreatedEvent, VendorActivatedEvent, VendorVerifiedEvent, DocumentUploadedEvent
+- Repositories
+- Migrations: Version0001VendorCore, Version0002VendorLegal
+- Tests: BasicSmokeTest.php
 
-All entities follow strict_types, PSR-12, and Doctrine attribute mapping.
+Conventions: strict_types, PSR-12, Doctrine Attributes.
