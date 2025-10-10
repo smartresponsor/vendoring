@@ -5,15 +5,15 @@ namespace App\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: 'App\\Repository\\Vendor\\VendorBillingRepository')]
 #[ORM\Table(name: 'vendor_billing')]
 class VendorBilling
 {
     #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\OneToOne(inversedBy: 'billing', targetEntity: Vendor::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OneToOne(targetEntity: Vendor::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Vendor $vendor;
 
     #[ORM\Column(length: 34, nullable: true)]
@@ -22,8 +22,31 @@ class VendorBilling
     #[ORM\Column(length: 64, nullable: true)]
     private ?string $swift = null;
 
-    #[ORM\Column(length: 16)]
-    private string $payoutMethod = 'bank';
+    #[ORM\Column(length: 32)]
+    private string $payoutMethod = 'bank'; // bank|stripe|paypal
 
-    public function __construct(Vendor $vendor) { $this->vendor = $vendor; }
+    #[ORM\Column(length: 128, nullable: true)]
+    private ?string $billingEmail = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $lastPayoutAt = null;
+
+    #[ORM\Column(length: 24)]
+    private string $payoutStatus = 'idle'; // idle|requested|processing|completed|failed
+
+    public function __construct(Vendor $vendor)
+    {
+        $this->vendor = $vendor;
+    }
+
+    public function markPayoutRequested(): void
+    {
+        $this->payoutStatus = 'requested';
+    }
+
+    public function markPayoutCompleted(): void
+    {
+        $this->payoutStatus = 'completed';
+        $this->lastPayoutAt = new \DateTimeImmutable();
+    }
 }

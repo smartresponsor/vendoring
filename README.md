@@ -1,14 +1,17 @@
-# Vendor Domain — Iter I–II (Core + Legal)
+# Vendor Domain — Final
 
-High-level package for SmartResponsor.
+Полный пакет изолированных контрактов домена Vendor для SmartResponsor.
 
-Includes:
-- Entities: Vendor, VendorPassport, VendorDocument
-- DTO: VendorCreateDTO, VendorUpdateDTO, VendorDocumentDTO
-- Services: VendorService, VendorPassportService, VendorDocumentService
-- Events: VendorCreatedEvent, VendorActivatedEvent, VendorVerifiedEvent, DocumentUploadedEvent
-- Repositories
-- Migrations: Version0001VendorCore, Version0002VendorLegal
-- Tests: BasicSmokeTest.php
+## Состав
+- **Entities:** Vendor, VendorPassport, VendorDocument, VendorBilling, VendorLedgerBinding, VendorProfile, VendorMedia, VendorAttachment, VendorSecurity, VendorAnalytics
+- **DTO:** VendorCreateDTO, VendorUpdateDTO, VendorDocumentDTO, VendorBillingDTO, VendorProfileDTO, VendorMediaUploadDTO, VendorAttachmentDTO
+- **Services:** VendorService, VendorPassportService, VendorDocumentService, VendorBillingService, VendorProfileService, VendorMediaService
+- **Events:** VendorCreatedEvent, VendorActivatedEvent, VendorVerifiedEvent, DocumentUploadedEvent, VendorPayoutRequestedEvent, VendorPayoutCompletedEvent, VendorProfileUpdatedEvent, VendorMediaUploadedEvent, VendorAttachmentUploadedEvent
+- **Repositories:** для всех сущностей
+- **Migrations:** Version0001..0005 (core, legal, billing/ledger, profile/media, security/analytics)
+- **Tests:** BasicSmokeTest.php
 
-Conventions: strict_types, PSR-12, Doctrine Attributes.
+## Принципы
+- strict_types, PSR-12, Doctrine Attributes
+- Изоляция контрактов: `src/Entity/Vendor/*` и симметрия слоёв
+- Готовность к событиям и multitenancy

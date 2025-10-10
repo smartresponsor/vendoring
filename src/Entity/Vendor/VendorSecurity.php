@@ -5,15 +5,15 @@ namespace App\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: 'App\\Repository\\Vendor\\VendorSecurityRepository')]
 #[ORM\Table(name: 'vendor_security')]
 class VendorSecurity
 {
     #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\OneToOne(inversedBy: 'security', targetEntity: Vendor::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OneToOne(targetEntity: Vendor::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Vendor $vendor;
 
     #[ORM\Column(length: 128, nullable: true)]
