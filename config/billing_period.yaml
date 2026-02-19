@@ -1,0 +1,3 @@
+billing_period:
+  timezone: "America/Chicago"
+  align_day: 1

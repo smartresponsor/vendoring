@@ -1,0 +1,5 @@
+deploy_guardrails:
+  canary_minutes: 15
+  halt_on:
+    error_rate_pct: 2.0
+    latency_p95_ms: 400

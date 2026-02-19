@@ -1,0 +1,1 @@
+feedback: { nps_cron: '0 9 * * MON', min_sample: 50 }

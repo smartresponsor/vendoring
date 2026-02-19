@@ -1,0 +1,4 @@
+crm:
+  provider: "stub"
+  base_url: "https://crm.example.com/api"
+  retries: { max: 6, base_ms: 500 }

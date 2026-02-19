@@ -1,0 +1,2 @@
+abuse:
+  actions: ['warn','throttle','block']

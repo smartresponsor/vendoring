@@ -1,0 +1,1 @@
+data_retention_ttl: { enabled: true }

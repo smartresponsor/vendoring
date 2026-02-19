@@ -1,0 +1,3 @@
+compat:
+  crm: { v1: ['lead','opportunity'], v2: ['lead','opportunity','note'] }
+  psp: { v1: ['charge','refund'], v2: ['charge','refund','dispute'] }

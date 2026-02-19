@@ -1,0 +1,5 @@
+error_budgets:
+  api_read: { slo: 0.99 }
+  api_write: { slo: 0.99 }
+  webhooks: { slo: 0.98 }
+  av: { slo: 0.975 }

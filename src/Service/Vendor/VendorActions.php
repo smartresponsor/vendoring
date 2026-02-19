@@ -1,0 +1,2 @@
+<?php declare(strict_types=1);
+namespace App\Service\Vendor; use SmartResponsor\Vendor\Port\Acl\AclPort; use SmartResponsor\Vendor\Port\Audit\AuditPort; final class VendorActions{public function __construct(private AclPort $acl, private AuditPort $audit){} public function perform(string $actor,string $action,string $target):void{ $allowed=$this->acl->allow($actor,$action); $this->audit->append($actor,$action,$target,$allowed?'allow':'deny'); if(!$allowed) throw new \RuntimeException('denied'); }}

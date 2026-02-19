@@ -1,0 +1,4 @@
+psp_webhooks:
+  allowed_ips: ['1.2.3.4']
+  signature: ['hmac_sha256','ed25519']
+  dedup_ttl_sec: 86400

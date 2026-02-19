@@ -1,0 +1,2 @@
+<?php declare(strict_types=1);
+namespace App\Service\Vendor\Outbox; use PDO; use SmartResponsor\Vendor\Port\Event\EventPort; final class SqliteOutbox implements EventPort{public function __construct(private PDO $pdo){$this->pdo->exec('CREATE TABLE IF NOT EXISTS outbox(id TEXT PRIMARY KEY, type TEXT, payload TEXT)');} public function publish(string $type,array $payload,string $key):void{ $st=$this->pdo->prepare('INSERT OR IGNORE INTO outbox(id,type,payload) VALUES(:id,:t,:p)'); $st->execute([':id'=>$key,':t'=>$type,':p'=>json_encode($payload,JSON_UNESCAPED_UNICODE)]);} }

@@ -1,0 +1,1 @@
+Wire repository via service container; replace InMemory with Doctrine in prod.

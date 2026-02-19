@@ -1,0 +1,7 @@
+observability:
+  logging: { format: json, level: info }
+  tracing:
+    exporter: otlp
+    sample_rates:
+      default: 0.1
+      error: 1.0

@@ -1,0 +1,7 @@
+residency:
+  default: US
+  vendors:
+    v_us: US
+    v_eu: EU
+  policy:
+    cross_region_write: deny

@@ -1,0 +1,9 @@
+plan_limits:
+  rate_limit_rps:
+    Free: 5
+    Pro: 50
+    Enterprise: 200
+  attachments_max_mb:
+    Free: 10
+    Pro: 100
+    Enterprise: 500

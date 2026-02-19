@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Event\Vendor;
 
@@ -7,5 +7,7 @@ use App\Entity\Vendor\VendorBilling;
 
 final class VendorPayoutCompletedEvent
 {
-    public function __construct(public readonly VendorBilling $billing, public readonly int $amountMinor = 0) {}
+    public function __construct(public readonly VendorBilling $billing, public readonly int $amountMinor = 0)
+    {
+    }
 }

@@ -1,0 +1,5 @@
+cors:
+  allowed_origins: ['https://partner.example.com']
+  allowed_headers: ['Authorization','X-Api-Key','Content-Type','Idempotency-Key','X-Vendor-Api-Version']
+  allowed_methods: ['GET','POST','PATCH','OPTIONS']
+  max_age_sec: 86400

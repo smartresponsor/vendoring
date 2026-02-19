@@ -1,0 +1,3 @@
+breach_sla:
+  detect_to_notify_hours: 72
+  internal_comm_minutes: 30

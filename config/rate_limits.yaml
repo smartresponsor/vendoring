@@ -1,0 +1,3 @@
+rate_limits:
+  tenant_default_rps: 50
+  burst: 2.0

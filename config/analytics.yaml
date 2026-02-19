@@ -1,0 +1,1 @@
+analytics: { cohort_window_days: 120, export: 's3://vendor-analytics' }

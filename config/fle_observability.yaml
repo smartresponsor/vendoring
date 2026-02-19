@@ -1,0 +1,1 @@
+metrics: { encrypt_ms: true, decrypt_ms: true, errors: true }

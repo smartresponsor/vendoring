@@ -1,0 +1,4 @@
+chaos:
+  db_latency_ms: 120
+  network_loss_pct: 1
+  kill_pod: false

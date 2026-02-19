@@ -1,0 +1,4 @@
+webhooks:
+  sla_seconds: 60
+  retry: { max_attempts: 12, base_ms: 1000, jitter: true }
+  dlq: enabled

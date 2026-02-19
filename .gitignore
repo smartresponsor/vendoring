@@ -123,5 +123,42 @@ Thumbs.db
 !/.yamllint.yml
 !/.editorconfig
 !/.gitattributes
-!/.php-cs-fixer.cache
-!/var/metrics/
+/.php-cs-fixer.cache
+/var/metrics/
+/.tmp.drivedownload/
+/.tmp.driveupload/
+
+# ──────────────────────────────────────────────
+#  🚫 Forbidden root folders (canon guards)
+# ──────────────────────────────────────────────
+/Vendor/
+
+# Legacy / local scratch
+/.commanding/legacy/vendo-fast-import-repo/
+
+# Vendor canon: git history + fast-import artifacts (local)
+/report/git-log/
+/.archive/
+/tools/git/fast-import/
+
+# Canon scan reports
+.report/vendor-canon-*
+.report/migration-dialect-guard.*
+
+# ──────────────────────────────────────────────
+# ──────────────────────────────────────────────
+
+# ──────────────────────────────────────────────
+# ──────────────────────────────────────────────
+
+
+# Tools (tracked)
+tools/tmp/
+
+# ──────────────────────────────────────────────
+#  🧱 Vendoring canon rejects
+# ──────────────────────────────────────────────
+/.commanding/legacy/fast-import/
+/.commanding/legacy/**/fast-import/
+/src/src/
+/src/**/src/

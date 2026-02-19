@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Event\Vendor;
 
@@ -7,5 +7,7 @@ use App\Entity\Vendor\Vendor;
 
 final class VendorCreatedEvent
 {
-    public function __construct(public readonly Vendor $vendor) {}
+    public function __construct(public readonly Vendor $vendor)
+    {
+    }
 }

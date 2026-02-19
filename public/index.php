@@ -1,0 +1,2 @@
+<?php declare(strict_types=1);
+require __DIR__.'/../vendor/autoload.php'; $service = new class{public function ping(){return true;}}; $router = SmartResponsor\Vendor\Api\Bootstrap::app($service); $res=$router->handle(['method'=>$_SERVER['REQUEST_METHOD']??'GET','path'=>$_SERVER['REQUEST_URI']??'/']); http_response_code($res['status']); header('Content-Type: application/json'); echo json_encode($res['body']);

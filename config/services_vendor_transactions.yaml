@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Repository\Vendor\VendorTransactionRepository: ~
+
+  App\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface: '@App\Repository\Vendor\VendorTransactionRepository'
+
+  App\Service\Vendor\VendorTransactionManager:
+    arguments:
+      $em: '@doctrine.orm.entity_manager'
+      $dispatcher: '@event_dispatcher'
+      $repo: '@App\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface'
+
+  App\ServiceInterface\Vendor\VendorTransactionManagerInterface: '@App\Service\Vendor\VendorTransactionManager'

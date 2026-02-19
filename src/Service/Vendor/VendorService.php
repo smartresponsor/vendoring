@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
 namespace App\Service\Vendor;
 
 use App\DTO\Vendor\VendorCreateDTO;
@@ -8,17 +10,20 @@ use App\DTO\Vendor\VendorUpdateDTO;
 use App\Entity\Vendor\Vendor;
 use App\Event\Vendor\VendorActivatedEvent;
 use App\Event\Vendor\VendorCreatedEvent;
-use App\Repository\Vendor\VendorRepository;
+use App\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\ServiceInterface\Vendor\VendorServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorService
+final class VendorService implements VendorServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly VendorRepository $repository,
-        private readonly EventDispatcherInterface $dispatcher
-    ) {}
+        private readonly EntityManagerInterface    $em,
+        private readonly VendorRepositoryInterface $repository,
+        private readonly EventDispatcherInterface  $dispatcher
+    )
+    {
+    }
 
     public function create(VendorCreateDTO $dto): Vendor
     {
@@ -36,6 +41,7 @@ final class VendorService
         if ($dto->brandName !== null) {
             $vendor->rename($dto->brandName);
         }
+
         if ($dto->status === 'active') {
             $vendor->activate();
             $this->dispatcher->dispatch(new VendorActivatedEvent($vendor));
@@ -44,6 +50,7 @@ final class VendorService
         }
 
         $this->em->flush();
+
         return $vendor;
     }
 }

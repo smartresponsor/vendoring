@@ -1,0 +1,4 @@
+shadow:
+  enabled: true
+  endpoint: "https://shadow.vendor.example.com"
+  sample_pct: 5

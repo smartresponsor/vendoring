@@ -1,17 +1,19 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\DTO\Vendor;
 
 final readonly class VendorProfileDTO
 {
     public function __construct(
-        public int $vendorId,
+        public int     $vendorId,
         public ?string $displayName = null,
         public ?string $about = null,
         public ?string $website = null,
-        public ?array $socials = null,
+        public ?array  $socials = null,
         public ?string $seoTitle = null,
         public ?string $seoDescription = null
-    ) {}
+    )
+    {
+    }
 }

@@ -1,0 +1,4 @@
+classification:
+  levels: ['public','internal','confidential','restricted']
+  tags: ['PII','PHI','Financial','Credential']
+  default_level: 'internal'

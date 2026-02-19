@@ -1,0 +1,4 @@
+search:
+  backend: pg_fts
+  languages: ['simple']
+  synonyms: []

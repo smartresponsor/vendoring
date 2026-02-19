@@ -1,0 +1,4 @@
+timeouts_ms:
+  http: 3000
+  db: 2000
+  queue: 5000
