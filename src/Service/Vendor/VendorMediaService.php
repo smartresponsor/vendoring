@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -6,7 +7,6 @@ declare(strict_types=1);
 namespace App\Service\Vendor;
 
 use App\DTO\Vendor\VendorAttachmentDTO;
-use App\DTO\Vendor\VendorMediaUploadDTO;
 use App\DTO\Vendor\VendorMediaUploadDTO;
 use App\Entity\Vendor\Vendor;
 use App\Entity\Vendor\VendorAttachment;
@@ -21,12 +21,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 final class VendorMediaService implements VendorMediaServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface              $em,
-        private readonly VendorMediaRepositoryInterface      $mediaRepository,
+        private readonly EntityManagerInterface $em,
+        private readonly VendorMediaRepositoryInterface $mediaRepository,
         private readonly VendorAttachmentRepositoryInterface $attachmentRepository,
-        private readonly EventDispatcherInterface            $dispatcher
-    )
-    {
+        private readonly EventDispatcherInterface $dispatcher,
+    ) {
     }
 
     public function upsertMedia(Vendor $vendor, VendorMediaUploadDTO $dto): VendorMedia

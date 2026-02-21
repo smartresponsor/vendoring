@@ -1,2 +1,0 @@
-<?php declare(strict_types=1);
-namespace App\ServiceInterface\Vendor\Port\Queue; interface QueuePort{public function enqueue(string $topic,string $key,array $payload):void; public function reserve(int $limit=1): array; public function ack(string $id): void; public function fail(string $id,string $reason): void;}

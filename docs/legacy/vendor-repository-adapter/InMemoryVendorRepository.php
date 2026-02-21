@@ -1,0 +1,4 @@
+<?php declare(strict_types=1);
+namespace App\Repository\Vendor;
+use App\RepositoryInterface\Vendor\Service\Repository\InMemoryVendorRepositoryInterface;
+use App\ServiceInterface\Vendor\Port\Repository\VendorRepositoryPort; use App\Entity\Vendor\Vendor; use App\ValueObject\Vendor\VendorId; final class InMemoryVendorRepository implements VendorRepositoryPort, InMemoryVendorRepositoryInterface {private array $m=[]; public function get(VendorId $id):?Vendor{return $this->m[(string)$id]??null;} public function listActive():array{return array_values(array_filter($this->m,fn($v)=>$v->active()));} public function save(Vendor $v):void{$this->m[$v->id()]=$v;} public function remove(VendorId $id):void{unset($this->m[(string)$id]);}}
