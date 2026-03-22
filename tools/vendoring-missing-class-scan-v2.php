@@ -120,7 +120,7 @@ function splitTopLevelComma(string $s): array
 /**
  * Expand a class import expression (already stripped from "use ").
  *
- * Examples:
+ * Accepted forms:
  *   App\Foo\Bar
  *   App\Foo\Bar as Baz
  *   App\Foo\{Bar,Baz as Qux}
@@ -512,3 +512,33 @@ if ($asJson) {
         'knownNamespaceCount' => count($knownNamespaceSet),
         'issueCount' => count($issueList),
         'issueList' => $limit > 0 ? array_slice($issueList, 0, $limit) : $issueList,
+    ];
+
+    echo json_encode($out, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
+    exit(0);
+}
+
+echo "Vendoring missing class scan (v2)\n";
+echo "- PHP files scanned: " . count($fileList) . "\n";
+echo "- Known types: " . count($knownTypeSet) . "\n";
+echo "- Known namespaces: " . count($knownNamespaceSet) . "\n";
+echo "- Issue count: " . count($issueList) . "\n";
+
+$printList = $limit > 0 ? array_slice($issueList, 0, $limit) : $issueList;
+foreach ($printList as $issue) {
+    $type = (string) ($issue['type'] ?? 'issue');
+    $file = (string) ($issue['file'] ?? '');
+    $line = isset($issue['line']) ? (int) $issue['line'] : 0;
+    $message = (string) ($issue['message'] ?? '');
+
+    echo sprintf('- [%s] %s', $type, $file);
+    if ($line > 0) {
+        echo ':' . $line;
+    }
+    if ('' !== $message) {
+        echo ' — ' . $message;
+    }
+    echo "\n";
+}
+
+exit(0);

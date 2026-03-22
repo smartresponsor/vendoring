@@ -1,0 +1,7 @@
+config/services.yaml
+src/Controller/Integration/VendorExternalIntegrationRuntimeController.php
+src/Projection/VendorExternalIntegrationRuntimeView.php
+src/Service/Integration/VendorExternalIntegrationRuntimeViewBuilder.php
+src/ServiceInterface/Integration/VendorExternalIntegrationRuntimeViewBuilderInterface.php
+docs/internal/VENDOR_EXTERNAL_INTEGRATION_RUNTIME_CANON.md
+VENDORING-W08-NOTES.md

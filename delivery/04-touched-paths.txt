@@ -1,0 +1,10 @@
+src/Entity/Vendor/VendorSecurity.php
+src/EntityInterface/VendorSecurityInterface.php
+src/EntityInterface/VendorSecurityEntityInterface.php
+src/RepositoryInterface/VendorSecurityRepositoryInterface.php
+src/Repository/VendorSecurityRepository.php
+src/Projection/VendorSecurityStateView.php
+src/ServiceInterface/VendorSecurityStateViewBuilderInterface.php
+src/Service/VendorSecurityStateViewBuilder.php
+docs/internal/VENDOR_SECURITY_STATE_CANON.md
+VENDORING-W04-NOTES.md

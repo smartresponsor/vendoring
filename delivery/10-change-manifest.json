@@ -1,0 +1,15 @@
+{
+  "wave": 10,
+  "message": "release-baseline-contour",
+  "touched": [
+    "src/Projection/VendorReleaseBaselineView.php",
+    "src/ServiceInterface/Ops/VendorReleaseBaselineReaderInterface.php",
+    "src/Service/Ops/VendorReleaseBaselineReader.php",
+    "src/Command/VendorReleaseBaselineCommand.php",
+    "src/Controller/Ops/VendorReleaseBaselineController.php",
+    "config/services.yaml",
+    "docs/release/RC_BASELINE.md",
+    "VENDORING-W10-NOTES.md"
+  ],
+  "removed": []
+}

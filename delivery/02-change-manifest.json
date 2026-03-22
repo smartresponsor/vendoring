@@ -1,0 +1,1 @@
+{"wave":2,"message":"owner-assignment-runtime-sync","touched":["src/Entity/Vendor/Vendor.php","src/DTO/VendorUpdateDTO.php","src/Service/VendorService.php","config/services.yaml","docs/internal/VENDOR_USER_ASSIGNMENT_CANON.md","VENDORING-W02-NOTES.md"]}

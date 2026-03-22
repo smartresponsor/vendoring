@@ -1,0 +1,7 @@
+src/Projection/VendorFinanceRuntimeView.php
+src/ServiceInterface/VendorFinanceRuntimeViewBuilderInterface.php
+src/Service/VendorFinanceRuntimeViewBuilder.php
+src/Controller/Finance/VendorFinanceRuntimeController.php
+config/services.yaml
+docs/internal/VENDOR_FINANCE_RUNTIME_CANON.md
+VENDORING-W06-NOTES.md

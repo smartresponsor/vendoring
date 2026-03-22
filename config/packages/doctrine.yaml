@@ -1,0 +1,15 @@
+doctrine:
+  dbal:
+    url: '%env(default:vendor.dsn:VENDOR_DSN)%'
+    use_savepoints: true
+  orm:
+    auto_generate_proxy_classes: true
+    enable_lazy_ghost_objects: true
+    report_fields_where_declared: true
+    validate_xml_mapping: false
+    mappings:
+      Vendoring:
+        type: attribute
+        dir: '%kernel.project_dir%/src/Entity'
+        prefix: 'App\Entity'
+        is_bundle: false

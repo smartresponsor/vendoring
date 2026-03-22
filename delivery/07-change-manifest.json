@@ -1,0 +1,14 @@
+{
+  "wave": 7,
+  "name": "statement-delivery-runtime-read-side",
+  "touched": [
+    "config/services.yaml",
+    "src/Projection/VendorStatementDeliveryRuntimeView.php",
+    "src/ServiceInterface/Statement/VendorStatementDeliveryRuntimeViewBuilderInterface.php",
+    "src/Service/Statement/VendorStatementDeliveryRuntimeViewBuilder.php",
+    "src/Controller/Statement/VendorStatementDeliveryRuntimeController.php",
+    "docs/internal/VENDOR_STATEMENT_DELIVERY_RUNTIME_CANON.md",
+    "VENDORING-W07-NOTES.md"
+  ],
+  "removed": []
+}

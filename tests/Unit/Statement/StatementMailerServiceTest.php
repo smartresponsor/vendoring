@@ -1,0 +1,62 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Unit\Statement;
+
+use App\Observability\Service\MetricEmitter;
+use App\Service\Statement\StatementMailerService;
+use App\Tests\Support\Statement\FakeMailer;
+use PHPUnit\Framework\TestCase;
+
+final class StatementMailerServiceTest extends TestCase
+{
+    public function testSendReturnsSuccessAndEmitsMetricWhenAttachmentExists(): void
+    {
+        $mailer = new FakeMailer();
+        $metrics = new MetricEmitter();
+        $service = new StatementMailerService($mailer, $metrics);
+        $pdf = tempnam(sys_get_temp_dir(), 'statement-mail-');
+        self::assertNotFalse($pdf);
+        file_put_contents($pdf, 'pdf');
+
+        $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', $pdf, 'March 2026');
+
+        self::assertTrue($result['ok']);
+        self::assertSame('sent', $result['message']);
+        self::assertTrue($result['attached']);
+        self::assertCount(1, $mailer->messages());
+        self::assertSame('statement_mail_sent_total', $metrics->snapshot()[0]['name']);
+
+        unlink($pdf);
+    }
+
+    public function testSendRejectsInvalidEmailWithoutCallingMailer(): void
+    {
+        $mailer = new FakeMailer();
+        $metrics = new MetricEmitter();
+        $service = new StatementMailerService($mailer, $metrics);
+
+        $result = $service->send('tenant-1', 'vendor-1', 'not-an-email', '/tmp/missing.pdf', 'March 2026');
+
+        self::assertFalse($result['ok']);
+        self::assertSame('statement_mail_invalid_email', $result['message']);
+        self::assertCount(0, $mailer->messages());
+        self::assertSame('statement_mail_invalid_email_total', $metrics->snapshot()[0]['name']);
+    }
+
+    public function testSendReturnsFailureAndEmitsMetricsWhenMailerThrows(): void
+    {
+        $mailer = new FakeMailer(true);
+        $metrics = new MetricEmitter();
+        $service = new StatementMailerService($mailer, $metrics);
+
+        $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
+
+        self::assertFalse($result['ok']);
+        self::assertSame('statement_mail_send_failed', $result['message']);
+        self::assertFalse($result['attached']);
+        self::assertSame('statement_mail_attachment_missing_total', $metrics->snapshot()[0]['name']);
+        self::assertSame('statement_mail_failed_total', $metrics->snapshot()[1]['name']);
+    }
+}

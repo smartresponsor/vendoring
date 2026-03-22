@@ -1,0 +1,49 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Entity\Vendor;
+
+final class VendorBilling
+{
+    private ?int $id = null;
+    private ?string $iban = null;
+    private ?string $swift = null;
+    private string $payoutMethod = 'bank';
+    private ?string $billingEmail = null;
+    private string $payoutStatus = 'idle';
+
+    public function __construct(private readonly Vendor $vendor)
+    {
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getVendor(): Vendor
+    {
+        return $this->vendor;
+    }
+
+    public function getBillingEmail(): ?string
+    {
+        return $this->billingEmail;
+    }
+
+    public function getPayoutStatus(): string
+    {
+        return $this->payoutStatus;
+    }
+
+    public function markPayoutRequested(): void
+    {
+        $this->payoutStatus = 'requested';
+    }
+
+    public function markPayoutCompleted(): void
+    {
+        $this->payoutStatus = 'completed';
+    }
+}

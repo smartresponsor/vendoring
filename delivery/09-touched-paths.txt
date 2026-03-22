@@ -1,0 +1,11 @@
+src/Projection/VendorRuntimeStatusView.php
+src/ServiceInterface/Ops/VendorRuntimeStatusViewBuilderInterface.php
+src/Service/Ops/VendorRuntimeStatusViewBuilder.php
+src/Controller/Ops/VendorRuntimeStatusController.php
+src/Command/VendorRuntimeStatusCommand.php
+config/services.yaml
+docs/internal/VENDOR_RUNTIME_STATUS_CANON.md
+VENDORING-W09-NOTES.md
+delivery/09-change-manifest.json
+delivery/09-touched-paths.txt
+delivery/09-removed-paths.txt

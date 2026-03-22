@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Service\Ledger;
+
+use App\DTO\Ledger\LedgerEntryDTO;
+use App\Entity\Vendor\Ledger\LedgerEntry;
+use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use Symfony\Component\Uid\Uuid;
+
+final class LedgerService
+{
+    public function __construct(private readonly LedgerEntryRepositoryInterface $repo)
+    {
+    }
+
+    public function record(LedgerEntryDTO $dto): LedgerEntry
+    {
+        $createdAt = $dto->occurredAt ?? (new \DateTimeImmutable())->format('Y-m-d H:i:s');
+        $amount = $dto->amountCents / 100;
+
+        [$debitAccount, $creditAccount] = match ($dto->direction) {
+            'debit' => [$dto->type, 'VENDOR_PAYABLE'],
+            'credit' => ['VENDOR_PAYABLE', $dto->type],
+            default => throw new \InvalidArgumentException(sprintf('Unsupported ledger direction "%s".', $dto->direction)),
+        };
+
+        $entry = new LedgerEntry(
+            Uuid::v4()->toRfc4122(),
+            $dto->tenantId,
+            $debitAccount,
+            $creditAccount,
+            $amount,
+            $dto->currency,
+            $dto->type,
+            $dto->entityId,
+            $dto->vendorId,
+            $createdAt,
+        );
+
+        $this->repo->insert($entry);
+
+        return $entry;
+    }
+}

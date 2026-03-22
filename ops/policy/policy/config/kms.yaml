@@ -1,4 +1,0 @@
-kms:
-  provider: 'stub'
-  rotation_days: 90
-  envelope_alg: 'aes-256-gcm'

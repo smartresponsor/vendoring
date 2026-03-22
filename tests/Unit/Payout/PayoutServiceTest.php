@@ -1,0 +1,81 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Unit\Payout;
+
+use App\DTO\Payout\CreatePayoutDTO;
+use App\Entity\Vendor\Ledger\LedgerEntry;
+use App\Observability\Service\MetricEmitter;
+use App\Service\Ledger\LedgerService;
+use App\Service\Payout\PayoutService;
+use App\Tests\Support\Payout\InMemoryPayoutRepository;
+use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
+use PHPUnit\Framework\TestCase;
+
+final class PayoutServiceTest extends TestCase
+{
+    public function testCreateReturnsNullWhenVendorBalanceIsBelowThreshold(): void
+    {
+        $payoutRepository = new InMemoryPayoutRepository();
+        $ledgerRepository = new InMemoryLedgerEntryRepository();
+        $ledgerService = new LedgerService($ledgerRepository);
+        $metrics = new MetricEmitter();
+        $service = new PayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics);
+        $ledgerRepository->insert(new LedgerEntry('1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 5.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
+
+        $result = $service->create(new CreatePayoutDTO('vendor-1', 'USD', 1000, 0.05));
+
+        self::assertNull($result);
+        self::assertSame([], $payoutRepository->all());
+        self::assertSame([], $metrics->snapshot());
+    }
+
+    public function testCreateAndProcessPersistPayoutAndLedgerFlow(): void
+    {
+        $payoutRepository = new InMemoryPayoutRepository();
+        $ledgerRepository = new InMemoryLedgerEntryRepository();
+        $ledgerService = new LedgerService($ledgerRepository);
+        $metrics = new MetricEmitter();
+        $service = new PayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics);
+        $ledgerRepository->insert(new LedgerEntry('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 15.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
+
+        $payoutId = $service->create(new CreatePayoutDTO('vendor-1', 'USD', 1000, 0.10));
+
+        self::assertNotNull($payoutId);
+        $payout = $payoutRepository->byId($payoutId);
+        self::assertNotNull($payout);
+        self::assertSame(1500, $payout->grossCents);
+        self::assertSame(150, $payout->feeCents);
+        self::assertSame(1350, $payout->netCents);
+        self::assertSame('pending', $payout->status);
+
+        $entriesAfterCreate = $ledgerRepository->all();
+        self::assertCount(2, $entriesAfterCreate);
+        self::assertSame('payout_reserve', $entriesAfterCreate[1]->debitAccount);
+        self::assertSame('VENDOR_PAYABLE', $entriesAfterCreate[1]->creditAccount);
+        self::assertSame(13.5, $entriesAfterCreate[1]->amount);
+
+        self::assertTrue($service->process($payoutId));
+
+        $processedPayout = $payoutRepository->byId($payoutId);
+        self::assertNotNull($processedPayout);
+        self::assertSame('processed', $processedPayout->status);
+        self::assertNotNull($processedPayout->processedAt);
+
+        $entriesAfterProcess = $ledgerRepository->all();
+        self::assertCount(4, $entriesAfterProcess);
+        self::assertSame('payout_processed', $entriesAfterProcess[2]->debitAccount);
+        self::assertSame(13.5, $entriesAfterProcess[2]->amount);
+        self::assertSame('payout_fee', $entriesAfterProcess[3]->debitAccount);
+        self::assertSame(1.5, $entriesAfterProcess[3]->amount);
+
+        self::assertSame(
+            [
+                ['name' => 'payout_created_total', 'tags' => ['currency' => 'USD']],
+                ['name' => 'payout_processed_total', 'tags' => ['currency' => 'USD']],
+            ],
+            $metrics->snapshot(),
+        );
+    }
+}

@@ -1,9 +1,0 @@
-vendor_transaction.create:
-  path: /api/vendor/transaction
-  controller: App\Controller\Vendor\VendorTransactionController::create
-  methods: [POST]
-
-vendor_transaction.update_status:
-  path: /api/vendor/transaction/{id}/status
-  controller: App\Controller\Vendor\VendorTransactionController::updateStatus
-  methods: [POST]
