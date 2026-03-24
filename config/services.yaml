@@ -78,4 +78,4 @@ services:
   App\ServiceInterface\Statement\StatementMailerServiceInterface: '@App\Service\Statement\StatementMailerService'
   App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface: '@App\Service\Statement\VendorStatementRecipientProvider'
   App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface: '@App\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder'
-  App\ServiceInterface\WebhooksConsumer\WebhooksConsumerInterface: '@App\Service\WebhooksConsumer\WebhooksConsumerService'
+  App\ServiceInterface\WebhooksConsumer\WebhooksConsumerServiceInterface: '@App\Service\WebhooksConsumer\WebhooksConsumerService'

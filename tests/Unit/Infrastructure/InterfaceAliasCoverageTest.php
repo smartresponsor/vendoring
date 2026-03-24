@@ -51,7 +51,7 @@ final class InterfaceAliasCoverageTest extends TestCase
             'App\\ServiceInterface\\VendorSecurityServiceInterface' => 'App\\Service\\VendorSecurityService',
             'App\\ServiceInterface\\VendorServiceInterface' => 'App\\Service\\VendorService',
             'App\\ServiceInterface\\VendorTransactionManagerInterface' => 'App\\Service\\VendorTransactionManager',
-            'App\\ServiceInterface\\WebhooksConsumer\\WebhooksConsumerInterface' => 'App\\Service\\WebhooksConsumer\\WebhooksConsumerService',
+            'App\\ServiceInterface\\WebhooksConsumer\\WebhooksConsumerServiceInterface' => 'App\\Service\\WebhooksConsumer\\WebhooksConsumerService',
             'App\\ServiceInterface\\Ledger\\DoubleEntryServiceInterface' => 'App\\Service\\Ledger\\DoubleEntryService',
             'App\\ServiceInterface\\Metric\\VendorMetricServiceInterface' => 'App\\Service\\Metric\\VendorMetricService',
             'App\\ServiceInterface\\Payout\\PayoutProviderBridgeInterface' => 'App\\Service\\Payout\\PayoutProviderBridge',
