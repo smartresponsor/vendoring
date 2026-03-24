@@ -1,5 +1,5 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service\Statement;
@@ -63,13 +63,15 @@ final class StatementMailerService implements StatementMailerServiceInterface
 
         try {
             $this->mailer->send($message);
-        } catch (\Throwable) {
+        } catch (\Throwable $exception) {
             $this->metrics->increment('statement_mail_failed_total', [
                 'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
+                'errorClass' => $exception::class,
             ]);
 
             $result['attached'] = $attached;
+            $result['errorClass'] = $exception::class;
 
             return $result;
         }

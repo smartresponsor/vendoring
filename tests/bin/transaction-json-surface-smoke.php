@@ -14,8 +14,8 @@ if (!str_contains($controller, 'VendorTransactionErrorCode::MALFORMED_JSON')) {
     fwrite(STDERR, 'Controller does not map malformed JSON'.PHP_EOL);
     exit(1);
 }
-if (!str_contains($controller, 'catch (JsonException)')) {
-    fwrite(STDERR, 'Controller does not catch JsonException'.PHP_EOL);
+if (!str_contains($controller, 'catch (JsonException $exception)')) {
+    fwrite(STDERR, 'Controller does not catch JsonException with exception context'.PHP_EOL);
     exit(1);
 }
 
