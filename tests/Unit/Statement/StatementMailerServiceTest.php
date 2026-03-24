@@ -1,5 +1,5 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Statement;
@@ -56,6 +56,7 @@ final class StatementMailerServiceTest extends TestCase
         self::assertFalse($result['ok']);
         self::assertSame('statement_mail_send_failed', $result['message']);
         self::assertFalse($result['attached']);
+        self::assertSame('mailer transport failed', $result['errorMessage']);
         self::assertSame('statement_mail_attachment_missing_total', $metrics->snapshot()[0]['name']);
         self::assertSame('statement_mail_failed_total', $metrics->snapshot()[1]['name']);
     }

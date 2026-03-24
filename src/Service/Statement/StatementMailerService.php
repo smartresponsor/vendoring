@@ -72,6 +72,9 @@ final class StatementMailerService implements StatementMailerServiceInterface
 
             $result['attached'] = $attached;
             $result['errorClass'] = $exception::class;
+            $result['errorMessage'] = '' !== trim($exception->getMessage())
+                ? $exception->getMessage()
+                : 'statement_mail_unknown_failure';
 
             return $result;
         }
