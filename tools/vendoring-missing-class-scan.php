@@ -1,8 +1,6 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 /**
  * Missing class scan for Vendoring.
@@ -186,7 +184,7 @@ foreach ($it as $node) {
 $knownTypeSet = [];
 
 foreach ($fileList as $abs) {
-    $code = @file_get_contents($abs);
+    $code = file_get_contents($abs);
     if (false === $code) {
         continue;
     }
@@ -208,7 +206,7 @@ $issueList = [];
 foreach ($fileList as $abs) {
     $rel = str_replace('\\', '/', substr($abs, strlen($repoRoot) + 1));
 
-    $code = @file_get_contents($abs);
+    $code = file_get_contents($abs);
     if (false === $code) {
         $issueList[] = ['type' => 'read', 'file' => $rel, 'message' => 'cannot read'];
         continue;

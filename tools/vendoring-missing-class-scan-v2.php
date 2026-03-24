@@ -1,8 +1,6 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 /**
  * Missing class scan for Vendoring (v2, noise-reduced).
@@ -404,7 +402,7 @@ $knownTypeSet = [];
 $fileMetaMap = [];
 
 foreach ($fileList as $abs) {
-    $code = @file_get_contents($abs);
+    $code = file_get_contents($abs);
     if (false === $code) {
         continue;
     }

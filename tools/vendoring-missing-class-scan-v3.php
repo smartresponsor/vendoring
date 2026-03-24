@@ -1,8 +1,6 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 /**
  * Vendoring missing class scan (v3).
@@ -344,7 +342,7 @@ function buildIndexV3(array $phpFileList, string $srcRoot): array
     $fileMetaMap = [];
 
     foreach ($phpFileList as $file) {
-        $code = @file_get_contents($file);
+        $code = file_get_contents($file);
         if (!is_string($code)) {
             continue;
         }
