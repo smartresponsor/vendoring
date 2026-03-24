@@ -1,10 +1,10 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller\Ledger;
 
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\ServiceInterface\Ledger\VendorSummaryServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/ledger/vendor')]
 final class VendorSummaryController extends AbstractController
 {
-    public function __construct(private readonly LedgerEntryRepositoryInterface $repo)
+    public function __construct(private readonly VendorSummaryServiceInterface $vendorSummaryService)
     {
     }
 
@@ -27,12 +27,8 @@ final class VendorSummaryController extends AbstractController
         if (!$tenantId) {
             return new JsonResponse(['error' => 'tenantId required'], 422);
         }
-        $accounts = ['REVENUE', 'REFUNDS_PAYABLE', 'VENDOR_PAYABLE', 'CASH'];
-        $data = [];
-        foreach ($accounts as $acc) {
-            $data[$acc] = $this->repo->sumByAccount($tenantId, $acc, $from ?: null, $to ?: null, $vendorId, '' !== $currency ? $currency : null);
-        }
+        $summary = $this->vendorSummaryService->build($tenantId, $vendorId, $from, $to, $currency);
 
-        return new JsonResponse(['data' => ['vendorId' => $vendorId, 'from' => $from, 'to' => $to, 'currency' => $currency, 'balances' => $data]], 200);
+        return new JsonResponse(['data' => $summary], 200);
     }
 }

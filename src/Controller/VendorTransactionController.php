@@ -1,15 +1,13 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 namespace App\Controller;
 
 use App\Entity\Vendor\VendorTransaction;
 use App\RepositoryInterface\VendorTransactionRepositoryInterface;
+use App\ServiceInterface\VendorTransactionInputResolverInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
-use App\ValueObject\VendorTransactionData;
 use App\ValueObject\VendorTransactionErrorCode;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
@@ -23,6 +21,7 @@ final class VendorTransactionController extends AbstractController
     public function __construct(
         private readonly VendorTransactionRepositoryInterface $repo,
         private readonly VendorTransactionManagerInterface $manager,
+        private readonly VendorTransactionInputResolverInterface $inputResolver,
     ) {
     }
 
@@ -37,38 +36,12 @@ final class VendorTransactionController extends AbstractController
     public function create(Request $request): JsonResponse
     {
         try {
-            $payload = $request->toArray();
+            $data = $this->inputResolver->resolveCreateData($request);
+            $tx = $this->manager->createTransaction($data);
         } catch (JsonException) {
             return new JsonResponse(['error' => VendorTransactionErrorCode::MALFORMED_JSON], 400);
-        }
-
-        foreach ([
-            'vendorId' => VendorTransactionErrorCode::VENDOR_ID_REQUIRED,
-            'orderId' => VendorTransactionErrorCode::ORDER_ID_REQUIRED,
-            'amount' => VendorTransactionErrorCode::AMOUNT_REQUIRED,
-        ] as $field => $errorCode) {
-            if (!isset($payload[$field]) || '' === (string) $payload[$field]) {
-                return new JsonResponse(['error' => $errorCode], 422);
-            }
-        }
-
-        $projectId = null;
-        if (array_key_exists('projectId', $payload) && null !== $payload['projectId']) {
-            $normalizedProjectId = trim((string) $payload['projectId']);
-            $projectId = '' === $normalizedProjectId ? null : $normalizedProjectId;
-        }
-
-        $data = new VendorTransactionData(
-            vendorId: trim((string) $payload['vendorId']),
-            orderId: trim((string) $payload['orderId']),
-            projectId: $projectId,
-            amount: (string) $payload['amount'],
-        );
-
-        try {
-            $tx = $this->manager->createTransaction($data);
         } catch (\InvalidArgumentException $exception) {
-            $errorCode = $this->normalizeErrorCode($exception->getMessage());
+            $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
             $statusCode = VendorTransactionErrorCode::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
 
             return new JsonResponse(['error' => $errorCode], $statusCode);
@@ -110,42 +83,15 @@ final class VendorTransactionController extends AbstractController
         }
 
         try {
-            $payload = $request->toArray();
+            $status = $this->inputResolver->resolveStatus($request);
+            $updated = $this->manager->updateStatus($transaction, $status);
         } catch (JsonException) {
             return new JsonResponse(['error' => VendorTransactionErrorCode::MALFORMED_JSON], 400);
-        }
-
-        $status = isset($payload['status']) ? (string) $payload['status'] : '';
-
-        if ('' === $status) {
-            return new JsonResponse(['error' => VendorTransactionErrorCode::STATUS_REQUIRED], 422);
-        }
-
-        try {
-            $updated = $this->manager->updateStatus($transaction, $status);
         } catch (\InvalidArgumentException $exception) {
-            return new JsonResponse(['error' => $this->normalizeErrorCode($exception->getMessage())], 422);
+            return new JsonResponse(['error' => $this->inputResolver->normalizeErrorCode($exception->getMessage())], 422);
         }
 
         return new JsonResponse(['id' => $updated->getId(), 'status' => $updated->getStatus()]);
-    }
-
-    private function normalizeErrorCode(string $message): string
-    {
-        return match ($message) {
-            VendorTransactionErrorCode::DUPLICATE_TRANSACTION,
-            VendorTransactionErrorCode::VENDOR_ID_REQUIRED,
-            VendorTransactionErrorCode::ORDER_ID_REQUIRED,
-            VendorTransactionErrorCode::AMOUNT_REQUIRED,
-            VendorTransactionErrorCode::AMOUNT_NOT_NUMERIC,
-            VendorTransactionErrorCode::AMOUNT_NOT_POSITIVE,
-            VendorTransactionErrorCode::STATUS_REQUIRED,
-            VendorTransactionErrorCode::INVALID_STATUS_TRANSITION,
-            VendorTransactionErrorCode::MALFORMED_JSON => $message,
-            default => str_starts_with($message, 'invalid_status_transition:')
-                ? VendorTransactionErrorCode::INVALID_STATUS_TRANSITION
-                : 'transaction_validation_error',
-        };
     }
 
     /**

@@ -1,11 +1,11 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller\Payout;
 
-use App\DTO\Payout\CreatePayoutDTO;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
+use App\ServiceInterface\Payout\PayoutRequestServiceInterface;
 use App\ServiceInterface\Payout\PayoutServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,19 +18,19 @@ final class PayoutController extends AbstractController
     public function __construct(
         private readonly PayoutServiceInterface $svc,
         private readonly PayoutRepositoryInterface $repo,
+        private readonly PayoutRequestServiceInterface $payoutRequestService,
     ) {
     }
 
     #[Route('/create', methods: ['POST'])]
     public function create(Request $r): JsonResponse
     {
-        $p = $r->toArray();
-        foreach (['vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $k) {
-            if (!isset($p[$k])) {
-                return new JsonResponse(['error' => "$k required"], 422);
-            }
+        try {
+            $dto = $this->payoutRequestService->toCreateDto($r->toArray());
+        } catch (\InvalidArgumentException $exception) {
+            return new JsonResponse(['error' => $exception->getMessage()], 422);
         }
-        $dto = new CreatePayoutDTO((string) $p['vendorId'], (string) $p['currency'], (int) $p['thresholdCents'], (float) $p['retentionFeePercent']);
+
         $id = $this->svc->create($dto);
         if (null === $id) {
             return new JsonResponse(['data' => ['created' => false, 'reason' => 'threshold_not_met']], 200);
@@ -55,10 +55,6 @@ final class PayoutController extends AbstractController
             return new JsonResponse(['error' => 'not_found'], 404);
         }
 
-        return new JsonResponse(['data' => [
-            'id' => $p->id, 'vendorId' => $p->vendorId, 'currency' => $p->currency,
-            'grossCents' => $p->grossCents, 'feeCents' => $p->feeCents, 'netCents' => $p->netCents,
-            'status' => $p->status, 'createdAt' => $p->createdAt, 'processedAt' => $p->processedAt,
-        ]], 200);
+        return new JsonResponse(['data' => $this->payoutRequestService->normalizePayout($p)], 200);
     }
 }

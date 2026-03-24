@@ -1,36 +1,31 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller\Payout;
 
-use App\Entity\Vendor\Payout\PayoutAccount;
-use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
+use App\ServiceInterface\Payout\PayoutAccountServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/payouts/account')]
 final class PayoutAccountController extends AbstractController
 {
-    public function __construct(private readonly PayoutAccountRepositoryInterface $repo)
+    public function __construct(private readonly PayoutAccountServiceInterface $payoutAccountService)
     {
     }
 
     #[Route('', methods: ['POST'])]
     public function upsert(Request $r): JsonResponse
     {
-        $p = $r->toArray();
-        foreach (['tenantId', 'vendorId', 'provider', 'accountRef', 'currency'] as $k) {
-            if (!isset($p[$k])) {
-                return new JsonResponse(['error' => "$k required"], 422);
-            }
+        try {
+            $account = $this->payoutAccountService->upsertFromPayload($r->toArray());
+        } catch (\InvalidArgumentException $exception) {
+            return new JsonResponse(['error' => $exception->getMessage()], 422);
         }
-        $a = new PayoutAccount(Uuid::v4()->toRfc4122(), (string) $p['tenantId'], (string) $p['vendorId'], (string) $p['provider'], (string) $p['accountRef'], (string) $p['currency'], (bool) ($p['active'] ?? true), (new \DateTimeImmutable())->format('Y-m-d H:i:s'));
-        $this->repo->upsert($a);
 
-        return new JsonResponse(['data' => ['provider' => $a->provider, 'accountRef' => $a->accountRef, 'active' => $a->active]], 200);
+        return new JsonResponse(['data' => ['provider' => $account->provider, 'accountRef' => $account->accountRef, 'active' => $account->active]], 200);
     }
 }
