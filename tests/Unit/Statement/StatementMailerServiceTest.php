@@ -8,6 +8,9 @@ use App\Observability\Service\MetricEmitter;
 use App\Service\Statement\StatementMailerService;
 use App\Tests\Support\Statement\FakeMailer;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\RawMessage;
 
 final class StatementMailerServiceTest extends TestCase
 {
@@ -59,5 +62,23 @@ final class StatementMailerServiceTest extends TestCase
         self::assertSame('mailer transport failed', $result['errorMessage']);
         self::assertSame('statement_mail_attachment_missing_total', $metrics->snapshot()[0]['name']);
         self::assertSame('statement_mail_failed_total', $metrics->snapshot()[1]['name']);
+    }
+
+    public function testSendDoesNotSwallowNonTransportExceptions(): void
+    {
+        $mailer = new class () implements MailerInterface {
+            public function send(RawMessage $message, ?Envelope $envelope = null): void
+            {
+                throw new \LogicException('unexpected mailer state');
+            }
+        };
+
+        $metrics = new MetricEmitter();
+        $service = new StatementMailerService($mailer, $metrics);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('unexpected mailer state');
+
+        $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
     }
 }

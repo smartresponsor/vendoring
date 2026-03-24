@@ -1,10 +1,11 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Support\Statement;
 
 use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\RawMessage;
 
@@ -20,7 +21,7 @@ final class FakeMailer implements MailerInterface
     public function send(RawMessage $message, ?Envelope $envelope = null): void
     {
         if ($this->shouldThrow) {
-            throw new \RuntimeException('mailer transport failed');
+            throw new TransportException('mailer transport failed');
         }
 
         $this->messages[] = $message;

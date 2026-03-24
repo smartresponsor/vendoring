@@ -6,6 +6,7 @@ namespace App\Service\Statement;
 
 use App\Observability\Service\MetricEmitter;
 use App\ServiceInterface\Statement\StatementMailerServiceInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
@@ -63,7 +64,7 @@ final class StatementMailerService implements StatementMailerServiceInterface
 
         try {
             $this->mailer->send($message);
-        } catch (\Throwable $exception) {
+        } catch (TransportExceptionInterface $exception) {
             $this->metrics->increment('statement_mail_failed_total', [
                 'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
