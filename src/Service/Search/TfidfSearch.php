@@ -1,13 +1,20 @@
 <?php
-declare(strict_types = 1);
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+declare(strict_types=1);
 
 namespace App\Service\Search;
-final class TfidfSearch
+
+use App\ServiceInterface\Search\TfidfSearchInterface;
+
+final class TfidfSearch implements TfidfSearchInterface
 {
     /** @var array<int,array{tokens:array<string,int>, tfidf:array<string,float>}> */
     private array $docs = [];
+
     /** @var array<string,int> */
     private array $df = [];
+
     private int $N = 0;
 
     private function tokenize(string $s): array
@@ -15,7 +22,8 @@ final class TfidfSearch
         $s = mb_strtolower($s);
         $s = preg_replace('/[^a-z0-9\p{Cyrillic}\s]+/u', ' ', $s);
         $t = preg_split('/\s+/u', trim($s)) ?: [];
-        return array_values(array_filter($t, fn($x) => $x !== ''));
+
+        return array_values(array_filter($t, fn ($x) => $x !== ''));
     }
 
     public function addDocument(string $text): int
@@ -31,16 +39,17 @@ final class TfidfSearch
         $id = $this->N;
         $this->docs[$id] = ['tokens' => $freq, 'tfidf' => []];
         $this->N++;
+
         return $id;
     }
 
     public function finalize(): void
     {
-        foreach ($this->docs as $id => $_) {
+        foreach ($this->docs as $id => $document) {
             $tfidf = [];
             $norm = 0.0;
-            $maxf = max($_['tokens']);
-            foreach ($_['tokens'] as $tok => $f) {
+            $maxf = max($document['tokens']);
+            foreach ($document['tokens'] as $tok => $f) {
                 $tf = 0.5 + 0.5 * ($f / $maxf);
                 $idf = log(($this->N + 1) / (($this->df[$tok] ?? 1) + 1)) + 1.0;
                 $w = $tf * $idf;
@@ -59,8 +68,8 @@ final class TfidfSearch
     {
         $qt = $this->tokenize($query);
         $qfreq = [];
-        foreach ($qt as $t) {
-            $qfreq[$t] = ($qfreq[$t] ?? 0) + 1;
+        foreach ($qt as $token) {
+            $qfreq[$token] = ($qfreq[$token] ?? 0) + 1;
         }
         $qtfidf = [];
         $norm = 0.0;
@@ -82,9 +91,12 @@ final class TfidfSearch
             foreach ($qtfidf as $tok => $qw) {
                 $dot += ($doc['tfidf'][$tok] ?? 0.0) * $qw;
             }
-            if ($dot > 0) $scores[$id] = $dot;
+            if ($dot > 0) {
+                $scores[$id] = $dot;
+            }
         }
         arsort($scores);
-        return array_slice(array_map(fn($id) => ['id' => $id, 'score' => $scores[$id]], array_keys($scores)), 0, $limit);
+
+        return array_slice(array_map(fn ($id) => ['id' => $id, 'score' => $scores[$id]], array_keys($scores)), 0, $limit);
     }
 }

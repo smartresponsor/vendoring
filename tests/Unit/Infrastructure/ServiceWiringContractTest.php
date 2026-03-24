@@ -49,7 +49,7 @@ final class ServiceWiringContractTest extends TestCase
         yield 'statement_exporter' => ['App\\ServiceInterface\\Statement\\StatementExporterPDFInterface', StatementExporterPDF::class];
         yield 'statement_mailer' => ['App\\ServiceInterface\\Statement\\StatementMailerServiceInterface', StatementMailerService::class];
         yield 'statement_recipient_provider' => ['App\\ServiceInterface\\Statement\\VendorStatementRecipientProviderInterface', VendorStatementRecipientProvider::class];
-        yield 'webhooks_consumer' => ['App\\ServiceInterface\\WebhooksConsumer\\WebhooksConsumerInterface', WebhooksConsumerService::class];
+        yield 'webhooks_consumer' => ['App\\ServiceInterface\\WebhooksConsumer\\WebhooksConsumerServiceInterface', WebhooksConsumerService::class];
     }
 
     #[DataProvider('serviceAliasMapProvider')]

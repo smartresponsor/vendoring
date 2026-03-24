@@ -9,7 +9,7 @@ use App\ServiceInterface\CrmServiceInterface;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
 use App\ServiceInterface\Payout\PayoutProviderBridgeInterface;
 use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
-use App\ServiceInterface\WebhooksConsumer\WebhooksConsumerInterface;
+use App\ServiceInterface\WebhooksConsumer\WebhooksConsumerServiceInterface;
 
 /**
  * Builds a vendor-local summary for neighboring integration seams.
@@ -23,7 +23,7 @@ final class VendorExternalIntegrationRuntimeViewBuilder implements VendorExterna
     public function __construct(
         private readonly VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
         private readonly CrmServiceInterface $crmService,
-        private readonly WebhooksConsumerInterface $webhooksConsumer,
+        private readonly WebhooksConsumerServiceInterface $webhooksConsumer,
         private readonly PayoutProviderBridgeInterface $payoutProviderBridge,
     ) {
     }

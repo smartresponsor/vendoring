@@ -12,7 +12,7 @@ $checks = [
     'services.yaml aliases VendorApiKeyRepositoryInterface' => str_contains($services, 'App\\RepositoryInterface\\VendorApiKeyRepositoryInterface'),
     'services.yaml aliases VendorStatementServiceInterface' => str_contains($services, 'App\\ServiceInterface\\Statement\\VendorStatementServiceInterface'),
     'services.yaml aliases StatementMailerServiceInterface' => str_contains($services, 'App\\ServiceInterface\\Statement\\StatementMailerServiceInterface'),
-    'services.yaml aliases WebhooksConsumerInterface' => str_contains($services, 'App\\ServiceInterface\\WebhooksConsumer\\WebhooksConsumerInterface'),
+    'services.yaml aliases WebhooksConsumerServiceInterface' => str_contains($services, 'App\\ServiceInterface\\WebhooksConsumer\\WebhooksConsumerServiceInterface'),
     'VendorApiKeyRepository exists' => is_file($root.'/src/Repository/VendorApiKeyRepository.php'),
 ];
 
