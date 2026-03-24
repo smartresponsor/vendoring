@@ -20,14 +20,35 @@ final class VendorSecurityRepository extends ServiceEntityRepository implements 
         parent::__construct($registry, VendorSecurity::class);
     }
 
-    public function findOneActiveForVendorId(int $vendorId): ?VendorSecurityInterface
+    public function find(int $id): ?VendorSecurityInterface
     {
         /** @var ?VendorSecurityInterface $entity */
-        $entity = $this->findOneBy([
+        $entity = parent::find($id);
+
+        return $entity;
+    }
+
+    public function findOneBy(array $criteria, ?array $orderBy = null): ?VendorSecurityInterface
+    {
+        /** @var ?VendorSecurityInterface $entity */
+        $entity = parent::findOneBy($criteria, $orderBy);
+
+        return $entity;
+    }
+
+    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
+    {
+        /** @var list<VendorSecurityInterface> $entities */
+        $entities = parent::findBy($criteria, $orderBy, $limit, $offset);
+
+        return $entities;
+    }
+
+    public function findOneActiveForVendorId(int $vendorId): ?VendorSecurityInterface
+    {
+        return $this->findOneBy([
             'vendor' => $vendorId,
             'status' => 'active',
         ]);
-
-        return $entity;
     }
 }

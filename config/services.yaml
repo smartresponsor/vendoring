@@ -20,6 +20,7 @@ services:
       - '../src/RepositoryInterface/'
       - '../src/ServiceInterface/'
       - '../src/ValueObject/'
+      - '../src/Form/'
 
 
   App\RepositoryInterface\VendorAnalyticsRepositoryInterface: '@App\Repository\VendorAnalyticsRepository'

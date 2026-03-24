@@ -6,6 +6,12 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
+/**
+ * Input DTO for vendor transaction creation.
+ *
+ * This object is consumed by both JSON API and operator surface flows so a single
+ * DocBlock can feed OpenAPI/phpDocumentor generation and human-readable developer docs.
+ */
 final class VendorTransactionData
 {
     public function __construct(

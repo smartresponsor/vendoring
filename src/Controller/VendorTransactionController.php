@@ -26,6 +26,13 @@ final class VendorTransactionController extends AbstractController
     ) {
     }
 
+    /**
+     * Create a vendor transaction from a JSON payload.
+     *
+     * Request schema: vendorId:string, orderId:string, projectId:?string, amount:string(decimal).
+     * Success response: {id:int,status:string}.
+     * Error responses: malformed_json(400), duplicate_transaction(409), validation errors(422).
+     */
     #[Route('', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
@@ -70,6 +77,11 @@ final class VendorTransactionController extends AbstractController
         return new JsonResponse(['id' => $tx->getId(), 'status' => $tx->getStatus()], 201);
     }
 
+    /**
+     * List all transactions for a single vendor.
+     *
+     * Response schema: {data: VendorTransactionResource[]}.
+     */
     #[Route('/vendor/{vendorId}', methods: ['GET'])]
     public function listByVendor(string $vendorId): JsonResponse
     {
@@ -81,6 +93,13 @@ final class VendorTransactionController extends AbstractController
         return new JsonResponse(['data' => $items], 200);
     }
 
+    /**
+     * Update the status of a vendor transaction.
+     *
+     * Request schema: {status:string}.
+     * Success response: {id:int,status:string}.
+     * Error responses: malformed_json(400), not_found(404), validation errors(422).
+     */
     #[Route('/vendor/{vendorId}/{id}/status', methods: ['POST'])]
     public function updateStatus(string $vendorId, int $id, Request $request): JsonResponse
     {

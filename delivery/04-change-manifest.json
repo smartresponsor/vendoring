@@ -1,17 +1,17 @@
 {
   "wave": 4,
-  "message": "vendor-security-state-transitional-canon",
-  "touched": [
-    "src/Entity/Vendor/VendorSecurity.php",
-    "src/EntityInterface/VendorSecurityInterface.php",
-    "src/EntityInterface/VendorSecurityEntityInterface.php",
-    "src/RepositoryInterface/VendorSecurityRepositoryInterface.php",
-    "src/Repository/VendorSecurityRepository.php",
-    "src/Projection/VendorSecurityStateView.php",
-    "src/ServiceInterface/VendorSecurityStateViewBuilderInterface.php",
-    "src/Service/VendorSecurityStateViewBuilder.php",
-    "docs/internal/VENDOR_SECURITY_STATE_CANON.md",
-    "VENDORING-W04-NOTES.md"
+  "message": "OperatorSurface",
+  "touched_paths": [
+    "src/Controller/Ops/VendorTransactionOperatorController.php",
+    "src/Service/Ops/VendorTransactionOperatorPageBuilder.php",
+    "tests/Support/Runtime/KernelRuntimeHarness.php",
+    "tests/Integration/Runtime/VendorTransactionOperatorSurfaceTest.php",
+    "tests/bin/operator-surface-smoke.php",
+    "docs/release/RC_OPERATOR_SURFACE.md",
+    "docs/release/RC_RUNTIME_SURFACES.md",
+    "README.md",
+    "composer.json",
+    ".github/workflows/ui-smoke.yml"
   ],
-  "removed": []
+  "removed_paths": []
 }

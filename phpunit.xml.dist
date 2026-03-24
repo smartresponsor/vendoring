@@ -19,6 +19,11 @@
         <testsuite name="integration">
             <directory>tests/Integration</directory>
         </testsuite>
+
+        <testsuite name="vendoring">
+            <directory>tests/Unit</directory>
+            <directory>tests/Integration</directory>
+        </testsuite>
     </testsuites>
 
     <php>
