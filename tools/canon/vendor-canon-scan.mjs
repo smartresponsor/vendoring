@@ -60,6 +60,25 @@ function scanRepoPath(file) {
   }
 }
 
+
+function shouldScanForForbiddenNamespaceChain(file) {
+  const r = rel(file);
+  if (r.startsWith('tools/canon/')) return false;
+
+  const roots = ['src/', 'config/', 'tests/', 'public/', 'bin/', 'composer.json'];
+  return roots.some((root) => r === root || r.startsWith(root));
+}
+
+function scanForbiddenNamespaceChain(file) {
+  if (!shouldScanForForbiddenNamespaceChain(file)) return;
+
+  const r = rel(file);
+  const head = readHead(file, 65536);
+  if (/Smartresponsor\\/i.test(head) || /Smartresponsor\//i.test(head)) {
+    pushIssue('namespace-chain', r, 'Forbidden namespace chain found. Use App\\* only.');
+  }
+}
+
 function readHead(file, maxBytes = 8192) {
   try {
     const fd = fs.openSync(file, 'r');
@@ -107,12 +126,12 @@ function scanPhpFile(file) {
     return;
   }
 
-  if (ns.startsWith('SmartResponsor\\')) {
-    pushIssue('namespace', r, `Namespace uses forbidden casing SmartResponsor: ${ns}. Use Smartresponsor or App.`);
+  if (/^Smartresponsor(?:\\|$)/i.test(ns)) {
+    pushIssue('namespace', r, `Forbidden namespace root: ${ns}. Use only App namespace rooted at src/.`);
   }
 
   const isAppNamespace = ns === 'App' || ns.startsWith('App\\');
-  if (!isAppNamespace && !ns.startsWith('SmartResponsor\\')) {
+  if (!isAppNamespace) {
     pushIssue('namespace', r, `Unexpected namespace root: ${ns}.`);
   }
 
@@ -150,7 +169,10 @@ function scan() {
     if (isDir(d)) pushIssue('path', rel(d), 'Forbidden directory present.');
   }
 
-  for (const f of allRepoFiles) scanRepoPath(f);
+  for (const f of allRepoFiles) {
+    scanRepoPath(f);
+    scanForbiddenNamespaceChain(f);
+  }
   for (const f of all) scanPhpFile(f);
 
   fs.mkdirSync(reportDir, { recursive: true });

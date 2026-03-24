@@ -8,7 +8,7 @@ Runs path + namespace heuristics to detect:
 - nested `src/src` trees
 - repeated layer segments (`Entity/Entity`, `Controller/Controller`, ...)
 - archive directories inside `src/` (e.g. `vendor-current`, `vendor-sketch-*`, `123_vendor-*`)
-- mixed namespace families (e.g. `SmartResponsor\\*` inside an `App\\*` runtime repo)
+- namespace roots other than `App\\*` and forbidden non-App namespace chains in runtime/config/test surfaces
 
 Run:
 
