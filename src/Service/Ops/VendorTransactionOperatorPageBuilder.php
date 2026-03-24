@@ -1,12 +1,14 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Service\Ops;
 
 use App\Entity\Vendor\VendorTransaction;
+use App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
 
-final class VendorTransactionOperatorPageBuilder
+final class VendorTransactionOperatorPageBuilder implements VendorTransactionOperatorPageBuilderInterface
 {
     /**
      * @param list<VendorTransaction> $transactions

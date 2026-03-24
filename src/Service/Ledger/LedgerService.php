@@ -1,4 +1,5 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -7,9 +8,10 @@ namespace App\Service\Ledger;
 use App\DTO\Ledger\LedgerEntryDTO;
 use App\Entity\Vendor\Ledger\LedgerEntry;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\ServiceInterface\Ledger\LedgerServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
-final class LedgerService
+final class LedgerService implements LedgerServiceInterface
 {
     public function __construct(private readonly LedgerEntryRepositoryInterface $repo)
     {

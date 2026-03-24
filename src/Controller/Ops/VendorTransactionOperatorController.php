@@ -1,4 +1,5 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -9,7 +10,7 @@ use App\Form\Ops\VendorTransactionCreateType;
 use App\Form\Ops\VendorTransactionStatusUpdateInput;
 use App\Form\Ops\VendorTransactionStatusUpdateType;
 use App\RepositoryInterface\VendorTransactionRepositoryInterface;
-use App\Service\Ops\VendorTransactionOperatorPageBuilder;
+use App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\VendorTransactionData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +25,7 @@ final class VendorTransactionOperatorController extends AbstractController
     public function __construct(
         private readonly VendorTransactionRepositoryInterface $transactions,
         private readonly VendorTransactionManagerInterface $manager,
-        private readonly VendorTransactionOperatorPageBuilder $pageBuilder,
+        private readonly VendorTransactionOperatorPageBuilderInterface $pageBuilder,
     ) {
     }
 
