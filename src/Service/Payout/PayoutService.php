@@ -1,4 +1,5 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -10,7 +11,7 @@ use App\Entity\Vendor\Payout\Payout;
 use App\Observability\Service\MetricEmitter;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
-use App\Service\Ledger\LedgerService;
+use App\ServiceInterface\Ledger\LedgerServiceInterface;
 use App\ServiceInterface\Payout\PayoutServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -19,7 +20,7 @@ final class PayoutService implements PayoutServiceInterface
     public function __construct(
         private readonly PayoutRepositoryInterface $repo,
         private readonly LedgerEntryRepositoryInterface $ledgerRepo,
-        private readonly LedgerService $ledger,
+        private readonly LedgerServiceInterface $ledger,
         private readonly MetricEmitter $metrics,
     ) {
     }
