@@ -7,21 +7,21 @@ namespace App\Tests\Unit\Payout;
 use App\DTO\Payout\CreatePayoutDTO;
 use App\Entity\Vendor\Ledger\LedgerEntry;
 use App\Observability\Service\MetricEmitter;
-use App\Service\Ledger\LedgerService;
-use App\Service\Payout\PayoutService;
+use App\Service\Ledger\VendorLedgerService;
+use App\Service\Payout\VendorPayoutService;
 use App\Tests\Support\Payout\InMemoryPayoutRepository;
 use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
 
-final class PayoutServiceTest extends TestCase
+final class VendorPayoutServiceTest extends TestCase
 {
     public function testCreateReturnsNullWhenVendorBalanceIsBelowThreshold(): void
     {
         $payoutRepository = new InMemoryPayoutRepository();
         $ledgerRepository = new InMemoryLedgerEntryRepository();
-        $ledgerService = new LedgerService($ledgerRepository);
+        $ledgerService = new VendorLedgerService($ledgerRepository);
         $metrics = new MetricEmitter();
-        $service = new PayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics);
+        $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics);
         $ledgerRepository->insert(new LedgerEntry('1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 5.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
 
         $result = $service->create(new CreatePayoutDTO('vendor-1', 'USD', 1000, 0.05));
@@ -35,9 +35,9 @@ final class PayoutServiceTest extends TestCase
     {
         $payoutRepository = new InMemoryPayoutRepository();
         $ledgerRepository = new InMemoryLedgerEntryRepository();
-        $ledgerService = new LedgerService($ledgerRepository);
+        $ledgerService = new VendorLedgerService($ledgerRepository);
         $metrics = new MetricEmitter();
-        $service = new PayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics);
+        $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics);
         $ledgerRepository->insert(new LedgerEntry('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 15.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
 
         $payoutId = $service->create(new CreatePayoutDTO('vendor-1', 'USD', 1000, 0.10));

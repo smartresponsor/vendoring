@@ -6,9 +6,9 @@ namespace App\Service\Payout;
 
 use App\DTO\Payout\CreatePayoutDTO;
 use App\Entity\Vendor\Payout\Payout;
-use App\ServiceInterface\Payout\PayoutRequestServiceInterface;
+use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 
-final class PayoutRequestService implements PayoutRequestServiceInterface
+final class VendorPayoutRequestService implements VendorPayoutRequestServiceInterface
 {
     public function toCreateDto(array $payload): CreatePayoutDTO
     {

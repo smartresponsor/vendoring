@@ -6,7 +6,7 @@ namespace App\ServiceInterface\Payout;
 
 use App\Entity\Vendor\Payout\PayoutAccount;
 
-interface PayoutAccountServiceInterface
+interface VendorPayoutAccountServiceInterface
 {
     /**
      * @param array<string, mixed> $payload

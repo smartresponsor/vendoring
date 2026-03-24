@@ -5,9 +5,9 @@ declare(strict_types=1);
 
 namespace App\Service\WebhooksConsumer;
 
-use App\ServiceInterface\WebhooksConsumer\WebhooksConsumerServiceInterface;
+use App\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface;
 
-final class WebhooksConsumerService implements WebhooksConsumerServiceInterface
+final class VendorWebhooksConsumerService implements VendorWebhooksConsumerServiceInterface
 {
     public function ok(): bool
     {

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Controller\Payout;
 
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
-use App\ServiceInterface\Payout\PayoutRequestServiceInterface;
-use App\ServiceInterface\Payout\PayoutServiceInterface;
+use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
+use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,9 +16,9 @@ use Symfony\Component\Routing\Attribute\Route;
 final class PayoutController extends AbstractController
 {
     public function __construct(
-        private readonly PayoutServiceInterface $svc,
+        private readonly VendorPayoutServiceInterface $svc,
         private readonly PayoutRepositoryInterface $repo,
-        private readonly PayoutRequestServiceInterface $payoutRequestService,
+        private readonly VendorPayoutRequestServiceInterface $payoutRequestService,
     ) {
     }
 

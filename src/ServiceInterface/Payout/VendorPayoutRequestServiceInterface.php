@@ -7,7 +7,7 @@ namespace App\ServiceInterface\Payout;
 use App\DTO\Payout\CreatePayoutDTO;
 use App\Entity\Vendor\Payout\Payout;
 
-interface PayoutRequestServiceInterface
+interface VendorPayoutRequestServiceInterface
 {
     /**
      * @param array<string, mixed> $payload

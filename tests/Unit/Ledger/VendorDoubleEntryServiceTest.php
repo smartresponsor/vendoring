@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Ledger;
 
 use App\DTO\Ledger\DoubleEntryDTO;
-use App\Service\Ledger\DoubleEntryService;
+use App\Service\Ledger\VendorDoubleEntryService;
 use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
 
-final class DoubleEntryServiceTest extends TestCase
+final class VendorDoubleEntryServiceTest extends TestCase
 {
     public function testPostPersistsLedgerEntryWithProvidedTimestamp(): void
     {
         $repository = new InMemoryLedgerEntryRepository();
-        $service = new DoubleEntryService($repository);
+        $service = new VendorDoubleEntryService($repository);
         $dto = new DoubleEntryDTO(
             'tenant-1',
             'VENDOR_PAYABLE',
@@ -46,7 +46,7 @@ final class DoubleEntryServiceTest extends TestCase
     public function testPostCreatesTimestampWhenDtoDoesNotProvideOne(): void
     {
         $repository = new InMemoryLedgerEntryRepository();
-        $service = new DoubleEntryService($repository);
+        $service = new VendorDoubleEntryService($repository);
         $dto = new DoubleEntryDTO('tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 10.0, 'USD', 'invoice', 'inv-101');
 
         $result = $service->post($dto);

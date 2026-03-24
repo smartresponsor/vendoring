@@ -6,7 +6,7 @@ namespace App\ServiceInterface;
 
 use App\Entity\Vendor\Vendor;
 
-interface CrmServiceInterface
+interface VendorCrmServiceInterface
 {
     public function registerVendor(Vendor $vendor): void;
 }

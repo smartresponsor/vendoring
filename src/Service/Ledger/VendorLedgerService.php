@@ -8,10 +8,10 @@ namespace App\Service\Ledger;
 use App\DTO\Ledger\LedgerEntryDTO;
 use App\Entity\Vendor\Ledger\LedgerEntry;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\ServiceInterface\Ledger\LedgerServiceInterface;
+use App\ServiceInterface\Ledger\VendorLedgerServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
-final class LedgerService implements LedgerServiceInterface
+final class VendorLedgerService implements VendorLedgerServiceInterface
 {
     public function __construct(private readonly LedgerEntryRepositoryInterface $repo)
     {

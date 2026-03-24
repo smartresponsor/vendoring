@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Support\Statement;
 
-use App\ServiceInterface\Statement\StatementMailerServiceInterface;
+use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 
-final class FakeStatementMailerService implements StatementMailerServiceInterface
+final class FakeVendorStatementMailerService implements VendorStatementMailerServiceInterface
 {
     /** @var list<array{tenantId:string,vendorId:string,email:string,pdfPath:string,periodLabel:string}> */
     private array $calls = [];

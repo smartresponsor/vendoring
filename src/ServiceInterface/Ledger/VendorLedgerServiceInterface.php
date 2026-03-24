@@ -8,7 +8,7 @@ namespace App\ServiceInterface\Ledger;
 use App\DTO\Ledger\LedgerEntryDTO;
 use App\Entity\Vendor\Ledger\LedgerEntry;
 
-interface LedgerServiceInterface
+interface VendorLedgerServiceInterface
 {
     public function record(LedgerEntryDTO $dto): LedgerEntry;
 }

@@ -7,7 +7,7 @@ namespace App\Command;
 use App\DTO\Statement\VendorStatementRecipientDTO;
 use App\DTO\Statement\VendorStatementRequestDTO;
 use App\ServiceInterface\Statement\StatementExporterPDFInterface;
-use App\ServiceInterface\Statement\StatementMailerServiceInterface;
+use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -22,7 +22,7 @@ final class SendVendorStatementsCommand extends Command
     public function __construct(
         private readonly VendorStatementServiceInterface $svc,
         private readonly StatementExporterPDFInterface $pdf,
-        private readonly StatementMailerServiceInterface $mailer,
+        private readonly VendorStatementMailerServiceInterface $mailer,
         private readonly VendorStatementRecipientProviderInterface $recipientProvider,
     ) {
         parent::__construct();

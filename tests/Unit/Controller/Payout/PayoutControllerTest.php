@@ -9,8 +9,8 @@ use App\Controller\Payout\PayoutController;
 use App\DTO\Payout\CreatePayoutDTO;
 use App\Entity\Vendor\Payout\Payout;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
-use App\ServiceInterface\Payout\PayoutRequestServiceInterface;
-use App\ServiceInterface\Payout\PayoutServiceInterface;
+use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
+use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,7 +18,7 @@ final class PayoutControllerTest extends TestCase
 {
     public function testCreateReturnsValidationErrorWhenRequiredFieldIsMissing(): void
     {
-        $controller = new PayoutController(new FakePayoutService(), new FakePayoutRepository(), new FakePayoutRequestService());
+        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), new FakeVendorPayoutRequestService());
 
         $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
             'vendorId' => 'vendor-1',
@@ -34,8 +34,8 @@ final class PayoutControllerTest extends TestCase
 
     public function testCreateReturnsCreatedPayload(): void
     {
-        $service = new FakePayoutService('payout-1');
-        $controller = new PayoutController($service, new FakePayoutRepository(), new FakePayoutRequestService());
+        $service = new FakeVendorPayoutService('payout-1');
+        $controller = new PayoutController($service, new FakePayoutRepository(), new FakeVendorPayoutRequestService());
 
         $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
             'vendorId' => 'vendor-1',
@@ -55,7 +55,7 @@ final class PayoutControllerTest extends TestCase
 
     public function testProcessReturnsNotFoundForUnknownPendingPayout(): void
     {
-        $controller = new PayoutController(new FakePayoutService(null, false), new FakePayoutRepository(), new FakePayoutRequestService());
+        $controller = new PayoutController(new FakeVendorPayoutService(null, false), new FakePayoutRepository(), new FakeVendorPayoutRequestService());
 
         $response = $controller->process('missing-payout');
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -65,7 +65,7 @@ final class PayoutControllerTest extends TestCase
     }
 }
 
-final class FakePayoutService implements PayoutServiceInterface
+final class FakeVendorPayoutService implements VendorPayoutServiceInterface
 {
     public ?CreatePayoutDTO $lastCreateDto = null;
 
@@ -113,7 +113,7 @@ final class FakePayoutRepository implements PayoutRepositoryInterface
     }
 }
 
-final class FakePayoutRequestService implements PayoutRequestServiceInterface
+final class FakeVendorPayoutRequestService implements VendorPayoutRequestServiceInterface
 {
     public function toCreateDto(array $payload): CreatePayoutDTO
     {

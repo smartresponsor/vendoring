@@ -11,8 +11,8 @@ $checks = [
     'services.yaml excludes src/DTO' => str_contains($services, '../src/DTO/'),
     'services.yaml aliases VendorApiKeyRepositoryInterface' => str_contains($services, 'App\\RepositoryInterface\\VendorApiKeyRepositoryInterface'),
     'services.yaml aliases VendorStatementServiceInterface' => str_contains($services, 'App\\ServiceInterface\\Statement\\VendorStatementServiceInterface'),
-    'services.yaml aliases StatementMailerServiceInterface' => str_contains($services, 'App\\ServiceInterface\\Statement\\StatementMailerServiceInterface'),
-    'services.yaml aliases WebhooksConsumerServiceInterface' => str_contains($services, 'App\\ServiceInterface\\WebhooksConsumer\\WebhooksConsumerServiceInterface'),
+    'services.yaml aliases VendorStatementMailerServiceInterface' => str_contains($services, 'App\\ServiceInterface\\Statement\\VendorStatementMailerServiceInterface'),
+    'services.yaml aliases VendorWebhooksConsumerServiceInterface' => str_contains($services, 'App\\ServiceInterface\\WebhooksConsumer\\VendorWebhooksConsumerServiceInterface'),
     'VendorApiKeyRepository exists' => is_file($root.'/src/Repository/VendorApiKeyRepository.php'),
 ];
 

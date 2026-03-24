@@ -6,7 +6,7 @@ namespace App\ServiceInterface\Ledger;
 
 use App\DTO\Ledger\DoubleEntryDTO;
 
-interface DoubleEntryServiceInterface
+interface VendorDoubleEntryServiceInterface
 {
     public function post(DoubleEntryDTO $dto): array;
 }
