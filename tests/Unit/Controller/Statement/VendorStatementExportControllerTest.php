@@ -1,5 +1,5 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Controller\Statement;
@@ -38,7 +38,9 @@ final class VendorStatementExportControllerTest extends TestCase
         ]));
 
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        @unlink($pdfPath);
+        if (is_file($pdfPath) && !unlink($pdfPath)) {
+            self::fail(sprintf('Failed to delete temp pdf file: %s', $pdfPath));
+        }
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(base64_encode('pdf-binary'), $payload['data']['pdfBase64']);

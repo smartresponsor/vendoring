@@ -1,5 +1,5 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Support\Runtime;
@@ -50,7 +50,9 @@ final class KernelRuntimeHarness
 
         register_shutdown_function(static function () use ($databaseFile): void {
             if (is_file($databaseFile)) {
-                @unlink($databaseFile);
+                if (!unlink($databaseFile)) {
+                    fwrite(STDERR, sprintf("Failed to remove sqlite database file: %s\n", $databaseFile));
+                }
             }
         });
 

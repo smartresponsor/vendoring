@@ -1,8 +1,6 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 /**
  * CLI empty-directory pruner for Vendoring.
@@ -57,8 +55,9 @@ function pruneEmptyDir(string $dirAbs, bool $dryRun, string $repoRoot): array
         $path = $node->getPathname();
 
         // If directory is empty (no files, no subdirs), remove.
-        $handle = @opendir($path);
+        $handle = opendir($path);
         if (false === $handle) {
+            fwrite(STDERR, sprintf("WARN: cannot open directory: %s\n", $path));
             continue;
         }
 
@@ -80,13 +79,16 @@ function pruneEmptyDir(string $dirAbs, bool $dryRun, string $repoRoot): array
         echo ($dryRun ? '[DRY] ' : '')."rmdir {$rel}\n";
 
         if (!$dryRun) {
-            @rmdir($path);
+            if (!rmdir($path)) {
+                fwrite(STDERR, sprintf("WARN: failed to remove directory: %s\n", $path));
+                continue;
+            }
         }
         $removed++;
     }
 
     // Lastly, try to remove the root itself if empty (optional behavior)
-    $handle = @opendir($dirAbs);
+    $handle = opendir($dirAbs);
     if (false !== $handle) {
         $hasChild = false;
         while (false !== ($entry = readdir($handle))) {
@@ -102,10 +104,15 @@ function pruneEmptyDir(string $dirAbs, bool $dryRun, string $repoRoot): array
             $rel = str_replace('\\', '/', substr($dirAbs, strlen($repoRoot) + 1));
             echo ($dryRun ? '[DRY] ' : '')."rmdir {$rel}\n";
             if (!$dryRun) {
-                @rmdir($dirAbs);
+                if (!rmdir($dirAbs)) {
+                    fwrite(STDERR, sprintf("WARN: failed to remove directory: %s\n", $dirAbs));
+                    return ['removed' => $removed, 'visited' => $visited];
+                }
             }
             $removed++;
         }
+    } else {
+        fwrite(STDERR, sprintf("WARN: cannot open directory: %s\n", $dirAbs));
     }
 
     return ['removed' => $removed, 'visited' => $visited];

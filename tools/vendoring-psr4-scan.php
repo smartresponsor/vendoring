@@ -1,8 +1,6 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 /**
  * PSR-4-ish structural scan for Vendoring.
@@ -200,7 +198,7 @@ foreach ($it as $node) {
     $abs = $node->getPathname();
     $rel = str_replace('\\', '/', substr($abs, strlen($repoRoot) + 1));
 
-    $code = @file_get_contents($abs);
+    $code = file_get_contents($abs);
     if (false === $code) {
         $issueList[] = ['type' => 'read', 'file' => $rel, 'message' => 'cannot read'];
         continue;
