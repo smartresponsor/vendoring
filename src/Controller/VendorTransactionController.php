@@ -38,8 +38,11 @@ final class VendorTransactionController extends AbstractController
         try {
             $data = $this->inputResolver->resolveCreateData($request);
             $tx = $this->manager->createTransaction($data);
-        } catch (JsonException) {
-            return new JsonResponse(['error' => VendorTransactionErrorCode::MALFORMED_JSON], 400);
+        } catch (JsonException $exception) {
+            return new JsonResponse([
+                'error' => VendorTransactionErrorCode::MALFORMED_JSON,
+                'jsonErrorCode' => $exception->getCode(),
+            ], 400);
         } catch (\InvalidArgumentException $exception) {
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
             $statusCode = VendorTransactionErrorCode::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
@@ -85,8 +88,11 @@ final class VendorTransactionController extends AbstractController
         try {
             $status = $this->inputResolver->resolveStatus($request);
             $updated = $this->manager->updateStatus($transaction, $status);
-        } catch (JsonException) {
-            return new JsonResponse(['error' => VendorTransactionErrorCode::MALFORMED_JSON], 400);
+        } catch (JsonException $exception) {
+            return new JsonResponse([
+                'error' => VendorTransactionErrorCode::MALFORMED_JSON,
+                'jsonErrorCode' => $exception->getCode(),
+            ], 400);
         } catch (\InvalidArgumentException $exception) {
             return new JsonResponse(['error' => $this->inputResolver->normalizeErrorCode($exception->getMessage())], 422);
         }
