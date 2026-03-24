@@ -8,6 +8,7 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
+    public: false
 
   App\:
     resource: '../src/'
@@ -21,7 +22,11 @@ services:
       - '../src/ServiceInterface/'
       - '../src/ValueObject/'
       - '../src/Form/'
+      - '../src/Controller/'
 
+  App\Controller\:
+    resource: '../src/Controller/'
+    tags: ['controller.service_arguments']
 
   App\RepositoryInterface\VendorAnalyticsRepositoryInterface: '@App\Repository\VendorAnalyticsRepository'
   App\RepositoryInterface\VendorAttachmentRepositoryInterface: '@App\Repository\VendorAttachmentRepository'
