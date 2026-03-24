@@ -6,7 +6,7 @@ namespace App\ServiceInterface\Payout;
 
 use App\DTO\Payout\CreatePayoutDTO;
 
-interface PayoutServiceInterface
+interface VendorPayoutServiceInterface
 {
     public function create(CreatePayoutDTO $dto): ?string;
 

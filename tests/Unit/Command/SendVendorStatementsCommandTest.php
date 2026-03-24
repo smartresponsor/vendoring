@@ -7,7 +7,7 @@ namespace App\Tests\Unit\Command;
 use App\Command\SendVendorStatementsCommand;
 use App\DTO\Statement\VendorStatementRecipientDTO;
 use App\Tests\Support\Statement\FakeStatementExporterPDF;
-use App\Tests\Support\Statement\FakeStatementMailerService;
+use App\Tests\Support\Statement\FakeVendorStatementMailerService;
 use App\Tests\Support\Statement\FakeVendorStatementRecipientProvider;
 use App\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +24,7 @@ final class SendVendorStatementsCommandTest extends TestCase
         $command = new SendVendorStatementsCommand(
             new FakeVendorStatementService(['balance' => 100.0]),
             new FakeStatementExporterPDF($pdf),
-            new FakeStatementMailerService(true, 'sent'),
+            new FakeVendorStatementMailerService(true, 'sent'),
             new FakeVendorStatementRecipientProvider([
                 new VendorStatementRecipientDTO('tenant-a', 'vendor-a', 'vendor@example.com', 'USD'),
             ]),
@@ -49,7 +49,7 @@ final class SendVendorStatementsCommandTest extends TestCase
         $command = new SendVendorStatementsCommand(
             new FakeVendorStatementService(['balance' => 100.0]),
             new FakeStatementExporterPDF($pdf),
-            new FakeStatementMailerService(true, 'sent'),
+            new FakeVendorStatementMailerService(true, 'sent'),
             new FakeVendorStatementRecipientProvider([]),
         );
 
@@ -77,7 +77,7 @@ final class SendVendorStatementsCommandTest extends TestCase
         $command = new SendVendorStatementsCommand(
             new FakeVendorStatementService(['balance' => 0.0]),
             new FakeStatementExporterPDF(sys_get_temp_dir().'/missing-statement.pdf'),
-            new FakeStatementMailerService(true, 'sent'),
+            new FakeVendorStatementMailerService(true, 'sent'),
             new FakeVendorStatementRecipientProvider([]),
         );
 

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Service\Statement;
 
 use App\Observability\Service\MetricEmitter;
-use App\ServiceInterface\Statement\StatementMailerServiceInterface;
+use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-final class StatementMailerService implements StatementMailerServiceInterface
+final class VendorStatementMailerService implements VendorStatementMailerServiceInterface
 {
     public function __construct(
         private readonly MailerInterface $mailer,

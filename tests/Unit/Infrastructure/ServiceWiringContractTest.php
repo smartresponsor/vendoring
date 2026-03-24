@@ -14,14 +14,14 @@ use App\Repository\VendorPassportRepository;
 use App\Repository\VendorProfileRepository;
 use App\Repository\VendorRepository;
 use App\Service\Metric\VendorMetricService;
-use App\Service\Payout\PayoutService;
+use App\Service\Payout\VendorPayoutService;
 use App\Service\Statement\StatementExporterPDF;
-use App\Service\Statement\StatementMailerService;
+use App\Service\Statement\VendorStatementMailerService;
 use App\Service\Statement\VendorStatementRecipientProvider;
 use App\Service\Statement\VendorStatementService;
 use App\Service\VendorSecurityService;
 use App\Service\VendorTransactionManager;
-use App\Service\WebhooksConsumer\WebhooksConsumerService;
+use App\Service\WebhooksConsumer\VendorWebhooksConsumerService;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -44,12 +44,12 @@ final class ServiceWiringContractTest extends TestCase
         yield 'vendor_security_service' => ['App\\ServiceInterface\\VendorSecurityServiceInterface', VendorSecurityService::class];
         yield 'vendor_transaction_manager' => ['App\\ServiceInterface\\VendorTransactionManagerInterface', VendorTransactionManager::class];
         yield 'vendor_metric_service' => ['App\\ServiceInterface\\Metric\\VendorMetricServiceInterface', VendorMetricService::class];
-        yield 'payout_service' => ['App\\ServiceInterface\\Payout\\PayoutServiceInterface', PayoutService::class];
+        yield 'payout_service' => ['App\\ServiceInterface\\Payout\\VendorPayoutServiceInterface', VendorPayoutService::class];
         yield 'statement_service' => ['App\\ServiceInterface\\Statement\\VendorStatementServiceInterface', VendorStatementService::class];
         yield 'statement_exporter' => ['App\\ServiceInterface\\Statement\\StatementExporterPDFInterface', StatementExporterPDF::class];
-        yield 'statement_mailer' => ['App\\ServiceInterface\\Statement\\StatementMailerServiceInterface', StatementMailerService::class];
+        yield 'statement_mailer' => ['App\\ServiceInterface\\Statement\\VendorStatementMailerServiceInterface', VendorStatementMailerService::class];
         yield 'statement_recipient_provider' => ['App\\ServiceInterface\\Statement\\VendorStatementRecipientProviderInterface', VendorStatementRecipientProvider::class];
-        yield 'webhooks_consumer' => ['App\\ServiceInterface\\WebhooksConsumer\\WebhooksConsumerServiceInterface', WebhooksConsumerService::class];
+        yield 'webhooks_consumer' => ['App\\ServiceInterface\\WebhooksConsumer\\VendorWebhooksConsumerServiceInterface', VendorWebhooksConsumerService::class];
     }
 
     #[DataProvider('serviceAliasMapProvider')]

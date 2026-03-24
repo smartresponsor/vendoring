@@ -9,10 +9,10 @@ namespace App\Service\Ledger;
 use App\DTO\Ledger\DoubleEntryDTO;
 use App\Entity\Vendor\Ledger\LedgerEntry;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\ServiceInterface\Ledger\DoubleEntryServiceInterface;
+use App\ServiceInterface\Ledger\VendorDoubleEntryServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
-final class DoubleEntryService implements DoubleEntryServiceInterface
+final class VendorDoubleEntryService implements VendorDoubleEntryServiceInterface
 {
     public function __construct(private readonly LedgerEntryRepositoryInterface $repo)
     {

@@ -6,10 +6,10 @@ namespace App\Service\Payout;
 
 use App\Entity\Vendor\Payout\PayoutAccount;
 use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
-use App\ServiceInterface\Payout\PayoutAccountServiceInterface;
+use App\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
-final class PayoutAccountService implements PayoutAccountServiceInterface
+final class VendorPayoutAccountService implements VendorPayoutAccountServiceInterface
 {
     public function __construct(private readonly PayoutAccountRepositoryInterface $accounts)
     {

@@ -11,16 +11,16 @@ use App\Entity\Vendor\Payout\Payout;
 use App\Observability\Service\MetricEmitter;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
-use App\ServiceInterface\Ledger\LedgerServiceInterface;
-use App\ServiceInterface\Payout\PayoutServiceInterface;
+use App\ServiceInterface\Ledger\VendorLedgerServiceInterface;
+use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
-final class PayoutService implements PayoutServiceInterface
+final class VendorPayoutService implements VendorPayoutServiceInterface
 {
     public function __construct(
         private readonly PayoutRepositoryInterface $repo,
         private readonly LedgerEntryRepositoryInterface $ledgerRepo,
-        private readonly LedgerServiceInterface $ledger,
+        private readonly VendorLedgerServiceInterface $ledger,
         private readonly MetricEmitter $metrics,
     ) {
     }
