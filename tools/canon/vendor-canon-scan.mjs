@@ -8,7 +8,9 @@ const srcRoot = path.join(repoRoot, 'src');
 const reportDir = path.join(repoRoot, '.report');
 
 const MAX_ISSUE = 5000;
+const MAX_SCANNED_FILES = 9000;
 const issues = [];
+const repoIgnores = new Set(['.git', 'vendor', 'node_modules', '.idea']);
 
 function pushIssue(kind, file, message) {
   if (issues.length >= MAX_ISSUE) return;
@@ -19,7 +21,7 @@ function isDir(p) {
   try { return fs.statSync(p).isDirectory(); } catch { return false; }
 }
 
-function walk(dir) {
+function walk(dir, ignores = new Set()) {
   const out = [];
   const stack = [dir];
   while (stack.length) {
@@ -29,8 +31,7 @@ function walk(dir) {
     for (const it of items) {
       const full = path.join(cur, it.name);
       if (it.isDirectory()) {
-        // skip vendor dirs if present
-        if (it.name === 'vendor' || it.name === 'node_modules') continue;
+        if (ignores.has(it.name)) continue;
         stack.push(full);
         continue;
       }
@@ -39,6 +40,24 @@ function walk(dir) {
     }
   }
   return out;
+}
+
+function scanRepoPath(file) {
+  const r = rel(file);
+  const seg = r.split('/');
+
+  if (seg[0].startsWith('.')) return;
+
+  for (let i = 1; i < seg.length - 1; i += 1) {
+    if (seg[i].startsWith('.')) {
+      pushIssue('dot-folder', r, `Dot-folder '${seg[i]}' is only allowed at repository root.`);
+      break;
+    }
+  }
+
+  if (r.includes('/Legacy/') || r.includes('/legacy/')) {
+    pushIssue('legacy', r, 'Legacy-tail path is forbidden.');
+  }
 }
 
 function readHead(file, maxBytes = 8192) {
@@ -74,9 +93,14 @@ function scanPhpFile(file) {
   if (r.includes('/vendor-current/')) pushIssue('archive', r, 'archive dir vendor-current is inside src/.');
   if (/\/[0-9]{2,4}[_-]vendor-/.test(r)) pushIssue('archive', r, 'phase/archive directory is inside src/.');
   if (r.includes('/vendor-sketch-')) pushIssue('archive', r, 'vendor-sketch directory is inside src/.');
+  if (r.startsWith('src/Port/')) pushIssue('architecture', r, 'src/Port is forbidden.');
+  if (r.startsWith('src/Adaptor/')) pushIssue('architecture', r, 'src/Adaptor is forbidden.');
 
   // namespace-based guards
   const head = readHead(file);
+  if (head.includes('TODO')) {
+    pushIssue('todo', r, 'TODO marker is forbidden.');
+  }
   const ns = detectNamespace(head);
   if (!ns) {
     pushIssue('namespace', r, 'No namespace declaration found.');
@@ -84,10 +108,11 @@ function scanPhpFile(file) {
   }
 
   if (ns.startsWith('SmartResponsor\\')) {
-    pushIssue('namespace', r, `Non-app namespace detected: ${ns}. (Prefer App\\* inside Symfony runtime repo)`);
+    pushIssue('namespace', r, `Namespace uses forbidden casing SmartResponsor: ${ns}. Use Smartresponsor or App.`);
   }
 
-  if (!ns.startsWith('App\\') && !ns.startsWith('SmartResponsor\\')) {
+  const isAppNamespace = ns === 'App' || ns.startsWith('App\\');
+  if (!isAppNamespace && !ns.startsWith('SmartResponsor\\')) {
     pushIssue('namespace', r, `Unexpected namespace root: ${ns}.`);
   }
 
@@ -108,7 +133,12 @@ function scan() {
     process.exit(2);
   }
 
-  const all = walk(srcRoot).filter(p => p.endsWith('.php'));
+  const allRepoFiles = walk(repoRoot, repoIgnores)
+    .map(rel)
+    .sort()
+    .slice(0, MAX_SCANNED_FILES)
+    .map((r) => path.join(repoRoot, r));
+  const all = allRepoFiles.filter((p) => rel(p).startsWith('src/') && p.endsWith('.php'));
 
   // global directory guards
   const archiveDirs = [
@@ -120,6 +150,7 @@ function scan() {
     if (isDir(d)) pushIssue('path', rel(d), 'Forbidden directory present.');
   }
 
+  for (const f of allRepoFiles) scanRepoPath(f);
   for (const f of all) scanPhpFile(f);
 
   fs.mkdirSync(reportDir, { recursive: true });
@@ -131,6 +162,7 @@ function scan() {
 
   const header = {
     repoRoot,
+    scanned_files: allRepoFiles.length,
     scanned_php: all.length,
     issue_total: issues.length,
     issue_by_kind: byKind,
@@ -140,6 +172,7 @@ function scan() {
 
   const lines = [];
   lines.push(`vendor-canon-scan`);
+  lines.push(`scanned_files=${allRepoFiles.length}`);
   lines.push(`scanned_php=${all.length}`);
   lines.push(`issue_total=${issues.length}`);
   for (const [k, v] of Object.entries(byKind)) lines.push(`issue_${k}=${v}`);
