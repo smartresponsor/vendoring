@@ -12,7 +12,7 @@ final class KernelConfigurationContractTest extends TestCase
     {
         $services = (string) file_get_contents(dirname(__DIR__, 3).'/config/services.yaml');
 
-        self::assertStringContainsString('services_vendor_transactions.yaml', $services);
+        self::assertStringContainsString('vendor_services_transactions.yaml', $services);
         self::assertStringContainsString('App\\:', $services);
         self::assertStringContainsString('../src/Entity/', $services);
     }

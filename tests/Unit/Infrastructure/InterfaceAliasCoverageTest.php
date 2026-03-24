@@ -11,7 +11,7 @@ final class InterfaceAliasCoverageTest extends TestCase
     public function testServicesConfigurationCoversCanonicalRepositoryAndServiceInterfaces(): void
     {
         $services = (string) file_get_contents(dirname(__DIR__, 3).'/config/services.yaml');
-        $servicesVendorTransactions = (string) file_get_contents(dirname(__DIR__, 3).'/config/services_vendor_transactions.yaml');
+        $servicesVendorTransactions = (string) file_get_contents(dirname(__DIR__, 3).'/config/vendor_services_transactions.yaml');
         $config = $services."\n".$servicesVendorTransactions;
 
         foreach ($this->expectedAliasMap() as $interfaceClass => $implementationClass) {

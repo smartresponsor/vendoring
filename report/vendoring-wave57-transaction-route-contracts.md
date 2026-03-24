@@ -2,7 +2,7 @@
 
 ## What changed
 - removed legacy `routes_vendor_transactions.yaml` import from `config/routes.yaml` and kept controller attribute routing as the single source of truth
-- aligned `config/services_vendor_transactions.yaml` with the real `VendorTransactionManager` constructor and removed stale `$repo` wiring
+- aligned `config/vendor_services_transactions.yaml` with the real `VendorTransactionManager` constructor and removed stale `$repo` wiring
 - extended `VendorTransactionRepositoryInterface` with `findOneByIdAndVendorId()`
 - updated `VendorTransactionController::updateStatus()` to use vendor-scoped repository lookup instead of scanning a vendor list from request payload/query
 - added unit coverage for the vendor-scoped transaction status update flow

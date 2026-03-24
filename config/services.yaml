@@ -1,5 +1,5 @@
 imports:
-  - { resource: 'services_vendor_transactions.yaml' }
+  - { resource: 'vendor_services_transactions.yaml' }
 
 parameters:
   vendoring_secret: 'vendoring-dev-secret'
