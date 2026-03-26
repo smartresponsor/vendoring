@@ -6,8 +6,8 @@ namespace App\Tests\Unit\Controller\Payout;
 
 use App\Controller\Payout\PayoutController;
 use App\DTO\Payout\CreatePayoutDTO;
-use App\Entity\Vendor\Payout\Payout;
-use App\Entity\Vendor\Payout\PayoutItem;
+use App\Entity\Payout\Payout;
+use App\Entity\Payout\PayoutItem;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;

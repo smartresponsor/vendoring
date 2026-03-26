@@ -8,7 +8,7 @@ use App\EntityInterface\VendorUserAssignmentInterface;
 use Doctrine\Persistence\ObjectRepository;
 
 /**
- * @extends ObjectRepository<\App\Entity\Vendor\VendorUserAssignment>
+ * @extends ObjectRepository<\App\Entity\VendorUserAssignment>
  */
 interface VendorUserAssignmentRepositoryInterface extends ObjectRepository
 {

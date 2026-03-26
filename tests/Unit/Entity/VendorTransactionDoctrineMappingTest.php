@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Entity;
 
-use App\Entity\Vendor\VendorTransaction;
+use App\Entity\VendorTransaction;
 use App\EntityInterface\VendorTransactionInterface;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;

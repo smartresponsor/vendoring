@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace App\Service\Ops;
 
-use App\Entity\Vendor\VendorTransaction;
+use App\Entity\VendorTransaction;
 use App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
 
 final class VendorTransactionOperatorPageBuilder implements VendorTransactionOperatorPageBuilderInterface

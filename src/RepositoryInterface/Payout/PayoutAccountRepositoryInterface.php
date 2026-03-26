@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace App\RepositoryInterface\Payout;
 
-use App\Entity\Vendor\Payout\PayoutAccount;
+use App\Entity\Payout\PayoutAccount;
 
 interface PayoutAccountRepositoryInterface
 {

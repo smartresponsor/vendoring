@@ -7,7 +7,7 @@ $statusCatalog = file_get_contents($root.'/src/ValueObject/VendorTransactionStat
 $policy = file_get_contents($root.'/src/Service/Policy/VendorTransactionStatusPolicy.php');
 $pg = file_get_contents($root.'/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
 $sqlite = file_get_contents($root.'/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
-$entity = file_get_contents($root.'/src/Entity/Vendor/VendorTransaction.php');
+$entity = file_get_contents($root.'/src/Entity/VendorTransaction.php');
 
 $checks = [
     'status catalog exists' => is_string($statusCatalog) && str_contains($statusCatalog, "public const PENDING = 'pending';"),

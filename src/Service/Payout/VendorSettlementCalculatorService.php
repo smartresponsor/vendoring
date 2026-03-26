@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Service\Payout;
 
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\ServiceInterface\Payout\VendorSettlementCalculatorInterface;
+use App\ServiceInterface\Payout\VendorSettlementCalculatorServiceInterface;
 
-final class VendorSettlementCalculator implements VendorSettlementCalculatorInterface
+final class VendorSettlementCalculatorService implements VendorSettlementCalculatorServiceInterface
 {
     public function __construct(private readonly LedgerEntryRepositoryInterface $ledger)
     {

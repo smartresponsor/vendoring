@@ -5,12 +5,12 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\ServiceInterface\VendorTransactionInputResolverInterface;
+use App\ServiceInterface\VendorTransactionInputResolverServiceInterface;
 use App\ValueObject\VendorTransactionData;
 use App\ValueObject\VendorTransactionErrorCode;
 use Symfony\Component\HttpFoundation\Request;
 
-final class VendorTransactionInputResolver implements VendorTransactionInputResolverInterface
+final class VendorTransactionInputResolverService implements VendorTransactionInputResolverServiceInterface
 {
     public function resolveCreateData(Request $request): VendorTransactionData
     {

@@ -6,8 +6,8 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller;
 
 use App\Controller\VendorTransactionController;
-use App\Entity\Vendor\VendorTransaction;
-use App\Service\VendorTransactionInputResolver;
+use App\Entity\VendorTransaction;
+use App\Service\VendorTransactionInputResolverService;
 use App\Tests\Support\Transaction\FakeVendorTransactionManager;
 use App\Tests\Support\Transaction\InMemoryVendorTransactionRepository;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +25,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             $manager,
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $response = $controller->create(Request::create('/', 'POST', content: json_encode([
@@ -55,7 +55,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             $manager,
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $response = $controller->create(Request::create('/', 'POST', content: json_encode([
@@ -77,7 +77,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             new FakeVendorTransactionManager($transaction),
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $response = $controller->create(Request::create('/', 'POST', content: json_encode([
@@ -99,7 +99,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             new FakeVendorTransactionManager($transaction),
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $response = $controller->create(Request::create('/', 'POST', content: json_encode([
@@ -121,7 +121,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             new FakeVendorTransactionManager($transaction),
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $response = $controller->create(Request::create('/', 'POST', content: json_encode([
@@ -143,7 +143,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             new FakeVendorTransactionManager($transaction),
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $response = $controller->create(Request::create('/', 'POST', content: '{invalid-json'));
@@ -162,7 +162,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             $manager,
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $request = Request::create('/', 'POST', content: json_encode(['status' => 'settled'], JSON_THROW_ON_ERROR));
@@ -183,7 +183,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             new FakeVendorTransactionManager($transaction),
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $response = $controller->updateStatus('vendor-2', 42, Request::create('/', 'POST', content: json_encode(['status' => 'settled'], JSON_THROW_ON_ERROR)));
@@ -201,7 +201,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             new FakeVendorTransactionManager($transaction),
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $response = $controller->updateStatus('vendor-1', 42, Request::create('/', 'POST', content: '{invalid-json'));
@@ -219,7 +219,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             new FakeVendorTransactionManager($transaction),
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $response = $controller->updateStatus('vendor-1', 42, Request::create('/', 'POST', content: json_encode([], JSON_THROW_ON_ERROR)));
@@ -240,7 +240,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             $manager,
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $response = $controller->updateStatus('vendor-1', 42, Request::create('/', 'POST', content: json_encode(['status' => 'refunded'], JSON_THROW_ON_ERROR)));
@@ -261,7 +261,7 @@ final class VendorTransactionControllerTest extends TestCase
         $controller = new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             $manager,
-            new VendorTransactionInputResolver(),
+            new VendorTransactionInputResolverService(),
         );
 
         $response = $controller->create(Request::create('/', 'POST', content: json_encode([

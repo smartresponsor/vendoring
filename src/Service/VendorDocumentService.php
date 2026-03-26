@@ -7,8 +7,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\DTO\VendorDocumentDTO;
-use App\Entity\Vendor\Vendor;
-use App\Entity\Vendor\VendorDocument;
+use App\Entity\Vendor;
+use App\Entity\VendorDocument;
 use App\Event\DocumentUploadedEvent;
 use App\ServiceInterface\VendorDocumentServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;

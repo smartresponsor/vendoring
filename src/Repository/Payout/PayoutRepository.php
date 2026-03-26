@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repository\Payout;
 
-use App\Entity\Vendor\Payout\Payout;
-use App\Entity\Vendor\Payout\PayoutItem;
+use App\Entity\Payout\Payout;
+use App\Entity\Payout\PayoutItem;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
 use Doctrine\DBAL\Connection;
 
