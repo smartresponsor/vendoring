@@ -11,8 +11,8 @@ final class OpenApiDocumentationContractTest extends TestCase
     public function testOpenApiGeneratorAndNelmioScaffoldArePresent(): void
     {
         self::assertFileExists(__DIR__.'/../../../bin/generate-openapi.php');
-        self::assertFileExists(__DIR__.'/../../../config/packages/nelmio_api_doc.yaml.dist');
-        self::assertFileExists(__DIR__.'/../../../config/routes/nelmio_api_doc.yaml.dist');
+        self::assertFileExists(__DIR__.'/../../../config/packages/vendor_nelmio_api_doc.yaml.dist');
+        self::assertFileExists(__DIR__.'/../../../config/routes/vendor_nelmio_api_doc.yaml.dist');
     }
 
     public function testVendorTransactionControllerContainsDocblockContractMarkers(): void

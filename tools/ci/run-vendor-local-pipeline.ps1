@@ -26,6 +26,12 @@ function Test-CommandPathAvailable {
     return Test-Path -LiteralPath (Join-Path $projectRoot $Path)
 }
 
+function Test-ExecutableAvailable {
+    param([string]$Name)
+
+    return $null -ne (Get-Command $Name -ErrorAction SilentlyContinue)
+}
+
 function Test-ComposerPackageInstalled {
     param([string]$PackageName)
 
@@ -172,6 +178,16 @@ if ($IncludeReports) {
         @{ name = 'report-quality-residue'; command = 'composer report:quality-residue'; skip = (-not (Test-CommandPathAvailable -Path 'tools\report\VendorQualityResidueReport.php')); reason = 'tools\\report\\VendorQualityResidueReport.php is missing' },
         @{ name = 'report-contract'; command = 'composer report:contract'; skip = (-not (Test-CommandPathAvailable -Path 'tools\report\VendorContractReport.php')); reason = 'tools\\report\\VendorContractReport.php is missing' },
         @{ name = 'report-readiness'; command = 'composer report:readiness'; skip = (-not (Test-CommandPathAvailable -Path 'tools\report\VendorReadinessReport.php')); reason = 'tools\\report\\VendorReadinessReport.php is missing' }
+    )
+}
+
+if ($IncludeSmokes -and $IncludeReports) {
+    $steps += @(
+        @{ name = 'composer-audit'; command = 'composer audit --locked'; skip = $false; reason = '' },
+        @{ name = 'importmap-audit'; command = 'php bin/console importmap:audit --no-interaction'; skip = (-not (Test-ComposerPackageInstalled -PackageName 'symfony/asset-mapper')); reason = 'symfony/asset-mapper is not installed in composer.lock' },
+        @{ name = 'gitleaks'; command = 'gitleaks git --source . --config .gitleaks.toml --redact --no-banner'; skip = (-not (Test-ExecutableAvailable -Name 'gitleaks')); reason = 'gitleaks is not available in PATH' },
+        @{ name = 'semgrep-ce'; command = 'semgrep scan --config auto --error'; skip = (-not (Test-ExecutableAvailable -Name 'semgrep')); reason = 'semgrep is not available in PATH' },
+        @{ name = 'symfony-security-tests'; command = 'composer test:symfony-security'; skip = $false; reason = '' }
     )
 }
 
