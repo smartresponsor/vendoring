@@ -11,8 +11,8 @@ $requiredFiles = [
     'config/bundles.php',
     'config/packages/framework.yaml',
     'config/packages/doctrine.yaml',
-    'config/services.yaml',
-    'config/routes.yaml',
+    'config/vendor_services.yaml',
+    'config/vendor_routes.yaml',
     'config/services_runtime.php',
     'config/routes_runtime.php',
 ];

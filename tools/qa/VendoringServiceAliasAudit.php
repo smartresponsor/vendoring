@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$servicesYaml = $root.'/config/services.yaml';
+$servicesYaml = $root.'/config/vendor_services.yaml';
 
 if (!is_file($servicesYaml)) {
-    fwrite(STDERR, "services.yaml not found\n");
+    fwrite(STDERR, "vendor_services.yaml not found\n");
     exit(1);
 }
 
@@ -65,7 +65,7 @@ foreach ($pairs as [$interfaceClass, $implementationClass]) {
 }
 
 if ([] !== $errors) {
-    fwrite(STDERR, "Missing canonical aliases in config/services.yaml:\n");
+    fwrite(STDERR, "Missing canonical aliases in config/vendor_services.yaml:\n");
 
     foreach ($errors as $error) {
         fwrite(STDERR, ' - '.$error."\n");

@@ -8,7 +8,7 @@ $required = [
     'config/packages_runtime.php',
     'config/routes_runtime.php',
     'config/services_runtime.php',
-    'config/routes/nelmio_api_doc.yaml',
+    'config/routes/vendor_nelmio_api_doc.yaml',
     'templates/ops/vendor_transactions/index.html.twig',
     'src/Form/Ops/VendorTransactionCreateInput.php',
     'src/Form/Ops/VendorTransactionCreateType.php',
