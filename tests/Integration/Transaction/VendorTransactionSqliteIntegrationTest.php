@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Transaction;
 
-use App\Entity\Vendor\VendorTransaction;
+use App\Entity\VendorTransaction;
 use App\Service\Policy\VendorTransactionAmountPolicy;
 use App\Service\Policy\VendorTransactionStatusPolicy;
 use App\Service\VendorTransactionManager;

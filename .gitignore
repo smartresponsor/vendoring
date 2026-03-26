@@ -33,6 +33,8 @@ Thumbs.db
 /var/storage/
 /var/metrics/
 /var/runtime/
+/report/
+/var/report/
 
 # ──────────────────────────────────────────────
 #  📦 Node / Frontend

@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface;
 
-use App\Entity\Vendor\Vendor;
-use App\Entity\Vendor\VendorApiKey;
+use App\Entity\Vendor;
+use App\Entity\VendorApiKey;
 
 /**
  * Vendor API key service is the canonical machine-access seam for Vendoring.

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Payout;
 
 use App\DTO\Payout\CreatePayoutDTO;
-use App\Entity\Vendor\Ledger\LedgerEntry;
+use App\Entity\Ledger\LedgerEntry;
 use App\Observability\Service\MetricEmitter;
 use App\Service\Ledger\VendorLedgerService;
 use App\Service\Payout\VendorPayoutService;

@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Vendor;
+namespace App\Entity;
 
-final class VendorLedgerBinding
+final class VendorAnalytics
 {
     private ?int $id = null;
 
+    /** @param array<string,mixed> $metrics */
     public function __construct(
         private readonly Vendor $vendor,
-        private readonly string $ledgerVendorId,
+        private array $metrics = [],
     ) {
     }
 
@@ -24,8 +25,9 @@ final class VendorLedgerBinding
         return $this->vendor;
     }
 
-    public function getLedgerVendorId(): string
+    /** @return array<string,mixed> */
+    public function getMetrics(): array
     {
-        return $this->ledgerVendorId;
+        return $this->metrics;
     }
 }

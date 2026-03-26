@@ -13,7 +13,7 @@ if (!isset($scripts['test:transaction-doctrine'])) {
     exit(1);
 }
 
-$entityPath = $root.'/src/Entity/Vendor/VendorTransaction.php';
+$entityPath = $root.'/src/Entity/VendorTransaction.php';
 $interfacePath = $root.'/src/EntityInterface/VendorTransactionInterface.php';
 
 foreach ([$entityPath, $interfacePath] as $path) {

@@ -7,8 +7,8 @@ declare(strict_types=1);
 namespace App\ServiceInterface;
 
 use App\DTO\VendorBillingDTO;
-use App\Entity\Vendor\Vendor;
-use App\Entity\Vendor\VendorBilling;
+use App\Entity\Vendor;
+use App\Entity\VendorBilling;
 
 interface VendorBillingServiceInterface
 {

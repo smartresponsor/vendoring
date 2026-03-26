@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace App\RepositoryInterface;
 
-use App\Entity\Vendor\VendorMedia;
+use App\Entity\VendorMedia;
 use Doctrine\Persistence\ObjectRepository;
 
 /**

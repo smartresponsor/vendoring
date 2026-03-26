@@ -8,7 +8,7 @@ namespace App\ServiceInterface;
 use App\ValueObject\VendorTransactionData;
 use Symfony\Component\HttpFoundation\Request;
 
-interface VendorTransactionInputResolverInterface
+interface VendorTransactionInputResolverServiceInterface
 {
     public function resolveCreateData(Request $request): VendorTransactionData;
 

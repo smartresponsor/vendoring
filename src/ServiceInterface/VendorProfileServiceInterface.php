@@ -7,8 +7,8 @@ declare(strict_types=1);
 namespace App\ServiceInterface;
 
 use App\DTO\VendorProfileDTO;
-use App\Entity\Vendor\Vendor;
-use App\Entity\Vendor\VendorProfile;
+use App\Entity\Vendor;
+use App\Entity\VendorProfile;
 
 interface VendorProfileServiceInterface
 {

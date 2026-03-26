@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Vendor\VendorTransaction;
+use App\Entity\VendorTransaction;
 use App\Event\VendorTransactionEvent;
 use App\RepositoryInterface\VendorTransactionRepositoryInterface;
 use App\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface;

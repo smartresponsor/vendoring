@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Vendor\Vendor;
-use App\Entity\Vendor\VendorApiKey;
+use App\Entity\Vendor;
+use App\Entity\VendorApiKey;
 use App\RepositoryInterface\VendorApiKeyRepositoryInterface;
 use App\ServiceInterface\VendorApiKeyServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;

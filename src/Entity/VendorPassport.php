@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Vendor;
+namespace App\Entity;
 
-final class VendorDocument
+final class VendorPassport
 {
     private ?int $id = null;
-    private ?\DateTimeImmutable $expiresAt = null;
-    private ?int $uploaderId = null;
+    private bool $verified = false;
     private \DateTimeImmutable $createdAt;
 
     public function __construct(
         private readonly Vendor $vendor,
-        private readonly string $type,
-        private readonly string $filePath,
+        private readonly string $taxId,
+        private readonly string $country,
     ) {
         $this->createdAt = new \DateTimeImmutable();
     }
@@ -29,24 +28,24 @@ final class VendorDocument
         return $this->vendor;
     }
 
-    public function getType(): string
+    public function getTaxId(): string
     {
-        return $this->type;
+        return $this->taxId;
     }
 
-    public function getFilePath(): string
+    public function getCountry(): string
     {
-        return $this->filePath;
+        return $this->country;
     }
 
-    public function getExpiresAt(): ?\DateTimeImmutable
+    public function isVerified(): bool
     {
-        return $this->expiresAt;
+        return $this->verified;
     }
 
-    public function getUploaderId(): ?int
+    public function markVerified(): void
     {
-        return $this->uploaderId;
+        $this->verified = true;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

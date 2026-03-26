@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Vendor;
+namespace App\Entity;
 
 final class VendorApiKey
 {
