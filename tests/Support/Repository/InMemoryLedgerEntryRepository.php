@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Support\Repository;
 
-use App\Entity\Vendor\Ledger\LedgerEntry;
+use App\Entity\Ledger\LedgerEntry;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 
 final class InMemoryLedgerEntryRepository implements LedgerEntryRepositoryInterface

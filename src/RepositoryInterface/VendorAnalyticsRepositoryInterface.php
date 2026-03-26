@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\RepositoryInterface;
 
-use App\Entity\Vendor\VendorAnalytics;
+use App\Entity\VendorAnalytics;
 use Doctrine\Persistence\ObjectRepository;
 
 /**

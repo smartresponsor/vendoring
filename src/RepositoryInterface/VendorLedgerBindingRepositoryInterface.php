@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace App\RepositoryInterface;
 
-use App\Entity\Vendor\VendorLedgerBinding;
+use App\Entity\VendorLedgerBinding;
 use Doctrine\Persistence\ObjectRepository;
 
 /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\RepositoryInterface;
 
-use App\Entity\Vendor\VendorAttachment;
+use App\Entity\VendorAttachment;
 use Doctrine\Persistence\ObjectRepository;
 
 /**

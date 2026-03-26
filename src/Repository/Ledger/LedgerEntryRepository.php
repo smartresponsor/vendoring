@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository\Ledger;
 
-use App\Entity\Vendor\Ledger\LedgerEntry;
+use App\Entity\Ledger\LedgerEntry;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use Doctrine\DBAL\Connection;
 

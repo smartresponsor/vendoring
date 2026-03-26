@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Vendor\VendorUserAssignment;
+use App\Entity\VendorUserAssignment;
 use App\EntityInterface\VendorUserAssignmentInterface;
 use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

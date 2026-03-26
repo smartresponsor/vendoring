@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Vendor\Payout;
+namespace App\Entity\Payout;
 
 final class PayoutItem
 {

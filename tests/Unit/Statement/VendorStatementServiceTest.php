@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Statement;
 
 use App\DTO\Statement\VendorStatementRequestDTO;
-use App\Entity\Vendor\Ledger\LedgerEntry;
+use App\Entity\Ledger\LedgerEntry;
 use App\Service\Statement\VendorStatementService;
 use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;

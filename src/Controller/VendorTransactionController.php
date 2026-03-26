@@ -5,9 +5,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Vendor\VendorTransaction;
+use App\Entity\VendorTransaction;
 use App\RepositoryInterface\VendorTransactionRepositoryInterface;
-use App\ServiceInterface\VendorTransactionInputResolverInterface;
+use App\ServiceInterface\VendorTransactionInputResolverServiceInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\VendorTransactionErrorCode;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +22,7 @@ final class VendorTransactionController extends AbstractController
     public function __construct(
         private readonly VendorTransactionRepositoryInterface $repo,
         private readonly VendorTransactionManagerInterface $manager,
-        private readonly VendorTransactionInputResolverInterface $inputResolver,
+        private readonly VendorTransactionInputResolverServiceInterface $inputResolver,
     ) {
     }
 

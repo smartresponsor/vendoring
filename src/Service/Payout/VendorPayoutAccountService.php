@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Service\Payout;
 
-use App\Entity\Vendor\Payout\PayoutAccount;
+use App\Entity\Payout\PayoutAccount;
 use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
 use App\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
 use Symfony\Component\Uid\Uuid;

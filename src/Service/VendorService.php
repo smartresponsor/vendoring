@@ -8,7 +8,7 @@ namespace App\Service;
 
 use App\DTO\VendorCreateDTO;
 use App\DTO\VendorUpdateDTO;
-use App\Entity\Vendor\Vendor;
+use App\Entity\Vendor;
 use App\Event\VendorActivatedEvent;
 use App\Event\VendorCreatedEvent;
 use App\ServiceInterface\VendorServiceInterface;
