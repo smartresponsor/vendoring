@@ -32,12 +32,6 @@ function Test-ExecutableAvailable {
     return $null -ne (Get-Command $Name -ErrorAction SilentlyContinue)
 }
 
-function Test-PathPatternAvailable {
-    param([string]$Pattern)
-
-    return @(Get-ChildItem -Path $projectRoot -Recurse -File -Filter $Pattern -ErrorAction SilentlyContinue).Count -gt 0
-}
-
 function Test-ComposerPackageInstalled {
     param([string]$PackageName)
 
@@ -193,7 +187,7 @@ if ($IncludeSmokes -and $IncludeReports) {
         @{ name = 'importmap-audit'; command = 'php bin/console importmap:audit --no-interaction'; skip = (-not (Test-ComposerPackageInstalled -PackageName 'symfony/asset-mapper')); reason = 'symfony/asset-mapper is not installed in composer.lock' },
         @{ name = 'gitleaks'; command = 'gitleaks git --source . --config .gitleaks.toml --redact --no-banner'; skip = (-not (Test-ExecutableAvailable -Name 'gitleaks')); reason = 'gitleaks is not available in PATH' },
         @{ name = 'semgrep-ce'; command = 'semgrep scan --config auto --error'; skip = (-not (Test-ExecutableAvailable -Name 'semgrep')); reason = 'semgrep is not available in PATH' },
-        @{ name = 'symfony-security-tests'; command = 'composer test:symfony-security'; skip = (-not (Test-PathPatternAvailable -Pattern '*Security*Test.php')); reason = 'no Symfony security tests found by *Security*Test.php pattern' }
+        @{ name = 'symfony-security-tests'; command = 'composer test:symfony-security'; skip = $false; reason = '' }
     )
 }
 
