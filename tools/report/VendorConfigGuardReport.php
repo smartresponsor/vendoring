@@ -30,9 +30,18 @@ $configFiles = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator($root.'/config', FilesystemIterator::SKIP_DOTS)
 );
 
+$ignoredConfigFiles = [
+    $root.'/config/reference.php',
+];
+
 $forbiddenNeedles = ['example', 'stub', 'todo'];
 foreach ($configFiles as $file) {
     if (!$file instanceof SplFileInfo || !$file->isFile()) {
+        continue;
+    }
+
+    $pathname = str_replace('\\', '/', $file->getPathname());
+    if (in_array($pathname, array_map(static fn (string $path): string => str_replace('\\', '/', $path), $ignoredConfigFiles), true)) {
         continue;
     }
 

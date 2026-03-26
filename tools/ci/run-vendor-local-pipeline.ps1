@@ -81,21 +81,37 @@ function Invoke-Step {
     Write-Host "    $Command"
 
     $start = Get-Date
-    $output = $null
+    $stdoutPath = [System.IO.Path]::GetTempFileName()
+    $stderrPath = [System.IO.Path]::GetTempFileName()
+    $combinedOutput = ''
     $exitCode = 0
     $status = 'passed'
 
     try {
-        $output = & powershell -NoProfile -ExecutionPolicy Bypass -Command $Command 2>&1 | Out-String
-        $exitCode = $LASTEXITCODE
-        if ($null -eq $exitCode) {
-            $exitCode = 0
+        $process = Start-Process -FilePath 'cmd.exe' -ArgumentList '/d', '/c', $Command -WorkingDirectory $projectRoot -NoNewWindow -Wait -PassThru -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+        $exitCode = $process.ExitCode
+
+        $stdout = ''
+        $stderr = ''
+
+        if (Test-Path -LiteralPath $stdoutPath) {
+            $stdout = Get-Content -LiteralPath $stdoutPath -Raw -ErrorAction SilentlyContinue
         }
+
+        if (Test-Path -LiteralPath $stderrPath) {
+            $stderr = Get-Content -LiteralPath $stderrPath -Raw -ErrorAction SilentlyContinue
+        }
+
+        $combinedOutput = ($stdout, $stderr | Where-Object { $_ -ne $null -and $_ -ne '' }) -join [Environment]::NewLine
     }
     catch {
-        $output = ($_ | Out-String)
+        $combinedOutput = ($_ | Out-String)
         $exitCode = 1
         $status = 'failed'
+    }
+    finally {
+        Remove-Item -LiteralPath $stdoutPath -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath $stderrPath -ErrorAction SilentlyContinue
     }
 
     if ($exitCode -ne 0 -and $status -eq 'passed') {
@@ -104,11 +120,7 @@ function Invoke-Step {
 
     $duration = [Math]::Round(((Get-Date) - $start).TotalSeconds, 3)
 
-    if ($null -eq $output) {
-        $output = ''
-    }
-
-    Set-Content -LiteralPath $LogPath -Value $output -Encoding UTF8
+    Set-Content -LiteralPath $LogPath -Value $combinedOutput -Encoding UTF8
 
     return [PSCustomObject]@{
         name = $Name

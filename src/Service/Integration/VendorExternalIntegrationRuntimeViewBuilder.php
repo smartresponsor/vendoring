@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Service\Integration;
 
 use App\Projection\VendorExternalIntegrationRuntimeView;
-use App\ServiceInterface\VendorCrmServiceInterface;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
 use App\ServiceInterface\Payout\PayoutProviderBridgeInterface;
+use App\ServiceInterface\VendorCrmServiceInterface;
 use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
 use App\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface;
 

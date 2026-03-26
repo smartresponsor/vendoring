@@ -1,7 +1,9 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace App\Entity\Vendor\Payout;
+
 final class PayoutAccount
 {
     public function __construct(
@@ -11,9 +13,8 @@ final class PayoutAccount
         public string $provider,   // stripe_connect|paypal|bank
         public string $accountRef, // acct_xxx / email / IBAN
         public string $currency,
-        public bool   $active,
-        public string $createdAt
-    )
-    {
+        public bool $active,
+        public string $createdAt,
+    ) {
     }
 }

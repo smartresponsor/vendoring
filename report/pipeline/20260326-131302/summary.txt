@@ -1,0 +1,48 @@
+﻿Vendoring local pipeline
+Timestamp: 20260326-131302
+Report root: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302
+Passed: 17
+Non-passed: 1
+Skipped: 2
+Total: 20
+
+[PASSED] composer-validate (exit=0, duration=2.059s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\composer-validate.log
+[PASSED] lint (exit=0, duration=39.244s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\lint.log
+[FAILED] cs-check (exit=8, duration=5.082s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\cs-check.log
+[PASSED] phpstan (exit=0, duration=17.309s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\phpstan.log
+[SKIPPED] phpmd-src (exit=0, duration=0s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\phpmd-src.log
+[SKIPPED] phpmd-tests (exit=0, duration=0s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\phpmd-tests.log
+[PASSED] phpunit (exit=0, duration=10.116s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\phpunit.log
+[PASSED] smoke-runtime (exit=0, duration=3.04s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\smoke-runtime.log
+[PASSED] smoke-container (exit=0, duration=3.067s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\smoke-container.log
+[PASSED] smoke-doctrine (exit=0, duration=2.034s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\smoke-doctrine.log
+[PASSED] smoke-admin (exit=0, duration=3.039s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\smoke-admin.log
+[PASSED] report-canonical-structure (exit=0, duration=4.048s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\report-canonical-structure.log
+[PASSED] report-mirror-enforcer (exit=0, duration=3.05s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\report-mirror-enforcer.log
+[PASSED] report-config-guard (exit=0, duration=2.019s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\report-config-guard.log
+[PASSED] report-config-drift (exit=0, duration=2.035s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\report-config-drift.log
+[PASSED] report-php-surface (exit=0, duration=47.433s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\report-php-surface.log
+[PASSED] report-prod-marker (exit=0, duration=2.049s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\report-prod-marker.log
+[PASSED] report-quality-residue (exit=0, duration=2.045s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\report-quality-residue.log
+[PASSED] report-contract (exit=0, duration=2.048s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\report-contract.log
+[PASSED] report-readiness (exit=0, duration=2.046s)
+  log: D:\PhpstormProjects\www\Vendoring\report\pipeline\20260326-131302\logs\report-readiness.log
