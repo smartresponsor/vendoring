@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Statement;
@@ -59,14 +60,17 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertFalse($result['ok']);
         self::assertSame('statement_mail_send_failed', $result['message']);
         self::assertFalse($result['attached']);
-        self::assertSame('mailer transport failed', $result['errorMessage']);
+        self::assertArrayHasKey('errorMessage', $result);
+        $errorMessage = $result['errorMessage'] ?? null;
+        self::assertIsString($errorMessage);
+        self::assertSame('mailer transport failed', $errorMessage);
         self::assertSame('statement_mail_attachment_missing_total', $metrics->snapshot()[0]['name']);
         self::assertSame('statement_mail_failed_total', $metrics->snapshot()[1]['name']);
     }
 
     public function testSendDoesNotSwallowNonTransportExceptions(): void
     {
-        $mailer = new class () implements MailerInterface {
+        $mailer = new class implements MailerInterface {
             public function send(RawMessage $message, ?Envelope $envelope = null): void
             {
                 throw new \LogicException('unexpected mailer state');

@@ -36,7 +36,8 @@ final class VendorApiKeyRotateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $keyId = (int) $input->getOption('keyId');
+        $keyIdOption = $input->getOption('keyId');
+        $keyId = is_scalar($keyIdOption) ? (int) (string) $keyIdOption : 0;
 
         if ($keyId <= 0) {
             $output->writeln('<error>Invalid keyId</error>');

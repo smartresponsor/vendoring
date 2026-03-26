@@ -2,21 +2,18 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2).'/src';
-$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root));
+$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS));
 
-foreach ($iterator as $file) {
-    if (!$file->isFile() || 'php' !== $file->getExtension()) {
-        continue;
-    }
-
+foreach (vendoring_php_files($iterator) as $file) {
     $path = $file->getPathname();
     $contents = (string) file_get_contents($path);
-
-    if (false !== stripos($contents, 'placeholder')) {
-        fwrite(STDERR, "Forbidden placeholder marker remains in: {$path}\n");
+    if (str_contains(strtolower($contents), 'placeholder')) {
+        fwrite(STDERR, "Placeholder marker found in production source: {$path}\n");
         exit(1);
     }
 }
 
-echo "no-placeholder-source smoke passed\n";
+echo "placeholder source scan passed\n";

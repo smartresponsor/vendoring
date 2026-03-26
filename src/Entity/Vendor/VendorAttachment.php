@@ -42,4 +42,9 @@ final class VendorAttachment
     {
         return $this->category;
     }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
 }

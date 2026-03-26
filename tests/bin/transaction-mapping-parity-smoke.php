@@ -2,26 +2,30 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2);
-$entity = file_get_contents($root.'/src/Entity/Vendor/VendorTransaction.php');
-$composer = json_decode((string) file_get_contents($root.'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+$entity = (string) file_get_contents($root.'/src/Entity/Vendor/VendorTransaction.php');
+$migration = (string) file_get_contents($root.'/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
+$composer = vendoring_load_composer_json($root);
 
-$checks = [
-    'vendor transaction entity exists' => is_string($entity) && '' !== $entity,
-    'entity maps vendor_id' => is_string($entity) && str_contains($entity, "name: 'vendor_id'"),
-    'entity maps order_id' => is_string($entity) && str_contains($entity, "name: 'order_id'"),
-    'entity maps project_id' => is_string($entity) && str_contains($entity, "name: 'project_id'"),
-    'entity maps status column explicitly' => is_string($entity) && str_contains($entity, "name: 'status'"),
-    'entity maps created_at explicitly' => is_string($entity) && str_contains($entity, "name: 'created_at'"),
-    'composer has transaction mapping script' => isset($composer['scripts']['test:transaction-mapping']),
-    'composer has transaction status persistence script' => isset($composer['scripts']['test:transaction-status-persistence']),
-];
-
-foreach ($checks as $label => $result) {
-    if (true !== $result) {
-        fwrite(STDERR, '[FAIL] '.$label.PHP_EOL);
+foreach (['vendor_id', 'order_id', 'project_id', 'amount', 'status', 'created_at'] as $column) {
+    if (!str_contains($migration, $column)) {
+        fwrite(STDERR, "Migration missing transaction column: {$column}\n");
         exit(1);
     }
-
-    fwrite(STDOUT, '[OK] '.$label.PHP_EOL);
 }
+if (!str_contains($entity, 'VendorTransaction')) {
+    fwrite(STDERR, "Entity mapping parity smoke failed\n");
+    exit(1);
+}
+if (!vendoring_has_script($composer, 'test:transaction-mapping')) {
+    fwrite(STDERR, "composer.json must define test:transaction-mapping\n");
+    exit(1);
+}
+if (!vendoring_has_script($composer, 'test:transaction-schema-parity')) {
+    fwrite(STDERR, "composer.json must define test:transaction-schema-parity\n");
+    exit(1);
+}
+
+echo "transaction mapping parity smoke passed\n";

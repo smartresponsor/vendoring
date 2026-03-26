@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace App\RepositoryInterface;
 
 use App\Entity\Vendor\VendorAttachment;
+use Doctrine\Persistence\ObjectRepository;
 
-interface VendorAttachmentRepositoryInterface
+/**
+ * @extends ObjectRepository<VendorAttachment>
+ */
+interface VendorAttachmentRepositoryInterface extends ObjectRepository
 {
     public function save(VendorAttachment $vendorAttachment, bool $flush = false): void;
 

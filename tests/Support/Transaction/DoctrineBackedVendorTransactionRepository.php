@@ -7,6 +7,7 @@ namespace App\Tests\Support\Transaction;
 use App\Entity\Vendor\VendorTransaction;
 use App\RepositoryInterface\VendorTransactionRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 
 final class DoctrineBackedVendorTransactionRepository implements VendorTransactionRepositoryInterface
 {
@@ -17,32 +18,59 @@ final class DoctrineBackedVendorTransactionRepository implements VendorTransacti
     public function findByVendorId(string $vendorId): array
     {
         /** @var list<VendorTransaction> $transactions */
-        $transactions = $this->entityManager
-            ->getRepository(VendorTransaction::class)
-            ->findBy(['vendorId' => $vendorId], ['createdAt' => 'DESC', 'id' => 'DESC']);
+        $transactions = $this->baseQueryBuilder()
+            ->andWhere('transaction.vendorId = :vendorId')
+            ->setParameter('vendorId', $vendorId)
+            ->getQuery()
+            ->getResult();
 
         return $transactions;
     }
 
     public function findOneByIdAndVendorId(int $id, string $vendorId): ?VendorTransaction
     {
-        $transaction = $this->entityManager
-            ->getRepository(VendorTransaction::class)
-            ->findOneBy(['id' => $id, 'vendorId' => $vendorId]);
+        $transaction = $this->baseQueryBuilder()
+            ->andWhere('transaction.id = :id')
+            ->andWhere('transaction.vendorId = :vendorId')
+            ->setParameter('id', $id)
+            ->setParameter('vendorId', $vendorId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
 
         return $transaction instanceof VendorTransaction ? $transaction : null;
     }
 
     public function existsForVendorOrderProject(string $vendorId, string $orderId, ?string $projectId): bool
     {
-        $criteria = [
-            'vendorId' => $vendorId,
-            'orderId' => $orderId,
-            'projectId' => $projectId,
-        ];
+        $queryBuilder = $this->entityManager
+            ->createQueryBuilder()
+            ->select('COUNT(transaction.id)')
+            ->from(VendorTransaction::class, 'transaction')
+            ->andWhere('transaction.vendorId = :vendorId')
+            ->andWhere('transaction.orderId = :orderId')
+            ->setParameter('vendorId', $vendorId)
+            ->setParameter('orderId', $orderId)
+            ->setMaxResults(1);
 
+        if (null === $projectId) {
+            $queryBuilder->andWhere('transaction.projectId IS NULL');
+        } else {
+            $queryBuilder
+                ->andWhere('transaction.projectId = :projectId')
+                ->setParameter('projectId', $projectId);
+        }
+
+        return (int) $queryBuilder->getQuery()->getSingleScalarResult() > 0;
+    }
+
+    private function baseQueryBuilder(): QueryBuilder
+    {
         return $this->entityManager
-            ->getRepository(VendorTransaction::class)
-            ->findOneBy($criteria) instanceof VendorTransaction;
+            ->createQueryBuilder()
+            ->select('transaction')
+            ->from(VendorTransaction::class, 'transaction')
+            ->orderBy('transaction.createdAt', 'DESC')
+            ->addOrderBy('transaction.id', 'DESC');
     }
 }

@@ -22,6 +22,11 @@ foreach ($iterator as $file) {
         '.idea/',
         '.git',
         '.release/',
+        'vendor/',
+        '.deploy/',
+        '.consuming/',
+        'tools/report/VendorConfigGuardReport.php',
+        'var/.php-cs-fixer.cache',
         'composer.json',
         'composer.lock',
     ] as $prefix) {

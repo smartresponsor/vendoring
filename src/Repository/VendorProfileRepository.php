@@ -11,6 +11,9 @@ use App\RepositoryInterface\VendorProfileRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<VendorProfile>
+ */
 final class VendorProfileRepository extends ServiceEntityRepository implements VendorProfileRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

@@ -18,6 +18,7 @@ final readonly class VendorSecurityStateView
     ) {
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array
     {
         return [

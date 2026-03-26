@@ -5,36 +5,36 @@ declare(strict_types=1);
 namespace App;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 final class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
+    protected function configureContainer(ContainerConfigurator $container): void
     {
         $configDir = $this->getProjectDir().'/config';
 
         if (is_dir($configDir.'/packages')) {
-            $loader->load($configDir.'/packages/*.yaml', 'glob');
+            $container->import($configDir.'/packages/*.yaml');
         }
 
         if (is_file($configDir.'/services.yaml')) {
-            $loader->load($configDir.'/services.yaml');
+            $container->import($configDir.'/services.yaml');
         }
 
         if (is_file($configDir.'/services_runtime.php')) {
-            $loader->load($configDir.'/services_runtime.php');
+            $container->import($configDir.'/services_runtime.php');
         }
 
         if (is_file($configDir.'/packages_runtime.php')) {
-            $loader->load($configDir.'/packages_runtime.php');
+            $container->import($configDir.'/packages_runtime.php');
         }
     }
 
-    protected function configureRoutes($routes): void
+    protected function configureRoutes(RoutingConfigurator $routes): void
     {
         $configDir = $this->getProjectDir().'/config';
 

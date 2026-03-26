@@ -17,10 +17,11 @@ final class VendorTransactionSchemaParityTest extends TestCase
         $reflection = new \ReflectionClass(VendorTransaction::class);
         $table = $reflection->getAttributes(Table::class)[0]->newInstance();
 
-        self::assertNotEmpty($table->indexes);
+        $indexes = $table->indexes ?? [];
+        self::assertNotEmpty($indexes);
 
         $index = null;
-        foreach ($table->indexes as $candidate) {
+        foreach ($indexes as $candidate) {
             if ($candidate instanceof Index && 'idx_vendor_transaction_vendor_created' === $candidate->name) {
                 $index = $candidate;
                 break;
@@ -31,23 +32,21 @@ final class VendorTransactionSchemaParityTest extends TestCase
         self::assertSame(['vendor_id', 'created_at', 'id'], $index->columns);
     }
 
-    public function testEntityDeclaresVendorOrderProjectUniqueConstraint(): void
+    public function testEntityDoesNotPretendFullVendorOrderProjectUniqueConstraint(): void
     {
         $reflection = new \ReflectionClass(VendorTransaction::class);
         $table = $reflection->getAttributes(Table::class)[0]->newInstance();
 
-        self::assertNotEmpty($table->uniqueConstraints);
+        $uniqueConstraints = $table->uniqueConstraints ?? [];
 
-        $constraint = null;
-        foreach ($table->uniqueConstraints as $candidate) {
-            if ($candidate instanceof UniqueConstraint && 'uniq_vendor_transaction_vendor_order_project' === $candidate->name) {
-                $constraint = $candidate;
-                break;
-            }
+        self::assertIsArray($uniqueConstraints);
+
+        foreach ($uniqueConstraints as $candidate) {
+            self::assertFalse(
+                $candidate instanceof UniqueConstraint && 'uniq_vendor_transaction_vendor_order_project' === $candidate->name,
+                'Entity metadata must not pretend a full three-column unique constraint; migrations own split partial uniqueness.',
+            );
         }
-
-        self::assertInstanceOf(UniqueConstraint::class, $constraint);
-        self::assertSame(['vendor_id', 'order_id', 'project_id'], $constraint->columns);
     }
 
     public function testSqlMigrationsKeepVendorCreatedIndexAndNullAwareUniqueness(): void

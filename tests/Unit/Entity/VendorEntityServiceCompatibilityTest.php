@@ -12,9 +12,14 @@ use PHPUnit\Framework\TestCase;
 
 final class VendorEntityServiceCompatibilityTest extends TestCase
 {
-    /** @param class-string $className */
+    /**
+     * @param class-string $className
+     * @param list<string> $properties
+     */
     private function assertEntityDefinesProperties(string $className, array $properties): void
     {
+        self::assertTrue(class_exists($className) || interface_exists($className));
+        /** @var class-string $className */
         $reflection = new \ReflectionClass($className);
 
         foreach ($properties as $property) {

@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
@@ -20,7 +21,10 @@ final class VendorTransactionInputResolver implements VendorTransactionInputReso
             'orderId' => VendorTransactionErrorCode::ORDER_ID_REQUIRED,
             'amount' => VendorTransactionErrorCode::AMOUNT_REQUIRED,
         ] as $field => $errorCode) {
-            if (!isset($payload[$field]) || '' === (string) $payload[$field]) {
+            $value = $payload[$field] ?? null;
+            $normalized = null === $value ? '' : trim((string) $value);
+
+            if ('' === $normalized) {
                 throw new \InvalidArgumentException($errorCode);
             }
         }

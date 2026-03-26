@@ -2,21 +2,12 @@
 
 declare(strict_types=1);
 
-$composer = json_decode((string) file_get_contents(__DIR__.'/../../composer.json'), true, 512, JSON_THROW_ON_ERROR);
-$quality = $composer['scripts']['quality'] ?? null;
+require_once __DIR__.'/_composer_json.php';
 
-if (!is_array($quality)) {
-    fwrite(STDERR, 'quality script must be an array
-');
-    exit(1);
-}
+$composer = vendoring_load_composer_json(dirname(__DIR__, 2));
+$quality = vendoring_script_commands($composer, 'quality');
 
 foreach ($quality as $entry) {
-    if (!is_string($entry)) {
-        fwrite(STDERR, 'quality entries must be strings
-');
-        exit(1);
-    }
     if (str_contains($entry, 'composer test:')) {
         fwrite(STDERR, 'quality must not shell-call composer test:* directly: '.$entry.PHP_EOL);
         exit(1);

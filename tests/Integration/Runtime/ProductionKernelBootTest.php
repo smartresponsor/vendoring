@@ -21,15 +21,17 @@ final class ProductionKernelBootTest extends TestCase
             debug: false,
         );
 
-        self::assertTrue($kernel->getContainer()->has('router'));
-        self::assertTrue($kernel->getContainer()->has('doctrine'));
+        try {
+            self::assertTrue($kernel->getContainer()->has('router'));
+            self::assertTrue($kernel->getContainer()->has('doctrine'));
 
-        $response = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor-transactions/vendor/vendor-boot');
-        $payload = KernelRuntimeHarness::decodeJson($response);
+            $response = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor-transactions/vendor/vendor-boot');
+            $payload = KernelRuntimeHarness::decodeJson($response);
 
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame([], $payload['data']);
-
-        $kernel->shutdown();
+            self::assertSame(200, $response->getStatusCode());
+            self::assertSame([], $payload['data']);
+        } finally {
+            KernelRuntimeHarness::cleanupRuntimeState($kernel);
+        }
     }
 }

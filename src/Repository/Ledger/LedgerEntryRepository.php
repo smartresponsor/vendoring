@@ -48,17 +48,17 @@ final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
         $rows = $this->db->fetchAllAssociative($sql, $params);
 
         return array_map(
-            static fn (array $row): LedgerEntry => new LedgerEntry(
-                (string) $row['id'],
-                (string) $row['tenant_id'],
-                (string) $row['debit_account'],
-                (string) $row['credit_account'],
-                (float) $row['amount'],
-                (string) $row['currency'],
-                (string) $row['reference_type'],
-                (string) $row['reference_id'],
-                isset($row['vendor_id']) && null !== $row['vendor_id'] ? (string) $row['vendor_id'] : null,
-                (string) $row['created_at'],
+            fn (array $row): LedgerEntry => new LedgerEntry(
+                $this->stringCell($row, 'id'),
+                $this->stringCell($row, 'tenant_id'),
+                $this->stringCell($row, 'debit_account'),
+                $this->stringCell($row, 'credit_account'),
+                $this->floatCell($row, 'amount'),
+                $this->stringCell($row, 'currency'),
+                $this->stringCell($row, 'reference_type'),
+                $this->stringCell($row, 'reference_id'),
+                $this->nullableStringCell($row, 'vendor_id'),
+                $this->stringCell($row, 'created_at'),
             ),
             $rows,
         );
@@ -91,8 +91,8 @@ final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
 
         $sql = 'SELECT SUM(CASE WHEN debit_account=:a THEN amount ELSE 0 END) AS d, SUM(CASE WHEN credit_account=:a THEN amount ELSE 0 END) AS c FROM ledger_entries WHERE '.implode(' AND ', $where);
         $row = $this->db->fetchAssociative($sql, $params);
-        $debit = (float) ($row['d'] ?? 0);
-        $credit = (float) ($row['c'] ?? 0);
+        $debit = is_array($row) ? $this->nullableFloatCell($row, 'd') ?? 0.0 : 0.0;
+        $credit = is_array($row) ? $this->nullableFloatCell($row, 'c') ?? 0.0 : 0.0;
 
         return $debit - $credit;
     }
@@ -105,11 +105,43 @@ final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
         );
 
         return array_map(
-            static fn (array $row): object => (object) [
-                'currency' => (string) ($row['currency'] ?? ''),
-                'balanceCents' => (int) round(((float) ($row['balance'] ?? 0.0)) * 100),
+            fn (array $row): object => (object) [
+                'currency' => $this->stringCell($row, 'currency'),
+                'balanceCents' => (int) round(($this->nullableFloatCell($row, 'balance') ?? 0.0) * 100),
             ],
             $rows,
         );
+    }
+
+    /** @param array<string, mixed> $row */
+    private function stringCell(array $row, string $key): string
+    {
+        $value = $row[$key] ?? '';
+
+        return is_scalar($value) ? (string) $value : '';
+    }
+
+    /** @param array<string, mixed> $row */
+    private function nullableStringCell(array $row, string $key): ?string
+    {
+        $value = $row[$key] ?? null;
+
+        return is_scalar($value) ? (string) $value : null;
+    }
+
+    /** @param array<string, mixed> $row */
+    private function floatCell(array $row, string $key): float
+    {
+        $value = $row[$key] ?? 0.0;
+
+        return is_numeric($value) ? (float) $value : 0.0;
+    }
+
+    /** @param array<string, mixed> $row */
+    private function nullableFloatCell(array $row, string $key): ?float
+    {
+        $value = $row[$key] ?? null;
+
+        return is_numeric($value) ? (float) $value : null;
     }
 }

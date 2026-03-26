@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure;
 
+require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class ReleaseCandidateRuntimeActivationContractTest extends TestCase
 {
     public function testComposerDeclaresRuntimeActivationPackages(): void
     {
-        $composer = json_decode((string) file_get_contents(__DIR__.'/../../../composer.json'), true, flags: JSON_THROW_ON_ERROR);
-        $require = $composer['require'] ?? [];
+        $composer = vendoring_load_composer_json(dirname(__DIR__, 3));
+        $require = vendoring_composer_section($composer, 'require');
 
         self::assertArrayHasKey('twig/twig', $require);
         self::assertArrayHasKey('symfony/twig-bundle', $require);

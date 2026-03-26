@@ -34,6 +34,7 @@ services:
   App\RepositoryInterface\VendorLedgerBindingRepositoryInterface: '@App\Repository\VendorLedgerBindingRepository'
   App\RepositoryInterface\VendorSecurityRepositoryInterface: '@App\Repository\VendorSecurityRepository'
   App\RepositoryInterface\VendorUserAssignmentRepositoryInterface: '@App\Repository\VendorUserAssignmentRepository'
+  App\RepositoryInterface\VendorTransactionRepositoryInterface: '@App\Repository\VendorTransactionRepository'
 
   App\ServiceInterface\VendorCrmServiceInterface: '@App\Service\VendorCrmService'
   App\ServiceInterface\VendorBillingServiceInterface: '@App\Service\VendorBillingService'
@@ -44,6 +45,10 @@ services:
   App\ServiceInterface\VendorServiceInterface: '@App\Service\VendorService'
   App\ServiceInterface\VendorUserAssignmentServiceInterface: '@App\Service\VendorUserAssignmentService'
   App\ServiceInterface\Ledger\VendorDoubleEntryServiceInterface: '@App\Service\Ledger\VendorDoubleEntryService'
+  App\ServiceInterface\Ledger\VendorLedgerServiceInterface: '@App\Service\Ledger\VendorLedgerService'
+  App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface: '@App\Service\Ops\VendorTransactionOperatorPageBuilder'
+  App\ServiceInterface\Search\TfidfSearchInterface: '@App\Service\Search\TfidfSearch'
+  App\ServiceInterface\Sec\HmacInterface: '@App\Service\Sec\Hmac'
   App\ServiceInterface\Payout\PayoutProviderBridgeInterface: '@App\Service\Payout\PayoutProviderBridge'
   App\ServiceInterface\Payout\VendorSettlementCalculatorInterface: '@App\Service\Payout\VendorSettlementCalculator'
   App\RepositoryInterface\VendorApiKeyRepositoryInterface: '@App\Repository\VendorApiKeyRepository'

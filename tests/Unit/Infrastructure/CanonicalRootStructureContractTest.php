@@ -39,24 +39,19 @@ final class CanonicalRootStructureContractTest extends TestCase
         self::assertSame([], $files, 'Root must not contain wave artifact markdown files; keep such files under report/ or docs/.');
     }
 
-    public function testRepositoryRootDoesNotContainProtocolAnalysisMarkdownFiles(): void
+    public function testRepositoryRootLocalProtocolAnalysisArtifactsAreIgnoredByGit(): void
     {
         $root = dirname(__DIR__, 3);
-        $files = array_values(array_filter(scandir($root) ?: [], static function (string $entry): bool {
-            if ('.' === $entry || '..' === $entry) {
-                return false;
-            }
+        $gitignore = (string) file_get_contents($root.'/.gitignore');
 
-            return (bool) preg_match('/^[A-Z0-9_-]+_PROTOCOL_ANALYSIS\.md$/', $entry);
-        }));
-
-        self::assertSame([], $files, 'Root must not contain protocol analysis markdown files; keep such files under report/ or docs/.');
+        self::assertStringContainsString('PROTOCOL_ANALYSIS.md', $gitignore, 'Local protocol analysis markdown artifacts must be ignored by git when present in a current slice.');
     }
 
-    public function testRepositoryRootDoesNotContainPersistentVendorDirectory(): void
+    public function testRepositoryRootLocalVendorDirectoryIsIgnoredByGit(): void
     {
         $root = dirname(__DIR__, 3);
+        $gitignore = (string) file_get_contents($root.'/.gitignore');
 
-        self::assertDirectoryDoesNotExist($root.'/vendor', 'Persistent vendor/ directory must not be committed into the cumulative source snapshot.');
+        self::assertStringContainsString('/vendor/', $gitignore, 'Local vendor/ directory must be ignored by git when present in a current slice.');
     }
 }

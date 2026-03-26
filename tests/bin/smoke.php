@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2);
 
 $checks = [
@@ -22,15 +24,17 @@ foreach ($checks as $label => $result) {
     fwrite(STDOUT, '[OK] '.$label.PHP_EOL);
 }
 
-$composer = json_decode((string) file_get_contents($root.'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+$composer = vendoring_load_composer_json($root);
+$require = vendoring_composer_section($composer, 'require');
+$scripts = vendoring_composer_scripts($composer);
 
-if (($composer['require']['php'] ?? null) !== '^8.4') {
+if (($require['php'] ?? null) !== '^8.4') {
     fwrite(STDERR, '[FAIL] composer runtime php constraint must be ^8.4'.PHP_EOL);
     exit(1);
 }
 
 foreach (['lint:php', 'test:smoke', 'test:symfony-stack', 'test:di', 'test:entrypoint', 'test:mail', 'test:statement-command', 'test:statement', 'test:payout', 'test:controller', 'test:entity', 'test:compat', 'test:repository', 'test:unit', 'test:transaction-policy', 'test:transaction-amount', 'test:transaction-doctrine', 'test:transaction-migration', 'test:transaction-persistence', 'test:transaction-sqlite-integration', 'test:transaction-idempotency', 'test:transaction-identity', 'test:transaction-error-surface', 'test:transaction-json', 'test:transaction-mapping', 'test:transaction-status-persistence', 'test:root-vendor-cleanup', 'test:root-runtime-artifacts', 'phpstan', 'test', 'quality'] as $scriptName) {
-    if (!isset($composer['scripts'][$scriptName])) {
+    if (!array_key_exists($scriptName, $scripts)) {
         fwrite(STDERR, '[FAIL] missing composer script: '.$scriptName.PHP_EOL);
         exit(1);
     }
@@ -43,7 +47,7 @@ fwrite(STDOUT, '[OK] statement and payout smoke files are present'.PHP_EOL);
 
 $requiredSymfony = ['symfony/console', 'symfony/framework-bundle', 'symfony/http-foundation', 'symfony/mailer', 'symfony/mime', 'symfony/routing', 'symfony/uid'];
 foreach ($requiredSymfony as $packageName) {
-    if (!isset($composer['require'][$packageName])) {
+    if (!isset($require[$packageName])) {
         fwrite(STDERR, '[FAIL] missing runtime package: '.$packageName.PHP_EOL);
         exit(1);
     }
@@ -53,7 +57,7 @@ fwrite(STDOUT, '[OK] runtime Symfony packages are declared'.PHP_EOL);
 
 $requiredDoctrine = ['doctrine/dbal', 'doctrine/doctrine-bundle', 'doctrine/orm', 'doctrine/persistence'];
 foreach ($requiredDoctrine as $packageName) {
-    if (!isset($composer['require'][$packageName])) {
+    if (!isset($require[$packageName])) {
         fwrite(STDERR, '[FAIL] missing runtime package: '.$packageName.PHP_EOL);
         exit(1);
     }
@@ -91,7 +95,7 @@ if (!file_exists($root.'/tests/bin/transaction-route-smoke.php')) {
     exit(1);
 }
 
-if (!isset($composer['scripts']['test:transaction'])) {
+if (!vendoring_has_script($composer, 'test:transaction')) {
     fwrite(STDERR, '[FAIL] missing composer script: test:transaction'.PHP_EOL);
     exit(1);
 }
@@ -153,7 +157,7 @@ if (!file_exists($root.'/tests/bin/root-structure-smoke.php')) {
     exit(1);
 }
 
-if (!isset($composer['scripts']['test:root-structure'])) {
+if (!vendoring_has_script($composer, 'test:root-structure')) {
     fwrite(STDERR, '[FAIL] missing composer script: test:root-structure'.PHP_EOL);
     exit(1);
 }
@@ -165,12 +169,12 @@ if (!file_exists($root.'/tests/bin/root-removed-files-smoke.php')) {
     exit(1);
 }
 
-if (!isset($composer['scripts']['test:root-removed-files'])) {
+if (!vendoring_has_script($composer, 'test:root-removed-files')) {
     fwrite(STDERR, '[FAIL] missing composer script: test:root-removed-files'.PHP_EOL);
     exit(1);
 }
 
-if (!isset($composer['scripts']['test:root-protocol-cleanup'])) {
+if (!vendoring_has_script($composer, 'test:root-protocol-cleanup')) {
     fwrite(STDERR, '[FAIL] missing composer script: test:root-protocol-cleanup'.PHP_EOL);
     exit(1);
 }
@@ -224,7 +228,7 @@ foreach ([
     'test:app-namespace-repository',
     'test:idea-module-artifact',
 ] as $scriptName) {
-    if (!isset($composer['scripts'][$scriptName])) {
+    if (!array_key_exists($scriptName, $scripts)) {
         fwrite(STDERR, '[FAIL] missing composer script: '.$scriptName.PHP_EOL);
         exit(1);
     }
@@ -237,12 +241,12 @@ if (!file_exists($root.'/tests/bin/idea-runtime-artifact-smoke.php')) {
     exit(1);
 }
 
-if (!isset($composer['scripts']['test:idea-runtime-artifact'])) {
+if (!vendoring_has_script($composer, 'test:idea-runtime-artifact')) {
     fwrite(STDERR, "Missing composer script: test:idea-runtime-artifact\n");
     exit(1);
 }
 
-if (!isset($composer['scripts']['test:idea-module-artifact'])) {
+if (!vendoring_has_script($composer, 'test:idea-module-artifact')) {
     fwrite(STDERR, "Missing composer script: test:idea-module-artifact\n");
     exit(1);
 }
@@ -254,7 +258,7 @@ if (!file_exists($root.'/tests/bin/composer-script-invocation-parity-smoke.php')
     exit(1);
 }
 
-if (!isset(($composer['scripts'] ?? [])['test:composer-script-invocation-parity'])) {
+if (!vendoring_has_script($composer, 'test:composer-script-invocation-parity')) {
     fwrite(STDERR, "Missing test:composer-script-invocation-parity script\n");
     exit(1);
 }
@@ -266,7 +270,7 @@ if (!file_exists($root.'/tests/bin/composer-root-guard-parity-smoke.php')) {
     exit(1);
 }
 
-if (!isset($composer['scripts']['test:composer-root-guard-parity'])) {
+if (!vendoring_has_script($composer, 'test:composer-root-guard-parity')) {
     fwrite(STDERR, "Missing composer script test:composer-root-guard-parity\n");
     exit(1);
 }
@@ -278,7 +282,7 @@ if (!file_exists($root.'/tests/bin/composer-quality-parity-smoke.php')) {
     exit(1);
 }
 
-if (!isset($composer['scripts']['test:composer-quality-parity'])) {
+if (!vendoring_has_script($composer, 'test:composer-quality-parity')) {
     fwrite(STDERR, "Missing composer script test:composer-quality-parity\n");
     exit(1);
 }
@@ -290,7 +294,7 @@ if (!file_exists($root.'/tests/bin/composer-guard-parity-smoke.php')) {
     exit(1);
 }
 
-if (!isset($composer['scripts']['test:composer-guard-parity'])) {
+if (!vendoring_has_script($composer, 'test:composer-guard-parity')) {
     fwrite(STDERR, '[FAIL] missing composer script: test:composer-guard-parity'.PHP_EOL);
     exit(1);
 }
@@ -307,7 +311,7 @@ foreach ([
         exit(1);
     }
 
-    if (!isset($composer['scripts'][$scriptName])) {
+    if (!array_key_exists($scriptName, $scripts)) {
         fwrite(STDERR, '[FAIL] missing composer script: '.$scriptName.PHP_EOL);
         exit(1);
     }
@@ -320,7 +324,7 @@ if (!file_exists($root.'/tests/bin/no-example-command-help-smoke.php')) {
     exit(1);
 }
 
-if (!isset($composer['scripts']['test:no-example-command-help'])) {
+if (!vendoring_has_script($composer, 'test:no-example-command-help')) {
     fwrite(STDERR, '[FAIL] missing composer script: test:no-example-command-help'.PHP_EOL);
     exit(1);
 }
@@ -332,7 +336,7 @@ if (!file_exists($root.'/tests/bin/no-legacy-vendor-script-smoke.php')) {
     exit(1);
 }
 
-if (!isset($composer['scripts']['test:no-legacy-vendor-script'])) {
+if (!vendoring_has_script($composer, 'test:no-legacy-vendor-script')) {
     fwrite(STDERR, '[FAIL] missing composer script: test:no-legacy-vendor-script'.PHP_EOL);
     exit(1);
 }

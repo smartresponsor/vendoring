@@ -63,7 +63,7 @@ final class VendorTransaction implements VendorTransactionInterface
 
     public function getAmount(): string
     {
-        return $this->amount;
+        return number_format((float) $this->amount, 2, '.', '');
     }
 
     public function getStatus(): string

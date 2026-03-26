@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure;
 
+require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class ComposerQualityScriptParityTest extends TestCase
 {
     public function testQualityScriptUsesCanonicalAtReferencesForTestCommands(): void
     {
-        $composer = json_decode((string) file_get_contents(dirname(__DIR__, 3).'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-        $quality = $composer['scripts']['quality'] ?? null;
-
-        self::assertIsArray($quality, 'quality script must be an array.');
+        $composer = vendoring_load_composer_json(dirname(__DIR__, 3));
+        $quality = vendoring_script_commands($composer, 'quality');
 
         foreach ($quality as $entry) {
-            self::assertIsString($entry, 'quality entries must be strings.');
             self::assertStringNotContainsString('composer test:', $entry, 'quality must not shell-call composer test:* directly.');
             self::assertStringNotContainsString('&&', $entry, 'quality must not chain test scripts inline.');
         }

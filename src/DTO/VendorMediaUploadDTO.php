@@ -6,6 +6,7 @@ namespace App\DTO;
 
 final readonly class VendorMediaUploadDTO
 {
+    /** @param list<string> $gallery */
     public function __construct(
         public int $vendorId,
         public ?string $logoPath = null,

@@ -6,6 +6,7 @@ namespace App\DTO\Ledger;
 
 final class LedgerEntryDTO
 {
+    /** @param array<string, mixed> $meta */
     public function __construct(
         public string $type,
         public string $entityId,

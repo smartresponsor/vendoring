@@ -15,9 +15,19 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
             $root.'/report/',
             $root.'/tests/',
             $root.'/.idea/',
+            $root.'/.deploy/_template/',
+            $root.'/.phpunit.cache/',
+            $root.'/build/docs/phpdocumentor/',
+            $root.'/docs/release/',
+            $root.'/var/',
+            $root.'/.deploy/systemd/',
+            $root.'/.consuming/',
         ];
         $allowedFiles = [
             $root.'/composer.json',
+            $root.'/bin/generate-phpdocumentor-site.php',
+            $root.'/bin/generate-rc-evidence.php',
+            $root.'/config/reference.php',
         ];
 
         $iterator = new \RecursiveIteratorIterator(
@@ -33,7 +43,11 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
             $path = $file->getPathname();
             $normalized = str_replace('\\', '/', $path);
 
-            if (str_contains($normalized, '/.git/') || str_contains($normalized, '/vendor/')) {
+            if (
+                str_contains($normalized, '/.git/')
+                || str_contains($normalized, '/vendor/')
+                || str_contains($normalized, '/.deploy/_template/')
+            ) {
                 continue;
             }
 

@@ -14,6 +14,9 @@ final class VendorStatementService implements VendorStatementServiceInterface
     {
     }
 
+    /**
+     * @return array{tenantId:string, vendorId:string, from:string, to:string, currency:string, opening:float, earnings:float, refunds:float, fees:float, closing:float, items:list<array{type:string, amount:float, currency:string}>}
+     */
     public function build(VendorStatementRequestDTO $dto): array
     {
         $opening = 0.0;
@@ -43,6 +46,11 @@ final class VendorStatementService implements VendorStatementServiceInterface
         $data = $this->build($dto);
         $path = sys_get_temp_dir().'/statement_'.$dto->vendorId.'_'.date('YmdHis').'.csv';
         $f = fopen($path, 'w');
+
+        if (false === $f) {
+            throw new \RuntimeException(sprintf('Failed to open csv stream: %s', $path));
+        }
+
         fputcsv($f, ['Section', 'Amount', 'Currency']);
         foreach ($data['items'] as $row) {
             fputcsv($f, [$row['type'], $row['amount'], $row['currency']]);

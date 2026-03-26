@@ -6,6 +6,8 @@ namespace Tests\Unit\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+
 final class ReleaseCandidateDocumentationContractTest extends TestCase
 {
     public function testReadmeReferencesReleaseCandidateLanesAndDocs(): void
@@ -19,8 +21,8 @@ final class ReleaseCandidateDocumentationContractTest extends TestCase
 
     public function testComposerDefinesGroupedReleaseCandidateQualityLanes(): void
     {
-        $composer = json_decode((string) file_get_contents(dirname(__DIR__, 3).'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-        $scripts = $composer['scripts'] ?? [];
+        $composer = vendoring_load_composer_json(dirname(__DIR__, 3));
+        $scripts = vendoring_composer_scripts($composer);
 
         foreach (['quality:static', 'quality:contracts', 'quality:runtime', 'quality:persistence', 'quality:api', 'quality:docs', 'quality:release-candidate', 'test:release-candidate-docs'] as $script) {
             self::assertArrayHasKey($script, $scripts, 'Missing grouped RC script: '.$script);
@@ -33,9 +35,9 @@ final class ReleaseCandidateDocumentationContractTest extends TestCase
     {
         $phpunit = (string) file_get_contents(dirname(__DIR__, 3).'/phpunit.xml.dist');
 
-        self::assertStringContainsString('<testsuite name="vendoring">', $phpunit);
-        self::assertStringContainsString('<directory>tests/Unit</directory>', $phpunit);
-        self::assertStringContainsString('<directory>tests/Integration</directory>', $phpunit);
+        self::assertStringContainsString('<testsuite name="unit">', $phpunit);
+        self::assertStringContainsString('<testsuite name="integration">', $phpunit);
+        self::assertStringContainsString('<testsuite name="smoke">', $phpunit);
     }
 
     public function testReleaseCandidateWorkflowsExistAndReferenceGroupedScripts(): void

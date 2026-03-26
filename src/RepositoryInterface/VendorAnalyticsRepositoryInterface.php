@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace App\RepositoryInterface;
 
 use App\Entity\Vendor\VendorAnalytics;
+use Doctrine\Persistence\ObjectRepository;
 
-interface VendorAnalyticsRepositoryInterface
+/**
+ * @extends ObjectRepository<VendorAnalytics>
+ */
+interface VendorAnalyticsRepositoryInterface extends ObjectRepository
 {
     public function save(VendorAnalytics $vendorAnalytics, bool $flush = false): void;
 

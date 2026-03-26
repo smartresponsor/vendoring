@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Transaction;
 
+use App\Entity\Vendor\VendorTransaction;
 use App\Event\VendorTransactionEvent;
 use App\RepositoryInterface\VendorTransactionRepositoryInterface;
 use App\Service\Policy\VendorTransactionAmountPolicy;
@@ -51,8 +52,8 @@ final class VendorTransactionManagerTest extends TestCase
         $this->entityManager
             ->expects(self::once())
             ->method('persist')
-            ->with(self::callback(static function (object $transaction): bool {
-                return method_exists($transaction, 'getVendorId')
+            ->with(self::callback(static function (VendorTransaction $transaction): bool {
+                return $transaction instanceof VendorTransaction
                     && 'vendor-1' === $transaction->getVendorId()
                     && 'order-1' === $transaction->getOrderId()
                     && 'project-1' === $transaction->getProjectId()
@@ -68,7 +69,7 @@ final class VendorTransactionManagerTest extends TestCase
             ->expects(self::once())
             ->method('dispatch')
             ->with(
-                self::callback(static function (object $event): bool {
+                self::callback(static function (VendorTransactionEvent $event): bool {
                     return $event instanceof VendorTransactionEvent
                         && 'vendor-1' === $event->transaction->getVendorId();
                 }),
@@ -106,8 +107,8 @@ final class VendorTransactionManagerTest extends TestCase
         $this->entityManager
             ->expects(self::once())
             ->method('persist')
-            ->with(self::callback(static function (object $transaction): bool {
-                return method_exists($transaction, 'getProjectId')
+            ->with(self::callback(static function (VendorTransaction $transaction): bool {
+                return $transaction instanceof VendorTransaction
                     && null === $transaction->getProjectId();
             }));
 
@@ -182,8 +183,8 @@ final class VendorTransactionManagerTest extends TestCase
         $this->entityManager
             ->expects(self::once())
             ->method('persist')
-            ->with(self::callback(static function (object $transaction): bool {
-                return method_exists($transaction, 'getVendorId')
+            ->with(self::callback(static function (VendorTransaction $transaction): bool {
+                return $transaction instanceof VendorTransaction
                     && 'vendor-1' === $transaction->getVendorId()
                     && 'order-1' === $transaction->getOrderId();
             }));
@@ -283,7 +284,7 @@ final class VendorTransactionManagerTest extends TestCase
             $this->transactions,
         );
 
-        $transaction = new \App\Entity\Vendor\VendorTransaction('vendor-1', 'order-1', null, '10.50');
+        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.50');
 
         $this->entityManager
             ->expects(self::once())
@@ -318,7 +319,7 @@ final class VendorTransactionManagerTest extends TestCase
             $this->transactions,
         );
 
-        $transaction = new \App\Entity\Vendor\VendorTransaction('vendor-1', 'order-1', null, '10.50');
+        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.50');
 
         $this->entityManager
             ->expects(self::never())

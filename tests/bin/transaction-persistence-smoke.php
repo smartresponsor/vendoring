@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-$root = dirname(__DIR__, 2);
-$composer = json_decode((string) file_get_contents($root.'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+require_once __DIR__.'/_composer_json.php';
 
-if (!isset($composer['scripts']['test:transaction-persistence'])) {
+$root = dirname(__DIR__, 2);
+$composer = vendoring_load_composer_json($root);
+
+if (!vendoring_has_script($composer, 'test:transaction-persistence')) {
     fwrite(STDERR, "Missing composer script test:transaction-persistence\n");
     exit(1);
 }
@@ -71,7 +73,14 @@ if (extension_loaded('pdo_sqlite')) {
             ':order_id' => 'order-2',
         ]);
 
-    $rows = $pdo->query('SELECT vendor_id, order_id, status, amount FROM vendor_transaction WHERE vendor_id = "vendor-1" ORDER BY created_at DESC, id DESC')?->fetchAll(PDO::FETCH_ASSOC);
+    $statement = $pdo->query('SELECT vendor_id, order_id, status, amount FROM vendor_transaction WHERE vendor_id = "vendor-1" ORDER BY created_at DESC, id DESC');
+
+    if (!$statement instanceof PDOStatement) {
+        fwrite(STDERR, "Failed to query vendor_transaction rows\n");
+        exit(1);
+    }
+
+    $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     if (!is_array($rows) || 2 !== count($rows)) {
         fwrite(STDERR, "Unexpected vendor_transaction row count\n");

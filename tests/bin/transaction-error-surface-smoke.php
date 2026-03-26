@@ -2,10 +2,17 @@
 
 declare(strict_types=1);
 
-$controller = file_get_contents(__DIR__.'/../../src/Controller/VendorTransactionController.php');
-$manager = file_get_contents(__DIR__.'/../../src/Service/VendorTransactionManager.php');
-$amountPolicy = file_get_contents(__DIR__.'/../../src/Service/Policy/VendorTransactionAmountPolicy.php');
-$errorCodes = file_get_contents(__DIR__.'/../../src/ValueObject/VendorTransactionErrorCode.php');
+function vendoring_load_file_or_empty(string $path): string
+{
+    $contents = file_get_contents($path);
+
+    return false === $contents ? '' : $contents;
+}
+
+$controller = vendoring_load_file_or_empty(__DIR__.'/../../src/Controller/VendorTransactionController.php');
+$manager = vendoring_load_file_or_empty(__DIR__.'/../../src/Service/VendorTransactionManager.php');
+$amountPolicy = vendoring_load_file_or_empty(__DIR__.'/../../src/Service/Policy/VendorTransactionAmountPolicy.php');
+$errorCodes = vendoring_load_file_or_empty(__DIR__.'/../../src/ValueObject/VendorTransactionErrorCode.php');
 
 $checks = [
     'controller avoids raw exception message payload' => !str_contains($controller, "['error' => \$exception->getMessage()]"),

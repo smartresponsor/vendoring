@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service\Payout;
@@ -10,6 +11,7 @@ use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 
 final class VendorPayoutRequestService implements VendorPayoutRequestServiceInterface
 {
+    /** @param array<string, mixed> $payload */
     public function toCreateDto(array $payload): CreatePayoutDTO
     {
         foreach (['vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
@@ -19,10 +21,10 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
         }
 
         return new CreatePayoutDTO(
-            (string) $payload['vendorId'],
-            (string) $payload['currency'],
-            (int) $payload['thresholdCents'],
-            (float) $payload['retentionFeePercent'],
+            $this->requiredString($payload, 'vendorId'),
+            $this->requiredString($payload, 'currency'),
+            $this->requiredInt($payload, 'thresholdCents'),
+            $this->requiredFloat($payload, 'retentionFeePercent'),
         );
     }
 
@@ -39,5 +41,53 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             'createdAt' => $payout->createdAt,
             'processedAt' => $payout->processedAt,
         ];
+    }
+
+    /** @param array<string, mixed> $payload */
+    private function requiredString(array $payload, string $field): string
+    {
+        $value = $payload[$field] ?? null;
+
+        if (is_string($value)) {
+            return $value;
+        }
+
+        if (is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+
+        throw new \InvalidArgumentException(sprintf('%s required', $field));
+    }
+
+    /** @param array<string, mixed> $payload */
+    private function requiredInt(array $payload, string $field): int
+    {
+        $value = $payload[$field] ?? null;
+
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (is_numeric($value)) {
+            return (int) $value;
+        }
+
+        throw new \InvalidArgumentException(sprintf('%s required', $field));
+    }
+
+    /** @param array<string, mixed> $payload */
+    private function requiredFloat(array $payload, string $field): float
+    {
+        $value = $payload[$field] ?? null;
+
+        if (is_float($value) || is_int($value)) {
+            return (float) $value;
+        }
+
+        if (is_numeric($value)) {
+            return (float) $value;
+        }
+
+        throw new \InvalidArgumentException(sprintf('%s required', $field));
     }
 }

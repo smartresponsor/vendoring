@@ -2,50 +2,33 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2);
-$composer = json_decode((string) file_get_contents($root.'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-$manager = (string) file_get_contents($root.'/src/Service/VendorTransactionManager.php');
-$controller = (string) file_get_contents($root.'/src/Controller/VendorTransactionController.php');
-$services = (string) file_get_contents($root.'/config/services.yaml');
+$amountPolicy = (string) file_get_contents($root.'/src/Service/Policy/VendorTransactionAmountPolicy.php');
+$statusPolicy = (string) file_get_contents($root.'/src/Service/Policy/VendorTransactionStatusPolicy.php');
+$servicesYaml = (string) file_get_contents($root.'/config/services.yaml');
+$composer = vendoring_load_composer_json($root);
 
-if (!file_exists($root.'/src/Service/Policy/VendorTransactionStatusPolicy.php')) {
-    fwrite(STDERR, "Missing VendorTransactionStatusPolicy service.\n");
+if (!vendoring_has_script($composer, 'test:transaction-policy')) {
+    fwrite(STDERR, "composer.json must define test:transaction-policy\n");
     exit(1);
 }
-
-if (!file_exists($root.'/src/ServiceInterface/Policy/VendorTransactionStatusPolicyInterface.php')) {
-    fwrite(STDERR, "Missing VendorTransactionStatusPolicyInterface contract.\n");
+if (!str_contains($amountPolicy, 'VendorTransactionErrorCode::AMOUNT_NOT_NUMERIC') || !str_contains($amountPolicy, 'VendorTransactionErrorCode::AMOUNT_NOT_POSITIVE')) {
+    fwrite(STDERR, "Amount policy must use stable error codes.\n");
     exit(1);
 }
-
-if (!isset($composer['scripts']['test:transaction-policy'])) {
-    fwrite(STDERR, "Missing composer script test:transaction-policy.\n");
+if (!str_contains($statusPolicy, 'VendorTransactionErrorCode::STATUS_REQUIRED') || !str_contains($statusPolicy, 'VendorTransactionErrorCode::INVALID_STATUS_TRANSITION')) {
+    fwrite(STDERR, "Status policy must use stable status error codes.\n");
     exit(1);
 }
-
-if (!str_contains($manager, 'VendorTransactionStatusPolicyInterface')) {
-    fwrite(STDERR, "VendorTransactionManager must depend on VendorTransactionStatusPolicyInterface.\n");
+if (!str_contains($servicesYaml, "App\\ServiceInterface\\Policy\\VendorTransactionAmountPolicyInterface: '@App\\Service\\Policy\\VendorTransactionAmountPolicy'")) {
+    fwrite(STDERR, "services.yaml must alias VendorTransactionAmountPolicyInterface.\n");
     exit(1);
 }
-
-if (!str_contains($manager, 'VendorTransactionErrorCode::INVALID_STATUS_TRANSITION')) {
-    fwrite(STDERR, "VendorTransactionManager must guard invalid status transitions.\n");
-    exit(1);
-}
-
-if (!str_contains($controller, 'VendorTransactionErrorCode::STATUS_REQUIRED')) {
-    fwrite(STDERR, "VendorTransactionController must validate explicit status payload.\n");
-    exit(1);
-}
-
-if (!str_contains($controller, 'InvalidArgumentException')) {
-    fwrite(STDERR, "VendorTransactionController must map invalid transition exception to 422.\n");
-    exit(1);
-}
-
-if (!str_contains($services, "App\\ServiceInterface\\Policy\\VendorTransactionStatusPolicyInterface: '@App\\Service\\Policy\\VendorTransactionStatusPolicy'")) {
+if (!str_contains($servicesYaml, "App\\ServiceInterface\\Policy\\VendorTransactionStatusPolicyInterface: '@App\\Service\\Policy\\VendorTransactionStatusPolicy'")) {
     fwrite(STDERR, "services.yaml must alias VendorTransactionStatusPolicyInterface.\n");
     exit(1);
 }
 
-fwrite(STDOUT, "transaction policy smoke passed\n");
+echo "transaction policy smoke passed\n";

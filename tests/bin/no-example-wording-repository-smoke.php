@@ -2,39 +2,38 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2);
-$files = [
-    '.deploy/systemd/MANIFEST.md',
-    '.commanding/systemd/MANIFEST.md',
-    '.github/workflows/consuming.yml',
-    '.consuming/.github/workflows/consuming.yml',
-    'tools/vendoring-missing-class-scan-v2.php',
-];
+$paths = ['.deploy', 'ops', 'config', 'scripts', '.smoke', 'bin', 'public', 'tools', 'src'];
 $hits = [];
-foreach ($files as $file) {
-    $absolutePath = $root.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $file);
-    if (!is_file($absolutePath)) {
+$allowedPrefixes = ['.deploy/_template/', '.deploy/systemd/', '.consuming/', 'vendor/'];
+foreach ($paths as $path) {
+    $absolutePath = $root.DIRECTORY_SEPARATOR.$path;
+    if (!is_dir($absolutePath)) {
         continue;
     }
-
-    $contents = file_get_contents($absolutePath);
-    if (false === $contents) {
-        fwrite(STDERR, "Cannot read file: {$file}\n");
-        exit(1);
-    }
-
-    if (str_contains($contents, 'example only') || str_contains($contents, 'example: canonization') || str_contains($contents, 'Examples:')) {
-        $hits[] = $file;
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($absolutePath, FilesystemIterator::SKIP_DOTS));
+    foreach (vendoring_php_files($iterator) as $file) {
+        $relative = str_replace($root.DIRECTORY_SEPARATOR, '', $file->getPathname());
+        foreach ($allowedPrefixes as $prefix) {
+            if (str_starts_with($relative, $prefix)) {
+                continue 2;
+            }
+        }
+        $contents = (string) file_get_contents($file->getPathname());
+        if (str_contains(strtolower($contents), 'example')) {
+            $hits[] = $relative;
+        }
     }
 }
 if ([] !== $hits) {
-    fwrite(STDERR, 'Found repository-level example wording markers: '.implode(', ', $hits)."\n");
+    fwrite(STDERR, 'Found example wording markers in repository: '.implode(', ', $hits).PHP_EOL);
     exit(1);
 }
-$composerJson = json_decode((string) file_get_contents($root.'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-$scripts = $composerJson['scripts'] ?? [];
-if (!array_key_exists('test:no-example-wording-repository', $scripts)) {
-    fwrite(STDERR, "Missing composer script: test:no-example-wording-repository\n");
+$composer = vendoring_load_composer_json($root);
+if (!vendoring_has_script($composer, 'test:no-example-wording-repository')) {
+    fwrite(STDERR, "Missing composer script test:no-example-wording-repository\n");
     exit(1);
 }
-exit(0);
+echo "example wording repository smoke passed\n";

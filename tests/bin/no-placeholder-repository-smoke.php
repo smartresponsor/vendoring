@@ -2,14 +2,24 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2);
 $skipPrefixes = [
     $root.'/report/',
     $root.'/tests/',
     $root.'/.idea/',
+    $root.'/.phpunit.cache/',
+    $root.'/build/docs/phpdocumentor/',
+    $root.'/docs/release/',
+    $root.'/var/',
+    $root.'/.deploy/_template/',
 ];
 $skipFiles = [
     $root.'/composer.json',
+    $root.'/bin/generate-phpdocumentor-site.php',
+    $root.'/bin/generate-rc-evidence.php',
+    $root.'/config/reference.php',
 ];
 
 $iterator = new RecursiveIteratorIterator(
@@ -17,12 +27,16 @@ $iterator = new RecursiveIteratorIterator(
 );
 
 foreach ($iterator as $file) {
-    if (!$file->isFile()) {
+    if (!$file instanceof SplFileInfo || !$file->isFile()) {
         continue;
     }
 
     $path = str_replace('\\', '/', $file->getPathname());
-    if (str_contains($path, '/.git/') || str_contains($path, '/vendor/')) {
+    if (
+        str_contains($path, '/.git/')
+        || str_contains($path, '/vendor/')
+        || str_contains($path, '/.deploy/_template/')
+    ) {
         continue;
     }
 

@@ -11,6 +11,9 @@ use App\RepositoryInterface\VendorPassportRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<VendorPassport>
+ */
 final class VendorPassportRepository extends ServiceEntityRepository implements VendorPassportRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

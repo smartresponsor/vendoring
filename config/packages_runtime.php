@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
-use Symfony\Component\Config\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $configurator): void {
     $frameworkConfig = [
@@ -25,6 +25,10 @@ return static function (ContainerConfigurator $configurator): void {
 
     if (interface_exists('Symfony\\Component\\Security\\Csrf\\CsrfTokenManagerInterface')) {
         $frameworkConfig['csrf_protection'] = ['enabled' => true];
+        $frameworkConfig['session'] = [
+            'enabled' => true,
+            'storage_factory_id' => 'session.storage.factory.mock_file',
+        ];
     }
 
     if (class_exists(FrameworkBundle::class)) {

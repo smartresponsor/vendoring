@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure;
 
+require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class ComposerGuardScriptParityTest extends TestCase
 {
     public function testNoStubAndPlaceholderGuardScriptsUseCanonicalSmokePlusUnitFilterPattern(): void
     {
-        $composer = json_decode((string) file_get_contents(dirname(__DIR__, 3).'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-        self::assertIsArray($composer);
+        $composer = vendoring_load_composer_json(dirname(__DIR__, 3));
 
         $expected = [
             'test:no-stub-config' => [
@@ -61,13 +62,13 @@ final class ComposerGuardScriptParityTest extends TestCase
         ];
 
         foreach ($expected as $scriptName => $commands) {
-            self::assertSame($commands, $composer['scripts'][$scriptName] ?? null, $scriptName.' must use canonical smoke + unit/filter pattern');
+            self::assertSame($commands, vendoring_script_commands($composer, $scriptName), $scriptName.' must use canonical smoke + unit/filter pattern');
         }
     }
 
     public function testQualityPipelineIncludesComposerGuardParitySlice(): void
     {
-        $composer = json_decode((string) file_get_contents(dirname(__DIR__, 3).'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-        self::assertContains('@test:composer-guard-parity', $composer['scripts']['quality'] ?? []);
+        $composer = vendoring_load_composer_json(dirname(__DIR__, 3));
+        self::assertContains('@test:composer-guard-parity', vendoring_string_list(vendoring_composer_scripts($composer)['quality'] ?? null));
     }
 }

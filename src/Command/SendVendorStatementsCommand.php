@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\DTO\Statement\VendorStatementRecipientDTO;
-use App\DTO\Statement\VendorStatementRequestDTO;
 use App\ServiceInterface\Statement\StatementExporterPDFInterface;
 use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
@@ -42,9 +41,9 @@ final class SendVendorStatementsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $from = $this->resolveDateOption((string) $input->getOption('from'), date('Y-m-01'));
-        $to = $this->resolveDateOption((string) $input->getOption('to'), date('Y-m-t'));
-        $period = $this->resolvePeriodLabel((string) $input->getOption('period-label'), $from, $to);
+        $from = $this->resolveDateOption($this->stringOption($input, 'from'), date('Y-m-01'));
+        $to = $this->resolveDateOption($this->stringOption($input, 'to'), date('Y-m-t'));
+        $period = $this->resolvePeriodLabel($this->stringOption($input, 'period-label'), $from, $to);
 
         $recipients = $this->resolveRecipients($input, $from, $to);
         if ([] === $recipients) {
@@ -54,7 +53,7 @@ final class SendVendorStatementsCommand extends Command
         }
 
         foreach ($recipients as $recipient) {
-            $dto = new VendorStatementRequestDTO($recipient->tenantId, $recipient->vendorId, $from, $to, $recipient->currency);
+            $dto = new \App\DTO\Statement\VendorStatementRequestDTO($recipient->tenantId, $recipient->vendorId, $from, $to, $recipient->currency);
             $data = $this->svc->build($dto);
             $pdfPath = $this->pdf->export($dto, $data, null);
             $res = $this->mailer->send($recipient->tenantId, $recipient->vendorId, $recipient->email, $pdfPath, $period);
@@ -63,11 +62,11 @@ final class SendVendorStatementsCommand extends Command
                 $recipient->tenantId,
                 $recipient->vendorId,
                 $res['ok'] ? 'SENT' : 'FAIL',
-                $res['email'] ?? $recipient->email,
-                $res['periodLabel'] ?? $period,
+                $res['email'],
+                $res['periodLabel'],
                 $dto->currency,
-                $res['pdfPath'] ?? $pdfPath,
-                ($res['attached'] ?? false) ? 'yes' : 'no',
+                $res['pdfPath'],
+                $res['attached'] ? 'yes' : 'no',
                 $res['message']
             ));
         }
@@ -78,10 +77,10 @@ final class SendVendorStatementsCommand extends Command
     /** @return list<VendorStatementRecipientDTO> */
     private function resolveRecipients(InputInterface $input, string $from, string $to): array
     {
-        $tenantId = trim((string) $input->getOption('tenant-id'));
-        $vendorId = trim((string) $input->getOption('vendor-id'));
-        $email = trim((string) $input->getOption('email'));
-        $currency = strtoupper(trim((string) $input->getOption('currency')));
+        $tenantId = trim($this->stringOption($input, 'tenant-id'));
+        $vendorId = trim($this->stringOption($input, 'vendor-id'));
+        $email = trim($this->stringOption($input, 'email'));
+        $currency = strtoupper(trim($this->stringOption($input, 'currency')));
 
         if ('' !== $tenantId || '' !== $vendorId || '' !== $email) {
             if ('' === $tenantId || '' === $vendorId || '' === $email) {
@@ -105,13 +104,27 @@ final class SendVendorStatementsCommand extends Command
             return $periodLabel;
         }
 
-        $fromMonth = date('Y-m', strtotime($from));
-        $toMonth = date('Y-m', strtotime($to));
+        $fromMonth = date('Y-m', $this->safeTimestamp($from));
+        $toMonth = date('Y-m', $this->safeTimestamp($to));
 
         if ($fromMonth === $toMonth) {
-            return date('F Y', strtotime($from));
+            return date('F Y', $this->safeTimestamp($from));
         }
 
         return sprintf('%s to %s', $from, $to);
+    }
+
+    private function stringOption(InputInterface $input, string $name): string
+    {
+        $value = $input->getOption($name);
+
+        return is_scalar($value) ? (string) $value : '';
+    }
+
+    private function safeTimestamp(string $value): int
+    {
+        $timestamp = strtotime($value);
+
+        return false === $timestamp ? time() : $timestamp;
     }
 }

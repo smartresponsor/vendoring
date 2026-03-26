@@ -17,44 +17,46 @@ final class VendorTransactionOperatorSurfaceTest extends TestCase
 
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
 
-        $indexResponse = KernelRuntimeHarness::requestForm($kernel, 'GET', '/ops/vendor-transactions/vendor-ops');
+        try {
+            $indexResponse = KernelRuntimeHarness::requestForm($kernel, 'GET', '/ops/vendor-transactions/vendor-ops');
 
-        self::assertSame(200, $indexResponse->getStatusCode());
-        self::assertStringContainsString('Vendor transaction operator surface', (string) $indexResponse->getContent());
-        self::assertStringContainsString('Create transaction', (string) $indexResponse->getContent());
-        self::assertStringContainsString('No transactions found for this vendor yet.', (string) $indexResponse->getContent());
+            self::assertSame(200, $indexResponse->getStatusCode());
+            self::assertStringContainsString('Vendor transaction operator surface', (string) $indexResponse->getContent());
+            self::assertStringContainsString('Create transaction', (string) $indexResponse->getContent());
+            self::assertStringContainsString('No transactions found for this vendor yet.', (string) $indexResponse->getContent());
 
-        $createResponse = KernelRuntimeHarness::requestForm($kernel, 'POST', '/ops/vendor-transactions/vendor-ops/create', [
-            'orderId' => 'order-ops-1',
-            'projectId' => 'project-ops-1',
-            'amount' => '15.75',
-        ]);
+            $createResponse = KernelRuntimeHarness::requestForm($kernel, 'POST', '/ops/vendor-transactions/vendor-ops/create', [
+                'orderId' => 'order-ops-1',
+                'projectId' => 'project-ops-1',
+                'amount' => '15.75',
+            ]);
 
-        self::assertSame(302, $createResponse->getStatusCode());
-        self::assertSame('/ops/vendor-transactions/vendor-ops?message=Transaction%20created.', $createResponse->headers->get('Location'));
+            self::assertSame(302, $createResponse->getStatusCode());
+            self::assertSame('/ops/vendor-transactions/vendor-ops?message=Transaction%20created.', $createResponse->headers->get('Location'));
 
-        $reloadedResponse = KernelRuntimeHarness::requestForm($kernel, 'GET', '/ops/vendor-transactions/vendor-ops?message=Transaction%20created.');
-        $reloadedHtml = (string) $reloadedResponse->getContent();
+            $reloadedResponse = KernelRuntimeHarness::requestForm($kernel, 'GET', '/ops/vendor-transactions/vendor-ops?message=Transaction%20created.');
+            $reloadedHtml = (string) $reloadedResponse->getContent();
 
-        self::assertStringContainsString('Transaction created.', $reloadedHtml);
-        self::assertStringContainsString('order-ops-1', $reloadedHtml);
-        self::assertStringContainsString('project-ops-1', $reloadedHtml);
-        self::assertStringContainsString('15.75', $reloadedHtml);
-        self::assertStringContainsString('pending', $reloadedHtml);
+            self::assertStringContainsString('Transaction created.', $reloadedHtml);
+            self::assertStringContainsString('order-ops-1', $reloadedHtml);
+            self::assertStringContainsString('project-ops-1', $reloadedHtml);
+            self::assertStringContainsString('15.75', $reloadedHtml);
+            self::assertStringContainsString('pending', $reloadedHtml);
 
-        $statusResponse = KernelRuntimeHarness::requestForm($kernel, 'POST', '/ops/vendor-transactions/vendor-ops/1/status', [
-            'status' => 'authorized',
-        ]);
+            $statusResponse = KernelRuntimeHarness::requestForm($kernel, 'POST', '/ops/vendor-transactions/vendor-ops/1/status', [
+                'status' => 'authorized',
+            ]);
 
-        self::assertSame(302, $statusResponse->getStatusCode());
-        self::assertSame('/ops/vendor-transactions/vendor-ops?message=Transaction%20status%20updated.', $statusResponse->headers->get('Location'));
+            self::assertSame(302, $statusResponse->getStatusCode());
+            self::assertSame('/ops/vendor-transactions/vendor-ops?message=Transaction%20status%20updated.', $statusResponse->headers->get('Location'));
 
-        $authorizedResponse = KernelRuntimeHarness::requestForm($kernel, 'GET', '/ops/vendor-transactions/vendor-ops?message=Transaction%20status%20updated.');
+            $authorizedResponse = KernelRuntimeHarness::requestForm($kernel, 'GET', '/ops/vendor-transactions/vendor-ops?message=Transaction%20status%20updated.');
 
-        self::assertStringContainsString('Transaction status updated.', (string) $authorizedResponse->getContent());
-        self::assertStringContainsString('authorized', (string) $authorizedResponse->getContent());
-
-        $kernel->shutdown();
+            self::assertStringContainsString('Transaction status updated.', (string) $authorizedResponse->getContent());
+            self::assertStringContainsString('authorized', (string) $authorizedResponse->getContent());
+        } finally {
+            KernelRuntimeHarness::cleanupRuntimeState($kernel);
+        }
     }
 
     public function testOperatorSurfaceRendersValidationErrorFeedback(): void
@@ -65,18 +67,20 @@ final class VendorTransactionOperatorSurfaceTest extends TestCase
 
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
 
-        $createResponse = KernelRuntimeHarness::requestForm($kernel, 'POST', '/ops/vendor-transactions/vendor-ops/create', [
-            'orderId' => '',
-            'amount' => '7.00',
-        ]);
+        try {
+            $createResponse = KernelRuntimeHarness::requestForm($kernel, 'POST', '/ops/vendor-transactions/vendor-ops/create', [
+                'orderId' => '',
+                'amount' => '7.00',
+            ]);
 
-        self::assertSame(302, $createResponse->getStatusCode());
-        self::assertSame('/ops/vendor-transactions/vendor-ops?error=order_id_required', $createResponse->headers->get('Location'));
+            self::assertSame(302, $createResponse->getStatusCode());
+            self::assertSame('/ops/vendor-transactions/vendor-ops?error=order_id_required', $createResponse->headers->get('Location'));
 
-        $errorResponse = KernelRuntimeHarness::requestForm($kernel, 'GET', '/ops/vendor-transactions/vendor-ops?error=order_id_required');
+            $errorResponse = KernelRuntimeHarness::requestForm($kernel, 'GET', '/ops/vendor-transactions/vendor-ops?error=order_id_required');
 
-        self::assertStringContainsString('order_id_required', (string) $errorResponse->getContent());
-
-        $kernel->shutdown();
+            self::assertStringContainsString('order_id_required', (string) $errorResponse->getContent());
+        } finally {
+            KernelRuntimeHarness::cleanupRuntimeState($kernel);
+        }
     }
 }

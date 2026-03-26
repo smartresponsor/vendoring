@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2);
 
 $requiredFiles = [
@@ -18,8 +20,8 @@ foreach ($requiredFiles as $file) {
     }
 }
 
-$composer = json_decode((string) file_get_contents($root.'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-$scripts = $composer['scripts'] ?? [];
+$composer = vendoring_load_composer_json($root);
+$scripts = vendoring_composer_section($composer, 'scripts');
 
 foreach (['docs:rc-evidence', 'test:rc-evidence', 'quality:release-candidate'] as $script) {
     if (!array_key_exists($script, $scripts)) {

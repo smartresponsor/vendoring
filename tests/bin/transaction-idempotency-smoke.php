@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2);
 $composerJsonPath = $root.'/composer.json';
 $repoInterfacePath = $root.'/src/RepositoryInterface/VendorTransactionRepositoryInterface.php';
@@ -11,8 +13,9 @@ $controllerPath = $root.'/src/Controller/VendorTransactionController.php';
 $pgMigrationPath = $root.'/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql';
 $sqliteMigrationPath = $root.'/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql';
 
-$composerJson = json_decode((string) file_get_contents($composerJsonPath), true, 512, JSON_THROW_ON_ERROR);
-if (!array_key_exists('test:transaction-idempotency', $composerJson['scripts'] ?? [])) {
+$composerJson = vendoring_load_composer_json($root);
+$scripts = vendoring_composer_section($composerJson, 'scripts');
+if (!array_key_exists('test:transaction-idempotency', $scripts)) {
     fwrite(STDERR, "composer script test:transaction-idempotency missing\n");
     exit(1);
 }

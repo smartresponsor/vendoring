@@ -30,7 +30,9 @@ if (201 !== $createResponse->getStatusCode() || ($createPayload['status'] ?? nul
 $listResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor-transactions/vendor/vendor-smoke');
 $listPayload = KernelRuntimeHarness::decodeJson($listResponse);
 
-if (200 !== $listResponse->getStatusCode() || 1 !== count($listPayload['data'] ?? [])) {
+$listData = $listPayload['data'] ?? null;
+
+if (200 !== $listResponse->getStatusCode() || !is_array($listData) || 1 !== count($listData)) {
     fwrite(STDERR, "transaction kernel runtime smoke failed during list\n");
     exit(1);
 }

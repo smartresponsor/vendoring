@@ -49,7 +49,7 @@ final class VendorReleaseBaselineReader implements VendorReleaseBaselineReaderIn
         ];
 
         $issues = [];
-        $surfaceStatus = $runtimeStatus['surfaceStatus'] ?? [];
+        $surfaceStatus = $runtimeStatus['surfaceStatus'];
         foreach ($surfaceStatus as $surface => $ready) {
             if (true !== $ready) {
                 $issues[] = sprintf('surface.%s.missing', (string) $surface);

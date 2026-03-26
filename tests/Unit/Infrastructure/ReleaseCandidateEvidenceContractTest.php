@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure;
 
+require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class ReleaseCandidateEvidenceContractTest extends TestCase
 {
     public function testComposerDefinesReleaseCandidateEvidenceScripts(): void
     {
-        $composer = json_decode((string) file_get_contents(dirname(__DIR__, 3).'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-        $scripts = $composer['scripts'] ?? [];
+        $composer = vendoring_load_composer_json(dirname(__DIR__, 3));
+        $scripts = vendoring_composer_section($composer, 'scripts');
 
         foreach (['docs:rc-evidence', 'test:rc-evidence'] as $script) {
             self::assertArrayHasKey($script, $scripts, 'Missing RC evidence script: '.$script);

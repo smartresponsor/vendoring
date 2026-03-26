@@ -47,4 +47,9 @@ final class VendorPassport
     {
         $this->verified = true;
     }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
 }

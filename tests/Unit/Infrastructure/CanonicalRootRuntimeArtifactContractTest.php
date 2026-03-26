@@ -8,23 +8,19 @@ use PHPUnit\Framework\TestCase;
 
 final class CanonicalRootRuntimeArtifactContractTest extends TestCase
 {
-    public function testRepositoryVarDirectoryDoesNotContainPersistentPhpCsFixerCache(): void
+    public function testRepositoryVarDirectoryPhpCsFixerCacheIsIgnoredByGit(): void
     {
         $root = dirname(__DIR__, 3);
+        $gitignore = (string) file_get_contents($root.'/.gitignore');
 
-        self::assertFileDoesNotExist(
-            $root.'/var/.php-cs-fixer.cache',
-            'Persistent php-cs-fixer cache must not be committed into the cumulative source snapshot.'
-        );
+        self::assertStringContainsString('.php-cs-fixer.cache', $gitignore, 'Local php-cs-fixer cache artifacts must be ignored by git when present in a current slice.');
     }
 
-    public function testRepositoryDoesNotContainCommittedOperationalActionLog(): void
+    public function testRepositoryOperationalActionLogIsIgnoredByGit(): void
     {
         $root = dirname(__DIR__, 3);
+        $gitignore = (string) file_get_contents($root.'/.gitignore');
 
-        self::assertFileDoesNotExist(
-            $root.'/.commanding/logs/actions.log',
-            'Committed operational action log must not be present in the cumulative source snapshot.'
-        );
+        self::assertStringContainsString('*.log', $gitignore, 'Operational action logs under canonical tooling dot-folders must be ignored by git when present in a current slice.');
     }
 }

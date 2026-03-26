@@ -41,6 +41,8 @@ final class EntryPointConstructorContractTest extends TestCase
     #[DataProvider('entryPointProvider')]
     public function testEntryPointsUseInterfacesOrApprovedFrameworkContracts(string $className): void
     {
+        self::assertTrue(class_exists($className) || interface_exists($className));
+        /** @var class-string $className */
         $reflection = new \ReflectionClass($className);
         $constructor = $reflection->getConstructor();
         self::assertNotNull($constructor, sprintf('%s must declare constructor explicitly.', $className));

@@ -5,21 +5,20 @@ declare(strict_types=1);
 namespace App\RepositoryInterface;
 
 use App\Entity\Vendor\VendorApiKey;
+use Doctrine\Persistence\ObjectRepository;
 
 /**
- * App-level repository contract for vendor API keys.
- *
- * Important: this interface intentionally does not redeclare Doctrine's generic
- * find() signature, because narrowing that method breaks compatibility with
- * Doctrine repository proxies and ServiceEntityRepository.
+ * @extends ObjectRepository<VendorApiKey>
  */
-interface VendorApiKeyRepositoryInterface
+interface VendorApiKeyRepositoryInterface extends ObjectRepository
 {
     public function findOneByApiKey(string $apiKey): ?VendorApiKey;
 
     public function findOneByVendorId(string $vendorId): ?VendorApiKey;
 
-    public function save(VendorApiKey $vendorApiKey): void;
+    public function findActiveByToken(string $tokenHash): ?VendorApiKey;
 
-    public function remove(VendorApiKey $vendorApiKey): void;
+    public function save(VendorApiKey $vendorApiKey, bool $flush = false): void;
+
+    public function remove(VendorApiKey $vendorApiKey, bool $flush = false): void;
 }

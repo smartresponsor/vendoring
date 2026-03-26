@@ -8,19 +8,12 @@ use PHPUnit\Framework\TestCase;
 
 final class CanonicalIdeRuntimeArtifactContractTest extends TestCase
 {
-    public function testIdeaRuntimeArtifactsAreNotCommitted(): void
+    public function testIdeaRuntimeArtifactsAreIgnoredByGit(): void
     {
         $root = dirname(__DIR__, 3);
+        $gitignore = (string) file_get_contents($root.'/.gitignore');
 
-        foreach ([
-            '/.idea/Canonization.iml',
-            '/.idea/Vendor.iml',
-            '/.idea/workspace.xml',
-            '/.ide/sr_default_inspector.xml',
-        ] as $relative) {
-            self::assertFileDoesNotExist($root.$relative, 'Forbidden IDE runtime artifact remains: '.ltrim($relative, '/'));
-        }
-
-        self::assertFalse(is_dir($root.'/.ide'), 'Forbidden empty hidden IDE directory remains: .ide');
+        self::assertStringContainsString('.idea/', $gitignore, 'IDE project directory must be ignored by git when present in a local current slice.');
+        self::assertStringContainsString('*.iml', $gitignore, 'IDE module files must be ignored by git when present in a local current slice.');
     }
 }

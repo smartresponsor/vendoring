@@ -162,3 +162,6 @@ tools/tmp/
 /.commanding/legacy/**/fast-import/
 /src/src/
 /src/**/src/
+
+# Local protocol analysis artifacts
+/*_PROTOCOL_ANALYSIS.md

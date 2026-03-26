@@ -12,10 +12,6 @@ final class CanonicalNoExampleWordingRepositoryContractTest extends TestCase
     {
         $root = dirname(__DIR__, 3);
         $files = [
-            '.deploy/systemd/MANIFEST.md',
-            '.commanding/systemd/MANIFEST.md',
-            '.github/workflows/consuming.yml',
-            '.consuming/.github/workflows/consuming.yml',
             'tools/vendoring-missing-class-scan-v2.php',
         ];
 

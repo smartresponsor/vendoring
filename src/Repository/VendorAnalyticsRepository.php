@@ -11,6 +11,9 @@ use App\RepositoryInterface\VendorAnalyticsRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<VendorAnalytics>
+ */
 final class VendorAnalyticsRepository extends ServiceEntityRepository implements VendorAnalyticsRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

@@ -40,16 +40,16 @@ final class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBui
         $finance = $this->financeRuntimeViewBuilder->build(
             tenantId: $tenantId,
             vendorId: $vendorId,
-            from: $from,
-            to: $to,
+            from: $from ?? '',
+            to: $to ?? '',
             currency: $currency,
         )->toArray();
 
         $statementDelivery = $this->statementDeliveryRuntimeViewBuilder->build(
             tenantId: $tenantId,
             vendorId: $vendorId,
-            from: $from,
-            to: $to,
+            from: $from ?? '',
+            to: $to ?? '',
             currency: $currency,
         )->toArray();
 

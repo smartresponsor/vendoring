@@ -16,6 +16,7 @@ final class DoctrineEntityManagerFactory
             paths: [$projectRoot.'/src/Entity'],
             isDevMode: true,
         );
+        $config->enableNativeLazyObjects(true);
 
         $connection = DriverManager::getConnection([
             'driver' => 'pdo_sqlite',

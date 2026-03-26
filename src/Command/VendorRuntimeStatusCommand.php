@@ -35,12 +35,16 @@ final class VendorRuntimeStatusCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $tenantId = (string) $input->getOption('tenantId');
-        $vendorId = (string) $input->getOption('vendorId');
+        $tenantIdOption = $input->getOption('tenantId');
+        $vendorIdOption = $input->getOption('vendorId');
         $from = $input->getOption('from');
         $to = $input->getOption('to');
-        $currency = (string) $input->getOption('currency');
-        $format = (string) $input->getOption('format');
+        $currencyOption = $input->getOption('currency');
+        $formatOption = $input->getOption('format');
+        $tenantId = is_scalar($tenantIdOption) ? (string) $tenantIdOption : '';
+        $vendorId = is_scalar($vendorIdOption) ? (string) $vendorIdOption : '';
+        $currency = is_scalar($currencyOption) ? (string) $currencyOption : 'USD';
+        $format = is_scalar($formatOption) ? (string) $formatOption : 'text';
 
         if ('' === $tenantId || '' === $vendorId) {
             $output->writeln('<error>Both --tenantId and --vendorId are required.</error>');

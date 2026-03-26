@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -17,13 +18,15 @@ final class TfidfSearch implements TfidfSearchInterface
 
     private int $N = 0;
 
+    /** @return list<string> */
     private function tokenize(string $s): array
     {
         $s = mb_strtolower($s);
-        $s = preg_replace('/[^a-z0-9\p{Cyrillic}\s]+/u', ' ', $s);
-        $t = preg_split('/\s+/u', trim($s)) ?: [];
+        $normalized = preg_replace('/[^a-z0-9\p{Cyrillic}\s]+/u', ' ', $s);
+        $prepared = is_string($normalized) ? $normalized : $s;
+        $tokens = preg_split('/\s+/u', trim($prepared)) ?: [];
 
-        return array_values(array_filter($t, fn ($x) => $x !== ''));
+        return array_values(array_filter($tokens, static fn (string $token): bool => '' !== $token));
     }
 
     public function addDocument(string $text): int
@@ -38,7 +41,7 @@ final class TfidfSearch implements TfidfSearchInterface
         }
         $id = $this->N;
         $this->docs[$id] = ['tokens' => $freq, 'tfidf' => []];
-        $this->N++;
+        ++$this->N;
 
         return $id;
     }

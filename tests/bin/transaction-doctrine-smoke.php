@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2);
-$composer = json_decode((string) file_get_contents($root.'/composer.json'), true, flags: JSON_THROW_ON_ERROR);
-$scripts = $composer['scripts'] ?? [];
+$composer = vendoring_load_composer_json($root);
+$scripts = vendoring_composer_section($composer, 'scripts');
 
 if (!isset($scripts['test:transaction-doctrine'])) {
     fwrite(STDERR, "Missing composer script test:transaction-doctrine\n");

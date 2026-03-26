@@ -12,6 +12,7 @@ use App\Entity\Vendor\Vendor;
 use App\Entity\Vendor\VendorAttachment;
 use App\Entity\Vendor\VendorMedia;
 use App\Event\VendorAttachmentUploadedEvent;
+use App\Event\VendorMediaUploadedEvent;
 use App\RepositoryInterface\VendorMediaRepositoryInterface;
 use App\ServiceInterface\VendorMediaServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;

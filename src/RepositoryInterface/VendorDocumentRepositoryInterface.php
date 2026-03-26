@@ -7,15 +7,11 @@ declare(strict_types=1);
 namespace App\RepositoryInterface;
 
 use App\Entity\Vendor\VendorDocument;
+use Doctrine\Persistence\ObjectRepository;
 
-interface VendorDocumentRepositoryInterface
+/**
+ * @extends ObjectRepository<VendorDocument>
+ */
+interface VendorDocumentRepositoryInterface extends ObjectRepository
 {
-    public function find(int $id): ?VendorDocument;
-
-    public function findOneBy(array $criteria, ?array $orderBy = null): ?VendorDocument;
-
-    /**
-     * @return list<VendorDocument>
-     */
-    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array;
 }

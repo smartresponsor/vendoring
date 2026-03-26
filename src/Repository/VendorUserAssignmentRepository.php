@@ -10,6 +10,9 @@ use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<VendorUserAssignment>
+ */
 final class VendorUserAssignmentRepository extends ServiceEntityRepository implements VendorUserAssignmentRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -37,34 +40,42 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
 
     public function findPrimaryForVendorId(int $vendorId): ?VendorUserAssignmentInterface
     {
-        return $this->findOneBy([
+        $entity = $this->findOneBy([
             'vendorId' => $vendorId,
             'status' => 'active',
             'isPrimary' => true,
         ]);
+
+        return $entity instanceof VendorUserAssignmentInterface ? $entity : null;
     }
 
     public function findActiveByVendorId(int $vendorId): array
     {
-        return $this->findBy([
+        $entities = $this->findBy([
             'vendorId' => $vendorId,
             'status' => 'active',
         ]);
+
+        return array_values(array_filter($entities, static fn (mixed $entity): bool => $entity instanceof VendorUserAssignmentInterface));
     }
 
     public function findActiveByUserId(int $userId): array
     {
-        return $this->findBy([
+        $entities = $this->findBy([
             'userId' => $userId,
             'status' => 'active',
         ]);
+
+        return array_values(array_filter($entities, static fn (mixed $entity): bool => $entity instanceof VendorUserAssignmentInterface));
     }
 
     public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?VendorUserAssignmentInterface
     {
-        return $this->findOneBy([
+        $entity = $this->findOneBy([
             'vendorId' => $vendorId,
             'userId' => $userId,
         ]);
+
+        return $entity instanceof VendorUserAssignmentInterface ? $entity : null;
     }
 }

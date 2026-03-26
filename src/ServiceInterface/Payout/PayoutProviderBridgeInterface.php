@@ -7,5 +7,6 @@ namespace App\ServiceInterface\Payout;
 
 interface PayoutProviderBridgeInterface
 {
+    /** @return array<string, mixed> */
     public function transfer(string $tenantId, string $vendorId, string $provider, string $accountRef, float $amount, string $currency): array;
 }

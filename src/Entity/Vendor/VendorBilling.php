@@ -46,4 +46,19 @@ final class VendorBilling
     {
         $this->payoutStatus = 'completed';
     }
+
+    public function getIban(): ?string
+    {
+        return $this->iban;
+    }
+
+    public function getSwift(): ?string
+    {
+        return $this->swift;
+    }
+
+    public function getPayoutMethod(): ?string
+    {
+        return $this->payoutMethod;
+    }
 }

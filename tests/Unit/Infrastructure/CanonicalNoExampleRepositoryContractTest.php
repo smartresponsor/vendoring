@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure;
 
+require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class CanonicalNoExampleRepositoryContractTest extends TestCase
@@ -36,11 +38,7 @@ final class CanonicalNoExampleRepositoryContractTest extends TestCase
                 new \RecursiveDirectoryIterator($absolutePath, \FilesystemIterator::SKIP_DOTS)
             );
 
-            foreach ($iterator as $file) {
-                if (!$file->isFile()) {
-                    continue;
-                }
-
+            foreach (vendoring_php_files($iterator) as $file) {
                 $contents = file_get_contents($file->getPathname());
                 if (false === $contents) {
                     continue;

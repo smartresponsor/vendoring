@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2);
 $entity = (string) file_get_contents($root.'/src/Entity/Vendor/VendorTransaction.php');
 $pg = (string) file_get_contents($root.'/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
 $sqlite = (string) file_get_contents($root.'/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
-$composer = json_decode((string) file_get_contents($root.'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+$composer = vendoring_load_composer_json($root);
 
 if (!str_contains($entity, 'idx_vendor_transaction_vendor_created')) {
     fwrite(STDERR, "VendorTransaction entity must declare vendor-created index metadata.\n");
@@ -25,7 +27,7 @@ foreach ([$pg, $sqlite] as $sql) {
     }
 }
 
-if (!isset($composer['scripts']['test:transaction-schema-parity'])) {
+if (!vendoring_has_script($composer, 'test:transaction-schema-parity')) {
     fwrite(STDERR, "composer.json must define test:transaction-schema-parity.\n");
     exit(1);
 }

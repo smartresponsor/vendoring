@@ -11,6 +11,9 @@ use App\RepositoryInterface\VendorMediaRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<VendorMedia>
+ */
 final class VendorMediaRepository extends ServiceEntityRepository implements VendorMediaRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

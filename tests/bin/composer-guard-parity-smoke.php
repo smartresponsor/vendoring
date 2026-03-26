@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2);
-$composer = json_decode((string) file_get_contents($root.'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+$composer = vendoring_load_composer_json($root);
 
 $expectedScripts = [
     'test:no-stub-config' => [
@@ -57,7 +59,7 @@ $expectedScripts = [
 ];
 
 foreach ($expectedScripts as $name => $commands) {
-    if (($composer['scripts'][$name] ?? null) !== $commands) {
+    if (vendoring_script_commands($composer, $name) !== $commands) {
         fwrite(STDERR, '[FAIL] composer script mismatch: '.$name.PHP_EOL);
         exit(1);
     }
@@ -65,7 +67,10 @@ foreach ($expectedScripts as $name => $commands) {
     fwrite(STDOUT, '[OK] '.$name.' uses canonical smoke + unit/filter pattern'.PHP_EOL);
 }
 
-if (!in_array('@test:composer-guard-parity', $composer['scripts']['quality'] ?? [], true)) {
+$scripts = vendoring_composer_section($composer, 'scripts');
+$quality = vendoring_string_list($scripts['quality'] ?? null);
+
+if (!in_array('@test:composer-guard-parity', $quality, true)) {
     fwrite(STDERR, '[FAIL] quality pipeline missing @test:composer-guard-parity'.PHP_EOL);
     exit(1);
 }

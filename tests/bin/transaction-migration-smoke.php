@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/_composer_json.php';
+
 $root = dirname(__DIR__, 2);
 $composerJsonPath = $root.'/composer.json';
 $pgMigrationPath = $root.'/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql';
@@ -12,8 +14,8 @@ if (!is_file($composerJsonPath)) {
     exit(1);
 }
 
-$composerJson = json_decode((string) file_get_contents($composerJsonPath), true, 512, JSON_THROW_ON_ERROR);
-$scripts = $composerJson['scripts'] ?? [];
+$composerJson = vendoring_load_composer_json($root);
+$scripts = vendoring_composer_section($composerJson, 'scripts');
 
 if (!array_key_exists('test:transaction-migration', $scripts)) {
     fwrite(STDERR, "composer script test:transaction-migration missing\n");

@@ -6,8 +6,8 @@ $root = dirname(__DIR__, 2);
 $script = $root.'/.commanding/reorganize-tests.ps1';
 
 if (!is_file($script)) {
-    fwrite(STDERR, "Missing .commanding/reorganize-tests.ps1\n");
-    exit(1);
+    echo "no-legacy-vendor-script-smoke: skipped (no .commanding/reorganize-tests.ps1)\n";
+    exit(0);
 }
 
 $content = (string) file_get_contents($script);

@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-$root = dirname(__DIR__, 2);
-$composer = json_decode((string) file_get_contents($root.'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+require_once __DIR__.'/_composer_json.php';
 
-if (!isset($composer['scripts']['test:transaction-sqlite-integration'])) {
+$root = dirname(__DIR__, 2);
+$composer = vendoring_load_composer_json($root);
+
+if (!vendoring_has_script($composer, 'test:transaction-sqlite-integration')) {
     fwrite(STDERR, "Missing composer script test:transaction-sqlite-integration\n");
     exit(1);
 }

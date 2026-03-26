@@ -1,10 +1,4 @@
-src/Controller/Ops/VendorTransactionOperatorController.php
-src/Service/Ops/VendorTransactionOperatorPageBuilder.php
-tests/Support/Runtime/KernelRuntimeHarness.php
-tests/Integration/Runtime/VendorTransactionOperatorSurfaceTest.php
-tests/bin/operator-surface-smoke.php
-docs/release/RC_OPERATOR_SURFACE.md
-docs/release/RC_RUNTIME_SURFACES.md
-README.md
 composer.json
-.github/workflows/ui-smoke.yml
+src/Repository/VendorSecurityRepository.php
+tools/ci/run-vendor-local-pipeline.ps1
+tools/report/VendorQualityResidueReport.php

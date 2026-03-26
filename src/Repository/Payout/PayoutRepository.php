@@ -49,16 +49,16 @@ final class PayoutRepository implements PayoutRepositoryInterface
         }
 
         return new Payout(
-            (string) $row['id'],
-            (string) $row['vendor_id'],
-            (string) $row['currency'],
-            (int) $row['gross_cents'],
-            (int) $row['fee_cents'],
-            (int) $row['net_cents'],
-            (string) $row['status'],
-            (string) $row['created_at'],
-            $row['processed_at'] ? (string) $row['processed_at'] : null,
-            json_decode((string) $row['meta'], true) ?: []
+            $this->stringCell($row, 'id'),
+            $this->stringCell($row, 'vendor_id'),
+            $this->stringCell($row, 'currency'),
+            $this->intCell($row, 'gross_cents'),
+            $this->intCell($row, 'fee_cents'),
+            $this->intCell($row, 'net_cents'),
+            $this->stringCell($row, 'status'),
+            $this->stringCell($row, 'created_at'),
+            '' !== $this->stringCell($row, 'processed_at') ? $this->stringCell($row, 'processed_at') : null,
+            $this->metaCell($row, 'meta')
         );
     }
 
@@ -66,11 +66,50 @@ final class PayoutRepository implements PayoutRepositoryInterface
     {
         $rows = $this->db->fetchAllAssociative('SELECT * FROM payout_items WHERE payout_id=:p', ['p' => $payoutId]);
 
-        return array_map(fn ($r) => new PayoutItem((string) $r['id'], (string) $r['payout_id'], (string) $r['entry_id'], (int) $r['amount_cents']), $rows);
+        return array_map(function (array $row): PayoutItem {
+            return new PayoutItem(
+                $this->stringCell($row, 'id'),
+                $this->stringCell($row, 'payout_id'),
+                $this->stringCell($row, 'entry_id'),
+                $this->intCell($row, 'amount_cents')
+            );
+        }, $rows);
     }
 
     public function markProcessed(string $id, string $processedAt): void
     {
         $this->db->update('payouts', ['status' => 'processed', 'processed_at' => $processedAt], ['id' => $id]);
+    }
+
+    /** @param array<string, mixed> $row */
+    private function stringCell(array $row, string $key): string
+    {
+        $value = $row[$key] ?? '';
+
+        return is_scalar($value) ? (string) $value : '';
+    }
+
+    /** @param array<string, mixed> $row */
+    private function intCell(array $row, string $key): int
+    {
+        $value = $row[$key] ?? 0;
+
+        return is_numeric($value) ? (int) $value : 0;
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     *
+     * @return array<string, mixed>
+     */
+    private function metaCell(array $row, string $key): array
+    {
+        $value = $row[$key] ?? '{}';
+        if (!is_scalar($value)) {
+            return [];
+        }
+        $decoded = json_decode((string) $value, true);
+
+        return is_array($decoded) ? $decoded : [];
     }
 }

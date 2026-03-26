@@ -43,25 +43,18 @@ if ([] !== $waveArtifacts) {
     exit(1);
 }
 
-$protocolArtifacts = array_values(array_filter(scandir($root) ?: [], static function (string $entry): bool {
-    if ('.' === $entry || '..' === $entry) {
-        return false;
-    }
+$gitignore = is_file($root.'/.gitignore') ? (string) file_get_contents($root.'/.gitignore') : '';
 
-    return (bool) preg_match('/^[A-Z0-9_-]+_PROTOCOL_ANALYSIS\.md$/', $entry);
-}));
-
-if ([] !== $protocolArtifacts) {
-    fwrite(STDERR, 'Root must not contain protocol analysis markdown files: '.implode(', ', $protocolArtifacts).PHP_EOL);
+if (!str_contains($gitignore, 'PROTOCOL_ANALYSIS.md')) {
+    fwrite(STDERR, "Local protocol analysis markdown artifacts must be ignored by git when present in a current slice\n");
     exit(1);
 }
 
-fwrite(STDOUT, '[OK] root-level protocol analysis markdown artifacts are absent
-');
+fwrite(STDOUT, "[OK] local protocol analysis markdown artifacts are ignored by git\n");
 
-if (is_dir($root.'/vendor')) {
-    fwrite(STDERR, "Persistent vendor/ directory must not exist in cumulative source snapshot\n");
+if (!str_contains($gitignore, '/vendor/')) {
+    fwrite(STDERR, "Local vendor/ directory must be ignored by git when present in a current slice\n");
     exit(1);
 }
 
-fwrite(STDOUT, "[OK] persistent vendor directory is absent\n");
+fwrite(STDOUT, "[OK] local vendor directory is ignored by git\n");

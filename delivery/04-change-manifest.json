@@ -1,17 +1,11 @@
 {
-  "wave": 4,
-  "message": "OperatorSurface",
-  "touched_paths": [
-    "src/Controller/Ops/VendorTransactionOperatorController.php",
-    "src/Service/Ops/VendorTransactionOperatorPageBuilder.php",
-    "tests/Support/Runtime/KernelRuntimeHarness.php",
-    "tests/Integration/Runtime/VendorTransactionOperatorSurfaceTest.php",
-    "tests/bin/operator-surface-smoke.php",
-    "docs/release/RC_OPERATOR_SURFACE.md",
-    "docs/release/RC_RUNTIME_SURFACES.md",
-    "README.md",
+  "delivery": 4,
+  "message": "vendor-security-repo-phpmd-quality-residue-fix",
+  "touched_files": [
     "composer.json",
-    ".github/workflows/ui-smoke.yml"
+    "src/Repository/VendorSecurityRepository.php",
+    "tools/ci/run-vendor-local-pipeline.ps1",
+    "tools/report/VendorQualityResidueReport.php"
   ],
-  "removed_paths": []
+  "removed_files": []
 }

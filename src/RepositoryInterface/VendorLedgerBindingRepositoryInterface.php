@@ -7,15 +7,11 @@ declare(strict_types=1);
 namespace App\RepositoryInterface;
 
 use App\Entity\Vendor\VendorLedgerBinding;
+use Doctrine\Persistence\ObjectRepository;
 
-interface VendorLedgerBindingRepositoryInterface
+/**
+ * @extends ObjectRepository<VendorLedgerBinding>
+ */
+interface VendorLedgerBindingRepositoryInterface extends ObjectRepository
 {
-    public function find(int $id): ?VendorLedgerBinding;
-
-    public function findOneBy(array $criteria, ?array $orderBy = null): ?VendorLedgerBinding;
-
-    /**
-     * @return list<VendorLedgerBinding>
-     */
-    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array;
 }

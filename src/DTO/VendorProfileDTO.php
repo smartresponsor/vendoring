@@ -6,6 +6,7 @@ namespace App\DTO;
 
 final readonly class VendorProfileDTO
 {
+    /** @param array<string, string> $socials */
     public function __construct(
         public int $vendorId,
         public ?string $displayName = null,

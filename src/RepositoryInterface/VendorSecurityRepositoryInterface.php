@@ -6,18 +6,14 @@ declare(strict_types=1);
 
 namespace App\RepositoryInterface;
 
+use App\Entity\Vendor\VendorSecurity;
 use App\EntityInterface\VendorSecurityInterface;
+use Doctrine\Persistence\ObjectRepository;
 
-interface VendorSecurityRepositoryInterface
+/**
+ * @extends ObjectRepository<VendorSecurity>
+ */
+interface VendorSecurityRepositoryInterface extends ObjectRepository
 {
-    public function find(int $id): ?VendorSecurityInterface;
-
-    public function findOneBy(array $criteria, ?array $orderBy = null): ?VendorSecurityInterface;
-
-    /**
-     * @return list<VendorSecurityInterface>
-     */
-    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array;
-
     public function findOneActiveForVendorId(int $vendorId): ?VendorSecurityInterface;
 }

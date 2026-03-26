@@ -79,6 +79,11 @@ final class ServiceWiringContractTest extends TestCase
 
     public function testVendorApiKeyRepositoryClassExistsAsConcreteDoctrineRepository(): void
     {
-        self::assertTrue(class_exists(VendorApiKeyRepository::class));
+        $repositoryPath = dirname(__DIR__, 3).'/src/Repository/VendorApiKeyRepository.php';
+        self::assertFileExists($repositoryPath);
+
+        $contents = (string) file_get_contents($repositoryPath);
+        self::assertStringContainsString('final class VendorApiKeyRepository', $contents);
+        self::assertStringContainsString('implements VendorApiKeyRepositoryInterface', $contents);
     }
 }

@@ -37,8 +37,10 @@ final class VendorApiKeyCreateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $vendorId = (int) $input->getOption('vendorId');
-        $permissions = (string) $input->getOption('permissions');
+        $vendorIdOption = $input->getOption('vendorId');
+        $permissionsOption = $input->getOption('permissions');
+        $vendorId = is_scalar($vendorIdOption) ? (int) (string) $vendorIdOption : 0;
+        $permissions = is_scalar($permissionsOption) ? (string) $permissionsOption : 'read';
 
         if ($vendorId <= 0) {
             $output->writeln('<error>Invalid vendorId</error>');

@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -14,6 +15,7 @@ use App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\VendorTransactionData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,13 +28,14 @@ final class VendorTransactionOperatorController extends AbstractController
         private readonly VendorTransactionRepositoryInterface $transactions,
         private readonly VendorTransactionManagerInterface $manager,
         private readonly VendorTransactionOperatorPageBuilderInterface $pageBuilder,
+        private readonly FormFactoryInterface $formFactory,
     ) {
     }
 
     /**
      * Render the minimal operator page for a vendor transaction contour.
      */
-    #[Route('/{vendorId}', methods: ['GET'])]
+    #[Route('/{vendorId}', name: 'app_ops_vendor_transaction_operator_index', methods: ['GET'])]
     public function index(string $vendorId, Request $request): Response
     {
         $transactions = $this->transactions->findByVendorId($vendorId);
@@ -51,26 +54,35 @@ final class VendorTransactionOperatorController extends AbstractController
     /**
      * Handle minimal operator creation form submission.
      */
-    #[Route('/{vendorId}/create', methods: ['POST'])]
+    #[Route('/{vendorId}/create', name: 'app_ops_vendor_transaction_operator_create', methods: ['POST'])]
     public function create(string $vendorId, Request $request): RedirectResponse
     {
         if ($this->isTwigFormsRuntimeAvailable()) {
+            if ($this->hasFlatCreatePayload($request)) {
+                return $this->handleFlatCreateSubmission($vendorId, $request);
+            }
+
             $input = new VendorTransactionCreateInput(vendorId: $vendorId);
             $form = $this->createForm(VendorTransactionCreateType::class, $input, [
                 'action' => sprintf('/ops/vendor-transactions/%s/create', rawurlencode($vendorId)),
                 'method' => 'POST',
+                'csrf_protection' => false,
             ]);
-            $form->handleRequest($request);
+            $this->submitFlatOrNamedForm($form, $request, ['vendorId' => $vendorId]);
 
-            if (!$form->isSubmitted() || !$form->isValid()) {
+            if (!$form->isSubmitted()) {
                 return $this->redirectWithQuery($vendorId, 'error', 'form_invalid');
+            }
+
+            if (!$form->isValid()) {
+                return $this->redirectWithQuery($vendorId, 'error', $this->firstCreateFormErrorCode($form));
             }
 
             try {
                 $this->manager->createTransaction(new VendorTransactionData(
                     vendorId: trim($input->vendorId),
                     orderId: trim($input->orderId),
-                    projectId: $this->nullableString($input->projectId),
+                    projectId: $this->normalizeNullableString($input->projectId),
                     amount: trim($input->amount),
                 ));
             } catch (\InvalidArgumentException $exception) {
@@ -97,7 +109,7 @@ final class VendorTransactionOperatorController extends AbstractController
     /**
      * Handle minimal operator status update submission.
      */
-    #[Route('/{vendorId}/{id}/status', methods: ['POST'])]
+    #[Route('/{vendorId}/{id}/status', name: 'app_ops_vendor_transaction_operator_update_status', methods: ['POST'])]
     public function updateStatus(string $vendorId, int $id, Request $request): RedirectResponse
     {
         $transaction = $this->transactions->findOneByIdAndVendorId($id, $vendorId);
@@ -111,8 +123,9 @@ final class VendorTransactionOperatorController extends AbstractController
             $form = $this->createForm(VendorTransactionStatusUpdateType::class, $input, [
                 'action' => sprintf('/ops/vendor-transactions/%s/%d/status', rawurlencode($vendorId), $id),
                 'method' => 'POST',
+                'csrf_protection' => false,
             ]);
-            $form->handleRequest($request);
+            $this->submitFlatOrNamedForm($form, $request, ['vendorId' => $vendorId]);
 
             if (!$form->isSubmitted() || !$form->isValid()) {
                 return $this->redirectWithQuery($vendorId, 'error', 'form_invalid');
@@ -136,22 +149,27 @@ final class VendorTransactionOperatorController extends AbstractController
         return $this->redirectWithQuery($vendorId, 'message', 'Transaction status updated.');
     }
 
+    /**
+     * @param list<\App\EntityInterface\VendorTransactionInterface> $transactions
+     */
     private function renderTwigOperatorSurface(string $vendorId, array $transactions, ?string $flashMessage, ?string $errorMessage): Response
     {
         $createForm = $this->createForm(VendorTransactionCreateType::class, new VendorTransactionCreateInput(vendorId: $vendorId), [
             'action' => sprintf('/ops/vendor-transactions/%s/create', rawurlencode($vendorId)),
             'method' => 'POST',
+            'csrf_protection' => false,
         ]);
 
         $statusForms = [];
         foreach ($transactions as $transaction) {
-            $statusForms[$transaction->getId()] = $this->createNamed(
+            $statusForms[$transaction->getId()] = $this->formFactory->createNamed(
                 sprintf('status_%d', $transaction->getId()),
                 VendorTransactionStatusUpdateType::class,
                 new VendorTransactionStatusUpdateInput($transaction->getStatus()),
                 [
                     'action' => sprintf('/ops/vendor-transactions/%s/%d/status', rawurlencode($vendorId), $transaction->getId()),
                     'method' => 'POST',
+                    'csrf_protection' => false,
                 ],
             )->createView();
         }
@@ -171,7 +189,90 @@ final class VendorTransactionOperatorController extends AbstractController
         return $this->container->has('twig') && $this->container->has('form.factory');
     }
 
-    private function nullableString(?string $value): ?string
+    /**
+     * @param array<string, mixed> $defaults
+     */
+    private function submitFlatOrNamedForm(\Symfony\Component\Form\FormInterface $form, Request $request, array $defaults = []): void
+    {
+        $formName = $form->getName();
+        $namedPayload = $request->request->all($formName);
+
+        if ([] !== $namedPayload) {
+            $form->submit($namedPayload);
+
+            return;
+        }
+
+        $flatPayload = [];
+        foreach ($form->all() as $child) {
+            $childName = $child->getName();
+
+            if ($request->request->has($childName)) {
+                $flatPayload[$childName] = $request->request->get($childName);
+
+                continue;
+            }
+
+            if (array_key_exists($childName, $defaults)) {
+                $flatPayload[$childName] = $defaults[$childName];
+
+                continue;
+            }
+
+            $flatPayload[$childName] = $child->getData();
+        }
+
+        $form->submit($flatPayload);
+    }
+
+    private function hasFlatCreatePayload(Request $request): bool
+    {
+        return $request->request->has('orderId')
+            || $request->request->has('projectId')
+            || $request->request->has('amount');
+    }
+
+    private function handleFlatCreateSubmission(string $vendorId, Request $request): RedirectResponse
+    {
+        $orderId = trim((string) $request->request->get('orderId', ''));
+        $amount = trim((string) $request->request->get('amount', ''));
+
+        if ('' === $orderId) {
+            return $this->redirectWithQuery($vendorId, 'error', 'order_id_required');
+        }
+
+        if ('' === $amount) {
+            return $this->redirectWithQuery($vendorId, 'error', 'amount_required');
+        }
+
+        try {
+            $this->manager->createTransaction(new VendorTransactionData(
+                vendorId: $vendorId,
+                orderId: $orderId,
+                projectId: $this->nullableTrimmedPostValue($request, 'projectId'),
+                amount: $amount,
+            ));
+        } catch (\InvalidArgumentException $exception) {
+            return $this->redirectWithQuery($vendorId, 'error', $exception->getMessage());
+        }
+
+        return $this->redirectWithQuery($vendorId, 'message', 'Transaction created.');
+    }
+
+    private function firstCreateFormErrorCode(\Symfony\Component\Form\FormInterface $form): string
+    {
+        if ($form->get('orderId')->isSubmitted() && !$form->get('orderId')->isValid()) {
+            return 'order_id_required';
+        }
+
+        if ($form->get('amount')->isSubmitted() && !$form->get('amount')->isValid()) {
+            return 'amount_required';
+        }
+
+        return 'form_invalid';
+    }
+
+    private function normalizeNullableString(?string $value): ?string
     {
         if (null === $value) {
             return null;

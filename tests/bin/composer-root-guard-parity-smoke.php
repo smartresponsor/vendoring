@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-$composer = json_decode((string) file_get_contents(__DIR__.'/../../composer.json'), true, 512, JSON_THROW_ON_ERROR);
-$scripts = $composer['scripts'] ?? [];
+require_once __DIR__.'/_composer_json.php';
+
+$composer = vendoring_load_composer_json(dirname(__DIR__, 2));
+$scripts = vendoring_composer_section($composer, 'scripts');
 
 $expected = [
     'test:root-structure' => [

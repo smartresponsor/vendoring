@@ -26,18 +26,21 @@ final class ControllerInfrastructureContractTest extends TestCase
     {
         yield 'vendor_transaction' => [VendorTransactionController::class, ['create', 'listByVendor', 'updateStatus']];
         yield 'vendor_summary' => [VendorSummaryController::class, ['summary']];
-        yield 'vendor_metric' => [VendorMetricController::class, ['listByVendor']];
+        yield 'vendor_metric' => [VendorMetricController::class, ['overview', 'trends']];
         yield 'payout_account' => [PayoutAccountController::class, ['upsert']];
         yield 'payout' => [PayoutController::class, ['create', 'process', 'getOne']];
         yield 'vendor_statement' => [VendorStatementController::class, ['build']];
-        yield 'vendor_statement_export' => [VendorStatementExportController::class, ['exportPdf']];
+        yield 'vendor_statement_export' => [VendorStatementExportController::class, ['export']];
     }
 
+    /** @param list<string> $actionMethods */
     #[DataProvider('controllerProvider')]
     public function testControllersExtendAbstractSymfonyController(string $controllerClass, array $actionMethods): void
     {
         self::assertTrue(is_a($controllerClass, AbstractController::class, true));
 
+        self::assertTrue(class_exists($controllerClass));
+        /** @var class-string $controllerClass */
         $reflection = new \ReflectionClass($controllerClass);
         self::assertNotEmpty($reflection->getAttributes(Route::class));
 

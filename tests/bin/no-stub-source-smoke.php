@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-$root = dirname(__DIR__, 2);
-$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root.'/src'));
+require_once __DIR__.'/_composer_json.php';
 
-foreach ($iterator as $file) {
-    if (!$file->isFile() || 'php' !== $file->getExtension()) {
-        continue;
-    }
+$root = dirname(__DIR__, 2).'/src';
+$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS));
 
-    $contents = (string) file_get_contents($file->getPathname());
-
-    if (false !== stripos($contents, 'stub')) {
-        fwrite(STDERR, 'Forbidden stub marker remains in source: '.$file->getPathname().PHP_EOL);
+foreach (vendoring_php_files($iterator) as $file) {
+    $path = $file->getPathname();
+    $contents = (string) file_get_contents($path);
+    if (str_contains(strtolower($contents), 'stub')) {
+        fwrite(STDERR, "Stub marker found in source: {$path}\n");
         exit(1);
     }
 }
 
-echo "no-stub-source smoke passed\n";
+echo "stub source scan passed\n";

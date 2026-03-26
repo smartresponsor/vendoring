@@ -1,10 +1,8 @@
 parameters:
-    level: 8
-    paths:
-        - src
-        - tests
-    excludePaths:
-        - var/metrics/*
-        - var/runtime/*
-    inferPrivatePropertyTypeFromConstructor: true
-    treatPhpDocTypesAsCertain: true
+  level: max
+  paths:
+    - src
+    - tests
+  checkGenericClassInNonGenericObjectType: true
+  checkMissingIterableValueType: true
+  inferPrivatePropertyTypeFromConstructor: true

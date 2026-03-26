@@ -64,6 +64,8 @@ final class DoctrineRepositoryContractTest extends TestCase
     #[DataProvider('repositoryMapProvider')]
     public function testDoctrineRepositoriesAcceptManagerRegistry(string $repositoryClass, string $entityClass): void
     {
+        self::assertTrue(class_exists($repositoryClass));
+        /** @var class-string $repositoryClass */
         $reflection = new \ReflectionClass($repositoryClass);
         $constructor = $reflection->getConstructor();
 

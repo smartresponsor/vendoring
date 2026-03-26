@@ -1,6 +1,6 @@
 <?php
 
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Controller;
@@ -11,6 +11,7 @@ use App\Service\VendorTransactionInputResolver;
 use App\Tests\Support\Transaction\FakeVendorTransactionManager;
 use App\Tests\Support\Transaction\InMemoryVendorTransactionRepository;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 final class VendorTransactionControllerTest extends TestCase
@@ -33,7 +34,7 @@ final class VendorTransactionControllerTest extends TestCase
             'projectId' => '   ',
             'amount' => '10.00',
         ], JSON_THROW_ON_ERROR)));
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(201, $response->getStatusCode());
         self::assertSame(42, $payload['id']);
@@ -62,7 +63,7 @@ final class VendorTransactionControllerTest extends TestCase
             'orderId' => 'order-1',
             'amount' => '10.00',
         ], JSON_THROW_ON_ERROR)));
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(409, $response->getStatusCode());
         self::assertSame('duplicate_transaction', $payload['error']);
@@ -84,7 +85,7 @@ final class VendorTransactionControllerTest extends TestCase
             'orderId' => 'order-1',
             'amount' => '',
         ], JSON_THROW_ON_ERROR)));
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(422, $response->getStatusCode());
         self::assertSame('amount_required', $payload['error']);
@@ -106,7 +107,7 @@ final class VendorTransactionControllerTest extends TestCase
             'orderId' => 'order-1',
             'amount' => '10.00',
         ], JSON_THROW_ON_ERROR)));
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(422, $response->getStatusCode());
         self::assertSame('vendor_id_required', $payload['error']);
@@ -128,7 +129,7 @@ final class VendorTransactionControllerTest extends TestCase
             'orderId' => '   ',
             'amount' => '10.00',
         ], JSON_THROW_ON_ERROR)));
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(422, $response->getStatusCode());
         self::assertSame('order_id_required', $payload['error']);
@@ -146,7 +147,7 @@ final class VendorTransactionControllerTest extends TestCase
         );
 
         $response = $controller->create(Request::create('/', 'POST', content: '{invalid-json'));
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(400, $response->getStatusCode());
         self::assertSame('malformed_json', $payload['error']);
@@ -166,7 +167,7 @@ final class VendorTransactionControllerTest extends TestCase
 
         $request = Request::create('/', 'POST', content: json_encode(['status' => 'settled'], JSON_THROW_ON_ERROR));
         $response = $controller->updateStatus('vendor-1', 42, $request);
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame('settled', $payload['status']);
@@ -186,7 +187,7 @@ final class VendorTransactionControllerTest extends TestCase
         );
 
         $response = $controller->updateStatus('vendor-2', 42, Request::create('/', 'POST', content: json_encode(['status' => 'settled'], JSON_THROW_ON_ERROR)));
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(404, $response->getStatusCode());
         self::assertSame('not_found', $payload['error']);
@@ -204,7 +205,7 @@ final class VendorTransactionControllerTest extends TestCase
         );
 
         $response = $controller->updateStatus('vendor-1', 42, Request::create('/', 'POST', content: '{invalid-json'));
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(400, $response->getStatusCode());
         self::assertSame('malformed_json', $payload['error']);
@@ -222,7 +223,7 @@ final class VendorTransactionControllerTest extends TestCase
         );
 
         $response = $controller->updateStatus('vendor-1', 42, Request::create('/', 'POST', content: json_encode([], JSON_THROW_ON_ERROR)));
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(422, $response->getStatusCode());
         self::assertSame('status_required', $payload['error']);
@@ -243,7 +244,7 @@ final class VendorTransactionControllerTest extends TestCase
         );
 
         $response = $controller->updateStatus('vendor-1', 42, Request::create('/', 'POST', content: json_encode(['status' => 'refunded'], JSON_THROW_ON_ERROR)));
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(422, $response->getStatusCode());
         self::assertSame('invalid_status_transition', $payload['error']);
@@ -268,10 +269,22 @@ final class VendorTransactionControllerTest extends TestCase
             'orderId' => 'order-1',
             'amount' => '10.00',
         ], JSON_THROW_ON_ERROR)));
-        $payload = json_decode((string) $response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(422, $response->getStatusCode());
         self::assertSame('transaction_validation_error', $payload['error']);
+    }
+
+    /** @return array<string, mixed> */
+    private static function decodePayload(JsonResponse $response): array
+    {
+        $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        if (!is_array($payload)) {
+            self::fail('Expected array payload.');
+        }
+
+        return $payload;
     }
 
     private function forceId(VendorTransaction $transaction, int $id): void

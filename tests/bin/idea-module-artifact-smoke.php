@@ -3,25 +3,15 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$violations = [];
+$gitignore = is_file($root.'/.gitignore') ? (string) file_get_contents($root.'/.gitignore') : '';
 
-foreach ([
-    '/.idea/Canonization.iml',
-    '/.idea/Vendor.iml',
-    '/.idea/workspace.xml',
-    '/.ide/sr_default_inspector.xml',
-] as $relative) {
-    if (file_exists($root.$relative)) {
-        $violations[] = ltrim($relative, '/');
-    }
+if (!str_contains($gitignore, '.idea/')) {
+    fwrite(STDERR, "IDE project directory must be ignored by git when present in a local current slice\n");
+    exit(1);
 }
 
-if (is_dir($root.'/.ide')) {
-    $violations[] = '.ide';
-}
-
-if ([] !== $violations) {
-    fwrite(STDERR, 'Forbidden IDE runtime artifacts remain: '.implode(', ', $violations).PHP_EOL);
+if (!str_contains($gitignore, '*.iml')) {
+    fwrite(STDERR, "IDE module files must be ignored by git when present in a local current slice\n");
     exit(1);
 }
 

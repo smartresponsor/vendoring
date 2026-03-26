@@ -33,7 +33,8 @@ final class VendorApiKeyListCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $vendorId = (int) $input->getOption('vendorId');
+        $vendorIdOption = $input->getOption('vendorId');
+        $vendorId = is_scalar($vendorIdOption) ? (int) (string) $vendorIdOption : 0;
 
         if ($vendorId <= 0) {
             $output->writeln('<error>Invalid vendorId</error>');

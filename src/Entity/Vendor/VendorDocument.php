@@ -38,4 +38,19 @@ final class VendorDocument
     {
         return $this->filePath;
     }
+
+    public function getExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->expiresAt;
+    }
+
+    public function getUploaderId(): ?int
+    {
+        return $this->uploaderId;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
 }
