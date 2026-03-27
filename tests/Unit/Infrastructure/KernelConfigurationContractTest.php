@@ -1,5 +1,5 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Infrastructure;
@@ -33,5 +33,14 @@ final class KernelConfigurationContractTest extends TestCase
         self::assertStringContainsString("prefix: 'App\\Entity'", $doctrine);
         self::assertStringContainsString("dir: '%kernel.project_dir%/src/Entity'", $doctrine);
         self::assertStringContainsString('type: attribute', $doctrine);
+    }
+
+    public function testKernelImportsEnvironmentSpecificContainerAndRouteConfig(): void
+    {
+        $kernel = (string) file_get_contents(dirname(__DIR__, 3).'/src/Kernel.php');
+
+        self::assertStringContainsString("packages/'.$environment.'/*.yaml", $kernel);
+        self::assertStringContainsString("vendor_services_'.$environment.'.yaml", $kernel);
+        self::assertStringContainsString("routes/'.$environment.'/*.yaml", $kernel);
     }
 }
