@@ -1,4 +1,5 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -33,5 +34,25 @@ final class KernelConfigurationContractTest extends TestCase
         self::assertStringContainsString("prefix: 'App\\Entity'", $doctrine);
         self::assertStringContainsString("dir: '%kernel.project_dir%/src/Entity'", $doctrine);
         self::assertStringContainsString('type: attribute', $doctrine);
+    }
+
+    public function testDoctrineYamlDefinesSeparatedConnectionsForUserAndAppData(): void
+    {
+        $doctrine = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/doctrine.yaml');
+
+        self::assertStringContainsString('default_connection: user_data', $doctrine);
+        self::assertStringContainsString('user_data:', $doctrine);
+        self::assertStringContainsString('app_data:', $doctrine);
+        self::assertStringContainsString('VENDOR_DSN', $doctrine);
+        self::assertStringContainsString('VENDOR_SQLITE_DSN', $doctrine);
+        self::assertStringContainsString('connection: user_data', $doctrine);
+    }
+
+    public function testVendorBridgeDefinesRuntimeSqliteParameter(): void
+    {
+        $vendorBridge = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/vendor_bridge.yaml');
+
+        self::assertStringContainsString('vendor.dsn:', $vendorBridge);
+        self::assertStringContainsString('vendor.sqlite_dsn:', $vendorBridge);
     }
 }
