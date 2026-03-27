@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Command;
@@ -40,13 +41,13 @@ final class VendorPayoutCreateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $payload = [
-            'vendorId' => $input->getOption('vendorId'),
-            'currency' => $input->getOption('currency'),
-            'thresholdCents' => $input->getOption('thresholdCents'),
-            'retentionFeePercent' => $input->getOption('retentionFeePercent'),
+            'vendorId' => $this->optionalScalarValue($input->getOption('vendorId')),
+            'currency' => $this->optionalScalarValue($input->getOption('currency')),
+            'thresholdCents' => $this->optionalScalarValue($input->getOption('thresholdCents')),
+            'retentionFeePercent' => $this->optionalScalarValue($input->getOption('retentionFeePercent')),
         ];
 
-        $format = (string) $input->getOption('format');
+        $format = $this->requiredScalarString($input->getOption('format'), 'format');
 
         try {
             $dto = $this->requestService->toCreateDto($payload);
@@ -75,22 +76,70 @@ final class VendorPayoutCreateCommand extends Command
         $normalized = $this->requestService->normalizePayout($payout);
 
         if ('json' === $format) {
-            $output->writeln((string) json_encode($normalized, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+            $output->writeln(json_encode($normalized, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
             return Command::SUCCESS;
         }
 
         $output->writeln(sprintf(
             'PAYOUT_CREATED id=%s vendorId=%s currency=%s grossCents=%d feeCents=%d netCents=%d status=%s',
-            $normalized['id'],
-            $normalized['vendorId'],
-            $normalized['currency'],
-            $normalized['grossCents'],
-            $normalized['feeCents'],
-            $normalized['netCents'],
-            $normalized['status'],
+            $this->requiredStringField($normalized, 'id'),
+            $this->requiredStringField($normalized, 'vendorId'),
+            $this->requiredStringField($normalized, 'currency'),
+            $this->requiredIntField($normalized, 'grossCents'),
+            $this->requiredIntField($normalized, 'feeCents'),
+            $this->requiredIntField($normalized, 'netCents'),
+            $this->requiredStringField($normalized, 'status'),
         ));
 
         return Command::SUCCESS;
+    }
+
+    private function optionalScalarValue(mixed $value): string|int|float|bool|null
+    {
+        if (null === $value || is_scalar($value)) {
+            return $value;
+        }
+
+        throw new \InvalidArgumentException('Console option must resolve to a scalar value.');
+    }
+
+    private function requiredScalarString(mixed $value, string $field): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+
+        if (is_int($value) || is_float($value) || is_bool($value)) {
+            return (string) $value;
+        }
+
+        throw new \InvalidArgumentException(sprintf('%s required', $field));
+    }
+
+    /** @param array<string, mixed> $payload */
+    private function requiredStringField(array $payload, string $field): string
+    {
+        return $this->requiredScalarString($payload[$field] ?? null, $field);
+    }
+
+    /** @param array<string, mixed> $payload */
+    private function requiredIntField(array $payload, string $field): int
+    {
+        $value = $payload[$field] ?? null;
+
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (is_float($value)) {
+            return (int) $value;
+        }
+
+        if (is_string($value) && is_numeric($value)) {
+            return (int) $value;
+        }
+
+        throw new \InvalidArgumentException(sprintf('%s required', $field));
     }
 }

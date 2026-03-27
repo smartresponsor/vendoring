@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -11,8 +12,8 @@ use App\Entity\Vendor;
 use App\Event\VendorActivatedEvent;
 use App\Event\VendorCreatedEvent;
 use App\ServiceInterface\VendorServiceInterface;
-use App\ValueObject\BrandName;
 use App\ServiceInterface\VendorUserAssignmentServiceInterface;
+use App\ValueObject\BrandName;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

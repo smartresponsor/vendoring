@@ -1,10 +1,12 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use App\Entity\Vendor\VendorTransaction;
+use App\Entity\VendorTransaction;
+use App\ValueObject\VendorTransactionStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -15,9 +17,16 @@ final class VendorTransactionDemoFixture extends Fixture
     {
         $faker = Factory::create('en_US');
         $vendorIds = ['demo-vendor-a', 'demo-vendor-b', 'demo-vendor-c'];
-        $statuses = ['pending', 'authorized', 'captured', 'refunded'];
+        $statuses = [
+            VendorTransactionStatus::PENDING,
+            VendorTransactionStatus::AUTHORIZED,
+            VendorTransactionStatus::FAILED,
+            VendorTransactionStatus::SETTLED,
+            VendorTransactionStatus::REFUNDED,
+        ];
 
         for ($index = 1; $index <= 30; ++$index) {
+            /** @var string $vendorId */
             $vendorId = $faker->randomElement($vendorIds);
             $transaction = new VendorTransaction(
                 vendorId: $vendorId,
@@ -26,7 +35,9 @@ final class VendorTransactionDemoFixture extends Fixture
                 amount: (string) $faker->randomFloat(2, 10, 1500),
             );
 
-            $transaction->setStatus($faker->randomElement($statuses));
+            /** @var string $status */
+            $status = $faker->randomElement($statuses);
+            $transaction->setStatus($status);
             $manager->persist($transaction);
         }
 

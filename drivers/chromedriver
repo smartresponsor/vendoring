@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+for candidate in /snap/bin/chromium.chromedriver /usr/bin/chromedriver; do
+  if [[ -x "$candidate" ]]; then
+    exec "$candidate" "$@"
+  fi
+done
+
+echo "Unable to locate a chromedriver binary." >&2
+exit 127

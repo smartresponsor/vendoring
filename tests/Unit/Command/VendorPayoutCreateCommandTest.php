@@ -1,11 +1,12 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Command;
 
 use App\Command\VendorPayoutCreateCommand;
-use App\Entity\Vendor\Ledger\LedgerEntry;
+use App\Entity\Ledger\LedgerEntry;
 use App\Observability\Service\MetricEmitter;
 use App\Service\Ledger\VendorLedgerService;
 use App\Service\Payout\VendorPayoutRequestService;
