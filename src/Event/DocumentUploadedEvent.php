@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Entity\Vendor\VendorDocument;
+use App\Entity\VendorDocument;
 
 final class DocumentUploadedEvent
 {

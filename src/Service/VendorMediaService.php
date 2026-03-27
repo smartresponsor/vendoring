@@ -8,9 +8,9 @@ namespace App\Service;
 
 use App\DTO\VendorAttachmentDTO;
 use App\DTO\VendorMediaUploadDTO;
-use App\Entity\Vendor\Vendor;
-use App\Entity\Vendor\VendorAttachment;
-use App\Entity\Vendor\VendorMedia;
+use App\Entity\Vendor;
+use App\Entity\VendorAttachment;
+use App\Entity\VendorMedia;
 use App\Event\VendorAttachmentUploadedEvent;
 use App\Event\VendorMediaUploadedEvent;
 use App\RepositoryInterface\VendorMediaRepositoryInterface;

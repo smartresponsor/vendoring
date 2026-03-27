@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Payout;
 
-use App\ServiceInterface\Payout\PayoutProviderBridgeInterface;
+use App\ServiceInterface\Payout\VendorPayoutProviderServiceInterface;
 
-final class PayoutProviderBridge implements PayoutProviderBridgeInterface
+final class VendorPayoutProviderService implements VendorPayoutProviderServiceInterface
 {
     public function transfer(string $tenantId, string $vendorId, string $provider, string $accountRef, float $amount, string $currency): array
     {

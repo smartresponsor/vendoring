@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Support\Runtime;
 
-use App\Entity\Vendor\VendorTransaction;
+use App\Entity\VendorTransaction;
 use App\Kernel;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;

@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface;
 
-use App\Entity\Vendor\Vendor;
-use App\Entity\Vendor\VendorPassport;
+use App\Entity\Vendor;
+use App\Entity\VendorPassport;
 
 interface VendorPassportServiceInterface
 {

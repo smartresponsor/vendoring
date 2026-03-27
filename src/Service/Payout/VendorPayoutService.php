@@ -8,7 +8,7 @@ namespace App\Service\Payout;
 
 use App\DTO\Ledger\LedgerEntryDTO;
 use App\DTO\Payout\CreatePayoutDTO;
-use App\Entity\Vendor\Payout\Payout;
+use App\Entity\Payout\Payout;
 use App\Observability\Service\MetricEmitter;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;

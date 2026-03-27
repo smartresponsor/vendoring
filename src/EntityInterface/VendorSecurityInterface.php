@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\EntityInterface;
 
-use App\Entity\Vendor\Vendor;
+use App\Entity\Vendor;
 
 /**
  * Transitional state contract for vendor-local security status.

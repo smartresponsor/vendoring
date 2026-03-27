@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Payout;
 
-interface PayoutProviderBridgeInterface
+interface VendorPayoutProviderServiceInterface
 {
     /** @return array<string, mixed> */
     public function transfer(string $tenantId, string $vendorId, string $provider, string $accountRef, float $amount, string $currency): array;

@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\Service\Payout;
 
 use App\DTO\Payout\CreatePayoutDTO;
-use App\Entity\Vendor\Payout\Payout;
+use App\Entity\Payout\Payout;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 
 final class VendorPayoutRequestService implements VendorPayoutRequestServiceInterface

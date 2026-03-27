@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Infrastructure;
 
-use App\Entity\Vendor\VendorTransaction;
+use App\Entity\VendorTransaction;
 use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionMappingParityTest extends TestCase
 {
     public function testEntityUsesExplicitSqlAlignedColumnNames(): void
     {
-        $source = (string) file_get_contents(dirname(__DIR__, 3).'/src/Entity/Vendor/VendorTransaction.php');
+        $source = (string) file_get_contents(dirname(__DIR__, 3).'/src/Entity/VendorTransaction.php');
 
         self::assertStringContainsString("name: 'vendor_id'", $source);
         self::assertStringContainsString("name: 'order_id'", $source);
