@@ -32,6 +32,21 @@ Full aggregate:
 composer quality
 ```
 
+
+## Data storage strategy
+
+Runtime intent is split by data sensitivity and operational role:
+
+- **PostgreSQL** for user/business data (`vendor.dsn`, typically `pgsql://...`)
+- **SQLite** for application/runtime local data and deterministic integration flows (`vendor.sqlite_dsn`, typically `sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite`)
+
+Example environment values:
+
+```bash
+VENDOR_DSN=pgsql://app:app@127.0.0.1:5432/vendoring
+VENDOR_SQLITE_DSN=sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite
+```
+
 ## Release-candidate documentation
 
 - `docs/release/RC_ROADMAP.md`
