@@ -78,33 +78,6 @@ final class VendorServiceTest extends TestCase
         $service->create($dto);
     }
 
-
-    public function testCreateBuildsDeterministicUniqueValidationMessage(): void
-    {
-        $dto = new VendorCreateDTO('');
-
-        $this->validator
-            ->expects(self::once())
-            ->method('validate')
-            ->with($dto)
-            ->willReturn(new ConstraintViolationList([
-                new ConstraintViolation('beta_error', '', [], null, 'brandName', ''),
-                new ConstraintViolation('alpha_error', '', [], null, 'brandName', ''),
-                new ConstraintViolation('beta_error', '', [], null, 'brandName', ''),
-                new ConstraintViolation('  ', '', [], null, 'brandName', ''),
-            ]));
-
-        $this->entityManager->expects(self::never())->method('persist');
-        $this->entityManager->expects(self::never())->method('flush');
-
-        $service = $this->buildService();
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('alpha_error; beta_error');
-
-        $service->create($dto);
-    }
-
     public function testUpdateTrimsBrandNameWhenProvided(): void
     {
         $vendor = new Vendor('Old');

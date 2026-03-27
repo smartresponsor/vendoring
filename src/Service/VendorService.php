@@ -93,15 +93,9 @@ final class VendorService implements VendorServiceInterface
         $messages = [];
 
         foreach ($violations as $violation) {
-            $message = trim($violation->getMessage());
-            if ('' !== $message) {
-                $messages[] = $message;
-            }
+            $messages[] = $violation->getMessage();
         }
 
-        $uniqueMessages = array_values(array_unique($messages));
-        sort($uniqueMessages);
-
-        return implode('; ', $uniqueMessages);
+        return implode('; ', $messages);
     }
 }
