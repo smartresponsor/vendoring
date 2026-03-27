@@ -7,7 +7,7 @@ require_once __DIR__.'/_composer_json.php';
 $root = dirname(__DIR__, 2);
 $amountPolicy = (string) file_get_contents($root.'/src/Service/Policy/VendorTransactionAmountPolicy.php');
 $statusPolicy = (string) file_get_contents($root.'/src/Service/Policy/VendorTransactionStatusPolicy.php');
-$servicesYaml = (string) file_get_contents($root.'/config/services.yaml');
+$servicesYaml = (string) file_get_contents($root.'/config/vendor_services.yaml');
 $composer = vendoring_load_composer_json($root);
 
 if (!vendoring_has_script($composer, 'test:transaction-policy')) {
@@ -23,11 +23,11 @@ if (!str_contains($statusPolicy, 'VendorTransactionErrorCode::STATUS_REQUIRED') 
     exit(1);
 }
 if (!str_contains($servicesYaml, "App\\ServiceInterface\\Policy\\VendorTransactionAmountPolicyInterface: '@App\\Service\\Policy\\VendorTransactionAmountPolicy'")) {
-    fwrite(STDERR, "services.yaml must alias VendorTransactionAmountPolicyInterface.\n");
+    fwrite(STDERR, "vendor_services.yaml must alias VendorTransactionAmountPolicyInterface.\n");
     exit(1);
 }
 if (!str_contains($servicesYaml, "App\\ServiceInterface\\Policy\\VendorTransactionStatusPolicyInterface: '@App\\Service\\Policy\\VendorTransactionStatusPolicy'")) {
-    fwrite(STDERR, "services.yaml must alias VendorTransactionStatusPolicyInterface.\n");
+    fwrite(STDERR, "vendor_services.yaml must alias VendorTransactionStatusPolicyInterface.\n");
     exit(1);
 }
 

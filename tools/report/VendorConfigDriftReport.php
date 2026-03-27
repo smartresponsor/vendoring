@@ -7,9 +7,9 @@ require __DIR__.'/_vendor_report_bootstrap.php';
 vendorReportHeader('Vendor config drift report');
 
 $pairs = [
-    ['config/packages/nelmio_api_doc.yaml.dist', 'config/routes/nelmio_api_doc.yaml.dist'],
-    ['config/services.yaml', 'config/services_runtime.php'],
-    ['config/routes.yaml', 'config/routes_runtime.php'],
+    ['config/packages/vendor_nelmio_api_doc.yaml.dist', 'config/routes/vendor_nelmio_api_doc.yaml.dist'],
+    ['config/vendor_services.yaml', 'config/services_runtime.php'],
+    ['config/vendor_routes.yaml', 'config/routes_runtime.php'],
 ];
 
 $hasWarning = false;

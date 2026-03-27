@@ -32,6 +32,26 @@ Full aggregate:
 composer quality
 ```
 
+## PostgreSQL integration checks (local + Docker)
+
+The integration lane includes a PostgreSQL test (`VendorTransactionPostgresIntegrationTest`) that is enabled when `VENDOR_TEST_POSTGRES_DSN` is provided.
+
+Local PostgreSQL example:
+
+```bash
+export VENDOR_TEST_POSTGRES_DSN='postgresql://postgres:postgres@127.0.0.1:5432/vendoring_test?serverVersion=16&charset=utf8'
+composer test:transaction-postgres-integration
+```
+
+Docker PostgreSQL example:
+
+```bash
+export VENDOR_TEST_POSTGRES_DSN='postgresql://postgres:postgres@postgres:5432/vendoring_test?serverVersion=16&charset=utf8'
+composer test:transaction-postgres-integration
+```
+
+If `VENDOR_TEST_POSTGRES_DSN` is not set (or `pdo_pgsql` is missing), the PostgreSQL integration test is skipped automatically.
+
 ## Release-candidate documentation
 
 - `docs/release/RC_ROADMAP.md`

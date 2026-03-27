@@ -16,8 +16,8 @@ final class SymfonyMiniStackSmokeTest extends TestCase
         self::assertFileExists($root.'/config/bundles.php');
         self::assertFileExists($root.'/config/packages/framework.yaml');
         self::assertFileExists($root.'/config/packages/doctrine.yaml');
-        self::assertFileExists($root.'/config/services.yaml');
-        self::assertFileExists($root.'/config/routes.yaml');
+        self::assertFileExists($root.'/config/vendor_services.yaml');
+        self::assertFileExists($root.'/config/vendor_routes.yaml');
         self::assertFileExists($root.'/bin/console');
         self::assertFileExists($root.'/public/index.php');
     }
