@@ -52,6 +52,17 @@ composer test:transaction-postgres-integration
 
 If `VENDOR_TEST_POSTGRES_DSN` is not set (or `pdo_pgsql` is missing), the PostgreSQL integration test is skipped automatically.
 
+## Playwright Chromium E2E smoke (for gaps outside Panther)
+
+Use Playwright smoke to cover browser-level flow for the Twig/Form operator surface:
+
+```bash
+composer test:e2e:playwright-chromium
+```
+
+The script starts a temporary local PHP server, initializes a SQLite test schema, opens Chromium, creates a vendor transaction through the UI form, and validates the created row appears in the table.
+If Playwright is not installed in the local Node environment, the smoke exits as skipped.
+
 ## Release-candidate documentation
 
 - `docs/release/RC_ROADMAP.md`
