@@ -27,6 +27,8 @@
     "nelmio/api-doc-bundle": "^5.3"
   },
   "require-dev": {
+    "doctrine/doctrine-fixtures-bundle": "^4.2",
+    "fakerphp/faker": "^1.24",
     "friendsofphp/php-cs-fixer": "^3.66",
     "phpstan/phpstan": "^1.12",
     "phpunit/phpunit": "^11.5"
@@ -135,6 +137,7 @@
       "php tests/bin/repository-contract-smoke.php",
       "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter DoctrineRepositoryContractTest"
     ],
+    "test:fixtures-stack": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorFixtureStackContractTest",
     "test:transaction": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter VendorTransaction",
     "test:transaction-policy": "php tests/bin/transaction-policy-smoke.php",
     "test:transaction-amount": "php tests/bin/transaction-amount-smoke.php",
@@ -142,6 +145,7 @@
     "test:transaction-migration": "php tests/bin/transaction-migration-smoke.php",
     "test:transaction-persistence": "php tests/bin/transaction-persistence-smoke.php",
     "test:transaction-sqlite-integration": "php tests/bin/transaction-sqlite-integration-smoke.php",
+    "test:transaction-postgres-integration": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter VendorTransactionPostgresIntegrationTest",
     "test:transaction-idempotency": "php tests/bin/transaction-idempotency-smoke.php",
     "test:transaction-identity": "php tests/bin/transaction-identity-smoke.php",
     "test:transaction-error-surface": "php tests/bin/transaction-error-surface-smoke.php",
@@ -256,6 +260,7 @@
       "@test:entrypoint",
       "@test:compat",
       "@test:repository",
+      "@test:fixtures-stack",
       "@test:unit",
       "@test:controller",
       "@test:entity"
@@ -268,7 +273,8 @@
       "@test:transaction-persistence",
       "@test:transaction-doctrine",
       "@test:transaction-migration",
-      "@test:transaction-sqlite-integration"
+      "@test:transaction-sqlite-integration",
+      "@test:transaction-postgres-integration"
     ],
     "quality:api": [
       "@test:mail",
@@ -312,6 +318,7 @@
       "@test:statement",
       "@test:payout",
       "@test:repository",
+      "@test:fixtures-stack",
       "@test:unit",
       "@test:controller",
       "@test:entity",
@@ -351,6 +358,7 @@
       "@test:composer-root-guard-parity",
       "@test:composer-quality-parity",
       "@test:composer-script-invocation-parity"
-    ]
+    ],
+    "test:symfony-security": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Security"
   }
 }

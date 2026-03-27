@@ -22,5 +22,5 @@ return static function (RoutingConfigurator $routes): void {
         return;
     }
 
-    $routes->import(__DIR__.'/routes/nelmio_api_doc.yaml');
+    $routes->import(__DIR__.'/routes/vendor_nelmio_api_doc.yaml');
 };

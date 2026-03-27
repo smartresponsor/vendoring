@@ -23,7 +23,7 @@ They are intentionally repository-owned so release evidence does not depend on a
 
 The repository also includes disabled integration scaffolding:
 
-- `config/packages/nelmio_api_doc.yaml.dist`
-- `config/routes/nelmio_api_doc.yaml.dist`
+- `config/packages/vendor_nelmio_api_doc.yaml.dist`
+- `config/routes/vendor_nelmio_api_doc.yaml.dist`
 
 Those files show the intended Symfony-native browsing surface without forcing the bundle into the active runtime before dependency installation is aligned.

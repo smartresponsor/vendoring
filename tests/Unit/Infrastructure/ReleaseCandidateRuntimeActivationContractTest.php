@@ -28,7 +28,7 @@ final class ReleaseCandidateRuntimeActivationContractTest extends TestCase
         self::assertFileExists(__DIR__.'/../../../config/packages_runtime.php');
         self::assertFileExists(__DIR__.'/../../../config/routes_runtime.php');
         self::assertFileExists(__DIR__.'/../../../config/services_runtime.php');
-        self::assertFileExists(__DIR__.'/../../../config/routes/nelmio_api_doc.yaml');
+        self::assertFileExists(__DIR__.'/../../../config/routes/vendor_nelmio_api_doc.yaml');
         self::assertFileExists(__DIR__.'/../../../templates/ops/vendor_transactions/index.html.twig');
     }
 
