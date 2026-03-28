@@ -4,11 +4,25 @@
 declare(strict_types=1);
 
 const EXIT_BINARY_NOT_FOUND = 127;
+const REQUIRE_EXT_OPTION = '--require-ext=';
+const ENV_PHP84_BINARY = 'PHP84_BINARY';
+const PHP84_WINDOWS_CANDIDATES = [
+    'C:\\PHP\\php-8.4.13-nts-Win32-vs17-x64\\php.exe',
+    'php',
+];
+const PHP84_UNIX_CANDIDATES = [
+    '/usr/bin/php8.4',
+    'php8.4',
+    'php',
+];
 const DOCKER_FALLBACK_ENV = [
     'PANTHER_NO_SANDBOX=1',
     'PANTHER_CHROME_BINARY=/usr/bin/chromium',
-    'PANTHER_CHROME_DRIVER_BINARY=/usr/bin/chromedriver',
 ];
+
+final class BinaryResolutionException extends \RuntimeException
+{
+}
 
 /**
  * @param list<string> $candidates
@@ -28,14 +42,13 @@ function resolveBinary(array $candidates): string
             continue;
         }
 
-        $resolved = trim((string) shell_exec(sprintf('command -v %s 2>/dev/null', escapeshellarg($candidate))));
+        $resolved = trim((string) shellExec(sprintf('command -v %s 2>/dev/null', escapeshellarg($candidate))));
         if ($resolved !== '') {
             return $resolved;
         }
     }
 
-    fwrite(STDERR, "Unable to locate a PHP 8.4 binary.\n");
-    exit(EXIT_BINARY_NOT_FOUND);
+    throw new BinaryResolutionException('Unable to locate a PHP 8.4 binary.');
 }
 
 /**
@@ -76,9 +89,7 @@ SH;
 
     $command = buildDockerCommand($script, $args);
 
-    passthru($command, $exitCode);
-
-    return $exitCode;
+    return passthruCommand($command);
 }
 
 function projectRoot(): string
@@ -88,7 +99,7 @@ function projectRoot(): string
 
 function hasDockerBinary(): bool
 {
-    return trim((string) shell_exec('command -v docker 2>/dev/null')) !== '';
+    return trim((string) shellExec('command -v docker 2>/dev/null')) !== '';
 }
 
 /**
@@ -111,50 +122,93 @@ function buildDockerCommand(string $script, array $args): string
     return $command;
 }
 
-$binary = match (PHP_OS_FAMILY) {
-    'Windows' => resolveBinary([
-        (string) getenv('PHP84_BINARY'),
-        'C:\\PHP\\php-8.4.13-nts-Win32-vs17-x64\\php.exe',
-        'php',
-    ]),
-    default => resolveBinary([
-        (string) getenv('PHP84_BINARY'),
-        '/usr/bin/php8.4',
-        'php8.4',
-        'php',
-    ]),
-};
+function shellExec(string $command): string
+{
+    return (string) shell_exec($command);
+}
 
-$args = $argv;
-array_shift($args);
+function passthruCommand(string $command): int
+{
+    passthru($command, $exitCode);
 
-$requiredExtensions = [];
+    return $exitCode;
+}
 
-while ($args !== [] && str_starts_with($args[0], '--require-ext=')) {
-    $option = array_shift($args);
-    if ($option === null) {
-        break;
-    }
+/**
+ * @param list<string> $args
+ * @return array{requiredExtensions:list<string>, commandArgs:list<string>}
+ */
+function parseArguments(array $args): array
+{
+    $requiredExtensions = [];
 
-    foreach (explode(',', substr($option, strlen('--require-ext='))) as $extension) {
-        $extension = trim($extension);
-        if ($extension !== '') {
-            $requiredExtensions[$extension] = true;
+    while ($args !== [] && str_starts_with($args[0], REQUIRE_EXT_OPTION)) {
+        $option = array_shift($args);
+        if ($option === null) {
+            break;
+        }
+
+        foreach (explode(',', substr($option, strlen(REQUIRE_EXT_OPTION))) as $extension) {
+            $extension = trim($extension);
+            if ($extension !== '') {
+                $requiredExtensions[$extension] = true;
+            }
         }
     }
+
+    return [
+        'requiredExtensions' => array_keys($requiredExtensions),
+        'commandArgs' => array_values($args),
+    ];
 }
 
-$missing = missingExtensions(array_keys($requiredExtensions));
+/**
+ * @param list<string> $args
+ */
+function buildPhpCommand(string $binary, array $args): string
+{
+    $command = escapeshellarg($binary);
 
-if ($missing !== []) {
-    exit(runInDocker($args));
+    foreach ($args as $arg) {
+        $command .= ' ' . escapeshellarg($arg);
+    }
+
+    return $command;
 }
 
-$command = escapeshellarg($binary);
+function resolvePhp84Binary(): string
+{
+    $candidates = match (PHP_OS_FAMILY) {
+        'Windows' => PHP84_WINDOWS_CANDIDATES,
+        default => PHP84_UNIX_CANDIDATES,
+    };
 
-foreach ($args as $arg) {
-    $command .= ' ' . escapeshellarg($arg);
+    array_unshift($candidates, (string) getenv(ENV_PHP84_BINARY));
+
+    return resolveBinary($candidates);
 }
 
-passthru($command, $exitCode);
-exit($exitCode);
+/**
+ * @param list<string> $argv
+ */
+function main(array $argv): int
+{
+    array_shift($argv);
+
+    $parsed = parseArguments($argv);
+    $missing = missingExtensions($parsed['requiredExtensions']);
+
+    if ($missing !== []) {
+        return runInDocker($parsed['commandArgs']);
+    }
+
+    try {
+        return passthruCommand(buildPhpCommand(resolvePhp84Binary(), $parsed['commandArgs']));
+    } catch (BinaryResolutionException $exception) {
+        fwrite(STDERR, $exception->getMessage() . "\n");
+
+        return EXIT_BINARY_NOT_FOUND;
+    }
+}
+
+exit(main($argv));
