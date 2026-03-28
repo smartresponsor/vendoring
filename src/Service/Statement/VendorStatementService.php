@@ -102,6 +102,7 @@ final class VendorStatementService implements VendorStatementServiceInterface
 
     /**
      * @param list<float|int|string> $row
+     * @param resource               $handle
      */
     private function writeCsvRow($handle, array $row): void
     {

@@ -19,6 +19,7 @@ use App\Service\Statement\StatementExporterPDF;
 use App\Service\Statement\VendorStatementMailerService;
 use App\Service\Statement\VendorStatementRecipientProvider;
 use App\Service\Statement\VendorStatementService;
+use App\Service\VendorProfileViewBuilder;
 use App\Service\VendorSecurityService;
 use App\Service\VendorTransactionManager;
 use App\Service\WebhooksConsumer\VendorWebhooksConsumerService;
@@ -44,6 +45,7 @@ final class ServiceWiringContractTest extends TestCase
         yield 'vendor_security_service' => ['App\\ServiceInterface\\VendorSecurityServiceInterface', VendorSecurityService::class];
         yield 'vendor_transaction_manager' => ['App\\ServiceInterface\\VendorTransactionManagerInterface', VendorTransactionManager::class];
         yield 'vendor_metric_service' => ['App\\ServiceInterface\\Metric\\VendorMetricServiceInterface', VendorMetricService::class];
+        yield 'vendor_profile_view_builder' => ['App\\ServiceInterface\\VendorProfileViewBuilderInterface', VendorProfileViewBuilder::class];
         yield 'payout_service' => ['App\\ServiceInterface\\Payout\\VendorPayoutServiceInterface', VendorPayoutService::class];
         yield 'statement_service' => ['App\\ServiceInterface\\Statement\\VendorStatementServiceInterface', VendorStatementService::class];
         yield 'statement_exporter' => ['App\\ServiceInterface\\Statement\\StatementExporterPDFInterface', StatementExporterPDF::class];

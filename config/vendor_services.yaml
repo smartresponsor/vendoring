@@ -65,6 +65,7 @@ services:
     App\ServiceInterface\VendorSecurityServiceInterface: '@App\Service\VendorSecurityService'
     App\ServiceInterface\VendorSecurityStateViewBuilderInterface: '@App\Service\VendorSecurityStateViewBuilder'
     App\ServiceInterface\VendorOwnershipViewBuilderInterface: '@App\Service\VendorOwnershipViewBuilder'
+    App\ServiceInterface\VendorProfileViewBuilderInterface: '@App\Service\VendorProfileViewBuilder'
     App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface: '@App\Service\VendorFinanceRuntimeViewBuilder'
     App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface: '@App\Service\Integration\VendorExternalIntegrationRuntimeViewBuilder'
     App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface: '@App\Service\Ops\VendorRuntimeStatusViewBuilder'

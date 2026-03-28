@@ -15,6 +15,7 @@ final readonly class VendorProfileDTO
         public ?array $socials = null,
         public ?string $seoTitle = null,
         public ?string $seoDescription = null,
+        public ?string $publicationAction = null,
     ) {
     }
 }

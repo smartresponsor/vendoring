@@ -5,9 +5,11 @@ readonly SCRIPT_PATH="$(readlink -f "$0")"
 
 candidate_paths() {
   printf '%s\n' \
+    "${HOME:-}/.local/bin/chromedriver" \
     /snap/bin/chromium.chromedriver \
     /usr/bin/chromedriver \
-    /usr/lib/chromium/chromedriver
+    /usr/lib/chromium/chromedriver \
+    /usr/lib/chromium-browser/chromedriver
 }
 
 resolve_chromedriver() {

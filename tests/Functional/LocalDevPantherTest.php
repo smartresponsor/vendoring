@@ -173,6 +173,9 @@ final class LocalDevPantherTest extends PantherTestCase
         return dirname(__DIR__, 2);
     }
 
+    /**
+     * @return array{HOST:string, PORT:string}
+     */
     private static function serverCommandEnvironment(): array
     {
         return [
