@@ -10,6 +10,10 @@ use App\ServiceInterface\Statement\VendorStatementServiceInterface;
 
 final class VendorStatementService implements VendorStatementServiceInterface
 {
+    private const CSV_SEPARATOR = ',';
+    private const CSV_ENCLOSURE = '"';
+    private const CSV_ESCAPE = '\\';
+
     public function __construct(private readonly LedgerEntryRepositoryInterface $ledger)
     {
     }
@@ -51,13 +55,13 @@ final class VendorStatementService implements VendorStatementServiceInterface
             throw new \RuntimeException(sprintf('Failed to open csv stream: %s', $path));
         }
 
-        fputcsv($f, ['Section', 'Amount', 'Currency']);
+        fputcsv($f, ['Section', 'Amount', 'Currency'], self::CSV_SEPARATOR, self::CSV_ENCLOSURE, self::CSV_ESCAPE);
         foreach ($data['items'] as $row) {
-            fputcsv($f, [$row['type'], $row['amount'], $row['currency']]);
+            fputcsv($f, [$row['type'], $row['amount'], $row['currency']], self::CSV_SEPARATOR, self::CSV_ENCLOSURE, self::CSV_ESCAPE);
         }
-        fputcsv($f, []);
-        fputcsv($f, ['Opening', $data['opening'], $dto->currency]);
-        fputcsv($f, ['Closing', $data['closing'], $dto->currency]);
+        fputcsv($f, [], self::CSV_SEPARATOR, self::CSV_ENCLOSURE, self::CSV_ESCAPE);
+        fputcsv($f, ['Opening', $data['opening'], $dto->currency], self::CSV_SEPARATOR, self::CSV_ENCLOSURE, self::CSV_ESCAPE);
+        fputcsv($f, ['Closing', $data['closing'], $dto->currency], self::CSV_SEPARATOR, self::CSV_ENCLOSURE, self::CSV_ESCAPE);
         fclose($f);
 
         return $path;
