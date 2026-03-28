@@ -1,22 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-HOST="${HOST:-127.0.0.1}"
-PORT="${PORT:-18000}"
-PID_FILE="$PROJECT_ROOT/var/run/local-server-${PORT}.pid"
-LOG_FILE="$PROJECT_ROOT/var/log/local-server-${PORT}.log"
-HEALTH_URL="http://${HOST}:${PORT}/healthz"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
-mkdir -p "$PROJECT_ROOT/var/log" "$PROJECT_ROOT/var/run"
+PROJECT_ROOT="$(local_server_project_root)"
+HOST="$(local_server_host)"
+PORT="$(local_server_port)"
+PID_FILE="$(local_server_pid_file "$PROJECT_ROOT" "$PORT")"
+LOG_FILE="$(local_server_log_file "$PROJECT_ROOT" "$PORT")"
+HEALTH_URL="$(local_server_health_url "$HOST" "$PORT")"
 
-if [[ -f "$PID_FILE" ]]; then
-  PID="$(cat "$PID_FILE")"
-  if kill -0 "$PID" >/dev/null 2>&1; then
-    echo "Local server already running on ${HOST}:${PORT} (pid ${PID})."
-    exit 0
-  fi
+local_server_prepare_runtime_dirs "$PROJECT_ROOT"
 
+PID="$(local_server_read_pid "$PID_FILE")"
+
+if local_server_pid_is_running "$PID"; then
+  echo "Local server already running on ${HOST}:${PORT} (pid ${PID})."
+  exit 0
+fi
+
+if [[ -n "$PID" ]]; then
   rm -f "$PID_FILE"
 fi
 
@@ -38,5 +41,6 @@ for _ in $(seq 1 50); do
   sleep 0.2
 done
 
+rm -f "$PID_FILE"
 echo "Local server failed to become ready; see ${LOG_FILE}."
 exit 1

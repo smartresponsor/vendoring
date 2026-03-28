@@ -3,6 +3,13 @@
 
 declare(strict_types=1);
 
+const EXIT_BINARY_NOT_FOUND = 127;
+const DOCKER_FALLBACK_ENV = [
+    'PANTHER_NO_SANDBOX=1',
+    'PANTHER_CHROME_BINARY=/usr/bin/chromium',
+    'PANTHER_CHROME_DRIVER_BINARY=/usr/bin/chromedriver',
+];
+
 /**
  * @param list<string> $candidates
  */
@@ -28,7 +35,7 @@ function resolveBinary(array $candidates): string
     }
 
     fwrite(STDERR, "Unable to locate a PHP 8.4 binary.\n");
-    exit(127);
+    exit(EXIT_BINARY_NOT_FOUND);
 }
 
 /**
@@ -52,13 +59,12 @@ function missingExtensions(array $extensions): array
  */
 function runInDocker(array $args): int
 {
-    $root = dirname(__DIR__, 2);
+    $root = projectRoot();
     chdir($root);
 
-    $dockerCompose = trim((string) shell_exec('command -v docker 2>/dev/null'));
-    if ($dockerCompose === '') {
+    if (!hasDockerBinary()) {
         fwrite(STDERR, "Missing required local PHP extensions and Docker is unavailable for fallback.\n");
-        return 127;
+        return EXIT_BINARY_NOT_FOUND;
     }
 
     $script = <<<'SH'
@@ -68,18 +74,41 @@ fi
 exec php "$@"
 SH;
 
-    $command = 'docker compose run --rm -T'
-        . ' -e PANTHER_NO_SANDBOX=1'
-        . ' -e PANTHER_CHROME_BINARY=/usr/bin/chromium'
-        . ' -e PANTHER_CHROME_DRIVER_BINARY=/usr/bin/chromedriver'
-        . ' app sh -lc ' . escapeshellarg($script) . ' sh';
-    foreach ($args as $arg) {
-        $command .= ' ' . escapeshellarg($arg);
-    }
+    $command = buildDockerCommand($script, $args);
 
     passthru($command, $exitCode);
 
     return $exitCode;
+}
+
+function projectRoot(): string
+{
+    return dirname(__DIR__, 2);
+}
+
+function hasDockerBinary(): bool
+{
+    return trim((string) shell_exec('command -v docker 2>/dev/null')) !== '';
+}
+
+/**
+ * @param list<string> $args
+ */
+function buildDockerCommand(string $script, array $args): string
+{
+    $command = 'docker compose run --rm -T';
+
+    foreach (DOCKER_FALLBACK_ENV as $env) {
+        $command .= ' -e ' . escapeshellarg($env);
+    }
+
+    $command .= ' app sh -lc ' . escapeshellarg($script) . ' sh';
+
+    foreach ($args as $arg) {
+        $command .= ' ' . escapeshellarg($arg);
+    }
+
+    return $command;
 }
 
 $binary = match (PHP_OS_FAMILY) {
@@ -107,13 +136,15 @@ while ($args !== [] && str_starts_with($args[0], '--require-ext=')) {
         break;
     }
 
-    $requiredExtensions = array_merge(
-        $requiredExtensions,
-        array_values(array_filter(array_map('trim', explode(',', substr($option, strlen('--require-ext='))))))
-    );
+    foreach (explode(',', substr($option, strlen('--require-ext='))) as $extension) {
+        $extension = trim($extension);
+        if ($extension !== '') {
+            $requiredExtensions[$extension] = true;
+        }
+    }
 }
 
-$missing = missingExtensions($requiredExtensions);
+$missing = missingExtensions(array_keys($requiredExtensions));
 
 if ($missing !== []) {
     exit(runInDocker($args));

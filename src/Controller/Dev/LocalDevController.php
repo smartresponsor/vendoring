@@ -10,10 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class LocalDevController
 {
-    #[Route('/', name: 'app_local_dev_home', methods: ['GET'])]
-    public function home(): Response
-    {
-        $html = <<<'HTML'
+    private const HOME_PAGE = <<<'HTML'
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -35,7 +32,10 @@ final class LocalDevController
 </html>
 HTML;
 
-        return new Response($html);
+    #[Route('/', name: 'app_local_dev_home', methods: ['GET'])]
+    public function home(): Response
+    {
+        return new Response(self::HOME_PAGE);
     }
 
     #[Route('/healthz', name: 'app_local_dev_healthz', methods: ['GET'])]
@@ -43,7 +43,12 @@ HTML;
     {
         return new JsonResponse([
             'status' => 'ok',
-            'appEnv' => $_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? 'dev',
+            'appEnv' => $this->resolveAppEnv(),
         ]);
+    }
+
+    private function resolveAppEnv(): string
+    {
+        return $_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? 'dev';
     }
 }

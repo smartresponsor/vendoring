@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PORT="${PORT:-18000}"
-PID_FILE="$PROJECT_ROOT/var/run/local-server-${PORT}.pid"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
-if [[ ! -f "$PID_FILE" ]]; then
+PROJECT_ROOT="$(local_server_project_root)"
+PORT="$(local_server_port)"
+PID_FILE="$(local_server_pid_file "$PROJECT_ROOT" "$PORT")"
+PID="$(local_server_read_pid "$PID_FILE")"
+
+if [[ -z "$PID" ]]; then
   echo "Local server is not running."
   exit 0
 fi
 
-PID="$(cat "$PID_FILE")"
-
-if kill -0 "$PID" >/dev/null 2>&1; then
+if local_server_pid_is_running "$PID"; then
   kill "$PID"
 fi
 

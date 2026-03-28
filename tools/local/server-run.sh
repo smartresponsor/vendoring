@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-HOST="${HOST:-127.0.0.1}"
-PORT="${PORT:-18000}"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
-mkdir -p "$PROJECT_ROOT/var/log" "$PROJECT_ROOT/var/run"
+PROJECT_ROOT="$(local_server_project_root)"
+HOST="$(local_server_host)"
+PORT="$(local_server_port)"
+
+local_server_prepare_runtime_dirs "$PROJECT_ROOT"
 cd "$PROJECT_ROOT"
 
 exec php -S "${HOST}:${PORT}" -t public public/index.php
