@@ -1,13 +1,13 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Service\Ops;
 
 use App\Entity\VendorTransaction;
 use App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
+use App\ValueObject\VendorTransactionStatus;
 
 final class VendorTransactionOperatorPageBuilder implements VendorTransactionOperatorPageBuilderInterface
 {
@@ -49,7 +49,7 @@ HTML,
                 $this->escape($transaction->getOrderId()),
                 $this->escape($transaction->getProjectId() ?? '—'),
                 $this->escape($transaction->getAmount()),
-                $this->escape($transaction->getStatus()),
+                $this->escape(VendorTransactionStatus::label($transaction->getStatus())),
                 $vendorIdEscaped,
                 $transaction->getId(),
                 $transaction->getId(),
@@ -151,12 +151,11 @@ HTML,
 
     private function renderStatusOptions(string $currentStatus): string
     {
-        $statuses = ['pending', 'authorized', 'captured', 'failed', 'refunded'];
         $options = '';
 
-        foreach ($statuses as $status) {
+        foreach (VendorTransactionStatus::operatorChoices() as $label => $status) {
             $selected = $status === $currentStatus ? ' selected' : '';
-            $options .= sprintf('<option value="%s"%s>%s</option>', $this->escape($status), $selected, $this->escape(ucfirst($status)));
+            $options .= sprintf('<option value="%s"%s>%s</option>', $this->escape($status), $selected, $this->escape($label));
         }
 
         return $options;
