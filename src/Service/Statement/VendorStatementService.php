@@ -12,6 +12,7 @@ final class VendorStatementService implements VendorStatementServiceInterface
 {
     private const ACCOUNT_REVENUE = 'REVENUE';
     private const ACCOUNT_REFUNDS_PAYABLE = 'REFUNDS_PAYABLE';
+    private const ACCOUNT_PAYOUT_FEE = 'payout_fee';
     private const CSV_SEPARATOR = ',';
     private const CSV_ENCLOSURE = '"';
     private const CSV_ESCAPE = '\\';
@@ -26,11 +27,17 @@ final class VendorStatementService implements VendorStatementServiceInterface
      */
     public function build(VendorStatementRequestDTO $dto): array
     {
-        $opening = 0.0;
-        $earnings = $this->sumPositive($dto, self::ACCOUNT_REVENUE);
-        $refunds = $this->sumPositive($dto, self::ACCOUNT_REFUNDS_PAYABLE);
-        $fees = 0.0;
-        $closing = $earnings - $refunds - $fees;
+        $fromDate = $this->normalizeDate($dto->from);
+        $toDate = $this->normalizeDate($dto->to);
+        $openingToDate = $this->previousDate($fromDate);
+
+        $opening = $this->sumPositiveBefore($dto, self::ACCOUNT_REVENUE, $openingToDate)
+            - $this->sumPositiveBefore($dto, self::ACCOUNT_REFUNDS_PAYABLE, $openingToDate)
+            - $this->sumPositiveBefore($dto, self::ACCOUNT_PAYOUT_FEE, $openingToDate);
+        $earnings = $this->sumPositive($dto, self::ACCOUNT_REVENUE, $fromDate, $toDate);
+        $refunds = $this->sumPositive($dto, self::ACCOUNT_REFUNDS_PAYABLE, $fromDate, $toDate);
+        $fees = $this->sumPositive($dto, self::ACCOUNT_PAYOUT_FEE, $fromDate, $toDate);
+        $closing = $opening + $earnings - $refunds - $fees;
         $items = [
             $this->buildItem('earnings', $earnings, $dto->currency),
             $this->buildItem('refunds', $refunds, $dto->currency),
@@ -76,16 +83,48 @@ final class VendorStatementService implements VendorStatementServiceInterface
         return $path;
     }
 
-    private function sumPositive(VendorStatementRequestDTO $dto, string $account): float
+    private function sumPositive(VendorStatementRequestDTO $dto, string $account, string $fromDate, string $toDate): float
     {
         return max(0.0, $this->ledger->sumByAccount(
             $dto->tenantId,
             $account,
-            $dto->from,
-            $dto->to,
+            $fromDate,
+            $toDate,
             $dto->vendorId,
             $dto->currency,
         ));
+    }
+
+    private function sumPositiveBefore(VendorStatementRequestDTO $dto, string $account, ?string $toDate): float
+    {
+        if (null === $toDate) {
+            return 0.0;
+        }
+
+        return max(0.0, $this->ledger->sumByAccount(
+            $dto->tenantId,
+            $account,
+            null,
+            $toDate,
+            $dto->vendorId,
+            $dto->currency,
+        ));
+    }
+
+    private function normalizeDate(string $value): string
+    {
+        return (new \DateTimeImmutable($value))->format('Y-m-d');
+    }
+
+    private function previousDate(string $date): ?string
+    {
+        $current = \DateTimeImmutable::createFromFormat('Y-m-d', $date);
+
+        if (!$current instanceof \DateTimeImmutable) {
+            return null;
+        }
+
+        return $current->modify('-1 day')->format('Y-m-d');
     }
 
     /**
