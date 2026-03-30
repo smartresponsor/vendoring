@@ -7,6 +7,7 @@ namespace App\DTO\Payout;
 final class CreatePayoutDTO
 {
     public function __construct(
+        public string $tenantId,
         public string $vendorId,
         public string $currency,
         public int $thresholdCents,

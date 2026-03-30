@@ -22,6 +22,31 @@ It already spans:
 - Symfony mini-stack smoke
 - minimal operator status controls aligned to the canonical transaction vocabulary
 
+## Payout orchestration hardening
+
+The payout contour now distinguishes:
+
+- tenant-aware payout creation input
+- reserve recording with explicit `tenantId`
+- real provider orchestration during `process()`
+- deterministic `processed` and `failed` outcomes
+- provider/account metadata persistence for later audit and runtime readback
+
+This replaces the earlier demo-like success assumption with a more RC-oriented orchestration path.
+
+## Statement hardening slice
+
+The vendor statement contour now computes:
+
+- opening balance from pre-period ledger movements
+- period earnings
+- period refunds
+- period fees
+- closing balance as `opening + earnings - refunds - fees`
+- date-boundary normalization so datetime-like inputs still resolve to calendar-day statement windows
+
+This keeps the statement surface closer to a finance/runtime read model rather than a flat demo export.
+
 ## Next target surface
 
 The next RC-strengthening step is a minimal operator/admin path that traverses:
