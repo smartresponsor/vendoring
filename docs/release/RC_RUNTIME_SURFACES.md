@@ -12,6 +12,7 @@ It already spans:
 - Doctrine-backed persistence tests
 - SQLite integration evidence
 - JSON/error/idempotency contract checks
+- duplicate transaction normalization across both pre-check and DB-level unique violations
 
 ## Additional proven surfaces
 
