@@ -19,6 +19,7 @@ It already spans:
 - payout calculation and orchestration
 - repository and DI alias coverage
 - Symfony mini-stack smoke
+- minimal operator status controls aligned to the canonical transaction vocabulary
 
 ## Next target surface
 
