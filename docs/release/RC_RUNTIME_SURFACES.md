@@ -23,6 +23,19 @@ It already spans:
 - minimal operator status controls aligned to the canonical transaction vocabulary
 - ledger summary aggregation across canonical vendor finance accounts
 - payout outcome metadata persistence for processed/failed repository updates
+- payout account normalization and tenant/vendor-scoped upsert coverage
+- formal API-doc configuration surface for the public `/api` runtime
+
+## API-doc hardening
+
+The repository now exposes a formal API-doc configuration contour through Nelmio wiring:
+
+- bundle registration in Symfony bundles
+- runtime route import for the Swagger UI surface
+- package-level OpenAPI/Nelmio configuration with release-candidate info metadata
+- documented path filtering that keeps `/api/doc` and `/api/doc.json` out of the described business surface
+
+This moves the repository closer to a formal contract-facing RC rather than relying only on inline controller docblocks.
 
 ## Ledger summary hardening
 
@@ -53,6 +66,7 @@ The payout contour now distinguishes:
 - real provider orchestration during `process()`
 - deterministic `processed` and `failed` outcomes
 - provider/account metadata persistence for later audit and runtime readback
+- payout account payload normalization and tenant/vendor-scoped persistence coverage
 
 This replaces the earlier demo-like success assumption with a more RC-oriented orchestration path.
 
