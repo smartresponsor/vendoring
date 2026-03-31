@@ -22,6 +22,7 @@ It already spans:
 - Symfony mini-stack smoke
 - minimal operator status controls aligned to the canonical transaction vocabulary
 - ledger summary aggregation across canonical vendor finance accounts
+- payout outcome metadata persistence for processed/failed repository updates
 
 ## Ledger summary hardening
 
