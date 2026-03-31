@@ -264,6 +264,7 @@
       "@phpstan"
     ],
     "quality:contracts": [
+      "@test:doctrine-storage-split",
       "@test:symfony-stack",
       "@test:di",
       "@test:entrypoint",
@@ -314,6 +315,7 @@
       "@quality:docs"
     ],
     "quality": [
+      "@test:doctrine-storage-split",
       "@test:symfony-stack",
       "@test:di",
       "@test:entrypoint",
@@ -367,6 +369,7 @@
       "@test:composer-quality-parity",
       "@test:composer-script-invocation-parity"
     ],
-    "test:symfony-security": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Security"
+    "test:symfony-security": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Security",
+    "test:doctrine-storage-split": "php tests/bin/doctrine-storage-split-smoke.php"
   }
 }
