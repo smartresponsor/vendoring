@@ -31,7 +31,7 @@ final class VendorPayoutAccountService implements VendorPayoutAccountServiceInte
             $this->requiredString($payload, 'vendorId'),
             $this->requiredString($payload, 'provider'),
             $this->requiredString($payload, 'accountRef'),
-            $this->requiredString($payload, 'currency'),
+            strtoupper($this->requiredString($payload, 'currency')),
             $this->boolValue($payload['active'] ?? true),
             (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
         );
@@ -45,16 +45,19 @@ final class VendorPayoutAccountService implements VendorPayoutAccountServiceInte
     private function requiredString(array $payload, string $field): string
     {
         $value = $payload[$field] ?? null;
+        $normalized = null;
 
         if (is_string($value)) {
-            return $value;
+            $normalized = trim($value);
+        } elseif (is_int($value) || is_float($value)) {
+            $normalized = trim((string) $value);
         }
 
-        if (is_int($value) || is_float($value)) {
-            return (string) $value;
+        if (null === $normalized || '' === $normalized) {
+            throw new \InvalidArgumentException(sprintf('%s required', $field));
         }
 
-        throw new \InvalidArgumentException(sprintf('%s required', $field));
+        return $normalized;
     }
 
     private function boolValue(mixed $value): bool
