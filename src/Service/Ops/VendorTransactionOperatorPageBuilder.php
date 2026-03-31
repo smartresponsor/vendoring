@@ -88,11 +88,13 @@ HTML,
     <div class="card shadow-sm mb-4">
         <div class="card-header">Create transaction</div>
         <div class="card-body">
-            <form method="post" action="/ops/vendor-transactions/%s/create" class="row g-3">
+            <div class="row g-3 mb-3">
                 <div class="col-md-3">
-                    <label for="vendorId" class="form-label">Vendor ID</label>
-                    <input id="vendorId" name="vendorId" class="form-control" value="%s" required>
+                    <label for="vendorIdDisplay" class="form-label">Vendor ID</label>
+                    <input id="vendorIdDisplay" class="form-control" value="%s" readonly disabled>
                 </div>
+            </div>
+            <form method="post" action="/ops/vendor-transactions/%s/create" class="row g-3">
                 <div class="col-md-3">
                     <label for="orderId" class="form-label">Order ID</label>
                     <input id="orderId" name="orderId" class="form-control" required>

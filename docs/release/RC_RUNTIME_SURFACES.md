@@ -57,6 +57,16 @@ The minimal operator/admin slice is now more route-scoped and less fragile:
 
 This keeps the operator surface thin while reducing scope drift between URL, form payload, and displayed state.
 
+## Operator contour hardening
+
+The minimal operator/admin slice is now more route-scoped and less fragile:
+
+- vendor identity is display-only in both Twig and fallback surfaces
+- create submissions rely on the route `vendorId` instead of editable form scope
+- Twig status rendering uses canonical human-readable labels instead of raw codes
+
+This keeps the operator surface thin while reducing scope drift between URL, form payload, and displayed state.
+
 ## Payout orchestration hardening
 
 The payout contour now distinguishes:
