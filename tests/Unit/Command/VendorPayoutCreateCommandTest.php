@@ -1,130 +1,117 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Command;
 
 use App\Command\VendorPayoutCreateCommand;
-use App\Entity\Ledger\LedgerEntry;
-use App\Observability\Service\MetricEmitter;
-use App\Service\Ledger\VendorLedgerService;
-use App\Service\Payout\VendorPayoutRequestService;
-use App\Service\Payout\VendorPayoutService;
-use App\Tests\Support\Payout\InMemoryPayoutRepository;
-use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
+use App\DTO\Payout\CreatePayoutDTO;
+use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 final class VendorPayoutCreateCommandTest extends TestCase
 {
-    public function testExecuteCreatesPayoutAndPrintsTextSurface(): void
+    private VendorPayoutServiceInterface&MockObject $payouts;
+
+    protected function setUp(): void
     {
-        $payoutRepository = new InMemoryPayoutRepository();
-        $ledgerRepository = new InMemoryLedgerEntryRepository();
-        $ledgerService = new VendorLedgerService($ledgerRepository);
-        $metrics = new MetricEmitter();
+        $this->payouts = $this->createMock(VendorPayoutServiceInterface::class);
+    }
 
-        $ledgerRepository->insert(new LedgerEntry('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 25.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-20 10:00:00'));
+    public function testExecuteCreatesPayoutAndNormalizesCurrency(): void
+    {
+        $this->payouts
+            ->expects(self::once())
+            ->method('create')
+            ->with(self::callback(function (CreatePayoutDTO $dto): bool {
+                self::assertSame('tenant-1', $dto->tenantId);
+                self::assertSame('vendor-1', $dto->vendorId);
+                self::assertSame('USD', $dto->currency);
+                self::assertSame(1000, $dto->thresholdCents);
+                self::assertSame(0.05, $dto->retentionFeePercent);
 
-        $command = new VendorPayoutCreateCommand(
-            new VendorPayoutRequestService(),
-            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics),
-            $payoutRepository,
-        );
+                return true;
+            }))
+            ->willReturn('payout-1');
+        $this->payouts->expects(self::never())->method('process');
 
-        $tester = new CommandTester($command);
+        $tester = new CommandTester(new VendorPayoutCreateCommand($this->payouts));
         $exitCode = $tester->execute([
-            '--vendorId' => 'vendor-1',
-            '--currency' => 'USD',
-            '--thresholdCents' => '1000',
-            '--retentionFeePercent' => '0.1',
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'usd',
+            'thresholdCents' => '1000',
+            'retentionFeePercent' => '0.05',
         ]);
 
         self::assertSame(0, $exitCode);
-        self::assertStringContainsString('PAYOUT_CREATED', $tester->getDisplay());
-        self::assertStringContainsString('vendorId=vendor-1', $tester->getDisplay());
-        self::assertStringContainsString('grossCents=2500', $tester->getDisplay());
+        self::assertStringContainsString('Created payout payout-1.', $tester->getDisplay());
     }
 
-    public function testExecutePrintsNoPayoutWhenBalanceIsBelowThreshold(): void
+    public function testExecuteCanProcessCreatedPayout(): void
     {
-        $payoutRepository = new InMemoryPayoutRepository();
-        $ledgerRepository = new InMemoryLedgerEntryRepository();
-        $ledgerService = new VendorLedgerService($ledgerRepository);
-        $metrics = new MetricEmitter();
+        $this->payouts->expects(self::once())->method('create')->willReturn('payout-1');
+        $this->payouts->expects(self::once())->method('process')->with('payout-1')->willReturn(true);
 
-        $ledgerRepository->insert(new LedgerEntry('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 2.5, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-20 10:00:00'));
-
-        $command = new VendorPayoutCreateCommand(
-            new VendorPayoutRequestService(),
-            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics),
-            $payoutRepository,
-        );
-
-        $tester = new CommandTester($command);
+        $tester = new CommandTester(new VendorPayoutCreateCommand($this->payouts));
         $exitCode = $tester->execute([
-            '--vendorId' => 'vendor-1',
-            '--currency' => 'USD',
-            '--thresholdCents' => '1000',
-            '--retentionFeePercent' => '0.1',
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => '1000',
+            'retentionFeePercent' => '0.05',
+            '--process' => true,
         ]);
 
         self::assertSame(0, $exitCode);
-        self::assertStringContainsString('NO_PAYOUT', $tester->getDisplay());
+        self::assertStringContainsString('Created payout payout-1.', $tester->getDisplay());
+        self::assertStringContainsString('Processed payout payout-1.', $tester->getDisplay());
     }
 
-    public function testExecuteReturnsFailureForMissingVendorId(): void
+    public function testExecuteWarnsWhenThresholdWasNotReached(): void
     {
-        $payoutRepository = new InMemoryPayoutRepository();
-        $ledgerRepository = new InMemoryLedgerEntryRepository();
-        $ledgerService = new VendorLedgerService($ledgerRepository);
-        $metrics = new MetricEmitter();
+        $this->payouts->expects(self::once())->method('create')->willReturn(null);
+        $this->payouts->expects(self::never())->method('process');
 
-        $command = new VendorPayoutCreateCommand(
-            new VendorPayoutRequestService(),
-            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics),
-            $payoutRepository,
-        );
-
-        $tester = new CommandTester($command);
+        $tester = new CommandTester(new VendorPayoutCreateCommand($this->payouts));
         $exitCode = $tester->execute([
-            '--currency' => 'USD',
-            '--thresholdCents' => '1000',
-            '--retentionFeePercent' => '0.1',
-        ]);
-
-        self::assertSame(1, $exitCode);
-        self::assertStringContainsString('vendorId required', $tester->getDisplay());
-    }
-
-    public function testExecutePrintsJsonSurfaceWhenRequested(): void
-    {
-        $payoutRepository = new InMemoryPayoutRepository();
-        $ledgerRepository = new InMemoryLedgerEntryRepository();
-        $ledgerService = new VendorLedgerService($ledgerRepository);
-        $metrics = new MetricEmitter();
-
-        $ledgerRepository->insert(new LedgerEntry('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 20.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-20 10:00:00'));
-
-        $command = new VendorPayoutCreateCommand(
-            new VendorPayoutRequestService(),
-            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics),
-            $payoutRepository,
-        );
-
-        $tester = new CommandTester($command);
-        $exitCode = $tester->execute([
-            '--vendorId' => 'vendor-1',
-            '--currency' => 'USD',
-            '--thresholdCents' => '1000',
-            '--retentionFeePercent' => '0.1',
-            '--format' => 'json',
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => '1000',
+            'retentionFeePercent' => '0.05',
         ]);
 
         self::assertSame(0, $exitCode);
-        self::assertStringContainsString('"vendorId": "vendor-1"', $tester->getDisplay());
-        self::assertStringContainsString('"currency": "USD"', $tester->getDisplay());
-        self::assertStringContainsString('"status": "pending"', $tester->getDisplay());
+        self::assertStringContainsString('No payout created. Threshold was not reached.', $tester->getDisplay());
+    }
+
+    public function testExecuteCanEmitJsonOutput(): void
+    {
+        $this->payouts->expects(self::once())->method('create')->willReturn('payout-1');
+        $this->payouts->expects(self::once())->method('process')->with('payout-1')->willReturn(false);
+
+        $tester = new CommandTester(new VendorPayoutCreateCommand($this->payouts));
+        $exitCode = $tester->execute([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => '1000',
+            'retentionFeePercent' => '0.05',
+            '--process' => true,
+            '--json' => true,
+        ]);
+
+        self::assertSame(0, $exitCode);
+        self::assertJson($tester->getDisplay());
+
+        $payload = json_decode($tester->getDisplay(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame([
+            'created' => true,
+            'payoutId' => 'payout-1',
+            'processed' => false,
+        ], $payload);
     }
 }
