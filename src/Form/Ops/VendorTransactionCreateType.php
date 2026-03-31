@@ -17,11 +17,6 @@ final class VendorTransactionCreateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('vendorId', TextType::class, [
-                'label' => 'Vendor ID',
-                'constraints' => [new NotBlank(), new Length(max: 120)],
-                'attr' => ['class' => 'form-control'],
-            ])
             ->add('orderId', TextType::class, [
                 'label' => 'Order ID',
                 'constraints' => [new NotBlank(), new Length(max: 120)],

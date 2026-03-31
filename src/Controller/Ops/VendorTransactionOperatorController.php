@@ -14,6 +14,7 @@ use App\RepositoryInterface\VendorTransactionRepositoryInterface;
 use App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\VendorTransactionData;
+use App\ValueObject\VendorTransactionStatus;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -68,7 +69,7 @@ final class VendorTransactionOperatorController extends AbstractController
                 'method' => 'POST',
                 'csrf_protection' => false,
             ]);
-            $this->submitFlatOrNamedForm($form, $request, ['vendorId' => $vendorId]);
+            $this->submitFlatOrNamedForm($form, $request);
 
             if (!$form->isSubmitted()) {
                 return $this->redirectWithQuery($vendorId, 'error', 'form_invalid');
@@ -80,7 +81,7 @@ final class VendorTransactionOperatorController extends AbstractController
 
             try {
                 $this->manager->createTransaction(new VendorTransactionData(
-                    vendorId: trim($input->vendorId),
+                    vendorId: $vendorId,
                     orderId: trim($input->orderId),
                     projectId: $this->normalizeNullableString($input->projectId),
                     amount: trim($input->amount),
@@ -177,6 +178,7 @@ final class VendorTransactionOperatorController extends AbstractController
         return $this->render('ops/vendor_transactions/index.html.twig', [
             'vendorId' => $vendorId,
             'transactions' => $transactions,
+            'statusLabels' => VendorTransactionStatus::labels(),
             'flashMessage' => $flashMessage,
             'errorMessage' => $errorMessage,
             'createForm' => $createForm->createView(),
