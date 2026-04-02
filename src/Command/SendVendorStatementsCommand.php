@@ -95,13 +95,17 @@ final class SendVendorStatementsCommand extends Command
 
     private function resolveDateOption(string $value, string $fallback): string
     {
-        return '' !== trim($value) ? $value : $fallback;
+        $normalized = trim($value);
+
+        return '' !== $normalized ? $normalized : $fallback;
     }
 
     private function resolvePeriodLabel(string $periodLabel, string $from, string $to): string
     {
-        if ('' !== trim($periodLabel)) {
-            return $periodLabel;
+        $normalized = trim($periodLabel);
+
+        if ('' !== $normalized) {
+            return $normalized;
         }
 
         $fromMonth = date('Y-m', $this->safeTimestamp($from));
