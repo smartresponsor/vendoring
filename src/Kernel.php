@@ -21,8 +21,8 @@ final class Kernel extends BaseKernel
             $container->import($configDir.'/packages/*.yaml');
         }
 
-        if (is_file($configDir.'/services.yaml')) {
-            $container->import($configDir.'/services.yaml');
+        if (is_file($configDir.'/vendor_services.yaml')) {
+            $container->import($configDir.'/vendor_services.yaml');
         }
 
         if (is_file($configDir.'/services_runtime.php')) {
@@ -38,8 +38,8 @@ final class Kernel extends BaseKernel
     {
         $configDir = $this->getProjectDir().'/config';
 
-        if (is_file($configDir.'/routes.yaml')) {
-            $routes->import($configDir.'/routes.yaml');
+        if (is_file($configDir.'/vendor_routes.yaml')) {
+            $routes->import($configDir.'/vendor_routes.yaml');
         }
 
         if (is_file($configDir.'/routes_runtime.php')) {

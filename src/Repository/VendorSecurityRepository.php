@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Vendor\VendorSecurity;
+use App\Entity\VendorSecurity;
 use App\EntityInterface\VendorSecurityInterface;
 use App\RepositoryInterface\VendorSecurityRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\RepositoryInterface\Payout;
 
-use App\Entity\Vendor\Payout\Payout;
-use App\Entity\Vendor\Payout\PayoutItem;
+use App\Entity\Payout\Payout;
+use App\Entity\Payout\PayoutItem;
 
 interface PayoutRepositoryInterface
 {
@@ -20,5 +20,13 @@ interface PayoutRepositoryInterface
      */
     public function items(string $payoutId): array;
 
-    public function markProcessed(string $id, string $processedAt): void;
+    /**
+     * @param array<string, mixed> $meta
+     */
+    public function markProcessed(string $id, string $processedAt, array $meta = []): void;
+
+    /**
+     * @param array<string, mixed> $meta
+     */
+    public function markFailed(string $id, string $processedAt, array $meta = []): void;
 }

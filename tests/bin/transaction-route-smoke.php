@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$routes = (string) file_get_contents($root.'/config/routes.yaml');
+$routes = (string) file_get_contents($root.'/config/vendor_routes.yaml');
 $transactionServices = (string) file_get_contents($root.'/config/vendor_services_transactions.yaml');
 $controller = (string) file_get_contents($root.'/src/Controller/VendorTransactionController.php');
 

@@ -1,95 +1,83 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
 declare(strict_types=1);
 
 namespace App\Command;
 
-use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
-use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
+use App\DTO\Payout\CreatePayoutDTO;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(
-    name: 'app:vendor:payout:create',
-    description: 'Create payout from vendor available balance and print payout state',
-)]
+#[AsCommand(name: 'app:vendor:payout:create', description: 'Create a vendor payout from payout threshold inputs.')]
 final class VendorPayoutCreateCommand extends Command
 {
-    public function __construct(
-        private readonly VendorPayoutRequestServiceInterface $requestService,
-        private readonly VendorPayoutServiceInterface $payoutService,
-        private readonly PayoutRepositoryInterface $payoutRepository,
-    ) {
+    public function __construct(private readonly VendorPayoutServiceInterface $payouts)
+    {
         parent::__construct();
     }
 
     protected function configure(): void
     {
         $this
-            ->addOption('vendorId', null, InputOption::VALUE_REQUIRED, 'Vendor ID')
-            ->addOption('currency', null, InputOption::VALUE_OPTIONAL, 'Currency', 'USD')
-            ->addOption('thresholdCents', null, InputOption::VALUE_OPTIONAL, 'Minimum balance in cents required to create payout', '1000')
-            ->addOption('retentionFeePercent', null, InputOption::VALUE_OPTIONAL, 'Retention fee percent as decimal fraction', '0.05')
-            ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Output format: text|json', 'text');
+            ->addArgument('tenantId', InputArgument::REQUIRED)
+            ->addArgument('vendorId', InputArgument::REQUIRED)
+            ->addArgument('currency', InputArgument::REQUIRED)
+            ->addArgument('thresholdCents', InputArgument::REQUIRED)
+            ->addArgument('retentionFeePercent', InputArgument::REQUIRED)
+            ->addOption('process', null, InputOption::VALUE_NONE, 'Process the payout immediately after creation.')
+            ->addOption('json', null, InputOption::VALUE_NONE, 'Emit machine-readable JSON output.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $payload = [
-            'vendorId' => $input->getOption('vendorId'),
-            'currency' => $input->getOption('currency'),
-            'thresholdCents' => $input->getOption('thresholdCents'),
-            'retentionFeePercent' => $input->getOption('retentionFeePercent'),
-        ];
+        $dto = new CreatePayoutDTO(
+            tenantId: (string) $input->getArgument('tenantId'),
+            vendorId: (string) $input->getArgument('vendorId'),
+            currency: strtoupper((string) $input->getArgument('currency')),
+            thresholdCents: (int) $input->getArgument('thresholdCents'),
+            retentionFeePercent: (float) $input->getArgument('retentionFeePercent'),
+        );
 
-        $format = (string) $input->getOption('format');
+        $payoutId = $this->payouts->create($dto);
+        $processed = false;
 
-        try {
-            $dto = $this->requestService->toCreateDto($payload);
-        } catch (\InvalidArgumentException $exception) {
-            $output->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
-
-            return Command::FAILURE;
+        if (null !== $payoutId && true === $input->getOption('process')) {
+            $processed = $this->payouts->process($payoutId);
         }
 
-        $payoutId = $this->payoutService->create($dto);
+        if (true === $input->getOption('json')) {
+            $output->writeln(json_encode([
+                'created' => null !== $payoutId,
+                'payoutId' => $payoutId,
+                'processed' => $processed,
+            ], JSON_THROW_ON_ERROR));
+
+            return Command::SUCCESS;
+        }
+
+        $io = new SymfonyStyle($input, $output);
 
         if (null === $payoutId) {
-            $output->writeln('NO_PAYOUT: balance below threshold');
+            $io->warning('No payout created. Threshold was not reached.');
 
             return Command::SUCCESS;
         }
 
-        $payout = $this->payoutRepository->byId($payoutId);
+        $io->success(sprintf('Created payout %s.', $payoutId));
 
-        if (null === $payout) {
-            $output->writeln('<error>Payout was created but cannot be loaded from repository.</error>');
-
-            return Command::FAILURE;
+        if (true === $input->getOption('process')) {
+            if ($processed) {
+                $io->success(sprintf('Processed payout %s.', $payoutId));
+            } else {
+                $io->warning(sprintf('Payout %s was created but not processed.', $payoutId));
+            }
         }
-
-        $normalized = $this->requestService->normalizePayout($payout);
-
-        if ('json' === $format) {
-            $output->writeln((string) json_encode($normalized, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-
-            return Command::SUCCESS;
-        }
-
-        $output->writeln(sprintf(
-            'PAYOUT_CREATED id=%s vendorId=%s currency=%s grossCents=%d feeCents=%d netCents=%d status=%s',
-            $normalized['id'],
-            $normalized['vendorId'],
-            $normalized['currency'],
-            $normalized['grossCents'],
-            $normalized['feeCents'],
-            $normalized['netCents'],
-            $normalized['status'],
-        ));
 
         return Command::SUCCESS;
     }

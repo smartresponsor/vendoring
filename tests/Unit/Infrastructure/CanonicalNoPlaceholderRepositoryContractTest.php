@@ -45,6 +45,7 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
 
             if (
                 str_contains($normalized, '/.git/')
+                || str_contains($normalized, '/node_modules/')
                 || str_contains($normalized, '/vendor/')
                 || str_contains($normalized, '/.deploy/_template/')
             ) {

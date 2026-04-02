@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace App\ServiceInterface\Ledger;
 
 use App\DTO\Ledger\LedgerEntryDTO;
-use App\Entity\Vendor\Ledger\LedgerEntry;
+use App\Entity\Ledger\LedgerEntry;
 
 interface VendorLedgerServiceInterface
 {

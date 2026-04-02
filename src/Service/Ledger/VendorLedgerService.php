@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace App\Service\Ledger;
 
 use App\DTO\Ledger\LedgerEntryDTO;
-use App\Entity\Vendor\Ledger\LedgerEntry;
+use App\Entity\Ledger\LedgerEntry;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Ledger\VendorLedgerServiceInterface;
 use Symfony\Component\Uid\Uuid;

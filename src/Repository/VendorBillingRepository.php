@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Vendor\VendorBilling;
+use App\Entity\VendorBilling;
 use App\RepositoryInterface\VendorBillingRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -39,7 +39,13 @@ final class VendorBillingRepository extends ServiceEntityRepository implements V
 
     public function findOneByVendorId(string $vendorId): ?VendorBilling
     {
-        $entity = $this->findOneBy(['vendorId' => $vendorId]);
+        $entity = $this->createQueryBuilder('billing')
+            ->innerJoin('billing.vendor', 'vendor')
+            ->andWhere('vendor.id = :vendorId')
+            ->setParameter('vendorId', (int) $vendorId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
 
         return $entity instanceof VendorBilling ? $entity : null;
     }

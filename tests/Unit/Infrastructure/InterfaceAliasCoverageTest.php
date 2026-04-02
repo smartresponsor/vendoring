@@ -10,7 +10,7 @@ final class InterfaceAliasCoverageTest extends TestCase
 {
     public function testServicesConfigurationCoversCanonicalRepositoryAndServiceInterfaces(): void
     {
-        $services = (string) file_get_contents(dirname(__DIR__, 3).'/config/services.yaml');
+        $services = (string) file_get_contents(dirname(__DIR__, 3).'/config/vendor_services.yaml');
         $servicesVendorTransactions = (string) file_get_contents(dirname(__DIR__, 3).'/config/vendor_services_transactions.yaml');
         $config = $services."\n".$servicesVendorTransactions;
 
@@ -48,15 +48,16 @@ final class InterfaceAliasCoverageTest extends TestCase
             'App\\ServiceInterface\\VendorMediaServiceInterface' => 'App\\Service\\VendorMediaService',
             'App\\ServiceInterface\\VendorPassportServiceInterface' => 'App\\Service\\VendorPassportService',
             'App\\ServiceInterface\\VendorProfileServiceInterface' => 'App\\Service\\VendorProfileService',
+            'App\\ServiceInterface\\VendorProfileViewBuilderInterface' => 'App\\Service\\VendorProfileViewBuilder',
             'App\\ServiceInterface\\VendorSecurityServiceInterface' => 'App\\Service\\VendorSecurityService',
             'App\\ServiceInterface\\VendorServiceInterface' => 'App\\Service\\VendorService',
             'App\\ServiceInterface\\VendorTransactionManagerInterface' => 'App\\Service\\VendorTransactionManager',
             'App\\ServiceInterface\\WebhooksConsumer\\VendorWebhooksConsumerServiceInterface' => 'App\\Service\\WebhooksConsumer\\VendorWebhooksConsumerService',
             'App\\ServiceInterface\\Ledger\\VendorDoubleEntryServiceInterface' => 'App\\Service\\Ledger\\VendorDoubleEntryService',
             'App\\ServiceInterface\\Metric\\VendorMetricServiceInterface' => 'App\\Service\\Metric\\VendorMetricService',
-            'App\\ServiceInterface\\Payout\\PayoutProviderBridgeInterface' => 'App\\Service\\Payout\\PayoutProviderBridge',
+            'App\\ServiceInterface\\Payout\\VendorPayoutProviderServiceInterface' => 'App\\Service\\Payout\\VendorPayoutProviderService',
             'App\\ServiceInterface\\Payout\\VendorPayoutServiceInterface' => 'App\\Service\\Payout\\VendorPayoutService',
-            'App\\ServiceInterface\\Payout\\VendorSettlementCalculatorInterface' => 'App\\Service\\Payout\\VendorSettlementCalculator',
+            'App\\ServiceInterface\\Payout\\VendorSettlementCalculatorServiceInterface' => 'App\\Service\\Payout\\VendorSettlementCalculatorService',
             'App\\ServiceInterface\\Statement\\StatementExporterPDFInterface' => 'App\\Service\\Statement\\StatementExporterPDF',
             'App\\ServiceInterface\\Statement\\VendorStatementMailerServiceInterface' => 'App\\Service\\Statement\\VendorStatementMailerService',
             'App\\ServiceInterface\\Statement\\VendorStatementRecipientProviderInterface' => 'App\\Service\\Statement\\VendorStatementRecipientProvider',

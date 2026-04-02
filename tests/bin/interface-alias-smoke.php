@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$services = (string) file_get_contents($root.'/config/services.yaml');
+$services = (string) file_get_contents($root.'/config/vendor_services.yaml');
 $servicesVendorTransactions = (string) file_get_contents($root.'/config/vendor_services_transactions.yaml');
 $config = $services."\n".$servicesVendorTransactions;
 
@@ -21,8 +21,8 @@ $required = [
     'App\\ServiceInterface\\VendorProfileServiceInterface',
     'App\\ServiceInterface\\VendorServiceInterface',
     'App\\ServiceInterface\\Ledger\\VendorDoubleEntryServiceInterface',
-    'App\\ServiceInterface\\Payout\\PayoutProviderBridgeInterface',
-    'App\\ServiceInterface\\Payout\\VendorSettlementCalculatorInterface',
+    'App\\ServiceInterface\\Payout\\VendorPayoutProviderServiceInterface',
+    'App\\ServiceInterface\\Payout\\VendorSettlementCalculatorServiceInterface',
 ];
 
 foreach ($required as $interfaceClass) {

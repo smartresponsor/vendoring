@@ -10,6 +10,7 @@ use App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
 use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
 use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
 use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\ServiceInterface\VendorProfileViewBuilderInterface;
 
 /**
  * Builds a release-facing vendor runtime status view that aggregates existing
@@ -19,6 +20,7 @@ final class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBui
 {
     public function __construct(
         private readonly VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
+        private readonly VendorProfileViewBuilderInterface $profileViewBuilder,
         private readonly VendorFinanceRuntimeViewBuilderInterface $financeRuntimeViewBuilder,
         private readonly VendorStatementDeliveryRuntimeViewBuilderInterface $statementDeliveryRuntimeViewBuilder,
         private readonly VendorExternalIntegrationRuntimeViewBuilderInterface $externalIntegrationRuntimeViewBuilder,
@@ -33,8 +35,10 @@ final class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBui
         string $currency = 'USD',
     ): VendorRuntimeStatusView {
         $ownership = null;
+        $profile = null;
         if (ctype_digit($vendorId)) {
             $ownership = $this->ownershipViewBuilder->buildForVendorId((int) $vendorId)?->toArray();
+            $profile = $this->profileViewBuilder->buildForVendorId((int) $vendorId)?->toArray();
         }
 
         $finance = $this->financeRuntimeViewBuilder->build(
@@ -60,6 +64,7 @@ final class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBui
 
         $surfaceStatus = [
             'ownership' => null !== $ownership,
+            'profile' => null !== $profile,
             'finance' => [] !== $finance,
             'statementDelivery' => [] !== $statementDelivery,
             'externalIntegration' => [] !== $externalIntegration,
@@ -70,6 +75,7 @@ final class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBui
             vendorId: $vendorId,
             currency: $currency,
             ownership: $ownership,
+            profile: $profile,
             finance: $finance,
             statementDelivery: $statementDelivery,
             externalIntegration: $externalIntegration,

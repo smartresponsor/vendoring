@@ -67,13 +67,25 @@ final class VendorRuntimeStatusCommand extends Command
         }
 
         $surfaceStatus = $view['surfaceStatus'];
+        $profile = is_array($view['profile'] ?? null) ? $view['profile'] : null;
+        $profileCompletion = is_int($profile['completionPercent'] ?? null) ? $profile['completionPercent'] : null;
+        $profileReady = is_bool($profile['readyForPublishing'] ?? null) ? $profile['readyForPublishing'] : null;
+        $profileNextAction = is_string($profile['nextAction'] ?? null) ? $profile['nextAction'] : null;
+
         $output->writeln(sprintf('tenantId=%s vendorId=%s currency=%s', $tenantId, $vendorId, $currency));
         $output->writeln(sprintf(
-            'ownership=%s finance=%s statementDelivery=%s externalIntegration=%s',
+            'ownership=%s profile=%s finance=%s statementDelivery=%s externalIntegration=%s',
             $surfaceStatus['ownership'] ? 'ready' : 'missing',
+            $surfaceStatus['profile'] ? 'ready' : 'missing',
             $surfaceStatus['finance'] ? 'ready' : 'missing',
             $surfaceStatus['statementDelivery'] ? 'ready' : 'missing',
             $surfaceStatus['externalIntegration'] ? 'ready' : 'missing',
+        ));
+        $output->writeln(sprintf(
+            'profileCompletion=%s profilePublishing=%s profileNextAction=%s',
+            null !== $profileCompletion ? (string) $profileCompletion : 'n/a',
+            true === $profileReady ? 'ready' : (false === $profileReady ? 'incomplete' : 'n/a'),
+            $profileNextAction ?? 'none',
         ));
 
         return Command::SUCCESS;
