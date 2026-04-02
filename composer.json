@@ -155,6 +155,7 @@
     "test:transaction-migration": "php tests/bin/transaction-migration-smoke.php",
     "test:transaction-persistence": "php tests/bin/transaction-persistence-smoke.php",
     "test:transaction-sqlite-integration": "php tests/bin/transaction-sqlite-integration-smoke.php",
+    "test:transaction-postgres-integration": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter VendorTransactionPostgresIntegrationTest",
     "test:transaction-idempotency": "php tests/bin/transaction-idempotency-smoke.php",
     "test:transaction-identity": "php tests/bin/transaction-identity-smoke.php",
     "test:transaction-error-surface": "php tests/bin/transaction-error-surface-smoke.php",
@@ -283,7 +284,8 @@
       "@test:transaction-persistence",
       "@test:transaction-doctrine",
       "@test:transaction-migration",
-      "@test:transaction-sqlite-integration"
+      "@test:transaction-sqlite-integration",
+      "@test:transaction-postgres-integration"
     ],
     "quality:api": [
       "@test:mail",
