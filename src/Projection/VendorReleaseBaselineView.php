@@ -12,6 +12,7 @@ final class VendorReleaseBaselineView
 {
     /**
      * @param array<string,mixed> $runtimeStatus
+     * @param array<string,mixed> $profileSummary
      * @param array<string,bool>  $artifactStatus
      * @param list<string>        $issues
      */
@@ -19,6 +20,7 @@ final class VendorReleaseBaselineView
         private readonly string $tenantId,
         private readonly string $vendorId,
         private readonly array $runtimeStatus,
+        private readonly array $profileSummary,
         private readonly array $artifactStatus,
         private readonly array $issues,
         private readonly string $status,
@@ -31,6 +33,7 @@ final class VendorReleaseBaselineView
      *   tenantId:string,
      *   vendorId:string,
      *   runtimeStatus:array<string,mixed>,
+     *   profileSummary:array<string,mixed>,
      *   artifactStatus:array<string,bool>,
      *   issues:list<string>,
      *   status:string,
@@ -43,6 +46,7 @@ final class VendorReleaseBaselineView
             'tenantId' => $this->tenantId,
             'vendorId' => $this->vendorId,
             'runtimeStatus' => $this->runtimeStatus,
+            'profileSummary' => $this->profileSummary,
             'artifactStatus' => $this->artifactStatus,
             'issues' => $this->issues,
             'status' => $this->status,

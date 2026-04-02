@@ -39,7 +39,13 @@ final class VendorBillingRepository extends ServiceEntityRepository implements V
 
     public function findOneByVendorId(string $vendorId): ?VendorBilling
     {
-        $entity = $this->findOneBy(['vendorId' => $vendorId]);
+        $entity = $this->createQueryBuilder('billing')
+            ->innerJoin('billing.vendor', 'vendor')
+            ->andWhere('vendor.id = :vendorId')
+            ->setParameter('vendorId', (int) $vendorId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
 
         return $entity instanceof VendorBilling ? $entity : null;
     }

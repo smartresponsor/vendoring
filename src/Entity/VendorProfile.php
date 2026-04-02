@@ -14,6 +14,8 @@ final class VendorProfile
     private ?array $socials = null;
     private ?string $seoTitle = null;
     private ?string $seoDescription = null;
+    private string $publicProfileStatus = 'draft';
+    private ?\DateTimeImmutable $publicProfilePublishedAt = null;
 
     public function __construct(private readonly Vendor $vendor)
     {
@@ -58,5 +60,44 @@ final class VendorProfile
     public function getSeoDescription(): ?string
     {
         return $this->seoDescription;
+    }
+
+    public function getPublicProfileStatus(): string
+    {
+        return $this->publicProfileStatus;
+    }
+
+    public function getPublicProfilePublishedAt(): ?\DateTimeImmutable
+    {
+        return $this->publicProfilePublishedAt;
+    }
+
+    /** @param array<string, string>|null $socials */
+    public function updateProfile(
+        ?string $displayName,
+        ?string $about,
+        ?string $website,
+        ?array $socials,
+        ?string $seoTitle,
+        ?string $seoDescription,
+    ): void {
+        $this->displayName = $displayName;
+        $this->about = $about;
+        $this->website = $website;
+        $this->socials = $socials;
+        $this->seoTitle = $seoTitle;
+        $this->seoDescription = $seoDescription;
+        $this->publicProfileStatus = 'draft';
+    }
+
+    public function markPublicProfilePublished(): void
+    {
+        $this->publicProfileStatus = 'published';
+        $this->publicProfilePublishedAt = new \DateTimeImmutable();
+    }
+
+    public function markPublicProfileDraft(): void
+    {
+        $this->publicProfileStatus = 'draft';
     }
 }

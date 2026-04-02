@@ -32,36 +32,20 @@ Full aggregate:
 composer quality
 ```
 
-## PostgreSQL integration checks (local + Docker)
 
-The integration lane includes a PostgreSQL test (`VendorTransactionPostgresIntegrationTest`) that is enabled when `VENDOR_TEST_POSTGRES_DSN` is provided.
+## Data storage strategy
 
-Local PostgreSQL example:
+Runtime intent is split by data sensitivity and operational role:
 
-```bash
-export VENDOR_TEST_POSTGRES_DSN='postgresql://postgres:postgres@127.0.0.1:5432/vendoring_test?serverVersion=16&charset=utf8'
-composer test:transaction-postgres-integration
-```
+- **PostgreSQL** for user/business data (`vendor.dsn`, typically `pgsql://...`)
+- **SQLite** for application/runtime local data and deterministic integration flows (`vendor.sqlite_dsn`, typically `sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite`)
 
-Docker PostgreSQL example:
+Example environment values:
 
 ```bash
-export VENDOR_TEST_POSTGRES_DSN='postgresql://postgres:postgres@postgres:5432/vendoring_test?serverVersion=16&charset=utf8'
-composer test:transaction-postgres-integration
+VENDOR_DSN=pgsql://app:app@127.0.0.1:5432/vendoring
+VENDOR_SQLITE_DSN=sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite
 ```
-
-If `VENDOR_TEST_POSTGRES_DSN` is not set (or `pdo_pgsql` is missing), the PostgreSQL integration test is skipped automatically.
-
-## Playwright Chromium E2E smoke (for gaps outside Panther)
-
-Use Playwright smoke to cover browser-level flow for the Twig/Form operator surface:
-
-```bash
-composer test:e2e:playwright-chromium
-```
-
-The script starts a temporary local PHP server, initializes a SQLite test schema, opens Chromium, creates a vendor transaction through the UI form, and validates the created row appears in the table.
-If Playwright is not installed in the local Node environment, the smoke exits as skipped.
 
 ## Release-candidate documentation
 

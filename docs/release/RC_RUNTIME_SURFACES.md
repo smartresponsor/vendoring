@@ -12,6 +12,7 @@ It already spans:
 - Doctrine-backed persistence tests
 - SQLite integration evidence
 - JSON/error/idempotency contract checks
+- duplicate transaction normalization across both pre-check and DB-level unique violations
 
 ## Additional proven surfaces
 
@@ -19,21 +20,82 @@ It already spans:
 - payout calculation and orchestration
 - repository and DI alias coverage
 - Symfony mini-stack smoke
+- minimal operator status controls aligned to the canonical transaction vocabulary
+- ledger summary aggregation across canonical vendor finance accounts
+- payout outcome metadata persistence for processed/failed repository updates
+- payout account normalization and tenant/vendor-scoped upsert coverage
+- formal API-doc configuration surface for the public `/api` runtime
+
+## API-doc hardening
+
+The repository now exposes a formal API-doc configuration contour through Nelmio wiring:
+
+- bundle registration in Symfony bundles
+- runtime route import for the Swagger UI surface
+- package-level OpenAPI/Nelmio configuration with release-candidate info metadata
+- documented path filtering that keeps `/api/doc` and `/api/doc.json` out of the described business surface
+
+This moves the repository closer to a formal contract-facing RC rather than relying only on inline controller docblocks.
+
+## Ledger summary hardening
+
+The vendor ledger summary contour now:
+
+- includes `payout_fee` alongside the existing summary account families
+- normalizes datetime-like `from` / `to` inputs to calendar-day boundaries before repository aggregation
+- preserves empty-currency behavior as an intentional unfiltered read model
+
+This keeps the summary slice closer to the statement/runtime semantics already established elsewhere in the component.
+
+## Operator contour hardening
+
+The minimal operator/admin slice is now more route-scoped and less fragile:
+
+- vendor identity is display-only in both Twig and fallback surfaces
+- create submissions rely on the route `vendorId` instead of editable form scope
+- Twig status rendering uses canonical human-readable labels instead of raw codes
+
+This keeps the operator surface thin while reducing scope drift between URL, form payload, and displayed state.
+
+## Operator contour hardening
+
+The minimal operator/admin slice is now more route-scoped and less fragile:
+
+- vendor identity is display-only in both Twig and fallback surfaces
+- create submissions rely on the route `vendorId` instead of editable form scope
+- Twig status rendering uses canonical human-readable labels instead of raw codes
+
+This keeps the operator surface thin while reducing scope drift between URL, form payload, and displayed state.
+
+## Payout orchestration hardening
+
+The payout contour now distinguishes:
+
+- tenant-aware payout creation input
+- reserve recording with explicit `tenantId`
+- real provider orchestration during `process()`
+- deterministic `processed` and `failed` outcomes
+- provider/account metadata persistence for later audit and runtime readback
+- payout account payload normalization and tenant/vendor-scoped persistence coverage
+
+This replaces the earlier demo-like success assumption with a more RC-oriented orchestration path.
+
+## Statement hardening slice
+
+The vendor statement contour now computes:
+
+- opening balance from pre-period ledger movements
+- period earnings
+- period refunds
+- period fees
+- closing balance as `opening + earnings - refunds - fees`
+- date-boundary normalization so datetime-like inputs still resolve to calendar-day statement windows
+
+This keeps the statement surface closer to a finance/runtime read model rather than a flat demo export.
 
 ## Next target surface
 
-The next RC-strengthening step is a minimal operator/admin path that traverses:
-
-- route
-- controller
-- Symfony form
-- validation
-- service/repository
-- Twig rendering
-- Bootstrap-based markup
-
-That operator surface should be thin and evidence-oriented rather than a full product UI.
-
+The next RC-strengthening step is broader operator/runtime convergence and consumer-facing runtime views around the remaining vendor domains.
 
 ## Wave 03 runtime evidence
 

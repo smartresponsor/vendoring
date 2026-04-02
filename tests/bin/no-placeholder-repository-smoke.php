@@ -34,6 +34,7 @@ foreach ($iterator as $file) {
     $path = str_replace('\\', '/', $file->getPathname());
     if (
         str_contains($path, '/.git/')
+        || str_contains($path, '/node_modules/')
         || str_contains($path, '/vendor/')
         || str_contains($path, '/.deploy/_template/')
     ) {

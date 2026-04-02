@@ -28,16 +28,12 @@ final class VendorBillingService implements VendorBillingServiceInterface
     public function upsert(Vendor $vendor, VendorBillingDTO $dto): VendorBilling
     {
         $billing = $this->repository->findOneBy(['vendor' => $vendor]) ?? new VendorBilling($vendor);
-
         $ref = new \ReflectionClass($billing);
 
-        foreach (['iban', 'swift', 'payoutMethod', 'billingEmail'] as $prop) {
-            if (property_exists($billing, $prop) && isset($dto->{$prop})) {
-                $rp = $ref->getProperty($prop);
-                $rp->setAccessible(true);
-                $rp->setValue($billing, $dto->{$prop});
-            }
-        }
+        $this->setProperty($ref, $billing, 'iban', $this->normalizeNullableString($dto->iban));
+        $this->setProperty($ref, $billing, 'swift', $this->normalizeNullableString($dto->swift));
+        $this->setProperty($ref, $billing, 'payoutMethod', $this->normalizePayoutMethod($dto->payoutMethod));
+        $this->setProperty($ref, $billing, 'billingEmail', $this->normalizeNullableString($dto->billingEmail));
 
         $this->em->persist($billing);
         $this->em->flush();
@@ -59,5 +55,30 @@ final class VendorBillingService implements VendorBillingServiceInterface
         $this->em->flush();
 
         $this->dispatcher->dispatch(new VendorPayoutCompletedEvent($billing, $amountMinor));
+    }
+
+    private function setProperty(\ReflectionClass $ref, VendorBilling $billing, string $property, mixed $value): void
+    {
+        $rp = $ref->getProperty($property);
+        $rp->setAccessible(true);
+        $rp->setValue($billing, $value);
+    }
+
+    private function normalizeNullableString(?string $value): ?string
+    {
+        if (null === $value) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        return '' === $trimmed ? null : $trimmed;
+    }
+
+    private function normalizePayoutMethod(string $value): string
+    {
+        $trimmed = trim($value);
+
+        return '' === $trimmed ? 'bank' : $trimmed;
     }
 }

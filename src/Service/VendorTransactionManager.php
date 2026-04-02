@@ -14,6 +14,7 @@ use App\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\VendorTransactionData;
 use App\ValueObject\VendorTransactionErrorCode;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -46,7 +47,12 @@ final class VendorTransactionManager implements VendorTransactionManagerInterfac
         );
 
         $this->em->persist($tx);
-        $this->em->flush();
+
+        try {
+            $this->em->flush();
+        } catch (UniqueConstraintViolationException $exception) {
+            throw new \InvalidArgumentException(VendorTransactionErrorCode::DUPLICATE_TRANSACTION, 0, $exception);
+        }
 
         $this->dispatcher->dispatch(new VendorTransactionEvent($tx), VendorTransactionEvent::NAME);
 

@@ -40,8 +40,7 @@ foreach ($iterator as $file) {
         exit(1);
     }
 
-    $namespaceLower = strtolower($namespace);
-    if (str_starts_with($namespaceLower, 'smartresponsor')) {
+    if (str_contains($namespace, 'Smartresponsor\\') || str_contains($namespace, 'SmartResponsor\\')) {
         fwrite(STDERR, "Forbidden Smartresponsor namespace detected: {$namespace}\n");
         exit(1);
     }

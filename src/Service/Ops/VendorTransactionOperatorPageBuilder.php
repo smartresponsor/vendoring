@@ -1,13 +1,13 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Service\Ops;
 
 use App\Entity\VendorTransaction;
 use App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
+use App\ValueObject\VendorTransactionStatus;
 
 final class VendorTransactionOperatorPageBuilder implements VendorTransactionOperatorPageBuilderInterface
 {
@@ -49,7 +49,7 @@ HTML,
                 $this->escape($transaction->getOrderId()),
                 $this->escape($transaction->getProjectId() ?? '—'),
                 $this->escape($transaction->getAmount()),
-                $this->escape($transaction->getStatus()),
+                $this->escape(VendorTransactionStatus::label($transaction->getStatus())),
                 $vendorIdEscaped,
                 $transaction->getId(),
                 $transaction->getId(),
@@ -88,11 +88,13 @@ HTML,
     <div class="card shadow-sm mb-4">
         <div class="card-header">Create transaction</div>
         <div class="card-body">
-            <form method="post" action="/ops/vendor-transactions/%s/create" class="row g-3">
+            <div class="row g-3 mb-3">
                 <div class="col-md-3">
-                    <label for="vendorId" class="form-label">Vendor ID</label>
-                    <input id="vendorId" name="vendorId" class="form-control" value="%s" required>
+                    <label for="vendorIdDisplay" class="form-label">Vendor ID</label>
+                    <input id="vendorIdDisplay" class="form-control" value="%s" readonly disabled>
                 </div>
+            </div>
+            <form method="post" action="/ops/vendor-transactions/%s/create" class="row g-3">
                 <div class="col-md-3">
                     <label for="orderId" class="form-label">Order ID</label>
                     <input id="orderId" name="orderId" class="form-control" required>
@@ -151,12 +153,11 @@ HTML,
 
     private function renderStatusOptions(string $currentStatus): string
     {
-        $statuses = ['pending', 'authorized', 'captured', 'failed', 'refunded'];
         $options = '';
 
-        foreach ($statuses as $status) {
+        foreach (VendorTransactionStatus::operatorChoices() as $label => $status) {
             $selected = $status === $currentStatus ? ' selected' : '';
-            $options .= sprintf('<option value="%s"%s>%s</option>', $this->escape($status), $selected, $this->escape(ucfirst($status)));
+            $options .= sprintf('<option value="%s"%s>%s</option>', $this->escape($status), $selected, $this->escape($label));
         }
 
         return $options;

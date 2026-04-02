@@ -1,4 +1,5 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -33,7 +34,7 @@ if (($require['php'] ?? null) !== '^8.4') {
     exit(1);
 }
 
-foreach (['lint:php', 'test:smoke', 'test:symfony-stack', 'test:di', 'test:entrypoint', 'test:mail', 'test:statement-command', 'test:statement', 'test:payout', 'test:controller', 'test:entity', 'test:compat', 'test:repository', 'test:unit', 'test:transaction-policy', 'test:transaction-amount', 'test:transaction-doctrine', 'test:transaction-migration', 'test:transaction-persistence', 'test:transaction-sqlite-integration', 'test:transaction-idempotency', 'test:transaction-identity', 'test:transaction-error-surface', 'test:transaction-json', 'test:transaction-mapping', 'test:transaction-status-persistence', 'test:root-vendor-cleanup', 'test:root-runtime-artifacts', 'phpstan', 'test', 'quality'] as $scriptName) {
+foreach (['lint:php', 'test:smoke', 'test:symfony-stack', 'test:di', 'test:entrypoint', 'test:mail', 'test:statement-command', 'test:statement', 'test:payout', 'test:controller', 'test:entity', 'test:compat', 'test:repository', 'test:unit', 'test:transaction-policy', 'test:transaction-amount', 'test:transaction-doctrine', 'test:transaction-migration', 'test:transaction-persistence', 'test:transaction-sqlite-integration', 'test:transaction-idempotency', 'test:transaction-identity', 'test:transaction-error-surface', 'test:transaction-json', 'test:transaction-mapping', 'test:transaction-status-persistence', 'test:doctrine-storage-split', 'test:root-vendor-cleanup', 'test:root-runtime-artifacts', 'phpstan', 'test', 'quality'] as $scriptName) {
     if (!array_key_exists($scriptName, $scripts)) {
         fwrite(STDERR, '[FAIL] missing composer script: '.$scriptName.PHP_EOL);
         exit(1);
@@ -141,6 +142,17 @@ if (!file_exists($root.'/tests/bin/transaction-json-surface-smoke.php')) {
 }
 
 fwrite(STDOUT, '[OK] transaction route script plus migration, persistence, idempotency, identity, error-surface, and json smoke scripts are present'.PHP_EOL);
+
+
+if (!file_exists($root.'/tests/bin/doctrine-storage-split-smoke.php')) {
+    fwrite(STDERR, "Missing doctrine-storage-split-smoke.php\n");
+    exit(1);
+}
+
+if (!vendoring_has_script($composer, 'test:doctrine-storage-split')) {
+    fwrite(STDERR, '[FAIL] missing composer script: test:doctrine-storage-split'.PHP_EOL);
+    exit(1);
+}
 
 if (!file_exists($root.'/tests/bin/transaction-mapping-parity-smoke.php')) {
     fwrite(STDERR, "Missing transaction-mapping-parity-smoke.php\n");

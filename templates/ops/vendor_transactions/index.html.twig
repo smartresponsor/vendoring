@@ -27,8 +27,13 @@
     <div class="card shadow-sm mb-4">
         <div class="card-header">Create transaction</div>
         <div class="card-body">
+            <div class="row g-3 mb-3">
+                <div class="col-md-3">
+                    <label class="form-label" for="vendor-identity">Vendor ID</label>
+                    <input id="vendor-identity" class="form-control" value="{{ vendorId }}" readonly disabled>
+                </div>
+            </div>
             {{ form_start(createForm, {attr: {class: 'row g-3'}}) }}
-            <div class="col-md-3">{{ form_row(createForm.vendorId) }}</div>
             <div class="col-md-3">{{ form_row(createForm.orderId) }}</div>
             <div class="col-md-2">{{ form_row(createForm.projectId) }}</div>
             <div class="col-md-2">{{ form_row(createForm.amount) }}</div>
@@ -61,7 +66,7 @@
                             <td>{{ transaction.orderId }}</td>
                             <td>{{ transaction.projectId ?? '—' }}</td>
                             <td>{{ transaction.amount }}</td>
-                            <td>{{ transaction.status }}</td>
+                            <td>{{ statusLabels[transaction.status] ?? transaction.status|title }}</td>
                             <td>
                                 {{ form_start(statusForms[transaction.id], {attr: {class: 'row g-2 align-items-center'}}) }}
                                 <div class="col-md-8">{{ form_widget(statusForms[transaction.id].status) }}</div>

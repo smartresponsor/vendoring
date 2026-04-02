@@ -48,6 +48,7 @@ final class InterfaceAliasCoverageTest extends TestCase
             'App\\ServiceInterface\\VendorMediaServiceInterface' => 'App\\Service\\VendorMediaService',
             'App\\ServiceInterface\\VendorPassportServiceInterface' => 'App\\Service\\VendorPassportService',
             'App\\ServiceInterface\\VendorProfileServiceInterface' => 'App\\Service\\VendorProfileService',
+            'App\\ServiceInterface\\VendorProfileViewBuilderInterface' => 'App\\Service\\VendorProfileViewBuilder',
             'App\\ServiceInterface\\VendorSecurityServiceInterface' => 'App\\Service\\VendorSecurityService',
             'App\\ServiceInterface\\VendorServiceInterface' => 'App\\Service\\VendorService',
             'App\\ServiceInterface\\VendorTransactionManagerInterface' => 'App\\Service\\VendorTransactionManager',
