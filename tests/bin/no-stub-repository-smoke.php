@@ -22,6 +22,7 @@ foreach ($iterator as $file) {
         '.idea/',
         '.git',
         '.release/',
+        'node_modules/',
         'vendor/',
         '.deploy/',
         '.consuming/',

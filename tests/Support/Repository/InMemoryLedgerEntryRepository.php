@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Support\Repository;
 
-use App\Entity\Vendor\Ledger\LedgerEntry;
+use App\Entity\Ledger\LedgerEntry;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 
 final class InMemoryLedgerEntryRepository implements LedgerEntryRepositoryInterface
@@ -42,6 +42,8 @@ final class InMemoryLedgerEntryRepository implements LedgerEntryRepositoryInterf
     public function sumByAccount(string $tenantId, string $accountCode, ?string $from = null, ?string $to = null, ?string $vendorId = null, ?string $currency = null): float
     {
         $sum = 0.0;
+        $fromBound = $this->lowerBound($from);
+        $toBound = $this->upperBound($to);
 
         foreach ($this->entries as $entry) {
             if ($entry->tenantId !== $tenantId) {
@@ -56,11 +58,13 @@ final class InMemoryLedgerEntryRepository implements LedgerEntryRepositoryInterf
                 continue;
             }
 
-            if (null !== $from && $entry->createdAt < $from) {
+            $entryCreatedAt = new \DateTimeImmutable($entry->createdAt);
+
+            if (null !== $fromBound && $entryCreatedAt < $fromBound) {
                 continue;
             }
 
-            if (null !== $to && $entry->createdAt > $to) {
+            if (null !== $toBound && $entryCreatedAt > $toBound) {
                 continue;
             }
 
@@ -105,5 +109,35 @@ final class InMemoryLedgerEntryRepository implements LedgerEntryRepositoryInterf
     public function all(): array
     {
         return $this->entries;
+    }
+
+    private function lowerBound(?string $value): ?\DateTimeImmutable
+    {
+        if (null === $value || '' === trim($value)) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $trimmed)) {
+            return new \DateTimeImmutable($trimmed.' 00:00:00');
+        }
+
+        return new \DateTimeImmutable($trimmed);
+    }
+
+    private function upperBound(?string $value): ?\DateTimeImmutable
+    {
+        if (null === $value || '' === trim($value)) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $trimmed)) {
+            return new \DateTimeImmutable($trimmed.' 23:59:59');
+        }
+
+        return new \DateTimeImmutable($trimmed);
     }
 }

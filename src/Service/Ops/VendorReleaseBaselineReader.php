@@ -50,6 +50,12 @@ final class VendorReleaseBaselineReader implements VendorReleaseBaselineReaderIn
 
         $issues = [];
         $surfaceStatus = $runtimeStatus['surfaceStatus'];
+        $profileSummary = $this->buildProfileSummary($runtimeStatus['profile'] ?? null);
+
+        if (true !== ($profileSummary['readyForPublishing'] ?? false) && null !== ($profileSummary['nextAction'] ?? null)) {
+            $issues[] = sprintf('profile.%s.required', (string) $profileSummary['nextAction']);
+        }
+
         foreach ($surfaceStatus as $surface => $ready) {
             if (true !== $ready) {
                 $issues[] = sprintf('surface.%s.missing', (string) $surface);
@@ -67,10 +73,39 @@ final class VendorReleaseBaselineReader implements VendorReleaseBaselineReaderIn
             tenantId: $tenantId,
             vendorId: $vendorId,
             runtimeStatus: $runtimeStatus,
+            profileSummary: $profileSummary,
             artifactStatus: $artifactStatus,
             issues: $issues,
             status: $status,
             generatedAt: (new \DateTimeImmutable())->format(DATE_ATOM),
         );
+    }
+
+    /**
+     * @param array<string,mixed>|null $profile
+     *
+     * @return array{available:bool, completionPercent:?int, readyForPublishing:?bool, nextAction:?string}
+     */
+    private function buildProfileSummary(?array $profile): array
+    {
+        if (null === $profile) {
+            return [
+                'available' => false,
+                'completionPercent' => null,
+                'readyForPublishing' => null,
+                'nextAction' => null,
+            ];
+        }
+
+        $completionPercent = $profile['completionPercent'] ?? null;
+        $readyForPublishing = $profile['readyForPublishing'] ?? null;
+        $nextAction = $profile['nextAction'] ?? null;
+
+        return [
+            'available' => true,
+            'completionPercent' => is_int($completionPercent) ? $completionPercent : null,
+            'readyForPublishing' => is_bool($readyForPublishing) ? $readyForPublishing : null,
+            'nextAction' => is_string($nextAction) ? $nextAction : null,
+        ];
     }
 }

@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Entity\Vendor\VendorTransaction;
+use App\Entity\VendorTransaction;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class VendorTransactionEvent extends Event

@@ -10,28 +10,32 @@
     "doctrine/doctrine-bundle": "^3.2",
     "doctrine/orm": "^3.3",
     "doctrine/persistence": "^4.0",
+    "nelmio/api-doc-bundle": "^5.3",
     "symfony/console": "^8.0",
+    "symfony/dotenv": "^8.0",
     "symfony/event-dispatcher-contracts": "^3.6",
+    "symfony/form": "^8.0",
     "symfony/framework-bundle": "^8.0",
     "symfony/http-foundation": "^8.0",
     "symfony/mailer": "^8.0",
     "symfony/mime": "^8.0",
     "symfony/routing": "^8.0",
-    "symfony/uid": "^8.0",
-    "symfony/var-exporter": "^8.0",
-    "twig/twig": "^3.15",
-    "symfony/twig-bundle": "^8.0",
-    "symfony/form": "^8.0",
-    "symfony/validator": "^8.0",
     "symfony/security-csrf": "^8.0",
-    "nelmio/api-doc-bundle": "^5.3"
+    "symfony/twig-bundle": "^8.0",
+    "symfony/uid": "^8.0",
+    "symfony/validator": "^8.0",
+    "symfony/var-exporter": "^8.0",
+    "twig/twig": "^3.15"
   },
   "require-dev": {
     "doctrine/doctrine-fixtures-bundle": "^4.2",
     "fakerphp/faker": "^1.24",
     "friendsofphp/php-cs-fixer": "^3.66",
     "phpstan/phpstan": "^1.12",
-    "phpunit/phpunit": "^11.5"
+    "phpunit/phpunit": "^11.5",
+    "symfony/browser-kit": "^8.0",
+    "symfony/css-selector": "^8.0",
+    "symfony/panther": "^2.4"
   },
   "autoload": {
     "psr-4": {
@@ -60,12 +64,18 @@
     "stan:max": "@php tools/php/php84.php vendor/bin/phpstan analyse --level=max",
     "md": "@php tools/php/php84.php vendor/bin/phpmd src text phpmd.xml.dist",
     "md:tests": "@php tools/php/php84.php vendor/bin/phpmd tests text phpmd.xml.dist",
-    "test": "php vendor/bin/phpunit --configuration phpunit.xml.dist",
-    "test:unit": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
-    "test:integration": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration",
-    "test:functional": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
-    "test:contract": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite contract",
-    "test:smoke": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite smoke",
+    "test": "@php tools/php/php84.php --require-ext=pdo_sqlite vendor/bin/phpunit --configuration phpunit.xml.dist",
+    "test:unit": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
+    "test:integration": "@php tools/php/php84.php --require-ext=pdo_sqlite vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration",
+    "test:functional": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
+    "test:contract": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ContractTest",
+    "test:smoke": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite smoke",
+    "test:panther": "PANTHER_NO_SANDBOX=1 php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
+    "test:e2e": "npx playwright test",
+    "server:run": "./tools/local/server-run.sh",
+    "server:start": "./tools/local/server-start.sh",
+    "server:stop": "./tools/local/server-stop.sh",
+    "fixtures:dry-run": "@php tools/php/php84.php --require-ext=pdo_sqlite tools/smoke/vendor-fixture-sanity.php",
     "qa:style": [
       "@lint",
       "@cs:check"
@@ -97,8 +107,8 @@
     "smoke:runtime": "@php tools/php/php84.php tools/smoke/vendor-runtime-smoke.php",
     "smoke:container": "@php tools/php/php84.php tools/smoke/vendor-container-boot-smoke.php",
     "smoke:doctrine": "@php tools/php/php84.php tools/smoke/vendor-doctrine-mapping-smoke.php",
-    "smoke:fixtures": "@php tools/php/php84.php tools/smoke/vendor-fixture-sanity.php",
-    "smoke:fixture-load": "@php tools/php/php84.php tools/smoke/vendor-fixture-load-smoke.php",
+    "smoke:fixtures": "@php tools/php/php84.php --require-ext=pdo_sqlite tools/smoke/vendor-fixture-sanity.php",
+    "smoke:fixture-load": "@php tools/php/php84.php --require-ext=pdo_sqlite tools/smoke/vendor-fixture-load-smoke.php",
     "smoke:admin": "@php tools/php/php84.php tools/smoke/vendor-admin-smoke.php",
     "report:canonical-structure": "@php tools/php/php84.php tools/report/VendorCanonicalStructureReport.php",
     "report:mirror-enforcer": "@php tools/php/php84.php tools/report/VendorMirrorEnforcerReport.php",
@@ -255,6 +265,7 @@
       "@phpstan"
     ],
     "quality:contracts": [
+      "@test:doctrine-storage-split",
       "@test:symfony-stack",
       "@test:di",
       "@test:entrypoint",
@@ -306,6 +317,7 @@
       "@quality:docs"
     ],
     "quality": [
+      "@test:doctrine-storage-split",
       "@test:symfony-stack",
       "@test:di",
       "@test:entrypoint",
@@ -359,6 +371,7 @@
       "@test:composer-quality-parity",
       "@test:composer-script-invocation-parity"
     ],
-    "test:symfony-security": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Security"
+    "test:symfony-security": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Security",
+    "test:doctrine-storage-split": "php tests/bin/doctrine-storage-split-smoke.php"
   }
 }

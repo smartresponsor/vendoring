@@ -8,7 +8,7 @@ namespace App\ServiceInterface;
 
 use App\DTO\VendorCreateDTO;
 use App\DTO\VendorUpdateDTO;
-use App\Entity\Vendor\Vendor;
+use App\Entity\Vendor;
 
 interface VendorServiceInterface
 {

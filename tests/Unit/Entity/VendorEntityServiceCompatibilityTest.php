@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Entity;
 
-use App\Entity\Vendor\VendorBilling;
-use App\Entity\Vendor\VendorDocument;
-use App\Entity\Vendor\VendorMedia;
-use App\Entity\Vendor\VendorProfile;
+use App\Entity\VendorBilling;
+use App\Entity\VendorDocument;
+use App\Entity\VendorMedia;
+use App\Entity\VendorProfile;
 use PHPUnit\Framework\TestCase;
 
 final class VendorEntityServiceCompatibilityTest extends TestCase

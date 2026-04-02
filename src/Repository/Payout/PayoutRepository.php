@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repository\Payout;
 
-use App\Entity\Vendor\Payout\Payout;
-use App\Entity\Vendor\Payout\PayoutItem;
+use App\Entity\Payout\Payout;
+use App\Entity\Payout\PayoutItem;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
 use Doctrine\DBAL\Connection;
 
@@ -76,9 +76,33 @@ final class PayoutRepository implements PayoutRepositoryInterface
         }, $rows);
     }
 
-    public function markProcessed(string $id, string $processedAt): void
+    public function markProcessed(string $id, string $processedAt, array $meta = []): void
     {
-        $this->db->update('payouts', ['status' => 'processed', 'processed_at' => $processedAt], ['id' => $id]);
+        $this->updateStatus($id, 'processed', $processedAt, $meta);
+    }
+
+    public function markFailed(string $id, string $processedAt, array $meta = []): void
+    {
+        $this->updateStatus($id, 'failed', $processedAt, $meta);
+    }
+
+    /**
+     * @param array<string, mixed> $meta
+     */
+    private function updateStatus(string $id, string $status, string $processedAt, array $meta): void
+    {
+        $existing = $this->byId($id);
+        $mergedMeta = null === $existing ? $meta : array_merge($existing->meta, $meta);
+
+        $this->db->update(
+            'payouts',
+            [
+                'status' => $status,
+                'processed_at' => $processedAt,
+                'meta' => json_encode($mergedMeta, JSON_UNESCAPED_UNICODE),
+            ],
+            ['id' => $id]
+        );
     }
 
     /** @param array<string, mixed> $row */

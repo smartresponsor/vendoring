@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Vendor\Vendor;
+use App\Entity\Vendor;
 use App\RepositoryInterface\VendorRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

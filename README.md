@@ -32,25 +32,20 @@ Full aggregate:
 composer quality
 ```
 
-## PostgreSQL integration checks (local + Docker)
 
-The integration lane includes a PostgreSQL test (`VendorTransactionPostgresIntegrationTest`) that is enabled when `VENDOR_TEST_POSTGRES_DSN` is provided.
+## Data storage strategy
 
-Local PostgreSQL example:
+Runtime intent is split by data sensitivity and operational role:
 
-```bash
-export VENDOR_TEST_POSTGRES_DSN='postgresql://postgres:postgres@127.0.0.1:5432/vendoring_test?serverVersion=16&charset=utf8'
-composer test:transaction-postgres-integration
-```
+- **PostgreSQL** for user/business data (`vendor.dsn`, typically `pgsql://...`)
+- **SQLite** for application/runtime local data and deterministic integration flows (`vendor.sqlite_dsn`, typically `sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite`)
 
-Docker PostgreSQL example:
+Example environment values:
 
 ```bash
-export VENDOR_TEST_POSTGRES_DSN='postgresql://postgres:postgres@postgres:5432/vendoring_test?serverVersion=16&charset=utf8'
-composer test:transaction-postgres-integration
+VENDOR_DSN=pgsql://app:app@127.0.0.1:5432/vendoring
+VENDOR_SQLITE_DSN=sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite
 ```
-
-If `VENDOR_TEST_POSTGRES_DSN` is not set (or `pdo_pgsql` is missing), the PostgreSQL integration test is skipped automatically.
 
 ## Release-candidate documentation
 

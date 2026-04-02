@@ -44,6 +44,7 @@ final class CanonicalNoStubRepositoryContractTest extends TestCase
             '.idea/',
             '.git',
             '.release/',
+            'node_modules/',
             'vendor/',
             '.deploy/_template/',
             '.deploy/systemd/',

@@ -1,5 +1,7 @@
 <?php
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
 declare(strict_types=1);
 
 namespace App\Service;
@@ -42,7 +44,7 @@ final class VendorOwnershipViewBuilder implements VendorOwnershipViewBuilderInte
 
         return new VendorOwnershipView(
             vendorId: $vendorId,
-            ownerUserId: method_exists($vendor, 'getOwnerUserId') ? $vendor->getOwnerUserId() : null,
+            ownerUserId: $vendor->getOwnerUserId(),
             assignments: $assignments,
         );
     }

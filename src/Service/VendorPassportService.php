@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Vendor\Vendor;
-use App\Entity\Vendor\VendorPassport;
+use App\Entity\Vendor;
+use App\Entity\VendorPassport;
 use App\Event\VendorVerifiedEvent;
 use App\ServiceInterface\VendorPassportServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;

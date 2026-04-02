@@ -7,8 +7,8 @@ declare(strict_types=1);
 namespace App\ServiceInterface;
 
 use App\DTO\VendorDocumentDTO;
-use App\Entity\Vendor\Vendor;
-use App\Entity\Vendor\VendorDocument;
+use App\Entity\Vendor;
+use App\Entity\VendorDocument;
 
 interface VendorDocumentServiceInterface
 {

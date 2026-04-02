@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\RepositoryInterface;
 
-use App\Entity\Vendor\VendorBilling;
+use App\Entity\VendorBilling;
 use Doctrine\Persistence\ObjectRepository;
 
 /**
