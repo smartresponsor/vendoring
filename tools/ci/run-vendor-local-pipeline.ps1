@@ -163,7 +163,8 @@ if ($IncludeSmokes) {
         @{ name = 'smoke-runtime'; command = 'composer smoke:runtime'; skip = (-not (Test-CommandPathAvailable -Path 'tools\smoke\vendor-runtime-smoke.php')); reason = 'tools\\smoke\\vendor-runtime-smoke.php is missing' },
         @{ name = 'smoke-container'; command = 'composer smoke:container'; skip = (-not (Test-CommandPathAvailable -Path 'tools\smoke\vendor-container-boot-smoke.php')); reason = 'tools\\smoke\\vendor-container-boot-smoke.php is missing' },
         @{ name = 'smoke-doctrine'; command = 'composer smoke:doctrine'; skip = (-not (Test-CommandPathAvailable -Path 'tools\smoke\vendor-doctrine-mapping-smoke.php')); reason = 'tools\\smoke\\vendor-doctrine-mapping-smoke.php is missing' },
-        @{ name = 'smoke-admin'; command = 'composer smoke:admin'; skip = (-not (Test-CommandPathAvailable -Path 'tools\smoke\vendor-admin-smoke.php')); reason = 'tools\\smoke\\vendor-admin-smoke.php is missing' }
+        @{ name = 'smoke-admin'; command = 'composer smoke:admin'; skip = (-not (Test-CommandPathAvailable -Path 'tools\smoke\vendor-admin-smoke.php')); reason = 'tools\\smoke\\vendor-admin-smoke.php is missing' },
+        @{ name = 'e2e-playwright-chromium'; command = 'composer test:e2e:playwright-chromium'; skip = (-not (Test-ExecutableAvailable -Name 'node')); reason = 'node is not available in PATH' }
     )
 }
 

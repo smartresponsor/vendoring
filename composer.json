@@ -139,6 +139,7 @@
     "test:mail": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorStatementMailerServiceTest",
     "test:statement-command": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter SendVendorStatementsCommandTest",
     "test:statement": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorStatementServiceTest",
+    "test:e2e:playwright-chromium": "node tests/bin/playwright-chromium-operator-smoke.mjs",
     "test:payout": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Payout",
     "test:controller": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Controller",
     "test:entity": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Entity",
