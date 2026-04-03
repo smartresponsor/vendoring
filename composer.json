@@ -359,6 +359,7 @@
       "@test:composer-quality-parity",
       "@test:composer-script-invocation-parity"
     ],
-    "test:symfony-security": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Security"
+    "test:symfony-security": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Security",
+    "test:runtime-synthetic-probe": "php tests/bin/runtime-synthetic-probe.php"
   }
 }
