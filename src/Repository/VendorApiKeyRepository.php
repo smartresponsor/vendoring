@@ -42,7 +42,7 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
     public function findOneByApiKey(string $apiKey): ?VendorApiKey
     {
         $candidate = $this->findOneBy([
-            'apiKey' => $apiKey,
+            'tokenHash' => hash('sha256', $apiKey),
         ]);
 
         return $candidate instanceof VendorApiKey ? $candidate : null;
@@ -50,9 +50,17 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
 
     public function findOneByVendorId(string $vendorId): ?VendorApiKey
     {
-        $candidate = $this->findOneBy([
-            'vendorId' => $vendorId,
-        ]);
+        if (!ctype_digit($vendorId)) {
+            return null;
+        }
+
+        $candidate = $this->createQueryBuilder('apiKey')
+            ->andWhere('IDENTITY(apiKey.vendor) = :vendorId')
+            ->setParameter('vendorId', (int) $vendorId)
+            ->orderBy('apiKey.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
 
         return $candidate instanceof VendorApiKey ? $candidate : null;
     }

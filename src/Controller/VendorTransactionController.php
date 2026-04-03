@@ -9,6 +9,7 @@ use App\Entity\VendorTransaction;
 use App\RepositoryInterface\VendorTransactionRepositoryInterface;
 use App\ServiceInterface\Observability\RuntimeLoggerInterface;
 use App\ServiceInterface\Traffic\WriteRateLimiterInterface;
+use App\ServiceInterface\VendorApiKeyServiceInterface;
 use App\ServiceInterface\VendorTransactionInputResolverServiceInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\Traffic\WriteRateLimitDecision;
@@ -28,6 +29,7 @@ final class VendorTransactionController extends AbstractController
         private readonly VendorTransactionInputResolverServiceInterface $inputResolver,
         private readonly RuntimeLoggerInterface $runtimeLogger,
         private readonly WriteRateLimiterInterface $writeRateLimiter,
+        private readonly VendorApiKeyServiceInterface $apiKeyService,
     ) {
     }
 
@@ -41,6 +43,10 @@ final class VendorTransactionController extends AbstractController
     #[Route('', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
+        if ($authenticationResponse = $this->enforceWriteAuthentication($request, 'write:transactions', null, null)) {
+            return $authenticationResponse;
+        }
+
         $rateLimitDecision = $this->writeRateLimiter->consume(
             'vendor_transaction_create',
             $this->writeActorKey($request),
@@ -108,6 +114,10 @@ final class VendorTransactionController extends AbstractController
     #[Route('/vendor/{vendorId}/{id}/status', methods: ['POST'])]
     public function updateStatus(string $vendorId, int $id, Request $request): JsonResponse
     {
+        if ($authenticationResponse = $this->enforceWriteAuthentication($request, 'write:transactions', $vendorId, $id)) {
+            return $authenticationResponse;
+        }
+
         $rateLimitDecision = $this->writeRateLimiter->consume(
             'vendor_transaction_status_update',
             $this->writeActorKey($request, $vendorId),
@@ -172,6 +182,61 @@ final class VendorTransactionController extends AbstractController
             'amount' => $transaction->getAmount(),
             'status' => $transaction->getStatus(),
         ];
+    }
+
+    private function enforceWriteAuthentication(Request $request, string $requiredPermission, ?string $vendorId, ?int $transactionId): ?JsonResponse
+    {
+        $authorization = trim((string) $request->headers->get('Authorization', ''));
+
+        if ('' === $authorization) {
+            $this->runtimeLogger->warning('vendor_transaction_authentication_rejected', [
+                'vendor_id' => $vendorId,
+                'transaction_id' => null !== $transactionId ? (string) $transactionId : null,
+                'error_code' => 'authentication_required',
+                'required_permission' => $requiredPermission,
+            ]);
+
+            return $this->authenticationResponse('authentication_required', 401, $requiredPermission);
+        }
+
+        $authenticatedVendor = $this->apiKeyService->resolveVendorFromAuthHeader($authorization);
+        if (null === $authenticatedVendor) {
+            $this->runtimeLogger->warning('vendor_transaction_authentication_rejected', [
+                'vendor_id' => $vendorId,
+                'transaction_id' => null !== $transactionId ? (string) $transactionId : null,
+                'error_code' => 'invalid_api_token',
+                'required_permission' => $requiredPermission,
+            ]);
+
+            return $this->authenticationResponse('invalid_api_token', 401, $requiredPermission);
+        }
+
+        $authorizedVendor = $this->apiKeyService->validateAuthorizationHeader($authorization, $requiredPermission);
+        if (null === $authorizedVendor) {
+            $this->runtimeLogger->warning('vendor_transaction_authorization_rejected', [
+                'vendor_id' => $vendorId,
+                'transaction_id' => null !== $transactionId ? (string) $transactionId : null,
+                'error_code' => 'permission_denied',
+                'required_permission' => $requiredPermission,
+            ]);
+
+            return $this->authenticationResponse('permission_denied', 403, $requiredPermission);
+        }
+
+        return null;
+    }
+
+    private function authenticationResponse(string $errorCode, int $statusCode, string $requiredPermission): JsonResponse
+    {
+        $response = new JsonResponse([
+            'error' => $errorCode,
+            'requiredPermission' => $requiredPermission,
+        ], $statusCode);
+
+        $response->headers->set('WWW-Authenticate', 'Bearer');
+        $response->headers->set('X-Auth-Required-Permission', $requiredPermission);
+
+        return $response;
     }
 
     private function rateLimitResponse(string $message, WriteRateLimitDecision $decision, Request $request, ?string $vendorId, ?int $transactionId): JsonResponse

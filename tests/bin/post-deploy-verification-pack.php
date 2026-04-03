@@ -31,6 +31,8 @@ if (!extension_loaded('pdo_sqlite')) {
 $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot);
 
 try {
+    $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
+    $authHeaders = ['Authorization' => 'Bearer '.$token];
     $suffix = bin2hex(random_bytes(4));
     $vendorId = 'post-deploy-vendor-'.$suffix;
     $orderId = 'post-deploy-order-'.$suffix;
@@ -46,7 +48,7 @@ try {
             'projectId' => 'post-deploy-check',
             'amount' => '18.25',
         ],
-        ['X-Correlation-ID' => $correlationId]
+        ['X-Correlation-ID' => $correlationId] + $authHeaders
     );
 
     if (201 !== $createResponse->getStatusCode()) {
@@ -77,7 +79,7 @@ try {
         'GET',
         '/api/vendor-transactions/vendor/'.$vendorId,
         null,
-        ['X-Correlation-ID' => $correlationId]
+        ['X-Correlation-ID' => $correlationId] + $authHeaders
     );
 
     if (200 !== $listResponse->getStatusCode()) {
@@ -110,7 +112,7 @@ try {
         'POST',
         '/api/vendor-transactions/vendor/'.$vendorId.'/'.(string) $transactionId.'/status',
         ['status' => 'authorized'],
-        ['X-Correlation-ID' => $correlationId]
+        ['X-Correlation-ID' => $correlationId] + $authHeaders
     );
 
     if (200 !== $updateResponse->getStatusCode()) {

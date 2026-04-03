@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Support\Runtime;
 
+use App\Entity\Vendor;
+use App\Entity\VendorApiKey;
 use App\Entity\VendorTransaction;
 use App\Kernel;
 use Doctrine\ORM\EntityManagerInterface;
@@ -190,10 +192,41 @@ final class KernelRuntimeHarness
         }
     }
 
+    public static function seedActiveApiKey(KernelInterface $kernel, string $permissions = 'write:transactions'): string
+    {
+        $container = $kernel->getContainer();
+        $doctrine = $container->get('doctrine');
+
+        if (!$doctrine instanceof ManagerRegistry) {
+            throw new \RuntimeException('Doctrine manager registry is not available in runtime harness.');
+        }
+
+        $entityManager = $doctrine->getManager();
+        if (!$entityManager instanceof EntityManagerInterface) {
+            throw new \RuntimeException('Runtime harness expected an EntityManagerInterface instance.');
+        }
+
+        $vendor = new Vendor('Runtime Harness Vendor '.bin2hex(random_bytes(4)));
+        $vendor->activate();
+        $entityManager->persist($vendor);
+        $entityManager->flush();
+
+        $plainToken = bin2hex(random_bytes(16));
+        $apiKey = new VendorApiKey($vendor, hash('sha256', $plainToken), $permissions);
+        $entityManager->persist($apiKey);
+        $entityManager->flush();
+
+        return $plainToken;
+    }
+
     private static function createVendorTransactionSchema(EntityManagerInterface $entityManager): void
     {
         $schemaTool = new SchemaTool($entityManager);
-        $metadata = [$entityManager->getClassMetadata(VendorTransaction::class)];
+        $metadata = [
+            $entityManager->getClassMetadata(Vendor::class),
+            $entityManager->getClassMetadata(VendorApiKey::class),
+            $entityManager->getClassMetadata(VendorTransaction::class),
+        ];
         $schemaTool->dropSchema($metadata);
         $schemaTool->createSchema($metadata);
     }

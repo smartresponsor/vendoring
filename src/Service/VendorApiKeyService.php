@@ -86,7 +86,7 @@ final class VendorApiKeyService implements VendorApiKeyServiceInterface
         return $apiKey->getVendor();
     }
 
-    public function resolveVendorFromAuthHeader(string $authorizationHeader): ?Vendor
+    public function validateAuthorizationHeader(string $authorizationHeader, ?string $permission = null): ?Vendor
     {
         $authorizationHeader = trim($authorizationHeader);
 
@@ -102,6 +102,11 @@ final class VendorApiKeyService implements VendorApiKeyServiceInterface
             return null;
         }
 
-        return $this->validateToken($plainToken);
+        return $this->validateToken($plainToken, $permission);
+    }
+
+    public function resolveVendorFromAuthHeader(string $authorizationHeader): ?Vendor
+    {
+        return $this->validateAuthorizationHeader($authorizationHeader);
     }
 }

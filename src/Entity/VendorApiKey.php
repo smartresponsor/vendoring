@@ -4,16 +4,42 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: 'App\\Repository\\VendorApiKeyRepository')]
+#[ORM\Table(
+    name: 'vendor_api_key',
+    indexes: [
+        new ORM\Index(name: 'idx_vendor_api_key_status', columns: ['status']),
+        new ORM\Index(name: 'idx_vendor_api_key_vendor_status', columns: ['vendor_id', 'status']),
+    ],
+    uniqueConstraints: [
+        new ORM\UniqueConstraint(name: 'uniq_vendor_api_key_token_hash', columns: ['token_hash']),
+    ],
+)]
 final class VendorApiKey
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
+
+    #[ORM\Column(type: 'string', length: 32)]
     private string $status;
+
+    #[ORM\Column(name: 'last_used_at', type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $lastUsedAt = null;
+
+    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
     public function __construct(
+        #[ORM\ManyToOne(targetEntity: Vendor::class)]
+        #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
         private readonly Vendor $vendor,
+        #[ORM\Column(name: 'token_hash', type: 'string', length: 64)]
         private readonly string $tokenHash,
+        #[ORM\Column(type: 'string', length: 255)]
         private readonly string $permissions,
     ) {
         $this->status = 'active';

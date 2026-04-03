@@ -26,5 +26,7 @@ interface VendorSecurityServiceInterface extends VendorApiKeyServiceInterface
 
     public function validateToken(string $plainToken, ?string $permission = null): ?Vendor;
 
+    public function validateAuthorizationHeader(string $authorizationHeader, ?string $permission = null): ?Vendor;
+
     public function resolveVendorFromAuthHeader(string $authorizationHeader): ?Vendor;
 }

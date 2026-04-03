@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionKernelRuntimeTest extends TestCase
 {
-    public function testKernelRuntimeCoversCreateListAndStatusUpdateFlow(): void
+    public function testKernelRuntimeCoversAuthenticatedCreateListAndStatusUpdateFlow(): void
     {
         if (!extension_loaded('pdo_sqlite')) {
             self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
@@ -18,12 +18,15 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
 
         try {
+            $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
+            $headers = ['Authorization' => 'Bearer '.$token];
+
             $createResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', [
                 'vendorId' => 'vendor-1',
                 'orderId' => 'order-1',
                 'projectId' => 'project-1',
                 'amount' => '10.50',
-            ]);
+            ], $headers);
             $createPayload = KernelRuntimeHarness::decodeJson($createResponse);
 
             self::assertSame(201, $createResponse->getStatusCode());
@@ -47,7 +50,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
 
             $updateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions/vendor/vendor-1/'.$createPayload['id'].'/status', [
                 'status' => 'authorized',
-            ]);
+            ], $headers);
             $updatePayload = KernelRuntimeHarness::decodeJson($updateResponse);
 
             self::assertSame(200, $updateResponse->getStatusCode());
@@ -67,7 +70,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
                 'orderId' => 'order-1',
                 'projectId' => 'project-1',
                 'amount' => '10.50',
-            ]);
+            ], $headers);
             $duplicatePayload = KernelRuntimeHarness::decodeJson($duplicateResponse);
 
             self::assertSame(409, $duplicateResponse->getStatusCode());
@@ -77,7 +80,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
         }
     }
 
-    public function testKernelRuntimeFreshBootHandlesMalformedAndMissingPayloads(): void
+    public function testKernelRuntimeRejectsMissingAuthenticationOnWriteEndpoints(): void
     {
         if (!extension_loaded('pdo_sqlite')) {
             self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
@@ -86,13 +89,40 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
 
         try {
-            $malformedResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', null);
+            $createResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', [
+                'vendorId' => 'vendor-1',
+                'orderId' => 'order-1',
+                'amount' => '10.50',
+            ]);
+            $createPayload = KernelRuntimeHarness::decodeJson($createResponse);
+
+            self::assertSame(401, $createResponse->getStatusCode());
+            self::assertSame('authentication_required', $createPayload['error']);
+            self::assertSame('write:transactions', $createResponse->headers->get('X-Auth-Required-Permission'));
+        } finally {
+            KernelRuntimeHarness::cleanupRuntimeState($kernel);
+        }
+    }
+
+    public function testKernelRuntimeFreshBootHandlesMalformedAndMissingPayloadsForAuthenticatedWrites(): void
+    {
+        if (!extension_loaded('pdo_sqlite')) {
+            self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
+        }
+
+        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+
+        try {
+            $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
+            $headers = ['Authorization' => 'Bearer '.$token];
+
+            $malformedResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', null, $headers);
             $malformedPayload = KernelRuntimeHarness::decodeJson($malformedResponse);
 
             self::assertSame(400, $malformedResponse->getStatusCode());
             self::assertSame('malformed_json', $malformedPayload['error']);
 
-            $missingStatusResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions/vendor/vendor-1/404/status', []);
+            $missingStatusResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions/vendor/vendor-1/404/status', [], $headers);
             $missingStatusPayload = KernelRuntimeHarness::decodeJson($missingStatusResponse);
 
             self::assertSame(404, $missingStatusResponse->getStatusCode());
@@ -102,7 +132,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
         }
     }
 
-    public function testKernelRuntimePropagatesCorrelationHeader(): void
+    public function testKernelRuntimePropagatesCorrelationHeaderForAuthenticatedCreate(): void
     {
         if (!extension_loaded('pdo_sqlite')) {
             self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
@@ -111,6 +141,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
 
         try {
+            $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
             $response = KernelRuntimeHarness::requestJson(
                 $kernel,
                 'POST',
@@ -121,7 +152,10 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
                     'projectId' => null,
                     'amount' => '20.00',
                 ],
-                ['X-Correlation-ID' => 'corr-runtime-001'],
+                [
+                    'X-Correlation-ID' => 'corr-runtime-001',
+                    'Authorization' => 'Bearer '.$token,
+                ],
             );
 
             self::assertSame(201, $response->getStatusCode());

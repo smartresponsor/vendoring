@@ -16,6 +16,8 @@ if (!extension_loaded('pdo_sqlite')) {
 $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot);
 
 try {
+    $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
+    $authHeaders = ['Authorization' => 'Bearer '.$token];
     $suffix = bin2hex(random_bytes(4));
     $vendorId = 'probe-vendor-'.$suffix;
     $orderId = 'probe-order-'.$suffix;
@@ -30,7 +32,7 @@ try {
             'projectId' => 'synthetic-runtime-probe',
             'amount' => '12.50',
         ],
-        ['X-Correlation-ID' => 'synthetic-runtime-probe']
+        ['X-Correlation-ID' => 'synthetic-runtime-probe'] + $authHeaders
     );
 
     if (201 !== $createResponse->getStatusCode()) {
@@ -54,7 +56,7 @@ try {
         'GET',
         '/api/vendor-transactions/vendor/'.$vendorId,
         null,
-        ['X-Correlation-ID' => 'synthetic-runtime-probe']
+        ['X-Correlation-ID' => 'synthetic-runtime-probe'] + $authHeaders
     );
 
     if (200 !== $listResponse->getStatusCode()) {
@@ -87,7 +89,7 @@ try {
         'POST',
         '/api/vendor-transactions/vendor/'.$vendorId.'/'.(string) $transactionId.'/status',
         ['status' => 'authorized'],
-        ['X-Correlation-ID' => 'synthetic-runtime-probe']
+        ['X-Correlation-ID' => 'synthetic-runtime-probe'] + $authHeaders
     );
 
     if (200 !== $updateResponse->getStatusCode()) {

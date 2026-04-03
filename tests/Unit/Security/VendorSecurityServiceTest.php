@@ -76,6 +76,21 @@ final class VendorSecurityServiceTest extends TestCase
         self::assertSame($vendor, $service->validateToken('token', 'write:transactions'));
     }
 
+
+    public function testValidateAuthorizationHeaderDelegatesToApiKeyService(): void
+    {
+        $vendor = new Vendor('Vendor A');
+        $service = new VendorSecurityService($this->apiKeyService);
+
+        $this->apiKeyService
+            ->expects(self::once())
+            ->method('validateAuthorizationHeader')
+            ->with('Bearer token', 'write:transactions')
+            ->willReturn($vendor);
+
+        self::assertSame($vendor, $service->validateAuthorizationHeader('Bearer token', 'write:transactions'));
+    }
+
     public function testResolveVendorFromAuthHeaderDelegatesToApiKeyService(): void
     {
         $vendor = new Vendor('Vendor A');

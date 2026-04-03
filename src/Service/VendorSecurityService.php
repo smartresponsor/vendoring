@@ -43,6 +43,11 @@ final class VendorSecurityService implements VendorSecurityServiceInterface
         return $this->apiKeyService->validateToken($plainToken, $permission);
     }
 
+    public function validateAuthorizationHeader(string $authorizationHeader, ?string $permission = null): ?Vendor
+    {
+        return $this->apiKeyService->validateAuthorizationHeader($authorizationHeader, $permission);
+    }
+
     public function resolveVendorFromAuthHeader(string $authorizationHeader): ?Vendor
     {
         return $this->apiKeyService->resolveVendorFromAuthHeader($authorizationHeader);

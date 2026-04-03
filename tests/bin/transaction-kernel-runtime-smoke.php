@@ -13,13 +13,15 @@ if (!extension_loaded('pdo_sqlite')) {
 
 $projectRoot = dirname(__DIR__, 2);
 $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot);
+$token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
+$authHeaders = ['Authorization' => 'Bearer '.$token];
 
 $createResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', [
     'vendorId' => 'vendor-smoke',
     'orderId' => 'order-smoke',
     'projectId' => null,
     'amount' => '25.00',
-]);
+], $authHeaders);
 $createPayload = KernelRuntimeHarness::decodeJson($createResponse);
 
 if (201 !== $createResponse->getStatusCode() || ($createPayload['status'] ?? null) !== 'pending') {
@@ -39,7 +41,7 @@ if (200 !== $listResponse->getStatusCode() || !is_array($listData) || 1 !== coun
 
 $updateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions/vendor/vendor-smoke/'.$createPayload['id'].'/status', [
     'status' => 'authorized',
-]);
+], $authHeaders);
 $updatePayload = KernelRuntimeHarness::decodeJson($updateResponse);
 
 if (200 !== $updateResponse->getStatusCode() || ($updatePayload['status'] ?? null) !== 'authorized') {

@@ -5,13 +5,27 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\EntityInterface\VendorEntityInterface;
+use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Entity(repositoryClass: 'App\\Repository\\VendorRepository')]
+#[ORM\Table(name: 'vendor')]
 final class Vendor implements VendorEntityInterface
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
+
+    #[ORM\Column(name: 'brand_name', type: 'string', length: 255)]
     private string $brandName;
+
+    #[ORM\Column(name: 'owner_user_id', type: 'integer', nullable: true)]
     private ?int $ownerUserId;
+
+    #[ORM\Column(type: 'string', length: 32)]
     private string $status;
+
+    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
     public function __construct(string $brandName, ?int $ownerUserId = null)
