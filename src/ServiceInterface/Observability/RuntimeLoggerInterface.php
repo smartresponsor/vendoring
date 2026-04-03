@@ -4,25 +4,45 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Observability;
 
+/**
+ * Write-side contract for structured runtime logging.
+ *
+ * Implementations are expected to emit an operationally stable log envelope for
+ * application flows while preserving the supplied message and contextual fields.
+ */
 interface RuntimeLoggerInterface
 {
     /**
-     * @param array<string, scalar|null> $context
+     * Record an informational runtime event.
+     *
+     * @param string                    $message Human-readable event message.
+     * @param array<string, scalar|null> $context Structured operational context such as route,
+     *                                            vendor_id, transaction_id, and error_code.
      */
     public function info(string $message, array $context = []): void;
 
     /**
-     * @param array<string, scalar|null> $context
+     * Record a warning-level runtime event.
+     *
+     * @param string                    $message Human-readable warning message.
+     * @param array<string, scalar|null> $context Structured operational context such as route,
+     *                                            vendor_id, transaction_id, and error_code.
      */
     public function warning(string $message, array $context = []): void;
 
     /**
-     * @param array<string, scalar|null> $context
+     * Record an error-level runtime event.
+     *
+     * @param string                    $message Human-readable error message.
+     * @param array<string, scalar|null> $context Structured operational context such as route,
+     *                                            vendor_id, transaction_id, and error_code.
      */
     public function error(string $message, array $context = []): void;
 
     /**
-     * @return list<array<string, scalar|null>>
+     * Return the in-memory inspection snapshot of emitted log records.
+     *
+     * @return list<array<string, scalar|null>> Stable structured records captured by the logger.
      */
     public function snapshot(): array;
 }

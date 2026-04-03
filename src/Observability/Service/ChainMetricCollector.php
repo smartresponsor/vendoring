@@ -6,15 +6,21 @@ namespace App\Observability\Service;
 
 use App\ServiceInterface\Observability\MetricCollectorInterface;
 
+/**
+ * Composite metric collector that fans one increment call out to multiple collectors.
+ */
 final class ChainMetricCollector implements MetricCollectorInterface
 {
     /**
-     * @param iterable<MetricCollectorInterface> $collectors
+     * @param iterable<MetricCollectorInterface> $collectors Downstream collectors that will all receive the increment.
      */
     public function __construct(private readonly iterable $collectors)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function increment(string $name, array $tags = []): void
     {
         foreach ($this->collectors as $collector) {

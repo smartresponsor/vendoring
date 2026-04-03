@@ -7,9 +7,21 @@ namespace App\Service\Policy;
 use App\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface;
 use App\ValueObject\VendorTransactionErrorCode;
 
+/**
+ * Read-side policy that validates and normalizes transport-facing transaction amounts.
+ */
 final class VendorTransactionAmountPolicy implements VendorTransactionAmountPolicyInterface
 {
-    // Stable validation surface: amount_not_numeric, amount_not_positive.
+    /**
+     * Normalize one transaction amount into canonical decimal-string form.
+     *
+     * Stable validation error codes include:
+     * - amount_required
+     * - amount_not_numeric
+     * - amount_not_positive
+     *
+     * @throws \InvalidArgumentException When the amount cannot be normalized under policy rules.
+     */
     public function normalize(string $amount): string
     {
         $normalized = trim($amount);

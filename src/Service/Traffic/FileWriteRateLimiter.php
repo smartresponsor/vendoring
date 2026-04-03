@@ -7,8 +7,17 @@ namespace App\Service\Traffic;
 use App\ServiceInterface\Traffic\WriteRateLimiterInterface;
 use App\ValueObject\Traffic\WriteRateLimitDecision;
 
+/**
+ * File-backed write rate limiter for low-complexity runtime environments.
+ *
+ * The limiter persists timestamp history in the local filesystem and produces immutable
+ * rate-limit decisions for one scope/actor pair.
+ */
 final class FileWriteRateLimiter implements WriteRateLimiterInterface
 {
+    /**
+     * Consume one slot from the write-rate limit bucket for the given scope and actor.
+     */
     public function consume(string $scope, string $actorKey, int $limit, int $windowSeconds): WriteRateLimitDecision
     {
         $normalizedScope = trim($scope);
@@ -58,6 +67,9 @@ final class FileWriteRateLimiter implements WriteRateLimiterInterface
         }
     }
 
+    /**
+     * Resolve the storage path for one rate-limit bucket.
+     */
     private function storagePath(string $scope, string $actorKey): string
     {
         $hash = sha1($scope.'|'.$actorKey);
@@ -66,7 +78,9 @@ final class FileWriteRateLimiter implements WriteRateLimiterInterface
     }
 
     /**
-     * @return list<int>
+     * Read persisted timestamps from one file handle.
+     *
+     * @return list<int> Historical timestamps still associated with the bucket file.
      */
     private function readTimestamps(mixed $handle): array
     {
@@ -97,7 +111,9 @@ final class FileWriteRateLimiter implements WriteRateLimiterInterface
     }
 
     /**
-     * @param list<int> $timestamps
+     * Persist the normalized timestamp history back into the bucket file.
+     *
+     * @param list<int> $timestamps Timestamp history to persist.
      */
     private function writeTimestamps(mixed $handle, array $timestamps): void
     {

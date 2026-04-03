@@ -9,6 +9,13 @@ use App\ServiceInterface\Observability\RuntimeLoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * Structured runtime logger for request-scoped operational events.
+ *
+ * The logger builds a deterministic operational envelope that includes correlation,
+ * route, path, and caller-supplied context fields. In non-test environments the
+ * envelope is emitted as one JSON line via the PHP error log.
+ */
 final class RuntimeLogger implements RuntimeLoggerInterface
 {
     /**
@@ -22,40 +29,60 @@ final class RuntimeLogger implements RuntimeLoggerInterface
     ) {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function info(string $message, array $context = []): void
     {
         $this->write('info', $message, $context);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function warning(string $message, array $context = []): void
     {
         $this->write('warning', $message, $context);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function error(string $message, array $context = []): void
     {
         $this->write('error', $message, $context);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function snapshot(): array
     {
         return $this->records;
     }
 
     /**
-     * @param array<string, scalar|null> $context
+     * Write one structured runtime record.
+     *
+     * @param array<string, scalar|null> $context Additional structured fields merged into the log envelope.
      */
     private function write(string $level, string $message, array $context): void
     {
         $request = $this->requestStack->getCurrentRequest();
+        $correlationId = $this->correlationContext->currentCorrelationId();
 
+        /** @var array<string, scalar|null> $record */
         $record = [
             'timestamp' => (new \DateTimeImmutable())->format(DATE_ATOM),
             'level' => $level,
             'message' => $message,
-            'correlation_id' => $this->correlationContext->currentCorrelationId(),
+            'request_id' => $correlationId,
+            'correlation_id' => $correlationId,
             'route' => $this->routeName($request),
             'path' => $request?->getPathInfo(),
+            'vendor_id' => null,
+            'transaction_id' => null,
+            'error_code' => null,
         ];
 
         foreach ($context as $key => $value) {
@@ -75,6 +102,9 @@ final class RuntimeLogger implements RuntimeLoggerInterface
         }
     }
 
+    /**
+     * Resolve the current Symfony route name from the active request.
+     */
     private function routeName(?Request $request): ?string
     {
         if (!$request instanceof Request) {

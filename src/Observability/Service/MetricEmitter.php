@@ -6,6 +6,9 @@ namespace App\Observability\Service;
 
 use App\ServiceInterface\Observability\MetricCollectorInterface;
 
+/**
+ * In-memory metric collector used for tests and inspection-only runtime scenarios.
+ */
 final class MetricEmitter implements MetricCollectorInterface
 {
     /**
@@ -14,7 +17,7 @@ final class MetricEmitter implements MetricCollectorInterface
     private array $increments = [];
 
     /**
-     * @param array<string, string> $tags
+     * {@inheritdoc}
      */
     public function increment(string $name, array $tags = []): void
     {
@@ -25,6 +28,8 @@ final class MetricEmitter implements MetricCollectorInterface
     }
 
     /**
+     * Return the inspection snapshot of in-memory metric increments.
+     *
      * @return list<array{name:string,tags:array<string,string>}>
      */
     public function snapshot(): array

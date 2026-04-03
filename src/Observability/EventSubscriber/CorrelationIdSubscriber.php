@@ -12,6 +12,13 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * HTTP boundary subscriber that establishes and returns the canonical correlation identifier.
+ *
+ * The subscriber reads `X-Correlation-ID` from inbound requests, generates one when absent,
+ * stores it in request attributes and correlation context, and mirrors the final value back
+ * into response headers for operational tracing.
+ */
 final class CorrelationIdSubscriber implements EventSubscriberInterface
 {
     private const HEADER_NAME = 'X-Correlation-ID';
@@ -21,6 +28,11 @@ final class CorrelationIdSubscriber implements EventSubscriberInterface
     {
     }
 
+    /**
+     * Return the kernel events used to establish correlation context.
+     *
+     * @return array<string, array{0:string,1:int}> Event map for request and response phases.
+     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -29,6 +41,9 @@ final class CorrelationIdSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Resolve and persist the active correlation identifier for the main request.
+     */
     public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
@@ -42,6 +57,9 @@ final class CorrelationIdSubscriber implements EventSubscriberInterface
         $this->correlationContext->beginRequest($correlationId);
     }
 
+    /**
+     * Mirror the active correlation identifier into the outbound HTTP response.
+     */
     public function onKernelResponse(ResponseEvent $event): void
     {
         if (!$event->isMainRequest()) {
@@ -58,6 +76,9 @@ final class CorrelationIdSubscriber implements EventSubscriberInterface
         $event->getResponse()->headers->set(self::HEADER_NAME, $correlationId);
     }
 
+    /**
+     * Resolve the inbound correlation identifier from the request or generate a new one.
+     */
     private function resolveCorrelationId(Request $request): string
     {
         $headerValue = $request->headers->get(self::HEADER_NAME);
@@ -69,6 +90,9 @@ final class CorrelationIdSubscriber implements EventSubscriberInterface
         return $this->generateCorrelationId();
     }
 
+    /**
+     * Generate one RFC 4122 correlation identifier.
+     */
     private function generateCorrelationId(): string
     {
         return Uuid::v7()->toRfc4122();

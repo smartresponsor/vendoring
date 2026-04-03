@@ -7,30 +7,78 @@ namespace App\Observability\Service;
 use App\ServiceInterface\Observability\CorrelationContextInterface;
 use App\ServiceInterface\Observability\MetricCollectorInterface;
 
+/**
+ * Structured metric collector for runtime observability events.
+ *
+ * The collector emits deterministic metric envelopes that can later be forwarded to
+ * external backends. In non-test environments the envelope is written as JSON to the
+ * PHP error log; in every environment it is retained in-memory for inspection.
+ */
 final class RuntimeMetricCollector implements MetricCollectorInterface
 {
+    /**
+     * @var list<array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string}>
+     */
+    private array $records = [];
+
     public function __construct(private readonly CorrelationContextInterface $correlationContext)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function increment(string $name, array $tags = []): void
     {
+        $correlationId = $this->correlationContext->currentCorrelationId();
+
+        /** @var array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string} $record */
+        $record = [
+            'timestamp' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'type' => 'metric',
+            'name' => $name,
+            'tags' => $this->normalizeTags($tags),
+            'request_id' => $correlationId,
+            'correlation_id' => $correlationId,
+        ];
+
+        $this->records[] = $record;
+
         $environment = (string) ($_ENV['APP_ENV'] ?? $_SERVER['APP_ENV'] ?? 'dev');
         if ('test' === $environment) {
             return;
         }
 
-        $record = [
-            'timestamp' => (new \DateTimeImmutable())->format(DATE_ATOM),
-            'type' => 'metric',
-            'name' => $name,
-            'tags' => $tags,
-            'correlation_id' => $this->correlationContext->currentCorrelationId(),
-        ];
-
         $encoded = json_encode($record, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         if (false !== $encoded) {
             error_log($encoded);
         }
+    }
+
+    /**
+     * Return the inspection snapshot of emitted runtime metrics.
+     *
+     * @return list<array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string}>
+     */
+    public function snapshot(): array
+    {
+        return $this->records;
+    }
+
+    /**
+     * Normalize metric tags to a stable string map.
+     *
+     * @param array<string, string> $tags Raw metric tags.
+     *
+     * @return array<string, string> Normalized tag map.
+     */
+    private function normalizeTags(array $tags): array
+    {
+        $normalized = [];
+        foreach ($tags as $key => $value) {
+            $normalized[(string) $key] = (string) $value;
+        }
+
+        return $normalized;
     }
 }

@@ -8,6 +8,9 @@ use App\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
 use App\ValueObject\VendorTransactionErrorCode;
 use App\ValueObject\VendorTransactionStatus;
 
+/**
+ * Read-side policy for canonical transaction status normalization and transition rules.
+ */
 final class VendorTransactionStatusPolicy implements VendorTransactionStatusPolicyInterface
 {
     /**
@@ -22,21 +25,33 @@ final class VendorTransactionStatusPolicy implements VendorTransactionStatusPoli
         VendorTransactionStatus::REFUNDED => [],
     ];
 
+    /**
+     * {@inheritdoc}
+     */
     public function normalize(string $status): string
     {
         return strtolower(trim($status));
     }
 
+    /**
+     * Return the stable error code for missing status input.
+     */
     public function requiredStatusErrorCode(): string
     {
         return VendorTransactionErrorCode::STATUS_REQUIRED;
     }
 
+    /**
+     * Return the stable error code for invalid status transitions.
+     */
     public function invalidTransitionErrorCode(): string
     {
         return VendorTransactionErrorCode::INVALID_STATUS_TRANSITION;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function canTransition(string $fromStatus, string $toStatus): bool
     {
         $from = $this->normalize($fromStatus);
