@@ -5,6 +5,7 @@ parameters:
     vendoring_secret: 'vendoring-dev-secret'
     vendoring_feature_flags: { }
     vendoring_observability_dir: '%kernel.project_dir%/var/observability'
+    vendoring_fault_tolerance_dir: '%kernel.project_dir%/var/fault-tolerance'
 
 services:
     _defaults:
@@ -39,6 +40,8 @@ services:
     App\RepositoryInterface\VendorTransactionRepositoryInterface: '@App\Repository\VendorTransactionRepository'
 
     App\ServiceInterface\VendorCrmServiceInterface: '@App\Service\VendorCrmService'
+    App\ServiceInterface\Policy\OutboundOperationPolicyInterface: '@App\Service\Policy\OutboundOperationPolicy'
+    App\ServiceInterface\Reliability\OutboundCircuitBreakerInterface: '@App\Service\Reliability\FileOutboundCircuitBreaker'
     App\ServiceInterface\Security\VendorAuthorizationMatrixInterface: '@App\Service\Security\VendorAuthorizationMatrix'
     App\ServiceInterface\Security\VendorAccessResolverInterface: '@App\Service\Security\VendorAccessResolver'
     App\ServiceInterface\VendorBillingServiceInterface: '@App\Service\VendorBillingService'
@@ -116,6 +119,10 @@ services:
     App\Observability\Service\FileObservabilityRecordExporter:
         arguments:
             $observabilityDir: '%vendoring_observability_dir%'
+
+    App\Service\Reliability\FileOutboundCircuitBreaker:
+        arguments:
+            $stateDir: '%vendoring_fault_tolerance_dir%/circuit-breakers'
 
     App\Observability\Service\MetricEmitter:
         public: false

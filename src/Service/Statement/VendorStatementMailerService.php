@@ -1,28 +1,41 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service\Statement;
 
 use App\ServiceInterface\Observability\MetricCollectorInterface;
 use App\ServiceInterface\Observability\RuntimeLoggerInterface;
+use App\ServiceInterface\Policy\OutboundOperationPolicyInterface;
+use App\ServiceInterface\Reliability\OutboundCircuitBreakerInterface;
 use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
+/**
+ * Write-side outbound mail transport for vendor statements.
+ *
+ * The service validates destination input, attaches the statement when present,
+ * applies outbound runtime policy, consults the circuit breaker, and attempts one
+ * transport send through Symfony Mailer.
+ */
 final class VendorStatementMailerService implements VendorStatementMailerServiceInterface
 {
     public function __construct(
         private readonly MailerInterface $mailer,
         private readonly MetricCollectorInterface $metrics,
         private readonly RuntimeLoggerInterface $runtimeLogger,
+        private readonly OutboundOperationPolicyInterface $outboundPolicy,
+        private readonly OutboundCircuitBreakerInterface $circuitBreaker,
     ) {
     }
 
     public function send(string $tenantId, string $vendorId, string $email, string $pdfPath, string $periodLabel): array
     {
+        $policy = $this->outboundPolicy->forOperation('statement_mail_send');
+        $scopeKey = $tenantId.':'.$vendorId;
+
         $result = [
             'ok' => false,
             'message' => 'statement_mail_send_failed',
@@ -32,6 +45,12 @@ final class VendorStatementMailerService implements VendorStatementMailerService
             'pdfPath' => $pdfPath,
             'periodLabel' => $periodLabel,
             'attached' => false,
+            'retryable' => $policy['retryable'],
+            'timeoutSeconds' => $policy['timeoutSeconds'],
+            'maxAttempts' => $policy['maxAttempts'],
+            'attemptCount' => 0,
+            'failureMode' => $policy['failureMode'],
+            'circuitState' => 'closed',
         ];
 
         if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -47,6 +66,33 @@ final class VendorStatementMailerService implements VendorStatementMailerService
             ]);
 
             $result['message'] = 'statement_mail_invalid_email';
+
+            return $result;
+        }
+
+        $breaker = $this->circuitBreaker->currentState(
+            'statement_mail_send',
+            $scopeKey,
+            $policy['breakerThreshold'],
+            $policy['cooldownSeconds'],
+        );
+        $result['circuitState'] = $breaker['state'];
+
+        if (true !== $breaker['allowRequest']) {
+            $this->metrics->increment('statement_mail_circuit_open_total', [
+                'tenantId' => $tenantId,
+                'vendorId' => $vendorId,
+            ]);
+            $this->runtimeLogger->warning('vendor_statement_mail_short_circuited', [
+                'tenant_id' => $tenantId,
+                'vendor_id' => $vendorId,
+                'email' => $email,
+                'error_code' => 'statement_mail_circuit_open',
+                'circuit_state' => $breaker['state'],
+                'failure_count' => (string) $breaker['failureCount'],
+            ]);
+
+            $result['message'] = 'statement_mail_circuit_open';
 
             return $result;
         }
@@ -79,6 +125,13 @@ final class VendorStatementMailerService implements VendorStatementMailerService
         try {
             $this->mailer->send($message);
         } catch (TransportExceptionInterface $exception) {
+            $updatedBreaker = $this->circuitBreaker->recordFailure(
+                'statement_mail_send',
+                $scopeKey,
+                $policy['breakerThreshold'],
+                $policy['cooldownSeconds'],
+            );
+
             $this->metrics->increment('statement_mail_failed_total', [
                 'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
@@ -90,9 +143,12 @@ final class VendorStatementMailerService implements VendorStatementMailerService
                 'email' => $email,
                 'error_class' => $exception::class,
                 'error_code' => 'statement_mail_send_failed',
+                'circuit_state' => $updatedBreaker['state'],
             ]);
 
             $result['attached'] = $attached;
+            $result['attemptCount'] = 1;
+            $result['circuitState'] = $updatedBreaker['state'];
             $result['errorClass'] = $exception::class;
             $result['errorMessage'] = '' !== trim($exception->getMessage())
                 ? $exception->getMessage()
@@ -101,6 +157,7 @@ final class VendorStatementMailerService implements VendorStatementMailerService
             return $result;
         }
 
+        $this->circuitBreaker->recordSuccess('statement_mail_send', $scopeKey);
         $this->metrics->increment('statement_mail_sent_total', [
             'tenantId' => $tenantId,
             'vendorId' => $vendorId,
@@ -121,6 +178,12 @@ final class VendorStatementMailerService implements VendorStatementMailerService
             'pdfPath' => $pdfPath,
             'periodLabel' => $periodLabel,
             'attached' => $attached,
+            'retryable' => $policy['retryable'],
+            'timeoutSeconds' => $policy['timeoutSeconds'],
+            'maxAttempts' => $policy['maxAttempts'],
+            'attemptCount' => 1,
+            'failureMode' => $policy['failureMode'],
+            'circuitState' => 'closed',
         ];
     }
 }

@@ -364,6 +364,7 @@
         "test:unit": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
         "test:finance-synthetic-probe": "php tests/bin/finance-synthetic-probe.php",
         "test:vendor-rbac-contract": "php tests/bin/vendor-rbac-contract-smoke.php",
-        "test:observability-backend": "php tests/bin/observability-backend-contract-smoke.php"
+        "test:observability-backend": "php tests/bin/observability-backend-contract-smoke.php",
+        "test:outbound-fault-tolerance": "php tests/bin/outbound-fault-tolerance-contract-smoke.php"
     }
 }
