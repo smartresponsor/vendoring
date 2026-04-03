@@ -361,6 +361,7 @@
         "test:transaction-sqlite-integration": "php tests/bin/transaction-sqlite-integration-smoke.php",
         "test:transaction-status-persistence": "php tests/bin/transaction-persistence-smoke.php",
         "test:transaction-uniqueness-contract": "php tests/bin/transaction-uniqueness-contract-smoke.php",
-        "test:unit": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit"
+        "test:unit": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
+        "test:finance-synthetic-probe": "php tests/bin/finance-synthetic-probe.php"
     }
 }
