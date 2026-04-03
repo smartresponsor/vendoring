@@ -10,6 +10,9 @@ parameters:
         errorLogThreshold: 1
         openBreakerThreshold: 1
         missingProbeThreshold: 1
+    vendoring_rollback_thresholds:
+        criticalAlertCodes: ['outbound_circuit_open']
+        warningAlertCodes: ['runtime_error_spike', 'probe_artifacts_missing', 'observability_metrics_empty']
 
 services:
     _defaults:
@@ -101,6 +104,8 @@ services:
     App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface: '@App\Service\Integration\VendorExternalIntegrationRuntimeViewBuilder'
     App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface: '@App\Service\Ops\VendorRuntimeStatusViewBuilder'
     App\ServiceInterface\Ops\VendorReleaseBaselineReaderInterface: '@App\Service\Ops\VendorReleaseBaselineReader'
+    App\ServiceInterface\Ops\ReleaseManifestBuilderInterface: '@App\Service\Ops\ReleaseManifestBuilder'
+    App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface: '@App\Service\Ops\RollbackDecisionEvaluator'
     App\ServiceInterface\VendorTransactionManagerInterface: '@App\Service\VendorTransactionManager'
     App\ServiceInterface\VendorTransactionInputResolverServiceInterface: '@App\Service\VendorTransactionInputResolverService'
     App\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface: '@App\Service\Policy\VendorTransactionStatusPolicy'
@@ -156,3 +161,11 @@ services:
         arguments:
             $flags: '%vendoring_feature_flags%'
 #
+
+    App\Service\Ops\ReleaseManifestBuilder:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Service\Ops\RollbackDecisionEvaluator:
+        arguments:
+            $thresholds: '%vendoring_rollback_thresholds%'

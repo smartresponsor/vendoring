@@ -58,6 +58,7 @@ Purpose:
 - OpenAPI artifact generation
 - phpDocumentor configuration and generated site placeholder
 - release manifest generation under `build/release/`
+- rollback manifest generation under `build/release/`
 - readiness for full Nelmio/phpDocumentor binary wiring
 
 Primary signals:

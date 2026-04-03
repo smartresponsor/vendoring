@@ -175,8 +175,10 @@
         ],
         "quality:docs": [
             "@docs:rc-evidence",
+            "@docs:release-manifest",
             "@test:rc-evidence",
-            "@test:release-candidate-docs"
+            "@test:release-candidate-docs",
+            "@test:release-rollback-manifest"
         ],
         "quality:persistence": [
             "@test:transaction-persistence",
@@ -365,7 +367,9 @@
         "test:finance-synthetic-probe": "php tests/bin/finance-synthetic-probe.php",
         "test:vendor-rbac-contract": "php tests/bin/vendor-rbac-contract-smoke.php",
         "test:observability-backend": "php tests/bin/observability-backend-contract-smoke.php",
-    "test:monitoring-alerting": "php tests/bin/monitoring-alerting-contract-smoke.php",
-        "test:outbound-fault-tolerance": "php tests/bin/outbound-fault-tolerance-contract-smoke.php"
+        "test:monitoring-alerting": "php tests/bin/monitoring-alerting-contract-smoke.php",
+        "test:outbound-fault-tolerance": "php tests/bin/outbound-fault-tolerance-contract-smoke.php",
+        "docs:release-manifest": "@php bin/generate-release-manifest.php",
+        "test:release-rollback-manifest": "php tests/bin/release-rollback-manifest-contract-smoke.php"
     }
 }

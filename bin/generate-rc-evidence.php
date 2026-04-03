@@ -9,3 +9,5 @@ file_put_contents($root.'/build/release/rc-evidence.json', json_encode(['status'
 file_put_contents($root.'/build/release/rc-evidence.md', "# RC evidence\n\nGenerated successfully.\n");
 file_put_contents($root.'/build/docs/runtime/index.txt', "runtime proof generated\n");
 echo "rc evidence generated\n";
+
+require __DIR__.'/generate-release-manifest.php';
