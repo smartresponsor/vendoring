@@ -370,6 +370,7 @@
         "test:monitoring-alerting": "php tests/bin/monitoring-alerting-contract-smoke.php",
         "test:outbound-fault-tolerance": "php tests/bin/outbound-fault-tolerance-contract-smoke.php",
         "docs:release-manifest": "@php bin/generate-release-manifest.php",
-        "test:release-rollback-manifest": "php tests/bin/release-rollback-manifest-contract-smoke.php"
+        "test:release-rollback-manifest": "php tests/bin/release-rollback-manifest-contract-smoke.php",
+        "test:canary-rollout": "php tests/bin/canary-rollout-contract-smoke.php"
     }
 }

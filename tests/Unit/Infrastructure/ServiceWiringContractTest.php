@@ -19,6 +19,7 @@ use App\Service\Ops\ReleaseManifestBuilder;
 use App\Service\Ops\RollbackDecisionEvaluator;
 use App\Service\Security\VendorAccessResolver;
 use App\Service\Security\VendorAuthorizationMatrix;
+use App\Service\Rollout\CanaryRolloutCoordinator;
 use App\Service\Rollout\FeatureFlagService;
 use App\Service\Policy\OutboundOperationPolicy;
 use App\Service\Reliability\FileOutboundCircuitBreaker;
@@ -56,6 +57,7 @@ final class ServiceWiringContractTest extends TestCase
         yield 'observability_record_exporter' => ['App\ServiceInterface\Observability\ObservabilityRecordExporterInterface', FileObservabilityRecordExporter::class];
         yield 'release_manifest_builder' => ['App\ServiceInterface\Ops\ReleaseManifestBuilderInterface', ReleaseManifestBuilder::class];
         yield 'rollback_decision_evaluator' => ['App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface', RollbackDecisionEvaluator::class];
+        yield 'canary_rollout_coordinator' => ['App\ServiceInterface\Rollout\CanaryRolloutCoordinatorInterface', CanaryRolloutCoordinator::class];
         yield 'vendor_transaction_manager' => ['App\\ServiceInterface\\VendorTransactionManagerInterface', VendorTransactionManager::class];
         yield 'vendor_metric_service' => ['App\\ServiceInterface\\Metric\\VendorMetricServiceInterface', VendorMetricService::class];
         yield 'payout_service' => ['App\\ServiceInterface\\Payout\\VendorPayoutServiceInterface', VendorPayoutService::class];

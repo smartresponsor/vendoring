@@ -61,6 +61,7 @@ services:
     App\ServiceInterface\Traffic\WriteRateLimiterInterface: '@App\Service\Traffic\FileWriteRateLimiter'
     App\ServiceInterface\Rollout\TrafficCohortResolverInterface: '@App\Service\Rollout\TrafficCohortResolver'
     App\ServiceInterface\Rollout\FeatureFlagServiceInterface: '@App\Service\Rollout\FeatureFlagService'
+    App\ServiceInterface\Rollout\CanaryRolloutCoordinatorInterface: '@App\Service\Rollout\CanaryRolloutCoordinator'
     App\ServiceInterface\CatalogMerchServiceInterface: '@App\Service\CatalogMerchService'
     App\ServiceInterface\CatalogSyndicationMappingServiceInterface: '@App\Service\CatalogSyndicationMappingService'
     App\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface: '@App\Service\CatalogSyndicationFallbackAwarePackageGateService'

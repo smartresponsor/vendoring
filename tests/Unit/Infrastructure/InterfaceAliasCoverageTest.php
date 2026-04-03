@@ -61,6 +61,8 @@ final class InterfaceAliasCoverageTest extends TestCase
             'App\\ServiceInterface\\Statement\\VendorStatementMailerServiceInterface' => 'App\\Service\\Statement\\VendorStatementMailerService',
             'App\\ServiceInterface\\Statement\\VendorStatementRecipientProviderInterface' => 'App\\Service\\Statement\\VendorStatementRecipientProvider',
             'App\\ServiceInterface\\Statement\\VendorStatementServiceInterface' => 'App\\Service\\Statement\\VendorStatementService',
+            'App\ServiceInterface\Rollout\FeatureFlagServiceInterface' => 'App\Service\Rollout\FeatureFlagService',
+            'App\ServiceInterface\Rollout\CanaryRolloutCoordinatorInterface' => 'App\Service\Rollout\CanaryRolloutCoordinator',
         ];
     }
 }
