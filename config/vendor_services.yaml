@@ -6,6 +6,10 @@ parameters:
     vendoring_feature_flags: { }
     vendoring_observability_dir: '%kernel.project_dir%/var/observability'
     vendoring_fault_tolerance_dir: '%kernel.project_dir%/var/fault-tolerance'
+    vendoring_alert_thresholds:
+        errorLogThreshold: 1
+        openBreakerThreshold: 1
+        missingProbeThreshold: 1
 
 services:
     _defaults:
@@ -49,6 +53,8 @@ services:
     App\ServiceInterface\Observability\ObservabilityRecordExporterInterface: '@App\Observability\Service\FileObservabilityRecordExporter'
     App\ServiceInterface\Observability\MetricCollectorInterface: '@App\Observability\Service\ChainMetricCollector'
     App\ServiceInterface\Observability\RuntimeLoggerInterface: '@App\Observability\Service\RuntimeLogger'
+    App\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface: '@App\Observability\Service\MonitoringSnapshotBuilder'
+    App\ServiceInterface\Observability\AlertRuleEvaluatorInterface: '@App\Observability\Service\AlertRuleEvaluator'
     App\ServiceInterface\Traffic\WriteRateLimiterInterface: '@App\Service\Traffic\FileWriteRateLimiter'
     App\ServiceInterface\Rollout\TrafficCohortResolverInterface: '@App\Service\Rollout\TrafficCohortResolver'
     App\ServiceInterface\Rollout\FeatureFlagServiceInterface: '@App\Service\Rollout\FeatureFlagService'
@@ -119,6 +125,16 @@ services:
     App\Observability\Service\FileObservabilityRecordExporter:
         arguments:
             $observabilityDir: '%vendoring_observability_dir%'
+
+    App\Observability\Service\MonitoringSnapshotBuilder:
+        arguments:
+            $observabilityDir: '%vendoring_observability_dir%'
+            $faultToleranceDir: '%vendoring_fault_tolerance_dir%'
+            $projectDir: '%kernel.project_dir%'
+
+    App\Observability\Service\AlertRuleEvaluator:
+        arguments:
+            $thresholds: '%vendoring_alert_thresholds%'
 
     App\Service\Reliability\FileOutboundCircuitBreaker:
         arguments:
