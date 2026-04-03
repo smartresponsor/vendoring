@@ -8,6 +8,7 @@ use App\Entity\VendorUserAssignment;
 use App\EntityInterface\VendorUserAssignmentInterface;
 use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use App\ServiceInterface\VendorUserAssignmentServiceInterface;
+use App\ValueObject\VendorRole;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class VendorUserAssignmentService implements VendorUserAssignmentServiceInterface
@@ -20,11 +21,17 @@ final class VendorUserAssignmentService implements VendorUserAssignmentServiceIn
 
     public function assignOwner(int $vendorId, int $userId): VendorUserAssignmentInterface
     {
-        return $this->assignRole($vendorId, $userId, 'owner', true);
+        return $this->assignRole($vendorId, $userId, VendorRole::OWNER, true);
     }
 
     public function assignRole(int $vendorId, int $userId, string $role, bool $isPrimary = false): VendorUserAssignmentInterface
     {
+        $normalizedRole = VendorRole::normalize($role);
+
+        if (!VendorRole::isValid($normalizedRole)) {
+            throw new \InvalidArgumentException(sprintf('Unsupported vendor role "%s".', $role));
+        }
+
         $existing = $this->assignmentRepository->findOneByVendorIdAndUserId($vendorId, $userId);
 
         if ($existing instanceof VendorUserAssignmentInterface) {
@@ -32,7 +39,7 @@ final class VendorUserAssignmentService implements VendorUserAssignmentServiceIn
                 $existing->activate();
             }
             if (method_exists($existing, 'changeRole')) {
-                $existing->changeRole($role);
+                $existing->changeRole($normalizedRole);
             }
             if ($isPrimary && method_exists($existing, 'markPrimary')) {
                 $this->clearPrimaryForVendor($vendorId);
@@ -51,7 +58,7 @@ final class VendorUserAssignmentService implements VendorUserAssignmentServiceIn
         $assignment = new VendorUserAssignment(
             vendorId: $vendorId,
             userId: $userId,
-            role: $role,
+            role: $normalizedRole,
             status: 'active',
             isPrimary: $isPrimary,
         );

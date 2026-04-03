@@ -14,6 +14,8 @@ use App\Repository\VendorPassportRepository;
 use App\Repository\VendorProfileRepository;
 use App\Repository\VendorRepository;
 use App\Service\Metric\VendorMetricService;
+use App\Service\Security\VendorAccessResolver;
+use App\Service\Security\VendorAuthorizationMatrix;
 use App\Service\Rollout\FeatureFlagService;
 use App\Service\Rollout\TrafficCohortResolver;
 use App\Service\Payout\VendorPayoutService;

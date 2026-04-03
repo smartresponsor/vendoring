@@ -362,6 +362,7 @@
         "test:transaction-status-persistence": "php tests/bin/transaction-persistence-smoke.php",
         "test:transaction-uniqueness-contract": "php tests/bin/transaction-uniqueness-contract-smoke.php",
         "test:unit": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
-        "test:finance-synthetic-probe": "php tests/bin/finance-synthetic-probe.php"
+        "test:finance-synthetic-probe": "php tests/bin/finance-synthetic-probe.php",
+        "test:vendor-rbac-contract": "php tests/bin/vendor-rbac-contract-smoke.php"
     }
 }

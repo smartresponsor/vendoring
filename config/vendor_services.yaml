@@ -38,6 +38,8 @@ services:
     App\RepositoryInterface\VendorTransactionRepositoryInterface: '@App\Repository\VendorTransactionRepository'
 
     App\ServiceInterface\VendorCrmServiceInterface: '@App\Service\VendorCrmService'
+    App\ServiceInterface\Security\VendorAuthorizationMatrixInterface: '@App\Service\Security\VendorAuthorizationMatrix'
+    App\ServiceInterface\Security\VendorAccessResolverInterface: '@App\Service\Security\VendorAccessResolver'
     App\ServiceInterface\VendorBillingServiceInterface: '@App\Service\VendorBillingService'
     App\ServiceInterface\Observability\CorrelationContextInterface: '@App\Observability\Service\CorrelationContext'
     App\ServiceInterface\Observability\MetricCollectorInterface: '@App\Observability\Service\ChainMetricCollector'

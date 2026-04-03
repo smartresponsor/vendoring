@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Projection\VendorOwnershipView;
 use App\RepositoryInterface\VendorRepositoryInterface;
 use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\ServiceInterface\Security\VendorAuthorizationMatrixInterface;
 use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
 
 /**
@@ -17,6 +18,7 @@ final class VendorOwnershipViewBuilder implements VendorOwnershipViewBuilderInte
     public function __construct(
         private readonly VendorRepositoryInterface $vendorRepository,
         private readonly VendorUserAssignmentRepositoryInterface $assignmentRepository,
+        private readonly VendorAuthorizationMatrixInterface $authorizationMatrix,
     ) {
     }
 
@@ -34,6 +36,7 @@ final class VendorOwnershipViewBuilder implements VendorOwnershipViewBuilderInte
                 'userId' => $assignment->getUserId(),
                 'role' => $assignment->getRole(),
                 'status' => $assignment->getStatus(),
+                'capabilities' => $this->authorizationMatrix->capabilitiesForRole($assignment->getRole()),
                 'isPrimary' => $assignment->isPrimary(),
                 'grantedAt' => $assignment->getGrantedAt()->format(DATE_ATOM),
                 'revokedAt' => $assignment->getRevokedAt()?->format(DATE_ATOM),
