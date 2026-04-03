@@ -6,6 +6,8 @@ namespace App\Tests\Unit\Transaction;
 
 use App\Entity\VendorTransaction;
 use App\Event\VendorTransactionEvent;
+use App\Observability\Service\CorrelationContext;
+use App\Observability\Service\RuntimeLogger;
 use App\RepositoryInterface\VendorTransactionRepositoryInterface;
 use App\Service\Policy\VendorTransactionAmountPolicy;
 use App\Service\Policy\VendorTransactionStatusPolicy;
@@ -14,6 +16,7 @@ use App\ValueObject\VendorTransactionData;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class VendorTransactionManagerTest extends TestCase
@@ -39,6 +42,7 @@ final class VendorTransactionManagerTest extends TestCase
             new VendorTransactionStatusPolicy(),
             new VendorTransactionAmountPolicy(),
             $this->transactions,
+            $this->runtimeLogger(),
         );
 
         $data = new VendorTransactionData('vendor-1', 'order-1', 'project-1', '10.50');
@@ -94,6 +98,7 @@ final class VendorTransactionManagerTest extends TestCase
             new VendorTransactionStatusPolicy(),
             new VendorTransactionAmountPolicy(),
             $this->transactions,
+            $this->runtimeLogger(),
         );
 
         $data = new VendorTransactionData('vendor-1', 'order-1', '   ', '10.50');
@@ -134,6 +139,7 @@ final class VendorTransactionManagerTest extends TestCase
             new VendorTransactionStatusPolicy(),
             new VendorTransactionAmountPolicy(),
             $this->transactions,
+            $this->runtimeLogger(),
         );
 
         $data = new VendorTransactionData('vendor-1', 'order-1', null, '10.50');
@@ -170,6 +176,7 @@ final class VendorTransactionManagerTest extends TestCase
             new VendorTransactionStatusPolicy(),
             new VendorTransactionAmountPolicy(),
             $this->transactions,
+            $this->runtimeLogger(),
         );
 
         $data = new VendorTransactionData('  vendor-1  ', '  order-1  ', 'project-1', '10.50');
@@ -212,6 +219,7 @@ final class VendorTransactionManagerTest extends TestCase
             new VendorTransactionStatusPolicy(),
             new VendorTransactionAmountPolicy(),
             $this->transactions,
+            $this->runtimeLogger(),
         );
 
         $data = new VendorTransactionData('   ', 'order-1', null, '10.50');
@@ -246,6 +254,7 @@ final class VendorTransactionManagerTest extends TestCase
             new VendorTransactionStatusPolicy(),
             new VendorTransactionAmountPolicy(),
             $this->transactions,
+            $this->runtimeLogger(),
         );
 
         $data = new VendorTransactionData('vendor-1', 'order-1', 'project-1', '0');
@@ -282,6 +291,7 @@ final class VendorTransactionManagerTest extends TestCase
             new VendorTransactionStatusPolicy(),
             new VendorTransactionAmountPolicy(),
             $this->transactions,
+            $this->runtimeLogger(),
         );
 
         $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.50');
@@ -317,6 +327,7 @@ final class VendorTransactionManagerTest extends TestCase
             new VendorTransactionStatusPolicy(),
             new VendorTransactionAmountPolicy(),
             $this->transactions,
+            $this->runtimeLogger(),
         );
 
         $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.50');
@@ -333,5 +344,10 @@ final class VendorTransactionManagerTest extends TestCase
         $this->expectExceptionMessage('invalid_status_transition');
 
         $manager->updateStatus($transaction, ' refunded ');
+    }
+
+    private function runtimeLogger(): RuntimeLogger
+    {
+        return new RuntimeLogger(new CorrelationContext(), new RequestStack());
     }
 }

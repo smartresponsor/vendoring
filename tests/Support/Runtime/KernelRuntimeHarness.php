@@ -47,6 +47,7 @@ final class KernelRuntimeHarness
 
         $kernel = new Kernel($environment, $debug);
         $kernel->boot();
+        $cacheDir = $kernel->getCacheDir();
 
         $container = $kernel->getContainer();
         $doctrine = $container->get('doctrine');
@@ -62,7 +63,7 @@ final class KernelRuntimeHarness
         }
         self::createVendorTransactionSchema($entityManager);
 
-        register_shutdown_function(static function () use ($databaseFile, $entityManager, $kernel): void {
+        register_shutdown_function(static function () use ($databaseFile, $entityManager, $kernel, $cacheDir): void {
             try {
                 if ($entityManager->isOpen()) {
                     $entityManager->clear();
@@ -79,6 +80,7 @@ final class KernelRuntimeHarness
 
             $kernel->shutdown();
             gc_collect_cycles();
+            self::removeDirectory($cacheDir);
 
             if (!is_file($databaseFile)) {
                 return;
@@ -99,10 +101,17 @@ final class KernelRuntimeHarness
         return $kernel;
     }
 
-    /** @param array<string, mixed>|null $payload */
-    public static function requestJson(KernelInterface $kernel, string $method, string $uri, ?array $payload = null): JsonResponse
+    /**
+     * @param array<string, mixed>|null $payload
+     * @param array<string, string>     $headers
+     */
+    public static function requestJson(KernelInterface $kernel, string $method, string $uri, ?array $payload = null, array $headers = []): JsonResponse
     {
         $server = ['CONTENT_TYPE' => 'application/json'];
+        foreach ($headers as $name => $value) {
+            $normalized = 'HTTP_'.strtoupper(str_replace('-', '_', $name));
+            $server[$normalized] = $value;
+        }
         $content = null === $payload ? null : json_encode($payload, JSON_THROW_ON_ERROR);
         $request = Request::create($uri, $method, server: $server, content: $content);
         $response = $kernel->handle($request);
@@ -135,6 +144,7 @@ final class KernelRuntimeHarness
     {
         if (null !== $kernel) {
             $kernel->shutdown();
+            self::removeDirectory($kernel->getCacheDir());
         }
 
         self::restoreExceptionHandlerStack();
@@ -186,5 +196,33 @@ final class KernelRuntimeHarness
         $metadata = [$entityManager->getClassMetadata(VendorTransaction::class)];
         $schemaTool->dropSchema($metadata);
         $schemaTool->createSchema($metadata);
+    }
+
+    private static function removeDirectory(string $path): void
+    {
+        if ('' === $path || !is_dir($path)) {
+            return;
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST,
+        );
+
+        foreach ($iterator as $item) {
+            if (!$item instanceof \SplFileInfo) {
+                continue;
+            }
+
+            if ($item->isDir()) {
+                @rmdir($item->getPathname());
+
+                continue;
+            }
+
+            @unlink($item->getPathname());
+        }
+
+        @rmdir($path);
     }
 }

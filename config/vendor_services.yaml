@@ -38,6 +38,18 @@ services:
 
     App\ServiceInterface\VendorCrmServiceInterface: '@App\Service\VendorCrmService'
     App\ServiceInterface\VendorBillingServiceInterface: '@App\Service\VendorBillingService'
+    App\ServiceInterface\Observability\CorrelationContextInterface: '@App\Observability\Service\CorrelationContext'
+    App\ServiceInterface\Observability\MetricCollectorInterface: '@App\Observability\Service\ChainMetricCollector'
+    App\ServiceInterface\Observability\RuntimeLoggerInterface: '@App\Observability\Service\RuntimeLogger'
+    App\ServiceInterface\Traffic\WriteRateLimiterInterface: '@App\Service\Traffic\FileWriteRateLimiter'
+    App\ServiceInterface\CatalogMerchServiceInterface: '@App\Service\CatalogMerchService'
+    App\ServiceInterface\CatalogSyndicationMappingServiceInterface: '@App\Service\CatalogSyndicationMappingService'
+    App\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface: '@App\Service\CatalogSyndicationFallbackAwarePackageGateService'
+    App\ServiceInterface\CatalogSyndicationPolicyAwarePackageGateServiceInterface: '@App\Service\CatalogSyndicationPolicyAwarePackageGateService'
+    App\ServiceInterface\CatalogSyndicationGovernanceTrailServiceInterface: '@App\Service\CatalogSyndicationGovernanceTrailService'
+    App\ServiceInterface\CatalogDestinationMediaReadinessServiceInterface: '@App\Service\CatalogDestinationMediaReadinessService'
+    App\ServiceInterface\CatalogDestinationMediaFallbackServiceInterface: '@App\Service\CatalogDestinationMediaFallbackService'
+    App\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface: '@App\Service\CatalogDestinationMediaPolicyPreferenceService'
     App\ServiceInterface\VendorDocumentServiceInterface: '@App\Service\VendorDocumentService'
     App\ServiceInterface\VendorMediaServiceInterface: '@App\Service\VendorMediaService'
     App\ServiceInterface\VendorPassportServiceInterface: '@App\Service\VendorPassportService'
@@ -47,6 +59,10 @@ services:
     App\ServiceInterface\Ledger\VendorDoubleEntryServiceInterface: '@App\Service\Ledger\VendorDoubleEntryService'
     App\ServiceInterface\Ledger\VendorLedgerServiceInterface: '@App\Service\Ledger\VendorLedgerService'
     App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface: '@App\Service\Ops\VendorTransactionOperatorPageBuilder'
+    App\ServiceInterface\Category\CategoryApproxTotalServiceInterface: '@App\Service\Category\CategoryApproxTotalService'
+    App\ServiceInterface\Category\CategoryCollectionServiceInterface: '@App\Service\Category\CategoryCollectionService'
+    App\ServiceInterface\Category\CategoryRuleEngineInterface: '@App\Service\Category\Rule\CategoryRuleEngine'
+    App\ServiceInterface\Category\CategoryRuleSuggestServiceInterface: '@App\Service\Category\Suggest\CategoryRuleSuggestService'
     App\ServiceInterface\Search\TfidfSearchInterface: '@App\Service\Search\TfidfSearch'
     App\ServiceInterface\Sec\HmacInterface: '@App\Service\Sec\Hmac'
     App\ServiceInterface\Payout\VendorPayoutProviderServiceInterface: '@App\Service\Payout\VendorPayoutProviderService'
@@ -84,4 +100,20 @@ services:
     App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface: '@App\Service\Statement\VendorStatementRecipientProvider'
     App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface: '@App\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder'
     App\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface: '@App\Service\WebhooksConsumer\VendorWebhooksConsumerService'
+    App\PolicyInterface\CategorySyndicationMappingPolicyInterface: '@App\Policy\CategorySyndicationMappingPolicy'
+    App\PolicyInterface\CategorySyndicationFallbackAwarePackageGatePolicyInterface: '@App\Policy\CategorySyndicationFallbackAwarePackageGatePolicy'
+    App\PolicyInterface\CategorySyndicationPolicyAwarePackageGatePolicyInterface: '@App\Policy\CategorySyndicationPolicyAwarePackageGatePolicy'
+    App\PolicyInterface\CategorySyndicationGovernanceTrailPolicyInterface: '@App\Policy\CategorySyndicationGovernanceTrailPolicy'
+
+    App\Observability\Service\MetricEmitter:
+        public: false
+
+    App\Observability\Service\RuntimeMetricCollector:
+        public: false
+
+    App\Observability\Service\ChainMetricCollector:
+        arguments:
+            $collectors:
+                - '@App\Observability\Service\MetricEmitter'
+                - '@App\Observability\Service\RuntimeMetricCollector'
 #

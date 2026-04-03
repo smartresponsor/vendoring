@@ -6,12 +6,15 @@ namespace App\Tests\Unit\Payout;
 
 use App\DTO\Payout\CreatePayoutDTO;
 use App\Entity\Ledger\LedgerEntry;
+use App\Observability\Service\CorrelationContext;
 use App\Observability\Service\MetricEmitter;
+use App\Observability\Service\RuntimeLogger;
 use App\Service\Ledger\VendorLedgerService;
 use App\Service\Payout\VendorPayoutService;
 use App\Tests\Support\Payout\InMemoryPayoutRepository;
 use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 final class VendorPayoutServiceTest extends TestCase
 {
@@ -21,7 +24,7 @@ final class VendorPayoutServiceTest extends TestCase
         $ledgerRepository = new InMemoryLedgerEntryRepository();
         $ledgerService = new VendorLedgerService($ledgerRepository);
         $metrics = new MetricEmitter();
-        $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics);
+        $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger());
         $ledgerRepository->insert(new LedgerEntry('1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 5.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
 
         $result = $service->create(new CreatePayoutDTO('vendor-1', 'USD', 1000, 0.05));
@@ -37,7 +40,7 @@ final class VendorPayoutServiceTest extends TestCase
         $ledgerRepository = new InMemoryLedgerEntryRepository();
         $ledgerService = new VendorLedgerService($ledgerRepository);
         $metrics = new MetricEmitter();
-        $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics);
+        $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger());
         $ledgerRepository->insert(new LedgerEntry('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 15.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
 
         $payoutId = $service->create(new CreatePayoutDTO('vendor-1', 'USD', 1000, 0.10));
@@ -77,5 +80,10 @@ final class VendorPayoutServiceTest extends TestCase
             ],
             $metrics->snapshot(),
         );
+    }
+
+    private function runtimeLogger(): RuntimeLogger
+    {
+        return new RuntimeLogger(new CorrelationContext(), new RequestStack());
     }
 }

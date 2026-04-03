@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service\Category;
@@ -8,7 +9,7 @@ use App\ServiceInterface\Category\CategoryApproxTotalServiceInterface;
 
 final class CategoryApproxTotalService implements CategoryApproxTotalServiceInterface
 {
-    public function __construct(private string $file)
+    public function __construct(private string $file = '')
     {
     }
 

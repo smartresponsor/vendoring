@@ -9,6 +9,7 @@ use App\ValueObject\VendorTransactionErrorCode;
 
 final class VendorTransactionAmountPolicy implements VendorTransactionAmountPolicyInterface
 {
+    // Stable validation surface: amount_not_numeric, amount_not_positive.
     public function normalize(string $amount): string
     {
         $normalized = trim($amount);

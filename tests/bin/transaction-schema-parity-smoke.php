@@ -15,8 +15,8 @@ if (!str_contains($entity, 'idx_vendor_transaction_vendor_created')) {
     exit(1);
 }
 
-if (!str_contains($entity, 'uniq_vendor_transaction_vendor_order_project')) {
-    fwrite(STDERR, "VendorTransaction entity must declare vendor/order/project unique metadata.\n");
+if (str_contains($entity, 'uniqueConstraints')) {
+    fwrite(STDERR, "VendorTransaction entity must not declare misleading full uniqueConstraints metadata.\n");
     exit(1);
 }
 

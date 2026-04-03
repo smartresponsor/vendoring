@@ -1,10 +1,11 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use App\Entity\Vendor\VendorTransaction;
+use App\Entity\VendorTransaction;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -18,7 +19,7 @@ final class VendorTransactionDemoFixture extends Fixture
         $statuses = ['pending', 'authorized', 'captured', 'refunded'];
 
         for ($index = 1; $index <= 30; ++$index) {
-            $vendorId = $faker->randomElement($vendorIds);
+            $vendorId = self::stringValue($faker->randomElement($vendorIds));
             $transaction = new VendorTransaction(
                 vendorId: $vendorId,
                 orderId: sprintf('order-%s', $faker->unique()->numerify('#####')),
@@ -26,10 +27,15 @@ final class VendorTransactionDemoFixture extends Fixture
                 amount: (string) $faker->randomFloat(2, 10, 1500),
             );
 
-            $transaction->setStatus($faker->randomElement($statuses));
+            $transaction->setStatus(self::stringValue($faker->randomElement($statuses)));
             $manager->persist($transaction);
         }
 
         $manager->flush();
+    }
+
+    private static function stringValue(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
     }
 }

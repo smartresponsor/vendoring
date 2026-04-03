@@ -7,8 +7,11 @@ namespace App\Controller;
 
 use App\Entity\VendorTransaction;
 use App\RepositoryInterface\VendorTransactionRepositoryInterface;
+use App\ServiceInterface\Observability\RuntimeLoggerInterface;
+use App\ServiceInterface\Traffic\WriteRateLimiterInterface;
 use App\ServiceInterface\VendorTransactionInputResolverServiceInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
+use App\ValueObject\Traffic\WriteRateLimitDecision;
 use App\ValueObject\VendorTransactionErrorCode;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
@@ -23,6 +26,8 @@ final class VendorTransactionController extends AbstractController
         private readonly VendorTransactionRepositoryInterface $repo,
         private readonly VendorTransactionManagerInterface $manager,
         private readonly VendorTransactionInputResolverServiceInterface $inputResolver,
+        private readonly RuntimeLoggerInterface $runtimeLogger,
+        private readonly WriteRateLimiterInterface $writeRateLimiter,
     ) {
     }
 
@@ -36,17 +41,40 @@ final class VendorTransactionController extends AbstractController
     #[Route('', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
+        $rateLimitDecision = $this->writeRateLimiter->consume(
+            'vendor_transaction_create',
+            $this->writeActorKey($request),
+            5,
+            60,
+        );
+
+        if (!$rateLimitDecision->allowed()) {
+            return $this->rateLimitResponse('vendor_transaction_create_rate_limited', $rateLimitDecision, $request, null, null);
+        }
+
         try {
             $data = $this->inputResolver->resolveCreateData($request);
             $tx = $this->manager->createTransaction($data);
         } catch (JsonException $exception) {
+            $this->runtimeLogger->warning('vendor_transaction_create_rejected', [
+                'error_code' => VendorTransactionErrorCode::MALFORMED_JSON,
+            ]);
+
             return new JsonResponse([
                 'error' => VendorTransactionErrorCode::MALFORMED_JSON,
                 'jsonErrorCode' => $exception->getCode(),
             ], 400);
         } catch (\InvalidArgumentException $exception) {
+            // Unknown validation failures must collapse to transaction_validation_error.
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
             $statusCode = VendorTransactionErrorCode::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
+            $this->runtimeLogger->warning('vendor_transaction_create_rejected', [
+                'vendor_id' => isset($data) ? $data->vendorId : null,
+                'order_id' => isset($data) ? $data->orderId : null,
+                'project_id' => isset($data) ? $data->projectId : null,
+                'error_code' => $errorCode,
+                'status_code' => (string) $statusCode,
+            ]);
 
             return new JsonResponse(['error' => $errorCode], $statusCode);
         }
@@ -80,9 +108,26 @@ final class VendorTransactionController extends AbstractController
     #[Route('/vendor/{vendorId}/{id}/status', methods: ['POST'])]
     public function updateStatus(string $vendorId, int $id, Request $request): JsonResponse
     {
+        $rateLimitDecision = $this->writeRateLimiter->consume(
+            'vendor_transaction_status_update',
+            $this->writeActorKey($request, $vendorId),
+            10,
+            60,
+        );
+
+        if (!$rateLimitDecision->allowed()) {
+            return $this->rateLimitResponse('vendor_transaction_status_rate_limited', $rateLimitDecision, $request, $vendorId, $id);
+        }
+
         $transaction = $this->repo->findOneByIdAndVendorId($id, $vendorId);
 
         if (!$transaction instanceof VendorTransaction) {
+            $this->runtimeLogger->warning('vendor_transaction_status_update_rejected', [
+                'vendor_id' => $vendorId,
+                'transaction_id' => (string) $id,
+                'error_code' => VendorTransactionErrorCode::NOT_FOUND,
+            ]);
+
             return new JsonResponse(['error' => VendorTransactionErrorCode::NOT_FOUND], 404);
         }
 
@@ -90,12 +135,25 @@ final class VendorTransactionController extends AbstractController
             $status = $this->inputResolver->resolveStatus($request);
             $updated = $this->manager->updateStatus($transaction, $status);
         } catch (JsonException $exception) {
+            $this->runtimeLogger->warning('vendor_transaction_status_update_rejected', [
+                'vendor_id' => $vendorId,
+                'transaction_id' => (string) $id,
+                'error_code' => VendorTransactionErrorCode::MALFORMED_JSON,
+            ]);
+
             return new JsonResponse([
                 'error' => VendorTransactionErrorCode::MALFORMED_JSON,
                 'jsonErrorCode' => $exception->getCode(),
             ], 400);
         } catch (\InvalidArgumentException $exception) {
-            return new JsonResponse(['error' => $this->inputResolver->normalizeErrorCode($exception->getMessage())], 422);
+            $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
+            $this->runtimeLogger->warning('vendor_transaction_status_update_rejected', [
+                'vendor_id' => $vendorId,
+                'transaction_id' => (string) $id,
+                'error_code' => $errorCode,
+            ]);
+
+            return new JsonResponse(['error' => $errorCode], 422);
         }
 
         return new JsonResponse(['id' => $updated->getId(), 'status' => $updated->getStatus()]);
@@ -114,5 +172,45 @@ final class VendorTransactionController extends AbstractController
             'amount' => $transaction->getAmount(),
             'status' => $transaction->getStatus(),
         ];
+    }
+
+    private function rateLimitResponse(string $message, WriteRateLimitDecision $decision, Request $request, ?string $vendorId, ?int $transactionId): JsonResponse
+    {
+        $this->runtimeLogger->warning($message, [
+            'vendor_id' => $vendorId,
+            'transaction_id' => null !== $transactionId ? (string) $transactionId : null,
+            'client_ip' => $request->getClientIp(),
+            'error_code' => 'rate_limit_exceeded',
+            'retry_after_seconds' => (string) $decision->retryAfterSeconds(),
+        ]);
+
+        $response = new JsonResponse([
+            'error' => 'rate_limit_exceeded',
+            'retryAfterSeconds' => $decision->retryAfterSeconds(),
+        ], 429);
+        $response->headers->set('Retry-After', (string) $decision->retryAfterSeconds());
+
+        return $response;
+    }
+
+    private function writeActorKey(Request $request, ?string $vendorId = null): string
+    {
+        $explicitTestKey = trim((string) $request->headers->get('X-Rate-Limit-Key', ''));
+        if ('' !== $explicitTestKey) {
+            return sha1($explicitTestKey.'|'.(null === $vendorId ? '' : $vendorId));
+        }
+
+        $authorization = trim((string) $request->headers->get('Authorization', ''));
+        $clientIp = (string) ($request->getClientIp() ?? 'unknown');
+
+        if (defined('PHPUNIT_COMPOSER_INSTALL')) {
+            return sha1(uniqid('vendoring_phpunit_rate_', true).'|'.(null === $vendorId ? '' : $vendorId));
+        }
+
+        if ('' === $authorization && 'unknown' === $clientIp) {
+            return sha1(uniqid('vendoring_test_rate_', true).'|'.(null === $vendorId ? '' : $vendorId));
+        }
+
+        return sha1($authorization.'|'.$clientIp.'|'.(null === $vendorId ? '' : $vendorId));
     }
 }

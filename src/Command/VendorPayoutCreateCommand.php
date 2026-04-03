@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Command;
@@ -46,7 +47,7 @@ final class VendorPayoutCreateCommand extends Command
             'retentionFeePercent' => $input->getOption('retentionFeePercent'),
         ];
 
-        $format = (string) $input->getOption('format');
+        $format = self::stringValue($input->getOption('format'));
 
         try {
             $dto = $this->requestService->toCreateDto($payload);
@@ -82,15 +83,25 @@ final class VendorPayoutCreateCommand extends Command
 
         $output->writeln(sprintf(
             'PAYOUT_CREATED id=%s vendorId=%s currency=%s grossCents=%d feeCents=%d netCents=%d status=%s',
-            $normalized['id'],
-            $normalized['vendorId'],
-            $normalized['currency'],
-            $normalized['grossCents'],
-            $normalized['feeCents'],
-            $normalized['netCents'],
-            $normalized['status'],
+            self::stringValue($normalized['id'] ?? null),
+            self::stringValue($normalized['vendorId'] ?? null),
+            self::stringValue($normalized['currency'] ?? null),
+            self::intValue($normalized['grossCents'] ?? null),
+            self::intValue($normalized['feeCents'] ?? null),
+            self::intValue($normalized['netCents'] ?? null),
+            self::stringValue($normalized['status'] ?? null),
         ));
 
         return Command::SUCCESS;
+    }
+
+    private static function stringValue(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
+    }
+
+    private static function intValue(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
     }
 }

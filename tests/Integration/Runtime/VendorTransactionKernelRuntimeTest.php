@@ -101,4 +101,33 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
             KernelRuntimeHarness::cleanupRuntimeState($kernel);
         }
     }
+
+    public function testKernelRuntimePropagatesCorrelationHeader(): void
+    {
+        if (!extension_loaded('pdo_sqlite')) {
+            self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
+        }
+
+        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+
+        try {
+            $response = KernelRuntimeHarness::requestJson(
+                $kernel,
+                'POST',
+                '/api/vendor-transactions',
+                [
+                    'vendorId' => 'vendor-2',
+                    'orderId' => 'order-2',
+                    'projectId' => null,
+                    'amount' => '20.00',
+                ],
+                ['X-Correlation-ID' => 'corr-runtime-001'],
+            );
+
+            self::assertSame(201, $response->getStatusCode());
+            self::assertSame('corr-runtime-001', $response->headers->get('X-Correlation-ID'));
+        } finally {
+            KernelRuntimeHarness::cleanupRuntimeState($kernel);
+        }
+    }
 }

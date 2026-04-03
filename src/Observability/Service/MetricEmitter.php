@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Observability\Service;
 
-final class MetricEmitter
+use App\ServiceInterface\Observability\MetricCollectorInterface;
+
+final class MetricEmitter implements MetricCollectorInterface
 {
     /**
      * @var list<array{name:string,tags:array<string,string>}>

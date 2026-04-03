@@ -1,12 +1,15 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Command;
 
 use App\Command\VendorPayoutCreateCommand;
-use App\Entity\Vendor\Ledger\LedgerEntry;
+use App\Entity\Ledger\LedgerEntry;
+use App\Observability\Service\CorrelationContext;
 use App\Observability\Service\MetricEmitter;
+use App\Observability\Service\RuntimeLogger;
 use App\Service\Ledger\VendorLedgerService;
 use App\Service\Payout\VendorPayoutRequestService;
 use App\Service\Payout\VendorPayoutService;
@@ -14,6 +17,7 @@ use App\Tests\Support\Payout\InMemoryPayoutRepository;
 use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 final class VendorPayoutCreateCommandTest extends TestCase
 {
@@ -28,7 +32,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $command = new VendorPayoutCreateCommand(
             new VendorPayoutRequestService(),
-            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics),
+            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger()),
             $payoutRepository,
         );
 
@@ -57,7 +61,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $command = new VendorPayoutCreateCommand(
             new VendorPayoutRequestService(),
-            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics),
+            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger()),
             $payoutRepository,
         );
 
@@ -82,7 +86,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $command = new VendorPayoutCreateCommand(
             new VendorPayoutRequestService(),
-            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics),
+            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger()),
             $payoutRepository,
         );
 
@@ -108,7 +112,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $command = new VendorPayoutCreateCommand(
             new VendorPayoutRequestService(),
-            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics),
+            new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger()),
             $payoutRepository,
         );
 
@@ -125,5 +129,10 @@ final class VendorPayoutCreateCommandTest extends TestCase
         self::assertStringContainsString('"vendorId": "vendor-1"', $tester->getDisplay());
         self::assertStringContainsString('"currency": "USD"', $tester->getDisplay());
         self::assertStringContainsString('"status": "pending"', $tester->getDisplay());
+    }
+
+    private function runtimeLogger(): RuntimeLogger
+    {
+        return new RuntimeLogger(new CorrelationContext(), new RequestStack());
     }
 }

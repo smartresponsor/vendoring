@@ -13,6 +13,18 @@ final class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
+    public function getCacheDir(): string
+    {
+        if ('1' === ($_ENV['VENDOR_RUNTIME_HARNESS'] ?? $_SERVER['VENDOR_RUNTIME_HARNESS'] ?? null)) {
+            $projectHash = substr(sha1($this->getProjectDir()), 0, 12);
+            $processId = (string) getmypid();
+
+            return sys_get_temp_dir().sprintf('/vendoring_kernel_%s_%s_%s', $this->environment, $projectHash, $processId);
+        }
+
+        return parent::getCacheDir();
+    }
+
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $configDir = $this->getProjectDir().'/config';

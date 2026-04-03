@@ -9,10 +9,11 @@ namespace App\Service\Payout;
 use App\DTO\Ledger\LedgerEntryDTO;
 use App\DTO\Payout\CreatePayoutDTO;
 use App\Entity\Payout\Payout;
-use App\Observability\Service\MetricEmitter;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
 use App\ServiceInterface\Ledger\VendorLedgerServiceInterface;
+use App\ServiceInterface\Observability\MetricCollectorInterface;
+use App\ServiceInterface\Observability\RuntimeLoggerInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -22,7 +23,8 @@ final class VendorPayoutService implements VendorPayoutServiceInterface
         private readonly PayoutRepositoryInterface $repo,
         private readonly LedgerEntryRepositoryInterface $ledgerRepo,
         private readonly VendorLedgerServiceInterface $ledger,
-        private readonly MetricEmitter $metrics,
+        private readonly MetricCollectorInterface $metrics,
+        private readonly RuntimeLoggerInterface $runtimeLogger,
     ) {
     }
 
@@ -40,6 +42,13 @@ final class VendorPayoutService implements VendorPayoutServiceInterface
         $balanceCents = $cur ? $cur->balanceCents : 0;
 
         if ($balanceCents < $dto->thresholdCents) {
+            $this->runtimeLogger->info('vendor_payout_skipped_insufficient_balance', [
+                'vendor_id' => $dto->vendorId,
+                'currency' => $dto->currency,
+                'balance_cents' => (string) $balanceCents,
+                'threshold_cents' => (string) $dto->thresholdCents,
+            ]);
+
             return null; // недостаточно средств для выплаты
         }
 
@@ -75,6 +84,13 @@ final class VendorPayoutService implements VendorPayoutServiceInterface
         ));
 
         $this->metrics->increment('payout_created_total', ['currency' => $dto->currency]);
+        $this->runtimeLogger->info('vendor_payout_created', [
+            'vendor_id' => $dto->vendorId,
+            'payout_id' => $pid,
+            'currency' => $dto->currency,
+            'gross_cents' => (string) $balanceCents,
+            'net_cents' => (string) $net,
+        ]);
 
         return $pid;
     }
@@ -83,6 +99,11 @@ final class VendorPayoutService implements VendorPayoutServiceInterface
     {
         $p = $this->repo->byId($payoutId);
         if (!$p || 'pending' !== $p->status) {
+            $this->runtimeLogger->warning('vendor_payout_process_rejected', [
+                'payout_id' => $payoutId,
+                'error_code' => 'payout_not_pending',
+            ]);
+
             return false;
         }
 
@@ -113,6 +134,12 @@ final class VendorPayoutService implements VendorPayoutServiceInterface
 
         $this->repo->markProcessed($payoutId, (new \DateTimeImmutable())->format('Y-m-d H:i:s'));
         $this->metrics->increment('payout_processed_total', ['currency' => $p->currency]);
+        $this->runtimeLogger->info('vendor_payout_processed', [
+            'vendor_id' => $p->vendorId,
+            'payout_id' => $payoutId,
+            'currency' => $p->currency,
+            'net_cents' => (string) $p->netCents,
+        ]);
 
         return true;
     }

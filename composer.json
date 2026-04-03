@@ -40,7 +40,9 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "App\\Tests\\": "tests/"
+      "App\\Tests\\": "tests/",
+      "Doctrine\\Bundle\\FixturesBundle\\": "stubs/Doctrine/Bundle/FixturesBundle/",
+      "Faker\\": "stubs/Faker/"
     }
   },
   "config": {

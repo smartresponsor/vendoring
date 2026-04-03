@@ -5,10 +5,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Statement;
 
+use App\Observability\Service\CorrelationContext;
 use App\Observability\Service\MetricEmitter;
+use App\Observability\Service\RuntimeLogger;
 use App\Service\Statement\VendorStatementMailerService;
 use App\Tests\Support\Statement\FakeMailer;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\RawMessage;
@@ -19,7 +22,7 @@ final class VendorStatementMailerServiceTest extends TestCase
     {
         $mailer = new FakeMailer();
         $metrics = new MetricEmitter();
-        $service = new VendorStatementMailerService($mailer, $metrics);
+        $service = new VendorStatementMailerService($mailer, $metrics, $this->runtimeLogger());
         $pdf = tempnam(sys_get_temp_dir(), 'statement-mail-');
         self::assertNotFalse($pdf);
         file_put_contents($pdf, 'pdf');
@@ -39,7 +42,7 @@ final class VendorStatementMailerServiceTest extends TestCase
     {
         $mailer = new FakeMailer();
         $metrics = new MetricEmitter();
-        $service = new VendorStatementMailerService($mailer, $metrics);
+        $service = new VendorStatementMailerService($mailer, $metrics, $this->runtimeLogger());
 
         $result = $service->send('tenant-1', 'vendor-1', 'not-an-email', '/tmp/missing.pdf', 'March 2026');
 
@@ -53,7 +56,7 @@ final class VendorStatementMailerServiceTest extends TestCase
     {
         $mailer = new FakeMailer(true);
         $metrics = new MetricEmitter();
-        $service = new VendorStatementMailerService($mailer, $metrics);
+        $service = new VendorStatementMailerService($mailer, $metrics, $this->runtimeLogger());
 
         $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
 
@@ -78,11 +81,16 @@ final class VendorStatementMailerServiceTest extends TestCase
         };
 
         $metrics = new MetricEmitter();
-        $service = new VendorStatementMailerService($mailer, $metrics);
+        $service = new VendorStatementMailerService($mailer, $metrics, $this->runtimeLogger());
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('unexpected mailer state');
 
         $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
+    }
+
+    private function runtimeLogger(): RuntimeLogger
+    {
+        return new RuntimeLogger(new CorrelationContext(), new RequestStack());
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Policy;
 
 use App\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
+use App\ValueObject\VendorTransactionErrorCode;
 use App\ValueObject\VendorTransactionStatus;
 
 final class VendorTransactionStatusPolicy implements VendorTransactionStatusPolicyInterface
@@ -24,6 +25,16 @@ final class VendorTransactionStatusPolicy implements VendorTransactionStatusPoli
     public function normalize(string $status): string
     {
         return strtolower(trim($status));
+    }
+
+    public function requiredStatusErrorCode(): string
+    {
+        return VendorTransactionErrorCode::STATUS_REQUIRED;
+    }
+
+    public function invalidTransitionErrorCode(): string
+    {
+        return VendorTransactionErrorCode::INVALID_STATUS_TRANSITION;
     }
 
     public function canTransition(string $fromStatus, string $toStatus): bool

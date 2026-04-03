@@ -5,7 +5,8 @@ declare(strict_types=1);
 
 namespace App\Service\Statement;
 
-use App\Observability\Service\MetricEmitter;
+use App\ServiceInterface\Observability\MetricCollectorInterface;
+use App\ServiceInterface\Observability\RuntimeLoggerInterface;
 use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -15,7 +16,8 @@ final class VendorStatementMailerService implements VendorStatementMailerService
 {
     public function __construct(
         private readonly MailerInterface $mailer,
-        private readonly MetricEmitter $metrics,
+        private readonly MetricCollectorInterface $metrics,
+        private readonly RuntimeLoggerInterface $runtimeLogger,
     ) {
     }
 
@@ -36,6 +38,12 @@ final class VendorStatementMailerService implements VendorStatementMailerService
             $this->metrics->increment('statement_mail_invalid_email_total', [
                 'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
+            ]);
+            $this->runtimeLogger->warning('vendor_statement_mail_rejected', [
+                'tenant_id' => $tenantId,
+                'vendor_id' => $vendorId,
+                'email' => $email,
+                'error_code' => 'statement_mail_invalid_email',
             ]);
 
             $result['message'] = 'statement_mail_invalid_email';
@@ -61,6 +69,11 @@ final class VendorStatementMailerService implements VendorStatementMailerService
                 'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
             ]);
+            $this->runtimeLogger->warning('vendor_statement_mail_attachment_missing', [
+                'tenant_id' => $tenantId,
+                'vendor_id' => $vendorId,
+                'pdf_path' => $pdfPath,
+            ]);
         }
 
         try {
@@ -70,6 +83,13 @@ final class VendorStatementMailerService implements VendorStatementMailerService
                 'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
                 'errorClass' => $exception::class,
+            ]);
+            $this->runtimeLogger->error('vendor_statement_mail_failed', [
+                'tenant_id' => $tenantId,
+                'vendor_id' => $vendorId,
+                'email' => $email,
+                'error_class' => $exception::class,
+                'error_code' => 'statement_mail_send_failed',
             ]);
 
             $result['attached'] = $attached;
@@ -84,6 +104,12 @@ final class VendorStatementMailerService implements VendorStatementMailerService
         $this->metrics->increment('statement_mail_sent_total', [
             'tenantId' => $tenantId,
             'vendorId' => $vendorId,
+        ]);
+        $this->runtimeLogger->info('vendor_statement_mail_sent', [
+            'tenant_id' => $tenantId,
+            'vendor_id' => $vendorId,
+            'email' => $email,
+            'attached' => $attached,
         ]);
 
         return [

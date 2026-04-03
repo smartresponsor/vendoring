@@ -58,6 +58,7 @@ final class EntryPointConstructorContractTest extends TestCase
                 'Doctrine\\Persistence\\ManagerRegistry',
                 'Psr\\Log\\LoggerInterface',
                 'Symfony\\Component\\Mailer\\MailerInterface',
+                'Symfony\\Component\\HttpFoundation\\RequestStack',
                 'Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface',
             ], true);
 

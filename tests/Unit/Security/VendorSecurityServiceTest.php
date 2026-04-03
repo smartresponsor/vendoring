@@ -1,11 +1,12 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Security;
 
-use App\Entity\Vendor\Vendor;
-use App\Entity\Vendor\VendorApiKey;
+use App\Entity\Vendor;
+use App\Entity\VendorApiKey;
 use App\Service\VendorSecurityService;
 use App\ServiceInterface\VendorApiKeyServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -22,7 +23,7 @@ final class VendorSecurityServiceTest extends TestCase
 
     public function testCreateKeyDelegatesToApiKeyService(): void
     {
-        $vendor = $this->createMock(Vendor::class);
+        $vendor = new Vendor('Vendor A');
         $service = new VendorSecurityService($this->apiKeyService);
 
         $this->apiKeyService
@@ -36,7 +37,7 @@ final class VendorSecurityServiceTest extends TestCase
 
     public function testRotateKeyDelegatesToApiKeyService(): void
     {
-        $existingKey = $this->createMock(VendorApiKey::class);
+        $existingKey = new VendorApiKey(new Vendor('Vendor A'), 'hash', 'read:transactions');
         $service = new VendorSecurityService($this->apiKeyService);
 
         $this->apiKeyService
@@ -50,7 +51,7 @@ final class VendorSecurityServiceTest extends TestCase
 
     public function testRevokeKeyDelegatesToApiKeyService(): void
     {
-        $key = $this->createMock(VendorApiKey::class);
+        $key = new VendorApiKey(new Vendor('Vendor A'), 'hash', 'read:transactions');
         $service = new VendorSecurityService($this->apiKeyService);
 
         $this->apiKeyService
@@ -63,7 +64,7 @@ final class VendorSecurityServiceTest extends TestCase
 
     public function testValidateTokenDelegatesToApiKeyService(): void
     {
-        $vendor = $this->createMock(Vendor::class);
+        $vendor = new Vendor('Vendor A');
         $service = new VendorSecurityService($this->apiKeyService);
 
         $this->apiKeyService
@@ -77,7 +78,7 @@ final class VendorSecurityServiceTest extends TestCase
 
     public function testResolveVendorFromAuthHeaderDelegatesToApiKeyService(): void
     {
-        $vendor = $this->createMock(Vendor::class);
+        $vendor = new Vendor('Vendor A');
         $service = new VendorSecurityService($this->apiKeyService);
 
         $this->apiKeyService

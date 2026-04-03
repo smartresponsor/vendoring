@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Transaction;
 
 use App\Entity\VendorTransaction;
+use App\Observability\Service\CorrelationContext;
+use App\Observability\Service\RuntimeLogger;
 use App\Service\Policy\VendorTransactionAmountPolicy;
 use App\Service\Policy\VendorTransactionStatusPolicy;
 use App\Service\VendorTransactionManager;
@@ -13,6 +15,7 @@ use App\Tests\Support\Transaction\DoctrineEntityManagerFactory;
 use App\ValueObject\VendorTransactionData;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class VendorTransactionSqliteIntegrationTest extends TestCase
@@ -48,6 +51,7 @@ final class VendorTransactionSqliteIntegrationTest extends TestCase
             new VendorTransactionStatusPolicy(),
             new VendorTransactionAmountPolicy(),
             $repository,
+            new RuntimeLogger(new CorrelationContext(), new RequestStack()),
         );
 
         $created = $manager->createTransaction(new VendorTransactionData('vendor-1', 'order-1', null, '10.50'));
