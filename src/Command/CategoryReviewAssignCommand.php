@@ -12,6 +12,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * CLI entrypoint for assigning category review requests to a reviewer.
+ *
+ * This command is write-side: it delegates to the catalog review assignment service and renders the
+ * resulting assignment payload as JSON. Invalid input is reported as console failure without
+ * exposing an internal stack trace.
+ */
 #[AsCommand(name: 'app:category:review:assign', description: 'Assign a category change request for review')]
 final class CategoryReviewAssignCommand extends Command
 {
@@ -20,6 +27,9 @@ final class CategoryReviewAssignCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Configure required CLI arguments and optional assignment priority.
+     */
     protected function configure(): void
     {
         $this
@@ -29,6 +39,15 @@ final class CategoryReviewAssignCommand extends Command
             ->addOption('priority', null, InputOption::VALUE_OPTIONAL, 'Assignment priority', 'medium');
     }
 
+    /**
+     * Assign the requested category review and render the resulting payload as JSON.
+     *
+     * @param InputInterface  $input  Console input carrying request, reviewer, assigner, and priority.
+     * @param OutputInterface $output Console output that receives either JSON payload or a validation error.
+     *
+     * @return int `Command::SUCCESS` when the assignment is created, otherwise `Command::FAILURE` for
+     *             invalid input detected by the underlying assignment service.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
@@ -49,6 +68,13 @@ final class CategoryReviewAssignCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * Normalize a console argument into a scalar string representation.
+     *
+     * @param mixed $value Raw console argument value.
+     *
+     * @return string Scalar string value or an empty string when the raw value is not scalar.
+     */
     private static function stringArgument(mixed $value): string
     {
         return is_scalar($value) ? (string) $value : '';
