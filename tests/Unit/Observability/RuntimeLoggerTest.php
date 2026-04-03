@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Observability;
 
 use App\Observability\Service\CorrelationContext;
+use App\Observability\Service\FileObservabilityRecordExporter;
 use App\Observability\Service\RuntimeLogger;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,5 +42,36 @@ final class RuntimeLoggerTest extends TestCase
         self::assertSame('duplicate_transaction', $records[0]['error_code']);
         self::assertSame('409', $records[0]['status_code']);
         self::assertArrayHasKey('timestamp', $records[0]);
+    }
+
+    public function testRuntimeLoggerExportsStructuredRecordIntoFileBackend(): void
+    {
+        $requestStack = new RequestStack();
+        $request = Request::create('/api/vendor-transactions');
+        $request->attributes->set('_route', 'app_vendor_transaction_create');
+        $requestStack->push($request);
+
+        $correlationContext = new CorrelationContext();
+        $correlationContext->beginRequest('corr-log-1');
+
+        $dir = sys_get_temp_dir().'/vendoring-logs-'.bin2hex(random_bytes(4));
+        $exporter = new FileObservabilityRecordExporter($dir);
+
+        $logger = new RuntimeLogger($correlationContext, $requestStack, $exporter);
+        $logger->info('vendor_transaction_created', ['vendor_id' => 'vendor-1']);
+
+        $path = $dir.'/runtime_logs.ndjson';
+
+        self::assertFileExists($path);
+        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        self::assertIsArray($lines);
+        self::assertCount(1, $lines);
+
+        /** @var array<string,mixed> $payload */
+        $payload = json_decode((string) $lines[0], true, flags: JSON_THROW_ON_ERROR);
+
+        self::assertSame('vendor_transaction_created', $payload['message']);
+        self::assertSame('corr-log-1', $payload['correlation_id']);
+        self::assertSame('vendor-1', $payload['vendor_id']);
     }
 }

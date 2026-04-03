@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Observability\Service;
 
 use App\ServiceInterface\Observability\CorrelationContextInterface;
+use App\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
 use App\ServiceInterface\Observability\RuntimeLoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,6 +27,7 @@ final class RuntimeLogger implements RuntimeLoggerInterface
     public function __construct(
         private readonly CorrelationContextInterface $correlationContext,
         private readonly RequestStack $requestStack,
+        private readonly ?ObservabilityRecordExporterInterface $exporter = null,
     ) {
     }
 
@@ -90,6 +92,10 @@ final class RuntimeLogger implements RuntimeLoggerInterface
         }
 
         $this->records[] = $record;
+
+        if ($this->exporter instanceof ObservabilityRecordExporterInterface) {
+            $this->exporter->export('runtime_logs', $record);
+        }
 
         $environment = (string) ($_ENV['APP_ENV'] ?? $_SERVER['APP_ENV'] ?? 'dev');
         if ('test' === $environment) {

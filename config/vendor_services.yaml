@@ -4,6 +4,7 @@ imports:
 parameters:
     vendoring_secret: 'vendoring-dev-secret'
     vendoring_feature_flags: { }
+    vendoring_observability_dir: '%kernel.project_dir%/var/observability'
 
 services:
     _defaults:
@@ -42,6 +43,7 @@ services:
     App\ServiceInterface\Security\VendorAccessResolverInterface: '@App\Service\Security\VendorAccessResolver'
     App\ServiceInterface\VendorBillingServiceInterface: '@App\Service\VendorBillingService'
     App\ServiceInterface\Observability\CorrelationContextInterface: '@App\Observability\Service\CorrelationContext'
+    App\ServiceInterface\Observability\ObservabilityRecordExporterInterface: '@App\Observability\Service\FileObservabilityRecordExporter'
     App\ServiceInterface\Observability\MetricCollectorInterface: '@App\Observability\Service\ChainMetricCollector'
     App\ServiceInterface\Observability\RuntimeLoggerInterface: '@App\Observability\Service\RuntimeLogger'
     App\ServiceInterface\Traffic\WriteRateLimiterInterface: '@App\Service\Traffic\FileWriteRateLimiter'
@@ -109,6 +111,11 @@ services:
     App\PolicyInterface\CategorySyndicationFallbackAwarePackageGatePolicyInterface: '@App\Policy\CategorySyndicationFallbackAwarePackageGatePolicy'
     App\PolicyInterface\CategorySyndicationPolicyAwarePackageGatePolicyInterface: '@App\Policy\CategorySyndicationPolicyAwarePackageGatePolicy'
     App\PolicyInterface\CategorySyndicationGovernanceTrailPolicyInterface: '@App\Policy\CategorySyndicationGovernanceTrailPolicy'
+
+
+    App\Observability\Service\FileObservabilityRecordExporter:
+        arguments:
+            $observabilityDir: '%vendoring_observability_dir%'
 
     App\Observability\Service\MetricEmitter:
         public: false

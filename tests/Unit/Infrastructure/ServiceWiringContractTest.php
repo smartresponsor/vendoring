@@ -13,6 +13,7 @@ use App\Repository\VendorMediaRepository;
 use App\Repository\VendorPassportRepository;
 use App\Repository\VendorProfileRepository;
 use App\Repository\VendorRepository;
+use App\Observability\Service\FileObservabilityRecordExporter;
 use App\Service\Metric\VendorMetricService;
 use App\Service\Security\VendorAccessResolver;
 use App\Service\Security\VendorAuthorizationMatrix;
@@ -46,6 +47,7 @@ final class ServiceWiringContractTest extends TestCase
         yield 'payout_repository' => ['App\\RepositoryInterface\\Payout\\PayoutRepositoryInterface', PayoutRepository::class];
         yield 'payout_account_repository' => ['App\\RepositoryInterface\\Payout\\PayoutAccountRepositoryInterface', PayoutAccountRepository::class];
         yield 'vendor_security_service' => ['App\\ServiceInterface\\VendorSecurityServiceInterface', VendorSecurityService::class];
+        yield 'observability_record_exporter' => ['App\ServiceInterface\Observability\ObservabilityRecordExporterInterface', FileObservabilityRecordExporter::class];
         yield 'vendor_transaction_manager' => ['App\\ServiceInterface\\VendorTransactionManagerInterface', VendorTransactionManager::class];
         yield 'vendor_metric_service' => ['App\\ServiceInterface\\Metric\\VendorMetricServiceInterface', VendorMetricService::class];
         yield 'payout_service' => ['App\\ServiceInterface\\Payout\\VendorPayoutServiceInterface', VendorPayoutService::class];
