@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly SCRIPT_PATH="$(readlink -f "$0")"
+
+candidate_paths() {
+  printf '%s\n' \
+    "${HOME:-}/.local/bin/chromedriver" \
+    /snap/bin/chromium.chromedriver \
+    /usr/bin/chromedriver \
+    /usr/lib/chromium/chromedriver \
+    /usr/lib/chromium-browser/chromedriver
+}
+
+resolve_chromedriver() {
+  local command_path
+  command_path="$(command -v chromedriver 2>/dev/null || true)"
+  if [[ -n "$command_path" && "$(readlink -f "$command_path")" != "$SCRIPT_PATH" ]]; then
+    printf '%s\n' "$command_path"
+    return 0
+  fi
+
+  while IFS= read -r candidate; do
+    if [[ -x "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done < <(candidate_paths)
+
+  return 1
+}
+
+if resolved_binary="$(resolve_chromedriver)"; then
+  exec "$resolved_binary" "$@"
+fi
+
+echo "Unable to locate a chromedriver binary." >&2
+exit 127
