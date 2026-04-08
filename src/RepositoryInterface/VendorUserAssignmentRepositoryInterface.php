@@ -12,10 +12,19 @@ use Doctrine\Persistence\ObjectRepository;
  */
 interface VendorUserAssignmentRepositoryInterface extends ObjectRepository
 {
+    /**
+     * Persists the requested record.
+     */
     public function save(VendorUserAssignmentInterface $assignment, bool $flush = false): void;
 
+    /**
+     * Removes the requested persisted state.
+     */
     public function remove(VendorUserAssignmentInterface $assignment, bool $flush = false): void;
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findPrimaryForVendorId(int $vendorId): ?VendorUserAssignmentInterface;
 
     /**
@@ -28,5 +37,8 @@ interface VendorUserAssignmentRepositoryInterface extends ObjectRepository
      */
     public function findActiveByUserId(int $userId): array;
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?VendorUserAssignmentInterface;
 }

@@ -24,6 +24,9 @@ final class CanaryRolloutCoordinator implements CanaryRolloutCoordinatorInterfac
     ) {
     }
 
+    /**
+     * Evaluates the requested runtime decision.
+     */
     public function evaluate(string $flagName, ?string $tenantId = null, ?string $vendorId = null, int $windowSeconds = 900): array
     {
         $windowSeconds = max(1, $windowSeconds);

@@ -19,6 +19,9 @@ final class VendorAttachmentRepository extends ServiceEntityRepository implement
         parent::__construct($registry, VendorAttachment::class);
     }
 
+    /**
+     * Persists the requested record.
+     */
     public function save(VendorAttachment $vendorAttachment, bool $flush = false): void
     {
         $this->getEntityManager()->persist($vendorAttachment);
@@ -28,6 +31,9 @@ final class VendorAttachmentRepository extends ServiceEntityRepository implement
         }
     }
 
+    /**
+     * Removes the requested persisted state.
+     */
     public function remove(VendorAttachment $vendorAttachment, bool $flush = false): void
     {
         $this->getEntityManager()->remove($vendorAttachment);
@@ -37,6 +43,9 @@ final class VendorAttachmentRepository extends ServiceEntityRepository implement
         }
     }
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findOneByVendorId(string $vendorId): ?VendorAttachment
     {
         $entity = $this->findOneBy(['vendorId' => $vendorId]);

@@ -6,6 +6,9 @@ namespace App\Service\Category;
 
 use App\ServiceInterface\Category\CategoryCollectionServiceInterface;
 
+/**
+ * Application service for category collection operations.
+ */
 final class CategoryCollectionService implements CategoryCollectionServiceInterface
 {
     /**

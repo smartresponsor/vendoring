@@ -7,6 +7,9 @@ namespace App\Service\Category;
 
 use App\ServiceInterface\Category\CategoryApproxTotalServiceInterface;
 
+/**
+ * Application service for category approx total operations.
+ */
 final class CategoryApproxTotalService implements CategoryApproxTotalServiceInterface
 {
     public function __construct(private string $file = '')

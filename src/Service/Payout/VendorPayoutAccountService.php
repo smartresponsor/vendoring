@@ -10,6 +10,9 @@ use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
 use App\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * Application service for vendor payout account operations.
+ */
 final class VendorPayoutAccountService implements VendorPayoutAccountServiceInterface
 {
     public function __construct(private readonly PayoutAccountRepositoryInterface $accounts)

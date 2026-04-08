@@ -6,6 +6,9 @@ namespace App\ServiceInterface;
 
 use App\EventInterface\CategorySyndicationFallbackAwarePackageGatedInterface;
 
+/**
+ * Application contract for catalog syndication fallback aware package gate service operations.
+ */
 interface CatalogSyndicationFallbackAwarePackageGateServiceInterface
 {
     /**

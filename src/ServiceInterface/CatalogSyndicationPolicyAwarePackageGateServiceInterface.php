@@ -6,6 +6,9 @@ namespace App\ServiceInterface;
 
 use App\EventInterface\CategorySyndicationPolicyAwarePackageGatedInterface;
 
+/**
+ * Application contract for catalog syndication policy aware package gate service operations.
+ */
 interface CatalogSyndicationPolicyAwarePackageGateServiceInterface
 {
     /**

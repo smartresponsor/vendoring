@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Ledger;
 
+/**
+ * Application contract for vendor summary service operations.
+ */
 interface VendorSummaryServiceInterface
 {
     /**

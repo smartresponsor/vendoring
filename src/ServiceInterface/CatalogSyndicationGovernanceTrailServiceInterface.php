@@ -6,6 +6,9 @@ namespace App\ServiceInterface;
 
 use App\EventInterface\CategorySyndicationGovernanceTrailRecordedInterface;
 
+/**
+ * Application contract for catalog syndication governance trail service operations.
+ */
 interface CatalogSyndicationGovernanceTrailServiceInterface
 {
     /**

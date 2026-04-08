@@ -14,6 +14,9 @@ use App\ServiceInterface\VendorDocumentServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Application service for vendor document operations.
+ */
 final class VendorDocumentService implements VendorDocumentServiceInterface
 {
     public function __construct(
@@ -22,6 +25,9 @@ final class VendorDocumentService implements VendorDocumentServiceInterface
     ) {
     }
 
+    /**
+     * Executes the upload operation for this runtime surface.
+     */
     public function upload(Vendor $vendor, VendorDocumentDTO $dto): VendorDocument
     {
         $doc = new VendorDocument($vendor, $dto->type, $dto->filePath);

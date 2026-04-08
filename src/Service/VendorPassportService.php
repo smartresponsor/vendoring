@@ -13,6 +13,9 @@ use App\ServiceInterface\VendorPassportServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Application service for vendor passport operations.
+ */
 final class VendorPassportService implements VendorPassportServiceInterface
 {
     public function __construct(
@@ -21,6 +24,9 @@ final class VendorPassportService implements VendorPassportServiceInterface
     ) {
     }
 
+    /**
+     * Determines whether the requested condition is satisfied.
+     */
     public function issue(Vendor $vendor, string $taxId, string $country): VendorPassport
     {
         $passport = new VendorPassport($vendor, $taxId, $country);
@@ -30,6 +36,9 @@ final class VendorPassportService implements VendorPassportServiceInterface
         return $passport;
     }
 
+    /**
+     * Executes the verify operation for this runtime surface.
+     */
     public function verify(VendorPassport $passport): VendorPassport
     {
         $passport->markVerified();

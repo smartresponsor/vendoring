@@ -13,6 +13,9 @@ use App\ServiceInterface\VendorSecurityStateViewBuilderInterface;
  */
 final class VendorSecurityStateViewBuilder implements VendorSecurityStateViewBuilderInterface
 {
+    /**
+     * Builds the requested read model.
+     */
     public function build(VendorSecurityInterface $security): VendorSecurityStateView
     {
         return new VendorSecurityStateView(

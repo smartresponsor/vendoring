@@ -8,12 +8,18 @@ use App\Entity\Ledger\LedgerEntry;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use Doctrine\DBAL\Connection;
 
+/**
+ * Doctrine repository for ledger entry records.
+ */
 final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
 {
     public function __construct(private readonly Connection $db)
     {
     }
 
+    /**
+     * Executes the insert operation for this runtime surface.
+     */
     public function insert(LedgerEntry $entry): void
     {
         $this->db->insert('ledger_entries', [
@@ -30,6 +36,9 @@ final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
         ]);
     }
 
+    /**
+     * Returns the available collection for the requested runtime surface.
+     */
     public function listByRef(string $tenantId, string $referenceType, string $referenceId, ?string $vendorId = null): array
     {
         $sql = 'SELECT * FROM ledger_entries WHERE tenant_id=:t AND reference_type=:rt AND reference_id=:rid';
@@ -64,6 +73,9 @@ final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
         );
     }
 
+    /**
+     * Executes the sum by account operation for this runtime surface.
+     */
     public function sumByAccount(string $tenantId, string $accountCode, ?string $from = null, ?string $to = null, ?string $vendorId = null, ?string $currency = null): float
     {
         $where = ['tenant_id=:t AND (debit_account=:a OR credit_account=:a)'];
@@ -97,6 +109,9 @@ final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
         return $debit - $credit;
     }
 
+    /**
+     * Executes the balances for vendor operation for this runtime surface.
+     */
     public function balancesForVendor(string $vendorId): array
     {
         $rows = $this->db->fetchAllAssociative(

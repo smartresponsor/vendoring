@@ -9,6 +9,9 @@ use App\EventInterface\CategorySyndicationGovernanceTrailRecordedInterface;
 use App\PolicyInterface\CategorySyndicationGovernanceTrailPolicyInterface;
 use App\ServiceInterface\CatalogSyndicationGovernanceTrailServiceInterface;
 
+/**
+ * Application service for catalog syndication governance trail operations.
+ */
 final class CatalogSyndicationGovernanceTrailService implements CatalogSyndicationGovernanceTrailServiceInterface
 {
     public function __construct(

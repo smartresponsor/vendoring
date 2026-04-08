@@ -8,8 +8,14 @@ namespace App\Service\WebhooksConsumer;
 
 use App\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface;
 
+/**
+ * Application service for vendor webhooks consumer operations.
+ */
 final class VendorWebhooksConsumerService implements VendorWebhooksConsumerServiceInterface
 {
+    /**
+     * Executes the ok operation for this runtime surface.
+     */
     public function ok(): bool
     {
         return true;

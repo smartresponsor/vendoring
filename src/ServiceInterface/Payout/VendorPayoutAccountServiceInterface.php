@@ -7,6 +7,9 @@ namespace App\ServiceInterface\Payout;
 
 use App\Entity\Payout\PayoutAccount;
 
+/**
+ * Application contract for vendor payout account service operations.
+ */
 interface VendorPayoutAccountServiceInterface
 {
     /**

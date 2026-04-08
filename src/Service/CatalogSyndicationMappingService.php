@@ -11,6 +11,9 @@ use App\ServiceInterface\CatalogSyndicationMappingServiceInterface;
 use App\ValueObject\CategorySyndicationMappingProfile;
 use App\ValueObject\CategorySyndicationPublishPackage;
 
+/**
+ * Application service for catalog syndication mapping operations.
+ */
 final class CatalogSyndicationMappingService implements CatalogSyndicationMappingServiceInterface
 {
     public function __construct(

@@ -32,6 +32,9 @@ final class VendorTransactionRepository extends ServiceEntityRepository implemen
         return $res;
     }
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findOneByIdAndVendorId(int $id, string $vendorId): ?VendorTransaction
     {
         $transaction = $this->findOneBy(['id' => $id, 'vendorId' => $vendorId]);
@@ -39,6 +42,9 @@ final class VendorTransactionRepository extends ServiceEntityRepository implemen
         return $transaction instanceof VendorTransaction ? $transaction : null;
     }
 
+    /**
+     * Executes the exists for vendor order project operation for this runtime surface.
+     */
     public function existsForVendorOrderProject(string $vendorId, string $orderId, ?string $projectId): bool
     {
         $queryBuilder = $this->createQueryBuilder('transaction')

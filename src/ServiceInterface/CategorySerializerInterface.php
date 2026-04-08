@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface;
 
+/**
+ * Application contract for category serializer operations.
+ */
 interface CategorySerializerInterface
 {
     /**

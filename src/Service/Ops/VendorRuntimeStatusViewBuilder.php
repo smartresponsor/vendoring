@@ -25,6 +25,9 @@ final class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBui
     ) {
     }
 
+    /**
+     * Builds the requested read model.
+     */
     public function build(
         string $tenantId,
         string $vendorId,

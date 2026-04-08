@@ -92,7 +92,7 @@ OpenAPI-specific attributes should supply:
 Forbidden:
 - undocumented error responses
 - undocumented auth expectations
-- placeholder summaries like “Handle request”
+- generic low-signal summaries like “Handle request”
 - mismatch between DTO contract and documented contract
 
 ## Release-candidate expectation

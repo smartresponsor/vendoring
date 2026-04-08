@@ -6,6 +6,9 @@ namespace App\Service;
 
 use App\ServiceInterface\CategorySerializerInterface;
 
+/**
+ * Application service for category serializer operations.
+ */
 final class CategorySerializer implements CategorySerializerInterface
 {
     /**

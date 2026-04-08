@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Acl;
 
+/**
+ * Application contract for acl repository operations.
+ */
 interface AclRepositoryInterface
 {
     /**

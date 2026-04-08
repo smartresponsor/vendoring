@@ -11,6 +11,9 @@ use App\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface
 use App\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface;
 use App\ServiceInterface\CatalogSyndicationPolicyAwarePackageGateServiceInterface;
 
+/**
+ * Application service for catalog syndication policy aware package gate operations.
+ */
 final class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSyndicationPolicyAwarePackageGateServiceInterface
 {
     public function __construct(

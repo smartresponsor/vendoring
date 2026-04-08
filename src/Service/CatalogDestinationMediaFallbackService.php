@@ -8,8 +8,14 @@ use App\Event\CategoryDestinationMediaFallbackEvaluated;
 use App\EventInterface\CategoryDestinationMediaFallbackEvaluatedInterface;
 use App\ServiceInterface\CatalogDestinationMediaFallbackServiceInterface;
 
+/**
+ * Application service for catalog destination media fallback operations.
+ */
 final class CatalogDestinationMediaFallbackService implements CatalogDestinationMediaFallbackServiceInterface
 {
+    /**
+     * Evaluates the requested runtime decision.
+     */
     public function evaluate(string $destinationId, string $categoryId, string $actorId, string $reason): CategoryDestinationMediaFallbackEvaluatedInterface
     {
         return new CategoryDestinationMediaFallbackEvaluated([

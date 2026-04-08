@@ -15,6 +15,9 @@ use App\ServiceInterface\VendorProfileServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Application service for vendor profile operations.
+ */
 final class VendorProfileService implements VendorProfileServiceInterface
 {
     public function __construct(
@@ -24,6 +27,9 @@ final class VendorProfileService implements VendorProfileServiceInterface
     ) {
     }
 
+    /**
+     * Creates or updates the requested aggregate state.
+     */
     public function upsert(Vendor $vendor, VendorProfileDTO $dto): VendorProfile
     {
         $profile = $this->repository->findOneBy(['vendor' => $vendor]) ?? new VendorProfile($vendor);

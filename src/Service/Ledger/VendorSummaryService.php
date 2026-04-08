@@ -8,6 +8,9 @@ namespace App\Service\Ledger;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Ledger\VendorSummaryServiceInterface;
 
+/**
+ * Application service for vendor summary operations.
+ */
 final class VendorSummaryService implements VendorSummaryServiceInterface
 {
     private const ACCOUNTS = ['REVENUE', 'REFUNDS_PAYABLE', 'VENDOR_PAYABLE', 'CASH'];
@@ -16,6 +19,9 @@ final class VendorSummaryService implements VendorSummaryServiceInterface
     {
     }
 
+    /**
+     * Builds the requested read model.
+     */
     public function build(string $tenantId, string $vendorId, string $from, string $to, string $currency): array
     {
         $balances = [];

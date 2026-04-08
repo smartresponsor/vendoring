@@ -18,6 +18,9 @@ use App\ServiceInterface\VendorMediaServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Application service for vendor media operations.
+ */
 final class VendorMediaService implements VendorMediaServiceInterface
 {
     public function __construct(
@@ -27,6 +30,9 @@ final class VendorMediaService implements VendorMediaServiceInterface
     ) {
     }
 
+    /**
+     * Creates or updates the requested aggregate state.
+     */
     public function upsertMedia(Vendor $vendor, VendorMediaUploadDTO $dto): VendorMedia
     {
         $media = $this->mediaRepository->findOneBy(['vendor' => $vendor]) ?? new VendorMedia($vendor);
@@ -49,6 +55,9 @@ final class VendorMediaService implements VendorMediaServiceInterface
         return $media;
     }
 
+    /**
+     * Executes the upload attachment operation for this runtime surface.
+     */
     public function uploadAttachment(Vendor $vendor, VendorAttachmentDTO $dto): VendorAttachment
     {
         $att = new VendorAttachment($vendor, $dto->title, $dto->filePath, $dto->category);
