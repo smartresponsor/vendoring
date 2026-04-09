@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Payout;
 
+/**
+ * Application contract for vendor payout provider service operations.
+ */
 interface VendorPayoutProviderServiceInterface
 {
     /** @return array<string, mixed> */

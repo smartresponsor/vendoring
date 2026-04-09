@@ -1,0 +1,20 @@
+= API
+
+Vendoring keeps the HTTP contract documentation split between narrative guidance and generated OpenAPI artifacts.
+
+== Narrative/API sources
+
+* `docs/release/RC_OPENAPI_SURFACE.md`
+* `docs/internal/API_DOCUMENTATION_CANON.md`
+* `docs/internal/API_ENDPOINT_INVENTORY.md`
+* `docs/integration.md`
+
+== Generated API artifacts
+
+* `build/docs/openapi.json`
+* `build/docs/openapi.yaml`
+
+== Nelmio integration seam
+
+Nelmio/OpenAPI configuration remains repository-owned under `config/` and `bin/generate-openapi.php`.
+Generated contract files stay under `build/docs/`; they are not duplicated into Antora narrative pages.

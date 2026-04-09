@@ -10,12 +10,18 @@ use App\Entity\CategoryPin;
 use App\ServiceInterface\CatalogMerchServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * Application service for catalog merch operations.
+ */
 final class CatalogMerchService implements CatalogMerchServiceInterface
 {
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {
     }
 
+    /**
+     * Executes the pin create operation for this runtime surface.
+     */
     public function pinCreate(string $categoryId, string $recordId, int $position): void
     {
         $pin = new CategoryPin($categoryId, $recordId, $position);
@@ -23,6 +29,9 @@ final class CatalogMerchService implements CatalogMerchServiceInterface
         $this->entityManager->flush();
     }
 
+    /**
+     * Executes the pin delete operation for this runtime surface.
+     */
     public function pinDelete(string $categoryId, string $recordId): void
     {
         $pin = $this->entityManager->getRepository(CategoryPin::class)->findOneBy([
@@ -52,6 +61,9 @@ final class CatalogMerchService implements CatalogMerchServiceInterface
         }
     }
 
+    /**
+     * Executes the banner publish operation for this runtime surface.
+     */
     public function bannerPublish(string $categoryId, string $title, string $content): string
     {
         $banner = new CategoryBanner($categoryId, $title, $content);
@@ -62,6 +74,9 @@ final class CatalogMerchService implements CatalogMerchServiceInterface
         return (string) $banner->id();
     }
 
+    /**
+     * Executes the html publish operation for this runtime surface.
+     */
     public function htmlPublish(string $categoryId, string $html): string
     {
         $htmlBlock = new CategoryHtmlBlock($categoryId, $html);

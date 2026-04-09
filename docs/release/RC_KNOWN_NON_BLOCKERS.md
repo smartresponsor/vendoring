@@ -20,25 +20,25 @@ A non-blocker must not:
 ## Entries
 
 ### NNB-001
-- Title:
-- Area:
-- Description:
-- Why not a blocker:
-- Recommended follow-up:
-- Target milestone:
+- Title: Central Antora assembly remains external
+- Area: Documentation ecosystem integration
+- Description: This repository now exposes an Antora-compatible producer surface, but the central aggregator playbook, UI, and site assembly remain outside the component repository.
+- Why not a blocker: Producer readiness is the repository-owned contract; central aggregation is intentionally outside this component boundary.
+- Recommended follow-up: Connect the producer surface from the external central documentation aggregator and validate navigation there.
+- Target milestone: Post-RC documentation ecosystem wiring
 
 ### NNB-002
-- Title:
-- Area:
-- Description:
-- Why not a blocker:
-- Recommended follow-up:
-- Target milestone:
+- Title: Full phpDocumentor binary publishing is still pending
+- Area: Generated reference documentation richness
+- Description: The repository publishes a stable generated reference landing page under `build/docs/phpdocumentor/`, while full binary-driven navigable phpDocumentor output is deferred.
+- Why not a blocker: RC already exposes stable narrative docs, OpenAPI artifacts, and a publishable code-reference entry point.
+- Recommended follow-up: Wire the full `phpdocumentor/phpdocumentor` generation lane when consumer/runtime dependency alignment is finalized.
+- Target milestone: Post-RC reference-surface enrichment
 
 ### NNB-003
-- Title:
-- Area:
-- Description:
-- Why not a blocker:
-- Recommended follow-up:
-- Target milestone:
+- Title: Live Nelmio browsing route is not universally activated
+- Area: API browsing surface
+- Description: Nelmio/OpenAPI browsing configuration is present in-tree, but some browsing routes remain intentionally activation-gated through repository-owned `.dist` scaffolding.
+- Why not a blocker: Machine-facing OpenAPI artifacts are already generated and publishable from CI.
+- Recommended follow-up: Enable the live Symfony/Nelmio browsing route in environments where dependency installation and runtime exposure policy are aligned.
+- Target milestone: Post-RC API browsing activation

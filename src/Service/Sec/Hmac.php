@@ -8,6 +8,9 @@ namespace App\Service\Sec;
 
 use App\ServiceInterface\Sec\HmacInterface;
 
+/**
+ * Application service for hmac operations.
+ */
 final class Hmac implements HmacInterface
 {
     public static function sign(string $payload, string $secret, string $algo = 'sha256'): string

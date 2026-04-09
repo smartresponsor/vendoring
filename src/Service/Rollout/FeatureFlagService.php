@@ -28,11 +28,17 @@ final class FeatureFlagService implements FeatureFlagServiceInterface
     ) {
     }
 
+    /**
+     * Determines whether the requested condition is satisfied.
+     */
     public function isEnabled(string $flagName, ?string $tenantId = null, ?string $vendorId = null): bool
     {
         return $this->explain($flagName, $tenantId, $vendorId)['enabled'];
     }
 
+    /**
+     * Executes the explain operation for this runtime surface.
+     */
     public function explain(string $flagName, ?string $tenantId = null, ?string $vendorId = null): array
     {
         $cohort = $this->trafficCohortResolver->resolve($tenantId, $vendorId);

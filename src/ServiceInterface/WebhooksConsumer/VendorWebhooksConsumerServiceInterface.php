@@ -6,7 +6,13 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\WebhooksConsumer;
 
+/**
+ * Application contract for vendor webhooks consumer service operations.
+ */
 interface VendorWebhooksConsumerServiceInterface
 {
+    /**
+     * Executes the ok operation for this runtime surface.
+     */
     public function ok(): bool;
 }

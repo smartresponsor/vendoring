@@ -8,8 +8,14 @@ use App\Event\CategoryDestinationMediaReadinessEvaluated;
 use App\EventInterface\CategoryDestinationMediaReadinessEvaluatedInterface;
 use App\ServiceInterface\CatalogDestinationMediaReadinessServiceInterface;
 
+/**
+ * Application service for catalog destination media readiness operations.
+ */
 final class CatalogDestinationMediaReadinessService implements CatalogDestinationMediaReadinessServiceInterface
 {
+    /**
+     * Evaluates the requested runtime decision.
+     */
     public function evaluate(string $destinationId, string $categoryId, string $actorId, string $reason): CategoryDestinationMediaReadinessEvaluatedInterface
     {
         return new CategoryDestinationMediaReadinessEvaluated([

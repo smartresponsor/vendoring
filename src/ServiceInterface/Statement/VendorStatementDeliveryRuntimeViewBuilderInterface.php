@@ -6,8 +6,14 @@ namespace App\ServiceInterface\Statement;
 
 use App\Projection\VendorStatementDeliveryRuntimeView;
 
+/**
+ * Contract for building vendor statement delivery runtime view builder views.
+ */
 interface VendorStatementDeliveryRuntimeViewBuilderInterface
 {
+    /**
+     * Builds the requested read model.
+     */
     public function build(
         string $tenantId,
         string $vendorId,

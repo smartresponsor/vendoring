@@ -8,6 +8,9 @@ namespace App\ServiceInterface\Payout;
 use App\DTO\Payout\CreatePayoutDTO;
 use App\Entity\Payout\Payout;
 
+/**
+ * Application contract for vendor payout request service operations.
+ */
 interface VendorPayoutRequestServiceInterface
 {
     /**

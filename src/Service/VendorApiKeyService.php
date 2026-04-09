@@ -27,6 +27,9 @@ final class VendorApiKeyService implements VendorApiKeyServiceInterface
     ) {
     }
 
+    /**
+     * Creates the requested resource from the supplied input.
+     */
     public function createKey(Vendor $vendor, string $permissions): string
     {
         $plainToken = bin2hex(random_bytes(32));
@@ -39,6 +42,9 @@ final class VendorApiKeyService implements VendorApiKeyServiceInterface
         return $plainToken;
     }
 
+    /**
+     * Rotates the requested credential material.
+     */
     public function rotateKey(VendorApiKey $existingKey): string
     {
         $existingKey->deactivate();
@@ -59,6 +65,9 @@ final class VendorApiKeyService implements VendorApiKeyServiceInterface
         return $newToken;
     }
 
+    /**
+     * Executes the revoke key operation for this runtime surface.
+     */
     public function revokeKey(VendorApiKey $apiKey): void
     {
         $apiKey->deactivate();
@@ -66,6 +75,9 @@ final class VendorApiKeyService implements VendorApiKeyServiceInterface
         $this->apiKeyRepo->save($apiKey, true);
     }
 
+    /**
+     * Executes the validate token operation for this runtime surface.
+     */
     public function validateToken(string $plainToken, ?string $permission = null): ?Vendor
     {
         $tokenHash = hash('sha256', $plainToken);
@@ -86,6 +98,9 @@ final class VendorApiKeyService implements VendorApiKeyServiceInterface
         return $apiKey->getVendor();
     }
 
+    /**
+     * Executes the validate authorization header operation for this runtime surface.
+     */
     public function validateAuthorizationHeader(string $authorizationHeader, ?string $permission = null): ?Vendor
     {
         $authorizationHeader = trim($authorizationHeader);
@@ -105,6 +120,9 @@ final class VendorApiKeyService implements VendorApiKeyServiceInterface
         return $this->validateToken($plainToken, $permission);
     }
 
+    /**
+     * Resolves the requested runtime subject.
+     */
     public function resolveVendorFromAuthHeader(string $authorizationHeader): ?Vendor
     {
         return $this->validateAuthorizationHeader($authorizationHeader);

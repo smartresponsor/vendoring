@@ -12,6 +12,9 @@ use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Ledger\VendorDoubleEntryServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * Application service for vendor double entry operations.
+ */
 final class VendorDoubleEntryService implements VendorDoubleEntryServiceInterface
 {
     public function __construct(private readonly LedgerEntryRepositoryInterface $repo)

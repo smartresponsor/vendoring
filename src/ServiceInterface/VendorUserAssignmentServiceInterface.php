@@ -13,6 +13,9 @@ use App\EntityInterface\VendorUserAssignmentInterface;
  */
 interface VendorUserAssignmentServiceInterface
 {
+    /**
+     * Assigns the requested runtime subject.
+     */
     public function assignOwner(int $vendorId, int $userId): VendorUserAssignmentInterface;
 
     /**
@@ -25,8 +28,14 @@ interface VendorUserAssignmentServiceInterface
      */
     public function assignRole(int $vendorId, int $userId, string $role, bool $isPrimary = false): VendorUserAssignmentInterface;
 
+    /**
+     * Executes the revoke operation for this runtime surface.
+     */
     public function revoke(int $vendorId, int $userId): void;
 
+    /**
+     * Executes the set primary operation for this runtime surface.
+     */
     public function setPrimary(int $vendorId, int $userId): void;
 
     /**

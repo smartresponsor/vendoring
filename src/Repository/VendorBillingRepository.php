@@ -19,6 +19,9 @@ final class VendorBillingRepository extends ServiceEntityRepository implements V
         parent::__construct($registry, VendorBilling::class);
     }
 
+    /**
+     * Persists the requested record.
+     */
     public function save(VendorBilling $vendorBilling, bool $flush = false): void
     {
         $this->getEntityManager()->persist($vendorBilling);
@@ -28,6 +31,9 @@ final class VendorBillingRepository extends ServiceEntityRepository implements V
         }
     }
 
+    /**
+     * Removes the requested persisted state.
+     */
     public function remove(VendorBilling $vendorBilling, bool $flush = false): void
     {
         $this->getEntityManager()->remove($vendorBilling);
@@ -37,6 +43,9 @@ final class VendorBillingRepository extends ServiceEntityRepository implements V
         }
     }
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findOneByVendorId(string $vendorId): ?VendorBilling
     {
         $entity = $this->findOneBy(['vendorId' => $vendorId]);

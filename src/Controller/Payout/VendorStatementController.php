@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * HTTP controller for vendor statement operations.
+ */
 #[Route('/api/payouts/statements')]
 final class VendorStatementController extends AbstractController
 {
@@ -18,6 +21,9 @@ final class VendorStatementController extends AbstractController
     {
     }
 
+    /**
+     * Builds the requested read model.
+     */
     #[Route('/{vendorId}', methods: ['GET'])]
     public function build(string $vendorId, Request $r): JsonResponse
     {

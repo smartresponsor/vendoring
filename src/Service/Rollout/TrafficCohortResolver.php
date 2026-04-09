@@ -14,6 +14,9 @@ use App\ServiceInterface\Rollout\TrafficCohortResolverInterface;
  */
 final class TrafficCohortResolver implements TrafficCohortResolverInterface
 {
+    /**
+     * Resolves the requested runtime subject.
+     */
     public function resolve(?string $tenantId = null, ?string $vendorId = null): string
     {
         if (null !== $vendorId && '' !== trim($vendorId)) {

@@ -9,6 +9,9 @@ use App\DTO\Payout\CreatePayoutDTO;
 use App\Entity\Payout\Payout;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 
+/**
+ * Application service for vendor payout request operations.
+ */
 final class VendorPayoutRequestService implements VendorPayoutRequestServiceInterface
 {
     /** @param array<string, mixed> $payload */
@@ -28,6 +31,9 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
         );
     }
 
+    /**
+     * Normalizes the supplied value set for downstream use.
+     */
     public function normalizePayout(Payout $payout): array
     {
         return [

@@ -17,6 +17,9 @@ use App\ServiceInterface\Observability\RuntimeLoggerInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * Application service for vendor payout operations.
+ */
 final class VendorPayoutService implements VendorPayoutServiceInterface
 {
     public function __construct(
@@ -28,6 +31,9 @@ final class VendorPayoutService implements VendorPayoutServiceInterface
     ) {
     }
 
+    /**
+     * Creates the requested resource from the supplied input.
+     */
     public function create(CreatePayoutDTO $dto): ?string
     {
         // 1) Получаем баланс в валюте
@@ -95,6 +101,9 @@ final class VendorPayoutService implements VendorPayoutServiceInterface
         return $pid;
     }
 
+    /**
+     * Processes the requested runtime operation.
+     */
     public function process(string $payoutId): bool
     {
         $p = $this->repo->byId($payoutId);

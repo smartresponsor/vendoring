@@ -12,9 +12,18 @@ use Doctrine\Persistence\ObjectRepository;
  */
 interface VendorAnalyticsRepositoryInterface extends ObjectRepository
 {
+    /**
+     * Persists the requested record.
+     */
     public function save(VendorAnalytics $vendorAnalytics, bool $flush = false): void;
 
+    /**
+     * Removes the requested persisted state.
+     */
     public function remove(VendorAnalytics $vendorAnalytics, bool $flush = false): void;
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findOneByVendorId(string $vendorId): ?VendorAnalytics;
 }

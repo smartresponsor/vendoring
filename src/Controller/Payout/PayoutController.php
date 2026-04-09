@@ -13,6 +13,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * HTTP controller for payout operations.
+ */
 #[Route('/api/payout')]
 final class PayoutController extends AbstractController
 {
@@ -23,6 +26,9 @@ final class PayoutController extends AbstractController
     ) {
     }
 
+    /**
+     * Creates the requested resource from the incoming request payload.
+     */
     #[Route('/create', methods: ['POST'])]
     public function create(Request $r): JsonResponse
     {
@@ -40,6 +46,9 @@ final class PayoutController extends AbstractController
         return new JsonResponse(['data' => ['created' => true, 'payoutId' => $id]], 201);
     }
 
+    /**
+     * Processes the requested runtime action.
+     */
     #[Route('/process/{payoutId}', methods: ['POST'])]
     public function process(string $payoutId): JsonResponse
     {
@@ -48,6 +57,9 @@ final class PayoutController extends AbstractController
         return new JsonResponse(['data' => ['processed' => $ok]], $ok ? 200 : 404);
     }
 
+    /**
+     * Returns the current read model for the requested resource.
+     */
     #[Route('/{payoutId}', methods: ['GET'])]
     public function getOne(string $payoutId): JsonResponse
     {

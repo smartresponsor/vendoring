@@ -12,9 +12,18 @@ use Doctrine\Persistence\ObjectRepository;
  */
 interface VendorAttachmentRepositoryInterface extends ObjectRepository
 {
+    /**
+     * Persists the requested record.
+     */
     public function save(VendorAttachment $vendorAttachment, bool $flush = false): void;
 
+    /**
+     * Removes the requested persisted state.
+     */
     public function remove(VendorAttachment $vendorAttachment, bool $flush = false): void;
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findOneByVendorId(string $vendorId): ?VendorAttachment;
 }

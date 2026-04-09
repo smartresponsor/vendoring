@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Metric;
 
+/**
+ * Application contract for vendor metric service operations.
+ */
 interface VendorMetricServiceInterface
 {
     /** @return array{tenantId:string, vendorId:string, from:?string, to:?string, currency:string, revenue:float, refunds:float, payouts:float, balance:float} */

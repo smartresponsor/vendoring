@@ -1,0 +1,14 @@
+= Reference
+
+Narrative docs and generated code reference remain intentionally separated.
+
+== Code-reference surface
+
+* `phpdoc.dist.xml`
+* `bin/generate-phpdocumentor-site.php`
+* `build/docs/phpdocumentor/index.html`
+
+== Role split
+
+Antora pages provide curated entry points for the documentation ecosystem.
+The phpDocumentor output remains the generated code-reference surface and is linked from the central aggregator rather than copied into hand-written narrative docs.

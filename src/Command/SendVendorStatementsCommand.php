@@ -15,6 +15,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * CLI entrypoint for send vendor statements operations.
+ */
 #[AsCommand(name: 'finance:send-vendor-statements', description: 'Send monthly vendor statements')]
 final class SendVendorStatementsCommand extends Command
 {

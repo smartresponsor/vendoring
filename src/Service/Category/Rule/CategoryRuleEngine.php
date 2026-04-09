@@ -6,6 +6,9 @@ namespace App\Service\Category\Rule;
 
 use App\ServiceInterface\Category\CategoryRuleEngineInterface;
 
+/**
+ * Application service for category rule engine operations.
+ */
 final class CategoryRuleEngine implements CategoryRuleEngineInterface
 {
     /**

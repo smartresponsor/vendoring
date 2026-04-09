@@ -11,6 +11,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * CLI entrypoint for vendor release baseline operations.
+ */
 #[AsCommand(
     name: 'app:vendor:release-baseline',
     description: 'Render a release-facing vendor baseline snapshot after a green runtime contour',

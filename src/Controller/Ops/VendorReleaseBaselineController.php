@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * HTTP controller for vendor release baseline operations.
+ */
 #[Route('/api/vendor-release-baseline')]
 final class VendorReleaseBaselineController extends AbstractController
 {
@@ -17,6 +20,9 @@ final class VendorReleaseBaselineController extends AbstractController
     {
     }
 
+    /**
+     * Returns the current read model for the requested resource.
+     */
     #[Route('/tenant/{tenantId}/vendor/{vendorId}', methods: ['GET'])]
     public function show(string $tenantId, string $vendorId, Request $request): JsonResponse
     {

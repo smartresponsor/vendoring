@@ -8,8 +8,14 @@ use App\Event\CategoryDestinationMediaPolicyPreferenceEvaluated;
 use App\EventInterface\CategoryDestinationMediaPolicyPreferenceEvaluatedInterface;
 use App\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface;
 
+/**
+ * Application service for catalog destination media policy preference operations.
+ */
 final class CatalogDestinationMediaPolicyPreferenceService implements CatalogDestinationMediaPolicyPreferenceServiceInterface
 {
+    /**
+     * Evaluates the requested runtime decision.
+     */
     public function evaluate(string $destinationId, string $categoryId, string $actorId, string $reason): CategoryDestinationMediaPolicyPreferenceEvaluatedInterface
     {
         return new CategoryDestinationMediaPolicyPreferenceEvaluated([

@@ -12,12 +12,18 @@ use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Ledger\VendorLedgerServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * Application service for vendor ledger operations.
+ */
 final class VendorLedgerService implements VendorLedgerServiceInterface
 {
     public function __construct(private readonly LedgerEntryRepositoryInterface $repo)
     {
     }
 
+    /**
+     * Records the requested runtime state change.
+     */
     public function record(LedgerEntryDTO $dto): LedgerEntry
     {
         $createdAt = $dto->occurredAt ?? (new \DateTimeImmutable())->format('Y-m-d H:i:s');

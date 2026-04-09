@@ -20,6 +20,9 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
         parent::__construct($registry, VendorUserAssignment::class);
     }
 
+    /**
+     * Persists the requested record.
+     */
     public function save(VendorUserAssignmentInterface $assignment, bool $flush = false): void
     {
         $this->getEntityManager()->persist($assignment);
@@ -29,6 +32,9 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
         }
     }
 
+    /**
+     * Removes the requested persisted state.
+     */
     public function remove(VendorUserAssignmentInterface $assignment, bool $flush = false): void
     {
         $this->getEntityManager()->remove($assignment);
@@ -38,6 +44,9 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
         }
     }
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findPrimaryForVendorId(int $vendorId): ?VendorUserAssignmentInterface
     {
         $entity = $this->findOneBy([
@@ -49,6 +58,9 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
         return $entity instanceof VendorUserAssignmentInterface ? $entity : null;
     }
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findActiveByVendorId(int $vendorId): array
     {
         $entities = $this->findBy([
@@ -59,6 +71,9 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
         return array_values(array_filter($entities, static fn (mixed $entity): bool => $entity instanceof VendorUserAssignmentInterface));
     }
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findActiveByUserId(int $userId): array
     {
         $entities = $this->findBy([
@@ -69,6 +84,9 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
         return array_values(array_filter($entities, static fn (mixed $entity): bool => $entity instanceof VendorUserAssignmentInterface));
     }
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?VendorUserAssignmentInterface
     {
         $entity = $this->findOneBy([

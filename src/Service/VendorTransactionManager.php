@@ -18,6 +18,9 @@ use App\ValueObject\VendorTransactionErrorCode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Application service for vendor transaction operations.
+ */
 final class VendorTransactionManager implements VendorTransactionManagerInterface
 {
     // Stable validation surface: duplicate_transaction.
@@ -31,6 +34,9 @@ final class VendorTransactionManager implements VendorTransactionManagerInterfac
     ) {
     }
 
+    /**
+     * Creates the requested resource from the supplied input.
+     */
     public function createTransaction(VendorTransactionData $data): VendorTransaction
     {
         $vendorId = $this->normalizeRequiredIdentity($data->vendorId, VendorTransactionErrorCode::VENDOR_ID_REQUIRED);
@@ -70,6 +76,9 @@ final class VendorTransactionManager implements VendorTransactionManagerInterfac
         return $tx;
     }
 
+    /**
+     * Updates the requested resource state.
+     */
     public function updateStatus(VendorTransaction $tx, string $status): VendorTransaction
     {
         $normalizedStatus = $this->statusPolicy->normalize($status);

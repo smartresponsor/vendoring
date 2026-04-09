@@ -8,6 +8,9 @@ namespace App\ServiceInterface\Ops;
 
 use App\Entity\VendorTransaction;
 
+/**
+ * Contract for building vendor transaction operator page builder views.
+ */
 interface VendorTransactionOperatorPageBuilderInterface
 {
     /**

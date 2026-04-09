@@ -10,7 +10,13 @@ use App\DTO\VendorProfileDTO;
 use App\Entity\Vendor;
 use App\Entity\VendorProfile;
 
+/**
+ * Application contract for vendor profile service operations.
+ */
 interface VendorProfileServiceInterface
 {
+    /**
+     * Creates or updates the requested aggregate state.
+     */
     public function upsert(Vendor $vendor, VendorProfileDTO $dto): VendorProfile;
 }

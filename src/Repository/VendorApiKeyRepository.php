@@ -21,6 +21,9 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
         parent::__construct($registry, VendorApiKey::class);
     }
 
+    /**
+     * Persists the requested record.
+     */
     public function save(VendorApiKey $apiKey, bool $flush = false): void
     {
         $this->getEntityManager()->persist($apiKey);
@@ -30,6 +33,9 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
         }
     }
 
+    /**
+     * Removes the requested persisted state.
+     */
     public function remove(VendorApiKey $vendorApiKey, bool $flush = false): void
     {
         $this->getEntityManager()->remove($vendorApiKey);
@@ -39,6 +45,9 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
         }
     }
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findOneByApiKey(string $apiKey): ?VendorApiKey
     {
         $candidate = $this->findOneBy([
@@ -48,6 +57,9 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
         return $candidate instanceof VendorApiKey ? $candidate : null;
     }
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findOneByVendorId(string $vendorId): ?VendorApiKey
     {
         if (!ctype_digit($vendorId)) {
@@ -65,6 +77,9 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
         return $candidate instanceof VendorApiKey ? $candidate : null;
     }
 
+    /**
+     * Returns the requested persisted state.
+     */
     public function findActiveByToken(string $tokenHash): ?VendorApiKey
     {
         $candidate = $this->findOneBy([
