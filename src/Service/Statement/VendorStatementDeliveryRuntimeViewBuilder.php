@@ -26,9 +26,6 @@ final class VendorStatementDeliveryRuntimeViewBuilder implements VendorStatement
     ) {
     }
 
-    /**
-     * Builds the requested read model.
-     */
     public function build(
         string $tenantId,
         string $vendorId,

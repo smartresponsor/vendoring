@@ -8,9 +8,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * HTTP controller for local dev operations.
- */
 final class LocalDevController
 {
     private const string HOME_PAGE = <<<'HTML'
@@ -35,18 +32,12 @@ final class LocalDevController
 </html>
 HTML;
 
-    /**
-     * Executes the home operation for this runtime surface.
-     */
     #[Route('/', name: 'app_local_dev_home', methods: ['GET'])]
     public function home(): Response
     {
         return new Response(self::HOME_PAGE);
     }
 
-    /**
-     * Executes the healthz operation for this runtime surface.
-     */
     #[Route('/healthz', name: 'app_local_dev_healthz', methods: ['GET'])]
     public function healthz(): JsonResponse
     {

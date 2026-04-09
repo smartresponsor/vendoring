@@ -1,18 +1,16 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\ServiceInterface;
 
-/**
- * Application contract for category serializer operations.
- */
 interface CategorySerializerInterface
 {
     /**
      * @param array<string, mixed> $source
-     * @param list<string> $includeFieldList
-     * @param list<string> $excludeFieldList
+     * @param list<string>         $includeFieldList
+     * @param list<string>         $excludeFieldList
      *
      * @return array<string, mixed>
      */

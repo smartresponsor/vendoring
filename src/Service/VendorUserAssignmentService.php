@@ -11,9 +11,6 @@ use App\ServiceInterface\VendorUserAssignmentServiceInterface;
 use App\ValueObject\VendorRole;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * Application service for vendor user assignment operations.
- */
 final class VendorUserAssignmentService implements VendorUserAssignmentServiceInterface
 {
     public function __construct(
@@ -22,17 +19,11 @@ final class VendorUserAssignmentService implements VendorUserAssignmentServiceIn
     ) {
     }
 
-    /**
-     * Assigns the requested runtime subject.
-     */
     public function assignOwner(int $vendorId, int $userId): VendorUserAssignmentInterface
     {
         return $this->assignRole($vendorId, $userId, VendorRole::OWNER, true);
     }
 
-    /**
-     * Assigns the requested runtime subject.
-     */
     public function assignRole(int $vendorId, int $userId, string $role, bool $isPrimary = false): VendorUserAssignmentInterface
     {
         $normalizedRole = VendorRole::normalize($role);
@@ -77,9 +68,6 @@ final class VendorUserAssignmentService implements VendorUserAssignmentServiceIn
         return $assignment;
     }
 
-    /**
-     * Executes the revoke operation for this runtime surface.
-     */
     public function revoke(int $vendorId, int $userId): void
     {
         $assignment = $this->assignmentRepository->findOneByVendorIdAndUserId($vendorId, $userId);
@@ -95,9 +83,6 @@ final class VendorUserAssignmentService implements VendorUserAssignmentServiceIn
         $this->assignmentRepository->save($assignment, true);
     }
 
-    /**
-     * Executes the set primary operation for this runtime surface.
-     */
     public function setPrimary(int $vendorId, int $userId): void
     {
         $assignment = $this->assignmentRepository->findOneByVendorIdAndUserId($vendorId, $userId);
@@ -115,9 +100,6 @@ final class VendorUserAssignmentService implements VendorUserAssignmentServiceIn
         $this->assignmentRepository->save($assignment, true);
     }
 
-    /**
-     * Returns the available collection for the requested runtime surface.
-     */
     public function listActiveForVendor(int $vendorId): array
     {
         return $this->assignmentRepository->findActiveByVendorId($vendorId);

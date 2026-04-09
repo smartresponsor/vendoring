@@ -22,9 +22,6 @@ final class VendorOwnershipViewBuilder implements VendorOwnershipViewBuilderInte
     ) {
     }
 
-    /**
-     * Builds the requested read model.
-     */
     public function buildForVendorId(int $vendorId): ?VendorOwnershipView
     {
         $vendor = $this->vendorRepository->find($vendorId);

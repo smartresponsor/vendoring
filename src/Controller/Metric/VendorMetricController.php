@@ -10,9 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * HTTP controller for vendor metric operations.
- */
 #[Route('/api/metrics/vendor')]
 final class VendorMetricController extends AbstractController
 {
@@ -20,9 +17,6 @@ final class VendorMetricController extends AbstractController
     {
     }
 
-    /**
-     * Returns the current collection or overview projection for the requested resource.
-     */
     #[Route('/{vendorId}/overview', methods: ['GET'])]
     public function overview(string $vendorId, Request $r): JsonResponse
     {
@@ -38,9 +32,6 @@ final class VendorMetricController extends AbstractController
         return new JsonResponse(['data' => $data], 200);
     }
 
-    /**
-     * Executes the trends operation for this runtime surface.
-     */
     #[Route('/{vendorId}/trends', methods: ['GET'])]
     public function trends(string $vendorId, Request $r): JsonResponse
     {

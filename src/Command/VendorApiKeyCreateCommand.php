@@ -14,9 +14,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * CLI entrypoint for vendor api key create operations.
- */
 #[AsCommand(
     name: 'app:vendor:api-key:create',
     description: 'Create an API key for a vendor',

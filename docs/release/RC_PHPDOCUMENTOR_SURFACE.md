@@ -1,24 +1,17 @@
 # Vendoring RC phpDocumentor Surface
 
-The repository includes a phpDocumentor configuration and a repository-owned generated reference index.
+The repository now includes a phpDocumentor configuration and CI-friendly generation seam.
 
 ## Current artifacts
 
 - `phpdoc.dist.xml`
-- `bin/generate-phpdocumentor-site.php`
 - `build/docs/phpdocumentor/index.html`
 
 ## Current strategy
 
-At this stage the repository generates a stable reference landing page that documents:
-- the code-reference role of the phpDocumentor surface
-- the generated OpenAPI contract artifacts
-- the release-candidate narrative/operator documentation that surrounds the code reference
+At this stage the repository generates a stable placeholder site and keeps the canonical `phpdoc.dist.xml` configuration in-tree.
+This is enough for release-candidate evidence because CI can publish a predictable documentation bundle now.
 
-This keeps the RC documentation bundle predictable and publishable from CI even before the full `phpdocumentor/phpdocumentor` binary is wired into every consumer runtime.
+## Next tightening step
 
-## Tightening path
-
-Once dependency installation and publishing lanes are fully aligned, the same `phpdoc.dist.xml` can drive the full `phpdocumentor/phpdocumentor` binary and replace the fallback landing page with navigable API documentation.
-
-That follow-up is an improvement in richness, not a reason to mix generated reference output into hand-written Antora narrative pages.
+Once dependency installation is aligned on the consumer side, the same configuration can be used to run the full `phpdocumentor/phpdocumentor` binary and replace the placeholder HTML with navigable API documentation.

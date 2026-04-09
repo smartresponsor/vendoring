@@ -320,9 +320,9 @@ Document adversaries, abuse cases, and key mitigations.
 
 ---
 
-### ISSUE DOCS-001 — Replace fallback phpDocumentor path with rich upstream generator
+### ISSUE DOCS-001 — Replace placeholder phpDocumentor path with rich upstream generator
 **Summary**
-Upgrade from fallback generation to full rich API documentation generation.
+Upgrade from placeholder generation to full rich API documentation generation.
 
 **Acceptance criteria**
 - upstream phpDocumentor tooling is wired in

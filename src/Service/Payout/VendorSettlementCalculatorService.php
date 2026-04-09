@@ -7,9 +7,6 @@ namespace App\Service\Payout;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Payout\VendorSettlementCalculatorServiceInterface;
 
-/**
- * Application service for vendor settlement calculator operations.
- */
 final class VendorSettlementCalculatorService implements VendorSettlementCalculatorServiceInterface
 {
     public function __construct(private readonly LedgerEntryRepositoryInterface $ledger)

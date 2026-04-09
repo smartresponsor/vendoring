@@ -9,18 +9,12 @@ use App\Entity\Payout\PayoutItem;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
 use Doctrine\DBAL\Connection;
 
-/**
- * Doctrine repository for payout records.
- */
 final class PayoutRepository implements PayoutRepositoryInterface
 {
     public function __construct(private readonly Connection $db)
     {
     }
 
-    /**
-     * Executes the insert operation for this runtime surface.
-     */
     public function insert(Payout $p): void
     {
         $this->db->insert('payouts', [
@@ -37,9 +31,6 @@ final class PayoutRepository implements PayoutRepositoryInterface
         ]);
     }
 
-    /**
-     * Executes the insert item operation for this runtime surface.
-     */
     public function insertItem(PayoutItem $i): void
     {
         $this->db->insert('payout_items', [
@@ -50,9 +41,6 @@ final class PayoutRepository implements PayoutRepositoryInterface
         ]);
     }
 
-    /**
-     * Executes the by id operation for this runtime surface.
-     */
     public function byId(string $id): ?Payout
     {
         $row = $this->db->fetchAssociative('SELECT * FROM payouts WHERE id=:id', ['id' => $id]);
@@ -74,9 +62,6 @@ final class PayoutRepository implements PayoutRepositoryInterface
         );
     }
 
-    /**
-     * Executes the items operation for this runtime surface.
-     */
     public function items(string $payoutId): array
     {
         $rows = $this->db->fetchAllAssociative('SELECT * FROM payout_items WHERE payout_id=:p', ['p' => $payoutId]);
@@ -91,9 +76,6 @@ final class PayoutRepository implements PayoutRepositoryInterface
         }, $rows);
     }
 
-    /**
-     * Executes the mark processed operation for this runtime surface.
-     */
     public function markProcessed(string $id, string $processedAt): void
     {
         $this->db->update('payouts', ['status' => 'processed', 'processed_at' => $processedAt], ['id' => $id]);

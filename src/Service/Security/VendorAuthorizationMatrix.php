@@ -50,17 +50,11 @@ final class VendorAuthorizationMatrix implements VendorAuthorizationMatrixInterf
         ],
     ];
 
-    /**
-     * Determines whether the requested operation is allowed.
-     */
     public function can(string $role, string $capability): bool
     {
         return in_array($capability, $this->capabilitiesForRole($role), true);
     }
 
-    /**
-     * Executes the capabilities for role operation for this runtime surface.
-     */
     public function capabilitiesForRole(string $role): array
     {
         $normalizedRole = VendorRole::normalize($role);

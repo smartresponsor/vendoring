@@ -10,9 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * HTTP controller for vendor finance runtime operations.
- */
 #[Route('/api/vendor/runtime')]
 final class VendorFinanceRuntimeController extends AbstractController
 {
@@ -20,9 +17,6 @@ final class VendorFinanceRuntimeController extends AbstractController
     {
     }
 
-    /**
-     * Executes the finance operation for this runtime surface.
-     */
     #[Route('/{vendorId}/finance', methods: ['GET'])]
     public function finance(string $vendorId, Request $request): JsonResponse
     {

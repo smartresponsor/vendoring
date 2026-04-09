@@ -21,9 +21,6 @@ final class VendorAnalyticsRepository extends ServiceEntityRepository implements
         parent::__construct($registry, VendorAnalytics::class);
     }
 
-    /**
-     * Persists the requested record.
-     */
     public function save(VendorAnalytics $vendorAnalytics, bool $flush = false): void
     {
         $this->getEntityManager()->persist($vendorAnalytics);
@@ -33,9 +30,6 @@ final class VendorAnalyticsRepository extends ServiceEntityRepository implements
         }
     }
 
-    /**
-     * Removes the requested persisted state.
-     */
     public function remove(VendorAnalytics $vendorAnalytics, bool $flush = false): void
     {
         $this->getEntityManager()->remove($vendorAnalytics);
@@ -45,9 +39,6 @@ final class VendorAnalyticsRepository extends ServiceEntityRepository implements
         }
     }
 
-    /**
-     * Returns the requested persisted state.
-     */
     public function findOneByVendorId(string $vendorId): ?VendorAnalytics
     {
         $entity = $this->findOneBy(['vendorId' => $vendorId]);

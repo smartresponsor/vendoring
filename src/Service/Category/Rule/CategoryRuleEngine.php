@@ -1,14 +1,12 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service\Category\Rule;
 
 use App\ServiceInterface\Category\CategoryRuleEngineInterface;
 
-/**
- * Application service for category rule engine operations.
- */
 final class CategoryRuleEngine implements CategoryRuleEngineInterface
 {
     /**
@@ -76,8 +74,6 @@ final class CategoryRuleEngine implements CategoryRuleEngineInterface
     }
 
     /**
-     * @param mixed $value
-     *
      * @return array<string, mixed>
      */
     private function arrayMap(mixed $value): array
@@ -86,8 +82,6 @@ final class CategoryRuleEngine implements CategoryRuleEngineInterface
     }
 
     /**
-     * @param mixed $value
-     *
      * @return list<array<string, mixed>>
      */
     private function nodeList(mixed $value): array

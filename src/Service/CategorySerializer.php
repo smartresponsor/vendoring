@@ -1,20 +1,18 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
 
 use App\ServiceInterface\CategorySerializerInterface;
 
-/**
- * Application service for category serializer operations.
- */
 final class CategorySerializer implements CategorySerializerInterface
 {
     /**
      * @param array<string, mixed> $source
-     * @param list<string> $includeFieldList
-     * @param list<string> $excludeFieldList
+     * @param list<string>         $includeFieldList
+     * @param list<string>         $excludeFieldList
      *
      * @return array<string, mixed>
      */

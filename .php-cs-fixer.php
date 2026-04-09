@@ -40,11 +40,6 @@ $config
         ],
         'single_import_per_statement' => true,
 
-        // preserve repository-owned descriptive DocBlocks
-        'comment_to_phpdoc' => false,
-        'phpdoc_to_comment' => false,
-        'phpdoc_summary' => false,
-
         // risky (category 1) — force OFF
         'no_unreachable_default_argument_value' => false,
         'logical_operators' => false,

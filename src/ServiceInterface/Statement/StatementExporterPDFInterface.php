@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Statement;
 
-/**
- * Application contract for statement exporter pdf operations.
- */
 interface StatementExporterPDFInterface
 {
     /** Returns absolute filepath to generated PDF.

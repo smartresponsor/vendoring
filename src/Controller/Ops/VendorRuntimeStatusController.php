@@ -10,9 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * HTTP controller for vendor runtime status operations.
- */
 #[Route('/api/vendor-runtime-status')]
 final class VendorRuntimeStatusController extends AbstractController
 {
@@ -20,9 +17,6 @@ final class VendorRuntimeStatusController extends AbstractController
     {
     }
 
-    /**
-     * Returns the current read model for the requested resource.
-     */
     #[Route('/tenant/{tenantId}/vendor/{vendorId}', methods: ['GET'])]
     public function show(string $tenantId, string $vendorId, Request $request): JsonResponse
     {

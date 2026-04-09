@@ -8,9 +8,6 @@ namespace App\Service\Search;
 
 use App\ServiceInterface\Search\TfidfSearchInterface;
 
-/**
- * Application service for tfidf search operations.
- */
 final class TfidfSearch implements TfidfSearchInterface
 {
     /** @var array<int,array{tokens:array<string,int>, tfidf:array<string,float>}> */
@@ -32,9 +29,6 @@ final class TfidfSearch implements TfidfSearchInterface
         return array_values(array_filter($tokens, static fn (string $token): bool => '' !== $token));
     }
 
-    /**
-     * Executes the add document operation for this runtime surface.
-     */
     public function addDocument(string $text): int
     {
         $tokens = $this->tokenize($text);
@@ -52,9 +46,6 @@ final class TfidfSearch implements TfidfSearchInterface
         return $id;
     }
 
-    /**
-     * Executes the finalize operation for this runtime surface.
-     */
     public function finalize(): void
     {
         foreach ($this->docs as $id => $document) {
@@ -76,9 +67,6 @@ final class TfidfSearch implements TfidfSearchInterface
         }
     }
 
-    /**
-     * Executes the search operation for this runtime surface.
-     */
     public function search(string $query, int $limit = 10): array
     {
         $qt = $this->tokenize($query);

@@ -15,8 +15,5 @@ use Doctrine\Persistence\ObjectRepository;
  */
 interface VendorSecurityRepositoryInterface extends ObjectRepository
 {
-    /**
-     * Returns the requested persisted state.
-     */
     public function findOneActiveForVendorId(int $vendorId): ?VendorSecurityInterface;
 }

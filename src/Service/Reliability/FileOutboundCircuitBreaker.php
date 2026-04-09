@@ -19,9 +19,6 @@ final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterfac
     {
     }
 
-    /**
-     * Executes the current state operation for this runtime surface.
-     */
     public function currentState(string $operation, string $scopeKey, int $threshold, int $cooldownSeconds): array
     {
         $payload = $this->readState($operation, $scopeKey);
@@ -40,9 +37,6 @@ final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterfac
         return $this->statePayload($operation, $scopeKey, 'closed', $failureCount, $threshold, $cooldownSeconds, true);
     }
 
-    /**
-     * Records the requested runtime state change.
-     */
     public function recordSuccess(string $operation, string $scopeKey): void
     {
         $path = $this->filePath($operation, $scopeKey);
@@ -51,9 +45,6 @@ final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterfac
         }
     }
 
-    /**
-     * Records the requested runtime state change.
-     */
     public function recordFailure(string $operation, string $scopeKey, int $threshold, int $cooldownSeconds): array
     {
         $current = $this->readState($operation, $scopeKey);

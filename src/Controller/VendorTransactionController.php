@@ -20,9 +20,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * HTTP controller for vendor transaction operations.
- */
 #[Route('/api/vendor-transactions')]
 final class VendorTransactionController extends AbstractController
 {

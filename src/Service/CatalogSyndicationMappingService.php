@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
@@ -11,9 +12,6 @@ use App\ServiceInterface\CatalogSyndicationMappingServiceInterface;
 use App\ValueObject\CategorySyndicationMappingProfile;
 use App\ValueObject\CategorySyndicationPublishPackage;
 
-/**
- * Application service for catalog syndication mapping operations.
- */
 final class CatalogSyndicationMappingService implements CatalogSyndicationMappingServiceInterface
 {
     public function __construct(
@@ -22,9 +20,9 @@ final class CatalogSyndicationMappingService implements CatalogSyndicationMappin
     }
 
     /**
-     * @param array<string, mixed> $categoryData
+     * @param array<string, mixed>  $categoryData
      * @param array<string, string> $fieldMap
-     * @param list<string> $requiredFields
+     * @param list<string>          $requiredFields
      */
     public function buildPublishPackage(
         string $packageId,

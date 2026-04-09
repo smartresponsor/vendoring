@@ -14,9 +14,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * HTTP controller for vendor profile operations.
- */
 #[Route('/api/vendor-profile')]
 final class VendorProfileController extends AbstractController
 {
@@ -27,9 +24,6 @@ final class VendorProfileController extends AbstractController
     ) {
     }
 
-    /**
-     * Applies the requested update and returns the refreshed resource state.
-     */
     #[Route('/vendor/{vendorId}', methods: ['PATCH'])]
     public function update(int $vendorId, Request $request): JsonResponse
     {
@@ -57,9 +51,6 @@ final class VendorProfileController extends AbstractController
         return new JsonResponse(['data' => $view->toArray()], 200);
     }
 
-    /**
-     * Returns the current read model for the requested resource.
-     */
     #[Route('/vendor/{vendorId}', methods: ['GET'])]
     public function show(int $vendorId): JsonResponse
     {

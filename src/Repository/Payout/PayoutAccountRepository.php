@@ -8,18 +8,12 @@ use App\Entity\Payout\PayoutAccount;
 use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
 use Doctrine\DBAL\Connection;
 
-/**
- * Doctrine repository for payout account records.
- */
 final class PayoutAccountRepository implements PayoutAccountRepositoryInterface
 {
     public function __construct(private readonly Connection $db)
     {
     }
 
-    /**
-     * Returns the requested runtime state.
-     */
     public function get(string $tenantId, string $vendorId): ?PayoutAccount
     {
         $r = $this->db->fetchAssociative('SELECT * FROM payout_accounts WHERE tenant_id=:t AND vendor_id=:v', ['t' => $tenantId, 'v' => $vendorId]);
@@ -30,9 +24,6 @@ final class PayoutAccountRepository implements PayoutAccountRepositoryInterface
         return new PayoutAccount($this->stringCell($r, 'id'), $this->stringCell($r, 'tenant_id'), $this->stringCell($r, 'vendor_id'), $this->stringCell($r, 'provider'), $this->stringCell($r, 'account_ref'), $this->stringCell($r, 'currency'), $this->boolCell($r, 'active'), $this->stringCell($r, 'created_at'));
     }
 
-    /**
-     * Creates or updates the requested aggregate state.
-     */
     public function upsert(PayoutAccount $a): void
     {
         $exists = $this->db->fetchOne('SELECT COUNT(*) FROM payout_accounts WHERE tenant_id=:t AND vendor_id=:v', ['t' => $a->tenantId, 'v' => $a->vendorId]);

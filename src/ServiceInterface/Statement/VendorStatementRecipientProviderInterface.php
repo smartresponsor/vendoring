@@ -6,9 +6,6 @@ namespace App\ServiceInterface\Statement;
 
 use App\DTO\Statement\VendorStatementRecipientDTO;
 
-/**
- * Contract for providing vendor statement recipient provider.
- */
 interface VendorStatementRecipientProviderInterface
 {
     /** @return list<VendorStatementRecipientDTO> */

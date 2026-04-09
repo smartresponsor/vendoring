@@ -28,9 +28,6 @@ final class VendorExternalIntegrationRuntimeViewBuilder implements VendorExterna
     ) {
     }
 
-    /**
-     * Builds the requested read model.
-     */
     public function build(string $tenantId, string $vendorId): VendorExternalIntegrationRuntimeView
     {
         $ownership = null;

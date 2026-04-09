@@ -10,9 +10,6 @@ use App\RepositoryInterface\VendorProfileRepositoryInterface;
 use App\RepositoryInterface\VendorRepositoryInterface;
 use App\ServiceInterface\VendorProfileViewBuilderInterface;
 
-/**
- * Builds vendor profile views.
- */
 final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterface
 {
     /**
@@ -52,9 +49,6 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     ) {
     }
 
-    /**
-     * Builds the requested read model.
-     */
     public function buildForVendorId(int $vendorId): ?VendorProfileView
     {
         $vendor = $this->vendorRepository->find($vendorId);

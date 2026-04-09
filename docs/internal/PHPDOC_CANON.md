@@ -93,7 +93,7 @@ Forbidden:
 - empty comments
 - boilerplate comments that restate code
 - stale comments after code changes
-- pretending a fallback service is “fully integrated” when it is intentionally local/no-op
+- pretending a placeholder service is “fully integrated” when it is intentionally local/no-op
 
 ## Release-candidate expectation
 

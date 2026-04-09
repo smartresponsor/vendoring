@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Category;
 
-/**
- * Application contract for category rule suggest service operations.
- */
 interface CategoryRuleSuggestServiceInterface
 {
     /**

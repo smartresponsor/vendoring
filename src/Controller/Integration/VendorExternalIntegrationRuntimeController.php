@@ -10,9 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * HTTP controller for vendor external integration runtime operations.
- */
 #[Route('/api/vendor/runtime')]
 final class VendorExternalIntegrationRuntimeController extends AbstractController
 {
@@ -21,9 +18,6 @@ final class VendorExternalIntegrationRuntimeController extends AbstractControlle
     ) {
     }
 
-    /**
-     * Returns the current read model for the requested resource.
-     */
     #[Route('/{vendorId}/external-integrations', methods: ['GET'])]
     public function show(string $vendorId, Request $request): JsonResponse
     {

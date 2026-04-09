@@ -11,9 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * HTTP controller for payout account operations.
- */
 #[Route('/api/payouts/account')]
 final class PayoutAccountController extends AbstractController
 {
@@ -21,9 +18,6 @@ final class PayoutAccountController extends AbstractController
     {
     }
 
-    /**
-     * Creates or updates the requested aggregate state.
-     */
     #[Route('', methods: ['POST'])]
     public function upsert(Request $r): JsonResponse
     {

@@ -23,17 +23,11 @@ final class VendorAccessResolver implements VendorAccessResolverInterface
     ) {
     }
 
-    /**
-     * Determines whether the requested operation is allowed.
-     */
     public function canUserAccessVendorCapability(int $vendorId, int $userId, string $capability): bool
     {
         return $this->explainUserAccessVendorCapability($vendorId, $userId, $capability)['granted'];
     }
 
-    /**
-     * Executes the explain user access vendor capability operation for this runtime surface.
-     */
     public function explainUserAccessVendorCapability(int $vendorId, int $userId, string $capability): array
     {
         $roles = [];

@@ -56,18 +56,6 @@ VENDOR_SQLITE_DSN=sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite
 - `docs/release/RC_BASELINE.md`
 - `docs/release/RC_EVIDENCE_PACK.md`
 
-## Antora producer surface
-
-- `docs/antora.yml`
-- `docs/modules/ROOT/pages/index.adoc`
-- `docs/modules/ROOT/pages/architecture.adoc`
-- `docs/modules/ROOT/pages/install.adoc`
-- `docs/modules/ROOT/pages/operations.adoc`
-- `docs/modules/ROOT/pages/api.adoc`
-- `docs/modules/ROOT/pages/reference.adoc`
-
-This repository provides documentation content as an Antora producer only. Central site assembly, playbooks, UI, and publishing logic remain outside this repository.
-
 ## Current note
 
 The repository intentionally does **not** present itself as a finished Twig/Form admin product yet.

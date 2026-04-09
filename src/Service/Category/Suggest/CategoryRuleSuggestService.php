@@ -1,14 +1,12 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service\Category\Suggest;
 
 use App\ServiceInterface\Category\CategoryRuleSuggestServiceInterface;
 
-/**
- * Application service for category rule suggest operations.
- */
 final class CategoryRuleSuggestService implements CategoryRuleSuggestServiceInterface
 {
     /**

@@ -1,14 +1,12 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service\Category;
 
 use App\ServiceInterface\Category\CategoryCollectionServiceInterface;
 
-/**
- * Application service for category collection operations.
- */
 final class CategoryCollectionService implements CategoryCollectionServiceInterface
 {
     /**
@@ -90,8 +88,6 @@ final class CategoryCollectionService implements CategoryCollectionServiceInterf
     }
 
     /**
-     * @param mixed $value
-     *
      * @return list<string>
      */
     private static function stringList(mixed $value): array

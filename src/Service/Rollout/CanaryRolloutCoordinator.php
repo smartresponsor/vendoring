@@ -24,9 +24,6 @@ final class CanaryRolloutCoordinator implements CanaryRolloutCoordinatorInterfac
     ) {
     }
 
-    /**
-     * Evaluates the requested runtime decision.
-     */
     public function evaluate(string $flagName, ?string $tenantId = null, ?string $vendorId = null, int $windowSeconds = 900): array
     {
         $windowSeconds = max(1, $windowSeconds);
@@ -55,8 +52,8 @@ final class CanaryRolloutCoordinator implements CanaryRolloutCoordinatorInterfac
     }
 
     /**
-     * @param array{flag:string, enabled:bool, cohort:string, reason:string} $flagDecision
-     * @param array<string,mixed> $rollback
+     * @param array{flag:string, enabled:bool, cohort:string, reason:string}      $flagDecision
+     * @param array<string,mixed>                                                 $rollback
      * @param array{transaction:bool, finance:bool, payout:bool, postDeploy:bool} $probeGate
      *
      * @return array{string,string,string}

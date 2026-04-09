@@ -7,9 +7,6 @@ namespace App\Service\Statement;
 use App\DTO\Statement\VendorStatementRequestDTO;
 use App\ServiceInterface\Statement\StatementExporterPDFInterface;
 
-/**
- * Application service for statement operations.
- */
 final class StatementExporterPDF implements StatementExporterPDFInterface
 {
     /** @param array{tenantId:string, vendorId:string, from:string, to:string, currency:string, opening:float, earnings:float, refunds:float, fees:float, closing:float, items:list<array{type:string, amount:float, currency:string}>} $data */

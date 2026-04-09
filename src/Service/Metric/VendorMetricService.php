@@ -7,9 +7,6 @@ namespace App\Service\Metric;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Metric\VendorMetricServiceInterface;
 
-/**
- * Application service for vendor metric operations.
- */
 final class VendorMetricService implements VendorMetricServiceInterface
 {
     public function __construct(
@@ -17,9 +14,6 @@ final class VendorMetricService implements VendorMetricServiceInterface
     ) {
     }
 
-    /**
-     * Returns the overview projection for the requested runtime surface.
-     */
     public function overview(string $tenantId, string $vendorId, ?string $from = null, ?string $to = null, string $currency = 'USD'): array
     {
         $revenue = max(0.0, $this->ledger->sumByAccount($tenantId, 'REVENUE', $from, $to, $vendorId, $currency));
@@ -40,9 +34,6 @@ final class VendorMetricService implements VendorMetricServiceInterface
         ];
     }
 
-    /**
-     * Executes the trends operation for this runtime surface.
-     */
     public function trends(string $tenantId, string $vendorId, string $from, string $to, string $bucket = 'month', string $currency = 'USD'): array
     {
         $o = $this->overview($tenantId, $vendorId, $from, $to, $currency);

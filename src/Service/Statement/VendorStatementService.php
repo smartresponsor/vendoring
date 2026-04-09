@@ -8,9 +8,6 @@ use App\DTO\Statement\VendorStatementRequestDTO;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
 
-/**
- * Application service for vendor statement operations.
- */
 final class VendorStatementService implements VendorStatementServiceInterface
 {
     public function __construct(private readonly LedgerEntryRepositoryInterface $ledger)
@@ -44,9 +41,6 @@ final class VendorStatementService implements VendorStatementServiceInterface
         ];
     }
 
-    /**
-     * Exports the requested artifact.
-     */
     public function exportCsv(VendorStatementRequestDTO $dto): string
     {
         $data = $this->build($dto);

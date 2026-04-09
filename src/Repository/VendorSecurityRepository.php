@@ -23,9 +23,6 @@ final class VendorSecurityRepository extends ServiceEntityRepository implements 
         parent::__construct($registry, VendorSecurity::class);
     }
 
-    /**
-     * Returns the requested persisted state.
-     */
     public function findOneActiveForVendorId(int $vendorId): ?VendorSecurityInterface
     {
         $entity = $this->findOneBy([

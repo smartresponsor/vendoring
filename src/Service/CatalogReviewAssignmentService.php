@@ -9,9 +9,6 @@ use App\Policy\CategoryReviewAssignmentPolicy;
 use App\Repository\CategoryChangeRequestRepository;
 use App\Repository\CategoryReviewAssignmentRepository;
 
-/**
- * Application service for catalog review assignment operations.
- */
 final class CatalogReviewAssignmentService
 {
     public function __construct(

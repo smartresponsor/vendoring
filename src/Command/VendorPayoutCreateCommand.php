@@ -14,9 +14,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * CLI entrypoint for vendor payout create operations.
- */
 #[AsCommand(
     name: 'app:vendor:payout:create',
     description: 'Create payout from vendor available balance and print payout state',

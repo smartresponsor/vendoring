@@ -16,9 +16,6 @@ use App\ServiceInterface\VendorUserAssignmentServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/**
- * Application service for vendor operations.
- */
 final class VendorService implements VendorServiceInterface
 {
     public function __construct(
@@ -28,9 +25,6 @@ final class VendorService implements VendorServiceInterface
     ) {
     }
 
-    /**
-     * Creates the requested resource from the supplied input.
-     */
     public function create(VendorCreateDTO $dto): Vendor
     {
         $ownerUserId = $dto->resolveOwnerUserId();
@@ -47,9 +41,6 @@ final class VendorService implements VendorServiceInterface
         return $vendor;
     }
 
-    /**
-     * Updates the requested resource state.
-     */
     public function update(Vendor $vendor, VendorUpdateDTO $dto): Vendor
     {
         if (null !== $dto->brandName) {

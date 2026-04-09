@@ -23,9 +23,6 @@ final class ReleaseManifestBuilder implements ReleaseManifestBuilderInterface
     ) {
     }
 
-    /**
-     * Builds the requested read model.
-     */
     public function build(int $windowSeconds = 900): array
     {
         $snapshot = $this->snapshotBuilder->build($windowSeconds);

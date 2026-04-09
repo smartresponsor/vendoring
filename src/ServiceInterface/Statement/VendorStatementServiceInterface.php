@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Statement;
 
-/**
- * Application contract for vendor statement service operations.
- */
 interface VendorStatementServiceInterface
 {
     /**
@@ -26,8 +23,5 @@ interface VendorStatementServiceInterface
      */
     public function build(\App\DTO\Statement\VendorStatementRequestDTO $dto): array;
 
-    /**
-     * Exports the requested artifact.
-     */
     public function exportCsv(\App\DTO\Statement\VendorStatementRequestDTO $dto): string;
 }

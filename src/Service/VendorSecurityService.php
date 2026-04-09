@@ -23,49 +23,31 @@ final class VendorSecurityService implements VendorSecurityServiceInterface
     {
     }
 
-    /**
-     * Creates the requested resource from the supplied input.
-     */
     public function createKey(Vendor $vendor, string $permissions): string
     {
         return $this->apiKeyService->createKey($vendor, $permissions);
     }
 
-    /**
-     * Rotates the requested credential material.
-     */
     public function rotateKey(VendorApiKey $existingKey): string
     {
         return $this->apiKeyService->rotateKey($existingKey);
     }
 
-    /**
-     * Executes the revoke key operation for this runtime surface.
-     */
     public function revokeKey(VendorApiKey $apiKey): void
     {
         $this->apiKeyService->revokeKey($apiKey);
     }
 
-    /**
-     * Executes the validate token operation for this runtime surface.
-     */
     public function validateToken(string $plainToken, ?string $permission = null): ?Vendor
     {
         return $this->apiKeyService->validateToken($plainToken, $permission);
     }
 
-    /**
-     * Executes the validate authorization header operation for this runtime surface.
-     */
     public function validateAuthorizationHeader(string $authorizationHeader, ?string $permission = null): ?Vendor
     {
         return $this->apiKeyService->validateAuthorizationHeader($authorizationHeader, $permission);
     }
 
-    /**
-     * Resolves the requested runtime subject.
-     */
     public function resolveVendorFromAuthHeader(string $authorizationHeader): ?Vendor
     {
         return $this->apiKeyService->resolveVendorFromAuthHeader($authorizationHeader);

@@ -31,9 +31,6 @@ final class VendorStatementMailerService implements VendorStatementMailerService
     ) {
     }
 
-    /**
-     * Sends the requested outbound artifact.
-     */
     public function send(string $tenantId, string $vendorId, string $email, string $pdfPath, string $periodLabel): array
     {
         $policy = $this->outboundPolicy->forOperation('statement_mail_send');

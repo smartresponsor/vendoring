@@ -6,9 +6,6 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Sec;
 
-/**
- * Application contract for hmac operations.
- */
 interface HmacInterface
 {
     public static function sign(string $payload, string $secret, string $algo = 'sha256'): string;

@@ -1,12 +1,10 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\ServiceInterface\Category;
 
-/**
- * Application contract for category rule engine operations.
- */
 interface CategoryRuleEngineInterface
 {
     /**

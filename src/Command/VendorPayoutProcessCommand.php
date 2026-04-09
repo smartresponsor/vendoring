@@ -13,9 +13,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * CLI entrypoint for vendor payout process operations.
- */
 #[AsCommand(name: 'app:vendor:payout:process', description: 'Process an existing vendor payout.')]
 final class VendorPayoutProcessCommand extends Command
 {

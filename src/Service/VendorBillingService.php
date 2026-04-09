@@ -16,9 +16,6 @@ use App\ServiceInterface\VendorBillingServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/**
- * Application service for vendor billing operations.
- */
 final class VendorBillingService implements VendorBillingServiceInterface
 {
     public function __construct(
@@ -28,9 +25,6 @@ final class VendorBillingService implements VendorBillingServiceInterface
     ) {
     }
 
-    /**
-     * Creates or updates the requested aggregate state.
-     */
     public function upsert(Vendor $vendor, VendorBillingDTO $dto): VendorBilling
     {
         $billing = $this->repository->findOneBy(['vendor' => $vendor]) ?? new VendorBilling($vendor);
@@ -51,9 +45,6 @@ final class VendorBillingService implements VendorBillingServiceInterface
         return $billing;
     }
 
-    /**
-     * Executes the request payout operation for this runtime surface.
-     */
     public function requestPayout(VendorBilling $billing, int $amountMinor): void
     {
         $billing->markPayoutRequested();
@@ -62,9 +53,6 @@ final class VendorBillingService implements VendorBillingServiceInterface
         $this->dispatcher->dispatch(new VendorPayoutRequestedEvent($billing, $amountMinor));
     }
 
-    /**
-     * Executes the complete payout operation for this runtime surface.
-     */
     public function completePayout(VendorBilling $billing, int $amountMinor): void
     {
         $billing->markPayoutCompleted();

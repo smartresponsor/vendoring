@@ -60,9 +60,6 @@ final class OutboundOperationPolicy implements OutboundOperationPolicyInterface
         ],
     ];
 
-    /**
-     * Executes the for operation operation for this runtime surface.
-     */
     public function forOperation(string $operation): array
     {
         $policy = self::POLICIES[$operation] ?? [

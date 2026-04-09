@@ -21,9 +21,6 @@ final class RollbackDecisionEvaluator implements RollbackDecisionEvaluatorInterf
     {
     }
 
-    /**
-     * Evaluates the requested runtime decision.
-     */
     public function evaluate(array $manifest): array
     {
         $criticalAlertCodes = $this->thresholds['criticalAlertCodes'] ?? ['outbound_circuit_open'];
