@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class LocalDevController
 {
-    private const HOME_PAGE = <<<'HTML'
+    private const string HOME_PAGE = <<<'HTML'
 <!DOCTYPE html>
 <html lang="en">
   <head>

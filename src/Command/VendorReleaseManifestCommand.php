@@ -27,6 +27,7 @@ final class VendorReleaseManifestCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->addOption('windowSeconds', null, InputOption::VALUE_OPTIONAL, 'Lookback window in seconds', '900')
             ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Output format: text|json', 'text')

@@ -1,0 +1,43 @@
+version: "1.0"
+
+profile:
+  base:
+    name: Project Default
+  inspections:
+    - inspection: LongLine
+      enabled: false
+    - inspection: IncorrectFormatting
+      enabled: false
+    - inspection: PhpClassNamingConventionInspection
+      enabled: false
+    - inspection: PhpMethodNamingConventionInspection
+      enabled: false
+    - inspection: PhpPropertyNamingConventionInspection
+      enabled: false
+    - inspection: PhpVariableNamingConventionInspection
+      enabled: false
+    - inspection: PhpConstantNamingConventionInspection
+      enabled: false
+    - inspection: PhpGetterAndSetterCanBeReplacedWithPropertyHooksInspection
+      enabled: false
+    - inspection: PhpPropertyCanBeReadonlyInspection
+      enabled: false
+    - inspection: PhpFunctionNamingConventionInspection
+      enabled: false
+    - inspection: PhpUndefinedClassInspection
+      enabled: false
+    - inspection: PhpUndefinedNamespaceInspection
+      enabled: false
+    - inspection: PhpUnusedLocalVariableInspection
+      enabled: false
+exclude:
+  - name: All paths
+    paths:
+      - vendor/**
+      - build/**
+      - report/**
+      - .idea/**
+      - .ide/**
+      - composer.lock
+      - config/reference.php
+      - .commanding/sh/**

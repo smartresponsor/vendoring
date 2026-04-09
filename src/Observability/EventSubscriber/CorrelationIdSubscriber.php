@@ -21,8 +21,8 @@ use Symfony\Component\Uid\Uuid;
  */
 final class CorrelationIdSubscriber implements EventSubscriberInterface
 {
-    private const HEADER_NAME = 'X-Correlation-ID';
-    private const ATTRIBUTE_NAME = '_vendoring_correlation_id';
+    private const string HEADER_NAME = 'X-Correlation-ID';
+    private const string ATTRIBUTE_NAME = '_vendoring_correlation_id';
 
     public function __construct(private readonly CorrelationContextInterface $correlationContext)
     {

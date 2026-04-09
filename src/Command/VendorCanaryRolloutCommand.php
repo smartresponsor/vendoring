@@ -24,6 +24,7 @@ final class VendorCanaryRolloutCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->addOption('flag', null, InputOption::VALUE_REQUIRED, 'Canonical feature flag identifier')
             ->addOption('tenantId', null, InputOption::VALUE_OPTIONAL, 'Optional tenant scope')

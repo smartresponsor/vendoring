@@ -16,7 +16,7 @@ final class VendorTransactionStatusUpdateType extends AbstractType
     /**
      * @var array<string, string>
      */
-    private const STATUSES = [
+    private const array STATUSES = [
         'Pending' => 'pending',
         'Authorized' => 'authorized',
         'Captured' => 'captured',
@@ -26,6 +26,7 @@ final class VendorTransactionStatusUpdateType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        parent::buildForm($builder, $options);
         $builder->add('status', ChoiceType::class, [
             'label' => false,
             'choices' => self::STATUSES,
@@ -36,6 +37,7 @@ final class VendorTransactionStatusUpdateType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
         $resolver->setDefaults([
             'data_class' => VendorTransactionStatusUpdateInput::class,
             'csrf_protection' => true,

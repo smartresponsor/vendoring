@@ -32,6 +32,7 @@ final class CategoryReviewAssignCommand extends Command
      */
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->addArgument('requestId', InputArgument::REQUIRED)
             ->addArgument('reviewer', InputArgument::REQUIRED)

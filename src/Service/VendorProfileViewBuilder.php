@@ -15,7 +15,7 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     /**
      * @var array<string, string>
      */
-    private const SECTION_LABELS = [
+    private const array SECTION_LABELS = [
         'business' => 'Business profile',
         'public' => 'Public profile',
         'search' => 'Search metadata',
@@ -24,7 +24,7 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     /**
      * @var array<string, list<string>>
      */
-    private const SECTION_FIELDS = [
+    private const array SECTION_FIELDS = [
         'business' => ['brandName', 'ownerUserId'],
         'public' => ['displayName', 'about', 'website', 'socials'],
         'search' => ['seoTitle', 'seoDescription'],
@@ -33,7 +33,7 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     /**
      * @var array<string, string>
      */
-    private const NEXT_ACTIONS = [
+    private const array NEXT_ACTIONS = [
         'ownerUserId' => 'assign_owner',
         'displayName' => 'add_display_name',
         'about' => 'add_about',

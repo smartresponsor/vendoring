@@ -24,6 +24,7 @@ final class VendorReleaseBaselineCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->addOption('tenantId', null, InputOption::VALUE_REQUIRED, 'Tenant ID')
             ->addOption('vendorId', null, InputOption::VALUE_REQUIRED, 'Vendor ID')
