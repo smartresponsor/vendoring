@@ -17,7 +17,7 @@ final class VendorAuthorizationMatrix implements VendorAuthorizationMatrixInterf
     /**
      * @var array<string, list<string>>
      */
-    private const CAPABILITIES_BY_ROLE = [
+    private const array CAPABILITIES_BY_ROLE = [
         VendorRole::OWNER => [
             'transactions.read',
             'transactions.write',

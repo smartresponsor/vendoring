@@ -29,6 +29,7 @@ final class VendorApiKeyRotateCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->addOption('keyId', null, InputOption::VALUE_REQUIRED, 'API key ID')
             ->setHelp('Usage: php bin/console app:vendor:api-key:rotate --keyId=555');

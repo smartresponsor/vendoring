@@ -25,7 +25,7 @@ final class OutboundOperationPolicy implements OutboundOperationPolicyInterface
      *   cooldownSeconds:int
      * }>
      */
-    private const POLICIES = [
+    private const array POLICIES = [
         'statement_mail_send' => [
             'timeoutSeconds' => 10,
             'maxAttempts' => 1,

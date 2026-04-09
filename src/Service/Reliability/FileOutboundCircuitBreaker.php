@@ -103,6 +103,9 @@ final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterfac
     private function filePath(string $operation, string $scopeKey): string
     {
         $safe = preg_replace('/[^A-Za-z0-9_.-]+/', '_', $operation.'__'.$scopeKey);
+        if (!is_string($safe) || '' === $safe) {
+            $safe = sha1($operation.'__'.$scopeKey);
+        }
 
         return rtrim($this->stateDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$safe.'.json';
     }

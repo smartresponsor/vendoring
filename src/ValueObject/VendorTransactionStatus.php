@@ -6,12 +6,12 @@ namespace App\ValueObject;
 
 final class VendorTransactionStatus
 {
-    public const PENDING = 'pending';
-    public const AUTHORIZED = 'authorized';
-    public const FAILED = 'failed';
-    public const CANCELLED = 'cancelled';
-    public const SETTLED = 'settled';
-    public const REFUNDED = 'refunded';
+    public const string PENDING = 'pending';
+    public const string AUTHORIZED = 'authorized';
+    public const string FAILED = 'failed';
+    public const string CANCELLED = 'cancelled';
+    public const string SETTLED = 'settled';
+    public const string REFUNDED = 'refunded';
 
     /**
      * @return list<string>

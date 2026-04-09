@@ -12,10 +12,10 @@ namespace App\ValueObject;
  */
 final class VendorRole
 {
-    public const OWNER = 'owner';
-    public const OPERATOR = 'operator';
-    public const FINANCE = 'finance';
-    public const VIEWER = 'viewer';
+    public const string OWNER = 'owner';
+    public const string OPERATOR = 'operator';
+    public const string FINANCE = 'finance';
+    public const string VIEWER = 'viewer';
 
     /**
      * @return list<string>

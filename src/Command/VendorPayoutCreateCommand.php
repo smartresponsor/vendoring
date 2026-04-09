@@ -30,6 +30,7 @@ final class VendorPayoutCreateCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->addOption('vendorId', null, InputOption::VALUE_REQUIRED, 'Vendor ID')
             ->addOption('currency', null, InputOption::VALUE_OPTIONAL, 'Currency', 'USD')

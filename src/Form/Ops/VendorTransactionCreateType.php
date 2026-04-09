@@ -16,6 +16,7 @@ final class VendorTransactionCreateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        parent::buildForm($builder, $options);
         $builder
             ->add('vendorId', TextType::class, [
                 'label' => 'Vendor ID',
@@ -45,6 +46,7 @@ final class VendorTransactionCreateType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
         $resolver->setDefaults([
             'data_class' => VendorTransactionCreateInput::class,
             'csrf_protection' => true,

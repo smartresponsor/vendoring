@@ -26,6 +26,7 @@ final class VendorApiKeyListCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->addOption('vendorId', null, InputOption::VALUE_REQUIRED, 'Vendor ID')
             ->setHelp('Usage: php bin/console app:vendor:api-key:list --vendorId=123');

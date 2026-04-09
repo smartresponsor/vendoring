@@ -10,7 +10,7 @@ use App\ServiceInterface\Ledger\VendorSummaryServiceInterface;
 
 final class VendorSummaryService implements VendorSummaryServiceInterface
 {
-    private const ACCOUNTS = ['REVENUE', 'REFUNDS_PAYABLE', 'VENDOR_PAYABLE', 'CASH'];
+    private const array ACCOUNTS = ['REVENUE', 'REFUNDS_PAYABLE', 'VENDOR_PAYABLE', 'CASH'];
 
     public function __construct(private readonly LedgerEntryRepositoryInterface $ledgerEntries)
     {

@@ -29,6 +29,7 @@ final class SendVendorStatementsCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->addOption('tenant-id', null, InputOption::VALUE_REQUIRED)
             ->addOption('vendor-id', null, InputOption::VALUE_REQUIRED)

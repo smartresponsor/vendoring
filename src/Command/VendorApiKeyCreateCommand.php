@@ -29,6 +29,7 @@ final class VendorApiKeyCreateCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->addOption('vendorId', null, InputOption::VALUE_REQUIRED, 'Vendor ID')
             ->addOption('permissions', null, InputOption::VALUE_OPTIONAL, 'Permissions (comma-separated)', 'read')

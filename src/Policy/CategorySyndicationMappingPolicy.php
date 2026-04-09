@@ -8,7 +8,7 @@ use App\PolicyInterface\CategorySyndicationMappingPolicyInterface;
 
 final class CategorySyndicationMappingPolicy implements CategorySyndicationMappingPolicyInterface
 {
-    private const LOCALE_MODES = ['per_locale', 'shared'];
+    private const array LOCALE_MODES = ['per_locale', 'shared'];
 
     public function assertLocaleMode(string $localeMode): void
     {

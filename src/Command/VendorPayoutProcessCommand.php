@@ -23,6 +23,7 @@ final class VendorPayoutProcessCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->addArgument('payoutId', InputArgument::REQUIRED)
             ->addOption('json', null, InputOption::VALUE_NONE, 'Emit machine-readable JSON output.');
