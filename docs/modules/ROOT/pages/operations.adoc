@@ -1,0 +1,24 @@
+= Operations
+
+Vendoring keeps release-candidate operational documentation in-tree and separates it from generated evidence artifacts.
+
+== Operator and RC sources
+
+* `docs/release/RC_BASELINE.md`
+* `docs/release/RC_CI_LANES.md`
+* `docs/release/RC_RUNTIME_SURFACES.md`
+* `docs/release/RC_OPERATOR_SURFACE.md`
+* `docs/release/RC_RELEASE_MANIFEST.md`
+* `docs/release/RC_ROLLBACK_MANIFEST.md`
+* `docs/release/RC_EVIDENCE_PACK.md`
+* `docs/release/RC_KNOWN_NON_BLOCKERS.md`
+
+== Generated operational artifacts
+
+* `build/release/rc-evidence.json`
+* `build/release/rc-evidence.md`
+* `build/release/release-manifest.json`
+* `build/release/rollback-manifest.json`
+
+The markdown pages remain human-readable narrative surfaces.
+The `build/release/` artifacts remain machine-generated release evidence.

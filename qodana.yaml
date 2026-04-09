@@ -1,4 +1,5 @@
 version: "1.0"
+<<<<<<< HEAD
 linter: qodana-php
 
 php:
@@ -50,3 +51,47 @@ exclude:
       - .qodana
       - composer.json
       - qodana.yaml
+=======
+
+profile:
+  base:
+    name: Project Default
+  inspections:
+    - inspection: LongLine
+      enabled: false
+    - inspection: IncorrectFormatting
+      enabled: false
+    - inspection: PhpClassNamingConventionInspection
+      enabled: false
+    - inspection: PhpMethodNamingConventionInspection
+      enabled: false
+    - inspection: PhpPropertyNamingConventionInspection
+      enabled: false
+    - inspection: PhpVariableNamingConventionInspection
+      enabled: false
+    - inspection: PhpConstantNamingConventionInspection
+      enabled: false
+    - inspection: PhpGetterAndSetterCanBeReplacedWithPropertyHooksInspection
+      enabled: false
+    - inspection: PhpPropertyCanBeReadonlyInspection
+      enabled: false
+    - inspection: PhpFunctionNamingConventionInspection
+      enabled: false
+    - inspection: PhpUndefinedClassInspection
+      enabled: false
+    - inspection: PhpUndefinedNamespaceInspection
+      enabled: false
+    - inspection: PhpUnusedLocalVariableInspection
+      enabled: false
+exclude:
+  - name: All paths
+    paths:
+      - vendor/**
+      - build/**
+      - report/**
+      - .idea/**
+      - .ide/**
+      - composer.lock
+      - config/reference.php
+      - .commanding/sh/**
+>>>>>>> 8b0c6f5f3ba4ad1f653b50437f3b002492c1bfb0
