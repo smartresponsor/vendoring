@@ -18,16 +18,16 @@ use App\ValueObject\VendorTransactionErrorCode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorTransactionManager implements VendorTransactionManagerInterface
+final readonly class VendorTransactionManager implements VendorTransactionManagerInterface
 {
     // Stable validation surface: duplicate_transaction.
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly EventDispatcherInterface $dispatcher,
-        private readonly VendorTransactionStatusPolicyInterface $statusPolicy,
-        private readonly VendorTransactionAmountPolicyInterface $amountPolicy,
-        private readonly VendorTransactionRepositoryInterface $transactions,
-        private readonly RuntimeLoggerInterface $runtimeLogger,
+        private EntityManagerInterface $em,
+        private EventDispatcherInterface $dispatcher,
+        private VendorTransactionStatusPolicyInterface $statusPolicy,
+        private VendorTransactionAmountPolicyInterface $amountPolicy,
+        private VendorTransactionRepositoryInterface $transactions,
+        private RuntimeLoggerInterface $runtimeLogger,
     ) {
     }
 

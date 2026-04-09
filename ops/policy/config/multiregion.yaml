@@ -1,5 +1,5 @@
 multiregion:
-  regions: ['us-east-1','eu-central-1']
-  primary: 'us-east-1'
-  read_replica_latency_ms: { 'us-east-1': 5, 'eu-central-1': 35 }
-  failover_threshold_sec: 20
+    regions: [ 'us-east-1','eu-central-1' ]
+    primary: 'us-east-1'
+    read_replica_latency_ms: { 'us-east-1': 5, 'eu-central-1': 35 }
+    failover_threshold_sec: 20

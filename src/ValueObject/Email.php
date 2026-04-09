@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-final class Email
+final readonly class Email
 {
     public function __construct(private string $value)
     {

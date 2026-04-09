@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
@@ -11,24 +12,49 @@ use App\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface
 use App\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface;
 use App\ServiceInterface\CatalogSyndicationPolicyAwarePackageGateServiceInterface;
 
-final class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSyndicationPolicyAwarePackageGateServiceInterface
+final readonly class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSyndicationPolicyAwarePackageGateServiceInterface
 {
     public function __construct(
-        private readonly CatalogSyndicationFallbackAwarePackageGateServiceInterface $fallbackAwareGateService,
-        private readonly CatalogDestinationMediaPolicyPreferenceServiceInterface $destinationMediaPolicyPreferenceService,
-        private readonly CategorySyndicationPolicyAwarePackageGatePolicyInterface $policy,
+        private CatalogSyndicationFallbackAwarePackageGateServiceInterface $fallbackAwareGateService,
+        private CatalogDestinationMediaPolicyPreferenceServiceInterface $destinationMediaPolicyPreferenceService,
+        private CategorySyndicationPolicyAwarePackageGatePolicyInterface $policy,
     ) {
     }
 
     /**
-     * @param array<string, mixed> $categoryData
+     * @param array<string, mixed>  $categoryData
      * @param array<string, string> $fieldMap
-     * @param list<string> $requiredFields
+     * @param list<string>          $requiredFields
      */
-    public function buildGatedPublishPackage(string $packageId, string $destinationId, string $categoryId, string $version, string $localeMode, array $categoryData, array $fieldMap, array $requiredFields, string $actorId, string $reason): CategorySyndicationPolicyAwarePackageGatedInterface
-    {
-        $fallbackGatePayload = $this->fallbackAwareGateService->buildGatedPublishPackage($packageId, $destinationId, $categoryId, $version, $localeMode, $categoryData, $fieldMap, $requiredFields, $actorId, $reason)->payload();
-        $policyPayload = $this->destinationMediaPolicyPreferenceService->evaluate($destinationId, $categoryId, $actorId, $reason)->payload();
+    public function buildGatedPublishPackage(
+        string $packageId,
+        string $destinationId,
+        string $categoryId,
+        string $version,
+        string $localeMode,
+        array $categoryData,
+        array $fieldMap,
+        array $requiredFields,
+        string $actorId,
+        string $reason,
+    ): CategorySyndicationPolicyAwarePackageGatedInterface {
+        $fallbackGatePayload = $this->fallbackAwareGateService
+            ->buildGatedPublishPackage(
+                $packageId,
+                $destinationId,
+                $categoryId,
+                $version,
+                $localeMode,
+                $categoryData,
+                $fieldMap,
+                $requiredFields,
+                $actorId,
+                $reason,
+            )
+            ->payload();
+        $policyPayload = $this->destinationMediaPolicyPreferenceService
+            ->evaluate($destinationId, $categoryId, $actorId, $reason)
+            ->payload();
 
         $report = $this->policy->buildReport(
             self::stringList($fallbackGatePayload['packageMissingRequiredFields'] ?? null),
@@ -65,8 +91,6 @@ final class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSy
     }
 
     /**
-     * @param mixed $value
-     *
      * @return array<string, mixed>
      */
     private static function arrayMap(mixed $value): array
@@ -75,8 +99,6 @@ final class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSy
     }
 
     /**
-     * @param mixed $value
-     *
      * @return array<string, string>
      */
     private static function stringMap(mixed $value): array
@@ -96,8 +118,6 @@ final class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSy
     }
 
     /**
-     * @param mixed $value
-     *
      * @return list<string>
      */
     private static function stringList(mixed $value): array

@@ -35,12 +35,12 @@ final class VendorStatementExportController extends AbstractController
      * statement service. When the export file cannot be read, the response returns the stable error
      * code `statement_export_unreadable` together with the unresolved export path.
      *
-     * @param string  $vendorId Vendor identifier used for statement and export lookup.
-     * @param Request $r        HTTP request containing tenant and period query parameters.
+     * @param string  $vendorId vendor identifier used for statement and export lookup
+     * @param Request $r        HTTP request containing tenant and period query parameters
      *
      * @return JsonResponse JSON payload containing either validation/error metadata or a `data`
      *                      object with tenant/vendor scope, requested period, export path, and
-     *                      base64-encoded PDF content.
+     *                      base64-encoded PDF content
      */
     #[Route('/{vendorId}/export', methods: ['GET'])]
     public function export(string $vendorId, Request $r): JsonResponse
@@ -56,7 +56,7 @@ final class VendorStatementExportController extends AbstractController
 
         $dto = new VendorStatementRequestDTO($tenantId, $vendorId, $from, $to, $currency);
         $data = $this->svc->build($dto);
-        $path = $this->pdf->export($dto, $data, null);
+        $path = $this->pdf->export($dto, $data);
 
         if (!is_file($path) || !is_readable($path)) {
             return new JsonResponse([

@@ -20,7 +20,7 @@ final class VendorTransactionAmountPolicy implements VendorTransactionAmountPoli
      * - amount_not_numeric
      * - amount_not_positive
      *
-     * @throws \InvalidArgumentException When the amount cannot be normalized under policy rules.
+     * @throws \InvalidArgumentException when the amount cannot be normalized under policy rules
      */
     public function normalize(string $amount): string
     {

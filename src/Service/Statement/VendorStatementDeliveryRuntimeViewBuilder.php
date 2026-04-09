@@ -16,13 +16,13 @@ use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
  * Builds a vendor-local statement delivery summary with ownership, export and
  * recipient surfaces kept adjacent for runtime inspection.
  */
-final class VendorStatementDeliveryRuntimeViewBuilder implements VendorStatementDeliveryRuntimeViewBuilderInterface
+final readonly class VendorStatementDeliveryRuntimeViewBuilder implements VendorStatementDeliveryRuntimeViewBuilderInterface
 {
     public function __construct(
-        private readonly VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
-        private readonly VendorStatementServiceInterface $statementService,
-        private readonly StatementExporterPDFInterface $statementExporter,
-        private readonly VendorStatementRecipientProviderInterface $recipientProvider,
+        private VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
+        private VendorStatementServiceInterface $statementService,
+        private StatementExporterPDFInterface $statementExporter,
+        private VendorStatementRecipientProviderInterface $recipientProvider,
     ) {
     }
 
@@ -45,7 +45,7 @@ final class VendorStatementDeliveryRuntimeViewBuilder implements VendorStatement
 
         $export = null;
         if ($includeExport) {
-            $path = $this->statementExporter->export($dto, $statement, null);
+            $path = $this->statementExporter->export($dto, $statement);
             $export = [
                 'path' => $path,
                 'exists' => is_file($path),

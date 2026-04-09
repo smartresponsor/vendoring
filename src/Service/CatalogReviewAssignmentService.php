@@ -9,12 +9,12 @@ use App\Policy\CategoryReviewAssignmentPolicy;
 use App\Repository\CategoryChangeRequestRepository;
 use App\Repository\CategoryReviewAssignmentRepository;
 
-final class CatalogReviewAssignmentService
+final readonly class CatalogReviewAssignmentService
 {
     public function __construct(
-        private readonly CategoryChangeRequestRepository $requestRepository,
-        private readonly CategoryReviewAssignmentRepository $assignmentRepository,
-        private readonly CategoryReviewAssignmentPolicy $policy,
+        private CategoryChangeRequestRepository $requestRepository,
+        private CategoryReviewAssignmentRepository $assignmentRepository,
+        private CategoryReviewAssignmentPolicy $policy,
     ) {
     }
 

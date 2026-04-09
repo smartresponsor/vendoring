@@ -65,7 +65,7 @@ final class VendorReleaseBaselineCommand extends Command
 
         $json = (string) json_encode($view, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
-        if ((bool) $input->getOption('write')) {
+        if ($input->getOption('write')) {
             $path = $input->getOption('output');
             $outputPath = \is_string($path) && '' !== $path
                 ? $path

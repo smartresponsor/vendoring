@@ -80,7 +80,7 @@ final class FileWriteRateLimiter implements WriteRateLimiterInterface
     /**
      * Read persisted timestamps from one file handle.
      *
-     * @return list<int> Historical timestamps still associated with the bucket file.
+     * @return list<int> historical timestamps still associated with the bucket file
      */
     private function readTimestamps(mixed $handle): array
     {
@@ -113,7 +113,9 @@ final class FileWriteRateLimiter implements WriteRateLimiterInterface
     /**
      * Persist the normalized timestamp history back into the bucket file.
      *
-     * @param list<int> $timestamps Timestamp history to persist.
+     * @param list<int> $timestamps timestamp history to persist
+     *
+     * @throws \JsonException
      */
     private function writeTimestamps(mixed $handle, array $timestamps): void
     {

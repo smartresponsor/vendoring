@@ -16,7 +16,7 @@ final class VendorTransactionStatusPolicy implements VendorTransactionStatusPoli
     /**
      * @var array<string, list<string>>
      */
-    private const ALLOWED_TRANSITIONS = [
+    private const array ALLOWED_TRANSITIONS = [
         VendorTransactionStatus::PENDING => [VendorTransactionStatus::AUTHORIZED, VendorTransactionStatus::FAILED, VendorTransactionStatus::CANCELLED],
         VendorTransactionStatus::AUTHORIZED => [VendorTransactionStatus::SETTLED, VendorTransactionStatus::FAILED, VendorTransactionStatus::CANCELLED],
         VendorTransactionStatus::SETTLED => [VendorTransactionStatus::REFUNDED],
@@ -25,9 +25,6 @@ final class VendorTransactionStatusPolicy implements VendorTransactionStatusPoli
         VendorTransactionStatus::REFUNDED => [],
     ];
 
-    /**
-     * {@inheritdoc}
-     */
     public function normalize(string $status): string
     {
         return strtolower(trim($status));
@@ -49,9 +46,6 @@ final class VendorTransactionStatusPolicy implements VendorTransactionStatusPoli
         return VendorTransactionErrorCode::INVALID_STATUS_TRANSITION;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function canTransition(string $fromStatus, string $toStatus): bool
     {
         $from = $this->normalize($fromStatus);

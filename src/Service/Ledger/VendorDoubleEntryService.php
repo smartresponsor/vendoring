@@ -12,9 +12,9 @@ use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Ledger\VendorDoubleEntryServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
-final class VendorDoubleEntryService implements VendorDoubleEntryServiceInterface
+final readonly class VendorDoubleEntryService implements VendorDoubleEntryServiceInterface
 {
-    public function __construct(private readonly LedgerEntryRepositoryInterface $repo)
+    public function __construct(private LedgerEntryRepositoryInterface $repo)
     {
     }
 
@@ -23,7 +23,7 @@ final class VendorDoubleEntryService implements VendorDoubleEntryServiceInterfac
      */
     public function post(DoubleEntryDTO $dto): array
     {
-        $ts = $dto->occurredAt ?? (new \DateTimeImmutable())->format('Y-m-d H:i:s');
+        $ts = $dto->occurredAt ?? new \DateTimeImmutable()->format('Y-m-d H:i:s');
 
         $e = new LedgerEntry(
             Uuid::v4()->toRfc4122(),

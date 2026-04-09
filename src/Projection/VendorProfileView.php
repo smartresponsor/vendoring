@@ -7,7 +7,7 @@ namespace App\Projection;
 /**
  * Vendor profile readiness view for self-serve profile completion and publishability.
  */
-final class VendorProfileView
+final readonly class VendorProfileView
 {
     /**
      * @param array<string, mixed>                                                    $profile
@@ -18,18 +18,18 @@ final class VendorProfileView
      * @param array<string, array{label:string, complete:bool, missing:list<string>}> $sections
      */
     public function __construct(
-        private readonly int $vendorId,
-        private readonly string $brandName,
-        private readonly string $vendorStatus,
-        private readonly array $profile,
-        private readonly array $businessProfile,
-        private readonly array $publicProfile,
-        private readonly array $searchProfile,
-        private readonly array $publication,
-        private readonly array $sections,
-        private readonly int $completionPercent,
-        private readonly bool $readyForPublishing,
-        private readonly ?string $nextAction,
+        private int $vendorId,
+        private string $brandName,
+        private string $vendorStatus,
+        private array $profile,
+        private array $businessProfile,
+        private array $publicProfile,
+        private array $searchProfile,
+        private array $publication,
+        private array $sections,
+        private int $completionPercent,
+        private bool $readyForPublishing,
+        private ?string $nextAction,
     ) {
     }
 

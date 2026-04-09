@@ -10,9 +10,9 @@ use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
 use App\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
-final class VendorPayoutAccountService implements VendorPayoutAccountServiceInterface
+final readonly class VendorPayoutAccountService implements VendorPayoutAccountServiceInterface
 {
-    public function __construct(private readonly PayoutAccountRepositoryInterface $accounts)
+    public function __construct(private PayoutAccountRepositoryInterface $accounts)
     {
     }
 
@@ -33,7 +33,7 @@ final class VendorPayoutAccountService implements VendorPayoutAccountServiceInte
             $this->requiredString($payload, 'accountRef'),
             $this->requiredString($payload, 'currency'),
             $this->boolValue($payload['active'] ?? true),
-            (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            new \DateTimeImmutable()->format('Y-m-d H:i:s'),
         );
 
         $this->accounts->upsert($account);

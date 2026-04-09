@@ -1,4 +1,4 @@
 shadow:
-  enabled: false
-  endpoint: null
-  sample_pct: 5
+    enabled: false
+    endpoint: null
+    sample_pct: 5

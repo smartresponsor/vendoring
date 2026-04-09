@@ -15,11 +15,11 @@ use App\ValueObject\VendorRole;
  * Access is granted when at least one active assignment for the user/vendor pair maps to the
  * requested capability through the canonical authorization matrix.
  */
-final class VendorAccessResolver implements VendorAccessResolverInterface
+final readonly class VendorAccessResolver implements VendorAccessResolverInterface
 {
     public function __construct(
-        private readonly VendorUserAssignmentRepositoryInterface $assignmentRepository,
-        private readonly VendorAuthorizationMatrixInterface $authorizationMatrix,
+        private VendorUserAssignmentRepositoryInterface $assignmentRepository,
+        private VendorAuthorizationMatrixInterface $authorizationMatrix,
     ) {
     }
 

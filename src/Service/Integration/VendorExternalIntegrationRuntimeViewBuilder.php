@@ -18,13 +18,13 @@ use App\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface
  * surface availability for CRM, webhook-consumer and payout bridge paths
  * without sending live external requests.
  */
-final class VendorExternalIntegrationRuntimeViewBuilder implements VendorExternalIntegrationRuntimeViewBuilderInterface
+final readonly class VendorExternalIntegrationRuntimeViewBuilder implements VendorExternalIntegrationRuntimeViewBuilderInterface
 {
     public function __construct(
-        private readonly VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
-        private readonly VendorCrmServiceInterface $crmService,
-        private readonly VendorWebhooksConsumerServiceInterface $webhooksConsumer,
-        private readonly VendorPayoutProviderServiceInterface $payoutProviderBridge,
+        private VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
+        private VendorCrmServiceInterface $crmService,
+        private VendorWebhooksConsumerServiceInterface $webhooksConsumer,
+        private VendorPayoutProviderServiceInterface $payoutProviderBridge,
     ) {
     }
 

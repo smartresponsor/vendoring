@@ -105,8 +105,6 @@ final class VendorProfileController extends AbstractController
     }
 
     /**
-     * @param array<mixed>|null $socials
-     *
      * @return array<string, string>|null
      */
     private function normalizeSocials(?array $socials): ?array

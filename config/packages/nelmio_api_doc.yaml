@@ -1,10 +1,10 @@
 nelmio_api_doc:
-  documentation:
-    info:
-      title: 'Vendoring API'
-      description: 'Release-candidate API documentation surface for the vendoring component.'
-      version: '1.0.0-rc'
-  areas:
-    path_patterns:
-      - ^/api(?!/doc$)
-      - ^/api(?!/doc\.json$)
+    documentation:
+        info:
+            title: 'Vendoring API'
+            description: 'Release-candidate API documentation surface for the vendoring component.'
+            version: '1.0.0-rc'
+    areas:
+        path_patterns:
+            - ^/api(?!/doc$)
+            - ^/api(?!/doc\.json$)

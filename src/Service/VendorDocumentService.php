@@ -14,11 +14,11 @@ use App\ServiceInterface\VendorDocumentServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorDocumentService implements VendorDocumentServiceInterface
+final readonly class VendorDocumentService implements VendorDocumentServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly EventDispatcherInterface $dispatcher,
+        private EntityManagerInterface $em,
+        private EventDispatcherInterface $dispatcher,
     ) {
     }
 
@@ -28,13 +28,11 @@ final class VendorDocumentService implements VendorDocumentServiceInterface
 
         if ($dto->expiresAt) {
             $ref = new \ReflectionProperty($doc, 'expiresAt');
-            $ref->setAccessible(true);
             $ref->setValue($doc, $dto->expiresAt);
         }
 
         if ($dto->uploaderId) {
             $ref = new \ReflectionProperty($doc, 'uploaderId');
-            $ref->setAccessible(true);
             $ref->setValue($doc, $dto->uploaderId);
         }
 

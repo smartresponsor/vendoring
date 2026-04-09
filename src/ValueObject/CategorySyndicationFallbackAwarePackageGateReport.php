@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-final class CategorySyndicationFallbackAwarePackageGateReport
+final readonly class CategorySyndicationFallbackAwarePackageGateReport
 {
     /**
      * @param list<string>        $packageMissingRequiredFields
@@ -16,15 +16,15 @@ final class CategorySyndicationFallbackAwarePackageGateReport
      * @param list<string>        $fallbackMatchedBindingIds
      */
     public function __construct(
-        private readonly array $packageMissingRequiredFields,
-        private readonly array $strictMediaRequiredMissing,
-        private readonly array $fallbackMediaRequiredMissing,
-        private readonly array $warnings,
-        private readonly array $checks,
-        private readonly array $exactMatchedBindingIds,
-        private readonly array $fallbackMatchedBindingIds,
-        private readonly bool $strictPublishable,
-        private readonly bool $fallbackPublishable,
+        private array $packageMissingRequiredFields,
+        private array $strictMediaRequiredMissing,
+        private array $fallbackMediaRequiredMissing,
+        private array $warnings,
+        private array $checks,
+        private array $exactMatchedBindingIds,
+        private array $fallbackMatchedBindingIds,
+        private bool $strictPublishable,
+        private bool $fallbackPublishable,
     ) {
     }
 

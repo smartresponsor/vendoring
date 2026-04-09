@@ -13,12 +13,12 @@ use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
 /**
  * Builds a vendor-local ownership/access summary without pulling any external User aggregate.
  */
-final class VendorOwnershipViewBuilder implements VendorOwnershipViewBuilderInterface
+final readonly class VendorOwnershipViewBuilder implements VendorOwnershipViewBuilderInterface
 {
     public function __construct(
-        private readonly VendorRepositoryInterface $vendorRepository,
-        private readonly VendorUserAssignmentRepositoryInterface $assignmentRepository,
-        private readonly VendorAuthorizationMatrixInterface $authorizationMatrix,
+        private VendorRepositoryInterface $vendorRepository,
+        private VendorUserAssignmentRepositoryInterface $assignmentRepository,
+        private VendorAuthorizationMatrixInterface $authorizationMatrix,
     ) {
     }
 

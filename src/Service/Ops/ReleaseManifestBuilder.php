@@ -14,12 +14,12 @@ use App\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
  * The builder combines runtime monitoring status, evaluated alerts, documentation presence, and
  * generated build artifacts into a deterministic manifest for release decisions.
  */
-final class ReleaseManifestBuilder implements ReleaseManifestBuilderInterface
+final readonly class ReleaseManifestBuilder implements ReleaseManifestBuilderInterface
 {
     public function __construct(
-        private readonly MonitoringSnapshotBuilderInterface $snapshotBuilder,
-        private readonly AlertRuleEvaluatorInterface $alertRuleEvaluator,
-        private readonly string $projectDir,
+        private MonitoringSnapshotBuilderInterface $snapshotBuilder,
+        private AlertRuleEvaluatorInterface $alertRuleEvaluator,
+        private string $projectDir,
     ) {
     }
 
@@ -51,7 +51,7 @@ final class ReleaseManifestBuilder implements ReleaseManifestBuilderInterface
         }
 
         return [
-            'generatedAt' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'generatedAt' => new \DateTimeImmutable()->format(DATE_ATOM),
             'windowSeconds' => max(1, $windowSeconds),
             'releaseDocs' => $releaseDocs,
             'buildArtifacts' => $buildArtifacts,

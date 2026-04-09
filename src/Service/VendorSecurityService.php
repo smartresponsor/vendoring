@@ -17,9 +17,9 @@ use App\ServiceInterface\VendorSecurityServiceInterface;
  * The canonical machine-access seam is VendorApiKeyService. Keep this class only
  * as a transitional alias while older callers still request VendorSecurityService.
  */
-final class VendorSecurityService implements VendorSecurityServiceInterface
+final readonly class VendorSecurityService implements VendorSecurityServiceInterface
 {
-    public function __construct(private readonly VendorApiKeyServiceInterface $apiKeyService)
+    public function __construct(private VendorApiKeyServiceInterface $apiKeyService)
     {
     }
 

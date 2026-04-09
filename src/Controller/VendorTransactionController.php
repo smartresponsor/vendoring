@@ -55,7 +55,13 @@ final class VendorTransactionController extends AbstractController
         );
 
         if (!$rateLimitDecision->allowed()) {
-            return $this->rateLimitResponse('vendor_transaction_create_rate_limited', $rateLimitDecision, $request, null, null);
+            return $this->rateLimitResponse(
+                'vendor_transaction_create_rate_limited',
+                $rateLimitDecision,
+                $request,
+                null,
+                null,
+            );
         }
 
         try {
@@ -114,7 +120,12 @@ final class VendorTransactionController extends AbstractController
     #[Route('/vendor/{vendorId}/{id}/status', methods: ['POST'])]
     public function updateStatus(string $vendorId, int $id, Request $request): JsonResponse
     {
-        if ($authenticationResponse = $this->enforceWriteAuthentication($request, 'write:transactions', $vendorId, $id)) {
+        if ($authenticationResponse = $this->enforceWriteAuthentication(
+            $request,
+            'write:transactions',
+            $vendorId,
+            $id,
+        )) {
             return $authenticationResponse;
         }
 
@@ -126,7 +137,13 @@ final class VendorTransactionController extends AbstractController
         );
 
         if (!$rateLimitDecision->allowed()) {
-            return $this->rateLimitResponse('vendor_transaction_status_rate_limited', $rateLimitDecision, $request, $vendorId, $id);
+            return $this->rateLimitResponse(
+                'vendor_transaction_status_rate_limited',
+                $rateLimitDecision,
+                $request,
+                $vendorId,
+                $id,
+            );
         }
 
         $transaction = $this->repo->findOneByIdAndVendorId($id, $vendorId);
@@ -184,8 +201,12 @@ final class VendorTransactionController extends AbstractController
         ];
     }
 
-    private function enforceWriteAuthentication(Request $request, string $requiredPermission, ?string $vendorId, ?int $transactionId): ?JsonResponse
-    {
+    private function enforceWriteAuthentication(
+        Request $request,
+        string $requiredPermission,
+        ?string $vendorId,
+        ?int $transactionId,
+    ): ?JsonResponse {
         $authorization = trim((string) $request->headers->get('Authorization', ''));
 
         if ('' === $authorization) {
@@ -226,8 +247,11 @@ final class VendorTransactionController extends AbstractController
         return null;
     }
 
-    private function authenticationResponse(string $errorCode, int $statusCode, string $requiredPermission): JsonResponse
-    {
+    private function authenticationResponse(
+        string $errorCode,
+        int $statusCode,
+        string $requiredPermission,
+    ): JsonResponse {
         $response = new JsonResponse([
             'error' => $errorCode,
             'requiredPermission' => $requiredPermission,
@@ -239,8 +263,13 @@ final class VendorTransactionController extends AbstractController
         return $response;
     }
 
-    private function rateLimitResponse(string $message, WriteRateLimitDecision $decision, Request $request, ?string $vendorId, ?int $transactionId): JsonResponse
-    {
+    private function rateLimitResponse(
+        string $message,
+        WriteRateLimitDecision $decision,
+        Request $request,
+        ?string $vendorId,
+        ?int $transactionId,
+    ): JsonResponse {
         $this->runtimeLogger->warning($message, [
             'vendor_id' => $vendorId,
             'transaction_id' => null !== $transactionId ? (string) $transactionId : null,
@@ -266,7 +295,7 @@ final class VendorTransactionController extends AbstractController
         }
 
         $authorization = trim((string) $request->headers->get('Authorization', ''));
-        $clientIp = (string) ($request->getClientIp() ?? 'unknown');
+        $clientIp = $request->getClientIp() ?? 'unknown';
 
         if (defined('PHPUNIT_COMPOSER_INSTALL')) {
             return sha1(uniqid('vendoring_phpunit_rate_', true).'|'.(null === $vendorId ? '' : $vendorId));

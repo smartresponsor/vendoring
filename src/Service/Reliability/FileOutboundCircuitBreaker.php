@@ -13,9 +13,9 @@ use App\ServiceInterface\Reliability\OutboundCircuitBreakerInterface;
  * repeated downstream failures can short-circuit unstable transport paths across
  * requests in one local runtime environment.
  */
-final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterface
+final readonly class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterface
 {
-    public function __construct(private readonly string $stateDir)
+    public function __construct(private string $stateDir)
     {
     }
 
@@ -89,6 +89,8 @@ final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterfac
 
     /**
      * @param array{failureCount:int, state:string, openedAt:int|null} $payload
+     *
+     * @throws \JsonException
      */
     private function writeState(string $operation, string $scopeKey, array $payload): void
     {

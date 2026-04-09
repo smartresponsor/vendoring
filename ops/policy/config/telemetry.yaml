@@ -1,6 +1,6 @@
 telemetry:
-  sink: "otlp"
-  sampling:
-    default: 1.0
-    noisy_events: 0.25
-  pii_scrub: true
+    sink: "otlp"
+    sampling:
+        default: 1.0
+        noisy_events: 0.25
+    pii_scrub: true

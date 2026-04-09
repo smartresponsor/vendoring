@@ -8,23 +8,59 @@ use App\DTO\Statement\VendorStatementRequestDTO;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
 
-final class VendorStatementService implements VendorStatementServiceInterface
+final readonly class VendorStatementService implements VendorStatementServiceInterface
 {
-    public function __construct(private readonly LedgerEntryRepositoryInterface $ledger)
+    public function __construct(private LedgerEntryRepositoryInterface $ledger)
     {
     }
 
     /**
-     * @return array{tenantId:string, vendorId:string, from:string, to:string, currency:string, opening:float, earnings:float, refunds:float, fees:float, closing:float, items:list<array{type:string, amount:float, currency:string}>}
+     * @return array{
+     *     tenantId:string,
+     *     vendorId:string,
+     *     from:string,
+     *     to:string,
+     *     currency:string,
+     *     opening:float,
+     *     earnings:float,
+     *     refunds:float,
+     *     fees:float,
+     *     closing:float,
+     *     items:list<array{type:string, amount:float, currency:string}>
+     * }
      */
     public function build(VendorStatementRequestDTO $dto): array
     {
         $opening = 0.0;
-        $earnings = max(0.0, $this->ledger->sumByAccount($dto->tenantId, 'REVENUE', $dto->from, $dto->to, $dto->vendorId, $dto->currency));
-        $refunds = max(0.0, $this->ledger->sumByAccount($dto->tenantId, 'REFUNDS_PAYABLE', $dto->from, $dto->to, $dto->vendorId, $dto->currency));
+        $earnings = max(
+            0.0,
+            $this->ledger->sumByAccount(
+                $dto->tenantId,
+                'REVENUE',
+                $dto->from,
+                $dto->to,
+                $dto->vendorId,
+                $dto->currency,
+            ),
+        );
+        $refunds = max(
+            0.0,
+            $this->ledger->sumByAccount(
+                $dto->tenantId,
+                'REFUNDS_PAYABLE',
+                $dto->from,
+                $dto->to,
+                $dto->vendorId,
+                $dto->currency,
+            ),
+        );
         $fees = 0.0;
         $closing = $earnings - $refunds - $fees;
-        $items = [['type' => 'earnings', 'amount' => $earnings, 'currency' => $dto->currency], ['type' => 'refunds', 'amount' => $refunds, 'currency' => $dto->currency], ['type' => 'fees', 'amount' => $fees, 'currency' => $dto->currency]];
+        $items = [
+            ['type' => 'earnings', 'amount' => $earnings, 'currency' => $dto->currency],
+            ['type' => 'refunds', 'amount' => $refunds, 'currency' => $dto->currency],
+            ['type' => 'fees', 'amount' => $fees, 'currency' => $dto->currency],
+        ];
 
         return [
             'tenantId' => $dto->tenantId,

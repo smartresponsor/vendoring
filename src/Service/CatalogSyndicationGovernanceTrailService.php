@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
@@ -9,10 +10,10 @@ use App\EventInterface\CategorySyndicationGovernanceTrailRecordedInterface;
 use App\PolicyInterface\CategorySyndicationGovernanceTrailPolicyInterface;
 use App\ServiceInterface\CatalogSyndicationGovernanceTrailServiceInterface;
 
-final class CatalogSyndicationGovernanceTrailService implements CatalogSyndicationGovernanceTrailServiceInterface
+final readonly class CatalogSyndicationGovernanceTrailService implements CatalogSyndicationGovernanceTrailServiceInterface
 {
     public function __construct(
-        private readonly CategorySyndicationGovernanceTrailPolicyInterface $policy,
+        private CategorySyndicationGovernanceTrailPolicyInterface $policy,
     ) {
     }
 

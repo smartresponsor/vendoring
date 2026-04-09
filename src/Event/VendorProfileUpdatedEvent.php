@@ -6,9 +6,9 @@ namespace App\Event;
 
 use App\Entity\VendorProfile;
 
-final class VendorProfileUpdatedEvent
+final readonly class VendorProfileUpdatedEvent
 {
-    public function __construct(public readonly VendorProfile $profile)
+    public function __construct(public VendorProfile $profile)
     {
     }
 }

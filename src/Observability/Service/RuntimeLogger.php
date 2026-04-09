@@ -31,33 +31,21 @@ final class RuntimeLogger implements RuntimeLoggerInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function info(string $message, array $context = []): void
     {
         $this->write('info', $message, $context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function warning(string $message, array $context = []): void
     {
         $this->write('warning', $message, $context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function error(string $message, array $context = []): void
     {
         $this->write('error', $message, $context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function snapshot(): array
     {
         return $this->records;
@@ -66,7 +54,7 @@ final class RuntimeLogger implements RuntimeLoggerInterface
     /**
      * Write one structured runtime record.
      *
-     * @param array<string, scalar|null> $context Additional structured fields merged into the log envelope.
+     * @param array<string, scalar|null> $context additional structured fields merged into the log envelope
      */
     private function write(string $level, string $message, array $context): void
     {
@@ -75,7 +63,7 @@ final class RuntimeLogger implements RuntimeLoggerInterface
 
         /** @var array<string, scalar|null> $record */
         $record = [
-            'timestamp' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'timestamp' => new \DateTimeImmutable()->format(DATE_ATOM),
             'level' => $level,
             'message' => $message,
             'request_id' => $correlationId,

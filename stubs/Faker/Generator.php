@@ -32,7 +32,7 @@ final class Generator
 
     public function numberBetween(int $min = 0, int $max = 2147483647): int
     {
-        return $min <= $max ? $min : $max;
+        return min($min, $max);
     }
 
     public function randomFloat(int $nbMaxDecimals = 0, float|int $min = 0, float|int $max = 2147483647): float

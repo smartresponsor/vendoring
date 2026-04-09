@@ -15,13 +15,13 @@ use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
  * Builds a release-facing vendor runtime status view that aggregates existing
  * vendor-local surfaces into one ops/admin-friendly payload.
  */
-final class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBuilderInterface
+final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBuilderInterface
 {
     public function __construct(
-        private readonly VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
-        private readonly VendorFinanceRuntimeViewBuilderInterface $financeRuntimeViewBuilder,
-        private readonly VendorStatementDeliveryRuntimeViewBuilderInterface $statementDeliveryRuntimeViewBuilder,
-        private readonly VendorExternalIntegrationRuntimeViewBuilderInterface $externalIntegrationRuntimeViewBuilder,
+        private VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
+        private VendorFinanceRuntimeViewBuilderInterface $financeRuntimeViewBuilder,
+        private VendorStatementDeliveryRuntimeViewBuilderInterface $statementDeliveryRuntimeViewBuilder,
+        private VendorExternalIntegrationRuntimeViewBuilderInterface $externalIntegrationRuntimeViewBuilder,
     ) {
     }
 
@@ -74,7 +74,7 @@ final class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBui
             statementDelivery: $statementDelivery,
             externalIntegration: $externalIntegration,
             surfaceStatus: $surfaceStatus,
-            generatedAt: (new \DateTimeImmutable())->format(DATE_ATOM),
+            generatedAt: new \DateTimeImmutable()->format(DATE_ATOM),
         );
     }
 }

@@ -6,9 +6,9 @@ namespace App\Event;
 
 use App\Entity\VendorBilling;
 
-final class VendorPayoutCompletedEvent
+final readonly class VendorPayoutCompletedEvent
 {
-    public function __construct(public readonly VendorBilling $billing, public readonly int $amountMinor = 0)
+    public function __construct(public VendorBilling $billing, public int $amountMinor = 0)
     {
     }
 }

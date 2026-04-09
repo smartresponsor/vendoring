@@ -139,21 +139,6 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     }
 
     /**
-     * @param array{
-     *   brandName:string,
-     *   vendorStatus:string,
-     *   ownerUserId:?int,
-     *   publicProfileStatus:string,
-     *   publicProfilePublishedAt:?string,
-     *   displayName:?string,
-     *   publicDisplayName:string,
-     *   about:?string,
-     *   website:?string,
-     *   socials:array<string,string>,
-     *   seoTitle:?string,
-     *   seoDescription:?string
-     * } $profileData
-     *
      * @return array<string, array{label:string, complete:bool, missing:list<string>}>
      */
     private function buildSections(array $profileData): array
@@ -180,21 +165,6 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     }
 
     /**
-     * @param array{
-     *   brandName:string,
-     *   vendorStatus:string,
-     *   ownerUserId:?int,
-     *   publicProfileStatus:string,
-     *   publicProfilePublishedAt:?string,
-     *   displayName:?string,
-     *   publicDisplayName:string,
-     *   about:?string,
-     *   website:?string,
-     *   socials:array<string,string>,
-     *   seoTitle:?string,
-     *   seoDescription:?string
-     * } $profileData
-     *
      * @return array{brandName:string, vendorStatus:string, ownerUserId:?int}
      */
     private function buildBusinessProfile(array $profileData): array
@@ -207,21 +177,6 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     }
 
     /**
-     * @param array{
-     *   brandName:string,
-     *   vendorStatus:string,
-     *   ownerUserId:?int,
-     *   publicProfileStatus:string,
-     *   publicProfilePublishedAt:?string,
-     *   displayName:?string,
-     *   publicDisplayName:string,
-     *   about:?string,
-     *   website:?string,
-     *   socials:array<string,string>,
-     *   seoTitle:?string,
-     *   seoDescription:?string
-     * } $profileData
-     *
      * @return array{
      *   displayName:?string,
      *   publicDisplayName:string,
@@ -244,21 +199,6 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     }
 
     /**
-     * @param array{
-     *   brandName:string,
-     *   vendorStatus:string,
-     *   ownerUserId:?int,
-     *   publicProfileStatus:string,
-     *   publicProfilePublishedAt:?string,
-     *   displayName:?string,
-     *   publicDisplayName:string,
-     *   about:?string,
-     *   website:?string,
-     *   socials:array<string,string>,
-     *   seoTitle:?string,
-     *   seoDescription:?string
-     * } $profileData
-     *
      * @return array{seoTitle:?string, seoDescription:?string}
      */
     private function buildSearchProfile(array $profileData): array
@@ -270,21 +210,6 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     }
 
     /**
-     * @param array{
-     *   brandName:string,
-     *   vendorStatus:string,
-     *   ownerUserId:?int,
-     *   publicProfileStatus:string,
-     *   publicProfilePublishedAt:?string,
-     *   displayName:?string,
-     *   publicDisplayName:string,
-     *   about:?string,
-     *   website:?string,
-     *   socials:array<string,string>,
-     *   seoTitle:?string,
-     *   seoDescription:?string
-     * } $profileData
-     *
      * @return array{status:string, publishedAt:?string, canPublish:bool}
      */
     private function buildPublication(array $profileData, bool $readyForPublishing): array

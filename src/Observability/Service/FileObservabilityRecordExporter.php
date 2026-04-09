@@ -13,15 +13,12 @@ use App\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
  * configured observability directory. This is a deployment-safe backend seam that can
  * later be replaced or complemented by Prometheus, OpenTelemetry, or StatsD adapters.
  */
-final class FileObservabilityRecordExporter implements ObservabilityRecordExporterInterface
+final readonly class FileObservabilityRecordExporter implements ObservabilityRecordExporterInterface
 {
-    public function __construct(private readonly string $observabilityDir)
+    public function __construct(private string $observabilityDir)
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function export(string $stream, array $payload): void
     {
         $normalizedStream = $this->normalizeStream($stream);

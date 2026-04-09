@@ -13,14 +13,19 @@ $spec = [
     'info' => [
         'title' => 'Vendoring API',
         'version' => '0.5.0-rc-docs',
-        'description' => 'Release-candidate API surface for the Vendoring component. Generated from repository-owned metadata and DocBlock-aligned route contracts.',
+        'description' =>
+            'Release-candidate API surface for the Vendoring component. '
+            .'Generated from repository-owned metadata and DocBlock-aligned route contracts.',
     ],
     'servers' => [
         ['url' => '/'],
     ],
     'tags' => [
         ['name' => 'Vendor Transactions', 'description' => 'Transaction write and read surfaces for vendors.'],
-        ['name' => 'Operator Surface', 'description' => 'Minimal server-rendered operator/admin seam used for RC evidence.'],
+        [
+            'name' => 'Operator Surface',
+            'description' => 'Minimal server-rendered operator/admin seam used for RC evidence.',
+        ],
     ],
     'paths' => [
         '/api/vendor-transactions' => [
@@ -136,15 +141,27 @@ $spec = [
                     ],
                     '400' => [
                         'description' => 'Malformed JSON payload.',
-                        'content' => ['application/json' => ['schema' => ['$ref' => '#/components/schemas/ErrorResponse']]],
+                        'content' => [
+                            'application/json' => [
+                                'schema' => ['$ref' => '#/components/schemas/ErrorResponse'],
+                            ],
+                        ],
                     ],
                     '404' => [
                         'description' => 'Transaction not found.',
-                        'content' => ['application/json' => ['schema' => ['$ref' => '#/components/schemas/ErrorResponse']]],
+                        'content' => [
+                            'application/json' => [
+                                'schema' => ['$ref' => '#/components/schemas/ErrorResponse'],
+                            ],
+                        ],
                     ],
                     '422' => [
                         'description' => 'Status validation failure.',
-                        'content' => ['application/json' => ['schema' => ['$ref' => '#/components/schemas/ErrorResponse']]],
+                        'content' => [
+                            'application/json' => [
+                                'schema' => ['$ref' => '#/components/schemas/ErrorResponse'],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -291,7 +308,12 @@ function yamlEncode(mixed $value, int $indent = 0): string
 function yamlScalar(mixed $value): string
 {
     if (is_string($value)) {
-        if ($value === '' || preg_match('/[:\[\]\{\},&\*#?\|<>=%@`]/', $value) === 1 || str_contains($value, ' ') || str_contains($value, '/')) {
+        if (
+            $value === ''
+            || preg_match('/[:\[\]{},&*#?|<>=%@`]/', $value) === 1
+            || str_contains($value, ' ')
+            || str_contains($value, '/')
+        ) {
             return '"' . str_replace('"', '\\"', $value) . '"';
         }
 

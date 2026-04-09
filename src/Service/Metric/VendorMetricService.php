@@ -7,10 +7,10 @@ namespace App\Service\Metric;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Metric\VendorMetricServiceInterface;
 
-final class VendorMetricService implements VendorMetricServiceInterface
+final readonly class VendorMetricService implements VendorMetricServiceInterface
 {
     public function __construct(
-        private readonly LedgerEntryRepositoryInterface $ledger,
+        private LedgerEntryRepositoryInterface $ledger,
     ) {
     }
 

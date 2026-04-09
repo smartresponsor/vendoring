@@ -33,7 +33,12 @@ final class VendorReleaseManifestCommand extends Command
             ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Output format: text|json', 'text')
             ->addOption('write', null, InputOption::VALUE_NONE, 'Write JSON manifests to build/release')
             ->addOption('manifest-output', null, InputOption::VALUE_OPTIONAL, 'Custom output path for release manifest')
-            ->addOption('rollback-output', null, InputOption::VALUE_OPTIONAL, 'Custom output path for rollback manifest');
+            ->addOption(
+                'rollback-output',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Custom output path for rollback manifest',
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -46,31 +51,42 @@ final class VendorReleaseManifestCommand extends Command
         $manifest = $this->releaseManifestBuilder->build($windowSeconds);
         $rollback = $this->rollbackDecisionEvaluator->evaluate($manifest);
 
-        if ((bool) $input->getOption('write')) {
+        if ($input->getOption('write')) {
             $this->writeJson(
-                is_scalar($input->getOption('manifest-output')) ? (string) $input->getOption('manifest-output') : dirname(__DIR__, 2).'/build/release/release-manifest.json',
+                is_scalar($input->getOption('manifest-output'))
+                    ? (string) $input->getOption('manifest-output')
+                    : dirname(__DIR__, 2).'/build/release/release-manifest.json',
                 $manifest,
             );
             $this->writeJson(
-                is_scalar($input->getOption('rollback-output')) ? (string) $input->getOption('rollback-output') : dirname(__DIR__, 2).'/build/release/rollback-manifest.json',
+                is_scalar($input->getOption('rollback-output'))
+                    ? (string) $input->getOption('rollback-output')
+                    : dirname(__DIR__, 2).'/build/release/rollback-manifest.json',
                 $rollback,
             );
         }
 
         if ('json' === $format) {
-            $output->writeln((string) json_encode(['manifest' => $manifest, 'rollback' => $rollback], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            $output->writeln((string) json_encode(
+                ['manifest' => $manifest, 'rollback' => $rollback],
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+            ));
 
             return Command::SUCCESS;
         }
 
         $output->writeln(sprintf(
             'release.status=%s monitoring.status=%s rollback.decision=%s severity=%s',
-            (string) $manifest['status'],
-            (string) $manifest['monitoring']['status'],
-            (string) $rollback['decision'],
-            (string) $rollback['severity'],
+            $manifest['status'],
+            $manifest['monitoring']['status'],
+            $rollback['decision'],
+            $rollback['severity'],
         ));
-        $output->writeln(sprintf('alerts=%d reasons=%d', (int) $manifest['monitoring']['alertCount'], count($rollback['reasons'])));
+        $output->writeln(sprintf(
+            'alerts=%d reasons=%d',
+            (int) $manifest['monitoring']['alertCount'],
+            count($rollback['reasons']),
+        ));
 
         return Command::SUCCESS;
     }

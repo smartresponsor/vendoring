@@ -8,9 +8,9 @@ use App\Entity\Ledger\LedgerEntry;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use Doctrine\DBAL\Connection;
 
-final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
+final readonly class LedgerEntryRepository implements LedgerEntryRepositoryInterface
 {
-    public function __construct(private readonly Connection $db)
+    public function __construct(private Connection $db)
     {
     }
 
@@ -30,8 +30,12 @@ final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
         ]);
     }
 
-    public function listByRef(string $tenantId, string $referenceType, string $referenceId, ?string $vendorId = null): array
-    {
+    public function listByRef(
+        string $tenantId,
+        string $referenceType,
+        string $referenceId,
+        ?string $vendorId = null,
+    ): array {
         $sql = 'SELECT * FROM ledger_entries WHERE tenant_id=:t AND reference_type=:rt AND reference_id=:rid';
         $params = [
             't' => $tenantId,
@@ -64,8 +68,14 @@ final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
         );
     }
 
-    public function sumByAccount(string $tenantId, string $accountCode, ?string $from = null, ?string $to = null, ?string $vendorId = null, ?string $currency = null): float
-    {
+    public function sumByAccount(
+        string $tenantId,
+        string $accountCode,
+        ?string $from = null,
+        ?string $to = null,
+        ?string $vendorId = null,
+        ?string $currency = null,
+    ): float {
         $where = ['tenant_id=:t AND (debit_account=:a OR credit_account=:a)'];
         $params = ['t' => $tenantId, 'a' => $accountCode];
 
@@ -89,7 +99,10 @@ final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
             $params['currency'] = $currency;
         }
 
-        $sql = 'SELECT SUM(CASE WHEN debit_account=:a THEN amount ELSE 0 END) AS d, SUM(CASE WHEN credit_account=:a THEN amount ELSE 0 END) AS c FROM ledger_entries WHERE '.implode(' AND ', $where);
+        $sql = 'SELECT SUM(CASE WHEN debit_account=:a THEN amount ELSE 0 END) AS d, '
+            .'SUM(CASE WHEN credit_account=:a THEN amount ELSE 0 END) AS c '
+            .'FROM ledger_entries WHERE '
+            .implode(' AND ', $where);
         $row = $this->db->fetchAssociative($sql, $params);
         $debit = is_array($row) ? $this->nullableFloatCell($row, 'd') ?? 0.0 : 0.0;
         $credit = is_array($row) ? $this->nullableFloatCell($row, 'c') ?? 0.0 : 0.0;
@@ -100,7 +113,11 @@ final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
     public function balancesForVendor(string $vendorId): array
     {
         $rows = $this->db->fetchAllAssociative(
-            "SELECT currency, SUM(CASE WHEN debit_account='VENDOR_PAYABLE' THEN amount ELSE 0 END) - SUM(CASE WHEN credit_account='VENDOR_PAYABLE' THEN amount ELSE 0 END) AS balance FROM ledger_entries WHERE vendor_id = :vendorId GROUP BY currency ORDER BY currency",
+            'SELECT currency, '
+            ."SUM(CASE WHEN debit_account='VENDOR_PAYABLE' THEN amount ELSE 0 END) "
+            ."- SUM(CASE WHEN credit_account='VENDOR_PAYABLE' THEN amount ELSE 0 END) AS balance "
+            .'FROM ledger_entries WHERE vendor_id = :vendorId '
+            .'GROUP BY currency ORDER BY currency',
             ['vendorId' => $vendorId],
         );
 

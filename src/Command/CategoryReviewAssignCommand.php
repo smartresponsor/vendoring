@@ -43,11 +43,13 @@ final class CategoryReviewAssignCommand extends Command
     /**
      * Assign the requested category review and render the resulting payload as JSON.
      *
-     * @param InputInterface  $input  Console input carrying request, reviewer, assigner, and priority.
-     * @param OutputInterface $output Console output that receives either JSON payload or a validation error.
+     * @param InputInterface  $input  console input carrying request, reviewer, assigner, and priority
+     * @param OutputInterface $output console output that receives either JSON payload or a validation error
      *
      * @return int `Command::SUCCESS` when the assignment is created, otherwise `Command::FAILURE` for
-     *             invalid input detected by the underlying assignment service.
+     *             invalid input detected by the underlying assignment service
+     *
+     * @throws \JsonException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -72,9 +74,9 @@ final class CategoryReviewAssignCommand extends Command
     /**
      * Normalize a console argument into a scalar string representation.
      *
-     * @param mixed $value Raw console argument value.
+     * @param mixed $value raw console argument value
      *
-     * @return string Scalar string value or an empty string when the raw value is not scalar.
+     * @return string scalar string value or an empty string when the raw value is not scalar
      */
     private static function stringArgument(mixed $value): string
     {

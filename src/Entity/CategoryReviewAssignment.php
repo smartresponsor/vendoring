@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-final class CategoryReviewAssignment
+final readonly class CategoryReviewAssignment
 {
     public function __construct(
-        private readonly string $requestId,
-        private readonly string $categoryId,
-        private readonly string $assignedReviewer,
-        private readonly string $assignedBy,
-        private readonly string $priority,
+        private string $requestId,
+        private string $categoryId,
+        private string $assignedReviewer,
+        private string $assignedBy,
+        private string $priority,
     ) {
     }
 

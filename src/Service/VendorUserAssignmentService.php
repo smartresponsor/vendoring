@@ -11,11 +11,11 @@ use App\ServiceInterface\VendorUserAssignmentServiceInterface;
 use App\ValueObject\VendorRole;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class VendorUserAssignmentService implements VendorUserAssignmentServiceInterface
+final readonly class VendorUserAssignmentService implements VendorUserAssignmentServiceInterface
 {
     public function __construct(
-        private readonly VendorUserAssignmentRepositoryInterface $assignmentRepository,
-        private readonly EntityManagerInterface $entityManager,
+        private VendorUserAssignmentRepositoryInterface $assignmentRepository,
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -110,7 +110,7 @@ final class VendorUserAssignmentService implements VendorUserAssignmentServiceIn
         foreach ($this->assignmentRepository->findActiveByVendorId($vendorId) as $assignment) {
             if (method_exists($assignment, 'clearPrimary')) {
                 $assignment->clearPrimary();
-                $this->assignmentRepository->save($assignment, false);
+                $this->assignmentRepository->save($assignment);
             }
         }
 

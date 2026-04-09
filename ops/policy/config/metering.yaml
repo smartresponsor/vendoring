@@ -1,4 +1,4 @@
 metering:
-  rollup_cron: "*/15 * * * *"
-  period_days: 30
-  dedup_ttl_sec: 86400
+    rollup_cron: "*/15 * * * *"
+    period_days: 30
+    dedup_ttl_sec: 86400

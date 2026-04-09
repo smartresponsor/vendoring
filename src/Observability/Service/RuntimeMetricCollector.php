@@ -18,7 +18,7 @@ use App\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
 final class RuntimeMetricCollector implements MetricCollectorInterface
 {
     /**
-     * @var list<array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string}>
+     * @var array:?string,correlation_id:?string}>
      */
     private array $records = [];
 
@@ -28,16 +28,13 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function increment(string $name, array $tags = []): void
     {
         $correlationId = $this->correlationContext->currentCorrelationId();
 
         /** @var array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string} $record */
         $record = [
-            'timestamp' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'timestamp' => new \DateTimeImmutable()->format(DATE_ATOM),
             'type' => 'metric',
             'name' => $name,
             'tags' => $this->normalizeTags($tags),
@@ -65,7 +62,7 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
     /**
      * Return the inspection snapshot of emitted runtime metrics.
      *
-     * @return list<array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string}>
+     * @return array :?string,correlation_id:?string}>
      */
     public function snapshot(): array
     {
@@ -75,16 +72,15 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
     /**
      * Normalize metric tags to a stable string map.
      *
-     * @param array<string, string> $tags Raw metric tags.
+     * @param array<string, string> $tags raw metric tags
      *
-     * @return array<string, string> Normalized tag map.
+     * @return array<string, string> normalized tag map
      */
     private function normalizeTags(array $tags): array
     {
-        $normalized = [];
-        foreach ($tags as $key => $value) {
-            $normalized[(string) $key] = (string) $value;
-        }
+        $normalized = array_map(function ($value) {
+            return (string) $value;
+        }, $tags);
 
         return $normalized;
     }

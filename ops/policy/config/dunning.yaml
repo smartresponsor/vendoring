@@ -1,4 +1,4 @@
 dunning:
-  schedule_days: [0, 3, 7, 14]
-  grace_days: 5
-  suspend_after_days: 21
+    schedule_days: [ 0, 3, 7, 14 ]
+    grace_days: 5
+    suspend_after_days: 21

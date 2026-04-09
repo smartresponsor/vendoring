@@ -57,7 +57,7 @@ final class VendorCanaryRolloutCommand extends Command
 
         $report = $this->canaryRolloutCoordinator->evaluate($flagName, $tenantId, $vendorId, $windowSeconds);
 
-        if ((bool) $input->getOption('write')) {
+        if ($input->getOption('write')) {
             $path = is_scalar($input->getOption('output')) && '' !== trim((string) $input->getOption('output'))
                 ? trim((string) $input->getOption('output'))
                 : dirname(__DIR__, 2).'/build/release/canary-rollout.json';
@@ -72,11 +72,11 @@ final class VendorCanaryRolloutCommand extends Command
 
         $output->writeln(sprintf(
             'flag=%s cohort=%s decision=%s action=%s next=%s',
-            (string) $report['flagDecision']['flag'],
-            (string) $report['canary']['cohort'],
-            (string) $report['canary']['decision'],
-            (string) $report['canary']['recommendedAction'],
-            (string) ($report['canary']['nextCohort'] ?? 'none'),
+            $report['flagDecision']['flag'],
+            $report['canary']['cohort'],
+            $report['canary']['decision'],
+            $report['canary']['recommendedAction'],
+            $report['canary']['nextCohort'] ?? 'none',
         ));
 
         return Command::SUCCESS;

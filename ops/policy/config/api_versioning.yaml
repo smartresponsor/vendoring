@@ -1,5 +1,5 @@
 api_versioning:
-  header: X-Vendor-Api-Version
-  current: "1"
-  supported: ["1"]
-  sunset_days_min: 90
+    header: X-Vendor-Api-Version
+    current: "1"
+    supported: [ "1" ]
+    sunset_days_min: 90

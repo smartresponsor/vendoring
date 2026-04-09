@@ -11,8 +11,8 @@ parameters:
         openBreakerThreshold: 1
         missingProbeThreshold: 1
     vendoring_rollback_thresholds:
-        criticalAlertCodes: ['outbound_circuit_open']
-        warningAlertCodes: ['runtime_error_spike', 'probe_artifacts_missing', 'observability_metrics_empty']
+        criticalAlertCodes: [ 'outbound_circuit_open' ]
+        warningAlertCodes: [ 'runtime_error_spike', 'probe_artifacts_missing', 'observability_metrics_empty' ]
 
 services:
     _defaults:
@@ -161,7 +161,7 @@ services:
     App\Service\Rollout\FeatureFlagService:
         arguments:
             $flags: '%vendoring_feature_flags%'
-#
+    #
 
     App\Service\Ops\ReleaseManifestBuilder:
         arguments:

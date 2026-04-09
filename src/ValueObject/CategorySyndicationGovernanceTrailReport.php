@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-final class CategorySyndicationGovernanceTrailReport
+final readonly class CategorySyndicationGovernanceTrailReport
 {
     /**
      * @param array<string, int>  $historyCounts
@@ -12,19 +12,19 @@ final class CategorySyndicationGovernanceTrailReport
      * @param array<string, bool> $checks
      */
     public function __construct(
-        private readonly string $destinationId,
-        private readonly string $categoryId,
-        private readonly string $mediaPolicyMode,
-        private readonly bool $strictPublishable,
-        private readonly bool $fallbackPublishable,
-        private readonly bool $resolvedPublishable,
-        private readonly bool $fallbackUsed,
-        private readonly string $deliveryStatus,
-        private readonly bool $retryable,
-        private readonly bool $retryScheduled,
-        private readonly array $historyCounts,
-        private readonly array $warnings,
-        private readonly array $checks,
+        private string $destinationId,
+        private string $categoryId,
+        private string $mediaPolicyMode,
+        private bool $strictPublishable,
+        private bool $fallbackPublishable,
+        private bool $resolvedPublishable,
+        private bool $fallbackUsed,
+        private string $deliveryStatus,
+        private bool $retryable,
+        private bool $retryScheduled,
+        private array $historyCounts,
+        private array $warnings,
+        private array $checks,
     ) {
     }
 

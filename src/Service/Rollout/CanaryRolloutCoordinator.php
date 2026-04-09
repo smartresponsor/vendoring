@@ -14,13 +14,13 @@ use App\ServiceInterface\Rollout\TrafficCohortResolverInterface;
  * Read-side coordinator that turns rollout flags, cohorts, probes, and rollback signals into one
  * operator-friendly canary verdict.
  */
-final class CanaryRolloutCoordinator implements CanaryRolloutCoordinatorInterface
+final readonly class CanaryRolloutCoordinator implements CanaryRolloutCoordinatorInterface
 {
     public function __construct(
-        private readonly FeatureFlagServiceInterface $featureFlagService,
-        private readonly TrafficCohortResolverInterface $trafficCohortResolver,
-        private readonly ReleaseManifestBuilderInterface $releaseManifestBuilder,
-        private readonly RollbackDecisionEvaluatorInterface $rollbackDecisionEvaluator,
+        private FeatureFlagServiceInterface $featureFlagService,
+        private TrafficCohortResolverInterface $trafficCohortResolver,
+        private ReleaseManifestBuilderInterface $releaseManifestBuilder,
+        private RollbackDecisionEvaluatorInterface $rollbackDecisionEvaluator,
     ) {
     }
 
@@ -36,7 +36,7 @@ final class CanaryRolloutCoordinator implements CanaryRolloutCoordinatorInterfac
         [$decision, $recommendedAction, $reason] = $this->rolloutDecision($flagDecision, $rollback, $probeGate);
 
         return [
-            'generatedAt' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'generatedAt' => new \DateTimeImmutable()->format(DATE_ATOM),
             'flagDecision' => $flagDecision,
             'manifest' => $manifest,
             'rollback' => $rollback,
@@ -52,8 +52,8 @@ final class CanaryRolloutCoordinator implements CanaryRolloutCoordinatorInterfac
     }
 
     /**
-     * @param array{flag:string, enabled:bool, cohort:string, reason:string} $flagDecision
-     * @param array<string,mixed> $rollback
+     * @param array{flag:string, enabled:bool, cohort:string, reason:string}      $flagDecision
+     * @param array<string,mixed>                                                 $rollback
      * @param array{transaction:bool, finance:bool, payout:bool, postDeploy:bool} $probeGate
      *
      * @return array{string,string,string}

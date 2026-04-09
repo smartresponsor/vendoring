@@ -16,12 +16,12 @@ use App\ServiceInterface\VendorUserAssignmentServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorService implements VendorServiceInterface
+final readonly class VendorService implements VendorServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly EventDispatcherInterface $dispatcher,
-        private readonly VendorUserAssignmentServiceInterface $vendorUserAssignmentService,
+        private EntityManagerInterface $em,
+        private EventDispatcherInterface $dispatcher,
+        private VendorUserAssignmentServiceInterface $vendorUserAssignmentService,
     ) {
     }
 

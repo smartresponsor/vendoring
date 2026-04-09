@@ -15,12 +15,12 @@ use App\ServiceInterface\VendorProfileServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorProfileService implements VendorProfileServiceInterface
+final readonly class VendorProfileService implements VendorProfileServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly VendorProfileRepositoryInterface $repository,
-        private readonly EventDispatcherInterface $dispatcher,
+        private EntityManagerInterface $em,
+        private VendorProfileRepositoryInterface $repository,
+        private EventDispatcherInterface $dispatcher,
     ) {
     }
 
@@ -33,7 +33,6 @@ final class VendorProfileService implements VendorProfileServiceInterface
         foreach (['displayName', 'about', 'website', 'socials', 'seoTitle', 'seoDescription'] as $prop) {
             if (property_exists($profile, $prop) && isset($dto->{$prop})) {
                 $rp = $ref->getProperty($prop);
-                $rp->setAccessible(true);
                 $rp->setValue($profile, $dto->{$prop});
             }
         }

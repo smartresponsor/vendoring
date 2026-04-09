@@ -18,12 +18,12 @@ use App\ServiceInterface\VendorMediaServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorMediaService implements VendorMediaServiceInterface
+final readonly class VendorMediaService implements VendorMediaServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly VendorMediaRepositoryInterface $mediaRepository,
-        private readonly EventDispatcherInterface $dispatcher,
+        private EntityManagerInterface $em,
+        private VendorMediaRepositoryInterface $mediaRepository,
+        private EventDispatcherInterface $dispatcher,
     ) {
     }
 
@@ -36,7 +36,6 @@ final class VendorMediaService implements VendorMediaServiceInterface
         foreach (['logoPath', 'bannerPath', 'gallery'] as $prop) {
             if (property_exists($media, $prop) && isset($dto->{$prop})) {
                 $rp = $ref->getProperty($prop);
-                $rp->setAccessible(true);
                 $rp->setValue($media, $dto->{$prop});
             }
         }

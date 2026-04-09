@@ -6,9 +6,9 @@ namespace App\Event;
 
 use App\Entity\VendorMedia;
 
-final class VendorMediaUploadedEvent
+final readonly class VendorMediaUploadedEvent
 {
-    public function __construct(public readonly VendorMedia $media)
+    public function __construct(public VendorMedia $media)
     {
     }
 }

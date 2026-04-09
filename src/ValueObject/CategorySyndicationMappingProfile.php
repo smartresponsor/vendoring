@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-final class CategorySyndicationMappingProfile
+final readonly class CategorySyndicationMappingProfile
 {
     /**
      * @param array<string, string> $fieldMap
      * @param list<string>          $requiredFields
      */
     public function __construct(
-        private readonly string $destinationId,
-        private readonly string $version,
-        private readonly array $fieldMap,
-        private readonly array $requiredFields,
-        private readonly string $localeMode,
+        private string $destinationId,
+        private string $version,
+        private array $fieldMap,
+        private array $requiredFields,
+        private string $localeMode,
     ) {
     }
 

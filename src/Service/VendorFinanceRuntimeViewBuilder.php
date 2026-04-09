@@ -16,13 +16,13 @@ use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
  * Builds a finance-facing runtime summary that keeps vendor ownership/access
  * context adjacent to payout and statement surfaces.
  */
-final class VendorFinanceRuntimeViewBuilder implements VendorFinanceRuntimeViewBuilderInterface
+final readonly class VendorFinanceRuntimeViewBuilder implements VendorFinanceRuntimeViewBuilderInterface
 {
     public function __construct(
-        private readonly VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
-        private readonly VendorMetricServiceInterface $metricService,
-        private readonly PayoutAccountRepositoryInterface $payoutAccountRepository,
-        private readonly VendorStatementServiceInterface $statementService,
+        private VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
+        private VendorMetricServiceInterface $metricService,
+        private PayoutAccountRepositoryInterface $payoutAccountRepository,
+        private VendorStatementServiceInterface $statementService,
     ) {
     }
 

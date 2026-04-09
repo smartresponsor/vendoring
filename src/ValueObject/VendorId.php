@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-final class VendorId
+final readonly class VendorId
 {
     public function __construct(private string $value)
     {

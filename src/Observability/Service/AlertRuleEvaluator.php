@@ -12,12 +12,12 @@ use App\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
  * The evaluator converts snapshot counters into explicit warning/critical alerts without
  * calling remote monitoring systems.
  */
-final class AlertRuleEvaluator implements AlertRuleEvaluatorInterface
+final readonly class AlertRuleEvaluator implements AlertRuleEvaluatorInterface
 {
     /**
      * @param array{errorLogThreshold?:int,openBreakerThreshold?:int,missingProbeThreshold?:int} $thresholds
      */
-    public function __construct(private readonly array $thresholds = [])
+    public function __construct(private array $thresholds = [])
     {
     }
 

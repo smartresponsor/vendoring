@@ -12,10 +12,10 @@ use App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
  * Builds a calm release baseline snapshot on top of the aggregated runtime
  * status contour without changing business behavior.
  */
-final class VendorReleaseBaselineReader implements VendorReleaseBaselineReaderInterface
+final readonly class VendorReleaseBaselineReader implements VendorReleaseBaselineReaderInterface
 {
     public function __construct(
-        private readonly VendorRuntimeStatusViewBuilderInterface $runtimeStatusViewBuilder,
+        private VendorRuntimeStatusViewBuilderInterface $runtimeStatusViewBuilder,
     ) {
     }
 
@@ -52,7 +52,7 @@ final class VendorReleaseBaselineReader implements VendorReleaseBaselineReaderIn
         $surfaceStatus = $runtimeStatus['surfaceStatus'];
         foreach ($surfaceStatus as $surface => $ready) {
             if (true !== $ready) {
-                $issues[] = sprintf('surface.%s.missing', (string) $surface);
+                $issues[] = sprintf('surface.%s.missing', $surface);
             }
         }
         foreach ($artifactStatus as $artifact => $present) {
@@ -70,7 +70,7 @@ final class VendorReleaseBaselineReader implements VendorReleaseBaselineReaderIn
             artifactStatus: $artifactStatus,
             issues: $issues,
             status: $status,
-            generatedAt: (new \DateTimeImmutable())->format(DATE_ATOM),
+            generatedAt: new \DateTimeImmutable()->format(DATE_ATOM),
         );
     }
 }

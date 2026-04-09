@@ -14,11 +14,19 @@ final class VendorTransactionOperatorPageBuilder implements VendorTransactionOpe
     /**
      * @param list<VendorTransaction> $transactions
      */
-    public function renderIndex(string $vendorId, array $transactions, ?string $flashMessage = null, ?string $errorMessage = null): string
-    {
+    public function renderIndex(
+        string $vendorId,
+        array $transactions,
+        ?string $flashMessage = null,
+        ?string $errorMessage = null,
+    ): string {
         $vendorIdEscaped = $this->escape($vendorId);
-        $flashMarkup = null === $flashMessage ? '' : '<div class="alert alert-success" role="alert">'.$this->escape($flashMessage).'</div>';
-        $errorMarkup = null === $errorMessage ? '' : '<div class="alert alert-danger" role="alert">'.$this->escape($errorMessage).'</div>';
+        $flashMarkup = null === $flashMessage
+            ? ''
+            : '<div class="alert alert-success" role="alert">'.$this->escape($flashMessage).'</div>';
+        $errorMarkup = null === $errorMessage
+            ? ''
+            : '<div class="alert alert-danger" role="alert">'.$this->escape($errorMessage).'</div>';
 
         $rows = '';
         foreach ($transactions as $transaction) {
@@ -59,7 +67,9 @@ HTML,
         }
 
         if ('' === $rows) {
-            $rows = '<tr><td colspan="6" class="text-center text-muted">No transactions found for this vendor yet.</td></tr>';
+            $rows = '<tr><td colspan="6" class="text-center text-muted">'
+                .'No transactions found for this vendor yet.'
+                .'</td></tr>';
         }
 
         return sprintf(
@@ -156,7 +166,12 @@ HTML,
 
         foreach ($statuses as $status) {
             $selected = $status === $currentStatus ? ' selected' : '';
-            $options .= sprintf('<option value="%s"%s>%s</option>', $this->escape($status), $selected, $this->escape(ucfirst($status)));
+            $options .= sprintf(
+                '<option value="%s"%s>%s</option>',
+                $this->escape($status),
+                $selected,
+                $this->escape(ucfirst($status)),
+            );
         }
 
         return $options;

@@ -17,14 +17,14 @@ use App\ServiceInterface\Rollout\TrafficCohortResolverInterface;
  * This service is intentionally read-side only and serves as the current rollout contract
  * for docs, smoke tests, and runtime inspection.
  */
-final class FeatureFlagService implements FeatureFlagServiceInterface
+final readonly class FeatureFlagService implements FeatureFlagServiceInterface
 {
     /**
      * @param array<string, array{enabled?:bool, cohorts?:list<string>}> $flags
      */
     public function __construct(
-        private readonly TrafficCohortResolverInterface $trafficCohortResolver,
-        private readonly array $flags = [],
+        private TrafficCohortResolverInterface $trafficCohortResolver,
+        private array $flags = [],
     ) {
     }
 

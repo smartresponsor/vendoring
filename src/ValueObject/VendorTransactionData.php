@@ -12,13 +12,13 @@ namespace App\ValueObject;
  * This object is consumed by both JSON API and operator surface flows so a single
  * DocBlock can feed OpenAPI/phpDocumentor generation and human-readable developer docs.
  */
-final class VendorTransactionData
+final readonly class VendorTransactionData
 {
     public function __construct(
-        public readonly string $vendorId,
-        public readonly string $orderId,
-        public readonly ?string $projectId,
-        public readonly string $amount,
+        public string $vendorId,
+        public string $orderId,
+        public ?string $projectId,
+        public string $amount,
     ) {
     }
 }

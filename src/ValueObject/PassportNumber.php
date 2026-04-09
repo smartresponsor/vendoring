@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-final class PassportNumber
+final readonly class PassportNumber
 {
     public function __construct(private string $v)
     {

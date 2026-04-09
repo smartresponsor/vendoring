@@ -12,12 +12,12 @@ use App\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface;
  * This builder reads exported NDJSON streams and circuit-breaker state files to produce
  * a deterministic overview of recent runtime health.
  */
-final class MonitoringSnapshotBuilder implements MonitoringSnapshotBuilderInterface
+final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuilderInterface
 {
     public function __construct(
-        private readonly string $observabilityDir,
-        private readonly string $faultToleranceDir,
-        private readonly string $projectDir,
+        private string $observabilityDir,
+        private string $faultToleranceDir,
+        private string $projectDir,
     ) {
     }
 
@@ -37,7 +37,7 @@ final class MonitoringSnapshotBuilder implements MonitoringSnapshotBuilderInterf
         }
 
         return [
-            'generatedAt' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'generatedAt' => new \DateTimeImmutable()->format(DATE_ATOM),
             'windowSeconds' => $windowSeconds,
             'logSummary' => $logSummary,
             'metricSummary' => $metricSummary,

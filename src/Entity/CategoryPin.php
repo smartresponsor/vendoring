@@ -6,7 +6,7 @@ namespace App\Entity;
 
 final class CategoryPin
 {
-    private ?string $id = null;
+    private ?string $id;
 
     public function __construct(
         private readonly string $categoryId,
