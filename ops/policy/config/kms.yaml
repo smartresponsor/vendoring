@@ -1,4 +1,4 @@
 kms:
-  provider: 'disabled'
-  rotation_days: 90
-  envelope_alg: 'aes-256-gcm'
+    provider: 'disabled'
+    rotation_days: 90
+    envelope_alg: 'aes-256-gcm'
