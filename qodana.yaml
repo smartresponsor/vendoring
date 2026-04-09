@@ -32,6 +32,9 @@ profile:
     - inspection: PhpClassNamingConventionInspection
       options:
         m_maxLength: 57
+    - inspection: PhpVariableNamingConventionInspection
+      options:
+        m_regex: "[a-z][A-Za-z\\d]*"
 
 exclude:
   - name: All
