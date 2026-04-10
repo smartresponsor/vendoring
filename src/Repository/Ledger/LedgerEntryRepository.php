@@ -4,144 +4,151 @@ declare(strict_types=1);
 
 namespace App\Repository\Ledger;
 
+use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
 use App\Entity\Ledger\LedgerEntry;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
-final class LedgerEntryRepository implements LedgerEntryRepositoryInterface
+final readonly class LedgerEntryRepository implements LedgerEntryRepositoryInterface
 {
-    public function __construct(private readonly Connection $db)
+    public function __construct(private Connection $connection)
     {
     }
 
+    /** @throws Exception */
     public function insert(LedgerEntry $entry): void
     {
-        $this->db->insert('ledger_entries', [
-            'id' => $entry->id,
+        $this->connection->insert('vendor_ledger_entries', [
             'tenant_id' => $entry->tenantId,
+            'vendor_id' => $entry->vendorId,
+            'reference_type' => $entry->referenceType,
+            'reference_id' => $entry->referenceId,
             'debit_account' => $entry->debitAccount,
             'credit_account' => $entry->creditAccount,
             'amount' => $entry->amount,
             'currency' => $entry->currency,
-            'reference_type' => $entry->referenceType,
-            'reference_id' => $entry->referenceId,
-            'vendor_id' => $entry->vendorId,
             'created_at' => $entry->createdAt,
         ]);
     }
 
+    /**
+     * @return list<LedgerEntry>
+     * @throws Exception
+     */
     public function listByRef(string $tenantId, string $referenceType, string $referenceId, ?string $vendorId = null): array
     {
-        $sql = 'SELECT * FROM ledger_entries WHERE tenant_id=:t AND reference_type=:rt AND reference_id=:rid';
+        $sql = 'SELECT * FROM vendor_ledger_entries WHERE tenant_id = :tenantId AND reference_type = :referenceType AND reference_id = :referenceId';
         $params = [
-            't' => $tenantId,
-            'rt' => $referenceType,
-            'rid' => $referenceId,
+            'tenantId' => $tenantId,
+            'referenceType' => $referenceType,
+            'referenceId' => $referenceId,
         ];
 
         if (null !== $vendorId) {
-            $sql .= ' AND vendor_id=:v';
-            $params['v'] = $vendorId;
+            $sql .= ' AND vendor_id = :vendorId';
+            $params['vendorId'] = $vendorId;
         }
 
-        $sql .= ' ORDER BY created_at';
-        $rows = $this->db->fetchAllAssociative($sql, $params);
+        $rows = $this->connection->fetchAllAssociative($sql, $params);
 
         return array_map(
-            fn (array $row): LedgerEntry => new LedgerEntry(
-                $this->stringCell($row, 'id'),
-                $this->stringCell($row, 'tenant_id'),
-                $this->stringCell($row, 'debit_account'),
-                $this->stringCell($row, 'credit_account'),
-                $this->floatCell($row, 'amount'),
-                $this->stringCell($row, 'currency'),
-                $this->stringCell($row, 'reference_type'),
-                $this->stringCell($row, 'reference_id'),
-                $this->nullableStringCell($row, 'vendor_id'),
-                $this->stringCell($row, 'created_at'),
-            ),
+            function (array $row): LedgerEntry {
+                $tenantValue = self::stringValue($row['tenant_id'] ?? null);
+                $vendorValue = self::nullableStringValue($row['vendor_id'] ?? null);
+                $referenceTypeValue = self::stringValue($row['reference_type'] ?? null);
+                $referenceIdValue = self::stringValue($row['reference_id'] ?? null);
+                $debitAccountValue = self::stringValue($row['debit_account'] ?? null);
+                $creditAccountValue = self::stringValue($row['credit_account'] ?? null);
+                $currencyValue = self::stringValue($row['currency'] ?? null);
+                $createdAtValue = self::stringValue($row['created_at'] ?? null);
+
+                return new LedgerEntry(
+                    id: self::stringValue($row['id'] ?? sha1($tenantValue.'|'.$referenceTypeValue.'|'.$referenceIdValue.'|'.$createdAtValue)),
+                    tenantId: $tenantValue,
+                    debitAccount: $debitAccountValue,
+                    creditAccount: $creditAccountValue,
+                    amount: self::floatValue($row['amount'] ?? null),
+                    currency: $currencyValue,
+                    referenceType: $referenceTypeValue,
+                    referenceId: $referenceIdValue,
+                    vendorId: $vendorValue,
+                    createdAt: $createdAtValue,
+                );
+            },
             $rows,
         );
     }
 
-    public function sumByAccount(string $tenantId, string $accountCode, ?string $from = null, ?string $to = null, ?string $vendorId = null, ?string $currency = null): float
+    /** @throws Exception */
+    public function sumByAccount(LedgerAccountSumCriteriaDTO $criteria): float
     {
-        $where = ['tenant_id=:t AND (debit_account=:a OR credit_account=:a)'];
-        $params = ['t' => $tenantId, 'a' => $accountCode];
+        $sql = 'SELECT COALESCE(SUM(CASE WHEN debit_account = :account THEN amount WHEN credit_account = :account THEN -amount ELSE 0 END), 0) total FROM vendor_ledger_entries WHERE tenant_id = :tenantId';
+        $params = [
+            'tenantId' => $criteria->tenantId,
+            'account' => $criteria->accountCode,
+        ];
 
-        if (null !== $from && '' !== $from) {
-            $where[] = 'created_at >= :from';
-            $params['from'] = $from.' 00:00:00';
+        if (null !== $criteria->from) {
+            $sql .= ' AND created_at >= :fromDate';
+            $params['fromDate'] = $criteria->from;
         }
 
-        if (null !== $to && '' !== $to) {
-            $where[] = 'created_at <= :to';
-            $params['to'] = $to.' 23:59:59';
+        if (null !== $criteria->to) {
+            $sql .= ' AND created_at <= :toDate';
+            $params['toDate'] = $criteria->to;
         }
 
-        if (null !== $vendorId && '' !== $vendorId) {
-            $where[] = 'vendor_id = :v';
-            $params['v'] = $vendorId;
+        if (null !== $criteria->vendorId) {
+            $sql .= ' AND vendor_id = :vendorId';
+            $params['vendorId'] = $criteria->vendorId;
         }
 
-        if (null !== $currency && '' !== $currency) {
-            $where[] = 'currency = :currency';
-            $params['currency'] = $currency;
+        if (null !== $criteria->currency) {
+            $sql .= ' AND currency = :currency';
+            $params['currency'] = $criteria->currency;
         }
 
-        $sql = 'SELECT SUM(CASE WHEN debit_account=:a THEN amount ELSE 0 END) AS d, SUM(CASE WHEN credit_account=:a THEN amount ELSE 0 END) AS c FROM ledger_entries WHERE '.implode(' AND ', $where);
-        $row = $this->db->fetchAssociative($sql, $params);
-        $debit = is_array($row) ? $this->nullableFloatCell($row, 'd') ?? 0.0 : 0.0;
-        $credit = is_array($row) ? $this->nullableFloatCell($row, 'c') ?? 0.0 : 0.0;
-
-        return $debit - $credit;
+        return self::floatValue($this->connection->fetchOne($sql, $params));
     }
 
+    /**
+     * @return list<object{currency:string,balanceCents:int}>
+     * @throws Exception
+     */
     public function balancesForVendor(string $vendorId): array
     {
-        $rows = $this->db->fetchAllAssociative(
-            "SELECT currency, SUM(CASE WHEN debit_account='VENDOR_PAYABLE' THEN amount ELSE 0 END) - SUM(CASE WHEN credit_account='VENDOR_PAYABLE' THEN amount ELSE 0 END) AS balance FROM ledger_entries WHERE vendor_id = :vendorId GROUP BY currency ORDER BY currency",
+        $rows = $this->connection->fetchAllAssociative(
+            'SELECT currency, CAST(ROUND(SUM(amount) * 100) AS SIGNED) AS balance_cents FROM vendor_ledger_entries WHERE vendor_id = :vendorId GROUP BY currency',
             ['vendorId' => $vendorId],
         );
 
         return array_map(
-            fn (array $row): object => (object) [
-                'currency' => $this->stringCell($row, 'currency'),
-                'balanceCents' => (int) round(($this->nullableFloatCell($row, 'balance') ?? 0.0) * 100),
+            static fn (array $row): object => (object) [
+                'currency' => self::stringValue($row['currency'] ?? null),
+                'balanceCents' => self::intValue($row['balance_cents'] ?? null),
             ],
             $rows,
         );
     }
 
-    /** @param array<string, mixed> $row */
-    private function stringCell(array $row, string $key): string
+    private static function stringValue(mixed $value): string
     {
-        $value = $row[$key] ?? '';
-
         return is_scalar($value) ? (string) $value : '';
     }
 
-    /** @param array<string, mixed> $row */
-    private function nullableStringCell(array $row, string $key): ?string
+    private static function nullableStringValue(mixed $value): ?string
     {
-        $value = $row[$key] ?? null;
-
         return is_scalar($value) ? (string) $value : null;
     }
 
-    /** @param array<string, mixed> $row */
-    private function floatCell(array $row, string $key): float
+    private static function floatValue(mixed $value): float
     {
-        $value = $row[$key] ?? 0.0;
-
         return is_numeric($value) ? (float) $value : 0.0;
     }
 
-    /** @param array<string, mixed> $row */
-    private function nullableFloatCell(array $row, string $key): ?float
+    private static function intValue(mixed $value): int
     {
-        $value = $row[$key] ?? null;
-
-        return is_numeric($value) ? (float) $value : null;
+        return is_numeric($value) ? (int) $value : 0;
     }
 }

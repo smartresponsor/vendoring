@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-final class VendorId
+use InvalidArgumentException;
+
+final readonly class VendorId
 {
     public function __construct(private string $value)
     {
         if ('' === $value) {
-            throw new \InvalidArgumentException('Empty VendorId');
+            throw new InvalidArgumentException('Empty VendorId');
         }
     }
 

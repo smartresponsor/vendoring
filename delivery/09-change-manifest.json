@@ -1,15 +1,15 @@
 {
-  "wave": 9,
-  "message": "vendor runtime status contour",
-  "touched": [
-    "src/Projection/VendorRuntimeStatusView.php",
-    "src/ServiceInterface/Ops/VendorRuntimeStatusViewBuilderInterface.php",
-    "src/Service/Ops/VendorRuntimeStatusViewBuilder.php",
-    "src/Controller/Ops/VendorRuntimeStatusController.php",
-    "src/Command/VendorRuntimeStatusCommand.php",
-    "config/services.yaml",
-    "docs/internal/VENDOR_RUNTIME_STATUS_CANON.md",
-    "VENDORING-W09-NOTES.md"
-  ],
-  "removed": []
+    "wave": 9,
+    "message": "vendor runtime status contour",
+    "touched": [
+        "src/Projection/VendorRuntimeStatusView.php",
+        "src/ServiceInterface/Ops/VendorRuntimeStatusViewBuilderInterface.php",
+        "src/Service/Ops/VendorRuntimeStatusViewBuilder.php",
+        "src/Controller/Ops/VendorRuntimeStatusController.php",
+        "src/Command/VendorRuntimeStatusCommand.php",
+        "config/services.yaml",
+        "docs/internal/VENDOR_RUNTIME_STATUS_CANON.md",
+        "VENDORING-W09-NOTES.md"
+    ],
+    "removed": []
 }

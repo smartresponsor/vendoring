@@ -1,15 +1,15 @@
 {
-  "wave": 3,
-  "message": "api-key-service-canon",
-  "touched": [
-    "src/ServiceInterface/VendorApiKeyServiceInterface.php",
-    "src/Service/VendorApiKeyService.php",
-    "src/ServiceInterface/VendorSecurityServiceInterface.php",
-    "src/Service/VendorSecurityService.php",
-    "src/Command/VendorApiKeyCreateCommand.php",
-    "src/Command/VendorApiKeyRotateCommand.php",
-    "config/services.yaml",
-    "docs/internal/VENDOR_API_KEY_CANON.md"
-  ],
-  "removed": []
+    "wave": 3,
+    "message": "api-key-service-canon",
+    "touched": [
+        "src/ServiceInterface/VendorApiKeyServiceInterface.php",
+        "src/Service/VendorApiKeyService.php",
+        "src/ServiceInterface/VendorSecurityServiceInterface.php",
+        "src/Service/VendorSecurityService.php",
+        "src/Command/VendorApiKeyCreateCommand.php",
+        "src/Command/VendorApiKeyRotateCommand.php",
+        "config/services.yaml",
+        "docs/internal/VENDOR_API_KEY_CANON.md"
+    ],
+    "removed": []
 }

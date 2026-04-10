@@ -1,33 +1,33 @@
 services:
-  app:
-    build:
-      context: ../..
-      dockerfile: deploy/docker/Dockerfile
-    working_dir: /app
-    environment:
-      APP_ENV: dev
-      APP_DEBUG: "1"
-      APP_SECRET: vendoring-docker-secret
-      HOST: 0.0.0.0
-      PORT: 8000
-      DOCKER_HTTP_PORT: ${DOCKER_HTTP_PORT:-18081}
-      VENDOR_DSN: sqlite:////app/var/vendor.sqlite
-      VENDOR_SQLITE_DSN: sqlite:////app/var/vendor_runtime.sqlite
-      COMPOSER_HOME: /tmp/composer
-    ports:
-      - "${DOCKER_HTTP_PORT:-18081}:8000"
-    volumes:
-      - ../..:/app
-      - vendoring_vendor:/app/vendor
-      - vendoring_var:/app/var
-      - vendoring_composer_cache:/tmp/composer/cache
-    healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8000/healthz | grep -q '\"status\":\"ok\"'"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
+    app:
+        build:
+            context: ../..
+            dockerfile: deploy/docker/Dockerfile
+        working_dir: /app
+        environment:
+            APP_ENV: dev
+            APP_DEBUG: "1"
+            APP_SECRET: vendoring-docker-secret
+            HOST: 0.0.0.0
+            PORT: 8000
+            DOCKER_HTTP_PORT: ${DOCKER_HTTP_PORT:-18081}
+            VENDOR_DSN: sqlite:////app/var/vendor.sqlite
+            VENDOR_SQLITE_DSN: sqlite:////app/var/vendor_runtime.sqlite
+            COMPOSER_HOME: /tmp/composer
+        ports:
+            - "${DOCKER_HTTP_PORT:-18081}:8000"
+        volumes:
+            - ../..:/app
+            - vendoring_vendor:/app/vendor
+            - vendoring_var:/app/var
+            - vendoring_composer_cache:/tmp/composer/cache
+        healthcheck:
+            test: [ "CMD-SHELL", "curl -fsS http://127.0.0.1:8000/healthz | grep -q '\"status\":\"ok\"'" ]
+            interval: 5s
+            timeout: 3s
+            retries: 20
 
 volumes:
-  vendoring_vendor:
-  vendoring_var:
-  vendoring_composer_cache:
+    vendoring_vendor:
+    vendoring_var:
+    vendoring_composer_cache:

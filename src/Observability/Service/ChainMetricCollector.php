@@ -9,12 +9,12 @@ use App\ServiceInterface\Observability\MetricCollectorInterface;
 /**
  * Composite metric collector that fans one increment call out to multiple collectors.
  */
-final class ChainMetricCollector implements MetricCollectorInterface
+final readonly class ChainMetricCollector implements MetricCollectorInterface
 {
     /**
      * @param iterable<MetricCollectorInterface> $collectors Downstream collectors that will all receive the increment.
      */
-    public function __construct(private readonly iterable $collectors)
+    public function __construct(private iterable $collectors)
     {
     }
 

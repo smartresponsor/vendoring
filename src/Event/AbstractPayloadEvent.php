@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\EventInterface\PayloadEventInterface;
+use DateTimeImmutable;
 use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractPayloadEvent extends Event implements PayloadEventInterface
@@ -14,7 +15,7 @@ abstract class AbstractPayloadEvent extends Event implements PayloadEventInterfa
      */
     final public function __construct(
         private readonly array $payload,
-        private readonly \DateTimeImmutable $occurredAt,
+        private readonly DateTimeImmutable $occurredAt,
     ) {
     }
 
@@ -26,7 +27,7 @@ abstract class AbstractPayloadEvent extends Event implements PayloadEventInterfa
         return $this->payload;
     }
 
-    final public function occurredAt(): \DateTimeImmutable
+    final public function occurredAt(): DateTimeImmutable
     {
         return $this->occurredAt;
     }

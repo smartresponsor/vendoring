@@ -8,6 +8,7 @@ use App\Projection\VendorExternalIntegrationRuntimeView;
 use App\Projection\VendorFinanceRuntimeView;
 use App\Projection\VendorOwnershipView;
 use App\Projection\VendorProfileView;
+use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Projection\VendorStatementDeliveryRuntimeView;
 use App\Service\Ops\VendorRuntimeStatusViewBuilder;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
@@ -97,13 +98,29 @@ final class VendorRuntimeStatusViewBuilderTest extends TestCase
         $this->financeRuntimeViewBuilder
             ->expects(self::once())
             ->method('build')
-            ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')
+            ->with(self::callback(function (VendorStatementDeliveryRuntimeRequestDTO $request): bool {
+                self::assertSame('tenant-1', $request->tenantId);
+                self::assertSame('42', $request->vendorId);
+                self::assertSame('2025-01-01', $request->from);
+                self::assertSame('2025-01-31', $request->to);
+                self::assertSame('USD', $request->currency);
+
+                return true;
+            }))
             ->willReturn(new VendorFinanceRuntimeView('tenant-1', '42', 'USD', ['ownerUserId' => 7], ['gmv' => 1000], ['provider' => 'bank'], ['closing' => 900]));
 
         $this->statementDeliveryRuntimeViewBuilder
             ->expects(self::once())
             ->method('build')
-            ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')
+            ->with(self::callback(function (VendorStatementDeliveryRuntimeRequestDTO $request): bool {
+                self::assertSame('tenant-1', $request->tenantId);
+                self::assertSame('42', $request->vendorId);
+                self::assertSame('2025-01-01', $request->from);
+                self::assertSame('2025-01-31', $request->to);
+                self::assertSame('USD', $request->currency);
+
+                return true;
+            }))
             ->willReturn(new VendorStatementDeliveryRuntimeView('tenant-1', '42', 'USD', ['ownerUserId' => 7], ['closing' => 900], ['path' => '/tmp/statement.csv'], [['email' => 'ops@example.com']]));
 
         $this->externalIntegrationRuntimeViewBuilder

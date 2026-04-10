@@ -1,4 +1,6 @@
 crm:
-  provider: "disabled"
+  provider: disabled
   base_url: null
-  retries: { max: 6, base_ms: 500 }
+  retries:
+    max: 6
+    base_ms: 500

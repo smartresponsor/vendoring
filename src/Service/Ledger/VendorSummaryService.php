@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Service\Ledger;
 
+use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Ledger\VendorSummaryServiceInterface;
 
@@ -20,14 +21,14 @@ final class VendorSummaryService implements VendorSummaryServiceInterface
     {
         $balances = [];
         foreach (self::ACCOUNTS as $account) {
-            $balances[$account] = $this->ledgerEntries->sumByAccount(
-                $tenantId,
-                $account,
-                '' !== $from ? $from : null,
-                '' !== $to ? $to : null,
-                $vendorId,
-                '' !== $currency ? $currency : null,
-            );
+            $balances[$account] = $this->ledgerEntries->sumByAccount(new LedgerAccountSumCriteriaDTO(
+                tenantId: $tenantId,
+                accountCode: $account,
+                from: '' !== $from ? $from : null,
+                to: '' !== $to ? $to : null,
+                vendorId: $vendorId,
+                currency: '' !== $currency ? $currency : null,
+            ));
         }
 
         return [

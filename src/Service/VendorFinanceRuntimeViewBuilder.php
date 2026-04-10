@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\DTO\Statement\VendorStatementRequestDTO;
 use App\Projection\VendorFinanceRuntimeView;
 use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
@@ -16,13 +17,13 @@ use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
  * Builds a finance-facing runtime summary that keeps vendor ownership/access
  * context adjacent to payout and statement surfaces.
  */
-final class VendorFinanceRuntimeViewBuilder implements VendorFinanceRuntimeViewBuilderInterface
+final readonly class VendorFinanceRuntimeViewBuilder implements VendorFinanceRuntimeViewBuilderInterface
 {
     public function __construct(
-        private readonly VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
-        private readonly VendorMetricServiceInterface $metricService,
-        private readonly PayoutAccountRepositoryInterface $payoutAccountRepository,
-        private readonly VendorStatementServiceInterface $statementService,
+        private VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
+        private VendorMetricServiceInterface $metricService,
+        private PayoutAccountRepositoryInterface $payoutAccountRepository,
+        private VendorStatementServiceInterface $statementService,
     ) {
     }
 
@@ -39,7 +40,13 @@ final class VendorFinanceRuntimeViewBuilder implements VendorFinanceRuntimeViewB
             $ownership = $ownershipView?->toArray();
         }
 
-        $metricOverview = $this->metricService->overview($tenantId, $vendorId, $from, $to, $currency);
+        $metricOverview = $this->metricService->overview(new VendorMetricOverviewRequestDTO(
+            tenantId: $tenantId,
+            vendorId: $vendorId,
+            from: $from,
+            to: $to,
+            currency: $currency,
+        ));
 
         $payoutAccountEntity = $this->payoutAccountRepository->get($tenantId, $vendorId);
         $payoutAccount = null;

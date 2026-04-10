@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Category;
 
+use App\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
 use App\Policy\CategorySyndicationPolicyAwarePackageGatePolicy;
 use App\Service\CatalogSyndicationPolicyAwarePackageGateService;
 use App\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface;
@@ -20,22 +21,17 @@ final class CatalogSyndicationPolicyAwarePackageGateServiceTest extends TestCase
     public function testBuildGatedPublishPackageResolvesPublishabilityViaPolicy(): void
     {
         $fallbackAwareGateService = new class implements CatalogSyndicationFallbackAwarePackageGateServiceInterface {
-            /**
-             * @param array<string, mixed> $categoryData
-             * @param array<string, string> $fieldMap
-             * @param list<string> $requiredFields
-             */
-            public function buildGatedPublishPackage(string $packageId, string $destinationId, string $categoryId, string $version, string $localeMode, array $categoryData, array $fieldMap, array $requiredFields, string $actorId, string $reason): \App\EventInterface\CategorySyndicationFallbackAwarePackageGatedInterface
+            public function buildGatedPublishPackage(CatalogSyndicationPublishPackageRequestDTO $request): \App\EventInterface\CategorySyndicationFallbackAwarePackageGatedInterface
             {
                 return new \App\Event\CategorySyndicationFallbackAwarePackageGated([
-                    'packageId' => $packageId,
-                    'destinationId' => $destinationId,
-                    'categoryId' => $categoryId,
-                    'version' => $version,
-                    'localeMode' => $localeMode,
+                    'packageId' => $request->packageId,
+                    'destinationId' => $request->destinationId,
+                    'categoryId' => $request->categoryId,
+                    'version' => $request->version,
+                    'localeMode' => $request->localeMode,
                     'payload' => ['slug' => 'chairs'],
-                    'fieldMap' => $fieldMap,
-                    'requiredFields' => $requiredFields,
+                    'fieldMap' => $request->fieldMap,
+                    'requiredFields' => $request->requiredFields,
                     'packageMissingRequiredFields' => [],
                     'warnings' => ['package_publishable_via_fallback_only'],
                     'checks' => ['fallbackPackageGatePublishable' => true],
@@ -71,7 +67,7 @@ final class CatalogSyndicationPolicyAwarePackageGateServiceTest extends TestCase
             new CategorySyndicationPolicyAwarePackageGatePolicy(),
         );
 
-        $event = $service->buildGatedPublishPackage('pkg-1', 'dst-1', 'cat-1', 'v1', 'per_locale', ['slug' => 'chairs'], ['slug' => 'slug'], ['slug'], 'actor-1', 'test');
+        $event = $service->buildGatedPublishPackage(new CatalogSyndicationPublishPackageRequestDTO('pkg-1', 'dst-1', 'cat-1', 'v1', 'per_locale', ['slug' => 'chairs'], ['slug' => 'slug'], ['slug'], 'actor-1', 'test'));
         $payload = $event->payload();
 
         self::assertIsArray($payload);

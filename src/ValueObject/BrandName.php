@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
+use InvalidArgumentException;
+
 final readonly class BrandName
 {
     private function __construct(private string $value)
@@ -17,11 +19,11 @@ final readonly class BrandName
         $normalized = trim($value);
 
         if ('' === $normalized) {
-            throw new \InvalidArgumentException('brand_name_required');
+            throw new InvalidArgumentException('brand_name_required');
         }
 
         if (mb_strlen($normalized) > 255) {
-            throw new \InvalidArgumentException('brand_name_too_long');
+            throw new InvalidArgumentException('brand_name_too_long');
         }
 
         return new self($normalized);

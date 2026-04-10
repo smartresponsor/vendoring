@@ -11,7 +11,7 @@ namespace App\Projection;
  * statement, metric and payout-account surfaces without pulling any external
  * User aggregate.
  */
-final class VendorFinanceRuntimeView
+final readonly class VendorFinanceRuntimeView
 {
     /**
      * @param array<string,mixed>|null $ownership
@@ -20,13 +20,13 @@ final class VendorFinanceRuntimeView
      * @param array<string,mixed>|null $statement
      */
     public function __construct(
-        private readonly string $tenantId,
-        private readonly string $vendorId,
-        private readonly string $currency,
-        private readonly ?array $ownership,
-        private readonly array $metricOverview,
-        private readonly ?array $payoutAccount,
-        private readonly ?array $statement,
+        private string $tenantId,
+        private string $vendorId,
+        private string $currency,
+        private ?array $ownership,
+        private array  $metricOverview,
+        private ?array $payoutAccount,
+        private ?array $statement,
     ) {
     }
 

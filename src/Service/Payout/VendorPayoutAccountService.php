@@ -8,11 +8,13 @@ namespace App\Service\Payout;
 use App\Entity\Payout\PayoutAccount;
 use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
 use App\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
+use DateTimeImmutable;
+use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 
-final class VendorPayoutAccountService implements VendorPayoutAccountServiceInterface
+final readonly class VendorPayoutAccountService implements VendorPayoutAccountServiceInterface
 {
-    public function __construct(private readonly PayoutAccountRepositoryInterface $accounts)
+    public function __construct(private PayoutAccountRepositoryInterface $accounts)
     {
     }
 
@@ -21,7 +23,7 @@ final class VendorPayoutAccountService implements VendorPayoutAccountServiceInte
     {
         foreach (['tenantId', 'vendorId', 'provider', 'accountRef', 'currency'] as $field) {
             if (!isset($payload[$field])) {
-                throw new \InvalidArgumentException(sprintf('%s required', $field));
+                throw new InvalidArgumentException(sprintf('%s required', $field));
             }
         }
 
@@ -33,7 +35,7 @@ final class VendorPayoutAccountService implements VendorPayoutAccountServiceInte
             $this->requiredString($payload, 'accountRef'),
             $this->requiredString($payload, 'currency'),
             $this->boolValue($payload['active'] ?? true),
-            (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            new DateTimeImmutable()->format('Y-m-d H:i:s'),
         );
 
         $this->accounts->upsert($account);
@@ -54,7 +56,7 @@ final class VendorPayoutAccountService implements VendorPayoutAccountServiceInte
             return (string) $value;
         }
 
-        throw new \InvalidArgumentException(sprintf('%s required', $field));
+        throw new InvalidArgumentException(sprintf('%s required', $field));
     }
 
     private function boolValue(mixed $value): bool

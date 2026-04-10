@@ -7,7 +7,7 @@ namespace App\Service\Category;
 
 use App\ServiceInterface\Category\CategoryApproxTotalServiceInterface;
 
-final class CategoryApproxTotalService implements CategoryApproxTotalServiceInterface
+final readonly class CategoryApproxTotalService implements CategoryApproxTotalServiceInterface
 {
     public function __construct(private string $file = '')
     {

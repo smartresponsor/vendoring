@@ -1,5 +1,7 @@
 export:
   bucket: s3://vendor-exports
-  formats: ['csv','parquet']
-  partition: 'date'
+  formats:
+  - csv
+  - parquet
+  partition: date
   retention_days: 365

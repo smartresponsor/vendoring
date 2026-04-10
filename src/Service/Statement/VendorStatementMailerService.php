@@ -20,14 +20,14 @@ use Symfony\Component\Mime\Email;
  * applies outbound runtime policy, consults the circuit breaker, and attempts one
  * transport send through Symfony Mailer.
  */
-final class VendorStatementMailerService implements VendorStatementMailerServiceInterface
+final readonly class VendorStatementMailerService implements VendorStatementMailerServiceInterface
 {
     public function __construct(
-        private readonly MailerInterface $mailer,
-        private readonly MetricCollectorInterface $metrics,
-        private readonly RuntimeLoggerInterface $runtimeLogger,
-        private readonly OutboundOperationPolicyInterface $outboundPolicy,
-        private readonly OutboundCircuitBreakerInterface $circuitBreaker,
+        private MailerInterface                  $mailer,
+        private MetricCollectorInterface         $metrics,
+        private RuntimeLoggerInterface           $runtimeLogger,
+        private OutboundOperationPolicyInterface $outboundPolicy,
+        private OutboundCircuitBreakerInterface  $circuitBreaker,
     ) {
     }
 
@@ -97,7 +97,7 @@ final class VendorStatementMailerService implements VendorStatementMailerService
             return $result;
         }
 
-        $message = (new Email())
+        $message = new Email()
             ->to($email)
             ->subject(sprintf('Monthly Vendor Statement for %s', $periodLabel))
             ->text(sprintf(

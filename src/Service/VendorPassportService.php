@@ -13,11 +13,11 @@ use App\ServiceInterface\VendorPassportServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorPassportService implements VendorPassportServiceInterface
+final readonly class VendorPassportService implements VendorPassportServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly EventDispatcherInterface $dispatcher,
+        private EntityManagerInterface   $em,
+        private EventDispatcherInterface $dispatcher,
     ) {
     }
 

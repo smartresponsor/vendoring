@@ -8,6 +8,7 @@ use App\Projection\VendorExternalIntegrationRuntimeView;
 use App\Projection\VendorFinanceRuntimeView;
 use App\Projection\VendorOwnershipView;
 use App\Projection\VendorProfileView;
+use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Projection\VendorStatementDeliveryRuntimeView;
 use App\Service\Ops\VendorRuntimeStatusViewBuilder;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;

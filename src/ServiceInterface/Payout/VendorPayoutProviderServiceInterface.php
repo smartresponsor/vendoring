@@ -5,8 +5,10 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Payout;
 
+use App\DTO\Payout\VendorPayoutTransferDTO;
+
 interface VendorPayoutProviderServiceInterface
 {
     /** @return array<string, mixed> */
-    public function transfer(string $tenantId, string $vendorId, string $provider, string $accountRef, float $amount, string $currency): array;
+    public function transfer(VendorPayoutTransferDTO $transfer): array;
 }

@@ -9,15 +9,17 @@ namespace App\Projection;
  *
  * This projection keeps human-access semantics separate from API key access.
  */
-final class VendorOwnershipView
+final readonly class VendorOwnershipView
 {
     /**
-     * @param list<array{userId:int,role:string,status:string,isPrimary:bool,grantedAt:string,revokedAt:?string,capabilities:list<string>}> $assignments
+     * @param int $vendorId
+     * @param int|null $ownerUserId
+     * @param array $assignments
      */
     public function __construct(
-        private readonly int $vendorId,
-        private readonly ?int $ownerUserId,
-        private readonly array $assignments,
+        private int   $vendorId,
+        private ?int  $ownerUserId,
+        private array $assignments,
     ) {
     }
 
@@ -32,7 +34,7 @@ final class VendorOwnershipView
     }
 
     /**
-     * @return list<array{userId:int,role:string,status:string,isPrimary:bool,grantedAt:string,revokedAt:?string,capabilities:list<string>}>
+     * @return array :?string,capabilities:list<string>}>
      */
     public function getAssignments(): array
     {

@@ -1,174 +1,174 @@
 ﻿{
-    "component":  "Vendoring",
-    "timestamp":  "20260326-132602",
-    "report_root":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602",
-    "passed":  17,
-    "non_passed":  1,
-    "skipped":  2,
-    "total":  20,
-    "strict":  false,
-    "include_smokes":  true,
-    "include_reports":  true,
-    "steps":  [
-                  {
-                      "name":  "composer-validate",
-                      "command":  "composer validate --no-check-publish",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  2.043,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\composer-validate.log"
-                  },
-                  {
-                      "name":  "lint",
-                      "command":  "composer lint",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  41.292,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\lint.log"
-                  },
-                  {
-                      "name":  "cs-check",
-                      "command":  "composer cs:check",
-                      "status":  "failed",
-                      "exit_code":  8,
-                      "duration_seconds":  5.066,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\cs-check.log"
-                  },
-                  {
-                      "name":  "phpstan",
-                      "command":  "composer stan",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  4.062,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\phpstan.log"
-                  },
-                  {
-                      "name":  "phpmd-src",
-                      "command":  "composer md",
-                      "status":  "skipped",
-                      "exit_code":  0,
-                      "duration_seconds":  0,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\phpmd-src.log"
-                  },
-                  {
-                      "name":  "phpmd-tests",
-                      "command":  "composer md:tests",
-                      "status":  "skipped",
-                      "exit_code":  0,
-                      "duration_seconds":  0,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\phpmd-tests.log"
-                  },
-                  {
-                      "name":  "phpunit",
-                      "command":  "composer test",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  6.07,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\phpunit.log"
-                  },
-                  {
-                      "name":  "smoke-runtime",
-                      "command":  "composer smoke:runtime",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  3.031,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\smoke-runtime.log"
-                  },
-                  {
-                      "name":  "smoke-container",
-                      "command":  "composer smoke:container",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  2.046,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\smoke-container.log"
-                  },
-                  {
-                      "name":  "smoke-doctrine",
-                      "command":  "composer smoke:doctrine",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  2.022,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\smoke-doctrine.log"
-                  },
-                  {
-                      "name":  "smoke-admin",
-                      "command":  "composer smoke:admin",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  2.042,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\smoke-admin.log"
-                  },
-                  {
-                      "name":  "report-canonical-structure",
-                      "command":  "composer report:canonical-structure",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  3.043,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-canonical-structure.log"
-                  },
-                  {
-                      "name":  "report-mirror-enforcer",
-                      "command":  "composer report:mirror-enforcer",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  2.047,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-mirror-enforcer.log"
-                  },
-                  {
-                      "name":  "report-config-guard",
-                      "command":  "composer report:config-guard",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  2.053,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-config-guard.log"
-                  },
-                  {
-                      "name":  "report-config-drift",
-                      "command":  "composer report:config-drift",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  2.021,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-config-drift.log"
-                  },
-                  {
-                      "name":  "report-php-surface",
-                      "command":  "composer report:php-surface",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  43.327,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-php-surface.log"
-                  },
-                  {
-                      "name":  "report-prod-marker",
-                      "command":  "composer report:prod-marker",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  2.063,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-prod-marker.log"
-                  },
-                  {
-                      "name":  "report-quality-residue",
-                      "command":  "composer report:quality-residue",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  3.044,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-quality-residue.log"
-                  },
-                  {
-                      "name":  "report-contract",
-                      "command":  "composer report:contract",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  3.043,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-contract.log"
-                  },
-                  {
-                      "name":  "report-readiness",
-                      "command":  "composer report:readiness",
-                      "status":  "passed",
-                      "exit_code":  0,
-                      "duration_seconds":  3.056,
-                      "log":  "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-readiness.log"
-                  }
-              ]
+    "component": "Vendoring",
+    "timestamp": "20260326-132602",
+    "report_root": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602",
+    "passed": 17,
+    "non_passed": 1,
+    "skipped": 2,
+    "total": 20,
+    "strict": false,
+    "include_smokes": true,
+    "include_reports": true,
+    "steps": [
+        {
+            "name": "composer-validate",
+            "command": "composer validate --no-check-publish",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 2.043,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\composer-validate.log"
+        },
+        {
+            "name": "lint",
+            "command": "composer lint",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 41.292,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\lint.log"
+        },
+        {
+            "name": "cs-check",
+            "command": "composer cs:check",
+            "status": "failed",
+            "exit_code": 8,
+            "duration_seconds": 5.066,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\cs-check.log"
+        },
+        {
+            "name": "phpstan",
+            "command": "composer stan",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 4.062,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\phpstan.log"
+        },
+        {
+            "name": "phpmd-src",
+            "command": "composer md",
+            "status": "skipped",
+            "exit_code": 0,
+            "duration_seconds": 0,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\phpmd-src.log"
+        },
+        {
+            "name": "phpmd-tests",
+            "command": "composer md:tests",
+            "status": "skipped",
+            "exit_code": 0,
+            "duration_seconds": 0,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\phpmd-tests.log"
+        },
+        {
+            "name": "phpunit",
+            "command": "composer test",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 6.07,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\phpunit.log"
+        },
+        {
+            "name": "smoke-runtime",
+            "command": "composer smoke:runtime",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 3.031,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\smoke-runtime.log"
+        },
+        {
+            "name": "smoke-container",
+            "command": "composer smoke:container",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 2.046,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\smoke-container.log"
+        },
+        {
+            "name": "smoke-doctrine",
+            "command": "composer smoke:doctrine",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 2.022,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\smoke-doctrine.log"
+        },
+        {
+            "name": "smoke-admin",
+            "command": "composer smoke:admin",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 2.042,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\smoke-admin.log"
+        },
+        {
+            "name": "report-canonical-structure",
+            "command": "composer report:canonical-structure",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 3.043,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-canonical-structure.log"
+        },
+        {
+            "name": "report-mirror-enforcer",
+            "command": "composer report:mirror-enforcer",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 2.047,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-mirror-enforcer.log"
+        },
+        {
+            "name": "report-config-guard",
+            "command": "composer report:config-guard",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 2.053,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-config-guard.log"
+        },
+        {
+            "name": "report-config-drift",
+            "command": "composer report:config-drift",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 2.021,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-config-drift.log"
+        },
+        {
+            "name": "report-php-surface",
+            "command": "composer report:php-surface",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 43.327,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-php-surface.log"
+        },
+        {
+            "name": "report-prod-marker",
+            "command": "composer report:prod-marker",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 2.063,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-prod-marker.log"
+        },
+        {
+            "name": "report-quality-residue",
+            "command": "composer report:quality-residue",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 3.044,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-quality-residue.log"
+        },
+        {
+            "name": "report-contract",
+            "command": "composer report:contract",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 3.043,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-contract.log"
+        },
+        {
+            "name": "report-readiness",
+            "command": "composer report:readiness",
+            "status": "passed",
+            "exit_code": 0,
+            "duration_seconds": 3.056,
+            "log": "D:\\PhpstormProjects\\www\\Vendoring\\report\\pipeline\\20260326-132602\\logs\\report-readiness.log"
+        }
+    ]
 }

@@ -10,7 +10,7 @@ namespace App\Projection;
  * Keeps neighboring integration surfaces readable without pulling external
  * aggregates or executing side effects against remote systems.
  */
-final class VendorExternalIntegrationRuntimeView
+final readonly class VendorExternalIntegrationRuntimeView
 {
     /**
      * @param array<string,mixed>|null $ownership
@@ -20,13 +20,13 @@ final class VendorExternalIntegrationRuntimeView
      * @param list<string>             $surfaces
      */
     public function __construct(
-        private readonly string $tenantId,
-        private readonly string $vendorId,
-        private readonly ?array $ownership,
-        private readonly array $crm,
-        private readonly array $webhooks,
-        private readonly array $payoutBridge,
-        private readonly array $surfaces,
+        private string $tenantId,
+        private string $vendorId,
+        private ?array $ownership,
+        private array  $crm,
+        private array  $webhooks,
+        private array  $payoutBridge,
+        private array  $surfaces,
     ) {
     }
 

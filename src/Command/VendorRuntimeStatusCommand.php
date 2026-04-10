@@ -10,6 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function is_string;
 
 #[AsCommand(
     name: 'app:vendor:runtime-status',
@@ -56,8 +57,8 @@ final class VendorRuntimeStatusCommand extends Command
         $view = $this->runtimeStatusViewBuilder->build(
             tenantId: $tenantId,
             vendorId: $vendorId,
-            from: \is_string($from) ? $from : null,
-            to: \is_string($to) ? $to : null,
+            from: is_string($from) ? $from : null,
+            to: is_string($to) ? $to : null,
             currency: $currency,
         )->toArray();
 

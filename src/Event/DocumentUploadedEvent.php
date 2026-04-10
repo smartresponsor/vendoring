@@ -6,9 +6,9 @@ namespace App\Event;
 
 use App\Entity\VendorDocument;
 
-final class DocumentUploadedEvent
+final readonly class DocumentUploadedEvent
 {
-    public function __construct(public readonly VendorDocument $document)
+    public function __construct(public VendorDocument $document)
     {
     }
 }

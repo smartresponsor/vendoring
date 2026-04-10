@@ -8,13 +8,14 @@ use App\Entity\CategoryReviewAssignment;
 use App\Policy\CategoryReviewAssignmentPolicy;
 use App\Repository\CategoryChangeRequestRepository;
 use App\Repository\CategoryReviewAssignmentRepository;
+use InvalidArgumentException;
 
-final class CatalogReviewAssignmentService
+final readonly class CatalogReviewAssignmentService
 {
     public function __construct(
-        private readonly CategoryChangeRequestRepository $requestRepository,
-        private readonly CategoryReviewAssignmentRepository $assignmentRepository,
-        private readonly CategoryReviewAssignmentPolicy $policy,
+        private CategoryChangeRequestRepository    $requestRepository,
+        private CategoryReviewAssignmentRepository $assignmentRepository,
+        private CategoryReviewAssignmentPolicy     $policy,
     ) {
     }
 
@@ -26,7 +27,7 @@ final class CatalogReviewAssignmentService
         $request = $this->requestRepository->byId($requestId);
 
         if (null === $request) {
-            throw new \InvalidArgumentException(sprintf('category_change_request_not_found:%s', $requestId));
+            throw new InvalidArgumentException(sprintf('category_change_request_not_found:%s', $requestId));
         }
 
         $assignment = new CategoryReviewAssignment(

@@ -14,6 +14,7 @@ use App\ServiceInterface\VendorTransactionInputResolverServiceInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\Traffic\WriteRateLimitDecision;
 use App\ValueObject\VendorTransactionErrorCode;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -70,7 +71,7 @@ final class VendorTransactionController extends AbstractController
                 'error' => VendorTransactionErrorCode::MALFORMED_JSON,
                 'jsonErrorCode' => $exception->getCode(),
             ], 400);
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             // Unknown validation failures must collapse to transaction_validation_error.
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
             $statusCode = VendorTransactionErrorCode::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
@@ -155,7 +156,7 @@ final class VendorTransactionController extends AbstractController
                 'error' => VendorTransactionErrorCode::MALFORMED_JSON,
                 'jsonErrorCode' => $exception->getCode(),
             ], 400);
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
             $this->runtimeLogger->warning('vendor_transaction_status_update_rejected', [
                 'vendor_id' => $vendorId,
@@ -266,7 +267,7 @@ final class VendorTransactionController extends AbstractController
         }
 
         $authorization = trim((string) $request->headers->get('Authorization', ''));
-        $clientIp = (string) ($request->getClientIp() ?? 'unknown');
+        $clientIp = $request->getClientIp() ?? 'unknown';
 
         if (defined('PHPUNIT_COMPOSER_INSTALL')) {
             return sha1(uniqid('vendoring_phpunit_rate_', true).'|'.(null === $vendorId ? '' : $vendorId));

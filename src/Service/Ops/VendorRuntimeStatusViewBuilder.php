@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace App\Service\Ops;
 
+use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Projection\VendorRuntimeStatusView;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
 use App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
 use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
 use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
 use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use DateTimeImmutable;
 
 /**
  * Builds a release-facing vendor runtime status view that aggregates existing
  * vendor-local surfaces into one ops/admin-friendly payload.
  */
-final class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBuilderInterface
+final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBuilderInterface
 {
     public function __construct(
-        private readonly VendorOwnershipViewBuilderInterface $ownershipViewBuilder,
-        private readonly VendorFinanceRuntimeViewBuilderInterface $financeRuntimeViewBuilder,
-        private readonly VendorStatementDeliveryRuntimeViewBuilderInterface $statementDeliveryRuntimeViewBuilder,
-        private readonly VendorExternalIntegrationRuntimeViewBuilderInterface $externalIntegrationRuntimeViewBuilder,
+        private VendorOwnershipViewBuilderInterface                  $ownershipViewBuilder,
+        private VendorFinanceRuntimeViewBuilderInterface             $financeRuntimeViewBuilder,
+        private VendorStatementDeliveryRuntimeViewBuilderInterface   $statementDeliveryRuntimeViewBuilder,
+        private VendorExternalIntegrationRuntimeViewBuilderInterface $externalIntegrationRuntimeViewBuilder,
     ) {
     }
 
@@ -45,13 +47,13 @@ final class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBui
             currency: $currency,
         )->toArray();
 
-        $statementDelivery = $this->statementDeliveryRuntimeViewBuilder->build(
+        $statementDelivery = $this->statementDeliveryRuntimeViewBuilder->build(new VendorStatementDeliveryRuntimeRequestDTO(
             tenantId: $tenantId,
             vendorId: $vendorId,
             from: $from ?? '',
             to: $to ?? '',
             currency: $currency,
-        )->toArray();
+        ))->toArray();
 
         $externalIntegration = $this->externalIntegrationRuntimeViewBuilder->build(
             tenantId: $tenantId,
@@ -74,7 +76,7 @@ final class VendorRuntimeStatusViewBuilder implements VendorRuntimeStatusViewBui
             statementDelivery: $statementDelivery,
             externalIntegration: $externalIntegration,
             surfaceStatus: $surfaceStatus,
-            generatedAt: (new \DateTimeImmutable())->format(DATE_ATOM),
+            generatedAt: (new DateTimeImmutable())->format(DATE_ATOM),
         );
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\EntityInterface\VendorEntityInterface;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: 'App\\Repository\\VendorRepository')]
@@ -26,14 +27,14 @@ final class Vendor implements VendorEntityInterface
     private string $status;
 
     #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     public function __construct(string $brandName, ?int $ownerUserId = null)
     {
         $this->brandName = $brandName;
         $this->ownerUserId = $ownerUserId;
         $this->status = 'inactive';
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -71,7 +72,7 @@ final class Vendor implements VendorEntityInterface
         return $this->status;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }

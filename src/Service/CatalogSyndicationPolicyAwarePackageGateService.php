@@ -4,31 +4,33 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
 use App\Event\CategorySyndicationPolicyAwarePackageGated;
 use App\EventInterface\CategorySyndicationPolicyAwarePackageGatedInterface;
 use App\PolicyInterface\CategorySyndicationPolicyAwarePackageGatePolicyInterface;
 use App\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface;
 use App\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface;
 use App\ServiceInterface\CatalogSyndicationPolicyAwarePackageGateServiceInterface;
+use DateTimeImmutable;
 
-final class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSyndicationPolicyAwarePackageGateServiceInterface
+final readonly class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSyndicationPolicyAwarePackageGateServiceInterface
 {
     public function __construct(
-        private readonly CatalogSyndicationFallbackAwarePackageGateServiceInterface $fallbackAwareGateService,
-        private readonly CatalogDestinationMediaPolicyPreferenceServiceInterface $destinationMediaPolicyPreferenceService,
-        private readonly CategorySyndicationPolicyAwarePackageGatePolicyInterface $policy,
+        private CatalogSyndicationFallbackAwarePackageGateServiceInterface $fallbackAwareGateService,
+        private CatalogDestinationMediaPolicyPreferenceServiceInterface $destinationMediaPolicyPreferenceService,
+        private CategorySyndicationPolicyAwarePackageGatePolicyInterface $policy,
     ) {
     }
 
-    /**
-     * @param array<string, mixed> $categoryData
-     * @param array<string, string> $fieldMap
-     * @param list<string> $requiredFields
-     */
-    public function buildGatedPublishPackage(string $packageId, string $destinationId, string $categoryId, string $version, string $localeMode, array $categoryData, array $fieldMap, array $requiredFields, string $actorId, string $reason): CategorySyndicationPolicyAwarePackageGatedInterface
+    public function buildGatedPublishPackage(CatalogSyndicationPublishPackageRequestDTO $request): CategorySyndicationPolicyAwarePackageGatedInterface
     {
-        $fallbackGatePayload = $this->fallbackAwareGateService->buildGatedPublishPackage($packageId, $destinationId, $categoryId, $version, $localeMode, $categoryData, $fieldMap, $requiredFields, $actorId, $reason)->payload();
-        $policyPayload = $this->destinationMediaPolicyPreferenceService->evaluate($destinationId, $categoryId, $actorId, $reason)->payload();
+        $fallbackGatePayload = $this->fallbackAwareGateService->buildGatedPublishPackage($request)->payload();
+        $policyPayload = $this->destinationMediaPolicyPreferenceService->evaluate(
+            $request->destinationId,
+            $request->categoryId,
+            $request->actorId,
+            $request->reason,
+        )->payload();
 
         $report = $this->policy->buildReport(
             self::stringList($fallbackGatePayload['packageMissingRequiredFields'] ?? null),
@@ -38,11 +40,11 @@ final class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSy
 
         return new CategorySyndicationPolicyAwarePackageGated(
             [
-                'packageId' => trim($packageId),
-                'destinationId' => trim($destinationId),
-                'categoryId' => trim($categoryId),
-                'version' => trim($version),
-                'localeMode' => trim($localeMode),
+                'packageId' => trim($request->packageId),
+                'destinationId' => trim($request->destinationId),
+                'categoryId' => trim($request->categoryId),
+                'version' => trim($request->version),
+                'localeMode' => trim($request->localeMode),
                 'payload' => self::arrayMap($fallbackGatePayload['payload'] ?? null),
                 'fieldMap' => self::stringMap($fallbackGatePayload['fieldMap'] ?? null),
                 'requiredFields' => self::stringList($fallbackGatePayload['requiredFields'] ?? null),
@@ -57,28 +59,20 @@ final class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSy
                 'fallbackPublishable' => $report->fallbackPublishable(),
                 'resolvedPublishable' => $report->resolvedPublishable(),
                 'fallbackUsed' => $report->fallbackUsed(),
-                'actorId' => trim($actorId),
-                'reason' => trim($reason),
+                'actorId' => trim($request->actorId),
+                'reason' => trim($request->reason),
             ],
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
         );
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return array<string, mixed>
-     */
+    /** @return array<string, mixed> */
     private static function arrayMap(mixed $value): array
     {
         return is_array($value) ? $value : [];
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     private static function stringMap(mixed $value): array
     {
         if (!is_array($value)) {
@@ -95,11 +89,7 @@ final class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSy
         return $result;
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return list<string>
-     */
+    /** @return list<string> */
     private static function stringList(mixed $value): array
     {
         if (!is_array($value)) {

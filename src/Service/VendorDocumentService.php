@@ -12,13 +12,14 @@ use App\Entity\VendorDocument;
 use App\Event\DocumentUploadedEvent;
 use App\ServiceInterface\VendorDocumentServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use ReflectionProperty;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorDocumentService implements VendorDocumentServiceInterface
+final readonly class VendorDocumentService implements VendorDocumentServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly EventDispatcherInterface $dispatcher,
+        private EntityManagerInterface   $em,
+        private EventDispatcherInterface $dispatcher,
     ) {
     }
 
@@ -27,14 +28,12 @@ final class VendorDocumentService implements VendorDocumentServiceInterface
         $doc = new VendorDocument($vendor, $dto->type, $dto->filePath);
 
         if ($dto->expiresAt) {
-            $ref = new \ReflectionProperty($doc, 'expiresAt');
-            $ref->setAccessible(true);
+            $ref = new ReflectionProperty($doc, 'expiresAt');
             $ref->setValue($doc, $dto->expiresAt);
         }
 
         if ($dto->uploaderId) {
-            $ref = new \ReflectionProperty($doc, 'uploaderId');
-            $ref->setAccessible(true);
+            $ref = new ReflectionProperty($doc, 'uploaderId');
             $ref->setValue($doc, $dto->uploaderId);
         }
 

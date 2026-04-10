@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace App\Service\Sec;
 
+use App\DTO\Sec\HmacVerificationDTO;
 use App\ServiceInterface\Sec\HmacInterface;
 
 final class Hmac implements HmacInterface
@@ -15,16 +16,10 @@ final class Hmac implements HmacInterface
         return hash_hmac($algo, $payload, $secret);
     }
 
-    public static function verify(
-        string $payload,
-        string $secret,
-        string $signature,
-        string $algo = 'sha256',
-        int $leeway = 300,
-        ?int $timestamp = null,
-    ): bool {
-        $expected = self::sign($payload, $secret, $algo);
+    public static function verify(HmacVerificationDTO $verification): bool
+    {
+        $expected = self::sign($verification->payload, $verification->secret, $verification->algo);
 
-        return hash_equals($expected, $signature);
+        return hash_equals($expected, $verification->signature);
     }
 }

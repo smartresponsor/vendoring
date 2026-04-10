@@ -10,7 +10,7 @@ namespace App\Projection;
  * Keeps ownership/access semantics adjacent to statement export and recipient
  * delivery surfaces without pulling an external User aggregate.
  */
-final class VendorStatementDeliveryRuntimeView
+final readonly class VendorStatementDeliveryRuntimeView
 {
     /**
      * @param array<string,mixed>|null  $ownership
@@ -19,13 +19,13 @@ final class VendorStatementDeliveryRuntimeView
      * @param list<array<string,mixed>> $recipients
      */
     public function __construct(
-        private readonly string $tenantId,
-        private readonly string $vendorId,
-        private readonly string $currency,
-        private readonly ?array $ownership,
-        private readonly array $statement,
-        private readonly ?array $export,
-        private readonly array $recipients,
+        private string $tenantId,
+        private string $vendorId,
+        private string $currency,
+        private ?array $ownership,
+        private array  $statement,
+        private ?array $export,
+        private array  $recipients,
     ) {
     }
 

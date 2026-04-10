@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Category;
 
+use App\DTO\CatalogSyndication\CatalogSyndicationGovernanceTrailRequestDTO;
 use App\Policy\CategorySyndicationGovernanceTrailPolicy;
 use App\Service\CatalogSyndicationGovernanceTrailService;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +20,7 @@ final class CatalogSyndicationGovernanceTrailServiceTest extends TestCase
     {
         $service = new CatalogSyndicationGovernanceTrailService(new CategorySyndicationGovernanceTrailPolicy());
 
-        $event = $service->recordTrail(
+        $event = $service->recordTrail(new CatalogSyndicationGovernanceTrailRequestDTO(
             [
                 'destinationId' => 'dst-1',
                 'categoryId' => 'cat-1',
@@ -50,7 +51,7 @@ final class CatalogSyndicationGovernanceTrailServiceTest extends TestCase
             ],
             'actor-1',
             'test',
-        );
+        ));
 
         $payload = $event->payload();
 

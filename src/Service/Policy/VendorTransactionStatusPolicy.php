@@ -16,7 +16,7 @@ final class VendorTransactionStatusPolicy implements VendorTransactionStatusPoli
     /**
      * @var array<string, list<string>>
      */
-    private const ALLOWED_TRANSITIONS = [
+    private const array ALLOWED_TRANSITIONS = [
         VendorTransactionStatus::PENDING => [VendorTransactionStatus::AUTHORIZED, VendorTransactionStatus::FAILED, VendorTransactionStatus::CANCELLED],
         VendorTransactionStatus::AUTHORIZED => [VendorTransactionStatus::SETTLED, VendorTransactionStatus::FAILED, VendorTransactionStatus::CANCELLED],
         VendorTransactionStatus::SETTLED => [VendorTransactionStatus::REFUNDED],

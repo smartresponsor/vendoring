@@ -18,7 +18,7 @@ services:
     volumes:
       - sr-pg-data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U app -d app']
+      test: [ 'CMD-SHELL', 'pg_isready -U app -d app' ]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -34,11 +34,11 @@ services:
       TZ: America/Chicago
     ports:
       - '3306:3306'
-    command: ['--default-authentication-plugin=mysql_native_password']
+    command: [ '--default-authentication-plugin=mysql_native_password' ]
     volumes:
       - sr-my-data:/var/lib/mysql
     healthcheck:
-      test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -uapp -papp --silent']
+      test: [ 'CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -uapp -papp --silent' ]
       interval: 5s
       timeout: 5s
       retries: 20

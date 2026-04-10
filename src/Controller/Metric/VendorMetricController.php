@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Metric;
 
+use App\DTO\Metric\VendorMetricOverviewRequestDTO;
+use App\DTO\Metric\VendorMetricTrendRequestDTO;
 use App\ServiceInterface\Metric\VendorMetricServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,7 +29,13 @@ final class VendorMetricController extends AbstractController
         if (!$tenantId) {
             return new JsonResponse(['error' => 'tenantId required'], 422);
         }
-        $data = $this->svc->overview($tenantId, $vendorId, $from ? (string) $from : null, $to ? (string) $to : null, $currency);
+        $data = $this->svc->overview(new VendorMetricOverviewRequestDTO(
+            tenantId: $tenantId,
+            vendorId: $vendorId,
+            from: $from ? (string) $from : null,
+            to: $to ? (string) $to : null,
+            currency: $currency,
+        ));
 
         return new JsonResponse(['data' => $data], 200);
     }
@@ -43,7 +51,14 @@ final class VendorMetricController extends AbstractController
         if (!$tenantId || !$from || !$to) {
             return new JsonResponse(['error' => 'tenantId, from, to required'], 422);
         }
-        $data = $this->svc->trends($tenantId, $vendorId, $from, $to, $bucket, $currency);
+        $data = $this->svc->trends(new VendorMetricTrendRequestDTO(
+            tenantId: $tenantId,
+            vendorId: $vendorId,
+            from: $from,
+            to: $to,
+            bucket: $bucket,
+            currency: $currency,
+        ));
 
         return new JsonResponse(['data' => $data], 200);
     }

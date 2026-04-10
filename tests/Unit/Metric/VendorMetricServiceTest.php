@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Metric;
 
+use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\DTO\Metric\VendorMetricOverviewRequestDTO;
+use App\DTO\Metric\VendorMetricTrendRequestDTO;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\Service\Metric\VendorMetricService;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -23,14 +26,17 @@ final class VendorMetricServiceTest extends TestCase
         $this->ledger
             ->expects(self::exactly(3))
             ->method('sumByAccount')
-            ->willReturnMap([
-                ['tenant-1', 'REVENUE', '2026-03-01', '2026-03-31', 'vendor-1', 'USD', 120.0],
-                ['tenant-1', 'REFUNDS_PAYABLE', '2026-03-01', '2026-03-31', 'vendor-1', 'USD', 15.0],
-                ['tenant-1', 'VENDOR_PAYABLE', '2026-03-01', '2026-03-31', 'vendor-1', 'USD', 30.0],
-            ]);
+            ->willReturnCallback(static function (LedgerAccountSumCriteriaDTO $criteria): float {
+                return match ($criteria->accountCode) {
+                    'REVENUE' => 120.0,
+                    'REFUNDS_PAYABLE' => 15.0,
+                    'VENDOR_PAYABLE' => 30.0,
+                    default => 0.0,
+                };
+            });
 
         $payload = (new VendorMetricService($this->ledger))
-            ->overview('tenant-1', 'vendor-1', '2026-03-01', '2026-03-31', 'USD');
+            ->overview(new VendorMetricOverviewRequestDTO('tenant-1', 'vendor-1', '2026-03-01', '2026-03-31', 'USD'));
 
         self::assertSame([
             'tenantId' => 'tenant-1',
@@ -50,14 +56,10 @@ final class VendorMetricServiceTest extends TestCase
         $this->ledger
             ->expects(self::exactly(3))
             ->method('sumByAccount')
-            ->willReturnMap([
-                ['tenant-1', 'REVENUE', null, null, 'vendor-1', 'USD', -100.0],
-                ['tenant-1', 'REFUNDS_PAYABLE', null, null, 'vendor-1', 'USD', -5.0],
-                ['tenant-1', 'VENDOR_PAYABLE', null, null, 'vendor-1', 'USD', -8.0],
-            ]);
+            ->willReturnCallback(static fn (): float => -100.0);
 
         $payload = (new VendorMetricService($this->ledger))
-            ->overview('tenant-1', 'vendor-1');
+            ->overview(new VendorMetricOverviewRequestDTO('tenant-1', 'vendor-1'));
 
         self::assertSame(0.0, $payload['revenue']);
         self::assertSame(0.0, $payload['refunds']);
@@ -70,14 +72,17 @@ final class VendorMetricServiceTest extends TestCase
         $this->ledger
             ->expects(self::exactly(3))
             ->method('sumByAccount')
-            ->willReturnMap([
-                ['tenant-1', 'REVENUE', '2026-01-01', '2026-03-31', 'vendor-1', 'EUR', 200.0],
-                ['tenant-1', 'REFUNDS_PAYABLE', '2026-01-01', '2026-03-31', 'vendor-1', 'EUR', 50.0],
-                ['tenant-1', 'VENDOR_PAYABLE', '2026-01-01', '2026-03-31', 'vendor-1', 'EUR', 25.0],
-            ]);
+            ->willReturnCallback(static function (LedgerAccountSumCriteriaDTO $criteria): float {
+                return match ($criteria->accountCode) {
+                    'REVENUE' => 200.0,
+                    'REFUNDS_PAYABLE' => 50.0,
+                    'VENDOR_PAYABLE' => 25.0,
+                    default => 0.0,
+                };
+            });
 
         $payload = (new VendorMetricService($this->ledger))
-            ->trends('tenant-1', 'vendor-1', '2026-01-01', '2026-03-31', 'quarter', 'EUR');
+            ->trends(new VendorMetricTrendRequestDTO('tenant-1', 'vendor-1', '2026-01-01', '2026-03-31', 'quarter', 'EUR'));
 
         self::assertSame([
             [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Statement;
 
+use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,14 +32,14 @@ final class VendorStatementDeliveryRuntimeController extends AbstractController
             return new JsonResponse(['error' => 'tenantId, from and to are required'], 422);
         }
 
-        $view = $this->runtimeViewBuilder->build(
+        $view = $this->runtimeViewBuilder->build(new VendorStatementDeliveryRuntimeRequestDTO(
             tenantId: $tenantId,
             vendorId: $vendorId,
             from: $from,
             to: $to,
             currency: $currency,
             includeExport: $includeExport,
-        );
+        ));
 
         return new JsonResponse(['data' => $view->toArray()], 200);
     }

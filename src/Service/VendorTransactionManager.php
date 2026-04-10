@@ -16,18 +16,19 @@ use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\VendorTransactionData;
 use App\ValueObject\VendorTransactionErrorCode;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorTransactionManager implements VendorTransactionManagerInterface
+final readonly class VendorTransactionManager implements VendorTransactionManagerInterface
 {
     // Stable validation surface: duplicate_transaction.
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly EventDispatcherInterface $dispatcher,
-        private readonly VendorTransactionStatusPolicyInterface $statusPolicy,
-        private readonly VendorTransactionAmountPolicyInterface $amountPolicy,
-        private readonly VendorTransactionRepositoryInterface $transactions,
-        private readonly RuntimeLoggerInterface $runtimeLogger,
+        private EntityManagerInterface                 $em,
+        private EventDispatcherInterface               $dispatcher,
+        private VendorTransactionStatusPolicyInterface $statusPolicy,
+        private VendorTransactionAmountPolicyInterface $amountPolicy,
+        private VendorTransactionRepositoryInterface   $transactions,
+        private RuntimeLoggerInterface                 $runtimeLogger,
     ) {
     }
 
@@ -45,7 +46,7 @@ final class VendorTransactionManager implements VendorTransactionManagerInterfac
                 'error_code' => VendorTransactionErrorCode::DUPLICATE_TRANSACTION,
             ]);
 
-            throw new \InvalidArgumentException(VendorTransactionErrorCode::DUPLICATE_TRANSACTION);
+            throw new InvalidArgumentException(VendorTransactionErrorCode::DUPLICATE_TRANSACTION);
         }
 
         $tx = new VendorTransaction(
@@ -83,7 +84,7 @@ final class VendorTransactionManager implements VendorTransactionManagerInterfac
                 'error_code' => VendorTransactionErrorCode::INVALID_STATUS_TRANSITION,
             ]);
 
-            throw new \InvalidArgumentException(VendorTransactionErrorCode::INVALID_STATUS_TRANSITION);
+            throw new InvalidArgumentException(VendorTransactionErrorCode::INVALID_STATUS_TRANSITION);
         }
 
         $tx->setStatus($normalizedStatus);
@@ -104,7 +105,7 @@ final class VendorTransactionManager implements VendorTransactionManagerInterfac
         $normalized = trim($value);
 
         if ('' == $normalized) {
-            throw new \InvalidArgumentException($message);
+            throw new InvalidArgumentException($message);
         }
 
         return $normalized;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Support\Repository;
 
+use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
 use App\Entity\Ledger\LedgerEntry;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 
@@ -39,36 +40,36 @@ final class InMemoryLedgerEntryRepository implements LedgerEntryRepositoryInterf
         ));
     }
 
-    public function sumByAccount(string $tenantId, string $accountCode, ?string $from = null, ?string $to = null, ?string $vendorId = null, ?string $currency = null): float
+    public function sumByAccount(LedgerAccountSumCriteriaDTO $criteria): float
     {
         $sum = 0.0;
 
         foreach ($this->entries as $entry) {
-            if ($entry->tenantId !== $tenantId) {
+            if ($entry->tenantId !== $criteria->tenantId) {
                 continue;
             }
 
-            if (null !== $vendorId && $entry->vendorId !== $vendorId) {
+            if (null !== $criteria->vendorId && $entry->vendorId !== $criteria->vendorId) {
                 continue;
             }
 
-            if (null !== $currency && $entry->currency !== $currency) {
+            if (null !== $criteria->currency && $entry->currency !== $criteria->currency) {
                 continue;
             }
 
-            if (null !== $from && $entry->createdAt < $from) {
+            if (null !== $criteria->from && $entry->createdAt < $criteria->from) {
                 continue;
             }
 
-            if (null !== $to && $entry->createdAt > $to) {
+            if (null !== $criteria->to && $entry->createdAt > $criteria->to) {
                 continue;
             }
 
-            if ($entry->debitAccount === $accountCode) {
+            if ($entry->debitAccount === $criteria->accountCode) {
                 $sum += $entry->amount;
             }
 
-            if ($entry->creditAccount === $accountCode) {
+            if ($entry->creditAccount === $criteria->accountCode) {
                 $sum -= $entry->amount;
             }
         }

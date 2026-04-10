@@ -4,52 +4,39 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
 use App\Event\CategorySyndicationPublishPackageBuilt;
 use App\EventInterface\CategorySyndicationPublishPackageBuiltInterface;
 use App\PolicyInterface\CategorySyndicationMappingPolicyInterface;
 use App\ServiceInterface\CatalogSyndicationMappingServiceInterface;
 use App\ValueObject\CategorySyndicationMappingProfile;
 use App\ValueObject\CategorySyndicationPublishPackage;
+use DateTimeImmutable;
 
-final class CatalogSyndicationMappingService implements CatalogSyndicationMappingServiceInterface
+final readonly class CatalogSyndicationMappingService implements CatalogSyndicationMappingServiceInterface
 {
     public function __construct(
-        private readonly CategorySyndicationMappingPolicyInterface $policy,
+        private CategorySyndicationMappingPolicyInterface $policy,
     ) {
     }
 
-    /**
-     * @param array<string, mixed> $categoryData
-     * @param array<string, string> $fieldMap
-     * @param list<string> $requiredFields
-     */
-    public function buildPublishPackage(
-        string $packageId,
-        string $destinationId,
-        string $categoryId,
-        string $version,
-        string $localeMode,
-        array $categoryData,
-        array $fieldMap,
-        array $requiredFields,
-        string $actorId,
-        string $reason,
-    ): CategorySyndicationPublishPackageBuiltInterface {
-        $this->policy->assertLocaleMode($localeMode);
-        $normalizedFieldMap = $this->policy->normalizeFieldMap($fieldMap);
-        $normalizedRequiredFields = $this->policy->normalizeRequiredFields($requiredFields);
+    public function buildPublishPackage(CatalogSyndicationPublishPackageRequestDTO $request): CategorySyndicationPublishPackageBuiltInterface
+    {
+        $this->policy->assertLocaleMode($request->localeMode);
+        $normalizedFieldMap = $this->policy->normalizeFieldMap($request->fieldMap);
+        $normalizedRequiredFields = $this->policy->normalizeRequiredFields($request->requiredFields);
 
         $profile = new CategorySyndicationMappingProfile(
-            trim($destinationId),
-            trim($version),
+            trim($request->destinationId),
+            trim($request->version),
             $normalizedFieldMap,
             $normalizedRequiredFields,
-            trim($localeMode),
+            trim($request->localeMode),
         );
 
         $payload = [];
         foreach ($profile->fieldMap() as $sourceField => $targetField) {
-            $payload[$targetField] = $categoryData[$sourceField] ?? null;
+            $payload[$targetField] = $request->categoryData[$sourceField] ?? null;
         }
 
         $missingRequiredFields = [];
@@ -61,9 +48,9 @@ final class CatalogSyndicationMappingService implements CatalogSyndicationMappin
         }
 
         $package = new CategorySyndicationPublishPackage(
-            trim($packageId),
+            trim($request->packageId),
             $profile->destinationId(),
-            trim($categoryId),
+            trim($request->categoryId),
             $profile->version(),
             $profile->localeMode(),
             $payload,
@@ -83,10 +70,10 @@ final class CatalogSyndicationMappingService implements CatalogSyndicationMappin
                 'publishable' => $package->publishable(),
                 'fieldMap' => $profile->fieldMap(),
                 'requiredFields' => $profile->requiredFields(),
-                'actorId' => trim($actorId),
-                'reason' => trim($reason),
+                'actorId' => trim($request->actorId),
+                'reason' => trim($request->reason),
             ],
-            new \DateTimeImmutable('now'),
+            new DateTimeImmutable('now'),
         );
     }
 

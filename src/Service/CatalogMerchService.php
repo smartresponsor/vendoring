@@ -8,11 +8,12 @@ use App\Entity\CategoryBanner;
 use App\Entity\CategoryHtmlBlock;
 use App\Entity\CategoryPin;
 use App\ServiceInterface\CatalogMerchServiceInterface;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class CatalogMerchService implements CatalogMerchServiceInterface
+final readonly class CatalogMerchService implements CatalogMerchServiceInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
     }
 
@@ -39,7 +40,9 @@ final class CatalogMerchService implements CatalogMerchServiceInterface
     }
 
     /**
+     * @param string $categoryId
      * @param list<string> $recordIds
+     * @throws Exception
      */
     public function orderSet(string $categoryId, array $recordIds): void
     {
@@ -59,7 +62,7 @@ final class CatalogMerchService implements CatalogMerchServiceInterface
         $this->entityManager->persist($banner);
         $this->entityManager->flush();
 
-        return (string) $banner->id();
+        return $banner->id();
     }
 
     public function htmlPublish(string $categoryId, string $html): string
@@ -69,6 +72,6 @@ final class CatalogMerchService implements CatalogMerchServiceInterface
         $this->entityManager->persist($htmlBlock);
         $this->entityManager->flush();
 
-        return (string) $htmlBlock->id();
+        return $htmlBlock->id();
     }
 }

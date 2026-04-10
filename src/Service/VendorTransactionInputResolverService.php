@@ -8,6 +8,7 @@ namespace App\Service;
 use App\ServiceInterface\VendorTransactionInputResolverServiceInterface;
 use App\ValueObject\VendorTransactionData;
 use App\ValueObject\VendorTransactionErrorCode;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 
 final class VendorTransactionInputResolverService implements VendorTransactionInputResolverServiceInterface
@@ -25,7 +26,7 @@ final class VendorTransactionInputResolverService implements VendorTransactionIn
             $normalized = null === $value ? '' : trim((string) $value);
 
             if ('' === $normalized) {
-                throw new \InvalidArgumentException($errorCode);
+                throw new InvalidArgumentException($errorCode);
             }
         }
 
@@ -49,7 +50,7 @@ final class VendorTransactionInputResolverService implements VendorTransactionIn
         $status = isset($payload['status']) ? trim((string) $payload['status']) : '';
 
         if ('' === $status) {
-            throw new \InvalidArgumentException(VendorTransactionErrorCode::STATUS_REQUIRED);
+            throw new InvalidArgumentException(VendorTransactionErrorCode::STATUS_REQUIRED);
         }
 
         return $status;

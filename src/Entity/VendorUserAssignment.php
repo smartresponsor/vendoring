@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\EntityInterface\VendorUserAssignmentEntityInterface;
+use DateTimeImmutable;
 
 final class VendorUserAssignment implements VendorUserAssignmentEntityInterface
 {
@@ -12,22 +13,22 @@ final class VendorUserAssignment implements VendorUserAssignmentEntityInterface
     private string $role;
     private string $status;
     private bool $isPrimary;
-    private \DateTimeImmutable $grantedAt;
-    private ?\DateTimeImmutable $revokedAt;
+    private DateTimeImmutable $grantedAt;
+    private ?DateTimeImmutable $revokedAt;
 
     public function __construct(
         private readonly int $vendorId,
         private readonly int $userId,
-        string $role = 'owner',
-        string $status = 'active',
-        bool $isPrimary = false,
-        ?\DateTimeImmutable $grantedAt = null,
-        ?\DateTimeImmutable $revokedAt = null,
+        string               $role = 'owner',
+        string               $status = 'active',
+        bool                 $isPrimary = false,
+        ?DateTimeImmutable   $grantedAt = null,
+        ?DateTimeImmutable   $revokedAt = null,
     ) {
         $this->role = trim($role);
         $this->status = trim($status);
         $this->isPrimary = $isPrimary;
-        $this->grantedAt = $grantedAt ?? new \DateTimeImmutable();
+        $this->grantedAt = $grantedAt ?? new DateTimeImmutable();
         $this->revokedAt = $revokedAt;
     }
 
@@ -61,12 +62,12 @@ final class VendorUserAssignment implements VendorUserAssignmentEntityInterface
         return $this->isPrimary;
     }
 
-    public function getGrantedAt(): \DateTimeImmutable
+    public function getGrantedAt(): DateTimeImmutable
     {
         return $this->grantedAt;
     }
 
-    public function getRevokedAt(): ?\DateTimeImmutable
+    public function getRevokedAt(): ?DateTimeImmutable
     {
         return $this->revokedAt;
     }
@@ -85,7 +86,7 @@ final class VendorUserAssignment implements VendorUserAssignmentEntityInterface
     {
         $this->status = 'revoked';
         $this->isPrimary = false;
-        $this->revokedAt = new \DateTimeImmutable();
+        $this->revokedAt = new DateTimeImmutable();
     }
 
     public function activate(): void

@@ -1,14 +1,14 @@
 plans:
-  Free:
-    price_usd_month: 0
-    quotas: { api_calls: 10000, storage_gb: 5, seats: 1 }
-    features: ['basic_profile','attachments_av']
-  Pro:
-    price_usd_month: 99
-    quotas: { api_calls: 250000, storage_gb: 200, seats: 10 }
-    features: ['all_basic','billing','reconcile','governance_sync']
-  Enterprise:
-    price_usd_month: 0
-    custom_contract: true
-    quotas: { api_calls: 10000000, storage_gb: 5000, seats: 1000 }
-    features: ['all','priority_support','sso_saml']
+    Free:
+        price_usd_month: 0
+        quotas: { api_calls: 10000, storage_gb: 5, seats: 1 }
+        features: [ 'basic_profile','attachments_av' ]
+    Pro:
+        price_usd_month: 99
+        quotas: { api_calls: 250000, storage_gb: 200, seats: 10 }
+        features: [ 'all_basic','billing','reconcile','governance_sync' ]
+    Enterprise:
+        price_usd_month: 0
+        custom_contract: true
+        quotas: { api_calls: 10000000, storage_gb: 5000, seats: 1000 }
+        features: [ 'all','priority_support','sso_saml' ]

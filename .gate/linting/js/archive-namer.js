@@ -11,17 +11,17 @@
 const path = require('path');
 
 function sanitize(name) {
-  let base = path.basename(name);
-  base = base.replace(/\s+/g, '-');
-  base = base.replace(/[()\[\]]+/g, '');
-  base = base.replace(/--+/g, '-');
-  base = base.replace(/^-+|-+$/g, '');
-  return base;
+    let base = path.basename(name);
+    base = base.replace(/\s+/g, '-');
+    base = base.replace(/[()\[\]]+/g, '');
+    base = base.replace(/--+/g, '-');
+    base = base.replace(/^-+|-+$/g, '');
+    return base;
 }
 
 const arg = process.argv[2];
 if (!arg) {
-  console.error('usage: node archive-namer.js "<file.zip>"');
-  process.exit(2);
+    console.error('usage: node archive-namer.js "<file.zip>"');
+    process.exit(2);
 }
 process.stdout.write(sanitize(arg));

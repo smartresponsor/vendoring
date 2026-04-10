@@ -6,6 +6,7 @@ namespace App\Service\Traffic;
 
 use App\ServiceInterface\Traffic\WriteRateLimiterInterface;
 use App\ValueObject\Traffic\WriteRateLimitDecision;
+use JsonException;
 
 /**
  * File-backed write rate limiter for low-complexity runtime environments.
@@ -113,7 +114,9 @@ final class FileWriteRateLimiter implements WriteRateLimiterInterface
     /**
      * Persist the normalized timestamp history back into the bucket file.
      *
+     * @param mixed $handle
      * @param list<int> $timestamps Timestamp history to persist.
+     * @throws JsonException
      */
     private function writeTimestamps(mixed $handle, array $timestamps): void
     {

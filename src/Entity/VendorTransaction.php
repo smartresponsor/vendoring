@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\EntityInterface\VendorTransactionInterface;
 use App\ValueObject\VendorTransactionStatus;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: 'App\\Repository\\VendorTransactionRepository')]
@@ -26,7 +27,7 @@ final class VendorTransaction implements VendorTransactionInterface
     private string $status = VendorTransactionStatus::PENDING;
 
     #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     public function __construct(
         #[ORM\Column(name: 'vendor_id', type: 'string', length: 64)]
@@ -38,7 +39,7 @@ final class VendorTransaction implements VendorTransactionInterface
         #[ORM\Column(type: 'decimal', precision: 12, scale: 2)]
         private readonly string $amount,
     ) {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -76,7 +77,7 @@ final class VendorTransaction implements VendorTransactionInterface
         $this->status = $status;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }

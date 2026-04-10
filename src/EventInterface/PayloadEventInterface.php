@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\EventInterface;
 
+use DateTimeImmutable;
+
 interface PayloadEventInterface
 {
     /**
@@ -11,5 +13,5 @@ interface PayloadEventInterface
      */
     public function payload(): array;
 
-    public function occurredAt(): \DateTimeImmutable;
+    public function occurredAt(): DateTimeImmutable;
 }

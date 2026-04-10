@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\EntityInterface;
 
+use DateTimeImmutable;
+
 interface VendorUserAssignmentInterface
 {
     public function getId(): ?int;
@@ -18,7 +20,7 @@ interface VendorUserAssignmentInterface
 
     public function isPrimary(): bool;
 
-    public function getGrantedAt(): \DateTimeImmutable;
+    public function getGrantedAt(): DateTimeImmutable;
 
-    public function getRevokedAt(): ?\DateTimeImmutable;
+    public function getRevokedAt(): ?DateTimeImmutable;
 }

@@ -10,6 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function is_string;
 
 #[AsCommand(
     name: 'app:vendor:release-baseline',
@@ -58,16 +59,16 @@ final class VendorReleaseBaselineCommand extends Command
         $view = $this->releaseBaselineReader->build(
             tenantId: $tenantId,
             vendorId: $vendorId,
-            from: \is_string($from) ? $from : null,
-            to: \is_string($to) ? $to : null,
+            from: is_string($from) ? $from : null,
+            to: is_string($to) ? $to : null,
             currency: $currency,
         )->toArray();
 
         $json = (string) json_encode($view, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
-        if ((bool) $input->getOption('write')) {
+        if ($input->getOption('write')) {
             $path = $input->getOption('output');
-            $outputPath = \is_string($path) && '' !== $path
+            $outputPath = is_string($path) && '' !== $path
                 ? $path
                 : dirname(__DIR__, 2).'/build/release/vendor-release-baseline.json';
             $dir = dirname($outputPath);

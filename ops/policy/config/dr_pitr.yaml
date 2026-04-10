@@ -1,5 +1,5 @@
 dr:
-  wal_g_archive: s3://vendor-wal/
-  base_backup_cron: "0 2 * * *"
-  rto_min: 30
-  rpo_min: 5
+    wal_g_archive: s3://vendor-wal/
+    base_backup_cron: "0 2 * * *"
+    rto_min: 30
+    rpo_min: 5

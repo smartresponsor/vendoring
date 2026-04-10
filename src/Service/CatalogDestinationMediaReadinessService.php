@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Event\CategoryDestinationMediaReadinessEvaluated;
 use App\EventInterface\CategoryDestinationMediaReadinessEvaluatedInterface;
 use App\ServiceInterface\CatalogDestinationMediaReadinessServiceInterface;
+use DateTimeImmutable;
 
 final class CatalogDestinationMediaReadinessService implements CatalogDestinationMediaReadinessServiceInterface
 {
@@ -20,6 +21,6 @@ final class CatalogDestinationMediaReadinessService implements CatalogDestinatio
             'checks' => ['strictMediaReady' => true],
             'actorId' => trim($actorId),
             'reason' => trim($reason),
-        ], new \DateTimeImmutable());
+        ], new DateTimeImmutable());
     }
 }

@@ -14,14 +14,15 @@ use App\Event\VendorPayoutRequestedEvent;
 use App\RepositoryInterface\VendorBillingRepositoryInterface;
 use App\ServiceInterface\VendorBillingServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use ReflectionClass;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorBillingService implements VendorBillingServiceInterface
+final readonly class VendorBillingService implements VendorBillingServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly VendorBillingRepositoryInterface $repository,
-        private readonly EventDispatcherInterface $dispatcher,
+        private EntityManagerInterface           $em,
+        private VendorBillingRepositoryInterface $repository,
+        private EventDispatcherInterface         $dispatcher,
     ) {
     }
 
@@ -29,12 +30,11 @@ final class VendorBillingService implements VendorBillingServiceInterface
     {
         $billing = $this->repository->findOneBy(['vendor' => $vendor]) ?? new VendorBilling($vendor);
 
-        $ref = new \ReflectionClass($billing);
+        $ref = new ReflectionClass($billing);
 
         foreach (['iban', 'swift', 'payoutMethod', 'billingEmail'] as $prop) {
             if (property_exists($billing, $prop) && isset($dto->{$prop})) {
                 $rp = $ref->getProperty($prop);
-                $rp->setAccessible(true);
                 $rp->setValue($billing, $dto->{$prop});
             }
         }

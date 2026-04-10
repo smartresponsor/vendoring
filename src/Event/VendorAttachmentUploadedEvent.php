@@ -6,9 +6,9 @@ namespace App\Event;
 
 use App\Entity\VendorAttachment;
 
-final class VendorAttachmentUploadedEvent
+final readonly class VendorAttachmentUploadedEvent
 {
-    public function __construct(public readonly VendorAttachment $attachment)
+    public function __construct(public VendorAttachment $attachment)
     {
     }
 }

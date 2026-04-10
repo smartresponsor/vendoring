@@ -8,6 +8,7 @@ namespace App\Service\Payout;
 use App\DTO\Payout\CreatePayoutDTO;
 use App\Entity\Payout\Payout;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
+use InvalidArgumentException;
 
 final class VendorPayoutRequestService implements VendorPayoutRequestServiceInterface
 {
@@ -16,7 +17,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
     {
         foreach (['vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
             if (!isset($payload[$field])) {
-                throw new \InvalidArgumentException(sprintf('%s required', $field));
+                throw new InvalidArgumentException(sprintf('%s required', $field));
             }
         }
 
@@ -56,7 +57,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             return (string) $value;
         }
 
-        throw new \InvalidArgumentException(sprintf('%s required', $field));
+        throw new InvalidArgumentException(sprintf('%s required', $field));
     }
 
     /** @param array<string, mixed> $payload */
@@ -72,7 +73,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             return (int) $value;
         }
 
-        throw new \InvalidArgumentException(sprintf('%s required', $field));
+        throw new InvalidArgumentException(sprintf('%s required', $field));
     }
 
     /** @param array<string, mixed> $payload */
@@ -88,6 +89,6 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             return (float) $value;
         }
 
-        throw new \InvalidArgumentException(sprintf('%s required', $field));
+        throw new InvalidArgumentException(sprintf('%s required', $field));
     }
 }

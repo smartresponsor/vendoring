@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Statement;
 
+use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\DTO\Statement\VendorStatementRecipientDTO;
 use App\DTO\Statement\VendorStatementRequestDTO;
 use App\Projection\VendorOwnershipView;
@@ -91,13 +92,15 @@ final class VendorStatementDeliveryRuntimeViewBuilderTest extends TestCase
             $this->statements,
             $this->exporter,
             $this->recipients,
-        ))->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', true)->toArray();
+        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', true))->toArray();
 
         self::assertSame('tenant-1', $view['tenantId']);
         self::assertSame('101', $view['vendorId']);
         self::assertSame('USD', $view['currency']);
+        self::assertIsArray($view['ownership']);
         self::assertSame(5001, $view['ownership']['ownerUserId']);
         self::assertSame($statement, $view['statement']);
+        self::assertIsArray($view['export']);
         self::assertSame($pdf, $view['export']['path']);
         self::assertTrue($view['export']['exists']);
         self::assertTrue($view['export']['readable']);
@@ -136,7 +139,7 @@ final class VendorStatementDeliveryRuntimeViewBuilderTest extends TestCase
             $this->statements,
             $this->exporter,
             $this->recipients,
-        ))->build('tenant-1', 'vendor-alpha', '2026-03-01', '2026-03-31', 'EUR', false)->toArray();
+        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('tenant-1', 'vendor-alpha', '2026-03-01', '2026-03-31', 'EUR', false))->toArray();
 
         self::assertNull($view['ownership']);
         self::assertNull($view['export']);

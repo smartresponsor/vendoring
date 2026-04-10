@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\RepositoryInterface\Ledger;
 
+use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
 use App\Entity\Ledger\LedgerEntry;
 
 interface LedgerEntryRepositoryInterface
@@ -15,7 +16,7 @@ interface LedgerEntryRepositoryInterface
      */
     public function listByRef(string $tenantId, string $referenceType, string $referenceId, ?string $vendorId = null): array;
 
-    public function sumByAccount(string $tenantId, string $accountCode, ?string $from = null, ?string $to = null, ?string $vendorId = null, ?string $currency = null): float;
+    public function sumByAccount(LedgerAccountSumCriteriaDTO $criteria): float;
 
     /**
      * @return list<object{currency:string,balanceCents:int}>

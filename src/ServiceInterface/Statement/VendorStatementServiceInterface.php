@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface\Statement;
 
+use App\DTO\Statement\VendorStatementRequestDTO;
+
 interface VendorStatementServiceInterface
 {
     /**
@@ -21,7 +23,7 @@ interface VendorStatementServiceInterface
      *   items:list<array{type:string, amount:float, currency:string}>
      * }
      */
-    public function build(\App\DTO\Statement\VendorStatementRequestDTO $dto): array;
+    public function build(VendorStatementRequestDTO $dto): array;
 
-    public function exportCsv(\App\DTO\Statement\VendorStatementRequestDTO $dto): string;
+    public function exportCsv(VendorStatementRequestDTO $dto): string;
 }

@@ -56,7 +56,7 @@ final class VendorStatementExportController extends AbstractController
 
         $dto = new VendorStatementRequestDTO($tenantId, $vendorId, $from, $to, $currency);
         $data = $this->svc->build($dto);
-        $path = $this->pdf->export($dto, $data, null);
+        $path = $this->pdf->export($dto, $data);
 
         if (!is_file($path) || !is_readable($path)) {
             return new JsonResponse([

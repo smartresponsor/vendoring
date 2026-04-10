@@ -7,6 +7,7 @@ namespace App\Observability\Service;
 use App\ServiceInterface\Observability\CorrelationContextInterface;
 use App\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
 use App\ServiceInterface\Observability\RuntimeLoggerInterface;
+use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -75,7 +76,7 @@ final class RuntimeLogger implements RuntimeLoggerInterface
 
         /** @var array<string, scalar|null> $record */
         $record = [
-            'timestamp' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'timestamp' => new DateTimeImmutable()->format(DATE_ATOM),
             'level' => $level,
             'message' => $message,
             'request_id' => $correlationId,

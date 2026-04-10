@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\CatalogReviewAssignmentService;
+use InvalidArgumentException;
+use JsonException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -43,11 +45,12 @@ final class CategoryReviewAssignCommand extends Command
     /**
      * Assign the requested category review and render the resulting payload as JSON.
      *
-     * @param InputInterface  $input  Console input carrying request, reviewer, assigner, and priority.
+     * @param InputInterface $input Console input carrying request, reviewer, assigner, and priority.
      * @param OutputInterface $output Console output that receives either JSON payload or a validation error.
      *
      * @return int `Command::SUCCESS` when the assignment is created, otherwise `Command::FAILURE` for
      *             invalid input detected by the underlying assignment service.
+     * @throws JsonException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -58,7 +61,7 @@ final class CategoryReviewAssignCommand extends Command
                 self::stringArgument($input->getArgument('assignedBy')),
                 is_scalar($input->getOption('priority')) ? (string) $input->getOption('priority') : null,
             );
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             $output->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
 
             return Command::FAILURE;

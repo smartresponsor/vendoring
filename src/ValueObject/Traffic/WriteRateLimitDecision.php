@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\ValueObject\Traffic;
 
-final class WriteRateLimitDecision
+final readonly class WriteRateLimitDecision
 {
     public function __construct(
-        private readonly bool $allowed,
-        private readonly int $limit,
-        private readonly int $remaining,
-        private readonly int $retryAfterSeconds,
+        private bool $allowed,
+        private int  $limit,
+        private int  $remaining,
+        private int  $retryAfterSeconds,
     ) {
     }
 

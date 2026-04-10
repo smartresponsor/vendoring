@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Event\CategoryDestinationMediaFallbackEvaluated;
 use App\EventInterface\CategoryDestinationMediaFallbackEvaluatedInterface;
 use App\ServiceInterface\CatalogDestinationMediaFallbackServiceInterface;
+use DateTimeImmutable;
 
 final class CatalogDestinationMediaFallbackService implements CatalogDestinationMediaFallbackServiceInterface
 {
@@ -22,6 +23,6 @@ final class CatalogDestinationMediaFallbackService implements CatalogDestination
             'fallbackMatchedBindingIds' => [],
             'actorId' => trim($actorId),
             'reason' => trim($reason),
-        ], new \DateTimeImmutable());
+        ], new DateTimeImmutable());
     }
 }

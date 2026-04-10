@@ -46,7 +46,7 @@ final class VendorReleaseManifestCommand extends Command
         $manifest = $this->releaseManifestBuilder->build($windowSeconds);
         $rollback = $this->rollbackDecisionEvaluator->evaluate($manifest);
 
-        if ((bool) $input->getOption('write')) {
+        if ($input->getOption('write')) {
             $this->writeJson(
                 is_scalar($input->getOption('manifest-output')) ? (string) $input->getOption('manifest-output') : dirname(__DIR__, 2).'/build/release/release-manifest.json',
                 $manifest,
@@ -65,10 +65,10 @@ final class VendorReleaseManifestCommand extends Command
 
         $output->writeln(sprintf(
             'release.status=%s monitoring.status=%s rollback.decision=%s severity=%s',
-            (string) $manifest['status'],
-            (string) $manifest['monitoring']['status'],
-            (string) $rollback['decision'],
-            (string) $rollback['severity'],
+            $manifest['status'],
+            $manifest['monitoring']['status'],
+            $rollback['decision'],
+            $rollback['severity'],
         ));
         $output->writeln(sprintf('alerts=%d reasons=%d', (int) $manifest['monitoring']['alertCount'], count($rollback['reasons'])));
 

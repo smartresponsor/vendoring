@@ -6,9 +6,9 @@ namespace App\Event;
 
 use App\Entity\Vendor;
 
-final class VendorActivatedEvent
+final readonly class VendorActivatedEvent
 {
-    public function __construct(public readonly Vendor $vendor)
+    public function __construct(public Vendor $vendor)
     {
     }
 }

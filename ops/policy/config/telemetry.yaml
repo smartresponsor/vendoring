@@ -1,5 +1,5 @@
 telemetry:
-  sink: "otlp"
+  sink: otlp
   sampling:
     default: 1.0
     noisy_events: 0.25

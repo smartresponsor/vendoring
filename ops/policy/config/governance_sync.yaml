@@ -1,4 +1,4 @@
 governance_sync:
-  direction: "bi"
-  conflict: "lww_with_locks"
+  direction: bi
+  conflict: lww_with_locks
   batch_size: 500

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
+use App\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\DTO\Statement\VendorStatementRequestDTO;
 use App\Entity\Payout\PayoutAccount;
 use App\Projection\VendorOwnershipView;
@@ -59,7 +60,15 @@ final class VendorFinanceRuntimeViewBuilderTest extends TestCase
 
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(101)
             ->willReturn(new VendorOwnershipView(101, 5001, [['userId' => 5002, 'role' => 'manager']]));
-        $this->metrics->expects(self::once())->method('overview')->with('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')
+        $this->metrics->expects(self::once())->method('overview')->with(self::callback(function (VendorMetricOverviewRequestDTO $request): bool {
+            self::assertSame('tenant-1', $request->tenantId);
+            self::assertSame('101', $request->vendorId);
+            self::assertSame('2026-03-01', $request->from);
+            self::assertSame('2026-03-31', $request->to);
+            self::assertSame('USD', $request->currency);
+
+            return true;
+        }))
             ->willReturn($metricOverview);
         $this->accounts->expects(self::once())->method('get')->with('tenant-1', '101')
             ->willReturn(new PayoutAccount('acc-1', 'tenant-1', '101', 'bank', 'iban-123', 'USD', true, '2026-03-01 10:00:00'));
@@ -83,8 +92,10 @@ final class VendorFinanceRuntimeViewBuilderTest extends TestCase
         self::assertSame('tenant-1', $view['tenantId']);
         self::assertSame('101', $view['vendorId']);
         self::assertSame('USD', $view['currency']);
+        self::assertIsArray($view['ownership']);
         self::assertSame(5001, $view['ownership']['ownerUserId']);
         self::assertSame($metricOverview, $view['metricOverview']);
+        self::assertIsArray($view['payoutAccount']);
         self::assertSame('bank', $view['payoutAccount']['provider']);
         self::assertSame('iban-123', $view['payoutAccount']['accountRef']);
         self::assertSame($statement, $view['statement']);
@@ -105,7 +116,15 @@ final class VendorFinanceRuntimeViewBuilderTest extends TestCase
         ];
 
         $this->ownership->expects(self::never())->method('buildForVendorId');
-        $this->metrics->expects(self::once())->method('overview')->with('tenant-1', 'vendor-alpha', null, null, 'EUR')
+        $this->metrics->expects(self::once())->method('overview')->with(self::callback(function (VendorMetricOverviewRequestDTO $request): bool {
+            self::assertSame('tenant-1', $request->tenantId);
+            self::assertSame('vendor-alpha', $request->vendorId);
+            self::assertNull($request->from);
+            self::assertNull($request->to);
+            self::assertSame('EUR', $request->currency);
+
+            return true;
+        }))
             ->willReturn($metricOverview);
         $this->accounts->expects(self::once())->method('get')->with('tenant-1', 'vendor-alpha')->willReturn(null);
         $this->statements->expects(self::never())->method('build');

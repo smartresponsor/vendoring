@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Service\Statement;
 
+use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
 use App\DTO\Statement\VendorStatementRequestDTO;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
+use RuntimeException;
 
-final class VendorStatementService implements VendorStatementServiceInterface
+final readonly class VendorStatementService implements VendorStatementServiceInterface
 {
-    public function __construct(private readonly LedgerEntryRepositoryInterface $ledger)
+    public function __construct(private LedgerEntryRepositoryInterface $ledger)
     {
     }
 
@@ -20,11 +22,29 @@ final class VendorStatementService implements VendorStatementServiceInterface
     public function build(VendorStatementRequestDTO $dto): array
     {
         $opening = 0.0;
-        $earnings = max(0.0, $this->ledger->sumByAccount($dto->tenantId, 'REVENUE', $dto->from, $dto->to, $dto->vendorId, $dto->currency));
-        $refunds = max(0.0, $this->ledger->sumByAccount($dto->tenantId, 'REFUNDS_PAYABLE', $dto->from, $dto->to, $dto->vendorId, $dto->currency));
+        $earnings = max(0.0, $this->ledger->sumByAccount(new LedgerAccountSumCriteriaDTO(
+            tenantId: $dto->tenantId,
+            accountCode: 'REVENUE',
+            from: $dto->from,
+            to: $dto->to,
+            vendorId: $dto->vendorId,
+            currency: $dto->currency,
+        )));
+        $refunds = max(0.0, $this->ledger->sumByAccount(new LedgerAccountSumCriteriaDTO(
+            tenantId: $dto->tenantId,
+            accountCode: 'REFUNDS_PAYABLE',
+            from: $dto->from,
+            to: $dto->to,
+            vendorId: $dto->vendorId,
+            currency: $dto->currency,
+        )));
         $fees = 0.0;
         $closing = $earnings - $refunds - $fees;
-        $items = [['type' => 'earnings', 'amount' => $earnings, 'currency' => $dto->currency], ['type' => 'refunds', 'amount' => $refunds, 'currency' => $dto->currency], ['type' => 'fees', 'amount' => $fees, 'currency' => $dto->currency]];
+        $items = [
+            ['type' => 'earnings', 'amount' => $earnings, 'currency' => $dto->currency],
+            ['type' => 'refunds', 'amount' => $refunds, 'currency' => $dto->currency],
+            ['type' => 'fees', 'amount' => $fees, 'currency' => $dto->currency],
+        ];
 
         return [
             'tenantId' => $dto->tenantId,
@@ -45,20 +65,20 @@ final class VendorStatementService implements VendorStatementServiceInterface
     {
         $data = $this->build($dto);
         $path = sys_get_temp_dir().'/statement_'.$dto->vendorId.'_'.date('YmdHis').'.csv';
-        $f = fopen($path, 'w');
+        $stream = fopen($path, 'w');
 
-        if (false === $f) {
-            throw new \RuntimeException(sprintf('Failed to open csv stream: %s', $path));
+        if (false === $stream) {
+            throw new RuntimeException(sprintf('Failed to open csv stream: %s', $path));
         }
 
-        fputcsv($f, ['Section', 'Amount', 'Currency']);
+        fputcsv($stream, ['Section', 'Amount', 'Currency']);
         foreach ($data['items'] as $row) {
-            fputcsv($f, [$row['type'], $row['amount'], $row['currency']]);
+            fputcsv($stream, [$row['type'], $row['amount'], $row['currency']]);
         }
-        fputcsv($f, []);
-        fputcsv($f, ['Opening', $data['opening'], $dto->currency]);
-        fputcsv($f, ['Closing', $data['closing'], $dto->currency]);
-        fclose($f);
+        fputcsv($stream, []);
+        fputcsv($stream, ['Opening', $data['opening'], $dto->currency]);
+        fputcsv($stream, ['Closing', $data['closing'], $dto->currency]);
+        fclose($stream);
 
         return $path;
     }

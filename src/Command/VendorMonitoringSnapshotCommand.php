@@ -49,7 +49,7 @@ final class VendorMonitoringSnapshotCommand extends Command
             return Command::SUCCESS;
         }
 
-        $output->writeln(sprintf('status=%s windowSeconds=%d', (string) $snapshot['status'], $windowSeconds));
+        $output->writeln(sprintf('status=%s windowSeconds=%d', $snapshot['status'], $windowSeconds));
         $output->writeln(sprintf(
             'logs.total=%d logs.error=%d metrics.total=%d breakers.open=%d',
             (int) $snapshot['logSummary']['total'],

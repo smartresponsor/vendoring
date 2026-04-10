@@ -6,9 +6,9 @@ namespace App\Event;
 
 use App\Entity\VendorPassport;
 
-final class VendorVerifiedEvent
+final readonly class VendorVerifiedEvent
 {
-    public function __construct(public readonly VendorPassport $passport)
+    public function __construct(public VendorPassport $passport)
     {
     }
 }

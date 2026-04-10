@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTimeImmutable;
+
 final class VendorAttachment
 {
     private ?int $id = null;
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     public function __construct(
         private readonly Vendor $vendor,
@@ -15,7 +17,7 @@ final class VendorAttachment
         private readonly string $filePath,
         private readonly ?string $category = null,
     ) {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -43,7 +45,7 @@ final class VendorAttachment
         return $this->category;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }

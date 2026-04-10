@@ -291,7 +291,7 @@ function yamlEncode(mixed $value, int $indent = 0): string
 function yamlScalar(mixed $value): string
 {
     if (is_string($value)) {
-        if ($value === '' || preg_match('/[:\[\]\{\},&\*#?\|<>=%@`]/', $value) === 1 || str_contains($value, ' ') || str_contains($value, '/')) {
+        if ($value === '' || preg_match('/[:\[\]{},&*#?|<>=%@`]/', $value) === 1 || str_contains($value, ' ') || str_contains($value, '/')) {
             return '"' . str_replace('"', '\\"', $value) . '"';
         }
 

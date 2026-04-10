@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\DTO\Statement\VendorStatementRecipientDTO;
+use App\DTO\Statement\VendorStatementRequestDTO;
 use App\ServiceInterface\Statement\StatementExporterPDFInterface;
 use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
@@ -54,9 +55,9 @@ final class SendVendorStatementsCommand extends Command
         }
 
         foreach ($recipients as $recipient) {
-            $dto = new \App\DTO\Statement\VendorStatementRequestDTO($recipient->tenantId, $recipient->vendorId, $from, $to, $recipient->currency);
+            $dto = new VendorStatementRequestDTO($recipient->tenantId, $recipient->vendorId, $from, $to, $recipient->currency);
             $data = $this->svc->build($dto);
-            $pdfPath = $this->pdf->export($dto, $data, null);
+            $pdfPath = $this->pdf->export($dto, $data);
             $res = $this->mailer->send($recipient->tenantId, $recipient->vendorId, $recipient->email, $pdfPath, $period);
             $output->writeln(sprintf(
                 '[%s/%s] %s email=%s period=%s currency=%s pdf=%s attached=%s message=%s',

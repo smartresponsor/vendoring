@@ -23,28 +23,22 @@ final class CategoryRuleEngine implements CategoryRuleEngineInterface
      */
     private function evalNode(array $node, array $payload): bool
     {
-        foreach ($this->nodeList($node['all'] ?? null) as $child) {
-            if (!$this->evalNode($child, $payload)) {
-                return false;
-            }
+        if (array_any($this->nodeList($node['all'] ?? null), fn($child) => !$this->evalNode($child, $payload))) {
+            return false;
         }
         if (isset($node['all'])) {
             return true;
         }
 
-        foreach ($this->nodeList($node['any'] ?? null) as $child) {
-            if ($this->evalNode($child, $payload)) {
-                return true;
-            }
+        if (array_any($this->nodeList($node['any'] ?? null), fn($child) => $this->evalNode($child, $payload))) {
+            return true;
         }
         if (isset($node['any'])) {
             return false;
         }
 
-        foreach ($this->nodeList($node['none'] ?? null) as $child) {
-            if ($this->evalNode($child, $payload)) {
-                return false;
-            }
+        if (array_any($this->nodeList($node['none'] ?? null), fn($child) => $this->evalNode($child, $payload))) {
+            return false;
         }
         if (isset($node['none'])) {
             return true;

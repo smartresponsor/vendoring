@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\EntityInterface;
 
+use DateTimeImmutable;
+
 interface VendorInterface
 {
     public function getId(): ?int;
@@ -14,5 +16,5 @@ interface VendorInterface
 
     public function getStatus(): string;
 
-    public function getCreatedAt(): \DateTimeImmutable;
+    public function getCreatedAt(): DateTimeImmutable;
 }

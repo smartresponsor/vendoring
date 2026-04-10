@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Ops;
 
 use App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
+use DateTimeImmutable;
 
 /**
  * Deterministic rollback evaluator for release operators.
@@ -12,12 +13,12 @@ use App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
  * The evaluator turns monitoring signals and manifest completeness into one operational decision:
  * proceed, hold, or rollback.
  */
-final class RollbackDecisionEvaluator implements RollbackDecisionEvaluatorInterface
+final readonly class RollbackDecisionEvaluator implements RollbackDecisionEvaluatorInterface
 {
     /**
      * @param array{criticalAlertCodes?:list<string>,warningAlertCodes?:list<string>} $thresholds
      */
-    public function __construct(private readonly array $thresholds = [])
+    public function __construct(private array $thresholds = [])
     {
     }
 
@@ -81,7 +82,7 @@ final class RollbackDecisionEvaluator implements RollbackDecisionEvaluatorInterf
         }
 
         return [
-            'generatedAt' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'generatedAt' => new DateTimeImmutable()->format(DATE_ATOM),
             'decision' => $decision,
             'severity' => $severity,
             'reasons' => $reasons,

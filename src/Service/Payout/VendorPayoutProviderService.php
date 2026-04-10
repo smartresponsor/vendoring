@@ -4,23 +4,24 @@ declare(strict_types=1);
 
 namespace App\Service\Payout;
 
+use App\DTO\Payout\VendorPayoutTransferDTO;
 use App\ServiceInterface\Payout\VendorPayoutProviderServiceInterface;
 
 final class VendorPayoutProviderService implements VendorPayoutProviderServiceInterface
 {
-    public function transfer(string $tenantId, string $vendorId, string $provider, string $accountRef, float $amount, string $currency): array
+    public function transfer(VendorPayoutTransferDTO $transfer): array
     {
-        $ref = $provider.'_payout_'.bin2hex(random_bytes(4));
+        $ref = $transfer->provider.'_payout_'.bin2hex(random_bytes(4));
 
         return [
             'ok' => true,
             'ref' => $ref,
-            'tenantId' => $tenantId,
-            'vendorId' => $vendorId,
-            'provider' => $provider,
-            'accountRef' => $accountRef,
-            'amount' => $amount,
-            'currency' => $currency,
+            'tenantId' => $transfer->tenantId,
+            'vendorId' => $transfer->vendorId,
+            'provider' => $transfer->provider,
+            'accountRef' => $transfer->accountRef,
+            'amount' => $transfer->amount,
+            'currency' => $transfer->currency,
             'error' => null,
         ];
     }

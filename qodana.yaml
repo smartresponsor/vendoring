@@ -1,43 +1,40 @@
 version: "1.0"
+linter: qodana-php
+
+php:
+  version: "8.4"
 
 profile:
   base:
-    name: Project Default
+    name: qodana.recommended
   inspections:
-    - inspection: LongLine
+    - inspection: PhpMissingDocCommentInspection
       enabled: false
-    - inspection: IncorrectFormatting
-      enabled: false
-    - inspection: PhpClassNamingConventionInspection
-      enabled: false
-    - inspection: PhpMethodNamingConventionInspection
-      enabled: false
-    - inspection: PhpPropertyNamingConventionInspection
-      enabled: false
-    - inspection: PhpVariableNamingConventionInspection
-      enabled: false
-    - inspection: PhpConstantNamingConventionInspection
-      enabled: false
+    - inspection: PhpEnforceDocCommentInspection
+      options:
+        CHECK_METHOD: false
+        CHECK_FUNCTION: false
+        CHECK_CLASS: false
     - inspection: PhpGetterAndSetterCanBeReplacedWithPropertyHooksInspection
       enabled: false
-    - inspection: PhpPropertyCanBeReadonlyInspection
-      enabled: false
-    - inspection: PhpFunctionNamingConventionInspection
-      enabled: false
-    - inspection: PhpUndefinedClassInspection
-      enabled: false
-    - inspection: PhpUndefinedNamespaceInspection
-      enabled: false
-    - inspection: PhpUnusedLocalVariableInspection
-      enabled: false
+    - inspection: PhpVariableNamingConventionInspection
+      options:
+        m_minLength: 2
+
 exclude:
-  - name: All paths
+  - name: All
     paths:
-      - vendor/**
-      - build/**
-      - report/**
-      - .idea/**
-      - .ide/**
-      - composer.lock
-      - config/reference.php
-      - .commanding/sh/**
+      - vendor
+      - var
+      - node_modules
+      - public/build
+      - build
+      - dist
+      - coverage
+      - archive
+      - docs/generated
+      - .git
+      - .idea
+      - .qodana
+      - composer.json
+      - qodana.yaml

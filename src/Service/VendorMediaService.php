@@ -16,14 +16,15 @@ use App\Event\VendorMediaUploadedEvent;
 use App\RepositoryInterface\VendorMediaRepositoryInterface;
 use App\ServiceInterface\VendorMediaServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use ReflectionClass;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorMediaService implements VendorMediaServiceInterface
+final readonly class VendorMediaService implements VendorMediaServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly VendorMediaRepositoryInterface $mediaRepository,
-        private readonly EventDispatcherInterface $dispatcher,
+        private EntityManagerInterface         $em,
+        private VendorMediaRepositoryInterface $mediaRepository,
+        private EventDispatcherInterface       $dispatcher,
     ) {
     }
 
@@ -31,12 +32,11 @@ final class VendorMediaService implements VendorMediaServiceInterface
     {
         $media = $this->mediaRepository->findOneBy(['vendor' => $vendor]) ?? new VendorMedia($vendor);
 
-        $ref = new \ReflectionClass($media);
+        $ref = new ReflectionClass($media);
 
         foreach (['logoPath', 'bannerPath', 'gallery'] as $prop) {
             if (property_exists($media, $prop) && isset($dto->{$prop})) {
                 $rp = $ref->getProperty($prop);
-                $rp->setAccessible(true);
                 $rp->setValue($media, $dto->{$prop});
             }
         }

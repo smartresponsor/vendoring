@@ -1,4 +1,8 @@
 alert_routing:
-  sev1: [pager_primary, pager_manager]
-  sev2: [pager_primary]
-  sev3: [chat_ops]
+  sev1:
+  - pager_primary
+  - pager_manager
+  sev2:
+  - pager_primary
+  sev3:
+  - chat_ops

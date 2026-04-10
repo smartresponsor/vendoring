@@ -10,12 +10,13 @@ use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use App\ServiceInterface\VendorUserAssignmentServiceInterface;
 use App\ValueObject\VendorRole;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 
-final class VendorUserAssignmentService implements VendorUserAssignmentServiceInterface
+final readonly class VendorUserAssignmentService implements VendorUserAssignmentServiceInterface
 {
     public function __construct(
-        private readonly VendorUserAssignmentRepositoryInterface $assignmentRepository,
-        private readonly EntityManagerInterface $entityManager,
+        private VendorUserAssignmentRepositoryInterface $assignmentRepository,
+        private EntityManagerInterface                  $entityManager,
     ) {
     }
 
@@ -29,7 +30,7 @@ final class VendorUserAssignmentService implements VendorUserAssignmentServiceIn
         $normalizedRole = VendorRole::normalize($role);
 
         if (!VendorRole::isValid($normalizedRole)) {
-            throw new \InvalidArgumentException(sprintf('Unsupported vendor role "%s".', $role));
+            throw new InvalidArgumentException(sprintf('Unsupported vendor role "%s".', $role));
         }
 
         $existing = $this->assignmentRepository->findOneByVendorIdAndUserId($vendorId, $userId);
@@ -110,7 +111,7 @@ final class VendorUserAssignmentService implements VendorUserAssignmentServiceIn
         foreach ($this->assignmentRepository->findActiveByVendorId($vendorId) as $assignment) {
             if (method_exists($assignment, 'clearPrimary')) {
                 $assignment->clearPrimary();
-                $this->assignmentRepository->save($assignment, false);
+                $this->assignmentRepository->save($assignment);
             }
         }
 

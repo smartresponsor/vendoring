@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Event\CategoryDestinationMediaPolicyPreferenceEvaluated;
 use App\EventInterface\CategoryDestinationMediaPolicyPreferenceEvaluatedInterface;
 use App\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface;
+use DateTimeImmutable;
 
 final class CatalogDestinationMediaPolicyPreferenceService implements CatalogDestinationMediaPolicyPreferenceServiceInterface
 {
@@ -25,6 +26,6 @@ final class CatalogDestinationMediaPolicyPreferenceService implements CatalogDes
             'checks' => ['resolvedPublishable' => true],
             'actorId' => trim($actorId),
             'reason' => trim($reason),
-        ], new \DateTimeImmutable());
+        ], new DateTimeImmutable());
     }
 }

@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTimeImmutable;
+
 final class VendorDocument
 {
     private ?int $id = null;
-    private ?\DateTimeImmutable $expiresAt = null;
+    private ?DateTimeImmutable $expiresAt = null;
     private ?int $uploaderId = null;
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     public function __construct(
         private readonly Vendor $vendor,
         private readonly string $type,
         private readonly string $filePath,
     ) {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -39,7 +41,7 @@ final class VendorDocument
         return $this->filePath;
     }
 
-    public function getExpiresAt(): ?\DateTimeImmutable
+    public function getExpiresAt(): ?DateTimeImmutable
     {
         return $this->expiresAt;
     }
@@ -49,7 +51,7 @@ final class VendorDocument
         return $this->uploaderId;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }

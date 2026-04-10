@@ -19,11 +19,11 @@ use Doctrine\ORM\EntityManagerInterface;
  * vendor resolution. It does not model human credentials or external User
  * identity, which remain outside Vendoring.
  */
-final class VendorApiKeyService implements VendorApiKeyServiceInterface
+final readonly class VendorApiKeyService implements VendorApiKeyServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly VendorApiKeyRepositoryInterface $apiKeyRepo,
+        private EntityManagerInterface          $em,
+        private VendorApiKeyRepositoryInterface $apiKeyRepo,
     ) {
     }
 
@@ -52,8 +52,8 @@ final class VendorApiKeyService implements VendorApiKeyServiceInterface
             $existingKey->getPermissions(),
         );
 
-        $this->apiKeyRepo->save($existingKey, false);
-        $this->apiKeyRepo->save($newKey, false);
+        $this->apiKeyRepo->save($existingKey);
+        $this->apiKeyRepo->save($newKey);
         $this->em->flush();
 
         return $newToken;

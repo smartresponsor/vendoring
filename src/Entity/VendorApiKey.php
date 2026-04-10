@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: 'App\\Repository\\VendorApiKeyRepository')]
@@ -28,10 +29,10 @@ final class VendorApiKey
     private string $status;
 
     #[ORM\Column(name: 'last_used_at', type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $lastUsedAt = null;
+    private ?DateTimeImmutable $lastUsedAt = null;
 
     #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     public function __construct(
         #[ORM\ManyToOne(targetEntity: Vendor::class)]
@@ -43,7 +44,7 @@ final class VendorApiKey
         private readonly string $permissions,
     ) {
         $this->status = 'active';
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -71,12 +72,12 @@ final class VendorApiKey
         return $this->status;
     }
 
-    public function getLastUsedAt(): ?\DateTimeImmutable
+    public function getLastUsedAt(): ?DateTimeImmutable
     {
         return $this->lastUsedAt;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -95,6 +96,6 @@ final class VendorApiKey
 
     public function touch(): void
     {
-        $this->lastUsedAt = new \DateTimeImmutable();
+        $this->lastUsedAt = new DateTimeImmutable();
     }
 }

@@ -4,29 +4,53 @@ declare(strict_types=1);
 
 namespace App\Service\Metric;
 
+use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\DTO\Metric\VendorMetricOverviewRequestDTO;
+use App\DTO\Metric\VendorMetricTrendRequestDTO;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Metric\VendorMetricServiceInterface;
 
-final class VendorMetricService implements VendorMetricServiceInterface
+final readonly class VendorMetricService implements VendorMetricServiceInterface
 {
     public function __construct(
-        private readonly LedgerEntryRepositoryInterface $ledger,
+        private LedgerEntryRepositoryInterface $ledger,
     ) {
     }
 
-    public function overview(string $tenantId, string $vendorId, ?string $from = null, ?string $to = null, string $currency = 'USD'): array
+    public function overview(VendorMetricOverviewRequestDTO $request): array
     {
-        $revenue = max(0.0, $this->ledger->sumByAccount($tenantId, 'REVENUE', $from, $to, $vendorId, $currency));
-        $refunds = max(0.0, $this->ledger->sumByAccount($tenantId, 'REFUNDS_PAYABLE', $from, $to, $vendorId, $currency));
-        $payouts = max(0.0, $this->ledger->sumByAccount($tenantId, 'VENDOR_PAYABLE', $from, $to, $vendorId, $currency));
+        $revenue = max(0.0, $this->ledger->sumByAccount(new LedgerAccountSumCriteriaDTO(
+            tenantId: $request->tenantId,
+            accountCode: 'REVENUE',
+            from: $request->from,
+            to: $request->to,
+            vendorId: $request->vendorId,
+            currency: $request->currency,
+        )));
+        $refunds = max(0.0, $this->ledger->sumByAccount(new LedgerAccountSumCriteriaDTO(
+            tenantId: $request->tenantId,
+            accountCode: 'REFUNDS_PAYABLE',
+            from: $request->from,
+            to: $request->to,
+            vendorId: $request->vendorId,
+            currency: $request->currency,
+        )));
+        $payouts = max(0.0, $this->ledger->sumByAccount(new LedgerAccountSumCriteriaDTO(
+            tenantId: $request->tenantId,
+            accountCode: 'VENDOR_PAYABLE',
+            from: $request->from,
+            to: $request->to,
+            vendorId: $request->vendorId,
+            currency: $request->currency,
+        )));
         $balance = $revenue - $refunds - $payouts;
 
         return [
-            'tenantId' => $tenantId,
-            'vendorId' => $vendorId,
-            'from' => $from,
-            'to' => $to,
-            'currency' => $currency,
+            'tenantId' => $request->tenantId,
+            'vendorId' => $request->vendorId,
+            'from' => $request->from,
+            'to' => $request->to,
+            'currency' => $request->currency,
             'revenue' => $revenue,
             'refunds' => $refunds,
             'payouts' => $payouts,
@@ -34,22 +58,28 @@ final class VendorMetricService implements VendorMetricServiceInterface
         ];
     }
 
-    public function trends(string $tenantId, string $vendorId, string $from, string $to, string $bucket = 'month', string $currency = 'USD'): array
+    public function trends(VendorMetricTrendRequestDTO $request): array
     {
-        $o = $this->overview($tenantId, $vendorId, $from, $to, $currency);
+        $overview = $this->overview(new VendorMetricOverviewRequestDTO(
+            tenantId: $request->tenantId,
+            vendorId: $request->vendorId,
+            from: $request->from,
+            to: $request->to,
+            currency: $request->currency,
+        ));
 
         return [[
-            'tenantId' => $tenantId,
-            'vendorId' => $vendorId,
-            'from' => $from,
-            'to' => $to,
-            'currency' => $currency,
-            'bucket' => $bucket,
-            'period' => $from.'..'.$to,
-            'revenue' => $o['revenue'],
-            'refunds' => $o['refunds'],
-            'payouts' => $o['payouts'],
-            'balance' => $o['balance'],
+            'tenantId' => $request->tenantId,
+            'vendorId' => $request->vendorId,
+            'from' => $request->from,
+            'to' => $request->to,
+            'currency' => $request->currency,
+            'bucket' => $request->bucket,
+            'period' => $request->from.'..'.$request->to,
+            'revenue' => $overview['revenue'],
+            'refunds' => $overview['refunds'],
+            'payouts' => $overview['payouts'],
+            'balance' => $overview['balance'],
         ]];
     }
 }

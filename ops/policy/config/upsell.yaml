@@ -1,3 +1,5 @@
 upsell:
-  quota_thresholds_pct: [75, 90]
+  quota_thresholds_pct:
+  - 75
+  - 90
   nps_bonus_weight: 0.2

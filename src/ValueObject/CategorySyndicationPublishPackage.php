@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-final class CategorySyndicationPublishPackage
+final readonly class CategorySyndicationPublishPackage
 {
     /**
      * @param array<string, mixed> $payload
      * @param list<string>         $missingRequiredFields
      */
     public function __construct(
-        private readonly string $packageId,
-        private readonly string $destinationId,
-        private readonly string $categoryId,
-        private readonly string $version,
-        private readonly string $localeMode,
-        private readonly array $payload,
-        private readonly array $missingRequiredFields,
-        private readonly bool $publishable,
+        private string $packageId,
+        private string $destinationId,
+        private string $categoryId,
+        private string $version,
+        private string $localeMode,
+        private array  $payload,
+        private array  $missingRequiredFields,
+        private bool   $publishable,
     ) {
     }
 

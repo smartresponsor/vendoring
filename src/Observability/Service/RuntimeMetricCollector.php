@@ -7,6 +7,7 @@ namespace App\Observability\Service;
 use App\ServiceInterface\Observability\CorrelationContextInterface;
 use App\ServiceInterface\Observability\MetricCollectorInterface;
 use App\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
+use DateTimeImmutable;
 
 /**
  * Structured metric collector for runtime observability events.
@@ -18,7 +19,7 @@ use App\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
 final class RuntimeMetricCollector implements MetricCollectorInterface
 {
     /**
-     * @var list<array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string}>
+     * @var array:?string,correlation_id:?string}>
      */
     private array $records = [];
 
@@ -37,7 +38,7 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
 
         /** @var array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string} $record */
         $record = [
-            'timestamp' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'timestamp' => new DateTimeImmutable()->format(DATE_ATOM),
             'type' => 'metric',
             'name' => $name,
             'tags' => $this->normalizeTags($tags),
@@ -65,7 +66,7 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
     /**
      * Return the inspection snapshot of emitted runtime metrics.
      *
-     * @return list<array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string}>
+     * @return array :?string,correlation_id:?string}>
      */
     public function snapshot(): array
     {
@@ -81,10 +82,9 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
      */
     private function normalizeTags(array $tags): array
     {
-        $normalized = [];
-        foreach ($tags as $key => $value) {
-            $normalized[(string) $key] = (string) $value;
-        }
+        $normalized = array_map(function ($value) {
+            return (string)$value;
+        }, $tags);
 
         return $normalized;
     }

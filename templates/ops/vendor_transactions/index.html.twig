@@ -13,7 +13,8 @@
             <h1 class="h3 mb-1">Vendor transaction operator surface</h1>
             <p class="text-muted mb-0">Minimal Twig/Form runtime slice for vendor <strong>{{ vendorId }}</strong>.</p>
         </div>
-        <a class="btn btn-outline-secondary" href="{{ path('app_ops_vendor_transaction_operator_index', {vendorId: vendorId}) }}">Refresh</a>
+        <a class="btn btn-outline-secondary"
+           href="{{ path('app_ops_vendor_transaction_operator_index', {vendorId: vendorId}) }}">Refresh</a>
     </div>
 
     {% if flashMessage is not null %}
@@ -65,13 +66,16 @@
                             <td>
                                 {{ form_start(statusForms[transaction.id], {attr: {class: 'row g-2 align-items-center'}}) }}
                                 <div class="col-md-8">{{ form_widget(statusForms[transaction.id].status) }}</div>
-                                <div class="col-md-4"><button type="submit" class="btn btn-sm btn-outline-primary w-100">Update</button></div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary w-100">Update</button>
+                                </div>
                                 {{ form_end(statusForms[transaction.id]) }}
                             </td>
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="6" class="text-center text-muted">No transactions found for this vendor yet.</td>
+                            <td colspan="6" class="text-center text-muted">No transactions found for this vendor yet.
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

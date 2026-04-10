@@ -15,16 +15,17 @@ use App\ServiceInterface\Ledger\VendorLedgerServiceInterface;
 use App\ServiceInterface\Observability\MetricCollectorInterface;
 use App\ServiceInterface\Observability\RuntimeLoggerInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
+use DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
 
-final class VendorPayoutService implements VendorPayoutServiceInterface
+final readonly class VendorPayoutService implements VendorPayoutServiceInterface
 {
     public function __construct(
-        private readonly PayoutRepositoryInterface $repo,
-        private readonly LedgerEntryRepositoryInterface $ledgerRepo,
-        private readonly VendorLedgerServiceInterface $ledger,
-        private readonly MetricCollectorInterface $metrics,
-        private readonly RuntimeLoggerInterface $runtimeLogger,
+        private PayoutRepositoryInterface      $repo,
+        private LedgerEntryRepositoryInterface $ledgerRepo,
+        private VendorLedgerServiceInterface   $ledger,
+        private MetricCollectorInterface       $metrics,
+        private RuntimeLoggerInterface         $runtimeLogger,
     ) {
     }
 
@@ -66,7 +67,7 @@ final class VendorPayoutService implements VendorPayoutServiceInterface
             feeCents: $fee,
             netCents: $net,
             status: 'pending',
-            createdAt: (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            createdAt: new DateTimeImmutable()->format('Y-m-d H:i:s'),
             meta: ['threshold' => $dto->thresholdCents, 'retention' => $dto->retentionFeePercent]
         );
         $this->repo->insert($payout);
@@ -132,7 +133,7 @@ final class VendorPayoutService implements VendorPayoutServiceInterface
             ));
         }
 
-        $this->repo->markProcessed($payoutId, (new \DateTimeImmutable())->format('Y-m-d H:i:s'));
+        $this->repo->markProcessed($payoutId, new DateTimeImmutable()->format('Y-m-d H:i:s'));
         $this->metrics->increment('payout_processed_total', ['currency' => $p->currency]);
         $this->runtimeLogger->info('vendor_payout_processed', [
             'vendor_id' => $p->vendorId,

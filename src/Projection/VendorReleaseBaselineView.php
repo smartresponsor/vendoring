@@ -8,7 +8,7 @@ namespace App\Projection;
  * Release-facing baseline view built from the current runtime status and
  * artifact presence checks after a green test contour.
  */
-final class VendorReleaseBaselineView
+final readonly class VendorReleaseBaselineView
 {
     /**
      * @param array<string,mixed> $runtimeStatus
@@ -16,13 +16,13 @@ final class VendorReleaseBaselineView
      * @param list<string>        $issues
      */
     public function __construct(
-        private readonly string $tenantId,
-        private readonly string $vendorId,
-        private readonly array $runtimeStatus,
-        private readonly array $artifactStatus,
-        private readonly array $issues,
-        private readonly string $status,
-        private readonly string $generatedAt,
+        private string $tenantId,
+        private string $vendorId,
+        private array  $runtimeStatus,
+        private array  $artifactStatus,
+        private array  $issues,
+        private string $status,
+        private string $generatedAt,
     ) {
     }
 

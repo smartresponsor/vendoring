@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Statement;
 
+use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\DTO\Statement\VendorStatementRecipientDTO;
 use App\Projection\VendorOwnershipView;
 use App\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder;
@@ -60,7 +61,7 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
             $this->statements,
             $this->exporter,
             $this->recipients,
-        ))->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', false)->toArray();
+        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', false))->toArray();
 
         self::assertSame([], $payload['recipients']);
         self::assertNull($payload['export']);
@@ -102,11 +103,12 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
             $this->statements,
             $this->exporter,
             $this->recipients,
-        ))->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', true)->toArray();
+        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', true))->toArray();
 
         self::assertSame([
             ['tenantId' => 'tenant-1', 'vendorId' => '101', 'email' => 'billing@example.com', 'currency' => 'USD'],
         ], $payload['recipients']);
+        self::assertIsArray($payload['export']);
         self::assertSame($pdf, $payload['export']['path']);
         self::assertTrue($payload['export']['exists']);
 

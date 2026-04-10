@@ -11,7 +11,7 @@ final class VendorAnalytics
     /** @param array<string,mixed> $metrics */
     public function __construct(
         private readonly Vendor $vendor,
-        private array $metrics = [],
+        private readonly array  $metrics = [],
     ) {
     }
 

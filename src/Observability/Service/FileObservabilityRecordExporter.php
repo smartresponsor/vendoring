@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Observability\Service;
 
 use App\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
+use RuntimeException;
 
 /**
  * File-backed observability exporter for runtime logs and metrics.
@@ -13,9 +14,9 @@ use App\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
  * configured observability directory. This is a deployment-safe backend seam that can
  * later be replaced or complemented by Prometheus, OpenTelemetry, or StatsD adapters.
  */
-final class FileObservabilityRecordExporter implements ObservabilityRecordExporterInterface
+final readonly class FileObservabilityRecordExporter implements ObservabilityRecordExporterInterface
 {
-    public function __construct(private readonly string $observabilityDir)
+    public function __construct(private string $observabilityDir)
     {
     }
 
@@ -65,7 +66,7 @@ final class FileObservabilityRecordExporter implements ObservabilityRecordExport
 
         mkdir($concurrentDirectory = $this->observabilityDir, 0777, true);
         if (!is_dir($concurrentDirectory)) {
-            throw new \RuntimeException(sprintf('Observability directory "%s" could not be created.', $this->observabilityDir));
+            throw new RuntimeException(sprintf('Observability directory "%s" could not be created.', $this->observabilityDir));
         }
     }
 }

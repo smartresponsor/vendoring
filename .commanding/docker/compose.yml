@@ -49,7 +49,7 @@ services:
     image: redis:7-alpine
     ports:
       - "${REDIS_PORT:-6379}:6379"
-    command: ["redis-server", "--appendonly", "yes"]
+    command: [ "redis-server", "--appendonly", "yes" ]
     volumes:
       - redis_data:/data
     networks:
@@ -59,7 +59,7 @@ services:
     image: redis:7-alpine
     ports:
       - "${REDIS_QUEUE_PORT:-6380}:6379"
-    command: ["redis-server", "--appendonly", "yes"]
+    command: [ "redis-server", "--appendonly", "yes" ]
     volumes:
       - redis_queue_data:/data
     networks:
@@ -80,10 +80,10 @@ services:
       - app
 
 networks:
-  app: {}
+  app: { }
 
 volumes:
-  pg_data: {}
-  redis_data: {}
-  redis_queue_data: {}
-  es_data: {}
+  pg_data: { }
+  redis_data: { }
+  redis_queue_data: { }
+  es_data: { }

@@ -1,4 +1,4 @@
 dwh:
-  bucket: "s3://vendor-dwh"
-  format: "parquet"
-  partition: "date"
+    bucket: "s3://vendor-dwh"
+    format: "parquet"
+    partition: "date"

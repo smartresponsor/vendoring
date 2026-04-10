@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-final class PassportNumber
+use InvalidArgumentException;
+
+final readonly class PassportNumber
 {
     public function __construct(private string $v)
     {
         if (!preg_match('/^[A-Z0-9]{6,15}$/', $v)) {
-            throw new \InvalidArgumentException('Bad passport');
+            throw new InvalidArgumentException('Bad passport');
         }
     }
 

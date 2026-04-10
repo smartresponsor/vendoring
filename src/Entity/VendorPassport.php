@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTimeImmutable;
+
 final class VendorPassport
 {
     private ?int $id = null;
     private bool $verified = false;
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     public function __construct(
         private readonly Vendor $vendor,
         private readonly string $taxId,
         private readonly string $country,
     ) {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -48,7 +50,7 @@ final class VendorPassport
         $this->verified = true;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }

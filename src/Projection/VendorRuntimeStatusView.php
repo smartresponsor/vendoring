@@ -8,7 +8,7 @@ namespace App\Projection;
  * Aggregated vendor-local runtime status view spanning ownership, finance,
  * statement delivery, and external integrations without loading external aggregates.
  */
-final class VendorRuntimeStatusView
+final readonly class VendorRuntimeStatusView
 {
     /**
      * @param array<string, mixed>|null $ownership
@@ -18,15 +18,15 @@ final class VendorRuntimeStatusView
      * @param array<string, bool>       $surfaceStatus
      */
     public function __construct(
-        private readonly string $tenantId,
-        private readonly string $vendorId,
-        private readonly string $currency,
-        private readonly ?array $ownership,
-        private readonly array $finance,
-        private readonly array $statementDelivery,
-        private readonly array $externalIntegration,
-        private readonly array $surfaceStatus,
-        private readonly string $generatedAt,
+        private string $tenantId,
+        private string $vendorId,
+        private string $currency,
+        private ?array $ownership,
+        private array  $finance,
+        private array  $statementDelivery,
+        private array  $externalIntegration,
+        private array  $surfaceStatus,
+        private string $generatedAt,
     ) {
     }
 

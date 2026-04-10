@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Reliability;
 
+use App\DTO\Reliability\OutboundCircuitBreakerStateDTO;
 use App\ServiceInterface\Reliability\OutboundCircuitBreakerInterface;
+use JsonException;
 
 /**
  * File-backed circuit-breaker implementation for outbound runtime protections.
@@ -13,9 +15,9 @@ use App\ServiceInterface\Reliability\OutboundCircuitBreakerInterface;
  * repeated downstream failures can short-circuit unstable transport paths across
  * requests in one local runtime environment.
  */
-final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterface
+final readonly class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterface
 {
-    public function __construct(private readonly string $stateDir)
+    public function __construct(private string $stateDir)
     {
     }
 
@@ -28,20 +30,44 @@ final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterfac
 
         if ('open' === $state && null !== $openedAt) {
             if ((time() - $openedAt) >= $cooldownSeconds) {
-                return $this->statePayload($operation, $scopeKey, 'half_open', $failureCount, $threshold, $cooldownSeconds, true);
+                return $this->createState(new OutboundCircuitBreakerStateDTO(
+                    operation: $operation,
+                    scopeKey: $scopeKey,
+                    state: 'half_open',
+                    failureCount: $failureCount,
+                    threshold: $threshold,
+                    cooldownSeconds: $cooldownSeconds,
+                    allowRequest: true,
+                ));
             }
 
-            return $this->statePayload($operation, $scopeKey, 'open', $failureCount, $threshold, $cooldownSeconds, false);
+            return $this->createState(new OutboundCircuitBreakerStateDTO(
+                operation: $operation,
+                scopeKey: $scopeKey,
+                state: 'open',
+                failureCount: $failureCount,
+                threshold: $threshold,
+                cooldownSeconds: $cooldownSeconds,
+                allowRequest: false,
+            ));
         }
 
-        return $this->statePayload($operation, $scopeKey, 'closed', $failureCount, $threshold, $cooldownSeconds, true);
+        return $this->createState(new OutboundCircuitBreakerStateDTO(
+            operation: $operation,
+            scopeKey: $scopeKey,
+            state: 'closed',
+            failureCount: $failureCount,
+            threshold: $threshold,
+            cooldownSeconds: $cooldownSeconds,
+            allowRequest: true,
+        ));
     }
 
     public function recordSuccess(string $operation, string $scopeKey): void
     {
         $path = $this->filePath($operation, $scopeKey);
         if (is_file($path)) {
-            @unlink($path);
+            unlink($path);
         }
     }
 
@@ -58,15 +84,15 @@ final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterfac
             'openedAt' => $openedAt,
         ]);
 
-        return $this->statePayload(
-            $operation,
-            $scopeKey,
-            $state,
-            $failureCount,
-            $threshold,
-            $cooldownSeconds,
-            'open' !== $state,
-        );
+        return $this->createState(new OutboundCircuitBreakerStateDTO(
+            operation: $operation,
+            scopeKey: $scopeKey,
+            state: $state,
+            failureCount: $failureCount,
+            threshold: $threshold,
+            cooldownSeconds: $cooldownSeconds,
+            allowRequest: 'open' !== $state,
+        ));
     }
 
     /**
@@ -79,7 +105,12 @@ final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterfac
             return [];
         }
 
-        $decoded = json_decode((string) file_get_contents($path), true);
+        $contents = file_get_contents($path);
+        if (false === $contents) {
+            return [];
+        }
+
+        $decoded = json_decode($contents, true);
         if (!is_array($decoded)) {
             return [];
         }
@@ -89,6 +120,7 @@ final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterfac
 
     /**
      * @param array{failureCount:int, state:string, openedAt:int|null} $payload
+     * @throws JsonException
      */
     private function writeState(string $operation, string $scopeKey, array $payload): void
     {
@@ -103,7 +135,7 @@ final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterfac
     private function filePath(string $operation, string $scopeKey): string
     {
         $safe = preg_replace('/[^A-Za-z0-9_.-]+/', '_', $operation.'__'.$scopeKey);
-        if (!is_string($safe) || '' === $safe) {
+        if (!is_string($safe)) {
             $safe = sha1($operation.'__'.$scopeKey);
         }
 
@@ -121,23 +153,8 @@ final class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterfac
      *   allowRequest:bool
      * }
      */
-    private function statePayload(
-        string $operation,
-        string $scopeKey,
-        string $state,
-        int $failureCount,
-        int $threshold,
-        int $cooldownSeconds,
-        bool $allowRequest,
-    ): array {
-        return [
-            'operation' => $operation,
-            'scopeKey' => $scopeKey,
-            'state' => $state,
-            'failureCount' => $failureCount,
-            'threshold' => $threshold,
-            'cooldownSeconds' => $cooldownSeconds,
-            'allowRequest' => $allowRequest,
-        ];
+    private function createState(OutboundCircuitBreakerStateDTO $state): array
+    {
+        return $state->toArray();
     }
 }

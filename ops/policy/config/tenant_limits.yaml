@@ -1,3 +1,6 @@
 tenant_limits:
-  rps: { default: 50, enterprise: 200 }
-  storage_gb: { default: 200 }
+  rps:
+    default: 50
+    enterprise: 200
+  storage_gb:
+    default: 200

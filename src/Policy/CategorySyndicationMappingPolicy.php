@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Policy;
 
 use App\PolicyInterface\CategorySyndicationMappingPolicyInterface;
+use InvalidArgumentException;
 
 final class CategorySyndicationMappingPolicy implements CategorySyndicationMappingPolicyInterface
 {
@@ -14,7 +15,7 @@ final class CategorySyndicationMappingPolicy implements CategorySyndicationMappi
     {
         $normalized = trim($localeMode);
         if (!in_array($normalized, self::LOCALE_MODES, true)) {
-            throw new \InvalidArgumentException(sprintf('unsupported_locale_mode:%s', $localeMode));
+            throw new InvalidArgumentException(sprintf('unsupported_locale_mode:%s', $localeMode));
         }
     }
 

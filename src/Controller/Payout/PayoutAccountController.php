@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Controller\Payout;
 
 use App\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,7 @@ final class PayoutAccountController extends AbstractController
     {
         try {
             $account = $this->payoutAccountService->upsertFromPayload($r->toArray());
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 422);
         }
 

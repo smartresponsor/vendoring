@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
 use App\Event\CategorySyndicationFallbackAwarePackageGated;
 use App\EventInterface\CategorySyndicationFallbackAwarePackageGatedInterface;
 use App\PolicyInterface\CategorySyndicationFallbackAwarePackageGatePolicyInterface;
@@ -11,51 +12,57 @@ use App\ServiceInterface\CatalogDestinationMediaFallbackServiceInterface;
 use App\ServiceInterface\CatalogDestinationMediaReadinessServiceInterface;
 use App\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface;
 use App\ServiceInterface\CatalogSyndicationMappingServiceInterface;
+use DateTimeImmutable;
 
-final class CatalogSyndicationFallbackAwarePackageGateService implements CatalogSyndicationFallbackAwarePackageGateServiceInterface
+final readonly class CatalogSyndicationFallbackAwarePackageGateService implements CatalogSyndicationFallbackAwarePackageGateServiceInterface
 {
     public function __construct(
-        private readonly CatalogSyndicationMappingServiceInterface $mappingService,
-        private readonly CatalogDestinationMediaReadinessServiceInterface $destinationMediaReadinessService,
-        private readonly CatalogDestinationMediaFallbackServiceInterface $destinationMediaFallbackService,
-        private readonly CategorySyndicationFallbackAwarePackageGatePolicyInterface $policy,
+        private CatalogSyndicationMappingServiceInterface $mappingService,
+        private CatalogDestinationMediaReadinessServiceInterface $destinationMediaReadinessService,
+        private CatalogDestinationMediaFallbackServiceInterface $destinationMediaFallbackService,
+        private CategorySyndicationFallbackAwarePackageGatePolicyInterface $policy,
     ) {
     }
 
-    /**
-     * @param array<string, mixed> $categoryData
-     * @param array<string, string> $fieldMap
-     * @param list<string> $requiredFields
-     */
-    public function buildGatedPublishPackage(string $packageId, string $destinationId, string $categoryId, string $version, string $localeMode, array $categoryData, array $fieldMap, array $requiredFields, string $actorId, string $reason): CategorySyndicationFallbackAwarePackageGatedInterface
+    public function buildGatedPublishPackage(CatalogSyndicationPublishPackageRequestDTO $request): CategorySyndicationFallbackAwarePackageGatedInterface
     {
-        $packageBuilt = $this->mappingService->buildPublishPackage($packageId, $destinationId, $categoryId, $version, $localeMode, $categoryData, $fieldMap, $requiredFields, $actorId, $reason);
+        $packageBuilt = $this->mappingService->buildPublishPackage($request);
         $packagePayload = $packageBuilt->payload();
 
-        $strictMedia = $this->destinationMediaReadinessService->evaluate($destinationId, $categoryId, $actorId, $reason)->payload();
-        $fallbackMedia = $this->destinationMediaFallbackService->evaluate($destinationId, $categoryId, $actorId, $reason)->payload();
+        $strictMedia = $this->destinationMediaReadinessService->evaluate(
+            $request->destinationId,
+            $request->categoryId,
+            $request->actorId,
+            $request->reason,
+        )->payload();
+        $fallbackMedia = $this->destinationMediaFallbackService->evaluate(
+            $request->destinationId,
+            $request->categoryId,
+            $request->actorId,
+            $request->reason,
+        )->payload();
 
-        $report = $this->policy->buildReport(
-            self::stringList($packagePayload['missingRequiredFields'] ?? null),
-            self::stringList($strictMedia['requiredMissing'] ?? null),
-            self::stringList($fallbackMedia['requiredMissing'] ?? null),
-            array_values(array_merge(
+        $report = $this->policy->buildReport(new \App\DTO\CatalogSyndication\CategorySyndicationFallbackAwarePackageGateReportInputDTO(
+            packageMissingRequiredFields: self::stringList($packagePayload['missingRequiredFields'] ?? null),
+            strictMediaRequiredMissing: self::stringList($strictMedia['requiredMissing'] ?? null),
+            fallbackMediaRequiredMissing: self::stringList($fallbackMedia['requiredMissing'] ?? null),
+            warnings: array_values(array_merge(
                 self::stringList($strictMedia['warnings'] ?? null),
                 self::stringList($fallbackMedia['warnings'] ?? null),
             )),
-            self::boolMap($strictMedia['checks'] ?? null),
-            self::boolMap($fallbackMedia['checks'] ?? null),
-            self::stringList($fallbackMedia['exactMatchedBindingIds'] ?? null),
-            self::stringList($fallbackMedia['fallbackMatchedBindingIds'] ?? null),
-        );
+            strictChecks: self::boolMap($strictMedia['checks'] ?? null),
+            fallbackChecks: self::boolMap($fallbackMedia['checks'] ?? null),
+            exactMatchedBindingIds: self::stringList($fallbackMedia['exactMatchedBindingIds'] ?? null),
+            fallbackMatchedBindingIds: self::stringList($fallbackMedia['fallbackMatchedBindingIds'] ?? null),
+        ));
 
         return new CategorySyndicationFallbackAwarePackageGated(
             [
-                'packageId' => trim($packageId),
-                'destinationId' => trim($destinationId),
-                'categoryId' => trim($categoryId),
-                'version' => trim($version),
-                'localeMode' => trim($localeMode),
+                'packageId' => trim($request->packageId),
+                'destinationId' => trim($request->destinationId),
+                'categoryId' => trim($request->categoryId),
+                'version' => trim($request->version),
+                'localeMode' => trim($request->localeMode),
                 'payload' => self::arrayMap($packagePayload['payload'] ?? null),
                 'fieldMap' => self::stringMap($packagePayload['fieldMap'] ?? null),
                 'requiredFields' => self::stringList($packagePayload['requiredFields'] ?? null),
@@ -68,28 +75,20 @@ final class CatalogSyndicationFallbackAwarePackageGateService implements Catalog
                 'fallbackMatchedBindingIds' => $report->fallbackMatchedBindingIds(),
                 'strictPublishable' => $report->strictPublishable(),
                 'fallbackPublishable' => $report->fallbackPublishable(),
-                'actorId' => trim($actorId),
-                'reason' => trim($reason),
+                'actorId' => trim($request->actorId),
+                'reason' => trim($request->reason),
             ],
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
         );
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return array<string, mixed>
-     */
+    /** @return array<string, mixed> */
     private static function arrayMap(mixed $value): array
     {
         return is_array($value) ? $value : [];
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     private static function stringMap(mixed $value): array
     {
         if (!is_array($value)) {
@@ -106,11 +105,7 @@ final class CatalogSyndicationFallbackAwarePackageGateService implements Catalog
         return $result;
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return list<string>
-     */
+    /** @return list<string> */
     private static function stringList(mixed $value): array
     {
         if (!is_array($value)) {
@@ -127,11 +122,7 @@ final class CatalogSyndicationFallbackAwarePackageGateService implements Catalog
         return $result;
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return array<string, bool>
-     */
+    /** @return array<string, bool> */
     private static function boolMap(mixed $value): array
     {
         if (!is_array($value)) {

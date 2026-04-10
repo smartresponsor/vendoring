@@ -8,6 +8,7 @@ use App\DTO\VendorProfileDTO;
 use App\RepositoryInterface\VendorRepositoryInterface;
 use App\ServiceInterface\VendorProfileServiceInterface;
 use App\ServiceInterface\VendorProfileViewBuilderInterface;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,7 +39,7 @@ final class VendorProfileController extends AbstractController
             $this->profileService->upsert($vendor, $this->buildDto($vendorId, $payload));
         } catch (JsonException) {
             return new JsonResponse(['error' => 'malformed_json'], 400);
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 422);
         }
 
@@ -71,7 +72,7 @@ final class VendorProfileController extends AbstractController
         $socials = $payload['socials'] ?? null;
 
         if (null !== $socials && !is_array($socials)) {
-            throw new \InvalidArgumentException('socials_must_be_object');
+            throw new InvalidArgumentException('socials_must_be_object');
         }
 
         return new VendorProfileDTO(
@@ -98,14 +99,14 @@ final class VendorProfileController extends AbstractController
         }
 
         if (!is_scalar($value)) {
-            throw new \InvalidArgumentException(sprintf('%s_must_be_string', $field));
+            throw new InvalidArgumentException(sprintf('%s_must_be_string', $field));
         }
 
         return (string) $value;
     }
 
     /**
-     * @param array<mixed>|null $socials
+     * @param array|null $socials
      *
      * @return array<string, string>|null
      */
@@ -119,7 +120,7 @@ final class VendorProfileController extends AbstractController
 
         foreach ($socials as $network => $url) {
             if (!is_scalar($url)) {
-                throw new \InvalidArgumentException('socials_must_be_object');
+                throw new InvalidArgumentException('socials_must_be_object');
             }
 
             $normalized[(string) $network] = (string) $url;

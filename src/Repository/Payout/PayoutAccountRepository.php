@@ -8,9 +8,9 @@ use App\Entity\Payout\PayoutAccount;
 use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
 use Doctrine\DBAL\Connection;
 
-final class PayoutAccountRepository implements PayoutAccountRepositoryInterface
+final readonly class PayoutAccountRepository implements PayoutAccountRepositoryInterface
 {
-    public function __construct(private readonly Connection $db)
+    public function __construct(private Connection $db)
     {
     }
 
