@@ -20,6 +20,30 @@ profile:
     - inspection: PhpVariableNamingConventionInspection
       options:
         m_minLength: 2
+        m_maxLength: 37
+      ignore:
+        - "tests/**"
+    - inspection: PhpMethodNamingConventionInspection
+      options:
+        m_minLength: 2
+        m_maxLength: 37
+      ignore:
+        - "tests/**"
+    - inspection: PhpClassNamingConventionInspection
+      options:
+        m_maxLength: 57
+    - inspection: PhpVariableNamingConventionInspection
+      options:
+        m_regex: "[a-z][A-Za-z\\d]*"
+    - inspection: PhpCSFixerValidationInspection
+      enabled: true
+    - inspection: IncorrectFormatting
+      enabled: false
+    - inspection: LongLine
+      enabled: false
+    - inspection: PhpFullyQualifiedNameUsageInspection
+      options:
+        IGNORE_GLOBAL_NAMESPACE: true
 
 exclude:
   - name: All
