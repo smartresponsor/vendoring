@@ -1,0 +1,6 @@
+name: vendoring
+title: Vendoring
+version: ~
+start_page: ROOT:index.adoc
+nav:
+  - modules/ROOT/nav.adoc

@@ -1,0 +1,22 @@
+= Install
+
+Vendoring is currently strongest as a headless/backend Symfony component with release-candidate quality lanes and generated documentation artifacts.
+
+== Local setup entry points
+
+* `README.md`
+* `compose.yaml`
+* `composer.json`
+* `phpunit.xml.dist`
+
+== Runtime/documentation generation seams
+
+* `bin/generate-openapi.php`
+* `bin/generate-phpdocumentor-site.php`
+* `bin/generate-rc-evidence.php`
+* `bin/generate-release-manifest.php`
+
+== Notes
+
+This producer repository does not assemble a standalone documentation portal.
+It only provides documentation content and generated artifacts that an external Antora aggregator can consume.
