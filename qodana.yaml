@@ -35,6 +35,7 @@ profile:
     - inspection: PhpVariableNamingConventionInspection
       options:
         m_regex: "[a-z][A-Za-z\\d]*"
+<<<<<<< HEAD
     - inspection: PhpCSFixerValidationInspection
       enabled: true
     - inspection: IncorrectFormatting
@@ -44,6 +45,8 @@ profile:
     - inspection: PhpFullyQualifiedNameUsageInspection
       options:
         IGNORE_GLOBAL_NAMESPACE: true
+=======
+>>>>>>> e1fae52eb38634bc50e4b7de34fc9138c2304c29
 
 exclude:
   - name: All

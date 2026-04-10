@@ -1,0 +1,16 @@
+= Architecture
+
+Vendoring is a Symfony-oriented business component centered on vendor-facing runtime and operational flows.
+The repository keeps the canonical `App\` namespace, avoids `/src/Domain/`, and does not introduce ports-and-adapters drift.
+
+== Primary architecture sources
+
+* `docs/architecture/API_AUTH_MODEL.md`
+* `docs/ARCHITECTURE_REVIEW_120_CHECKLIST.md`
+* `docs/internal/DOCUMENTATION_CANON.md`
+* `docs/internal/PUBLIC_CODE_DOCUMENTATION_INVENTORY.md`
+
+== Reading guidance
+
+Use the architecture markdown sources above as the detailed narrative baseline.
+This Antora page exists as the stable producer entry point for the central documentation aggregator.
