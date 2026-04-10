@@ -21,9 +21,9 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
         parent::__construct($registry, VendorApiKey::class);
     }
 
-    public function save(VendorApiKey $apiKey, bool $flush = false): void
+    public function save(VendorApiKey $vendorApiKey, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($apiKey);
+        $this->getEntityManager()->persist($vendorApiKey);
 
         if ($flush) {
             $this->getEntityManager()->flush();

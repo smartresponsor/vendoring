@@ -254,7 +254,7 @@ $spec = [
 
 file_put_contents($outDir . '/openapi.json', json_encode($spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
 
-function yamlEncode(mixed $value, int $indent = 0): string
+function yaml_encode(mixed $value, int $indent = 0): string
 {
     $spaces = str_repeat('  ', $indent);
 
@@ -266,9 +266,9 @@ function yamlEncode(mixed $value, int $indent = 0): string
             if ($isList) {
                 if (is_array($item)) {
                     $lines[] = $spaces . '-';
-                    $lines[] = yamlEncode($item, $indent + 1);
+                    $lines[] = yaml_encode($item, $indent + 1);
                 } else {
-                    $lines[] = $spaces . '- ' . yamlScalar($item);
+                    $lines[] = $spaces . '- ' . yaml_scalar($item);
                 }
 
                 continue;
@@ -276,19 +276,19 @@ function yamlEncode(mixed $value, int $indent = 0): string
 
             if (is_array($item)) {
                 $lines[] = $spaces . $key . ':';
-                $lines[] = yamlEncode($item, $indent + 1);
+                $lines[] = yaml_encode($item, $indent + 1);
             } else {
-                $lines[] = $spaces . $key . ': ' . yamlScalar($item);
+                $lines[] = $spaces . $key . ': ' . yaml_scalar($item);
             }
         }
 
         return implode(PHP_EOL, $lines);
     }
 
-    return $spaces . yamlScalar($value);
+    return $spaces . yaml_scalar($value);
 }
 
-function yamlScalar(mixed $value): string
+function yaml_scalar(mixed $value): string
 {
     if (is_string($value)) {
         if ($value === '' || preg_match('/[:\[\]{},&*#?|<>=%@`]/', $value) === 1 || str_contains($value, ' ') || str_contains($value, '/')) {
@@ -309,5 +309,5 @@ function yamlScalar(mixed $value): string
     return (string) $value;
 }
 
-file_put_contents($outDir . '/openapi.yaml', yamlEncode($spec) . PHP_EOL);
+file_put_contents($outDir . '/openapi.yaml', yaml_encode($spec) . PHP_EOL);
 echo "Generated build/docs/openapi.json and build/docs/openapi.yaml\n";

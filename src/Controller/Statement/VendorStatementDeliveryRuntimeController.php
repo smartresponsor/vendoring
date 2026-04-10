@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Statement;
 
-use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
+use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,30 +16,18 @@ final class VendorStatementDeliveryRuntimeController extends AbstractController
 {
     public function __construct(
         private readonly VendorStatementDeliveryRuntimeViewBuilderInterface $runtimeViewBuilder,
-    ) {
-    }
+        private readonly VendorStatementRequestResolverInterface $requestResolver,
+    ) {}
 
     #[Route('/{vendorId}/statement-delivery', methods: ['GET'])]
     public function show(string $vendorId, Request $request): JsonResponse
     {
-        $tenantId = (string) ($request->query->get('tenantId') ?? '');
-        $from = (string) ($request->query->get('from') ?? '');
-        $to = (string) ($request->query->get('to') ?? '');
-        $currency = (string) ($request->query->get('currency') ?? 'USD');
-        $includeExport = filter_var($request->query->get('includeExport', true), FILTER_VALIDATE_BOOL);
-
-        if ('' === $tenantId || '' === $from || '' === $to) {
+        $runtimeRequest = $this->requestResolver->resolveDeliveryRuntimeRequest($vendorId, $request);
+        if (null === $runtimeRequest) {
             return new JsonResponse(['error' => 'tenantId, from and to are required'], 422);
         }
 
-        $view = $this->runtimeViewBuilder->build(new VendorStatementDeliveryRuntimeRequestDTO(
-            tenantId: $tenantId,
-            vendorId: $vendorId,
-            from: $from,
-            to: $to,
-            currency: $currency,
-            includeExport: $includeExport,
-        ));
+        $view = $this->runtimeViewBuilder->build($runtimeRequest);
 
         return new JsonResponse(['data' => $view->toArray()], 200);
     }

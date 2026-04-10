@@ -8,6 +8,8 @@ use App\DTO\VendorProfileDTO;
 use App\RepositoryInterface\VendorRepositoryInterface;
 use App\ServiceInterface\VendorProfileServiceInterface;
 use App\ServiceInterface\VendorProfileViewBuilderInterface;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
@@ -22,8 +24,7 @@ final class VendorProfileController extends AbstractController
         private readonly VendorRepositoryInterface $vendorRepository,
         private readonly VendorProfileServiceInterface $profileService,
         private readonly VendorProfileViewBuilderInterface $profileViewBuilder,
-    ) {
-    }
+    ) {}
 
     #[Route('/vendor/{vendorId}', methods: ['PATCH'])]
     public function update(int $vendorId, Request $request): JsonResponse
@@ -41,6 +42,8 @@ final class VendorProfileController extends AbstractController
             return new JsonResponse(['error' => 'malformed_json'], 400);
         } catch (InvalidArgumentException $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 422);
+        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
         }
 
         $view = $this->profileViewBuilder->buildForVendorId($vendorId);

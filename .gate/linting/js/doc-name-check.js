@@ -25,9 +25,6 @@ function getArg(name, def) {
     return v ?? def;
 }
 
-function hasFlag(name) {
-    return args.includes(name);
-}
 
 const rootDir = path.resolve(getArg('--root', '.'));
 const expectedDomain = String(getArg('--domain', 'canon')).trim();

@@ -9,16 +9,19 @@ use App\Entity\Payout\PayoutAccount;
 use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
 use App\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
 use DateTimeImmutable;
+use Doctrine\DBAL\Exception;
 use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class VendorPayoutAccountService implements VendorPayoutAccountServiceInterface
 {
-    public function __construct(private PayoutAccountRepositoryInterface $accounts)
-    {
-    }
+    public function __construct(private PayoutAccountRepositoryInterface $accounts) {}
 
-    /** @param array<string, mixed> $payload */
+    /**
+     * @param array<string, mixed> $payload
+     * @return PayoutAccount
+     * @throws Exception
+     */
     public function upsertFromPayload(array $payload): PayoutAccount
     {
         foreach (['tenantId', 'vendorId', 'provider', 'accountRef', 'currency'] as $field) {

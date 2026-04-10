@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller\Statement;
 
 use App\Controller\Statement\VendorStatementExportController;
+use App\Service\Statement\VendorStatementRequestResolver;
 use App\Tests\Support\Statement\FakeStatementExporterPDF;
 use App\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
@@ -16,7 +17,7 @@ final class VendorStatementExportControllerTest extends TestCase
 {
     public function testExportReturnsBase64PayloadWhenPdfWasGenerated(): void
     {
-        $pdfPath = sys_get_temp_dir().'/vendoring-export-test.pdf';
+        $pdfPath = sys_get_temp_dir() . '/vendoring-export-test.pdf';
         file_put_contents($pdfPath, 'pdf-binary');
 
         $statementService = new FakeVendorStatementService([
@@ -30,7 +31,7 @@ final class VendorStatementExportControllerTest extends TestCase
             'closing' => 10.0,
             'items' => [],
         ]);
-        $controller = new VendorStatementExportController($statementService, new FakeStatementExporterPDF($pdfPath));
+        $controller = new VendorStatementExportController($statementService, new FakeStatementExporterPDF($pdfPath), new VendorStatementRequestResolver());
 
         $response = $controller->export('vendor-1', new Request([
             'tenantId' => 'tenant-1',
@@ -65,7 +66,7 @@ final class VendorStatementExportControllerTest extends TestCase
             'closing' => 10.0,
             'items' => [],
         ]);
-        $controller = new VendorStatementExportController($statementService, new FakeStatementExporterPDF(sys_get_temp_dir().'/missing-vendoring-export.pdf'));
+        $controller = new VendorStatementExportController($statementService, new FakeStatementExporterPDF(sys_get_temp_dir() . '/missing-vendoring-export.pdf'), new VendorStatementRequestResolver());
 
         $response = $controller->export('vendor-1', new Request([
             'tenantId' => 'tenant-1',

@@ -11,9 +11,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 final class VendorTransactionEvent extends Event
 {
-    public const string NAME = 'vendor.transaction.action';
+    public const string EVENT_NAME = 'vendor.transaction.action';
+    public const string NAME = self::EVENT_NAME;
 
-    public function __construct(public readonly VendorTransaction $transaction)
-    {
-    }
+    public function __construct(public readonly VendorTransaction $transaction) {}
 }

@@ -28,13 +28,12 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
         private RuntimeLoggerInterface           $runtimeLogger,
         private OutboundOperationPolicyInterface $outboundPolicy,
         private OutboundCircuitBreakerInterface  $circuitBreaker,
-    ) {
-    }
+    ) {}
 
     public function send(string $tenantId, string $vendorId, string $email, string $pdfPath, string $periodLabel): array
     {
         $policy = $this->outboundPolicy->forOperation('statement_mail_send');
-        $scopeKey = $tenantId.':'.$vendorId;
+        $scopeKey = $tenantId . ':' . $vendorId;
 
         $result = [
             'ok' => false,
@@ -155,6 +154,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
                 : 'statement_mail_unknown_failure';
 
             return $result;
+        } catch (\JsonException $e) {
         }
 
         $this->circuitBreaker->recordSuccess('statement_mail_send', $scopeKey);

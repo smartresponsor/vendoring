@@ -121,6 +121,7 @@ services:
     App\ServiceInterface\Statement\VendorStatementMailerServiceInterface: '@App\Service\Statement\VendorStatementMailerService'
     App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface: '@App\Service\Statement\VendorStatementRecipientProvider'
     App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface: '@App\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder'
+    App\ServiceInterface\Statement\VendorStatementRequestResolverInterface: '@App\Service\Statement\VendorStatementRequestResolver'
     App\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface: '@App\Service\WebhooksConsumer\VendorWebhooksConsumerService'
     App\PolicyInterface\CategorySyndicationMappingPolicyInterface: '@App\Policy\CategorySyndicationMappingPolicy'
     App\PolicyInterface\CategorySyndicationFallbackAwarePackageGatePolicyInterface: '@App\Policy\CategorySyndicationFallbackAwarePackageGatePolicy'
@@ -170,3 +171,9 @@ services:
     App\Service\Ops\RollbackDecisionEvaluator:
         arguments:
             $thresholds: '%vendoring_rollback_thresholds%'
+
+    App\Service\VendorProfileRequestResolver:
+        arguments: []
+
+    App\ServiceInterface\VendorProfileRequestResolverInterface: '@App\Service\VendorProfileRequestResolver'
+

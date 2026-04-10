@@ -24,8 +24,7 @@ final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStat
         private VendorFinanceRuntimeViewBuilderInterface             $financeRuntimeViewBuilder,
         private VendorStatementDeliveryRuntimeViewBuilderInterface   $statementDeliveryRuntimeViewBuilder,
         private VendorExternalIntegrationRuntimeViewBuilderInterface $externalIntegrationRuntimeViewBuilder,
-    ) {
-    }
+    ) {}
 
     public function build(
         string $tenantId,
@@ -67,6 +66,8 @@ final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStat
             'externalIntegration' => [] !== $externalIntegration,
         ];
 
+        $generatedAt = (new DateTimeImmutable())->format(DATE_ATOM);
+
         return new VendorRuntimeStatusView(
             tenantId: $tenantId,
             vendorId: $vendorId,
@@ -76,7 +77,7 @@ final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStat
             statementDelivery: $statementDelivery,
             externalIntegration: $externalIntegration,
             surfaceStatus: $surfaceStatus,
-            generatedAt: (new DateTimeImmutable())->format(DATE_ATOM),
+            generatedAt: $generatedAt,
         );
     }
 }

@@ -13,31 +13,22 @@ use App\Event\VendorProfileUpdatedEvent;
 use App\RepositoryInterface\VendorProfileRepositoryInterface;
 use App\ServiceInterface\VendorProfileServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\OptimisticLockException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorProfileService implements VendorProfileServiceInterface
 {
     public function __construct(
-        private EntityManagerInterface           $em,
+        private EntityManagerInterface $em,
         private VendorProfileRepositoryInterface $repository,
-        private EventDispatcherInterface         $dispatcher,
-    ) {
-    }
+        private EventDispatcherInterface $dispatcher,
+    ) {}
 
-    /** @throws ORMException|OptimisticLockException */
     public function upsert(Vendor $vendor, VendorProfileDTO $dto): VendorProfile
     {
         $profile = $this->repository->findOneBy(['vendor' => $vendor]) ?? new VendorProfile($vendor);
-        $profile->updateProfile(
-            displayName: $dto->displayName,
-            about: $dto->about,
-            website: $dto->website,
-            socials: $dto->socials,
-            seoTitle: $dto->seoTitle,
-            seoDescription: $dto->seoDescription,
-        );
+        $profile->updateContent($dto->displayName, $dto->about, $dto->website);
+        $profile->replaceSocials($dto->socials);
+        $profile->updateSeo($dto->seoTitle, $dto->seoDescription);
 
         if ('publish' === $dto->publicationAction && $profile->isPublishable()) {
             $profile->publish();

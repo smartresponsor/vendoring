@@ -35,8 +35,8 @@ final class Generator
         return min($min, $max);
     }
 
-    public function randomFloat(int $nbMaxDecimals = 0, float|int $min = 0, float|int $max = 2147483647): float
+    public function randomFloat(int $maxDecimals = 0, float|int $min = 0, float|int $max = 2147483647): float
     {
-        return (float) $min;
+        return round(min((float) $min, (float) $max), max(0, $maxDecimals));
     }
 }

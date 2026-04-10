@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller\Payout;
 
 use App\Controller\Payout\VendorStatementController;
+use App\Service\Statement\VendorStatementRequestResolver;
 use App\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ final class VendorStatementControllerTest extends TestCase
 {
     public function testBuildReturnsValidationErrorWhenParamsMissing(): void
     {
-        $controller = new VendorStatementController(new FakeVendorStatementService(['items' => []]));
+        $controller = new VendorStatementController(new FakeVendorStatementService(['items' => []]), new VendorStatementRequestResolver());
 
         $response = $controller->build('vendor-1', new Request());
 
@@ -35,7 +36,7 @@ final class VendorStatementControllerTest extends TestCase
             ],
         ]);
 
-        $controller = new VendorStatementController($service);
+        $controller = new VendorStatementController($service, new VendorStatementRequestResolver());
         $request = new Request([
             'tenantId' => 'tenant-1',
             'from' => '2026-03-01',

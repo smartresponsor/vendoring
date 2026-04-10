@@ -14,20 +14,16 @@ use App\Event\VendorPayoutRequestedEvent;
 use App\RepositoryInterface\VendorBillingRepositoryInterface;
 use App\ServiceInterface\VendorBillingServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\OptimisticLockException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorBillingService implements VendorBillingServiceInterface
 {
     public function __construct(
-        private EntityManagerInterface           $em,
+        private EntityManagerInterface $em,
         private VendorBillingRepositoryInterface $repository,
-        private EventDispatcherInterface         $dispatcher,
-    ) {
-    }
+        private EventDispatcherInterface $dispatcher,
+    ) {}
 
-    /** @throws ORMException|OptimisticLockException */
     public function upsert(Vendor $vendor, VendorBillingDTO $dto): VendorBilling
     {
         $billing = $this->repository->findOneBy(['vendor' => $vendor]) ?? new VendorBilling($vendor);
@@ -39,7 +35,6 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
         return $billing;
     }
 
-    /** @throws ORMException|OptimisticLockException */
     public function requestPayout(VendorBilling $billing, int $amountMinor): void
     {
         $billing->markPayoutRequested();
@@ -48,7 +43,6 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
         $this->dispatcher->dispatch(new VendorPayoutRequestedEvent($billing, $amountMinor));
     }
 
-    /** @throws ORMException|OptimisticLockException */
     public function completePayout(VendorBilling $billing, int $amountMinor): void
     {
         $billing->markPayoutCompleted();

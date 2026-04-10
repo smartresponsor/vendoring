@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Statement;
 
-use App\DTO\Statement\VendorStatementRequestDTO;
 use App\ServiceInterface\Statement\StatementExporterPDFInterface;
+use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,8 +25,8 @@ final class VendorStatementExportController extends AbstractController
     public function __construct(
         private readonly VendorStatementServiceInterface $svc,
         private readonly StatementExporterPDFInterface $pdf,
-    ) {
-    }
+        private readonly VendorStatementRequestResolverInterface $requestResolver,
+    ) {}
 
     /**
      * Build and export a vendor statement for the requested tenant/vendor period.
@@ -45,16 +45,11 @@ final class VendorStatementExportController extends AbstractController
     #[Route('/{vendorId}/export', methods: ['GET'])]
     public function export(string $vendorId, Request $r): JsonResponse
     {
-        $tenantId = (string) ($r->query->get('tenantId') ?? '');
-        $from = (string) ($r->query->get('from') ?? '');
-        $to = (string) ($r->query->get('to') ?? '');
-        $currency = (string) ($r->query->get('currency') ?? 'USD');
-
-        if ('' === $tenantId || '' === $from || '' === $to) {
+        $dto = $this->requestResolver->resolveStatementRequest($vendorId, $r);
+        if (null === $dto) {
             return new JsonResponse(['error' => 'params required'], 422);
         }
 
-        $dto = new VendorStatementRequestDTO($tenantId, $vendorId, $from, $to, $currency);
         $data = $this->svc->build($dto);
         $path = $this->pdf->export($dto, $data);
 

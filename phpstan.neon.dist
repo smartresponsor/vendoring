@@ -1,14 +1,8 @@
 parameters:
-    level: 5
+    level: 0
     paths:
         - src
         - tests
-    tmpDir: var/phpstan
-    excludePaths:
-        - tests/bootstrap.php
-    scanDirectories:
-        - vendor/symfony
-        - vendor/doctrine
-    checkMissingIterableValueType: false
-    inferPrivatePropertyTypeFromConstructor: true
-    treatPhpDocTypesAsCertain: false
+    bootstrapFiles:
+        - phpstan.bootstrap.php
+    tmpDir: var/smartresponsor-tagging/phpstan

@@ -1,10 +1,12 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
 
 use App\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
+use App\DTO\CatalogSyndication\CategorySyndicationFallbackAwarePackageGateReportInputDTO;
 use App\Event\CategorySyndicationFallbackAwarePackageGated;
 use App\EventInterface\CategorySyndicationFallbackAwarePackageGatedInterface;
 use App\PolicyInterface\CategorySyndicationFallbackAwarePackageGatePolicyInterface;
@@ -21,8 +23,7 @@ final readonly class CatalogSyndicationFallbackAwarePackageGateService implement
         private CatalogDestinationMediaReadinessServiceInterface $destinationMediaReadinessService,
         private CatalogDestinationMediaFallbackServiceInterface $destinationMediaFallbackService,
         private CategorySyndicationFallbackAwarePackageGatePolicyInterface $policy,
-    ) {
-    }
+    ) {}
 
     public function buildGatedPublishPackage(CatalogSyndicationPublishPackageRequestDTO $request): CategorySyndicationFallbackAwarePackageGatedInterface
     {
@@ -42,7 +43,7 @@ final readonly class CatalogSyndicationFallbackAwarePackageGateService implement
             $request->reason,
         )->payload();
 
-        $report = $this->policy->buildReport(new \App\DTO\CatalogSyndication\CategorySyndicationFallbackAwarePackageGateReportInputDTO(
+        $report = $this->policy->buildReport(new CategorySyndicationFallbackAwarePackageGateReportInputDTO(
             packageMissingRequiredFields: self::stringList($packagePayload['missingRequiredFields'] ?? null),
             strictMediaRequiredMissing: self::stringList($strictMedia['requiredMissing'] ?? null),
             fallbackMediaRequiredMissing: self::stringList($fallbackMedia['requiredMissing'] ?? null),

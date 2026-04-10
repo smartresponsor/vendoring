@@ -29,8 +29,7 @@ final readonly class VendorTransactionManager implements VendorTransactionManage
         private VendorTransactionAmountPolicyInterface $amountPolicy,
         private VendorTransactionRepositoryInterface   $transactions,
         private RuntimeLoggerInterface                 $runtimeLogger,
-    ) {
-    }
+    ) {}
 
     public function createTransaction(VendorTransactionData $data): VendorTransaction
     {
@@ -53,13 +52,13 @@ final readonly class VendorTransactionManager implements VendorTransactionManage
             vendorId: $vendorId,
             orderId: $orderId,
             projectId: $projectId,
-            amount: $this->amountPolicy->normalize($data->amount)
+            amount: $this->amountPolicy->normalize($data->amount),
         );
 
         $this->em->persist($tx);
         $this->em->flush();
 
-        $this->dispatcher->dispatch(new VendorTransactionEvent($tx), VendorTransactionEvent::NAME);
+        $this->dispatcher->dispatch(new VendorTransactionEvent($tx), VendorTransactionEvent::EVENT_NAME);
         $this->runtimeLogger->info('vendor_transaction_created', [
             'vendor_id' => $tx->getVendorId(),
             'transaction_id' => null !== $tx->getId() ? (string) $tx->getId() : null,
@@ -90,7 +89,7 @@ final readonly class VendorTransactionManager implements VendorTransactionManage
         $tx->setStatus($normalizedStatus);
         $this->em->flush();
 
-        $this->dispatcher->dispatch(new VendorTransactionEvent($tx), VendorTransactionEvent::NAME);
+        $this->dispatcher->dispatch(new VendorTransactionEvent($tx), VendorTransactionEvent::EVENT_NAME);
         $this->runtimeLogger->info('vendor_transaction_status_updated', [
             'vendor_id' => $tx->getVendorId(),
             'transaction_id' => null !== $tx->getId() ? (string) $tx->getId() : null,

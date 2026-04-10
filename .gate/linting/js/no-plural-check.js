@@ -34,8 +34,7 @@ function isPluralish(name) {
     if (low.endsWith('us')) return false;          // Status
     if (low.endsWith('is')) return false;          // Analysis
     if (low.endsWith('ops')) return false;         // Ops
-    if (!low.endsWith('s')) return false;
-    return true;
+    return low.endsWith('s');
 }
 
 function walk(dir, out) {
@@ -55,14 +54,14 @@ function scanPhp(file) {
     const txt = fs.readFileSync(file, 'utf8');
     const issues = [];
 
-    const classRe = /\bclass\s+([A-Za-z_][A-Za-z0-9_]*)\b/g;
+    const classRe = /\bclass\s+(?:[A-Za-z_][A-Za-z0-9_]*\s+)?([A-Za-z_][A-Za-z0-9_]*)\b/g;
     let m;
     while ((m = classRe.exec(txt)) !== null) {
         const name = m[1];
         if (isPluralish(name)) issues.push({kind: 'class', name});
     }
 
-    const fnRe = /\bfunction\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(/g;
+    const fnRe = /\bfunction\s+&?([A-Za-z_][A-Za-z0-9_]*)\s*\(/g;
     while ((m = fnRe.exec(txt)) !== null) {
         const name = m[1];
         if (name.startsWith('__')) continue; // magic
