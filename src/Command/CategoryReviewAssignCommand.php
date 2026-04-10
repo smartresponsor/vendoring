@@ -52,6 +52,7 @@ final class CategoryReviewAssignCommand extends Command
      *             invalid input detected by the underlying assignment service.
      * @throws JsonException
      */
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {

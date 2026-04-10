@@ -36,6 +36,7 @@ final class VendorApiKeyCreateCommand extends Command
             ->setHelp('Usage: php bin/console app:vendor:api-key:create --vendorId=123 --permissions=read,write');
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $vendorIdOption = $input->getOption('vendorId');

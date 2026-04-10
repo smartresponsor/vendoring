@@ -13,7 +13,8 @@ use App\Event\VendorProfileUpdatedEvent;
 use App\RepositoryInterface\VendorProfileRepositoryInterface;
 use App\ServiceInterface\VendorProfileServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use ReflectionClass;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorProfileService implements VendorProfileServiceInterface
@@ -25,17 +26,23 @@ final readonly class VendorProfileService implements VendorProfileServiceInterfa
     ) {
     }
 
+    /** @throws ORMException|OptimisticLockException */
     public function upsert(Vendor $vendor, VendorProfileDTO $dto): VendorProfile
     {
         $profile = $this->repository->findOneBy(['vendor' => $vendor]) ?? new VendorProfile($vendor);
+        $profile->updateProfile(
+            displayName: $dto->displayName,
+            about: $dto->about,
+            website: $dto->website,
+            socials: $dto->socials,
+            seoTitle: $dto->seoTitle,
+            seoDescription: $dto->seoDescription,
+        );
 
-        $ref = new ReflectionClass($profile);
-
-        foreach (['displayName', 'about', 'website', 'socials', 'seoTitle', 'seoDescription'] as $prop) {
-            if (property_exists($profile, $prop) && isset($dto->{$prop})) {
-                $rp = $ref->getProperty($prop);
-                $rp->setValue($profile, $dto->{$prop});
-            }
+        if ('publish' === $dto->publicationAction && $profile->isPublishable()) {
+            $profile->publish();
+        } elseif ('unpublish' === $dto->publicationAction) {
+            $profile->unpublish();
         }
 
         $this->em->persist($profile);

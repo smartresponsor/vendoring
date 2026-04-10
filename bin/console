@@ -6,8 +6,14 @@ declare(strict_types=1);
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__).'/vendor/autoload.php';
 
 $kernel = new Kernel($_SERVER['APP_ENV'] ?? 'dev', (bool) ($_SERVER['APP_DEBUG'] ?? true));
 $application = new Application($kernel);
-$application->run();
+
+try {
+    $application->run();
+} catch (Throwable $throwable) {
+    fwrite(STDERR, $throwable->getMessage().PHP_EOL);
+    exit(1);
+}

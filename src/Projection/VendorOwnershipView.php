@@ -12,13 +12,11 @@ namespace App\Projection;
 final readonly class VendorOwnershipView
 {
     /**
-     * @param int $vendorId
-     * @param int|null $ownerUserId
-     * @param array $assignments
+     * @param list<array{userId:int,role:string,status:string,isPrimary:bool,grantedAt:string,revokedAt:?string,capabilities:list<string>}> $assignments
      */
     public function __construct(
-        private int   $vendorId,
-        private ?int  $ownerUserId,
+        private int $vendorId,
+        private ?int $ownerUserId,
         private array $assignments,
     ) {
     }
@@ -34,7 +32,7 @@ final readonly class VendorOwnershipView
     }
 
     /**
-     * @return array :?string,capabilities:list<string>}>
+     * @return list<array{userId:int,role:string,status:string,isPrimary:bool,grantedAt:string,revokedAt:?string,capabilities:list<string>}>
      */
     public function getAssignments(): array
     {
@@ -42,7 +40,7 @@ final readonly class VendorOwnershipView
     }
 
     /**
-     * @return array{vendorId:int, ownerUserId:?int, assignments:list<array{userId:int,role:string,status:string,isPrimary:bool,grantedAt:string,revokedAt:?string,capabilities:list<string>}>}
+     * @return array{vendorId:int,ownerUserId:?int,assignments:list<array{userId:int,role:string,status:string,isPrimary:bool,grantedAt:string,revokedAt:?string,capabilities:list<string>}>}
      */
     public function toArray(): array
     {

@@ -11,6 +11,7 @@ use App\Entity\VendorApiKey;
 use App\RepositoryInterface\VendorApiKeyRepositoryInterface;
 use App\ServiceInterface\VendorApiKeyServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Random\RandomException;
 
 /**
  * Canonical machine-access service for vendor API keys.
@@ -22,11 +23,12 @@ use Doctrine\ORM\EntityManagerInterface;
 final readonly class VendorApiKeyService implements VendorApiKeyServiceInterface
 {
     public function __construct(
-        private EntityManagerInterface          $em,
+        private EntityManagerInterface $em,
         private VendorApiKeyRepositoryInterface $apiKeyRepo,
     ) {
     }
 
+    /** @throws RandomException */
     public function createKey(Vendor $vendor, string $permissions): string
     {
         $plainToken = bin2hex(random_bytes(32));
@@ -39,6 +41,7 @@ final readonly class VendorApiKeyService implements VendorApiKeyServiceInterface
         return $plainToken;
     }
 
+    /** @throws RandomException */
     public function rotateKey(VendorApiKey $existingKey): string
     {
         $existingKey->deactivate();

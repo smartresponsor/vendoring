@@ -21,6 +21,12 @@ final class VendorDocument
         $this->createdAt = new DateTimeImmutable();
     }
 
+    public function assignMetadata(?DateTimeImmutable $expiresAt = null, ?int $uploaderId = null): void
+    {
+        $this->expiresAt = $expiresAt;
+        $this->uploaderId = $uploaderId;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

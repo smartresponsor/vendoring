@@ -7,6 +7,7 @@ namespace App\Service\Reliability;
 use App\DTO\Reliability\OutboundCircuitBreakerStateDTO;
 use App\ServiceInterface\Reliability\OutboundCircuitBreakerInterface;
 use JsonException;
+use RuntimeException;
 
 /**
  * File-backed circuit-breaker implementation for outbound runtime protections.
@@ -71,6 +72,18 @@ final readonly class FileOutboundCircuitBreaker implements OutboundCircuitBreake
         }
     }
 
+    /**
+     * @return array{
+     *   operation:string,
+     *   scopeKey:string,
+     *   state:string,
+     *   failureCount:int,
+     *   threshold:int,
+     *   cooldownSeconds:int,
+     *   allowRequest:bool
+     * }
+     * @throws JsonException
+     */
     public function recordFailure(string $operation, string $scopeKey, int $threshold, int $cooldownSeconds): array
     {
         $current = $this->readState($operation, $scopeKey);
@@ -124,12 +137,15 @@ final readonly class FileOutboundCircuitBreaker implements OutboundCircuitBreake
      */
     private function writeState(string $operation, string $scopeKey, array $payload): void
     {
-        $dir = rtrim($this->stateDir, DIRECTORY_SEPARATOR);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
+        $directory = rtrim($this->stateDir, DIRECTORY_SEPARATOR);
+        if (!is_dir($directory) && !mkdir($directory, 0777, true) && !is_dir($directory)) {
+            throw new RuntimeException(sprintf('Unable to create circuit-breaker state directory "%s".', $directory));
         }
 
-        file_put_contents($this->filePath($operation, $scopeKey), json_encode($payload, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
+        $json = json_encode($payload, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+        if (false === file_put_contents($this->filePath($operation, $scopeKey), $json)) {
+            throw new RuntimeException('Unable to persist circuit-breaker state.');
+        }
     }
 
     private function filePath(string $operation, string $scopeKey): string

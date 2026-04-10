@@ -30,8 +30,8 @@ final class FileWriteRateLimiter implements WriteRateLimiterInterface
 
         $path = $this->storagePath($normalizedScope, $normalizedActorKey);
         $directory = dirname($path);
-        if (!is_dir($directory)) {
-            @mkdir($directory, 0777, true);
+        if (!is_dir($directory) && !mkdir($directory, 0777, true) && !is_dir($directory)) {
+            return new WriteRateLimitDecision(true, $limit, max(0, $limit - 1), 0);
         }
 
         $handle = fopen($path, 'c+');

@@ -8,6 +8,8 @@ use App\Entity\Payout\Payout;
 use App\Entity\Payout\PayoutItem;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
+use JsonException;
 
 final readonly class PayoutRepository implements PayoutRepositoryInterface
 {
@@ -15,32 +17,35 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
     {
     }
 
-    public function insert(Payout $p): void
+    /** @throws Exception|JsonException */
+    public function insert(Payout $payout): void
     {
         $this->db->insert('payouts', [
-            'id' => $p->id,
-            'vendor_id' => $p->vendorId,
-            'currency' => $p->currency,
-            'gross_cents' => $p->grossCents,
-            'fee_cents' => $p->feeCents,
-            'net_cents' => $p->netCents,
-            'status' => $p->status,
-            'created_at' => $p->createdAt,
-            'processed_at' => $p->processedAt,
-            'meta' => json_encode($p->meta, JSON_UNESCAPED_UNICODE),
+            'id' => $payout->id,
+            'vendor_id' => $payout->vendorId,
+            'currency' => $payout->currency,
+            'gross_cents' => $payout->grossCents,
+            'fee_cents' => $payout->feeCents,
+            'net_cents' => $payout->netCents,
+            'status' => $payout->status,
+            'created_at' => $payout->createdAt,
+            'processed_at' => $payout->processedAt,
+            'meta' => json_encode($payout->meta, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),
         ]);
     }
 
-    public function insertItem(PayoutItem $i): void
+    /** @throws Exception */
+    public function insertItem(PayoutItem $item): void
     {
         $this->db->insert('payout_items', [
-            'id' => $i->id,
-            'payout_id' => $i->payoutId,
-            'entry_id' => $i->entryId,
-            'amount_cents' => $i->amountCents,
+            'id' => $item->id,
+            'payout_id' => $item->payoutId,
+            'entry_id' => $item->entryId,
+            'amount_cents' => $item->amountCents,
         ]);
     }
 
+    /** @throws Exception */
     public function byId(string $id): ?Payout
     {
         $row = $this->db->fetchAssociative('SELECT * FROM payouts WHERE id=:id', ['id' => $id]);
@@ -58,10 +63,14 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
             $this->stringCell($row, 'status'),
             $this->stringCell($row, 'created_at'),
             '' !== $this->stringCell($row, 'processed_at') ? $this->stringCell($row, 'processed_at') : null,
-            $this->metaCell($row, 'meta')
+            $this->metaCell($row, 'meta'),
         );
     }
 
+    /**
+     * @return list<PayoutItem>
+     * @throws Exception
+     */
     public function items(string $payoutId): array
     {
         $rows = $this->db->fetchAllAssociative('SELECT * FROM payout_items WHERE payout_id=:p', ['p' => $payoutId]);
@@ -71,11 +80,12 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
                 $this->stringCell($row, 'id'),
                 $this->stringCell($row, 'payout_id'),
                 $this->stringCell($row, 'entry_id'),
-                $this->intCell($row, 'amount_cents')
+                $this->intCell($row, 'amount_cents'),
             );
         }, $rows);
     }
 
+    /** @throws Exception */
     public function markProcessed(string $id, string $processedAt): void
     {
         $this->db->update('payouts', ['status' => 'processed', 'processed_at' => $processedAt], ['id' => $id]);
@@ -99,7 +109,6 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
 
     /**
      * @param array<string, mixed> $row
-     *
      * @return array<string, mixed>
      */
     private function metaCell(array $row, string $key): array

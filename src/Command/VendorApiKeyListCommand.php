@@ -32,6 +32,7 @@ final class VendorApiKeyListCommand extends Command
             ->setHelp('Usage: php bin/console app:vendor:api-key:list --vendorId=123');
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $vendorIdOption = $input->getOption('vendorId');

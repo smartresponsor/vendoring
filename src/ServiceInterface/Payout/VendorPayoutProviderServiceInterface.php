@@ -6,9 +6,13 @@ declare(strict_types=1);
 namespace App\ServiceInterface\Payout;
 
 use App\DTO\Payout\VendorPayoutTransferDTO;
+use Random\RandomException;
 
 interface VendorPayoutProviderServiceInterface
 {
-    /** @return array<string, mixed> */
+    /**
+     * @return array<string, mixed>
+     * @throws RandomException
+     */
     public function transfer(VendorPayoutTransferDTO $transfer): array;
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
+use JsonException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -29,16 +30,24 @@ final class VendorPayoutProcessCommand extends Command
             ->addOption('json', null, InputOption::VALUE_NONE, 'Emit machine-readable JSON output.');
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $payoutId = (string) $input->getArgument('payoutId');
+        $argument = $input->getArgument('payoutId');
+        $payoutId = is_scalar($argument) ? (string) $argument : '';
         $processed = $this->payouts->process($payoutId);
 
         if (true === $input->getOption('json')) {
-            $output->writeln(json_encode([
-                'payoutId' => $payoutId,
-                'processed' => $processed,
-            ], JSON_THROW_ON_ERROR));
+            try {
+                $output->writeln(json_encode([
+                    'payoutId' => $payoutId,
+                    'processed' => $processed,
+                ], JSON_THROW_ON_ERROR));
+            } catch (JsonException $exception) {
+                $output->writeln('{"ok":false,"error":"json_encode_failed"}');
+
+                return Command::FAILURE;
+            }
 
             return Command::SUCCESS;
         }

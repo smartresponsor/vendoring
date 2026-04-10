@@ -3,7 +3,12 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__);
-@mkdir($root.'/build/release', 0777, true);
+$releaseDir = $root.'/build/release';
+
+if (!is_dir($releaseDir) && !mkdir($releaseDir, 0777, true) && !is_dir($releaseDir)) {
+    fwrite(STDERR, sprintf("Unable to create directory: %s\n", $releaseDir));
+    exit(1);
+}
 
 $releaseDocs = [
     'rcBaseline' => file_exists($root.'/docs/release/RC_BASELINE.md'),
@@ -31,7 +36,20 @@ $rollback = [
     'reasons' => 'warn' === $manifest['status'] ? ['release_manifest_incomplete'] : ['release_manifest_green'],
     'actions' => 'warn' === $manifest['status'] ? ['repair_release_artifacts', 'rerun_release_manifest_generation'] : ['continue_release_candidate_validation'],
 ];
-file_put_contents($root.'/build/release/release-manifest.json', json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
-file_put_contents($root.'/build/release/rollback-manifest.json', json_encode($rollback, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
-file_put_contents($root.'/build/release/release-manifest.md', "# Release manifest\n\nGenerated successfully.\n");
-file_put_contents($root.'/build/release/rollback-manifest.md', "# Rollback manifest\n\nGenerated successfully.\n");
+
+try {
+    file_put_contents(
+        $releaseDir.'/release-manifest.json',
+        json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
+    );
+    file_put_contents(
+        $releaseDir.'/rollback-manifest.json',
+        json_encode($rollback, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
+    );
+} catch (JsonException $exception) {
+    fwrite(STDERR, "Unable to generate release manifest JSON files\n");
+    exit(1);
+}
+
+file_put_contents($releaseDir.'/release-manifest.md', "# Release manifest\n\nGenerated successfully.\n");
+file_put_contents($releaseDir.'/rollback-manifest.md', "# Rollback manifest\n\nGenerated successfully.\n");

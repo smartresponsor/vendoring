@@ -12,7 +12,8 @@ use App\Entity\VendorDocument;
 use App\Event\DocumentUploadedEvent;
 use App\ServiceInterface\VendorDocumentServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use ReflectionProperty;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorDocumentService implements VendorDocumentServiceInterface
@@ -23,25 +24,17 @@ final readonly class VendorDocumentService implements VendorDocumentServiceInter
     ) {
     }
 
+    /** @throws ORMException|OptimisticLockException */
     public function upload(Vendor $vendor, VendorDocumentDTO $dto): VendorDocument
     {
-        $doc = new VendorDocument($vendor, $dto->type, $dto->filePath);
+        $document = new VendorDocument($vendor, $dto->type, $dto->filePath);
+        $document->assignMetadata($dto->expiresAt, $dto->uploaderId);
 
-        if ($dto->expiresAt) {
-            $ref = new ReflectionProperty($doc, 'expiresAt');
-            $ref->setValue($doc, $dto->expiresAt);
-        }
-
-        if ($dto->uploaderId) {
-            $ref = new ReflectionProperty($doc, 'uploaderId');
-            $ref->setValue($doc, $dto->uploaderId);
-        }
-
-        $this->em->persist($doc);
+        $this->em->persist($document);
         $this->em->flush();
 
-        $this->dispatcher->dispatch(new DocumentUploadedEvent($doc));
+        $this->dispatcher->dispatch(new DocumentUploadedEvent($document));
 
-        return $doc;
+        return $document;
     }
 }

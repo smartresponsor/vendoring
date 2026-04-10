@@ -41,6 +41,7 @@ final class SendVendorStatementsCommand extends Command
             ->addOption('period-label', null, InputOption::VALUE_REQUIRED);
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $from = $this->resolveDateOption($this->stringOption($input, 'from'), date('Y-m-01'));

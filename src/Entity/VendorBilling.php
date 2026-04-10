@@ -17,6 +17,14 @@ final class VendorBilling
     {
     }
 
+    public function update(?string $iban = null, ?string $swift = null, string $payoutMethod = 'bank', ?string $billingEmail = null): void
+    {
+        $this->iban = $iban;
+        $this->swift = $swift;
+        $this->payoutMethod = $payoutMethod;
+        $this->billingEmail = $billingEmail;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

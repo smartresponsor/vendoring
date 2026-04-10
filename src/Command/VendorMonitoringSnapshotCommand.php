@@ -33,6 +33,7 @@ final class VendorMonitoringSnapshotCommand extends Command
             ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Output format: text|json', 'text');
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $windowOption = $input->getOption('windowSeconds');

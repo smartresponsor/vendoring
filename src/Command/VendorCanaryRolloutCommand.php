@@ -35,6 +35,7 @@ final class VendorCanaryRolloutCommand extends Command
             ->addOption('output', null, InputOption::VALUE_OPTIONAL, 'Custom canary rollout output path');
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $flagOption = $input->getOption('flag');

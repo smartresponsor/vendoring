@@ -37,6 +37,7 @@ final class VendorReleaseBaselineCommand extends Command
             ->addOption('output', null, InputOption::VALUE_OPTIONAL, 'Custom output path');
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $tenantIdOption = $input->getOption('tenantId');

@@ -36,6 +36,7 @@ final class VendorReleaseManifestCommand extends Command
             ->addOption('rollback-output', null, InputOption::VALUE_OPTIONAL, 'Custom output path for rollback manifest');
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $windowOption = $input->getOption('windowSeconds');

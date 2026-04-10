@@ -29,7 +29,12 @@ interface CanaryRolloutCoordinatorInterface
      *     recommendedAction:string,
      *     nextCohort:?string,
      *     reason:string,
-     *     probeGate:array{transaction:bool, finance:bool, payout:bool, postDeploy:bool}
+     *     probeGate:array{
+     *       transaction:bool,
+     *       finance:bool,
+     *       payout:bool,
+     *       postDeploy:bool
+     *     }
      *   }
      * }
      */

@@ -8,6 +8,7 @@ namespace App\ServiceInterface;
 
 use App\Entity\Vendor;
 use App\Entity\VendorApiKey;
+use Random\RandomException;
 
 /**
  * Vendor API key service is the canonical machine-access seam for Vendoring.
@@ -17,8 +18,10 @@ use App\Entity\VendorApiKey;
  */
 interface VendorApiKeyServiceInterface
 {
+    /** @throws RandomException */
     public function createKey(Vendor $vendor, string $permissions): string;
 
+    /** @throws RandomException */
     public function rotateKey(VendorApiKey $existingKey): string;
 
     public function revokeKey(VendorApiKey $apiKey): void;

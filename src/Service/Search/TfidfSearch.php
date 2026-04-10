@@ -10,21 +10,21 @@ use App\ServiceInterface\Search\TfidfSearchInterface;
 
 final class TfidfSearch implements TfidfSearchInterface
 {
-    /** @var array<int,array{tokens:array<string,int>, tfidf:array<string,float>}> */
-    private array $docs = [];
+    /** @var array<int, array{tokens: array<string, int>, tfidf: array<string, float>}> */
+    private array $documents = [];
 
-    /** @var array<string,int> */
-    private array $df = [];
+    /** @var array<string, int> */
+    private array $documentFrequencies = [];
 
-    private int $N = 0;
+    private int $documentCount = 0;
 
     /** @return list<string> */
-    private function tokenize(string $s): array
+    private function tokenize(string $sourceText): array
     {
-        $s = mb_strtolower($s);
-        $normalized = preg_replace('/[^a-z0-9\p{Cyrillic}\s]+/u', ' ', $s);
-        $prepared = is_string($normalized) ? $normalized : $s;
-        $tokens = preg_split('/\s+/u', trim($prepared)) ?: [];
+        $lowercaseText = mb_strtolower($sourceText);
+        $normalizedText = preg_replace('/[^a-z0-9\p{Cyrillic}\s]+/u', ' ', $lowercaseText);
+        $preparedText = is_string($normalizedText) ? $normalizedText : $lowercaseText;
+        $tokens = preg_split('/\s+/u', trim($preparedText)) ?: [];
 
         return array_values(array_filter($tokens, static fn (string $token): bool => '' !== $token));
     }
@@ -32,74 +32,95 @@ final class TfidfSearch implements TfidfSearchInterface
     public function addDocument(string $text): int
     {
         $tokens = $this->tokenize($text);
-        $freq = [];
-        foreach ($tokens as $tok) {
-            $freq[$tok] = ($freq[$tok] ?? 0) + 1;
-        }
-        foreach (array_keys($freq) as $tok) {
-            $this->df[$tok] = ($this->df[$tok] ?? 0) + 1;
-        }
-        $id = $this->N;
-        $this->docs[$id] = ['tokens' => $freq, 'tfidf' => []];
-        ++$this->N;
+        $tokenFrequencies = [];
 
-        return $id;
+        foreach ($tokens as $token) {
+            $tokenFrequencies[$token] = ($tokenFrequencies[$token] ?? 0) + 1;
+        }
+
+        foreach (array_keys($tokenFrequencies) as $token) {
+            $this->documentFrequencies[$token] = ($this->documentFrequencies[$token] ?? 0) + 1;
+        }
+
+        $documentId = $this->documentCount;
+        $this->documents[$documentId] = ['tokens' => $tokenFrequencies, 'tfidf' => []];
+        ++$this->documentCount;
+
+        return $documentId;
     }
 
     public function finalize(): void
     {
-        foreach ($this->docs as $id => $document) {
-            $tfidf = [];
-            $norm = 0.0;
-            $maxf = max($document['tokens']);
-            foreach ($document['tokens'] as $tok => $f) {
-                $tf = 0.5 + 0.5 * ($f / $maxf);
-                $idf = log(($this->N + 1) / (($this->df[$tok] ?? 1) + 1)) + 1.0;
-                $w = $tf * $idf;
-                $tfidf[$tok] = $w;
-                $norm += $w * $w;
-            }
-            $norm = sqrt($norm) ?: 1.0;
-            foreach ($tfidf as $tok => $w) {
-                $tfidf[$tok] = $w / $norm;
-            }
-            $this->docs[$id]['tfidf'] = $tfidf;
+        foreach ($this->documents as $documentId => $document) {
+            $tfidfVector = $this->buildNormalizedVector($document['tokens']);
+            $this->documents[$documentId]['tfidf'] = $tfidfVector;
         }
     }
 
     public function search(string $query, int $limit = 10): array
     {
-        $qt = $this->tokenize($query);
-        $qfreq = [];
-        foreach ($qt as $token) {
-            $qfreq[$token] = ($qfreq[$token] ?? 0) + 1;
+        $queryTokens = $this->tokenize($query);
+        $queryFrequencies = [];
+
+        foreach ($queryTokens as $token) {
+            $queryFrequencies[$token] = ($queryFrequencies[$token] ?? 0) + 1;
         }
-        $qtfidf = [];
-        $norm = 0.0;
-        $maxf = empty($qfreq) ? 1 : max($qfreq);
-        foreach ($qfreq as $tok => $f) {
-            $tf = 0.5 + 0.5 * ($f / $maxf);
-            $idf = log(($this->N + 1) / (($this->df[$tok] ?? 1) + 1)) + 1.0;
-            $w = $tf * $idf;
-            $qtfidf[$tok] = $w;
-            $norm += $w * $w;
-        }
-        $norm = sqrt($norm) ?: 1.0;
-        foreach ($qtfidf as $k => $w) {
-            $qtfidf[$k] = $w / $norm;
-        }
+
+        $queryVector = $this->buildNormalizedVector($queryFrequencies);
         $scores = [];
-        foreach ($this->docs as $id => $doc) {
-            $dot = 0.0;
-            foreach ($qtfidf as $tok => $qw) {
-                $dot += ($doc['tfidf'][$tok] ?? 0.0) * $qw;
+
+        foreach ($this->documents as $documentId => $document) {
+            $dotProduct = 0.0;
+
+            foreach ($queryVector as $token => $queryWeight) {
+                $dotProduct += ($document['tfidf'][$token] ?? 0.0) * $queryWeight;
             }
-            if ($dot > 0) {
-                $scores[$id] = $dot;
+
+            if ($dotProduct > 0.0) {
+                $scores[$documentId] = $dotProduct;
             }
         }
+
         arsort($scores);
 
-        return array_slice(array_map(fn ($id) => ['id' => $id, 'score' => $scores[$id]], array_keys($scores)), 0, $limit);
+        return array_slice(
+            array_map(
+                fn (int $documentId): array => ['id' => $documentId, 'score' => $scores[$documentId]],
+                array_keys($scores),
+            ),
+            0,
+            $limit,
+        );
+    }
+
+    /**
+     * @param array<string, int> $tokenFrequencies
+     * @return array<string, float>
+     */
+    private function buildNormalizedVector(array $tokenFrequencies): array
+    {
+        if ([] === $tokenFrequencies) {
+            return [];
+        }
+
+        $tfidfVector = [];
+        $normalizationFactor = 0.0;
+        $maxFrequency = max($tokenFrequencies);
+
+        foreach ($tokenFrequencies as $token => $frequency) {
+            $termFrequency = 0.5 + 0.5 * ($frequency / $maxFrequency);
+            $inverseDocumentFrequency = log(($this->documentCount + 1) / (($this->documentFrequencies[$token] ?? 1) + 1)) + 1.0;
+            $tokenWeight = $termFrequency * $inverseDocumentFrequency;
+            $tfidfVector[$token] = $tokenWeight;
+            $normalizationFactor += $tokenWeight * $tokenWeight;
+        }
+
+        $normalizationFactor = sqrt($normalizationFactor) ?: 1.0;
+
+        foreach ($tfidfVector as $token => $tokenWeight) {
+            $tfidfVector[$token] = $tokenWeight / $normalizationFactor;
+        }
+
+        return $tfidfVector;
     }
 }

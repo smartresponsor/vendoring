@@ -9,12 +9,17 @@ namespace App\ServiceInterface;
 use App\DTO\VendorBillingDTO;
 use App\Entity\Vendor;
 use App\Entity\VendorBilling;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 
 interface VendorBillingServiceInterface
 {
+    /** @throws ORMException|OptimisticLockException */
     public function upsert(Vendor $vendor, VendorBillingDTO $dto): VendorBilling;
 
+    /** @throws ORMException|OptimisticLockException */
     public function requestPayout(VendorBilling $billing, int $amountMinor): void;
 
+    /** @throws ORMException|OptimisticLockException */
     public function completePayout(VendorBilling $billing, int $amountMinor): void;
 }

@@ -19,7 +19,7 @@ use DateTimeImmutable;
 final class RuntimeMetricCollector implements MetricCollectorInterface
 {
     /**
-     * @var array:?string,correlation_id:?string}>
+     * @var list<array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string}>
      */
     private array $records = [];
 
@@ -38,7 +38,7 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
 
         /** @var array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string} $record */
         $record = [
-            'timestamp' => new DateTimeImmutable()->format(DATE_ATOM),
+            'timestamp' => (new DateTimeImmutable())->format(DATE_ATOM),
             'type' => 'metric',
             'name' => $name,
             'tags' => $this->normalizeTags($tags),
@@ -64,9 +64,7 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
     }
 
     /**
-     * Return the inspection snapshot of emitted runtime metrics.
-     *
-     * @return array :?string,correlation_id:?string}>
+     * @return list<array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string}>
      */
     public function snapshot(): array
     {
@@ -74,18 +72,11 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
     }
 
     /**
-     * Normalize metric tags to a stable string map.
-     *
-     * @param array<string, string> $tags Raw metric tags.
-     *
-     * @return array<string, string> Normalized tag map.
+     * @param array<string, string> $tags
+     * @return array<string, string>
      */
     private function normalizeTags(array $tags): array
     {
-        $normalized = array_map(function ($value) {
-            return (string)$value;
-        }, $tags);
-
-        return $normalized;
+        return array_map(static fn (mixed $value): string => (string) $value, $tags);
     }
 }

@@ -35,6 +35,7 @@ final class VendorApiKeyRotateCommand extends Command
             ->setHelp('Usage: php bin/console app:vendor:api-key:rotate --keyId=555');
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $keyIdOption = $input->getOption('keyId');

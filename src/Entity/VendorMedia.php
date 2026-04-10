@@ -16,6 +16,14 @@ final class VendorMedia
     {
     }
 
+    /** @param list<string>|null $gallery */
+    public function update(?string $logoPath = null, ?string $bannerPath = null, ?array $gallery = null): void
+    {
+        $this->logoPath = $logoPath;
+        $this->bannerPath = $bannerPath;
+        $this->gallery = $gallery;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -14,7 +14,8 @@ use App\Event\VendorPayoutRequestedEvent;
 use App\RepositoryInterface\VendorBillingRepositoryInterface;
 use App\ServiceInterface\VendorBillingServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use ReflectionClass;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorBillingService implements VendorBillingServiceInterface
@@ -26,18 +27,11 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
     ) {
     }
 
+    /** @throws ORMException|OptimisticLockException */
     public function upsert(Vendor $vendor, VendorBillingDTO $dto): VendorBilling
     {
         $billing = $this->repository->findOneBy(['vendor' => $vendor]) ?? new VendorBilling($vendor);
-
-        $ref = new ReflectionClass($billing);
-
-        foreach (['iban', 'swift', 'payoutMethod', 'billingEmail'] as $prop) {
-            if (property_exists($billing, $prop) && isset($dto->{$prop})) {
-                $rp = $ref->getProperty($prop);
-                $rp->setValue($billing, $dto->{$prop});
-            }
-        }
+        $billing->update($dto->iban, $dto->swift, $dto->payoutMethod, $dto->billingEmail);
 
         $this->em->persist($billing);
         $this->em->flush();
@@ -45,6 +39,7 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
         return $billing;
     }
 
+    /** @throws ORMException|OptimisticLockException */
     public function requestPayout(VendorBilling $billing, int $amountMinor): void
     {
         $billing->markPayoutRequested();
@@ -53,6 +48,7 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
         $this->dispatcher->dispatch(new VendorPayoutRequestedEvent($billing, $amountMinor));
     }
 
+    /** @throws ORMException|OptimisticLockException */
     public function completePayout(VendorBilling $billing, int $amountMinor): void
     {
         $billing->markPayoutCompleted();

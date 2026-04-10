@@ -7,6 +7,7 @@ namespace App\Repository\Payout;
 use App\Entity\Payout\PayoutAccount;
 use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
 final readonly class PayoutAccountRepository implements PayoutAccountRepositoryInterface
 {
@@ -14,24 +15,61 @@ final readonly class PayoutAccountRepository implements PayoutAccountRepositoryI
     {
     }
 
+    /** @throws Exception */
     public function get(string $tenantId, string $vendorId): ?PayoutAccount
     {
-        $r = $this->db->fetchAssociative('SELECT * FROM payout_accounts WHERE tenant_id=:t AND vendor_id=:v', ['t' => $tenantId, 'v' => $vendorId]);
-        if (!$r) {
+        $accountRow = $this->db->fetchAssociative(
+            'SELECT * FROM payout_accounts WHERE tenant_id=:t AND vendor_id=:v',
+            ['t' => $tenantId, 'v' => $vendorId],
+        );
+        if (!$accountRow) {
             return null;
         }
 
-        return new PayoutAccount($this->stringCell($r, 'id'), $this->stringCell($r, 'tenant_id'), $this->stringCell($r, 'vendor_id'), $this->stringCell($r, 'provider'), $this->stringCell($r, 'account_ref'), $this->stringCell($r, 'currency'), $this->boolCell($r, 'active'), $this->stringCell($r, 'created_at'));
+        return new PayoutAccount(
+            $this->stringCell($accountRow, 'id'),
+            $this->stringCell($accountRow, 'tenant_id'),
+            $this->stringCell($accountRow, 'vendor_id'),
+            $this->stringCell($accountRow, 'provider'),
+            $this->stringCell($accountRow, 'account_ref'),
+            $this->stringCell($accountRow, 'currency'),
+            $this->boolCell($accountRow, 'active'),
+            $this->stringCell($accountRow, 'created_at'),
+        );
     }
 
-    public function upsert(PayoutAccount $a): void
+    /** @throws Exception */
+    public function upsert(PayoutAccount $account): void
     {
-        $exists = $this->db->fetchOne('SELECT COUNT(*) FROM payout_accounts WHERE tenant_id=:t AND vendor_id=:v', ['t' => $a->tenantId, 'v' => $a->vendorId]);
+        $exists = $this->db->fetchOne(
+            'SELECT COUNT(*) FROM payout_accounts WHERE tenant_id=:t AND vendor_id=:v',
+            ['t' => $account->tenantId, 'v' => $account->vendorId],
+        );
         if ($this->intValue($exists) > 0) {
-            $this->db->update('payout_accounts', ['provider' => $a->provider, 'account_ref' => $a->accountRef, 'currency' => $a->currency, 'active' => $a->active ? 1 : 0], ['tenant_id' => $a->tenantId, 'vendor_id' => $a->vendorId]);
-        } else {
-            $this->db->insert('payout_accounts', ['id' => $a->id, 'tenant_id' => $a->tenantId, 'vendor_id' => $a->vendorId, 'provider' => $a->provider, 'account_ref' => $a->accountRef, 'currency' => $a->currency, 'active' => $a->active ? 1 : 0, 'created_at' => $a->createdAt]);
+            $this->db->update(
+                'payout_accounts',
+                [
+                    'provider' => $account->provider,
+                    'account_ref' => $account->accountRef,
+                    'currency' => $account->currency,
+                    'active' => $account->active ? 1 : 0,
+                ],
+                ['tenant_id' => $account->tenantId, 'vendor_id' => $account->vendorId],
+            );
+
+            return;
         }
+
+        $this->db->insert('payout_accounts', [
+            'id' => $account->id,
+            'tenant_id' => $account->tenantId,
+            'vendor_id' => $account->vendorId,
+            'provider' => $account->provider,
+            'account_ref' => $account->accountRef,
+            'currency' => $account->currency,
+            'active' => $account->active ? 1 : 0,
+            'created_at' => $account->createdAt,
+        ]);
     }
 
     /** @param array<string, mixed> $row */
