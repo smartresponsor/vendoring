@@ -18,9 +18,7 @@ use RuntimeException;
  */
 final readonly class FileOutboundCircuitBreaker implements OutboundCircuitBreakerInterface
 {
-    public function __construct(private string $stateDir)
-    {
-    }
+    public function __construct(private string $stateDir) {}
 
     public function currentState(string $operation, string $scopeKey, int $threshold, int $cooldownSeconds): array
     {
@@ -150,12 +148,13 @@ final readonly class FileOutboundCircuitBreaker implements OutboundCircuitBreake
 
     private function filePath(string $operation, string $scopeKey): string
     {
-        $safe = preg_replace('/[^A-Za-z0-9_.-]+/', '_', $operation.'__'.$scopeKey);
+        $input = $operation . '__' . $scopeKey;
+        $safe = preg_replace('/[^A-Za-z0-9_.-]+/', '_', $input);
         if (!is_string($safe)) {
-            $safe = sha1($operation.'__'.$scopeKey);
+            $safe = sha1($operation . '__' . $scopeKey);
         }
 
-        return rtrim($this->stateDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$safe.'.json';
+        return rtrim($this->stateDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $safe . '.json';
     }
 
     /**

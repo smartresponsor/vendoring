@@ -17,30 +17,29 @@ use App\ServiceInterface\Observability\RuntimeLoggerInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
+use Throwable;
 
 final readonly class VendorPayoutService implements VendorPayoutServiceInterface
 {
     public function __construct(
-        private PayoutRepositoryInterface      $repo,
+        private PayoutRepositoryInterface $repo,
         private LedgerEntryRepositoryInterface $ledgerRepo,
-        private VendorLedgerServiceInterface   $ledger,
-        private MetricCollectorInterface       $metrics,
-        private RuntimeLoggerInterface         $runtimeLogger,
-    ) {
-    }
+        private VendorLedgerServiceInterface $ledger,
+        private MetricCollectorInterface $metrics,
+        private RuntimeLoggerInterface $runtimeLogger,
+    ) {}
 
     public function create(CreatePayoutDTO $dto): ?string
     {
-        // 1) Получаем баланс в валюте
         $balances = $this->ledgerRepo->balancesForVendor($dto->vendorId);
-        $cur = null;
-        foreach ($balances as $b) {
-            if ($b->currency === $dto->currency) {
-                $cur = $b;
+        $matchedBalance = null;
+        foreach ($balances as $balance) {
+            if ($balance->currency === $dto->currency) {
+                $matchedBalance = $balance;
                 break;
             }
         }
-        $balanceCents = $cur ? $cur->balanceCents : 0;
+        $balanceCents = $matchedBalance?->balanceCents ?? 0;
 
         if ($balanceCents < $dto->thresholdCents) {
             $this->runtimeLogger->info('vendor_payout_skipped_insufficient_balance', [
@@ -50,56 +49,64 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
                 'threshold_cents' => (string) $dto->thresholdCents,
             ]);
 
-            return null; // недостаточно средств для выплаты
+            return null;
         }
 
-        // 2) Рассчитываем комиссии/нетто
         $fee = (int) round($balanceCents * $dto->retentionFeePercent);
         $net = max(0, $balanceCents - $fee);
 
-        // 3) Создаём payout
-        $pid = Uuid::v4()->toRfc4122();
-        $payout = new Payout(
-            id: $pid,
-            vendorId: $dto->vendorId,
-            currency: $dto->currency,
-            grossCents: $balanceCents,
-            feeCents: $fee,
-            netCents: $net,
-            status: 'pending',
-            createdAt: new DateTimeImmutable()->format('Y-m-d H:i:s'),
-            meta: ['threshold' => $dto->thresholdCents, 'retention' => $dto->retentionFeePercent]
-        );
-        $this->repo->insert($payout);
+        try {
+            $payoutId = Uuid::v4()->toRfc4122();
+            $payout = new Payout(
+                id: $payoutId,
+                vendorId: $dto->vendorId,
+                currency: $dto->currency,
+                grossCents: $balanceCents,
+                feeCents: $fee,
+                netCents: $net,
+                status: 'pending',
+                createdAt: new DateTimeImmutable()->format('Y-m-d H:i:s'),
+                meta: ['threshold' => $dto->thresholdCents, 'retention' => $dto->retentionFeePercent],
+            );
+            $this->repo->insert($payout);
 
-        // 4) Записываем дебет в Ledger (резерв под выплату)
-        $this->ledger->record(new LedgerEntryDTO(
-            type: 'payout_reserve',
-            entityId: $pid,
-            sagaId: Uuid::v4()->toRfc4122(),
-            vendorId: $dto->vendorId,
-            amountCents: $net,
-            currency: $dto->currency,
-            direction: 'debit',
-            meta: ['payoutId' => $pid]
-        ));
+            $this->ledger->record(new LedgerEntryDTO(
+                type: 'payout_reserve',
+                entityId: $payoutId,
+                sagaId: Uuid::v4()->toRfc4122(),
+                vendorId: $dto->vendorId,
+                amountCents: $net,
+                currency: $dto->currency,
+                direction: 'debit',
+                meta: ['payoutId' => $payoutId],
+            ));
+        } catch (Throwable $exception) {
+            $this->runtimeLogger->error('vendor_payout_create_failed', [
+                'vendor_id' => $dto->vendorId,
+                'currency' => $dto->currency,
+                'error_class' => $exception::class,
+                'error_message' => $exception->getMessage(),
+            ]);
+
+            throw $exception;
+        }
 
         $this->metrics->increment('payout_created_total', ['currency' => $dto->currency]);
         $this->runtimeLogger->info('vendor_payout_created', [
             'vendor_id' => $dto->vendorId,
-            'payout_id' => $pid,
+            'payout_id' => $payoutId,
             'currency' => $dto->currency,
             'gross_cents' => (string) $balanceCents,
             'net_cents' => (string) $net,
         ]);
 
-        return $pid;
+        return $payoutId;
     }
 
     public function process(string $payoutId): bool
     {
-        $p = $this->repo->byId($payoutId);
-        if (!$p || 'pending' !== $p->status) {
+        $payout = $this->repo->byId($payoutId);
+        if (!$payout || 'pending' !== $payout->status) {
             $this->runtimeLogger->warning('vendor_payout_process_rejected', [
                 'payout_id' => $payoutId,
                 'error_code' => 'payout_not_pending',
@@ -108,38 +115,49 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
             return false;
         }
 
-        // Тут должен быть вызов внешнего платёжного адаптера для перевода средств вендору (bank/stripe connect)
-        // Для демо считаем успешным и записываем ledger: payout_processed (debit fee), payout_fee
-        $this->ledger->record(new LedgerEntryDTO(
-            type: 'payout_processed',
-            entityId: $payoutId,
-            sagaId: Uuid::v4()->toRfc4122(),
-            vendorId: $p->vendorId,
-            amountCents: $p->netCents,
-            currency: $p->currency,
-            direction: 'debit',
-            meta: ['payoutId' => $payoutId]
-        ));
-        if ($p->feeCents > 0) {
+        try {
             $this->ledger->record(new LedgerEntryDTO(
-                type: 'payout_fee',
+                type: 'payout_processed',
                 entityId: $payoutId,
                 sagaId: Uuid::v4()->toRfc4122(),
-                vendorId: $p->vendorId,
-                amountCents: $p->feeCents,
-                currency: $p->currency,
+                vendorId: $payout->vendorId,
+                amountCents: $payout->netCents,
+                currency: $payout->currency,
                 direction: 'debit',
-                meta: ['payoutId' => $payoutId]
+                meta: ['payoutId' => $payoutId],
             ));
+            if ($payout->feeCents > 0) {
+                $this->ledger->record(new LedgerEntryDTO(
+                    type: 'payout_fee',
+                    entityId: $payoutId,
+                    sagaId: Uuid::v4()->toRfc4122(),
+                    vendorId: $payout->vendorId,
+                    amountCents: $payout->feeCents,
+                    currency: $payout->currency,
+                    direction: 'debit',
+                    meta: ['payoutId' => $payoutId],
+                ));
+            }
+
+            $this->repo->markProcessed($payoutId, new DateTimeImmutable()->format('Y-m-d H:i:s'));
+        } catch (Throwable $exception) {
+            $this->runtimeLogger->error('vendor_payout_process_failed', [
+                'vendor_id' => $payout->vendorId,
+                'payout_id' => $payoutId,
+                'currency' => $payout->currency,
+                'error_class' => $exception::class,
+                'error_message' => $exception->getMessage(),
+            ]);
+
+            throw $exception;
         }
 
-        $this->repo->markProcessed($payoutId, new DateTimeImmutable()->format('Y-m-d H:i:s'));
-        $this->metrics->increment('payout_processed_total', ['currency' => $p->currency]);
+        $this->metrics->increment('payout_processed_total', ['currency' => $payout->currency]);
         $this->runtimeLogger->info('vendor_payout_processed', [
-            'vendor_id' => $p->vendorId,
+            'vendor_id' => $payout->vendorId,
             'payout_id' => $payoutId,
-            'currency' => $p->currency,
-            'net_cents' => (string) $p->netCents,
+            'currency' => $payout->currency,
+            'net_cents' => (string) $payout->netCents,
         ]);
 
         return true;

@@ -10,6 +10,7 @@ use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,14 +22,15 @@ final class PayoutController extends AbstractController
         private readonly VendorPayoutServiceInterface $svc,
         private readonly PayoutRepositoryInterface $repo,
         private readonly VendorPayoutRequestServiceInterface $payoutRequestService,
-    ) {
-    }
+    ) {}
 
     #[Route('/create', methods: ['POST'])]
-    public function create(Request $r): JsonResponse
+    public function create(Request $request): JsonResponse
     {
         try {
-            $dto = $this->payoutRequestService->toCreateDto($r->toArray());
+            $dto = $this->payoutRequestService->toCreateDto($request->toArray());
+        } catch (JsonException) {
+            return new JsonResponse(['error' => 'malformed_json'], 400);
         } catch (InvalidArgumentException $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 422);
         }
@@ -52,11 +54,11 @@ final class PayoutController extends AbstractController
     #[Route('/{payoutId}', methods: ['GET'])]
     public function getOne(string $payoutId): JsonResponse
     {
-        $p = $this->repo->byId($payoutId);
-        if (!$p) {
+        $payout = $this->repo->byId($payoutId);
+        if (!$payout) {
             return new JsonResponse(['error' => 'not_found'], 404);
         }
 
-        return new JsonResponse(['data' => $this->payoutRequestService->normalizePayout($p)], 200);
+        return new JsonResponse(['data' => $this->payoutRequestService->normalizePayout($payout)], 200);
     }
 }

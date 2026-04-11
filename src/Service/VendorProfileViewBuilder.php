@@ -169,7 +169,7 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     }
 
     /**
-     * @param array{brandName:string, vendorStatus:string, ownerUserId $profileData :?int} $profileData
+     * @param array $profileData
      * @return array{brandName:string, vendorStatus:string, ownerUserId:?int}
      */
     private function buildBusinessProfile(array $profileData): array
@@ -207,7 +207,7 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     }
 
     /**
-     * @param array{seoTitle $profileData :?string, seoDescription:?string} $profileData
+     * @param array $profileData
      * @return array{seoTitle:?string, seoDescription:?string}
      */
     private function buildSearchProfile(array $profileData): array
@@ -219,7 +219,7 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
     }
 
     /**
-     * @param array{publicProfileStatus:string, publicProfilePublishedAt $profileData :?string} $profileData
+     * @param array $profileData
      * @param bool $readyForPublishing
      * @return array{status:string, publishedAt:?string, canPublish:bool}
      */

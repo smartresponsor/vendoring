@@ -977,6 +977,7 @@ use UnitEnum;
  *     }>
  * }
  */
+/** @noinspection PhpClassNamingConventionInspection */
 final class App
 {
     /**

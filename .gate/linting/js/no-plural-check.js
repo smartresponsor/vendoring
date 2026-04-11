@@ -54,16 +54,16 @@ function scanPhp(file) {
     const txt = fs.readFileSync(file, 'utf8');
     const issues = [];
 
-    const classRe = /\bclass\s+(?:[A-Za-z_][A-Za-z0-9_]*\s+)?([A-Za-z_][A-Za-z0-9_]*)\b/g;
+    const classRe = /\bclass\s+(?:[A-Za-z_][A-Za-z0-9_]*\s+)?(?<className>[A-Za-z_][A-Za-z0-9_]*)\b/g;
     let m;
     while ((m = classRe.exec(txt)) !== null) {
-        const name = m[1];
+        const name = m.groups?.className ?? m[1];
         if (isPluralish(name)) issues.push({kind: 'class', name});
     }
 
-    const fnRe = /\bfunction\s+&?([A-Za-z_][A-Za-z0-9_]*)\s*\(/g;
+    const fnRe = /\bfunction\s+&?(?<functionName>[A-Za-z_][A-Za-z0-9_]*)\s*\(/g;
     while ((m = fnRe.exec(txt)) !== null) {
-        const name = m[1];
+        const name = m.groups?.functionName ?? m[1];
         if (name.startsWith('__')) continue; // magic
         if (isPluralish(name)) issues.push({kind: 'method', name});
     }

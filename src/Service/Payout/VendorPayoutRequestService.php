@@ -10,6 +10,7 @@ use App\Entity\Payout\Payout;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use InvalidArgumentException;
 
+/** @noinspection PhpSameParameterValueInspection */
 final class VendorPayoutRequestService implements VendorPayoutRequestServiceInterface
 {
     /** @param array<string, mixed> $payload */

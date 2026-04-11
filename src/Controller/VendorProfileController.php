@@ -42,29 +42,20 @@ final class VendorProfileController extends AbstractController
             return new JsonResponse(['error' => 'malformed_json'], 400);
         } catch (InvalidArgumentException $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 422);
-        } catch (OptimisticLockException $e) {
-        } catch (ORMException $e) {
+        } catch (OptimisticLockException|ORMException $exception) {
+            return new JsonResponse([
+                'error' => 'vendor_profile_persist_failed',
+                'detail' => $exception->getMessage(),
+            ], 409);
         }
 
-        $view = $this->profileViewBuilder->buildForVendorId($vendorId);
-
-        if (null === $view) {
-            return new JsonResponse(['error' => 'profile_view_unavailable'], 500);
-        }
-
-        return new JsonResponse(['data' => $view->toArray()], 200);
+        return $this->buildVendorProfileResponse($vendorId);
     }
 
     #[Route('/vendor/{vendorId}', methods: ['GET'])]
     public function show(int $vendorId): JsonResponse
     {
-        $view = $this->profileViewBuilder->buildForVendorId($vendorId);
-
-        if (null === $view) {
-            return new JsonResponse(['error' => 'vendor_not_found'], 404);
-        }
-
-        return new JsonResponse(['data' => $view->toArray()], 200);
+        return $this->buildVendorProfileResponse($vendorId);
     }
 
     /**
@@ -109,7 +100,7 @@ final class VendorProfileController extends AbstractController
     }
 
     /**
-     * @param array|null $socials
+     * @param array<string, string>|null $socials
      *
      * @return array<string, string>|null
      */
@@ -130,5 +121,15 @@ final class VendorProfileController extends AbstractController
         }
 
         return $normalized;
+    }
+
+    private function buildVendorProfileResponse(int $vendorId): JsonResponse
+    {
+        $view = $this->profileViewBuilder->buildForVendorId($vendorId);
+        if (null === $view) {
+            return new JsonResponse(['error' => 'vendor_not_found'], 404);
+        }
+
+        return new JsonResponse(['data' => $view->toArray()], 200);
     }
 }

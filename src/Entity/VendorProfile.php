@@ -6,6 +6,8 @@ namespace App\Entity;
 
 use DateTimeImmutable;
 
+/** @noinspection PhpPropertyNamingConventionInspection */
+/** @noinspection PhpTooManyParametersInspection */
 final class VendorProfile
 {
     private ?int $id = null;
@@ -19,9 +21,7 @@ final class VendorProfile
     private string $publicProfileStatus = 'draft';
     private ?DateTimeImmutable $publicProfilePublishedAt = null;
 
-    public function __construct(private readonly Vendor $vendor)
-    {
-    }
+    public function __construct(private readonly Vendor $vendor) {}
 
     /** @param array<string, string>|null $socials */
     public function updateProfile(

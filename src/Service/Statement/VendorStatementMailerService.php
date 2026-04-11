@@ -12,6 +12,7 @@ use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Throwable;
 
 /**
  * Write-side outbound mail transport for vendor statements.
@@ -154,6 +155,38 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
                 : 'statement_mail_unknown_failure';
 
             return $result;
+        } catch (Throwable $exception) {
+            $updatedBreaker = $this->circuitBreaker->recordFailure(
+                'statement_mail_send',
+                $scopeKey,
+                $policy['breakerThreshold'],
+                $policy['cooldownSeconds'],
+            );
+
+            $this->metrics->increment('statement_mail_failed_total', [
+                'tenantId' => $tenantId,
+                'vendorId' => $vendorId,
+                'errorClass' => $exception::class,
+            ]);
+            $this->runtimeLogger->error('vendor_statement_mail_failed', [
+                'tenant_id' => $tenantId,
+                'vendor_id' => $vendorId,
+                'email' => $email,
+                'error_class' => $exception::class,
+                'error_code' => 'statement_mail_unexpected_failure',
+                'circuit_state' => $updatedBreaker['state'],
+            ]);
+
+            $result['attached'] = $attached;
+            $result['attemptCount'] = 1;
+            $result['circuitState'] = $updatedBreaker['state'];
+            $result['errorClass'] = $exception::class;
+            $result['errorMessage'] = '' !== trim($exception->getMessage())
+                ? $exception->getMessage()
+                : 'statement_mail_unknown_failure';
+
+            return $result;
+        } catch (\JsonException $e) {
         } catch (\JsonException $e) {
         }
 

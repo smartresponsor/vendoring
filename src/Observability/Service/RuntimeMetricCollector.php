@@ -19,7 +19,9 @@ use DateTimeImmutable;
 final class RuntimeMetricCollector implements MetricCollectorInterface
 {
     /**
-     * @var array:?string,correlation_id:?string}>
+     * @var array:?string,
+     *   correlation_id:?string
+     * }>
      */
     private array $records = [];
 
@@ -63,7 +65,9 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
     }
 
     /**
-     * @return array :?string,correlation_id:?string}>
+     * @return array :?string,
+     *   correlation_id:?string
+     * }>
      */
     public function snapshot(): array
     {
