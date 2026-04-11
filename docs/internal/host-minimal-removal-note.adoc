@@ -1,0 +1,16 @@
+= Host-minimal removal note
+
+The previous `host-minimal/` surface was removed from this component.
+
+Reasoning:
+
+* it referenced a foreign Tag/Search host layer that does not exist in this repository;
+* it was not referenced by this component's runtime wiring, tests, scripts, or configuration;
+* keeping it in this repository produced a large amount of Qodana noise unrelated to the component's actual public surface.
+
+Decision:
+
+* treat the prior `host-minimal/` tree as a foreign carry-over from another component;
+* remove it from this repository instead of adapting unsupported classes and contracts here.
+
+If a minimal host/demo surface is needed in the future, it should be reintroduced only as a component-native adapter bound to real classes present in this repository.

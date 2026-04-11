@@ -66,7 +66,7 @@ final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStat
             'externalIntegration' => [] !== $externalIntegration,
         ];
 
-        $generatedAt = (new DateTimeImmutable())->format(DATE_ATOM);
+        $generatedAt = new DateTimeImmutable()->format(DATE_ATOM);
 
         return new VendorRuntimeStatusView(
             tenantId: $tenantId,
