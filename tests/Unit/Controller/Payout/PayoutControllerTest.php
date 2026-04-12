@@ -60,6 +60,30 @@ final class PayoutControllerTest extends TestCase
         self::assertSame('vendor-1', $service->lastCreateDto->vendorId);
     }
 
+    public function testCreateAcceptsTrimmedNumericStringValuesInPayload(): void
+    {
+        $service = new FakeVendorPayoutService('payout-1');
+        $controller = new PayoutController($service, new FakePayoutRepository(), new VendorPayoutRequestService());
+
+        $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => ' 1000 ',
+            'retentionFeePercent' => ' 0.05 ',
+        ], JSON_THROW_ON_ERROR)));
+
+        $payload = self::decodePayload($response);
+        $data = self::payloadData($payload);
+
+        self::assertSame(201, $response->getStatusCode());
+        self::assertTrue((bool) ($data['created'] ?? false));
+        self::assertSame('payout-1', $data['payoutId'] ?? null);
+        self::assertInstanceOf(CreatePayoutDTO::class, $service->lastCreateDto);
+        self::assertSame(1000, $service->lastCreateDto->thresholdCents);
+        self::assertSame(0.05, $service->lastCreateDto->retentionFeePercent);
+    }
+
     public function testCreateMapsUnknownValidationFailureToStableErrorCode(): void
     {
         $requestService = new class implements VendorPayoutRequestServiceInterface {
