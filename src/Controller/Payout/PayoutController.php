@@ -89,6 +89,7 @@ final class PayoutController extends AbstractController
             'currency required' => 'currency_required',
             'thresholdCents required' => 'threshold_cents_required',
             'retentionFeePercent required' => 'retention_fee_percent_required',
+            'retentionFeePercent out_of_range' => 'retention_fee_percent_out_of_range',
             default => 'payout_validation_error',
         };
     }

@@ -51,7 +51,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
         ];
     }
 
-    public function testKernelRuntimeNormalizesUnexpectedPayoutValidationFailureAsGenericContractError(): void
+    public function testKernelRuntimeReturnsDedicatedErrorForOutOfRangePayoutRetentionFeePercent(): void
     {
         if (!extension_loaded('pdo_sqlite')) {
             self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
@@ -70,7 +70,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             $payload = KernelRuntimeHarness::decodeJson($response);
 
             self::assertSame(422, $response->getStatusCode());
-            self::assertSame('payout_validation_error', $payload['error'] ?? null);
+            self::assertSame('retention_fee_percent_out_of_range', $payload['error'] ?? null);
         } finally {
             KernelRuntimeHarness::cleanupRuntimeState($kernel);
         }

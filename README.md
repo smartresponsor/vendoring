@@ -173,7 +173,7 @@ Common error codes:
 - `duplicate_transaction` (409)
 - validation/invariant violations (422)
 - `tenant_id_required`, `statement_from_required`, `statement_to_required` (422 for statement/runtime query validation)
-- `retention_fee_percent_required` and `payout_validation_error` (422 for payout create validation)
+- `retention_fee_percent_required`, `retention_fee_percent_out_of_range`, and `payout_validation_error` (422 for payout create validation)
 
 Authentication expectation: Bearer token in `Authorization` header for write operations.
 

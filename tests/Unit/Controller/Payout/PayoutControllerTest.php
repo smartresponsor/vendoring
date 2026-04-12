@@ -1,5 +1,5 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Controller\Payout;
@@ -79,6 +79,29 @@ final class PayoutControllerTest extends TestCase
 
         self::assertSame(422, $response->getStatusCode());
         self::assertSame('payout_validation_error', $payload['error'] ?? null);
+        self::assertSame('Check payout request fields and try again.', $payload['hint'] ?? null);
+    }
+
+    public function testCreateMapsRetentionFeePercentOutOfRangeToDedicatedErrorCode(): void
+    {
+        $requestService = new class implements VendorPayoutRequestServiceInterface {
+            public function toCreateDto(array $payload): CreatePayoutDTO
+            {
+                throw new \InvalidArgumentException('retentionFeePercent out_of_range');
+            }
+
+            public function normalizePayout(Payout $payout): array
+            {
+                return ['id' => $payout->id];
+            }
+        };
+
+        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), $requestService);
+        $response = $controller->create(Request::create('/api/payout/create', 'POST', content: '{}'));
+        $payload = self::decodePayload($response);
+
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('retention_fee_percent_out_of_range', $payload['error'] ?? null);
         self::assertSame('Check payout request fields and try again.', $payload['hint'] ?? null);
     }
 
