@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Statement;
 
 use App\Controller\ApiErrorResponseTrait;
+use App\Controller\StatementQueryValidationResponseTrait;
 use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
 use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
@@ -17,6 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class VendorStatementDeliveryRuntimeController extends AbstractController
 {
     use ApiErrorResponseTrait;
+    use StatementQueryValidationResponseTrait;
 
     public function __construct(
         private readonly VendorStatementDeliveryRuntimeViewBuilderInterface $runtimeViewBuilder,
@@ -29,11 +31,8 @@ final class VendorStatementDeliveryRuntimeController extends AbstractController
     {
         try {
             $this->statementWindowQueryRequestResolver->resolve($request);
-        } catch (\InvalidArgumentException) {
-            return $this->validationErrorResponse(
-                'statement_runtime_params_required',
-                'Provide tenantId, from, and to query parameters.',
-            );
+        } catch (\InvalidArgumentException $exception) {
+            return $this->statementQueryValidationResponse($exception);
         }
 
         $runtimeRequest = $this->requestResolver->resolveDeliveryRuntimeRequest($vendorId, $request);

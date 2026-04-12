@@ -172,6 +172,7 @@ Common error codes:
 - `not_found` or `vendor_not_found` (404)
 - `duplicate_transaction` (409)
 - validation/invariant violations (422)
+- `tenant_id_required`, `statement_from_required`, `statement_to_required` (422 for statement/runtime query validation)
 
 Authentication expectation: Bearer token in `Authorization` header for write operations.
 

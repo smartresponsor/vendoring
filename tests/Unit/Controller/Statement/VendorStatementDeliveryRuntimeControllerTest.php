@@ -30,7 +30,7 @@ final class VendorStatementDeliveryRuntimeControllerTest extends TestCase
     {
         $this->statementWindowQueryRequestResolver->expects(self::once())
             ->method('resolve')
-            ->willThrowException(new \InvalidArgumentException('statement_runtime_params_required'));
+            ->willThrowException(new \InvalidArgumentException('statement_to_required'));
         $controller = new VendorStatementDeliveryRuntimeController(
             $this->builder,
             new VendorStatementRequestResolver(),
@@ -41,8 +41,8 @@ final class VendorStatementDeliveryRuntimeControllerTest extends TestCase
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertSame(422, $response->getStatusCode());
-        self::assertSame('statement_runtime_params_required', $payload['error'] ?? null);
-        self::assertSame('Provide tenantId, from, and to query parameters.', $payload['hint'] ?? null);
+        self::assertSame('statement_to_required', $payload['error'] ?? null);
+        self::assertSame('Provide the to query parameter.', $payload['hint'] ?? null);
     }
 
     public function testShowBuildsRuntimeViewFromResolvedRequest(): void

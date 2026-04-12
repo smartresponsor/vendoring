@@ -16,6 +16,29 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class VendorStatementExportControllerTest extends TestCase
 {
+    public function testExportReturnsValidationErrorWhenTenantIdIsMissing(): void
+    {
+        $statementService = new FakeVendorStatementService(['items' => []]);
+        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver->expects(self::once())
+            ->method('resolve')
+            ->willThrowException(new \InvalidArgumentException('tenant_id_required'));
+
+        $controller = new VendorStatementExportController(
+            $statementService,
+            new FakeStatementExporterPDF(sys_get_temp_dir() . '/unused-vendoring-export.pdf'),
+            new VendorStatementRequestResolver(),
+            $windowResolver,
+        );
+
+        $response = $controller->export('vendor-1', new Request());
+        $payload = self::decodePayload($response);
+
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('tenant_id_required', $payload['error'] ?? null);
+        self::assertSame('Provide the tenantId query parameter.', $payload['hint'] ?? null);
+    }
+
     public function testExportReturnsBase64PayloadWhenPdfWasGenerated(): void
     {
         $pdfPath = sys_get_temp_dir() . '/vendoring-export-test.pdf';

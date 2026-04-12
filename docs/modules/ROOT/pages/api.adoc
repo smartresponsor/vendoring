@@ -51,6 +51,7 @@ Typical status semantics:
 * `404` entity/projection missing
 * `409` state conflict (for example duplicate transaction)
 * `422` domain validation failure
+* `422` statement/runtime query validation (`tenant_id_required`, `statement_from_required`, `statement_to_required`)
 
 == Lifecycle/status semantics
 
