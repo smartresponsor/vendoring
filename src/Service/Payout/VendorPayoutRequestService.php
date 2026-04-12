@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service\Payout;
@@ -82,15 +81,24 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
     private function requiredRetentionFeePercent(array $payload): float
     {
         $value = $payload['retentionFeePercent'] ?? null;
+        $parsed = null;
 
         if (is_float($value) || is_int($value)) {
-            return (float) $value;
+            $parsed = (float) $value;
         }
 
         if (is_numeric($value)) {
-            return (float) $value;
+            $parsed = (float) $value;
         }
 
-        throw new InvalidArgumentException('retentionFeePercent required');
+        if (null === $parsed) {
+            throw new InvalidArgumentException('retentionFeePercent required');
+        }
+
+        if ($parsed < 0.0 || $parsed > 1.0) {
+            throw new InvalidArgumentException('retentionFeePercent out_of_range');
+        }
+
+        return $parsed;
     }
 }

@@ -1,5 +1,5 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Integration\Runtime;
@@ -49,5 +49,30 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             'uri' => '/api/payouts/statements/vendor-1?tenantId=tenant-1&from=2026-01-01&currency=USD',
             'expectedError' => 'statement_to_required',
         ];
+    }
+
+    public function testKernelRuntimeNormalizesUnexpectedPayoutValidationFailureAsGenericContractError(): void
+    {
+        if (!extension_loaded('pdo_sqlite')) {
+            self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
+        }
+
+        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+
+        try {
+            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/payout/create', [
+                'tenantId' => 'tenant-1',
+                'vendorId' => 'vendor-1',
+                'currency' => 'USD',
+                'thresholdCents' => 1000,
+                'retentionFeePercent' => 1.5,
+            ]);
+            $payload = KernelRuntimeHarness::decodeJson($response);
+
+            self::assertSame(422, $response->getStatusCode());
+            self::assertSame('payout_validation_error', $payload['error'] ?? null);
+        } finally {
+            KernelRuntimeHarness::cleanupRuntimeState($kernel);
+        }
     }
 }
