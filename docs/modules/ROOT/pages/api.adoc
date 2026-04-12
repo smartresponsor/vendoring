@@ -40,7 +40,8 @@ Stable error payload shape:
 [source,json]
 ----
 {
-  "error": "machine_readable_code"
+  "error": "machine_readable_code",
+  "hint": "Actionable guidance for the client"
 }
 ----
 

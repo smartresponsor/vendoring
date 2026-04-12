@@ -1,5 +1,5 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Controller\Payout;
@@ -17,9 +17,11 @@ final class VendorStatementControllerTest extends TestCase
         $controller = new VendorStatementController(new FakeVendorStatementService(['items' => []]), new VendorStatementRequestResolver());
 
         $response = $controller->build('vendor-1', new Request());
+        $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertSame(422, $response->getStatusCode());
-        self::assertStringContainsString('params required', (string) $response->getContent());
+        self::assertSame('statement_params_required', $payload['error'] ?? null);
+        self::assertSame('Provide tenantId, from, and to query parameters.', $payload['hint'] ?? null);
     }
 
     public function testBuildReturnsStatementPayload(): void

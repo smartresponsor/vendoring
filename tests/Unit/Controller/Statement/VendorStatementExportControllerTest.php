@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Controller\Statement;
@@ -75,11 +74,10 @@ final class VendorStatementExportControllerTest extends TestCase
         ]));
 
         $payload = self::decodePayload($response);
-        $data = self::payloadData($payload);
 
         self::assertSame(500, $response->getStatusCode());
         self::assertSame('statement_export_unreadable', $payload['error'] ?? null);
-        self::assertSame('vendor-1', $data['vendorId'] ?? null);
+        self::assertStringContainsString('Unable to read export file at path:', (string) ($payload['hint'] ?? ''));
     }
 
     /** @return array<string, mixed> */

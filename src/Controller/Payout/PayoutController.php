@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Payout;
 
+use App\Controller\ApiErrorResponseTrait;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
@@ -20,6 +21,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/payout')]
 final class PayoutController extends AbstractController
 {
+    use ApiErrorResponseTrait;
+
     public function __construct(
         private readonly VendorPayoutServiceInterface $payoutService,
         private readonly PayoutRepositoryInterface $payoutRepository,
@@ -37,7 +40,7 @@ final class PayoutController extends AbstractController
         } catch (InvalidArgumentException $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 422);
         } catch (Exception|JsonException|RandomException $exception) {
-            return $this->runtimeFailureResponse('payout_create_failed');
+            return $this->runtimeErrorResponse('payout_create_failed', 'Check runtime logs for details and retry the operation.');
         }
 
         if (null === $id) {
@@ -53,7 +56,7 @@ final class PayoutController extends AbstractController
         try {
             $ok = $this->payoutService->process($payoutId);
         } catch (Exception|JsonException|RandomException $exception) {
-            return $this->runtimeFailureResponse('payout_process_failed');
+            return $this->runtimeErrorResponse('payout_process_failed', 'Check runtime logs for details and retry the operation.');
         }
 
         return new JsonResponse(['data' => ['processed' => $ok]], $ok ? 200 : 404);
@@ -65,7 +68,7 @@ final class PayoutController extends AbstractController
         try {
             $payout = $this->payoutRepository->byId($payoutId);
         } catch (Exception $exception) {
-            return $this->runtimeFailureResponse('payout_lookup_failed');
+            return $this->runtimeErrorResponse('payout_lookup_failed', 'Check runtime logs for details and retry the operation.');
         }
 
         if (null === $payout) {
@@ -73,13 +76,5 @@ final class PayoutController extends AbstractController
         }
 
         return new JsonResponse(['data' => $this->payoutRequestService->normalizePayout($payout)], 200);
-    }
-
-    private function runtimeFailureResponse(string $errorCode): JsonResponse
-    {
-        return new JsonResponse([
-            'error' => $errorCode,
-            'hint' => 'Check runtime logs for details and retry the operation.',
-        ], 500);
     }
 }

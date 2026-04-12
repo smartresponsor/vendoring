@@ -158,7 +158,8 @@ Content-Type: application/json
 
 ```json
 {
-  "error": "transaction_validation_error"
+  "error": "transaction_validation_error",
+  "hint": "Actionable next step for the consumer."
 }
 ```
 

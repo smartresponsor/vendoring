@@ -1,9 +1,10 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller\Integration;
 
+use App\Controller\ApiErrorResponseTrait;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,6 +14,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/vendor/runtime')]
 final class VendorExternalIntegrationRuntimeController extends AbstractController
 {
+    use ApiErrorResponseTrait;
+
     public function __construct(
         private readonly VendorExternalIntegrationRuntimeViewBuilderInterface $runtimeViewBuilder,
     ) {}
@@ -22,7 +25,10 @@ final class VendorExternalIntegrationRuntimeController extends AbstractControlle
     {
         $tenantId = (string) ($request->query->get('tenantId') ?? '');
         if ('' === $tenantId) {
-            return new JsonResponse(['error' => 'tenantId is required'], 422);
+            return $this->validationErrorResponse(
+                'tenant_id_required',
+                'Provide the tenantId query parameter.',
+            );
         }
 
         $view = $this->runtimeViewBuilder->build($tenantId, $vendorId);

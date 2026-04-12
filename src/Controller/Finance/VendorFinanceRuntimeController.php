@@ -1,9 +1,10 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller\Finance;
 
+use App\Controller\ApiErrorResponseTrait;
 use Doctrine\DBAL\Exception;
 use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,6 +15,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/vendor/runtime')]
 final class VendorFinanceRuntimeController extends AbstractController
 {
+    use ApiErrorResponseTrait;
+
     public function __construct(private readonly VendorFinanceRuntimeViewBuilderInterface $runtimeViewBuilder) {}
 
     #[Route('/{vendorId}/finance', methods: ['GET'])]
@@ -22,7 +25,10 @@ final class VendorFinanceRuntimeController extends AbstractController
     {
         $tenantId = (string) ($request->query->get('tenantId') ?? '');
         if ('' === $tenantId) {
-            return new JsonResponse(['error' => 'tenantId required'], 422);
+            return $this->validationErrorResponse(
+                'tenant_id_required',
+                'Provide the tenantId query parameter.',
+            );
         }
 
         $from = $request->query->get('from');

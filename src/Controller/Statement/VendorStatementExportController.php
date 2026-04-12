@@ -1,9 +1,10 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller\Statement;
 
+use App\Controller\ApiErrorResponseTrait;
 use App\ServiceInterface\Statement\StatementExporterPDFInterface;
 use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
@@ -23,6 +24,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/payouts/statements')]
 final class VendorStatementExportController extends AbstractController
 {
+    use ApiErrorResponseTrait;
+
     public function __construct(
         private readonly VendorStatementServiceInterface $svc,
         private readonly StatementExporterPDFInterface $pdf,
@@ -49,33 +52,28 @@ final class VendorStatementExportController extends AbstractController
     {
         $dto = $this->requestResolver->resolveStatementRequest($vendorId, $r);
         if (null === $dto) {
-            return new JsonResponse(['error' => 'params required'], 422);
+            return $this->validationErrorResponse(
+                'statement_params_required',
+                'Provide tenantId, from, and to query parameters.',
+            );
         }
 
         $data = $this->svc->build($dto);
         $path = $this->pdf->export($dto, $data);
 
         if (!is_file($path) || !is_readable($path)) {
-            return new JsonResponse([
-                'error' => 'statement_export_unreadable',
-                'data' => [
-                    'tenantId' => $dto->tenantId,
-                    'vendorId' => $dto->vendorId,
-                    'path' => $path,
-                ],
-            ], 500);
+            return $this->runtimeErrorResponse(
+                'statement_export_unreadable',
+                sprintf('Unable to read export file at path: %s.', $path),
+            );
         }
 
         $content = file_get_contents($path);
         if (false === $content) {
-            return new JsonResponse([
-                'error' => 'statement_export_unreadable',
-                'data' => [
-                    'tenantId' => $dto->tenantId,
-                    'vendorId' => $dto->vendorId,
-                    'path' => $path,
-                ],
-            ], 500);
+            return $this->runtimeErrorResponse(
+                'statement_export_unreadable',
+                sprintf('Unable to read export file at path: %s.', $path),
+            );
         }
 
         return new JsonResponse(['data' => [
