@@ -75,4 +75,32 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             KernelRuntimeHarness::cleanupRuntimeState($kernel);
         }
     }
+
+    public function testKernelRuntimeAcceptsTrimmedNumericPayoutPayloadValues(): void
+    {
+        if (!extension_loaded('pdo_sqlite')) {
+            self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
+        }
+
+        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+
+        try {
+            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/payout/create', [
+                'tenantId' => 'tenant-1',
+                'vendorId' => 'vendor-1',
+                'currency' => 'USD',
+                'thresholdCents' => ' 1000 ',
+                'retentionFeePercent' => ' 0.05 ',
+            ]);
+            $payload = KernelRuntimeHarness::decodeJson($response);
+            $data = $payload['data'] ?? null;
+
+            self::assertSame(200, $response->getStatusCode());
+            self::assertIsArray($data);
+            self::assertSame(false, $data['created'] ?? null);
+            self::assertSame('threshold_not_met', $data['reason'] ?? null);
+        } finally {
+            KernelRuntimeHarness::cleanupRuntimeState($kernel);
+        }
+    }
 }
