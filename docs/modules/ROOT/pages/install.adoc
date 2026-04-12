@@ -1,13 +1,52 @@
 = Install
 
-Vendoring is currently strongest as a headless/backend Symfony component with release-candidate quality lanes and generated documentation artifacts.
+Vendoring is designed to be consumed as a Symfony component, not only as an internal codebase.
 
-== Local setup entry points
+== 1) Dependencies
 
-* `README.md`
-* `compose.yaml`
-* `composer.json`
-* `phpunit.xml.dist`
+Install core Symfony + Doctrine dependencies used by vendoring surfaces:
+
+[source,bash]
+----
+composer require symfony/framework-bundle symfony/validator symfony/form doctrine/orm
+----
+
+== 2) Wire routes and services
+
+[source,yaml]
+----
+# config/routes/vendor.yaml
+vendoring:
+  resource: '../../vendor/.../config/vendor_routes.yaml'
+----
+
+[source,yaml]
+----
+# config/services.yaml
+imports:
+  - { resource: '../../vendor/.../config/vendor_services.yaml' }
+----
+
+== 3) Configure runtime storage split
+
+[source,bash]
+----
+VENDOR_DSN=pgsql://app:app@127.0.0.1:5432/vendoring
+VENDOR_SQLITE_DSN=sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite
+----
+
+* PostgreSQL: user/business data
+* SQLite: runtime/application local state
+
+== 4) Minimal Symfony integration flow
+
+* Upsert vendor profile (`PATCH /api/vendor-profile/vendor/{vendorId}`)
+* Read vendor runtime view (`GET /api/vendor/runtime/{vendorId}/finance`)
+* Create payout when ready (`POST /api/payout/create`)
+
+== 5) Enable only needed parts
+
+For a minimal integration, expose only required routes (for example `vendor-transactions` + `payout`) and keep optional ops/runtime endpoints disabled at gateway or routing level.
 
 == Runtime/documentation generation seams
 
@@ -15,8 +54,3 @@ Vendoring is currently strongest as a headless/backend Symfony component with re
 * `bin/generate-phpdocumentor-site.php`
 * `bin/generate-rc-evidence.php`
 * `bin/generate-release-manifest.php`
-
-== Notes
-
-This producer repository does not assemble a standalone documentation portal.
-It only provides documentation content and generated artifacts that an external Antora aggregator can consume.

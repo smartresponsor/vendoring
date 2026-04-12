@@ -1,4 +1,7 @@
 * xref:index.adoc[Vendoring]
+* xref:positioning.adoc[Positioning]
+* xref:boundaries.adoc[Boundaries]
+* xref:use-cases.adoc[Use cases]
 * xref:architecture.adoc[Architecture]
 * xref:install.adoc[Install]
 * xref:operations.adoc[Operations]

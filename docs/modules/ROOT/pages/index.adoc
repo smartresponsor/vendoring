@@ -1,18 +1,23 @@
 = Vendoring
 
-Vendoring exposes an Antora-compatible documentation producer surface for the central documentation ecosystem.
-This repository publishes narrative entry pages only; site assembly, UI, and aggregator playbooks stay outside this producer.
+Vendoring is a Symfony-oriented component for vendor lifecycle and runtime readiness surfaces.
+It provides a product-facing API and operational contract around vendor profile, status, and payout-readiness metadata.
+
+== Start here
+
+* xref:positioning.adoc[Positioning] — what Vendoring owns, and what it explicitly does not own.
+* xref:boundaries.adoc[Boundaries] — canonical responsibility map versus adjacent domains.
+* xref:use-cases.adoc[Use cases] — real integration scenarios.
+* xref:install.adoc[Install] — consumer-oriented install/configuration flow.
+* xref:api.adoc[API] — grouped endpoint model, lifecycle semantics, and OpenAPI artifacts.
 
 == Documentation surface map
 
 * xref:architecture.adoc[Architecture] — domain/runtime shape and boundary-oriented notes.
-* xref:install.adoc[Install] — local setup and activation entry points.
 * xref:operations.adoc[Operations] — release-candidate, runtime, operator, and rollback surfaces.
-* xref:api.adoc[API] — OpenAPI/Nelmio entry point and generated contract artifacts.
 * xref:reference.adoc[Reference] — phpDocumentor/code-reference surface and related generation seams.
 
 == Source-of-truth boundaries
 
-Narrative documentation remains repository-owned under `docs/`.
-GitHub-facing repository guidance remains in `README.md` and `RELEASE_NOTES.md`.
-Generated artifacts remain under `build/docs/` and `build/release/` so hand-written docs and machine-generated evidence do not collapse into one layer.
+Narrative docs are repository-owned under `docs/`.
+Machine-generated artifacts remain under `build/docs/` and `build/release/`.
