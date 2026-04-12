@@ -31,7 +31,8 @@ final class PayoutControllerTest extends TestCase
         $payload = self::decodePayload($response);
 
         self::assertSame(422, $response->getStatusCode());
-        self::assertSame('retentionFeePercent required', $payload['error'] ?? null);
+        self::assertSame('retention_fee_percent_required', $payload['error'] ?? null);
+        self::assertSame('Check payout request fields and try again.', $payload['hint'] ?? null);
     }
 
     public function testCreateReturnsCreatedPayload(): void
@@ -56,6 +57,29 @@ final class PayoutControllerTest extends TestCase
         self::assertInstanceOf(CreatePayoutDTO::class, $service->lastCreateDto);
         self::assertSame('tenant-1', $service->lastCreateDto->tenantId);
         self::assertSame('vendor-1', $service->lastCreateDto->vendorId);
+    }
+
+    public function testCreateMapsUnknownValidationFailureToStableErrorCode(): void
+    {
+        $requestService = new class implements VendorPayoutRequestServiceInterface {
+            public function toCreateDto(array $payload): CreatePayoutDTO
+            {
+                throw new \InvalidArgumentException('validation pipeline broke');
+            }
+
+            public function normalizePayout(Payout $payout): array
+            {
+                return ['id' => $payout->id];
+            }
+        };
+
+        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), $requestService);
+        $response = $controller->create(Request::create('/api/payout/create', 'POST', content: '{}'));
+        $payload = self::decodePayload($response);
+
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('payout_validation_error', $payload['error'] ?? null);
+        self::assertSame('Check payout request fields and try again.', $payload['hint'] ?? null);
     }
 
     public function testProcessReturnsNotFoundForUnknownPendingPayout(): void

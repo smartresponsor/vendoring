@@ -38,7 +38,10 @@ final class PayoutController extends AbstractController
         } catch (HttpFoundationJsonException) {
             return new JsonResponse(['error' => 'malformed_json'], 400);
         } catch (InvalidArgumentException $exception) {
-            return new JsonResponse(['error' => $exception->getMessage()], 422);
+            return $this->validationErrorResponse(
+                $this->normalizePayoutValidationErrorCode($exception->getMessage()),
+                'Check payout request fields and try again.',
+            );
         } catch (Exception|JsonException|RandomException $exception) {
             return $this->runtimeErrorResponse('payout_create_failed', 'Check runtime logs for details and retry the operation.');
         }
@@ -76,5 +79,17 @@ final class PayoutController extends AbstractController
         }
 
         return new JsonResponse(['data' => $this->payoutRequestService->normalizePayout($payout)], 200);
+    }
+
+    private function normalizePayoutValidationErrorCode(string $message): string
+    {
+        return match (trim($message)) {
+            'tenantId required' => 'tenant_id_required',
+            'vendorId required' => 'vendor_id_required',
+            'currency required' => 'currency_required',
+            'thresholdCents required' => 'threshold_cents_required',
+            'retentionFeePercent required' => 'retention_fee_percent_required',
+            default => 'payout_validation_error',
+        };
     }
 }
