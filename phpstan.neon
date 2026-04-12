@@ -6,3 +6,6 @@ parameters:
   checkGenericClassInNonGenericObjectType: true
   checkMissingIterableValueType: true
   inferPrivatePropertyTypeFromConstructor: true
+
+  bootstrapFiles:
+    - stubs/panther-bootstrap.php

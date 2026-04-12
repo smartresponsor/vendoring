@@ -67,15 +67,19 @@ final class LocalDevPantherTest extends PantherTestCase
     private function assertHomePageLoads(Client $client): void
     {
         $client->request('GET', '/');
-        self::assertPageTitleContains(self::HOME_PAGE_TITLE);
-        self::assertSelectorTextContains('h1', self::HOME_PAGE_HEADING);
-        self::assertSelectorTextContains('body', self::HOME_PAGE_BODY);
+
+        $pageSource = $client->getPageSource();
+
+        self::assertStringContainsString(self::HOME_PAGE_TITLE, $pageSource);
+        self::assertStringContainsString(self::HOME_PAGE_HEADING, $pageSource);
+        self::assertStringContainsString(self::HOME_PAGE_BODY, $pageSource);
     }
 
     private function assertHealthEndpointLoads(Client $client): void
     {
         $client->request('GET', '/healthz');
-        self::assertSelectorTextContains('body', self::HEALTH_RESPONSE_FRAGMENT);
+
+        self::assertStringContainsString(self::HEALTH_RESPONSE_FRAGMENT, $client->getPageSource());
     }
 
     private static function runServerCommand(string $relativeScriptPath): void

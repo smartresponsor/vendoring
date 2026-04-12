@@ -82,6 +82,10 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         $found = false;
 
         foreach ($listPayload['data'] as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+
             if (($row['orderId'] ?? null) === $orderId) {
                 $found = true;
                 break;

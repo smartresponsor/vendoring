@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Runtime;
 
+use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Projection\VendorExternalIntegrationRuntimeView;
 use App\Projection\VendorFinanceRuntimeView;
 use App\Projection\VendorOwnershipView;
-use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Projection\VendorStatementDeliveryRuntimeView;
 use App\Service\Ops\VendorRuntimeStatusViewBuilder;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
@@ -67,6 +67,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
         $payload = $this->buildRuntimeStatus()->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')->toArray();
 
         self::assertArrayHasKey('ownership', $payload);
+        self::assertIsArray($payload['ownership']);
         self::assertSame(5001, $payload['ownership']['ownerUserId']);
         self::assertFalse($payload['surfaceStatus']['statementDelivery']);
         self::assertTrue($payload['surfaceStatus']['finance']);
@@ -107,6 +108,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
         $payload = $this->buildRuntimeStatus()->build('tenant-1', '202', '2026-03-01', '2026-03-31', 'USD')->toArray();
 
         self::assertArrayHasKey('ownership', $payload);
+        self::assertIsArray($payload['ownership']);
         self::assertSame(5001, $payload['ownership']['ownerUserId']);
         self::assertIsArray($payload['finance']);
         self::assertIsArray($payload['statementDelivery']);

@@ -33,17 +33,17 @@ $service = new VendorStatementMailerService(
 
 $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '', 'March 2026');
 
-if (true === ($result['ok'] ?? false)) {
+if ($result['ok']) {
     fwrite(STDERR, "expected circuit-open failure\n");
     exit(1);
 }
 
-if ('statement_mail_circuit_open' !== ($result['message'] ?? null)) {
+if ('statement_mail_circuit_open' !== $result['message']) {
     fwrite(STDERR, "unexpected message\n");
     exit(1);
 }
 
-if ('open' !== ($result['circuitState'] ?? null)) {
+if ('open' !== $result['circuitState']) {
     fwrite(STDERR, "unexpected circuit state\n");
     exit(1);
 }

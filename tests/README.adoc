@@ -1,0 +1,25 @@
+= Vendoring test contour
+
+This repository uses a Symfony-oriented multi-track test contour.
+
+== Canonical tracks
+
+* `tests/Unit/` — isolated unit tests
+* `tests/Integration/` — integration tests for repository, runtime, persistence, and contracts
+* `tests/Functional/` — Symfony functional browser-oriented tests
+* `tests/Functional/Panther/` — Panther browser track for application/runtime surfaces
+* `tests/Smoke/` — lightweight smoke coverage
+* `tests/e2e/` — Playwright browser E2E track
+* `tests/Support/` — shared fakes, builders, decoders, and helpers
+* `tests/bin/` — contract and synthetic smoke entrypoints
+
+== Policy
+
+Panther is a canonical functional browser dependency for Vendoring. When the real
+`symfony/panther` package is unavailable in a local static-analysis environment,
+Panther support is surfaced through local stubs so PHPStan can analyze the
+functional contour without hiding it.
+
+Legacy tests that target removed services, removed entities, or obsolete
+contracts are not preserved by default. They must be rewritten to current
+contracts or removed.
