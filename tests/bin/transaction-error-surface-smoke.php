@@ -9,10 +9,10 @@ function vendoring_load_file_or_empty(string $path): string
     return false === $contents ? '' : $contents;
 }
 
-$controller = vendoring_load_file_or_empty(__DIR__.'/../../src/Controller/VendorTransactionController.php');
-$manager = vendoring_load_file_or_empty(__DIR__.'/../../src/Service/VendorTransactionManager.php');
-$amountPolicy = vendoring_load_file_or_empty(__DIR__.'/../../src/Service/Policy/VendorTransactionAmountPolicy.php');
-$errorCodes = vendoring_load_file_or_empty(__DIR__.'/../../src/ValueObject/VendorTransactionErrorCode.php');
+$controller = vendoring_load_file_or_empty(__DIR__ . '/../../src/Controller/VendorTransactionController.php');
+$manager = vendoring_load_file_or_empty(__DIR__ . '/../../src/Service/VendorTransactionManager.php');
+$amountPolicy = vendoring_load_file_or_empty(__DIR__ . '/../../src/Service/Policy/VendorTransactionAmountPolicy.php');
+$errorCodes = vendoring_load_file_or_empty(__DIR__ . '/../../src/ValueObject/VendorTransactionErrorCode.php');
 
 $checks = [
     'controller avoids raw exception message payload' => !str_contains($controller, "['error' => \$exception->getMessage()]"),
@@ -33,8 +33,8 @@ foreach ($checks as $label => $ok) {
 
 if ([] !== $failed) {
     fwrite(STDERR, 'Transaction error surface smoke failed:
- - '.implode('
- - ', $failed).'
+ - ' . implode('
+ - ', $failed) . '
 ');
     exit(1);
 }

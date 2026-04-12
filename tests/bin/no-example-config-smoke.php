@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
 $files = [
-    $root.'/ops/policy/config/crm.yaml',
-    $root.'/ops/policy/config/shadow.yaml',
-    $root.'/ops/policy/config/api_v1_cors.yaml',
-    $root.'/ops/policy/config/services_interface.yaml',
+    $root . '/ops/policy/config/crm.yaml',
+    $root . '/ops/policy/config/shadow.yaml',
+    $root . '/ops/policy/config/api_v1_cors.yaml',
+    $root . '/ops/policy/config/services_interface.yaml',
 ];
 
 foreach ($files as $file) {

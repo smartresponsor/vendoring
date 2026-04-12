@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -8,7 +9,7 @@ declare(strict_types=1);
  * No formatting, no auto-fix.
  */
 
-$repoRoot = realpath(__DIR__.'/..') ?: getcwd();
+$repoRoot = realpath(__DIR__ . '/..') ?: getcwd();
 if (!is_string($repoRoot) || '' === $repoRoot) {
     fwrite(STDERR, "ERROR: cannot resolve repo root\n");
     exit(2);
@@ -20,7 +21,7 @@ array_shift($args);
 $asJson = in_array('--json', $args, true);
 $strict = in_array('--strict', $args, true);
 
-$srcRoot = $repoRoot.DIRECTORY_SEPARATOR.'src';
+$srcRoot = $repoRoot . DIRECTORY_SEPARATOR . 'src';
 if (!is_dir($srcRoot)) {
     fwrite(STDERR, "ERROR: src/ not found\n");
     exit(2);
@@ -32,8 +33,8 @@ if (!is_dir($srcRoot)) {
 function parsePhpMeta(string $code): array
 {
     // token_get_all() treats "<?phpdeclare" as inline HTML; normalize missing whitespace after open tag.
-    if (str_starts_with($code, "<?php") && isset($code[5]) && !ctype_space($code[5])) {
-        $code = "<?php\n".substr($code, 5);
+    if (str_starts_with($code, '<?php') && isset($code[5]) && !ctype_space($code[5])) {
+        $code = "<?php\n" . substr($code, 5);
     }
 
     $tokens = token_get_all($code);
@@ -97,7 +98,7 @@ function parsePhpMeta(string $code): array
                     // Strip use function/const.
                     $chunk = preg_replace('/^(function|const)\s+/i', '', $chunk) ?? $chunk;
 
-                    $parts = array_values(array_filter(array_map('trim', explode(',', $chunk)), static fn (string $v): bool => '' !== $v));
+                    $parts = array_values(array_filter(array_map('trim', explode(',', $chunk)), static fn(string $v): bool => '' !== $v));
                     foreach ($parts as $p) {
                         // Normalize spaces.
                         $p = preg_replace('/\s+/', ' ', $p) ?? $p;
@@ -120,7 +121,7 @@ function parsePhpMeta(string $code): array
 
                         if (isset($importAliasMap[$alias]) && $importAliasMap[$alias] !== $fqn) {
                             // Mark collision by storing a special value; full report built by caller.
-                            $importAliasMap[$alias] = $importAliasMap[$alias].' | '.$fqn;
+                            $importAliasMap[$alias] = $importAliasMap[$alias] . ' | ' . $fqn;
                         } else {
                             $importAliasMap[$alias] = $fqn;
                         }
@@ -185,7 +186,7 @@ function parsePhpMeta(string $code): array
 }
 
 $it = new RecursiveIteratorIterator(
-    new RecursiveDirectoryIterator($srcRoot, FilesystemIterator::SKIP_DOTS)
+    new RecursiveDirectoryIterator($srcRoot, FilesystemIterator::SKIP_DOTS),
 );
 
 $issueList = [];
@@ -211,12 +212,12 @@ foreach ($it as $node) {
 
     // Expected namespace: App + path under src.
     $expectedNs = 'App';
-    if (str_starts_with($dirRel.'/', 'src/')) {
+    if (str_starts_with($dirRel . '/', 'src/')) {
         $suffix = substr($dirRel, strlen('src/'));
         // Legacy path alias: src/ServiceInterface/<Domain>/Service/<X> -> App\ServiceInterface\<Domain>\<X>
-        $suffix = preg_replace('#^ServiceInterface/([^/]+)/Service/#', "ServiceInterface/$1/", $suffix) ?? $suffix;
+        $suffix = preg_replace('#^ServiceInterface/([^/]+)/Service/#', 'ServiceInterface/$1/', $suffix) ?? $suffix;
         if ('' !== $suffix && '.' !== $suffix) {
-            $expectedNs .= '\\'.str_replace('/', '\\', $suffix);
+            $expectedNs .= '\\' . str_replace('/', '\\', $suffix);
         }
     }
 
@@ -239,7 +240,7 @@ foreach ($it as $node) {
 
         $primary = $typeList[0]['name'];
         if ($primary !== $base) {
-            $issueList[] = ['type' => 'name', 'file' => $rel, 'message' => 'filename mismatch', 'expected' => $primary.'.php', 'actual' => $base.'.php'];
+            $issueList[] = ['type' => 'name', 'file' => $rel, 'message' => 'filename mismatch', 'expected' => $primary . '.php', 'actual' => $base . '.php'];
         }
     }
 
@@ -264,7 +265,7 @@ $result = [
 ];
 
 if ($asJson) {
-    echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n";
+    echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
 } else {
     echo "Vendoring PSR scan\n";
     $cnt = count($issueList);
@@ -289,7 +290,7 @@ if ($asJson) {
         } elseif ('name' === $type) {
             echo "  * [NAME] {$file} expected={$iss['expected']} actual={$iss['actual']}\n";
         } elseif ('type' === $type && isset($iss['types'])) {
-            echo "  * [TYPE] {$file} {$msg} (".count((array) $iss['types']).")\n";
+            echo "  * [TYPE] {$file} {$msg} (" . count((array) $iss['types']) . ")\n";
         } elseif ('import' === $type) {
             if (isset($iss['alias'], $iss['fqn'])) {
                 echo "  * [IMPORT] {$file} {$msg} alias={$iss['alias']} fqn={$iss['fqn']}\n";

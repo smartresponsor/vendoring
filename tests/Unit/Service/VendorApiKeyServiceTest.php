@@ -26,15 +26,17 @@ final class VendorApiKeyServiceTest extends TestCase
     public function testCreateKeyPersistsHashedTokenAndReturnsPlainToken(): void
     {
         $vendor = new Vendor('Vendor Example');
+        $savedKey = null;
 
         $this->repository
             ->expects(self::once())
             ->method('save')
-            ->with(self::callback(function (VendorApiKey $apiKey) use ($vendor, &$plainToken): bool {
+            ->with(self::callback(function (VendorApiKey $apiKey) use ($vendor, &$savedKey): bool {
+                $savedKey = $apiKey;
+
                 self::assertSame($vendor, $apiKey->getVendor());
                 self::assertSame('read,write', $apiKey->getPermissions());
                 self::assertSame('active', $apiKey->getStatus());
-                self::assertSame(hash('sha256', $plainToken), $apiKey->getTokenHash());
 
                 return true;
             }), true);
@@ -45,32 +47,22 @@ final class VendorApiKeyServiceTest extends TestCase
 
         self::assertSame(64, strlen($plainToken));
         self::assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $plainToken);
+        self::assertInstanceOf(VendorApiKey::class, $savedKey);
+        self::assertSame(hash('sha256', $plainToken), $savedKey->getTokenHash());
     }
 
     public function testRotateKeyDeactivatesExistingKeyAndSavesReplacement(): void
     {
         $vendor = new Vendor('Vendor Example');
         $existingKey = new VendorApiKey($vendor, hash('sha256', 'old-token'), 'read,write');
+        $savedKeys = [];
 
         $this->repository
             ->expects(self::exactly(2))
             ->method('save')
-            ->withConsecutive(
-                [self::callback(function (VendorApiKey $apiKey) use ($existingKey): bool {
-                    self::assertSame($existingKey, $apiKey);
-                    self::assertSame('inactive', $apiKey->getStatus());
-
-                    return true;
-                }), false],
-                [self::callback(function (VendorApiKey $apiKey) use ($vendor, $existingKey, &$newPlainToken): bool {
-                    self::assertSame($vendor, $apiKey->getVendor());
-                    self::assertSame($existingKey->getPermissions(), $apiKey->getPermissions());
-                    self::assertSame('active', $apiKey->getStatus());
-                    self::assertSame(hash('sha256', $newPlainToken), $apiKey->getTokenHash());
-
-                    return true;
-                }), false],
-            );
+            ->willReturnCallback(function (VendorApiKey $apiKey, bool $flush = false) use (&$savedKeys): void {
+                $savedKeys[] = [$apiKey, $flush];
+            });
         $this->entityManager->expects(self::once())->method('flush');
 
         $service = new VendorApiKeyService($this->entityManager, $this->repository);
@@ -78,6 +70,16 @@ final class VendorApiKeyServiceTest extends TestCase
 
         self::assertSame(64, strlen($newPlainToken));
         self::assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $newPlainToken);
+        self::assertCount(2, $savedKeys);
+        self::assertSame($existingKey, $savedKeys[0][0]);
+        self::assertFalse($savedKeys[0][1]);
+        self::assertSame('inactive', $savedKeys[0][0]->getStatus());
+        self::assertInstanceOf(VendorApiKey::class, $savedKeys[1][0]);
+        self::assertFalse($savedKeys[1][1]);
+        self::assertSame($vendor, $savedKeys[1][0]->getVendor());
+        self::assertSame($existingKey->getPermissions(), $savedKeys[1][0]->getPermissions());
+        self::assertSame('active', $savedKeys[1][0]->getStatus());
+        self::assertSame(hash('sha256', $newPlainToken), $savedKeys[1][0]->getTokenHash());
     }
 
     public function testValidateTokenRespectsPermissionGateAndTouchesActiveKeyOnSuccess(): void

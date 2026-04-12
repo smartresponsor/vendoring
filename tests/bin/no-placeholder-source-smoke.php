@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
-$root = dirname(__DIR__, 2).'/src';
+$root = dirname(__DIR__, 2) . '/src';
 $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS));
 
 foreach (vendoring_php_files($iterator) as $file) {

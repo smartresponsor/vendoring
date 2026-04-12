@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
 $composer = vendoring_load_composer_json($root);
@@ -12,13 +12,13 @@ if (!vendoring_has_script($composer, 'test:transaction-persistence')) {
     exit(1);
 }
 
-$migrationPath = $root.'/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql';
+$migrationPath = $root . '/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql';
 if (!is_file($migrationPath)) {
     fwrite(STDERR, "Missing SQLite transaction migration\n");
     exit(1);
 }
 
-$repositoryPath = $root.'/src/Repository/VendorTransactionRepository.php';
+$repositoryPath = $root . '/src/Repository/VendorTransactionRepository.php';
 if (!is_file($repositoryPath)) {
     fwrite(STDERR, "Missing VendorTransactionRepository.php\n");
     exit(1);

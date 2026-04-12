@@ -15,6 +15,7 @@ use App\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\VendorTransactionData;
 use App\ValueObject\VendorTransactionErrorCode;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -55,8 +56,19 @@ final readonly class VendorTransactionManager implements VendorTransactionManage
             amount: $this->amountPolicy->normalize($data->amount),
         );
 
-        $this->em->persist($tx);
-        $this->em->flush();
+        try {
+            $this->em->persist($tx);
+            $this->em->flush();
+        } catch (UniqueConstraintViolationException $exception) {
+            $this->runtimeLogger->warning('vendor_transaction_duplicate_rejected', [
+                'vendor_id' => $vendorId,
+                'order_id' => $orderId,
+                'project_id' => $projectId,
+                'error_code' => VendorTransactionErrorCode::DUPLICATE_TRANSACTION,
+            ]);
+
+            throw new InvalidArgumentException(VendorTransactionErrorCode::DUPLICATE_TRANSACTION, previous: $exception);
+        }
 
         $this->dispatcher->dispatch(new VendorTransactionEvent($tx), VendorTransactionEvent::EVENT_NAME);
         $this->runtimeLogger->info('vendor_transaction_created', [

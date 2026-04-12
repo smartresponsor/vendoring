@@ -12,6 +12,4 @@ use Doctrine\Persistence\ObjectRepository;
 /**
  * @extends ObjectRepository<VendorDocument>
  */
-interface VendorDocumentRepositoryInterface extends ObjectRepository
-{
-}
+interface VendorDocumentRepositoryInterface extends ObjectRepository {}

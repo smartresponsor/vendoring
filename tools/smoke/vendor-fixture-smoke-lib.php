@@ -30,8 +30,8 @@ function vendoringFixtureSmokeBootstrap(string $databasePrefix): array
             'APP_ENV' => 'test',
             'APP_DEBUG' => '0',
             'APP_SECRET' => VENDOR_FIXTURE_SMOKE_APP_SECRET,
-            'VENDOR_DSN' => 'sqlite:///'.$databaseFile,
-            'VENDOR_SQLITE_DSN' => 'sqlite:///'.$databaseFile,
+            'VENDOR_DSN' => 'sqlite:///' . $databaseFile,
+            'VENDOR_SQLITE_DSN' => 'sqlite:///' . $databaseFile,
         ],
     ];
 }
@@ -50,7 +50,7 @@ function vendoringFixtureSmokeRunCommands(array $commands, string $root, array $
             continue;
         }
 
-        fwrite(STDERR, $process->getErrorOutput().$process->getOutput());
+        fwrite(STDERR, $process->getErrorOutput() . $process->getOutput());
         exit($process->getExitCode() ?? 1);
     }
 }

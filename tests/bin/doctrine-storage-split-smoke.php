@@ -1,11 +1,12 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$doctrine = (string) file_get_contents($root.'/config/packages/doctrine.yaml');
-$vendorBridge = (string) file_get_contents($root.'/config/packages/vendor_bridge.yaml');
+$doctrine = (string) file_get_contents($root . '/config/packages/doctrine.yaml');
+$vendorBridge = (string) file_get_contents($root . '/config/packages/vendor_bridge.yaml');
 
 $checks = [
     ['default connection must target user_data', str_contains($doctrine, 'default_connection: user_data')],

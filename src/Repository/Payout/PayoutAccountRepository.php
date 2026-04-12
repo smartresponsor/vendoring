@@ -11,9 +11,7 @@ use Doctrine\DBAL\Exception;
 
 final readonly class PayoutAccountRepository implements PayoutAccountRepositoryInterface
 {
-    public function __construct(private Connection $db)
-    {
-    }
+    public function __construct(private Connection $db) {}
 
     /** @throws Exception */
     public function get(string $tenantId, string $vendorId): ?PayoutAccount
@@ -33,7 +31,7 @@ final readonly class PayoutAccountRepository implements PayoutAccountRepositoryI
             $this->stringCell($accountRow, 'provider'),
             $this->stringCell($accountRow, 'account_ref'),
             $this->stringCell($accountRow, 'currency'),
-            $this->boolCell($accountRow, 'active'),
+            $this->activeCell($accountRow),
             $this->stringCell($accountRow, 'created_at'),
         );
     }
@@ -81,9 +79,9 @@ final readonly class PayoutAccountRepository implements PayoutAccountRepositoryI
     }
 
     /** @param array<string, mixed> $row */
-    private function boolCell(array $row, string $key): bool
+    private function activeCell(array $row): bool
     {
-        return filter_var($row[$key] ?? false, FILTER_VALIDATE_BOOL);
+        return filter_var($row['active'] ?? false, FILTER_VALIDATE_BOOL);
     }
 
     private function intValue(mixed $value): int

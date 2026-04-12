@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -13,9 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class CatalogMerchService implements CatalogMerchServiceInterface
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
-    }
+    public function __construct(private EntityManagerInterface $entityManager) {}
 
     public function pinCreate(string $categoryId, string $recordId, int $position): void
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
 $composer = vendoring_load_composer_json($root);
@@ -16,7 +16,7 @@ foreach ($requiredScripts as $scriptName) {
     }
 }
 
-$controller = (string) file_get_contents($root.'/src/Controller/VendorTransactionController.php');
+$controller = (string) file_get_contents($root . '/src/Controller/VendorTransactionController.php');
 if (!str_contains($controller, 'extends AbstractController')) {
     fwrite(STDERR, "VendorTransactionController must extend AbstractController.\n");
     exit(1);

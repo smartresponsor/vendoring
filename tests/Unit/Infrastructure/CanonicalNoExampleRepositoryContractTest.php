@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure;
 
-require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+require_once dirname(__DIR__, 2) . '/bin/_composer_json.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -29,13 +29,13 @@ final class CanonicalNoExampleRepositoryContractTest extends TestCase
         $hits = [];
 
         foreach ($paths as $path) {
-            $absolutePath = $root.DIRECTORY_SEPARATOR.$path;
+            $absolutePath = $root . DIRECTORY_SEPARATOR . $path;
             if (!is_dir($absolutePath)) {
                 continue;
             }
 
             $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($absolutePath, \FilesystemIterator::SKIP_DOTS)
+                new \RecursiveDirectoryIterator($absolutePath, \FilesystemIterator::SKIP_DOTS),
             );
 
             foreach (vendoring_php_files($iterator) as $file) {
@@ -45,11 +45,11 @@ final class CanonicalNoExampleRepositoryContractTest extends TestCase
                 }
 
                 if (str_contains($contents, 'example.com')) {
-                    $hits[] = str_replace($root.DIRECTORY_SEPARATOR, '', $file->getPathname());
+                    $hits[] = str_replace($root . DIRECTORY_SEPARATOR, '', $file->getPathname());
                 }
             }
         }
 
-        self::assertSame([], $hits, 'Found example.com markers in operational repository layers: '.implode(', ', $hits));
+        self::assertSame([], $hits, 'Found example.com markers in operational repository layers: ' . implode(', ', $hits));
     }
 }

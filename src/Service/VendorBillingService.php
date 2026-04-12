@@ -27,7 +27,12 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
     public function upsert(Vendor $vendor, VendorBillingDTO $dto): VendorBilling
     {
         $billing = $this->repository->findOneBy(['vendor' => $vendor]) ?? new VendorBilling($vendor);
-        $billing->update($dto->iban, $dto->swift, $dto->payoutMethod, $dto->billingEmail);
+        $billing->update(
+            $this->normalizeNullableString($dto->iban),
+            $this->normalizeNullableString($dto->swift),
+            $this->normalizeRequiredString($dto->payoutMethod, 'bank'),
+            $this->normalizeNullableString($dto->billingEmail),
+        );
 
         $this->em->persist($billing);
         $this->em->flush();
@@ -49,5 +54,23 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
         $this->em->flush();
 
         $this->dispatcher->dispatch(new VendorPayoutCompletedEvent($billing, $amountMinor));
+    }
+
+    private function normalizeNullableString(?string $value): ?string
+    {
+        if (null === $value) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        return '' === $trimmed ? null : $trimmed;
+    }
+
+    private function normalizeRequiredString(?string $value, string $default): string
+    {
+        $trimmed = null === $value ? '' : trim($value);
+
+        return '' === $trimmed ? $default : $trimmed;
     }
 }

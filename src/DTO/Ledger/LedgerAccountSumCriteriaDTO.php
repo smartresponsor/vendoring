@@ -13,6 +13,5 @@ final readonly class LedgerAccountSumCriteriaDTO
         public ?string $to = null,
         public ?string $vendorId = null,
         public ?string $currency = null,
-    ) {
-    }
+    ) {}
 }

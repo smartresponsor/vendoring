@@ -19,9 +19,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/vendor-ownership')]
 final class VendorOwnershipController extends AbstractController
 {
-    public function __construct(private readonly VendorOwnershipViewBuilderInterface $ownershipViewBuilder)
-    {
-    }
+    public function __construct(private readonly VendorOwnershipViewBuilderInterface $ownershipViewBuilder) {}
 
     /**
      * Show ownership information for one vendor.

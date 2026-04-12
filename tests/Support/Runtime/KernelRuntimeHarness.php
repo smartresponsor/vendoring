@@ -32,7 +32,7 @@ final class KernelRuntimeHarness
             throw new \RuntimeException('Failed to allocate sqlite database file.');
         }
 
-        $databaseDsn = 'sqlite:///'.$databaseFile;
+        $databaseDsn = 'sqlite:///' . $databaseFile;
 
         $_ENV['APP_ENV'] = $environment;
         $_SERVER['APP_ENV'] = $environment;
@@ -111,7 +111,7 @@ final class KernelRuntimeHarness
     {
         $server = ['CONTENT_TYPE' => 'application/json'];
         foreach ($headers as $name => $value) {
-            $normalized = 'HTTP_'.strtoupper(str_replace('-', '_', $name));
+            $normalized = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
             $server[$normalized] = $value;
         }
         $content = null === $payload ? null : json_encode($payload, JSON_THROW_ON_ERROR);
@@ -160,7 +160,7 @@ final class KernelRuntimeHarness
         }
 
         if ($response->headers->get('Location') !== $expectedLocation) {
-            throw new \RuntimeException('Unexpected redirect target: '.(string) $response->headers->get('Location'));
+            throw new \RuntimeException('Unexpected redirect target: ' . (string) $response->headers->get('Location'));
         }
     }
 
@@ -206,7 +206,7 @@ final class KernelRuntimeHarness
             throw new \RuntimeException('Runtime harness expected an EntityManagerInterface instance.');
         }
 
-        $vendor = new Vendor('Runtime Harness Vendor '.bin2hex(random_bytes(4)));
+        $vendor = new Vendor('Runtime Harness Vendor ' . bin2hex(random_bytes(4)));
         $vendor->activate();
         $entityManager->persist($vendor);
         $entityManager->flush();

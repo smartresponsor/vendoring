@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure;
 
-require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+require_once dirname(__DIR__, 2) . '/bin/_composer_json.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -62,7 +62,7 @@ final class ComposerGuardScriptParityTest extends TestCase
         ];
 
         foreach ($expected as $scriptName => $commands) {
-            self::assertSame($commands, vendoring_script_commands($composer, $scriptName), $scriptName.' must use canonical smoke + unit/filter pattern');
+            self::assertSame($commands, vendoring_script_commands($composer, $scriptName), $scriptName . ' must use canonical smoke + unit/filter pattern');
         }
     }
 

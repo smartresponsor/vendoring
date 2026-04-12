@@ -12,6 +12,5 @@ final readonly class VendorBillingDTO
         public ?string $swift = null,
         public string $payoutMethod = 'bank',
         public ?string $billingEmail = null,
-    ) {
-    }
+    ) {}
 }

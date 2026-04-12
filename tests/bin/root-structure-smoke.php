@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
 
-$canonical = $root.'/src/Controller/VendorTransactionController.php';
-$forbidden = $root.'/VendorTransactionController.php';
+$canonical = $root . '/src/Controller/VendorTransactionController.php';
+$forbidden = $root . '/VendorTransactionController.php';
 
 if (!is_file($canonical)) {
     fwrite(STDERR, "Missing canonical src/Controller/VendorTransactionController.php\n");
@@ -17,7 +17,7 @@ if (is_file($forbidden)) {
     exit(1);
 }
 
-$rootPhpFiles = glob($root.'/*.php') ?: [];
+$rootPhpFiles = glob($root . '/*.php') ?: [];
 foreach ($rootPhpFiles as $path) {
     $name = basename($path);
     if (str_starts_with($name, '.')) {
@@ -39,11 +39,11 @@ $waveArtifacts = array_values(array_filter(scandir($root) ?: [], static function
 }));
 
 if ([] !== $waveArtifacts) {
-    fwrite(STDERR, 'Root must not contain wave artifact markdown files: '.implode(', ', $waveArtifacts).PHP_EOL);
+    fwrite(STDERR, 'Root must not contain wave artifact markdown files: ' . implode(', ', $waveArtifacts) . PHP_EOL);
     exit(1);
 }
 
-$gitignore = is_file($root.'/.gitignore') ? (string) file_get_contents($root.'/.gitignore') : '';
+$gitignore = is_file($root . '/.gitignore') ? (string) file_get_contents($root . '/.gitignore') : '';
 
 if (!str_contains($gitignore, 'PROTOCOL_ANALYSIS.md')) {
     fwrite(STDERR, "Local protocol analysis markdown artifacts must be ignored by git when present in a current slice\n");

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure;
 
-require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+require_once dirname(__DIR__, 2) . '/bin/_composer_json.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -28,14 +28,14 @@ final class ComposerScriptInvocationParityTest extends TestCase
                 self::assertStringNotContainsString(
                     'vendor/bin/phpunit ',
                     preg_replace('/^php\s+vendor\/bin\/phpunit\s+/', '', $command) ?? $command,
-                    'Non-canonical phpunit invocation remains in script: '.$name
+                    'Non-canonical phpunit invocation remains in script: ' . $name,
                 );
 
                 if (str_contains($command, 'vendor/bin/phpunit')) {
                     self::assertStringStartsWith(
                         'php vendor/bin/phpunit ',
                         $command,
-                        'Phpunit command must be prefixed with php in script: '.$name
+                        'Phpunit command must be prefixed with php in script: ' . $name,
                     );
                 }
             }

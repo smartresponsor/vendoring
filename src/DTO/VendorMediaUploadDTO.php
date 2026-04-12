@@ -12,6 +12,5 @@ final readonly class VendorMediaUploadDTO
         public ?string $logoPath = null,
         public ?string $bannerPath = null,
         public ?array $gallery = null,
-    ) {
-    }
+    ) {}
 }

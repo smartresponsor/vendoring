@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -22,7 +23,7 @@ if (!is_dir($src)) {
 $issues = [];
 
 $rii = new RecursiveIteratorIterator(
-    new RecursiveDirectoryIterator($src, FilesystemIterator::SKIP_DOTS)
+    new RecursiveDirectoryIterator($src, FilesystemIterator::SKIP_DOTS),
 );
 
 foreach ($rii as $file) {
@@ -82,7 +83,7 @@ if ($issues !== []) {
     foreach ($issues as $line) {
         echo $line, "\n";
     }
-    fwrite(STDERR, "Vendor canon scan: FAIL (" . count($issues) . " issue(s))\n");
+    fwrite(STDERR, 'Vendor canon scan: FAIL (' . count($issues) . " issue(s))\n");
     exit(1);
 }
 

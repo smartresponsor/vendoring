@@ -36,9 +36,9 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
             $this->requiredString($payload, 'vendorId'),
             $this->requiredString($payload, 'provider'),
             $this->requiredString($payload, 'accountRef'),
-            $this->requiredString($payload, 'currency'),
+            strtoupper($this->requiredString($payload, 'currency')),
             $this->boolValue($payload['active'] ?? true),
-            new DateTimeImmutable()->format('Y-m-d H:i:s'),
+            (new DateTimeImmutable())->format('Y-m-d H:i:s'),
         );
 
         $this->accounts->upsert($account);
@@ -50,13 +50,18 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
     private function requiredString(array $payload, string $field): string
     {
         $value = $payload[$field] ?? null;
+        $normalized = null;
 
         if (is_string($value)) {
-            return $value;
+            $normalized = trim($value);
         }
 
         if (is_int($value) || is_float($value)) {
-            return (string) $value;
+            $normalized = (string) $value;
+        }
+
+        if (null !== $normalized && '' !== $normalized) {
+            return $normalized;
         }
 
         throw new InvalidArgumentException(sprintf('%s required', $field));

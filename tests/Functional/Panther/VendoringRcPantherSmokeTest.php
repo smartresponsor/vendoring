@@ -49,8 +49,8 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         $client = self::createExternalBaseClient();
 
         $suffix = bin2hex(random_bytes(6));
-        $vendorId = 'panther-vendor-'.$suffix;
-        $orderId = 'panther-order-'.$suffix;
+        $vendorId = 'panther-vendor-' . $suffix;
+        $orderId = 'panther-order-' . $suffix;
 
         // create
         $client->request(
@@ -64,7 +64,7 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
                 'orderId' => $orderId,
                 'projectId' => 'panther-project',
                 'amount' => '15.00',
-            ], JSON_THROW_ON_ERROR)
+            ], JSON_THROW_ON_ERROR),
         );
 
         $createPayload = self::decodeJsonResponse($client, 201);
@@ -75,7 +75,7 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         $id = $createPayload['id'];
 
         // list
-        $client->request('GET', '/api/vendor-transactions/vendor/'.$vendorId);
+        $client->request('GET', '/api/vendor-transactions/vendor/' . $vendorId);
         $listPayload = self::decodeJsonResponse($client);
 
         self::assertIsArray($listPayload['data']);
@@ -93,11 +93,11 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         // update status
         $client->request(
             'POST',
-            '/api/vendor-transactions/vendor/'.$vendorId.'/'.$id.'/status',
+            '/api/vendor-transactions/vendor/' . $vendorId . '/' . $id . '/status',
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
-            json_encode(['status' => 'authorized'], JSON_THROW_ON_ERROR)
+            json_encode(['status' => 'authorized'], JSON_THROW_ON_ERROR),
         );
 
         $updatePayload = self::decodeJsonResponse($client);
@@ -111,8 +111,8 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         $client = self::createExternalBaseClient();
 
         $suffix = bin2hex(random_bytes(6));
-        $vendorId = 'panther-dup-'.$suffix;
-        $orderId = 'panther-dup-order-'.$suffix;
+        $vendorId = 'panther-dup-' . $suffix;
+        $orderId = 'panther-dup-order-' . $suffix;
 
         $payload = json_encode([
             'vendorId' => $vendorId,

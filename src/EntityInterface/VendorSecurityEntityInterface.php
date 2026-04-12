@@ -6,6 +6,4 @@ declare(strict_types=1);
 
 namespace App\EntityInterface;
 
-interface VendorSecurityEntityInterface extends VendorSecurityInterface
-{
-}
+interface VendorSecurityEntityInterface extends VendorSecurityInterface {}

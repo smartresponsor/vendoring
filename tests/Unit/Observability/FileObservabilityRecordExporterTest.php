@@ -11,7 +11,7 @@ final class FileObservabilityRecordExporterTest extends TestCase
 {
     public function testExporterWritesStructuredNdjsonRecordIntoNamedStream(): void
     {
-        $dir = sys_get_temp_dir().'/vendoring-observability-'.bin2hex(random_bytes(4));
+        $dir = sys_get_temp_dir() . '/vendoring-observability-' . bin2hex(random_bytes(4));
         $exporter = new FileObservabilityRecordExporter($dir);
 
         $exporter->export('runtime_logs', [
@@ -20,7 +20,7 @@ final class FileObservabilityRecordExporterTest extends TestCase
             'message' => 'runtime_check',
         ]);
 
-        $path = $dir.'/runtime_logs.ndjson';
+        $path = $dir . '/runtime_logs.ndjson';
 
         self::assertFileExists($path);
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

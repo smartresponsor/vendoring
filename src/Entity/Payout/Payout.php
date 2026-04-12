@@ -18,6 +18,5 @@ final class Payout
         public string $createdAt,
         public ?string $processedAt = null,
         public array $meta = [],
-    ) {
-    }
+    ) {}
 }

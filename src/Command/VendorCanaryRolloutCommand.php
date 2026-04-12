@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Command\Support\CommandIoException;
+use App\Command\Support\CommandJsonArtifactWriter;
+use App\Command\Support\CommandOutputFormat;
+use App\Command\Support\CommandResultEmitter;
 use App\ServiceInterface\Rollout\CanaryRolloutCoordinatorInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * CLI entrypoint for rendering canary rollout readiness and recommended next action.
@@ -17,8 +22,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'app:vendor:canary-rollout', description: 'Render canary rollout readiness for one flag and cohort')]
 final class VendorCanaryRolloutCommand extends Command
 {
-    public function __construct(private readonly CanaryRolloutCoordinatorInterface $canaryRolloutCoordinator)
-    {
+    public function __construct(
+        private readonly CanaryRolloutCoordinatorInterface $canaryRolloutCoordinator,
+        private readonly CommandJsonArtifactWriter $commandJsonArtifactWriter,
+        private readonly CommandResultEmitter $commandResultEmitter,
+    ) {
         parent::__construct();
     }
 
@@ -40,8 +48,10 @@ final class VendorCanaryRolloutCommand extends Command
     {
         $flagOption = $input->getOption('flag');
         $flagName = is_scalar($flagOption) ? trim((string) $flagOption) : '';
+        $format = CommandOutputFormat::normalize($input->getOption('format'));
+
         if ('' === $flagName) {
-            $output->writeln('flag option is required');
+            $this->commandResultEmitter->emitError($output, $format, 'invalid', 'flag option is required');
 
             return Command::INVALID;
         }
@@ -49,26 +59,53 @@ final class VendorCanaryRolloutCommand extends Command
         $tenantOption = $input->getOption('tenantId');
         $vendorOption = $input->getOption('vendorId');
         $windowOption = $input->getOption('windowSeconds');
-        $formatOption = $input->getOption('format');
 
         $tenantId = is_scalar($tenantOption) && '' !== trim((string) $tenantOption) ? trim((string) $tenantOption) : null;
         $vendorId = is_scalar($vendorOption) && '' !== trim((string) $vendorOption) ? trim((string) $vendorOption) : null;
         $windowSeconds = is_scalar($windowOption) ? max(1, (int) $windowOption) : 900;
-        $format = is_scalar($formatOption) ? (string) $formatOption : 'text';
 
-        $report = $this->canaryRolloutCoordinator->evaluate($flagName, $tenantId, $vendorId, $windowSeconds);
+        try {
+            $report = $this->canaryRolloutCoordinator->evaluate($flagName, $tenantId, $vendorId, $windowSeconds);
+        } catch (Throwable $throwable) {
+            $this->commandResultEmitter->emitThrowableError(
+                $output,
+                $format,
+                'failed',
+                'Failed to evaluate canary rollout',
+                $throwable,
+                [
+                    'flag' => $flagName,
+                    'tenantId' => $tenantId,
+                    'vendorId' => $vendorId,
+                    'windowSeconds' => $windowSeconds,
+                ],
+            );
 
-        if ($input->getOption('write')) {
-            $path = is_scalar($input->getOption('output')) && '' !== trim((string) $input->getOption('output'))
-                ? trim((string) $input->getOption('output'))
-                : dirname(__DIR__, 2).'/build/release/canary-rollout.json';
-            $this->writeJson($path, $report);
+            return Command::FAILURE;
         }
 
-        if ('json' === $format) {
-            $output->writeln((string) json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        try {
+            $writtenPath = $this->commandJsonArtifactWriter->writeIfRequested(
+                (bool) $input->getOption('write'),
+                $input->getOption('output'),
+                dirname(__DIR__, 2) . '/build/release/canary-rollout.json',
+                $report,
+            );
+        } catch (CommandIoException $exception) {
+            $this->commandResultEmitter->emitError($output, $format, 'failed', $exception->getMessage(), [
+                'flag' => $flagName,
+                'tenantId' => $tenantId,
+                'vendorId' => $vendorId,
+                'windowSeconds' => $windowSeconds,
+            ]);
 
-            return Command::SUCCESS;
+            return Command::FAILURE;
+        }
+
+        if (CommandOutputFormat::isJson($format)) {
+            return $this->commandResultEmitter->emitJson($output, $report)
+                ? Command::SUCCESS
+                : Command::FAILURE;
         }
 
         $output->writeln(sprintf(
@@ -80,18 +117,10 @@ final class VendorCanaryRolloutCommand extends Command
             $report['canary']['nextCohort'] ?? 'none',
         ));
 
-        return Command::SUCCESS;
-    }
-
-    /**
-     * @param array<string,mixed> $payload
-     */
-    private function writeJson(string $path, array $payload): void
-    {
-        $dir = dirname($path);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
+        if (null !== $writtenPath) {
+            $output->writeln(sprintf('written=%s', $writtenPath));
         }
-        file_put_contents($path, (string) json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+        return Command::SUCCESS;
     }
 }

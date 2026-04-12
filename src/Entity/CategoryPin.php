@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class CategoryPin
 {
     private ?string $id;

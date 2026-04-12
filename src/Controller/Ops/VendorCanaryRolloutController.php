@@ -16,9 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/vendor-monitoring')]
 final class VendorCanaryRolloutController extends AbstractController
 {
-    public function __construct(private readonly CanaryRolloutCoordinatorInterface $canaryRolloutCoordinator)
-    {
-    }
+    public function __construct(private readonly CanaryRolloutCoordinatorInterface $canaryRolloutCoordinator) {}
 
     /**
      * Render canary rollout status for one flag and runtime cohort.

@@ -11,6 +11,7 @@ use App\Entity\VendorApiKey;
 use App\RepositoryInterface\VendorApiKeyRepositoryInterface;
 use App\ServiceInterface\VendorApiKeyServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ManagerException;
 use Random\RandomException;
 
 /**
@@ -25,8 +26,7 @@ final readonly class VendorApiKeyService implements VendorApiKeyServiceInterface
     public function __construct(
         private EntityManagerInterface $em,
         private VendorApiKeyRepositoryInterface $apiKeyRepo,
-    ) {
-    }
+    ) {}
 
     /** @throws RandomException */
     public function createKey(Vendor $vendor, string $permissions): string
@@ -89,6 +89,7 @@ final readonly class VendorApiKeyService implements VendorApiKeyServiceInterface
         return $apiKey->getVendor();
     }
 
+    /** @throws ManagerException */
     public function validateAuthorizationHeader(string $authorizationHeader, ?string $permission = null): ?Vendor
     {
         $authorizationHeader = trim($authorizationHeader);
@@ -108,6 +109,7 @@ final readonly class VendorApiKeyService implements VendorApiKeyServiceInterface
         return $this->validateToken($plainToken, $permission);
     }
 
+    /** @throws ManagerException */
     public function resolveVendorFromAuthHeader(string $authorizationHeader): ?Vendor
     {
         return $this->validateAuthorizationHeader($authorizationHeader);

@@ -8,7 +8,5 @@ use App\Entity\VendorAttachment;
 
 final readonly class VendorAttachmentUploadedEvent
 {
-    public function __construct(public VendorAttachment $attachment)
-    {
-    }
+    public function __construct(public VendorAttachment $attachment) {}
 }

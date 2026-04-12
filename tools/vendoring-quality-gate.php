@@ -13,7 +13,7 @@ declare(strict_types=1);
  *   php tools/vendoring-quality-gate.php
  */
 
-$repoRoot = realpath(__DIR__.'/..') ?: getcwd();
+$repoRoot = realpath(__DIR__ . '/..') ?: getcwd();
 if (!is_string($repoRoot) || '' === $repoRoot) {
     fwrite(STDERR, "ERROR: cannot resolve repo root\n");
     exit(2);
@@ -39,11 +39,11 @@ foreach ($cmdList as $cmd) {
             2 => STDERR,
         ],
         $pipes,
-        $repoRoot
+        $repoRoot,
     );
 
     if (!is_resource($proc)) {
-        fwrite(STDERR, "ERROR: cannot run ".$cmd[0]."\n");
+        fwrite(STDERR, 'ERROR: cannot run ' . $cmd[0] . "\n");
         $hasFail = true;
         continue;
     }

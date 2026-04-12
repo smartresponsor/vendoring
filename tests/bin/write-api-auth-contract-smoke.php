@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Tests\Support\Runtime\KernelRuntimeHarness;
 
-require dirname(__DIR__, 2).'/vendor/autoload.php';
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 $projectRoot = dirname(__DIR__, 2);
 
@@ -36,7 +36,7 @@ try {
         'vendorId' => 'auth-vendor',
         'orderId' => 'auth-order-read-only',
         'amount' => '10.00',
-    ], ['Authorization' => 'Bearer '.$readOnlyToken]);
+    ], ['Authorization' => 'Bearer ' . $readOnlyToken]);
     $readOnlyPayload = KernelRuntimeHarness::decodeJson($readOnlyResponse);
 
     if (403 !== $readOnlyResponse->getStatusCode() || ($readOnlyPayload['error'] ?? null) !== 'permission_denied') {
@@ -48,7 +48,7 @@ try {
         'vendorId' => 'auth-vendor',
         'orderId' => 'auth-order-write',
         'amount' => '10.00',
-    ], ['Authorization' => 'Bearer '.$writeToken]);
+    ], ['Authorization' => 'Bearer ' . $writeToken]);
     $writePayload = KernelRuntimeHarness::decodeJson($writeResponse);
 
     if (201 !== $writeResponse->getStatusCode() || ($writePayload['status'] ?? null) !== 'pending') {

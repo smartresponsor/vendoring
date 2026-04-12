@@ -76,7 +76,7 @@ final class SendVendorStatementsCommandTest extends TestCase
     {
         $command = new SendVendorStatementsCommand(
             new FakeVendorStatementService(['balance' => 0.0]),
-            new FakeStatementExporterPDF(sys_get_temp_dir().'/missing-statement.pdf'),
+            new FakeStatementExporterPDF(sys_get_temp_dir() . '/missing-statement.pdf'),
             new FakeVendorStatementMailerService(true, 'sent'),
             new FakeVendorStatementRecipientProvider([]),
         );

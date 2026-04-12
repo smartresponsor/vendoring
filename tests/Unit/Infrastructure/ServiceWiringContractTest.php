@@ -71,15 +71,15 @@ final class ServiceWiringContractTest extends TestCase
     #[DataProvider('serviceAliasMapProvider')]
     public function testServicesYamlDefinesCanonicalAliases(string $interfaceClass, string $implementationClass): void
     {
-        $services = (string) file_get_contents(dirname(__DIR__, 3).'/config/vendor_services.yaml');
+        $services = (string) file_get_contents(dirname(__DIR__, 3) . '/config/vendor_services.yaml');
 
-        self::assertStringContainsString($interfaceClass.':', $services);
-        self::assertStringContainsString("'@".$implementationClass."'", $services);
+        self::assertStringContainsString($interfaceClass . ':', $services);
+        self::assertStringContainsString("'@" . $implementationClass . "'", $services);
     }
 
     public function testServicesYamlExcludesNonServiceTreesFromAppResource(): void
     {
-        $services = (string) file_get_contents(dirname(__DIR__, 3).'/config/vendor_services.yaml');
+        $services = (string) file_get_contents(dirname(__DIR__, 3) . '/config/vendor_services.yaml');
 
         foreach ([
             '../src/DTO/',
@@ -95,7 +95,7 @@ final class ServiceWiringContractTest extends TestCase
 
     public function testVendorApiKeyRepositoryClassExistsAsConcreteDoctrineRepository(): void
     {
-        $repositoryPath = dirname(__DIR__, 3).'/src/Repository/VendorApiKeyRepository.php';
+        $repositoryPath = dirname(__DIR__, 3) . '/src/Repository/VendorApiKeyRepository.php';
         self::assertFileExists($repositoryPath);
 
         $contents = (string) file_get_contents($repositoryPath);

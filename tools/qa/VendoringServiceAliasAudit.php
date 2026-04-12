@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$servicesYaml = $root.'/config/vendor_services.yaml';
+$servicesYaml = $root . '/config/vendor_services.yaml';
 
 if (!is_file($servicesYaml)) {
     fwrite(STDERR, "vendor_services.yaml not found\n");
@@ -18,7 +18,7 @@ $errors = [];
  */
 $collectPairs = static function (string $interfaceRoot, string $implementationRoot, string $interfaceNs, string $implementationNs) use ($root): array {
     $pairs = [];
-    $directory = $root.'/'.$interfaceRoot;
+    $directory = $root . '/' . $interfaceRoot;
 
     if (!is_dir($directory)) {
         return $pairs;
@@ -37,13 +37,13 @@ $collectPairs = static function (string $interfaceRoot, string $implementationRo
         $implementationRelativeClass = str_ends_with($relativeClass, 'Interface')
             ? substr($relativeClass, 0, -strlen('Interface'))
             : $relativeClass;
-        $implementationPath = $root.'/'.$implementationRoot.'/'.str_replace('\\', '/', $implementationRelativeClass).'.php';
+        $implementationPath = $root . '/' . $implementationRoot . '/' . str_replace('\\', '/', $implementationRelativeClass) . '.php';
 
         if (!is_file($implementationPath)) {
             continue;
         }
 
-        $pairs[] = [$interfaceNs.'\\'.$relativeClass, $implementationNs.'\\'.$implementationRelativeClass];
+        $pairs[] = [$interfaceNs . '\\' . $relativeClass, $implementationNs . '\\' . $implementationRelativeClass];
     }
 
     sort($pairs);
@@ -68,7 +68,7 @@ if ([] !== $errors) {
     fwrite(STDERR, "Missing canonical aliases in config/vendor_services.yaml:\n");
 
     foreach ($errors as $error) {
-        fwrite(STDERR, ' - '.$error."\n");
+        fwrite(STDERR, ' - ' . $error . "\n");
     }
 
     exit(1);

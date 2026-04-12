@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require __DIR__.'/_vendor_report_bootstrap.php';
+require __DIR__ . '/_vendor_report_bootstrap.php';
 
 vendorReportHeader('Vendor config drift report');
 
@@ -17,7 +17,7 @@ foreach ($pairs as [$left, $right]) {
     $leftExists = vendorReportFileExists($left);
     $rightExists = vendorReportFileExists($right);
     $ok = $leftExists && $rightExists;
-    vendorReportPrintCheck($left.' <-> '.$right, $ok);
+    vendorReportPrintCheck($left . ' <-> ' . $right, $ok);
     if (!$ok) {
         $hasWarning = true;
     }

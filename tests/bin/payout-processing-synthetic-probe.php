@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Tests\Support\Runtime\KernelRuntimeHarness;
 
-require dirname(__DIR__, 2).'/vendor/autoload.php';
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 $projectRoot = dirname(__DIR__, 2);
 
@@ -18,7 +18,7 @@ $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot
 try {
     $suffix = bin2hex(random_bytes(4));
     $correlationId = 'payout-processing-synthetic-probe';
-    $vendorId = 'probe-vendor-'.$suffix;
+    $vendorId = 'probe-vendor-' . $suffix;
 
     $createResponse = KernelRuntimeHarness::requestJson(
         $kernel,
@@ -30,7 +30,7 @@ try {
             'thresholdCents' => 0,
             'feeRate' => 0.10,
         ],
-        ['X-Correlation-ID' => $correlationId]
+        ['X-Correlation-ID' => $correlationId],
     );
 
     if (201 !== $createResponse->getStatusCode()) {
@@ -50,9 +50,9 @@ try {
     $getResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'GET',
-        '/api/payout/'.$payoutId,
+        '/api/payout/' . $payoutId,
         null,
-        ['X-Correlation-ID' => $correlationId]
+        ['X-Correlation-ID' => $correlationId],
     );
 
     if (200 !== $getResponse->getStatusCode()) {
@@ -67,9 +67,9 @@ try {
     $processResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'POST',
-        '/api/payout/process/'.$payoutId,
+        '/api/payout/process/' . $payoutId,
         [],
-        ['X-Correlation-ID' => $correlationId]
+        ['X-Correlation-ID' => $correlationId],
     );
 
     if (200 !== $processResponse->getStatusCode()) {
@@ -84,9 +84,9 @@ try {
     $afterResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'GET',
-        '/api/payout/'.$payoutId,
+        '/api/payout/' . $payoutId,
         null,
-        ['X-Correlation-ID' => $correlationId]
+        ['X-Correlation-ID' => $correlationId],
     );
 
     if (200 !== $afterResponse->getStatusCode()) {

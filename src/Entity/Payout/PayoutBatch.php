@@ -19,6 +19,5 @@ final class PayoutBatch
         public string $currency,
         public ?string $providerRef,
         public string $createdAt,
-    ) {
-    }
+    ) {}
 }

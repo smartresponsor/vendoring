@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-require __DIR__.'/_vendor_report_bootstrap.php';
+require __DIR__ . '/_vendor_report_bootstrap.php';
 
 vendorReportHeader('Vendor quality residue report');
 $root = vendorReportProjectRoot();
-$scanRoots = [$root.'/src', $root.'/tests', $root.'/config'];
+$scanRoots = [$root . '/src', $root . '/tests', $root . '/config'];
 $literalNeedles = ['TODO', 'FIXME'];
 $regexNeedles = [
     '/\bvar_dump\s*\(/',
@@ -34,13 +34,13 @@ foreach ($scanRoots as $scanRoot) {
         $contents = (string) file_get_contents($file->getPathname());
         foreach ($literalNeedles as $needle) {
             if (str_contains($contents, $needle)) {
-                $hits[] = str_replace($root.'/', '', $file->getPathname()).' :: '.$needle;
+                $hits[] = str_replace($root . '/', '', $file->getPathname()) . ' :: ' . $needle;
             }
         }
 
         foreach ($regexNeedles as $needle) {
             if (1 === preg_match($needle, $contents)) {
-                $hits[] = str_replace($root.'/', '', $file->getPathname()).' :: '.$needle;
+                $hits[] = str_replace($root . '/', '', $file->getPathname()) . ' :: ' . $needle;
             }
         }
     }

@@ -12,6 +12,5 @@ final readonly class VendorMetricOverviewRequestDTO
         public ?string $from = null,
         public ?string $to = null,
         public string $currency = 'USD',
-    ) {
-    }
+    ) {}
 }

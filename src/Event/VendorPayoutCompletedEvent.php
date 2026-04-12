@@ -8,7 +8,5 @@ use App\Entity\VendorBilling;
 
 final readonly class VendorPayoutCompletedEvent
 {
-    public function __construct(public VendorBilling $billing, public int $amountMinor = 0)
-    {
-    }
+    public function __construct(public VendorBilling $billing, public int $amountMinor = 0) {}
 }

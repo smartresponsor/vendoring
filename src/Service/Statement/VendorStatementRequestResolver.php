@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 final readonly class VendorStatementRequestResolver implements VendorStatementRequestResolverInterface
 {
+    private const string DEFAULT_CURRENCY = 'USD';
+
     public function resolveStatementRequest(string $vendorId, Request $request): ?VendorStatementRequestDTO
     {
         $tenantId = $this->requiredString($request, 'tenantId');
@@ -26,7 +28,7 @@ final readonly class VendorStatementRequestResolver implements VendorStatementRe
             $vendorId,
             $from,
             $to,
-            $this->stringOrDefault($request, 'currency', 'USD'),
+            $this->resolveCurrency($request),
         );
     }
 
@@ -49,6 +51,16 @@ final readonly class VendorStatementRequestResolver implements VendorStatementRe
 
     private function requiredString(Request $request, string $key): ?string
     {
+        return $this->nullableQueryString($request, $key);
+    }
+
+    private function resolveCurrency(Request $request): string
+    {
+        return $this->nullableQueryString($request, 'currency') ?? self::DEFAULT_CURRENCY;
+    }
+
+    private function nullableQueryString(Request $request, string $key): ?string
+    {
         $value = $request->query->get($key);
         if (!is_scalar($value)) {
             return null;
@@ -57,17 +69,5 @@ final readonly class VendorStatementRequestResolver implements VendorStatementRe
         $normalized = trim((string) $value);
 
         return '' === $normalized ? null : $normalized;
-    }
-
-    private function stringOrDefault(Request $request, string $key, string $default): string
-    {
-        $value = $request->query->get($key);
-        if (!is_scalar($value)) {
-            return $default;
-        }
-
-        $normalized = trim((string) $value);
-
-        return '' === $normalized ? $default : $normalized;
     }
 }

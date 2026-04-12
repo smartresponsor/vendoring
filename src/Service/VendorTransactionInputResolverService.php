@@ -40,7 +40,7 @@ final class VendorTransactionInputResolverService implements VendorTransactionIn
             vendorId: trim((string) $payload['vendorId']),
             orderId: trim((string) $payload['orderId']),
             projectId: $projectId,
-            amount: (string) $payload['amount'],
+            amount: trim((string) $payload['amount']),
         );
     }
 

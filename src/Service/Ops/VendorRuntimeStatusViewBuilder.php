@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Ops;
 
+use Doctrine\DBAL\Exception;
 use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Projection\VendorRuntimeStatusView;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
@@ -26,6 +27,7 @@ final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStat
         private VendorExternalIntegrationRuntimeViewBuilderInterface $externalIntegrationRuntimeViewBuilder,
     ) {}
 
+    /** @throws Exception */
     public function build(
         string $tenantId,
         string $vendorId,
@@ -66,7 +68,7 @@ final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStat
             'externalIntegration' => [] !== $externalIntegration,
         ];
 
-        $generatedAt = new DateTimeImmutable()->format(DATE_ATOM);
+        $generatedAt = (new DateTimeImmutable())->format(DATE_ATOM);
 
         return new VendorRuntimeStatusView(
             tenantId: $tenantId,

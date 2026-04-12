@@ -11,9 +11,9 @@ final class CanonicalNoExampleCommandHelpContractTest extends TestCase
     public function testVendorApiKeyCommandsDoNotUseExampleHelpWording(): void
     {
         $files = [
-            __DIR__.'/../../../src/Command/VendorApiKeyCreateCommand.php',
-            __DIR__.'/../../../src/Command/VendorApiKeyListCommand.php',
-            __DIR__.'/../../../src/Command/VendorApiKeyRotateCommand.php',
+            __DIR__ . '/../../../src/Command/VendorApiKeyCreateCommand.php',
+            __DIR__ . '/../../../src/Command/VendorApiKeyListCommand.php',
+            __DIR__ . '/../../../src/Command/VendorApiKeyRotateCommand.php',
         ];
 
         foreach ($files as $file) {

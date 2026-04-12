@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
 $composer = vendoring_load_composer_json($root);
@@ -60,19 +60,19 @@ $expectedScripts = [
 
 foreach ($expectedScripts as $name => $commands) {
     if (vendoring_script_commands($composer, $name) !== $commands) {
-        fwrite(STDERR, '[FAIL] composer script mismatch: '.$name.PHP_EOL);
+        fwrite(STDERR, '[FAIL] composer script mismatch: ' . $name . PHP_EOL);
         exit(1);
     }
 
-    fwrite(STDOUT, '[OK] '.$name.' uses canonical smoke + unit/filter pattern'.PHP_EOL);
+    fwrite(STDOUT, '[OK] ' . $name . ' uses canonical smoke + unit/filter pattern' . PHP_EOL);
 }
 
 $scripts = vendoring_composer_section($composer, 'scripts');
 $quality = vendoring_string_list($scripts['quality'] ?? null);
 
 if (!in_array('@test:composer-guard-parity', $quality, true)) {
-    fwrite(STDERR, '[FAIL] quality pipeline missing @test:composer-guard-parity'.PHP_EOL);
+    fwrite(STDERR, '[FAIL] quality pipeline missing @test:composer-guard-parity' . PHP_EOL);
     exit(1);
 }
 
-fwrite(STDOUT, '[OK] quality pipeline includes composer guard parity slice'.PHP_EOL);
+fwrite(STDOUT, '[OK] quality pipeline includes composer guard parity slice' . PHP_EOL);

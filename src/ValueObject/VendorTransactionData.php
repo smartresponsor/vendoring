@@ -19,6 +19,5 @@ final readonly class VendorTransactionData
         public string  $orderId,
         public ?string $projectId,
         public string  $amount,
-    ) {
-    }
+    ) {}
 }

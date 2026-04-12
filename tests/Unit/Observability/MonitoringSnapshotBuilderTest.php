@@ -11,34 +11,34 @@ final class MonitoringSnapshotBuilderTest extends TestCase
 {
     public function testBuildAggregatesLogsMetricsBreakersAndProbeArtifacts(): void
     {
-        $root = sys_get_temp_dir().'/vendoring-monitoring-'.bin2hex(random_bytes(4));
-        $observabilityDir = $root.'/observability';
-        $breakerDir = $root.'/fault-tolerance/circuit-breakers';
-        $projectDir = $root.'/project';
+        $root = sys_get_temp_dir() . '/vendoring-monitoring-' . bin2hex(random_bytes(4));
+        $observabilityDir = $root . '/observability';
+        $breakerDir = $root . '/fault-tolerance/circuit-breakers';
+        $projectDir = $root . '/project';
         mkdir($observabilityDir, 0777, true);
         mkdir($breakerDir, 0777, true);
-        mkdir($projectDir.'/docs', 0777, true);
+        mkdir($projectDir . '/docs', 0777, true);
 
-        file_put_contents($observabilityDir.'/runtime_logs.ndjson', json_encode([
+        file_put_contents($observabilityDir . '/runtime_logs.ndjson', json_encode([
             'timestamp' => (new \DateTimeImmutable())->format(DATE_ATOM),
             'level' => 'error',
             'route' => 'vendor_transaction_create',
             'error_code' => 'invalid_api_token',
-        ]).PHP_EOL);
-        file_put_contents($observabilityDir.'/runtime_metrics.ndjson', json_encode([
+        ]) . PHP_EOL);
+        file_put_contents($observabilityDir . '/runtime_metrics.ndjson', json_encode([
             'timestamp' => (new \DateTimeImmutable())->format(DATE_ATOM),
             'name' => 'statement_mail_failed_total',
-        ]).PHP_EOL);
-        file_put_contents($breakerDir.'/mail.json', json_encode([
+        ]) . PHP_EOL);
+        file_put_contents($breakerDir . '/mail.json', json_encode([
             'state' => 'open',
             'scopeKey' => 'tenant-1:vendor-1',
         ]));
-        file_put_contents($projectDir.'/docs/PHASE59_SYNTHETIC_RUNTIME_PROBES.md', "ok");
-        file_put_contents($projectDir.'/docs/PHASE61_FINANCE_SYNTHETIC_PROBE.md', "ok");
-        file_put_contents($projectDir.'/docs/PHASE62_PAYOUT_PROCESSING_SYNTHETIC_PROBE.md', "ok");
-        file_put_contents($projectDir.'/docs/PHASE60_DEPLOY_READINESS_POST_DEPLOY_PACK.md', "ok");
+        file_put_contents($projectDir . '/docs/PHASE59_SYNTHETIC_RUNTIME_PROBES.md', 'ok');
+        file_put_contents($projectDir . '/docs/PHASE61_FINANCE_SYNTHETIC_PROBE.md', 'ok');
+        file_put_contents($projectDir . '/docs/PHASE62_PAYOUT_PROCESSING_SYNTHETIC_PROBE.md', 'ok');
+        file_put_contents($projectDir . '/docs/PHASE60_DEPLOY_READINESS_POST_DEPLOY_PACK.md', 'ok');
 
-        $builder = new MonitoringSnapshotBuilder($observabilityDir, $root.'/fault-tolerance', $projectDir);
+        $builder = new MonitoringSnapshotBuilder($observabilityDir, $root . '/fault-tolerance', $projectDir);
         $snapshot = $builder->build(900);
 
         self::assertSame('warn', $snapshot['status']);

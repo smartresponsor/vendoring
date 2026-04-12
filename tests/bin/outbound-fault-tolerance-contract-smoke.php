@@ -11,10 +11,10 @@ use App\Service\Statement\VendorStatementMailerService;
 use App\Tests\Support\Statement\FakeMailer;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-require dirname(__DIR__, 2).'/vendor/autoload.php';
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 $policy = new OutboundOperationPolicy();
-$breakerDir = sys_get_temp_dir().'/vendoring-fault-smoke-'.bin2hex(random_bytes(4));
+$breakerDir = sys_get_temp_dir() . '/vendoring-fault-smoke-' . bin2hex(random_bytes(4));
 $breaker = new FileOutboundCircuitBreaker($breakerDir);
 $scopeKey = 'tenant-1:vendor-1';
 $breaker->recordFailure('statement_mail_send', $scopeKey, 2, 60);

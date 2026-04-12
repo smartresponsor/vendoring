@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Command\Support\CommandIoException;
+use App\Command\Support\CommandJsonArtifactWriter;
+use App\Command\Support\CommandOutputFormat;
+use App\Command\Support\CommandResultEmitter;
+use App\Command\Support\VendorRuntimeWindowInput;
 use App\ServiceInterface\Ops\VendorReleaseBaselineReaderInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use function is_string;
+use Throwable;
 
 #[AsCommand(
     name: 'app:vendor:release-baseline',
@@ -18,8 +23,11 @@ use function is_string;
 )]
 final class VendorReleaseBaselineCommand extends Command
 {
-    public function __construct(private readonly VendorReleaseBaselineReaderInterface $releaseBaselineReader)
-    {
+    public function __construct(
+        private readonly VendorReleaseBaselineReaderInterface $releaseBaselineReader,
+        private readonly CommandJsonArtifactWriter $commandJsonArtifactWriter,
+        private readonly CommandResultEmitter $commandResultEmitter,
+    ) {
         parent::__construct();
     }
 
@@ -40,58 +48,80 @@ final class VendorReleaseBaselineCommand extends Command
     /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $tenantIdOption = $input->getOption('tenantId');
-        $vendorIdOption = $input->getOption('vendorId');
-        $from = $input->getOption('from');
-        $to = $input->getOption('to');
-        $currencyOption = $input->getOption('currency');
-        $formatOption = $input->getOption('format');
-        $tenantId = is_scalar($tenantIdOption) ? (string) $tenantIdOption : '';
-        $vendorId = is_scalar($vendorIdOption) ? (string) $vendorIdOption : '';
-        $currency = is_scalar($currencyOption) ? (string) $currencyOption : 'USD';
-        $format = is_scalar($formatOption) ? (string) $formatOption : 'text';
+        $runtimeInput = VendorRuntimeWindowInput::fromInput($input);
 
-        if ('' === $tenantId || '' === $vendorId) {
-            $output->writeln('<error>Both --tenantId and --vendorId are required.</error>');
+        if (!$runtimeInput->hasRequiredScope()) {
+            $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'invalid', 'Both --tenantId and --vendorId are required.', [
+                'tenantId' => $runtimeInput->tenantId,
+                'vendorId' => $runtimeInput->vendorId,
+            ]);
 
             return Command::FAILURE;
         }
 
-        $view = $this->releaseBaselineReader->build(
-            tenantId: $tenantId,
-            vendorId: $vendorId,
-            from: is_string($from) ? $from : null,
-            to: is_string($to) ? $to : null,
-            currency: $currency,
-        )->toArray();
+        try {
+            $view = $this->releaseBaselineReader->build(
+                tenantId: $runtimeInput->tenantId,
+                vendorId: $runtimeInput->vendorId,
+                from: $runtimeInput->from,
+                to: $runtimeInput->to,
+                currency: $runtimeInput->currency,
+            )->toArray();
+        } catch (Throwable $throwable) {
+            $this->commandResultEmitter->emitThrowableError(
+                $output,
+                $runtimeInput->format,
+                'failed',
+                'Failed to build vendor release baseline',
+                $throwable,
+                [
+                    'tenantId' => $runtimeInput->tenantId,
+                    'vendorId' => $runtimeInput->vendorId,
+                    'from' => $runtimeInput->from,
+                    'to' => $runtimeInput->to,
+                    'currency' => $runtimeInput->currency,
+                ],
+            );
 
-        $json = (string) json_encode($view, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-
-        if ($input->getOption('write')) {
-            $path = $input->getOption('output');
-            $outputPath = is_string($path) && '' !== $path
-                ? $path
-                : dirname(__DIR__, 2).'/build/release/vendor-release-baseline.json';
-            $dir = dirname($outputPath);
-            if (!is_dir($dir)) {
-                mkdir($dir, 0777, true);
-            }
-            file_put_contents($outputPath, $json);
+            return Command::FAILURE;
         }
 
-        if ('json' === $format) {
-            $output->writeln($json);
+        try {
+            $writtenPath = $this->commandJsonArtifactWriter->writeIfRequested(
+                (bool) $input->getOption('write'),
+                $input->getOption('output'),
+                dirname(__DIR__, 2) . '/build/release/vendor-release-baseline.json',
+                $view,
+            );
+        } catch (CommandIoException $exception) {
+            $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'failed', $exception->getMessage(), [
+                'tenantId' => $runtimeInput->tenantId,
+                'vendorId' => $runtimeInput->vendorId,
+                'from' => $runtimeInput->from,
+                'to' => $runtimeInput->to,
+                'currency' => $runtimeInput->currency,
+            ]);
 
-            return Command::SUCCESS;
+            return Command::FAILURE;
+        }
+
+        if (CommandOutputFormat::isJson($runtimeInput->format)) {
+            return $this->commandResultEmitter->emitJson($output, $view)
+                ? Command::SUCCESS
+                : Command::FAILURE;
         }
 
         $output->writeln(sprintf(
             'tenantId=%s vendorId=%s status=%s',
-            $tenantId,
-            $vendorId,
+            $runtimeInput->tenantId,
+            $runtimeInput->vendorId,
             $view['status'],
         ));
         $output->writeln(sprintf('issues=%d', count($view['issues'])));
+
+        if (null !== $writtenPath) {
+            $output->writeln(sprintf('written=%s', $writtenPath));
+        }
 
         return Command::SUCCESS;
     }

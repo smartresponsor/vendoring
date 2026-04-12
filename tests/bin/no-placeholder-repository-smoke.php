@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
 $skipPrefixes = [
-    $root.'/report/',
-    $root.'/tests/',
-    $root.'/.idea/',
-    $root.'/.phpunit.cache/',
-    $root.'/build/docs/phpdocumentor/',
-    $root.'/docs/release/',
-    $root.'/var/',
-    $root.'/.deploy/_template/',
+    $root . '/report/',
+    $root . '/tests/',
+    $root . '/.idea/',
+    $root . '/.phpunit.cache/',
+    $root . '/build/docs/phpdocumentor/',
+    $root . '/docs/release/',
+    $root . '/var/',
+    $root . '/.deploy/_template/',
 ];
 $skipFiles = [
-    $root.'/composer.json',
-    $root.'/bin/generate-phpdocumentor-site.php',
-    $root.'/bin/generate-rc-evidence.php',
-    $root.'/config/reference.php',
+    $root . '/composer.json',
+    $root . '/bin/generate-phpdocumentor-site.php',
+    $root . '/bin/generate-rc-evidence.php',
+    $root . '/config/reference.php',
 ];
 
 $iterator = new RecursiveIteratorIterator(
-    new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS)
+    new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS),
 );
 
 foreach ($iterator as $file) {
@@ -40,7 +40,7 @@ foreach ($iterator as $file) {
         continue;
     }
 
-    if (in_array($path, array_map(static fn (string $item): string => str_replace('\\', '/', $item), $skipFiles), true)) {
+    if (in_array($path, array_map(static fn(string $item): string => str_replace('\\', '/', $item), $skipFiles), true)) {
         continue;
     }
 
@@ -57,12 +57,12 @@ foreach ($iterator as $file) {
 
     $contents = file_get_contents($path);
     if (false === $contents) {
-        fwrite(STDERR, 'Unable to read: '.$path.PHP_EOL);
+        fwrite(STDERR, 'Unable to read: ' . $path . PHP_EOL);
         exit(1);
     }
 
     if (false !== stripos($contents, 'placeholder')) {
-        fwrite(STDERR, 'Forbidden repository placeholder marker remains in: '.$path.PHP_EOL);
+        fwrite(STDERR, 'Forbidden repository placeholder marker remains in: ' . $path . PHP_EOL);
         exit(1);
     }
 }

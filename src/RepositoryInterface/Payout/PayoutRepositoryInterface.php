@@ -29,6 +29,15 @@ interface PayoutRepositoryInterface
      */
     public function items(string $payoutId): array;
 
-    /** @throws Exception */
-    public function markProcessed(string $id, string $processedAt): void;
+    /**
+     * @param array<string, mixed> $meta
+     * @throws Exception
+     */
+    public function markProcessed(string $id, string $processedAt, array $meta = []): void;
+
+    /**
+     * @param array<string, mixed> $meta
+     * @throws Exception
+     */
+    public function markFailed(string $id, string $processedAt, array $meta = []): void;
 }

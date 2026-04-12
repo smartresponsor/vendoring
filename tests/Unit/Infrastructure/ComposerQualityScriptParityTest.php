@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure;
 
-require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+require_once dirname(__DIR__, 2) . '/bin/_composer_json.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -75,7 +75,7 @@ final class ComposerQualityScriptParityTest extends TestCase
         ];
 
         foreach ($expected as $scriptName) {
-            self::assertContains($scriptName, $quality, 'Missing canonical quality entry: '.$scriptName);
+            self::assertContains($scriptName, $quality, 'Missing canonical quality entry: ' . $scriptName);
         }
     }
 }

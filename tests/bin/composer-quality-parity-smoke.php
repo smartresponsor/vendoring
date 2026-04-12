@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $composer = vendoring_load_composer_json(dirname(__DIR__, 2));
 $quality = vendoring_script_commands($composer, 'quality');
 
 foreach ($quality as $entry) {
     if (str_contains($entry, 'composer test:')) {
-        fwrite(STDERR, 'quality must not shell-call composer test:* directly: '.$entry.PHP_EOL);
+        fwrite(STDERR, 'quality must not shell-call composer test:* directly: ' . $entry . PHP_EOL);
         exit(1);
     }
     if (str_contains($entry, '&&')) {
-        fwrite(STDERR, 'quality must not chain test scripts inline: '.$entry.PHP_EOL);
+        fwrite(STDERR, 'quality must not chain test scripts inline: ' . $entry . PHP_EOL);
         exit(1);
     }
 }
@@ -74,7 +74,7 @@ $expected = [
 
 foreach ($expected as $scriptName) {
     if (!in_array($scriptName, $quality, true)) {
-        fwrite(STDERR, 'Missing canonical quality entry: '.$scriptName.PHP_EOL);
+        fwrite(STDERR, 'Missing canonical quality entry: ' . $scriptName . PHP_EOL);
         exit(1);
     }
 }

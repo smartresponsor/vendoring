@@ -19,8 +19,7 @@ final readonly class VendorOwnershipViewBuilder implements VendorOwnershipViewBu
         private VendorRepositoryInterface               $vendorRepository,
         private VendorUserAssignmentRepositoryInterface $assignmentRepository,
         private VendorAuthorizationMatrixInterface      $authorizationMatrix,
-    ) {
-    }
+    ) {}
 
     public function buildForVendorId(int $vendorId): ?VendorOwnershipView
     {

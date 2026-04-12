@@ -56,7 +56,7 @@ final class VendorMetricServiceTest extends TestCase
         $this->ledger
             ->expects(self::exactly(3))
             ->method('sumByAccount')
-            ->willReturnCallback(static fn (): float => -100.0);
+            ->willReturnCallback(static fn(): float => -100.0);
 
         $payload = (new VendorMetricService($this->ledger))
             ->overview(new VendorMetricOverviewRequestDTO('tenant-1', 'vendor-1'));

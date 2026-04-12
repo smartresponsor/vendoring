@@ -25,6 +25,5 @@ final readonly class CategorySyndicationFallbackAwarePackageGateReportInputDTO
         public array $fallbackChecks,
         public array $exactMatchedBindingIds,
         public array $fallbackMatchedBindingIds,
-    ) {
-    }
+    ) {}
 }

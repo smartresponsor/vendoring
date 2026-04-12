@@ -27,8 +27,7 @@ final readonly class VendorFinanceRuntimeView
         private array  $metricOverview,
         private ?array $payoutAccount,
         private ?array $statement,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{

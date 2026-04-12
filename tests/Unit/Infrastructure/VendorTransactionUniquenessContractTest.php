@@ -10,7 +10,7 @@ final class VendorTransactionUniquenessContractTest extends TestCase
 {
     public function testEntityDoesNotPretendFullThreeColumnUniqueConstraint(): void
     {
-        $source = (string) file_get_contents(dirname(__DIR__, 3).'/src/Entity/VendorTransaction.php');
+        $source = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Entity/VendorTransaction.php');
 
         self::assertStringNotContainsString('uniqueConstraints', $source);
         self::assertStringNotContainsString('uniq_vendor_transaction_vendor_order_project', $source);
@@ -18,7 +18,7 @@ final class VendorTransactionUniquenessContractTest extends TestCase
 
     public function testPostgresMigrationDefinesSplitPartialUniqueIndexes(): void
     {
-        $sql = (string) file_get_contents(dirname(__DIR__, 3).'/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
+        $sql = (string) file_get_contents(dirname(__DIR__, 3) . '/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
 
         self::assertStringContainsString('uniq_vendor_transaction_vendor_order_project_nonnull', $sql);
         self::assertStringContainsString('uniq_vendor_transaction_vendor_order_nullproject', $sql);
@@ -28,7 +28,7 @@ final class VendorTransactionUniquenessContractTest extends TestCase
 
     public function testSqliteMigrationDefinesSplitPartialUniqueIndexes(): void
     {
-        $sql = (string) file_get_contents(dirname(__DIR__, 3).'/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
+        $sql = (string) file_get_contents(dirname(__DIR__, 3) . '/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
 
         self::assertStringContainsString('uniq_vendor_transaction_vendor_order_project_nonnull', $sql);
         self::assertStringContainsString('uniq_vendor_transaction_vendor_order_nullproject', $sql);

@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
 
 $requiredFiles = [
-    $root.'/bin/generate-rc-evidence.php',
-    $root.'/docs/release/RC_EVIDENCE_PACK.md',
-    $root.'/bin/generate-release-manifest.php',
-    $root.'/docs/release/RC_RELEASE_MANIFEST.md',
-    $root.'/docs/release/RC_ROLLBACK_MANIFEST.md',
-    $root.'/.github/workflows/release-candidate.yml',
-    $root.'/.github/workflows/docs.yml',
+    $root . '/bin/generate-rc-evidence.php',
+    $root . '/docs/release/RC_EVIDENCE_PACK.md',
+    $root . '/bin/generate-release-manifest.php',
+    $root . '/docs/release/RC_RELEASE_MANIFEST.md',
+    $root . '/docs/release/RC_ROLLBACK_MANIFEST.md',
+    $root . '/.github/workflows/release-candidate.yml',
+    $root . '/.github/workflows/docs.yml',
 ];
 
 foreach ($requiredFiles as $file) {
     if (!file_exists($file)) {
-        fwrite(STDERR, 'Missing RC evidence file: '.$file.PHP_EOL);
+        fwrite(STDERR, 'Missing RC evidence file: ' . $file . PHP_EOL);
         exit(1);
     }
 }
@@ -28,7 +28,7 @@ $scripts = vendoring_composer_section($composer, 'scripts');
 
 foreach (['docs:rc-evidence', 'docs:release-manifest', 'test:rc-evidence', 'test:release-rollback-manifest', 'quality:release-candidate'] as $script) {
     if (!array_key_exists($script, $scripts)) {
-        fwrite(STDERR, 'Missing RC evidence composer script: '.$script.PHP_EOL);
+        fwrite(STDERR, 'Missing RC evidence composer script: ' . $script . PHP_EOL);
         exit(1);
     }
 }

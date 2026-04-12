@@ -19,7 +19,7 @@ final class Kernel extends BaseKernel
             $projectHash = substr(sha1($this->getProjectDir()), 0, 12);
             $processId = (string) getmypid();
 
-            return sys_get_temp_dir().sprintf('/vendoring_kernel_%s_%s_%s', $this->environment, $projectHash, $processId);
+            return sys_get_temp_dir() . sprintf('/vendoring_kernel_%s_%s_%s', $this->environment, $projectHash, $processId);
         }
 
         return parent::getCacheDir();
@@ -27,35 +27,35 @@ final class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerConfigurator $container): void
     {
-        $configDir = $this->getProjectDir().'/config';
+        $configDir = $this->getProjectDir() . '/config';
 
-        if (is_dir($configDir.'/packages')) {
-            $container->import($configDir.'/packages/*.yaml');
+        if (is_dir($configDir . '/packages')) {
+            $container->import($configDir . '/packages/*.yaml');
         }
 
-        if (is_file($configDir.'/vendor_services.yaml')) {
-            $container->import($configDir.'/vendor_services.yaml');
+        if (is_file($configDir . '/vendor_services.yaml')) {
+            $container->import($configDir . '/vendor_services.yaml');
         }
 
-        if (is_file($configDir.'/services_runtime.php')) {
-            $container->import($configDir.'/services_runtime.php');
+        if (is_file($configDir . '/services_runtime.php')) {
+            $container->import($configDir . '/services_runtime.php');
         }
 
-        if (is_file($configDir.'/packages_runtime.php')) {
-            $container->import($configDir.'/packages_runtime.php');
+        if (is_file($configDir . '/packages_runtime.php')) {
+            $container->import($configDir . '/packages_runtime.php');
         }
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $configDir = $this->getProjectDir().'/config';
+        $configDir = $this->getProjectDir() . '/config';
 
-        if (is_file($configDir.'/vendor_routes.yaml')) {
-            $routes->import($configDir.'/vendor_routes.yaml');
+        if (is_file($configDir . '/vendor_routes.yaml')) {
+            $routes->import($configDir . '/vendor_routes.yaml');
         }
 
-        if (is_file($configDir.'/routes_runtime.php')) {
-            $routes->import($configDir.'/routes_runtime.php');
+        if (is_file($configDir . '/routes_runtime.php')) {
+            $routes->import($configDir . '/routes_runtime.php');
         }
     }
 }

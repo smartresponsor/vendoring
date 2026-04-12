@@ -8,6 +8,7 @@ namespace App\ServiceInterface;
 
 use App\Entity\Vendor;
 use App\Entity\VendorApiKey;
+use Doctrine\ORM\Exception\ManagerException;
 use Random\RandomException;
 
 /**
@@ -18,17 +19,21 @@ use Random\RandomException;
  */
 interface VendorApiKeyServiceInterface
 {
-    /** @throws RandomException */
+    /** @throws ManagerException|RandomException */
     public function createKey(Vendor $vendor, string $permissions): string;
 
-    /** @throws RandomException */
+    /** @throws ManagerException|RandomException */
     public function rotateKey(VendorApiKey $existingKey): string;
 
+    /** @throws ManagerException */
     public function revokeKey(VendorApiKey $apiKey): void;
 
+    /** @throws ManagerException */
     public function validateToken(string $plainToken, ?string $permission = null): ?Vendor;
 
+    /** @throws ManagerException */
     public function validateAuthorizationHeader(string $authorizationHeader, ?string $permission = null): ?Vendor;
 
+    /** @throws ManagerException */
     public function resolveVendorFromAuthHeader(string $authorizationHeader): ?Vendor;
 }

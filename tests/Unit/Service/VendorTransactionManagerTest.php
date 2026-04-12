@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Service;
 
 use App\Service\VendorTransactionManager;
+use App\ServiceInterface\Observability\RuntimeLoggerInterface;
 use App\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface;
 use App\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
 use App\RepositoryInterface\VendorTransactionRepositoryInterface;
@@ -23,6 +24,7 @@ final class VendorTransactionManagerTest extends TestCase
     private VendorTransactionStatusPolicyInterface&MockObject $statusPolicy;
     private VendorTransactionAmountPolicyInterface&MockObject $amountPolicy;
     private VendorTransactionRepositoryInterface&MockObject $transactions;
+    private RuntimeLoggerInterface&MockObject $runtimeLogger;
 
     protected function setUp(): void
     {
@@ -31,6 +33,7 @@ final class VendorTransactionManagerTest extends TestCase
         $this->statusPolicy = $this->createMock(VendorTransactionStatusPolicyInterface::class);
         $this->amountPolicy = $this->createMock(VendorTransactionAmountPolicyInterface::class);
         $this->transactions = $this->createMock(VendorTransactionRepositoryInterface::class);
+        $this->runtimeLogger = $this->createMock(RuntimeLoggerInterface::class);
     }
 
     public function testCreateTransactionRejectsDuplicateBeforePersistenceWhenBusinessKeyAlreadyExists(): void
@@ -45,6 +48,8 @@ final class VendorTransactionManagerTest extends TestCase
         $this->entityManager->expects(self::never())->method('persist');
         $this->entityManager->expects(self::never())->method('flush');
         $this->dispatcher->expects(self::never())->method('dispatch');
+        $this->runtimeLogger->expects(self::once())->method('warning');
+        $this->runtimeLogger->expects(self::never())->method('info');
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(VendorTransactionErrorCode::DUPLICATE_TRANSACTION);
@@ -78,6 +83,8 @@ final class VendorTransactionManagerTest extends TestCase
             ->willThrowException($this->newUniqueConstraintViolationException());
 
         $this->dispatcher->expects(self::never())->method('dispatch');
+        $this->runtimeLogger->expects(self::once())->method('warning');
+        $this->runtimeLogger->expects(self::never())->method('info');
 
         try {
             $this->buildManager()->createTransaction(new VendorTransactionData(
@@ -102,6 +109,7 @@ final class VendorTransactionManagerTest extends TestCase
             $this->statusPolicy,
             $this->amountPolicy,
             $this->transactions,
+            $this->runtimeLogger,
         );
     }
 

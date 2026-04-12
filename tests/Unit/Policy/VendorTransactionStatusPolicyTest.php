@@ -18,7 +18,7 @@ final class VendorTransactionStatusPolicyTest extends TestCase
 
     public function testCanonicalStatusCatalogIsUsedForPending(): void
     {
-        $source = file_get_contents(__DIR__.'/../../../src/Service/Policy/VendorTransactionStatusPolicy.php');
+        $source = file_get_contents(__DIR__ . '/../../../src/Service/Policy/VendorTransactionStatusPolicy.php');
 
         self::assertIsString($source);
         self::assertStringContainsString('VendorTransactionStatus::PENDING', $source);

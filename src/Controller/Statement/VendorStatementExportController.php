@@ -7,6 +7,7 @@ namespace App\Controller\Statement;
 use App\ServiceInterface\Statement\StatementExporterPDFInterface;
 use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
+use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,12 +36,13 @@ final class VendorStatementExportController extends AbstractController
      * statement service. When the export file cannot be read, the response returns the stable error
      * code `statement_export_unreadable` together with the unresolved export path.
      *
-     * @param string  $vendorId Vendor identifier used for statement and export lookup.
-     * @param Request $r        HTTP request containing tenant and period query parameters.
+     * @param string $vendorId Vendor identifier used for statement and export lookup.
+     * @param Request $r HTTP request containing tenant and period query parameters.
      *
      * @return JsonResponse JSON payload containing either validation/error metadata or a `data`
      *                      object with tenant/vendor scope, requested period, export path, and
      *                      base64-encoded PDF content.
+     * @throws Exception
      */
     #[Route('/{vendorId}/export', methods: ['GET'])]
     public function export(string $vendorId, Request $r): JsonResponse

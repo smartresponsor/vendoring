@@ -11,6 +11,5 @@ final readonly class VendorStatementRecipientDTO
         public string $vendorId,
         public string $email,
         public string $currency = 'USD',
-    ) {
-    }
+    ) {}
 }

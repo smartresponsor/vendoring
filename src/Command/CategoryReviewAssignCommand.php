@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Command\Support\CommandOutputFormat;
+use App\Command\Support\CommandResultEmitter;
+use App\Command\Support\CommandResultEmitterInterface;
 use App\Service\CatalogReviewAssignmentService;
 use InvalidArgumentException;
-use JsonException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * CLI entrypoint for assigning category review requests to a reviewer.
@@ -24,8 +27,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'app:category:review:assign', description: 'Assign a category change request for review')]
 final class CategoryReviewAssignCommand extends Command
 {
-    public function __construct(private readonly CatalogReviewAssignmentService $service)
-    {
+    private readonly CatalogReviewAssignmentService $service;
+    private readonly CommandResultEmitterInterface $commandResultEmitter;
+
+    public function __construct(
+        CatalogReviewAssignmentService $service,
+        ?CommandResultEmitterInterface $commandResultEmitter = null,
+    ) {
+        $this->service = $service;
+        $this->commandResultEmitter = $commandResultEmitter ?? self::defaultCommandResultEmitter();
         parent::__construct();
     }
 
@@ -39,7 +49,8 @@ final class CategoryReviewAssignCommand extends Command
             ->addArgument('requestId', InputArgument::REQUIRED)
             ->addArgument('reviewer', InputArgument::REQUIRED)
             ->addArgument('assignedBy', InputArgument::REQUIRED)
-            ->addOption('priority', null, InputOption::VALUE_OPTIONAL, 'Assignment priority', 'medium');
+            ->addOption('priority', null, InputOption::VALUE_OPTIONAL, 'Assignment priority', 'medium')
+            ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Output format: text|json', 'json');
     }
 
     /**
@@ -50,25 +61,52 @@ final class CategoryReviewAssignCommand extends Command
      *
      * @return int `Command::SUCCESS` when the assignment is created, otherwise `Command::FAILURE` for
      *             invalid input detected by the underlying assignment service.
-     * @throws JsonException
      */
     /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $format = CommandOutputFormat::normalize($input->getOption('format'));
+        $requestId = self::stringArgument($input->getArgument('requestId'));
+        $reviewer = self::stringArgument($input->getArgument('reviewer'));
+        $assignedBy = self::stringArgument($input->getArgument('assignedBy'));
+        $priority = is_scalar($input->getOption('priority')) ? (string) $input->getOption('priority') : null;
+
         try {
-            $payload = $this->service->assign(
-                self::stringArgument($input->getArgument('requestId')),
-                self::stringArgument($input->getArgument('reviewer')),
-                self::stringArgument($input->getArgument('assignedBy')),
-                is_scalar($input->getOption('priority')) ? (string) $input->getOption('priority') : null,
-            );
+            $payload = $this->service->assign($requestId, $reviewer, $assignedBy, $priority);
         } catch (InvalidArgumentException $exception) {
-            $output->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
+            $this->commandResultEmitter->emitError($output, $format, 'invalid', $exception->getMessage(), [
+                'requestId' => $requestId,
+                'reviewer' => $reviewer,
+                'assignedBy' => $assignedBy,
+                'priority' => $priority,
+            ]);
+
+            return Command::FAILURE;
+        } catch (Throwable $throwable) {
+            $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to assign category review', $throwable, [
+                'requestId' => $requestId,
+                'reviewer' => $reviewer,
+                'assignedBy' => $assignedBy,
+                'priority' => $priority,
+            ]);
 
             return Command::FAILURE;
         }
 
-        $output->writeln((string) json_encode($payload, JSON_THROW_ON_ERROR));
+        if (CommandOutputFormat::isJson($format)) {
+            return $this->commandResultEmitter->emitJson($output, $payload)
+                ? Command::SUCCESS
+                : Command::FAILURE;
+        }
+
+        $output->writeln(sprintf(
+            'requestId=%s reviewer=%s assignedBy=%s priority=%s status=%s',
+            self::stringArgument($payload['requestId'] ?? null),
+            self::stringArgument($payload['reviewer'] ?? null),
+            self::stringArgument($payload['assignedBy'] ?? null),
+            self::stringArgument($payload['priority'] ?? null),
+            self::stringArgument($payload['status'] ?? null),
+        ));
 
         return Command::SUCCESS;
     }
@@ -83,5 +121,10 @@ final class CategoryReviewAssignCommand extends Command
     private static function stringArgument(mixed $value): string
     {
         return is_scalar($value) ? (string) $value : '';
+    }
+
+    private static function defaultCommandResultEmitter(): CommandResultEmitterInterface
+    {
+        return new CommandResultEmitter(new \App\Command\Support\CommandJsonEncoder());
     }
 }

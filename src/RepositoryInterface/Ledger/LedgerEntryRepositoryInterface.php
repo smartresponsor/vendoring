@@ -6,20 +6,25 @@ namespace App\RepositoryInterface\Ledger;
 
 use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
 use App\Entity\Ledger\LedgerEntry;
+use Doctrine\DBAL\Exception;
 
 interface LedgerEntryRepositoryInterface
 {
+    /** @throws Exception */
     public function insert(LedgerEntry $entry): void;
 
     /**
      * @return list<LedgerEntry>
+     * @throws Exception
      */
     public function listByRef(string $tenantId, string $referenceType, string $referenceId, ?string $vendorId = null): array;
 
+    /** @throws Exception */
     public function sumByAccount(LedgerAccountSumCriteriaDTO $criteria): float;
 
     /**
      * @return list<object{currency:string,balanceCents:int}>
+     * @throws Exception
      */
     public function balancesForVendor(string $vendorId): array;
 }

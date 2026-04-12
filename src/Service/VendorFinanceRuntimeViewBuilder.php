@@ -12,6 +12,7 @@ use App\ServiceInterface\Metric\VendorMetricServiceInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
 use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
 use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use Doctrine\DBAL\Exception;
 
 /**
  * Builds a finance-facing runtime summary that keeps vendor ownership/access
@@ -24,9 +25,11 @@ final readonly class VendorFinanceRuntimeViewBuilder implements VendorFinanceRun
         private VendorMetricServiceInterface $metricService,
         private PayoutAccountRepositoryInterface $payoutAccountRepository,
         private VendorStatementServiceInterface $statementService,
-    ) {
-    }
+    ) {}
 
+    /**
+     * @throws Exception
+     */
     public function build(
         string $tenantId,
         string $vendorId,
@@ -63,7 +66,7 @@ final readonly class VendorFinanceRuntimeViewBuilder implements VendorFinanceRun
         $statement = null;
         if (null !== $from && null !== $to && '' !== $from && '' !== $to) {
             $statement = $this->statementService->build(
-                new VendorStatementRequestDTO($tenantId, $vendorId, $from, $to, $currency)
+                new VendorStatementRequestDTO($tenantId, $vendorId, $from, $to, $currency),
             );
         }
 

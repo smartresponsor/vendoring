@@ -14,8 +14,7 @@ final readonly class OutboundCircuitBreakerStateDTO
         public int $threshold,
         public int $cooldownSeconds,
         public bool $allowRequest,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{

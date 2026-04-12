@@ -22,8 +22,7 @@ final readonly class CanaryRolloutCoordinator implements CanaryRolloutCoordinato
         private TrafficCohortResolverInterface     $trafficCohortResolver,
         private ReleaseManifestBuilderInterface    $releaseManifestBuilder,
         private RollbackDecisionEvaluatorInterface $rollbackDecisionEvaluator,
-    ) {
-    }
+    ) {}
 
     public function evaluate(string $flagName, ?string $tenantId = null, ?string $vendorId = null, int $windowSeconds = 900): array
     {
@@ -37,7 +36,7 @@ final readonly class CanaryRolloutCoordinator implements CanaryRolloutCoordinato
         [$decision, $recommendedAction, $reason] = $this->rolloutDecision($flagDecision, $rollback, $probeGate);
 
         return [
-            'generatedAt' => new DateTimeImmutable()->format(DATE_ATOM),
+            'generatedAt' => (new DateTimeImmutable())->format(DATE_ATOM),
             'flagDecision' => $flagDecision,
             'manifest' => $manifest,
             'rollback' => $rollback,
@@ -108,7 +107,7 @@ final readonly class CanaryRolloutCoordinator implements CanaryRolloutCoordinato
     private function nextCohort(string $currentCohort, ?string $tenantId): ?string
     {
         if (str_starts_with($currentCohort, 'vendor:')) {
-            return null !== $tenantId && '' !== trim($tenantId) ? 'tenant:'.trim($tenantId) : 'global';
+            return null !== $tenantId && '' !== trim($tenantId) ? 'tenant:' . trim($tenantId) : 'global';
         }
 
         if (str_starts_with($currentCohort, 'tenant:')) {

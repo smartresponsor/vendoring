@@ -13,9 +13,7 @@ use JsonException;
 
 final readonly class PayoutRepository implements PayoutRepositoryInterface
 {
-    public function __construct(private Connection $db)
-    {
-    }
+    public function __construct(private Connection $db) {}
 
     /** @throws Exception|JsonException */
     public function insert(Payout $payout): void
@@ -63,7 +61,7 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
             $this->stringCell($row, 'status'),
             $this->stringCell($row, 'created_at'),
             '' !== $this->stringCell($row, 'processed_at') ? $this->stringCell($row, 'processed_at') : null,
-            $this->metaCell($row, 'meta'),
+            $this->decodedMetaCell($row),
         );
     }
 
@@ -85,10 +83,30 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
         }, $rows);
     }
 
-    /** @throws Exception */
-    public function markProcessed(string $id, string $processedAt): void
+    /**
+     * @param array<string, mixed> $meta
+     * @throws Exception
+     */
+    public function markProcessed(string $id, string $processedAt, array $meta = []): void
     {
-        $this->db->update('payouts', ['status' => 'processed', 'processed_at' => $processedAt], ['id' => $id]);
+        $this->db->update('payouts', [
+            'status' => 'processed',
+            'processed_at' => $processedAt,
+            'meta' => $this->encodeMergedMeta($id, $meta),
+        ], ['id' => $id]);
+    }
+
+    /**
+     * @param array<string, mixed> $meta
+     * @throws Exception
+     */
+    public function markFailed(string $id, string $processedAt, array $meta = []): void
+    {
+        $this->db->update('payouts', [
+            'status' => 'failed',
+            'processed_at' => $processedAt,
+            'meta' => $this->encodeMergedMeta($id, $meta),
+        ], ['id' => $id]);
     }
 
     /** @param array<string, mixed> $row */
@@ -111,14 +129,25 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
      * @param array<string, mixed> $row
      * @return array<string, mixed>
      */
-    private function metaCell(array $row, string $key): array
+    private function decodedMetaCell(array $row): array
     {
-        $value = $row[$key] ?? '{}';
+        $value = $row['meta'] ?? '{}';
         if (!is_scalar($value)) {
             return [];
         }
         $decoded = json_decode((string) $value, true);
 
         return is_array($decoded) ? $decoded : [];
+    }
+
+    /**
+     * @param array<string, mixed> $meta
+     * @throws Exception
+     */
+    private function encodeMergedMeta(string $id, array $meta): string
+    {
+        $existing = $this->byId($id)?->meta ?? [];
+
+        return json_encode([...$existing, ...$meta], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
     }
 }

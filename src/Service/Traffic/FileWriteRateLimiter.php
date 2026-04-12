@@ -47,7 +47,7 @@ final class FileWriteRateLimiter implements WriteRateLimiterInterface
             $now = time();
             $history = $this->readTimestamps($handle);
             $threshold = $now - $windowSeconds;
-            $history = array_values(array_filter($history, static fn (int $timestamp): bool => $timestamp > $threshold));
+            $history = array_values(array_filter($history, static fn(int $timestamp): bool => $timestamp > $threshold));
 
             if (count($history) >= $limit) {
                 $oldest = min($history);
@@ -73,9 +73,9 @@ final class FileWriteRateLimiter implements WriteRateLimiterInterface
      */
     private function storagePath(string $scope, string $actorKey): string
     {
-        $hash = sha1($scope.'|'.$actorKey);
+        $hash = sha1($scope . '|' . $actorKey);
 
-        return sys_get_temp_dir().DIRECTORY_SEPARATOR.'vendoring_rate_limit'.DIRECTORY_SEPARATOR.$hash.'.json';
+        return sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'vendoring_rate_limit' . DIRECTORY_SEPARATOR . $hash . '.json';
     }
 
     /**

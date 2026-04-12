@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -32,13 +33,13 @@ final class CategoryCollectionService implements CategoryCollectionServiceInterf
 
             if (str_starts_with($token, 'tag:')) {
                 $tag = substr($token, 4);
-                $predicates[] = static fn (array $product): bool => in_array($tag, self::stringList($product['tags'] ?? null), true);
+                $predicates[] = static fn(array $product): bool => in_array($tag, self::stringList($product['tags'] ?? null), true);
                 continue;
             }
 
             if (str_starts_with($token, 'category:')) {
                 $categoryId = substr($token, 9);
-                $predicates[] = static fn (array $product): bool => in_array($categoryId, self::stringList($product['categoryIds'] ?? null), true);
+                $predicates[] = static fn(array $product): bool => in_array($categoryId, self::stringList($product['categoryIds'] ?? null), true);
                 continue;
             }
 

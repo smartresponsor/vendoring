@@ -17,8 +17,7 @@ final readonly class VendorReleaseBaselineReader implements VendorReleaseBaselin
 {
     public function __construct(
         private VendorRuntimeStatusViewBuilderInterface $runtimeStatusViewBuilder,
-    ) {
-    }
+    ) {}
 
     public function build(
         string $tenantId,
@@ -37,16 +36,16 @@ final readonly class VendorReleaseBaselineReader implements VendorReleaseBaselin
 
         $projectRoot = dirname(__DIR__, 3);
         $artifactStatus = [
-            'runtimeStatusCommand' => file_exists($projectRoot.'/src/Command/VendorRuntimeStatusCommand.php'),
-            'runtimeStatusController' => file_exists($projectRoot.'/src/Controller/Ops/VendorRuntimeStatusController.php'),
-            'runtimeStatusCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_RUNTIME_STATUS_CANON.md'),
-            'ownerCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_OWNER_IDENTITY_CANON.md'),
-            'userAssignmentCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_USER_ASSIGNMENT_CANON.md'),
-            'apiKeyCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_API_KEY_CANON.md'),
-            'securityStateCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_SECURITY_STATE_CANON.md'),
-            'financeRuntimeCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_FINANCE_RUNTIME_CANON.md'),
-            'statementDeliveryCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_STATEMENT_DELIVERY_RUNTIME_CANON.md'),
-            'externalIntegrationCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_EXTERNAL_INTEGRATION_RUNTIME_CANON.md'),
+            'runtimeStatusCommand' => file_exists($projectRoot . '/src/Command/VendorRuntimeStatusCommand.php'),
+            'runtimeStatusController' => file_exists($projectRoot . '/src/Controller/Ops/VendorRuntimeStatusController.php'),
+            'runtimeStatusCanon' => file_exists($projectRoot . '/docs/internal/VENDOR_RUNTIME_STATUS_CANON.md'),
+            'ownerCanon' => file_exists($projectRoot . '/docs/internal/VENDOR_OWNER_IDENTITY_CANON.md'),
+            'userAssignmentCanon' => file_exists($projectRoot . '/docs/internal/VENDOR_USER_ASSIGNMENT_CANON.md'),
+            'apiKeyCanon' => file_exists($projectRoot . '/docs/internal/VENDOR_API_KEY_CANON.md'),
+            'securityStateCanon' => file_exists($projectRoot . '/docs/internal/VENDOR_SECURITY_STATE_CANON.md'),
+            'financeRuntimeCanon' => file_exists($projectRoot . '/docs/internal/VENDOR_FINANCE_RUNTIME_CANON.md'),
+            'statementDeliveryCanon' => file_exists($projectRoot . '/docs/internal/VENDOR_STATEMENT_DELIVERY_RUNTIME_CANON.md'),
+            'externalIntegrationCanon' => file_exists($projectRoot . '/docs/internal/VENDOR_EXTERNAL_INTEGRATION_RUNTIME_CANON.md'),
         ];
 
         $issues = [];
@@ -71,7 +70,7 @@ final readonly class VendorReleaseBaselineReader implements VendorReleaseBaselin
             artifactStatus: $artifactStatus,
             issues: $issues,
             status: $status,
-            generatedAt: new DateTimeImmutable()->format(DATE_ATOM),
+            generatedAt: (new DateTimeImmutable())->format(DATE_ATOM),
         );
     }
 }

@@ -10,7 +10,7 @@ final class CanonicalNoLegacyVendorScriptContractTest extends TestCase
 {
     public function testReorganizeTestsScriptDoesNotKeepLegacyVendorSegment(): void
     {
-        $path = dirname(__DIR__, 3).'/.commanding/reorganize-tests.ps1';
+        $path = dirname(__DIR__, 3) . '/.commanding/reorganize-tests.ps1';
         if (!is_file($path)) {
             self::assertTrue(true);
 

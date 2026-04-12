@@ -16,8 +16,7 @@ final readonly class CategorySyndicationMappingProfile
         private array  $fieldMap,
         private array  $requiredFields,
         private string $localeMode,
-    ) {
-    }
+    ) {}
 
     public function destinationId(): string
     {

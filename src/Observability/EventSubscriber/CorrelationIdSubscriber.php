@@ -24,9 +24,7 @@ final class CorrelationIdSubscriber implements EventSubscriberInterface
     private const string HEADER_NAME = 'X-Correlation-ID';
     private const string ATTRIBUTE_NAME = '_vendoring_correlation_id';
 
-    public function __construct(private readonly CorrelationContextInterface $correlationContext)
-    {
-    }
+    public function __construct(private readonly CorrelationContextInterface $correlationContext) {}
 
     /**
      * Return the kernel events used to establish correlation context.

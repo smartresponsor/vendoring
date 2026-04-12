@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$file = $root.'/ops/policy/config/services_interface.yaml';
+$file = $root . '/ops/policy/config/services_interface.yaml';
 
 if (!is_file($file)) {
     fwrite(STDERR, "Missing file: {$file}\n");

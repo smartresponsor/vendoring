@@ -6,6 +6,4 @@ namespace App\Event;
 
 use App\EventInterface\CategoryDestinationMediaReadinessEvaluatedInterface;
 
-final class CategoryDestinationMediaReadinessEvaluated extends AbstractPayloadEvent implements CategoryDestinationMediaReadinessEvaluatedInterface
-{
-}
+final class CategoryDestinationMediaReadinessEvaluated extends AbstractPayloadEvent implements CategoryDestinationMediaReadinessEvaluatedInterface {}

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
 $files = [
-    $root.'/src/Command/VendorApiKeyCreateCommand.php',
-    $root.'/src/Command/VendorApiKeyListCommand.php',
-    $root.'/src/Command/VendorApiKeyRotateCommand.php',
+    $root . '/src/Command/VendorApiKeyCreateCommand.php',
+    $root . '/src/Command/VendorApiKeyListCommand.php',
+    $root . '/src/Command/VendorApiKeyRotateCommand.php',
 ];
 
 foreach ($files as $file) {
@@ -22,7 +22,7 @@ foreach ($files as $file) {
     }
 }
 
-$composerJson = $root.'/composer.json';
+$composerJson = $root . '/composer.json';
 $content = (string) file_get_contents($composerJson);
 foreach (['test:no-example-command-help', '@test:no-example-command-help'] as $needle) {
     if (!str_contains($content, $needle)) {

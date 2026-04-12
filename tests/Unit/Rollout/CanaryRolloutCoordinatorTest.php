@@ -80,11 +80,9 @@ final class CanaryRolloutCoordinatorTest extends TestCase
      */
     private function featureFlagService(array $decision): FeatureFlagServiceInterface
     {
-        return new class($decision) implements FeatureFlagServiceInterface {
+        return new class ($decision) implements FeatureFlagServiceInterface {
             /** @param array{flag:string, enabled:bool, cohort:string, reason:string} $decision */
-            public function __construct(private readonly array $decision)
-            {
-            }
+            public function __construct(private readonly array $decision) {}
             public function isEnabled(string $flagName, ?string $tenantId = null, ?string $vendorId = null): bool
             {
                 return $this->decision['enabled'];
@@ -98,10 +96,8 @@ final class CanaryRolloutCoordinatorTest extends TestCase
 
     private function cohortResolver(string $cohort): TrafficCohortResolverInterface
     {
-        return new class($cohort) implements TrafficCohortResolverInterface {
-            public function __construct(private readonly string $cohort)
-            {
-            }
+        return new class ($cohort) implements TrafficCohortResolverInterface {
+            public function __construct(private readonly string $cohort) {}
             public function resolve(?string $tenantId = null, ?string $vendorId = null): string
             {
                 return $this->cohort;
@@ -114,11 +110,9 @@ final class CanaryRolloutCoordinatorTest extends TestCase
      */
     private function manifestBuilder(array $missingProbes): ReleaseManifestBuilderInterface
     {
-        return new class($missingProbes) implements ReleaseManifestBuilderInterface {
+        return new class ($missingProbes) implements ReleaseManifestBuilderInterface {
             /** @param list<string> $missingProbes */
-            public function __construct(private readonly array $missingProbes)
-            {
-            }
+            public function __construct(private readonly array $missingProbes) {}
             public function build(int $windowSeconds = 900): array
             {
                 return [
@@ -135,11 +129,9 @@ final class CanaryRolloutCoordinatorTest extends TestCase
      */
     private function rollbackEvaluator(array $decision): RollbackDecisionEvaluatorInterface
     {
-        return new class($decision) implements RollbackDecisionEvaluatorInterface {
+        return new class ($decision) implements RollbackDecisionEvaluatorInterface {
             /** @param array<string,mixed> $decision */
-            public function __construct(private readonly array $decision)
-            {
-            }
+            public function __construct(private readonly array $decision) {}
             public function evaluate(array $manifest): array
             {
                 return $this->decision;

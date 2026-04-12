@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class VendorBilling
 {
     private ?int $id = null;
@@ -13,9 +16,7 @@ final class VendorBilling
     private ?string $billingEmail = null;
     private string $payoutStatus = 'idle';
 
-    public function __construct(private readonly Vendor $vendor)
-    {
-    }
+    public function __construct(private readonly Vendor $vendor) {}
 
     public function update(?string $iban = null, ?string $swift = null, string $payoutMethod = 'bank', ?string $billingEmail = null): void
     {

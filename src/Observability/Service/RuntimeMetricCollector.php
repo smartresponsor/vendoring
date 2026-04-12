@@ -19,8 +19,13 @@ use DateTimeImmutable;
 final class RuntimeMetricCollector implements MetricCollectorInterface
 {
     /**
-     * @var array:?string,
-     *   correlation_id:?string
+     * @var list<array{
+     *   'timestamp': string,
+     *   'type': string,
+     *   'name': string,
+     *   'tags': array<string, string>,
+     *   'request_id': ?string,
+     *   'correlation_id': ?string
      * }>
      */
     private array $records = [];
@@ -37,9 +42,9 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
     {
         $correlationId = $this->correlationContext->currentCorrelationId();
 
-        /** @var array{timestamp:string,type:string,name:string,tags:array<string,string>,request_id:?string,correlation_id:?string} $record */
+        /** @var array{'timestamp': string,'type': string,'name': string,'tags': array<string, string>,'request_id': ?string,'correlation_id': ?string} $record */
         $record = [
-            'timestamp' => new DateTimeImmutable()->format(DATE_ATOM),
+            'timestamp' => (new DateTimeImmutable())->format(DATE_ATOM),
             'type' => 'metric',
             'name' => $name,
             'tags' => $this->normalizeTags($tags),
@@ -65,8 +70,13 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
     }
 
     /**
-     * @return array :?string,
-     *   correlation_id:?string
+     * @return list<array{
+     *   'timestamp': string,
+     *   'type': string,
+     *   'name': string,
+     *   'tags': array<string, string>,
+     *   'request_id': ?string,
+     *   'correlation_id': ?string
      * }>
      */
     public function snapshot(): array

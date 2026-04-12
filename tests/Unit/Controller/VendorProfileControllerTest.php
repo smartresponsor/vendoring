@@ -329,9 +329,7 @@ final class VendorProfileControllerTest extends TestCase
 
 final class FakeVendorRepository implements VendorRepositoryInterface
 {
-    public function __construct(private readonly ?Vendor $vendor)
-    {
-    }
+    public function __construct(private readonly ?Vendor $vendor) {}
 
     public function find(mixed $id, mixed $lockMode = null, mixed $lockVersion = null): ?object
     {
@@ -375,9 +373,7 @@ final class FakeVendorProfileService implements VendorProfileServiceInterface
 
 final class FakeVendorProfileViewBuilder implements VendorProfileViewBuilderInterface
 {
-    public function __construct(private readonly ?VendorProfileView $view)
-    {
-    }
+    public function __construct(private readonly ?VendorProfileView $view) {}
 
     public function buildForVendorId(int $vendorId): ?VendorProfileView
     {

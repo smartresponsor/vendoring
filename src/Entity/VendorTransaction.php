@@ -16,6 +16,9 @@ use Doctrine\ORM\Mapping as ORM;
         new ORM\Index(name: 'idx_vendor_transaction_vendor_created', columns: ['vendor_id', 'created_at', 'id']),
     ],
 )]
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class VendorTransaction implements VendorTransactionInterface
 {
     #[ORM\Id]

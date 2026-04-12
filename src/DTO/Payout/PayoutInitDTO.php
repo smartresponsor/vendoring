@@ -12,6 +12,5 @@ final class PayoutInitDTO
         public string $periodStart,
         public string $periodEnd,
         public string $currency,
-    ) {
-    }
+    ) {}
 }

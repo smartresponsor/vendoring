@@ -22,6 +22,7 @@ final class PayoutControllerTest extends TestCase
         $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), new FakeVendorPayoutRequestService());
 
         $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
+            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
@@ -39,6 +40,7 @@ final class PayoutControllerTest extends TestCase
         $controller = new PayoutController($service, new FakePayoutRepository(), new FakeVendorPayoutRequestService());
 
         $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
+            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
@@ -52,6 +54,7 @@ final class PayoutControllerTest extends TestCase
         self::assertTrue((bool) ($data['created'] ?? false));
         self::assertSame('payout-1', $data['payoutId'] ?? null);
         self::assertInstanceOf(CreatePayoutDTO::class, $service->lastCreateDto);
+        self::assertSame('tenant-1', $service->lastCreateDto->tenantId);
         self::assertSame('vendor-1', $service->lastCreateDto->vendorId);
     }
 
@@ -103,8 +106,7 @@ final class FakeVendorPayoutService implements VendorPayoutServiceInterface
     public function __construct(
         private readonly ?string $createResult = null,
         private readonly bool $processResult = true,
-    ) {
-    }
+    ) {}
 
     public function create(CreatePayoutDTO $dto): ?string
     {
@@ -121,13 +123,9 @@ final class FakeVendorPayoutService implements VendorPayoutServiceInterface
 
 final class FakePayoutRepository implements PayoutRepositoryInterface
 {
-    public function insert(Payout $payout): void
-    {
-    }
+    public function insert(Payout $payout): void {}
 
-    public function insertItem(PayoutItem $item): void
-    {
-    }
+    public function insertItem(PayoutItem $item): void {}
 
     public function byId(string $id): ?Payout
     {
@@ -139,9 +137,9 @@ final class FakePayoutRepository implements PayoutRepositoryInterface
         return [];
     }
 
-    public function markProcessed(string $id, string $processedAt): void
-    {
-    }
+    public function markProcessed(string $id, string $processedAt, array $meta = []): void {}
+
+    public function markFailed(string $id, string $processedAt, array $meta = []): void {}
 }
 
 final class FakeVendorPayoutRequestService implements VendorPayoutRequestServiceInterface
@@ -149,17 +147,18 @@ final class FakeVendorPayoutRequestService implements VendorPayoutRequestService
     /** @param array<string, mixed> $payload */
     public function toCreateDto(array $payload): CreatePayoutDTO
     {
-        foreach (['vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
+        foreach (['tenantId', 'vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
             if (!isset($payload[$field])) {
                 throw new \InvalidArgumentException(sprintf('%s required', $field));
             }
         }
 
         return new CreatePayoutDTO(
-            self::requiredString($payload, 'vendorId'),
-            self::requiredString($payload, 'currency'),
-            self::requiredInt($payload, 'thresholdCents'),
-            self::requiredFloat($payload, 'retentionFeePercent'),
+            vendorId: self::requiredString($payload, 'vendorId'),
+            currency: self::requiredString($payload, 'currency'),
+            thresholdCents: self::requiredInt($payload, 'thresholdCents'),
+            retentionFeePercent: self::requiredFloat($payload, 'retentionFeePercent'),
+            tenantId: self::requiredString($payload, 'tenantId'),
         );
     }
 

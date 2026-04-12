@@ -51,8 +51,8 @@ final class VendorTransactionSchemaParityTest extends TestCase
 
     public function testSqlMigrationsKeepVendorCreatedIndexAndNullAwareUniqueness(): void
     {
-        $pg = (string) file_get_contents(__DIR__.'/../../../migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
-        $sqlite = (string) file_get_contents(__DIR__.'/../../../migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
+        $pg = (string) file_get_contents(__DIR__ . '/../../../migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
+        $sqlite = (string) file_get_contents(__DIR__ . '/../../../migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
 
         foreach ([$pg, $sqlite] as $sql) {
             self::assertStringContainsString('idx_vendor_transaction_vendor_created', $sql);

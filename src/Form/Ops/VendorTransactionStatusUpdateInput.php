@@ -8,6 +8,5 @@ final class VendorTransactionStatusUpdateInput
 {
     public function __construct(
         public string $status = 'pending',
-    ) {
-    }
+    ) {}
 }

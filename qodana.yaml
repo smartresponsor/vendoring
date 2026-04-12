@@ -8,6 +8,11 @@ profile:
   base:
     name: qodana.recommended
   inspections:
+    - inspection: PhpConstantNamingConventionInspection
+      options:
+        m_regex: "[A-Z][A-Z_\\d]*"
+        m_minLength: 4
+        m_maxLength: 37
     - inspection: PhpMissingDocCommentInspection
       enabled: false
     - inspection: PhpEnforceDocCommentInspection
@@ -19,10 +24,17 @@ profile:
       enabled: false
     - inspection: PhpVariableNamingConventionInspection
       options:
-        m_minLength: 2
+        m_regex: "[a-z][A-Za-z\\d]*"
+        m_minLength: 1
         m_maxLength: 37
       ignore:
         - "tests/**"
+    - inspection: PhpPropertyNamingConventionInspection
+      enabled: true
+      options:
+        m_regex: "[a-z][A-Za-z\\d]*"
+        m_minLength: 2
+        m_maxLength: 37   
     - inspection: PhpMethodNamingConventionInspection
       options:
         m_minLength: 2
@@ -31,10 +43,12 @@ profile:
         - "tests/**"
     - inspection: PhpClassNamingConventionInspection
       options:
+        m_minLength: 3
         m_maxLength: 57
-    - inspection: PhpVariableNamingConventionInspection
-      options:
-        m_regex: "[a-z][A-Za-z\\d]*"
+      ignore:
+        - "tests/**"
+        - "ValueObjectInterface/**"
+        - "ValueObject/**"
     - inspection: PhpCSFixerValidationInspection
       enabled: true
     - inspection: IncorrectFormatting

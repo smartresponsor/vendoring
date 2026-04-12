@@ -12,8 +12,7 @@ final readonly class CategoryReviewAssignment
         private string $assignedReviewer,
         private string $assignedBy,
         private string $priority,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<string, string>

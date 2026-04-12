@@ -16,8 +16,7 @@ abstract class AbstractPayloadEvent extends Event implements PayloadEventInterfa
     final public function __construct(
         private readonly array $payload,
         private readonly DateTimeImmutable $occurredAt,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<string, mixed>

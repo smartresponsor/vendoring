@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
-$amountPolicy = (string) file_get_contents($root.'/src/Service/Policy/VendorTransactionAmountPolicy.php');
-$statusPolicy = (string) file_get_contents($root.'/src/Service/Policy/VendorTransactionStatusPolicy.php');
-$servicesYaml = (string) file_get_contents($root.'/config/vendor_services.yaml');
+$amountPolicy = (string) file_get_contents($root . '/src/Service/Policy/VendorTransactionAmountPolicy.php');
+$statusPolicy = (string) file_get_contents($root . '/src/Service/Policy/VendorTransactionStatusPolicy.php');
+$servicesYaml = (string) file_get_contents($root . '/config/vendor_services.yaml');
 $composer = vendoring_load_composer_json($root);
 
 if (!vendoring_has_script($composer, 'test:transaction-policy')) {

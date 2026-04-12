@@ -25,8 +25,7 @@ final readonly class FeatureFlagService implements FeatureFlagServiceInterface
     public function __construct(
         private TrafficCohortResolverInterface $trafficCohortResolver,
         private array                          $flags = [],
-    ) {
-    }
+    ) {}
 
     public function isEnabled(string $flagName, ?string $tenantId = null, ?string $vendorId = null): bool
     {

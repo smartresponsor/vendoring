@@ -18,6 +18,9 @@ use Doctrine\ORM\Mapping as ORM;
         new ORM\UniqueConstraint(name: 'uniq_vendor_api_key_token_hash', columns: ['token_hash']),
     ],
 )]
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class VendorApiKey
 {
     #[ORM\Id]
@@ -89,7 +92,7 @@ final class VendorApiKey
 
     public function hasPermission(string $permission): bool
     {
-        $tokens = array_filter(array_map('trim', explode(',', $this->permissions)), static fn (string $value): bool => '' !== $value);
+        $tokens = array_filter(array_map('trim', explode(',', $this->permissions)), static fn(string $value): bool => '' !== $value);
 
         return in_array($permission, $tokens, true);
     }

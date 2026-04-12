@@ -25,8 +25,7 @@ final readonly class VendorExternalIntegrationRuntimeViewBuilder implements Vend
         private VendorCrmServiceInterface              $crmService,
         private VendorWebhooksConsumerServiceInterface $webhooksConsumer,
         private VendorPayoutProviderServiceInterface   $payoutProviderBridge,
-    ) {
-    }
+    ) {}
 
     public function build(string $tenantId, string $vendorId): VendorExternalIntegrationRuntimeView
     {

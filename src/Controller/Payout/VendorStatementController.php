@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Payout;
 
+use Doctrine\DBAL\Exception;
 use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,6 +21,7 @@ final class VendorStatementController extends AbstractController
     ) {}
 
     #[Route('/{vendorId}', methods: ['GET'])]
+    /** @throws Exception */
     public function build(string $vendorId, Request $r): JsonResponse
     {
         $dto = $this->requestResolver->resolveStatementRequest($vendorId, $r);

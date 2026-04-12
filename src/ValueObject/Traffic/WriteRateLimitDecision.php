@@ -11,8 +11,7 @@ final readonly class WriteRateLimitDecision
         private int  $limit,
         private int  $remaining,
         private int  $retryAfterSeconds,
-    ) {
-    }
+    ) {}
 
     public function allowed(): bool
     {

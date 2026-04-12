@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class CategoryBanner
 {
     private string $id;
@@ -11,7 +14,7 @@ final class CategoryBanner
 
     public function __construct(string $categoryId, string $title, string $content)
     {
-        $this->id = sha1($categoryId.'|'.$title.'|'.$content);
+        $this->id = sha1($categoryId . '|' . $title . '|' . $content);
     }
 
     public function publish(): void

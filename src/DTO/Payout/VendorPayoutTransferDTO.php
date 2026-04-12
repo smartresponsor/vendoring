@@ -13,6 +13,5 @@ final readonly class VendorPayoutTransferDTO
         public string $accountRef,
         public float $amount,
         public string $currency,
-    ) {
-    }
+    ) {}
 }

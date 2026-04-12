@@ -13,9 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/vendor-release-baseline')]
 final class VendorReleaseBaselineController extends AbstractController
 {
-    public function __construct(private readonly VendorReleaseBaselineReaderInterface $releaseBaselineReader)
-    {
-    }
+    public function __construct(private readonly VendorReleaseBaselineReaderInterface $releaseBaselineReader) {}
 
     #[Route('/tenant/{tenantId}/vendor/{vendorId}', methods: ['GET'])]
     public function show(string $tenantId, string $vendorId, Request $request): JsonResponse

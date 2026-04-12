@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class VendorLedgerBinding
 {
     private ?int $id = null;
@@ -11,8 +14,7 @@ final class VendorLedgerBinding
     public function __construct(
         private readonly Vendor $vendor,
         private readonly string $ledgerVendorId,
-    ) {
-    }
+    ) {}
 
     public function getId(): ?int
     {

@@ -25,8 +25,7 @@ final readonly class CategorySyndicationGovernanceTrailReport
         private array  $historyCounts,
         private array  $warnings,
         private array  $checks,
-    ) {
-    }
+    ) {}
 
     public function destinationId(): string
     {

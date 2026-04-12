@@ -10,13 +10,13 @@ declare(strict_types=1);
  * Not a formatter; no code rewriting.
  */
 
-$repoRoot = realpath(__DIR__.'/..') ?: getcwd();
+$repoRoot = realpath(__DIR__ . '/..') ?: getcwd();
 if (!is_string($repoRoot) || '' === $repoRoot) {
     fwrite(STDERR, "ERROR: cannot resolve repo root\n");
     exit(2);
 }
 
-$srcRoot = $repoRoot.DIRECTORY_SEPARATOR.'src';
+$srcRoot = $repoRoot . DIRECTORY_SEPARATOR . 'src';
 if (!is_dir($srcRoot)) {
     fwrite(STDERR, "ERROR: src/ not found at {$srcRoot}\n");
     exit(2);
@@ -49,7 +49,7 @@ $legacyPathList = [];
 
 $it = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator($srcRoot, FilesystemIterator::SKIP_DOTS),
-    RecursiveIteratorIterator::SELF_FIRST
+    RecursiveIteratorIterator::SELF_FIRST,
 );
 
 foreach ($it as $node) {
@@ -57,7 +57,7 @@ foreach ($it as $node) {
     $rel = str_replace('\\', '/', substr($full, strlen($repoRoot) + 1));
 
     if ($node->isDir()) {
-        $parts = array_values(array_filter(explode('/', $rel), static fn (string $v): bool => '' !== $v));
+        $parts = array_values(array_filter(explode('/', $rel), static fn(string $v): bool => '' !== $v));
         for ($i = 1; $i < count($parts); $i++) {
             if ($parts[$i] === $parts[$i - 1]) {
                 $dirIssueList[] = [
@@ -81,7 +81,7 @@ foreach ($it as $node) {
         $dirRel = dirname($rel);
         if ('.' !== $dirRel && '' !== $dirRel) {
             $dirRel = str_replace('\\', '/', $dirRel);
-            $parts = array_values(array_filter(explode('/', $dirRel), static fn (string $v): bool => '' !== $v));
+            $parts = array_values(array_filter(explode('/', $dirRel), static fn(string $v): bool => '' !== $v));
             $acc = [];
             foreach ($parts as $p) {
                 $acc[] = $p;
@@ -101,7 +101,7 @@ foreach ($it as $node) {
         }
 
         foreach ($legacySegmentList as $seg) {
-            if (false !== strpos($rel, '/'.$seg.'/')) {
+            if (false !== strpos($rel, '/' . $seg . '/')) {
                 $legacyPathList[] = [
                     'type' => 'legacy-segment',
                     'path' => $rel,
@@ -114,7 +114,7 @@ foreach ($it as $node) {
 }
 
 if (!$includeEmptyDir) {
-    $dirIssueList = array_values(array_filter($dirIssueList, static fn (array $hit): bool => isset($dirWithFileSet[$hit['path']])));
+    $dirIssueList = array_values(array_filter($dirIssueList, static fn(array $hit): bool => isset($dirWithFileSet[$hit['path']])));
 }
 
 $result = [
@@ -126,22 +126,22 @@ $result = [
 ];
 
 if ($asJson) {
-    echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n";
+    echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
 } else {
     echo "Vendoring structure scan\n";
-    echo "- PHP files under src/: ".count($phpFileList)."\n";
+    echo '- PHP files under src/: ' . count($phpFileList) . "\n";
 
-    echo "- Forbidden placement hits: ".count($forbiddenFileList)."\n";
+    echo '- Forbidden placement hits: ' . count($forbiddenFileList) . "\n";
     foreach ($forbiddenFileList as $hit) {
         echo "  * {$hit['path']} (prefix={$hit['prefix']})\n";
     }
 
-    echo "- Duplicate-segment directories: ".count($dirIssueList).($includeEmptyDir ? " (incl. empty)" : " (non-empty only)")."\n";
+    echo '- Duplicate-segment directories: ' . count($dirIssueList) . ($includeEmptyDir ? ' (incl. empty)' : ' (non-empty only)') . "\n";
     foreach ($dirIssueList as $hit) {
         echo "  * {$hit['path']} (segment={$hit['segment']})\n";
     }
 
-    echo "- Legacy-path hits: ".count($legacyPathList)."\n";
+    echo '- Legacy-path hits: ' . count($legacyPathList) . "\n";
     foreach ($legacyPathList as $hit) {
         echo "  * {$hit['path']} (segment={$hit['segment']})\n";
     }

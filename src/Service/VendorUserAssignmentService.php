@@ -17,8 +17,7 @@ final readonly class VendorUserAssignmentService implements VendorUserAssignment
     public function __construct(
         private VendorUserAssignmentRepositoryInterface $assignmentRepository,
         private EntityManagerInterface                  $entityManager,
-    ) {
-    }
+    ) {}
 
     public function assignOwner(int $vendorId, int $userId): VendorUserAssignmentInterface
     {

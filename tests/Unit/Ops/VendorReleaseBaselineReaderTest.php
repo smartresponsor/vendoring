@@ -30,18 +30,12 @@ final class VendorReleaseBaselineReaderTest extends TestCase
                 vendorId: '42',
                 currency: 'USD',
                 ownership: ['ownerUserId' => 7],
-                profile: [
-                    'completionPercent' => 75,
-                    'readyForPublishing' => false,
-                    'nextAction' => 'assign_owner',
-                ],
                 finance: ['metricOverview' => []],
                 statementDelivery: ['statement' => []],
                 externalIntegration: ['surfaces' => []],
                 surfaceStatus: [
                     'ownership' => true,
-                    'profile' => true,
-                    'finance' => true,
+                    'finance' => false,
                     'statementDelivery' => true,
                     'externalIntegration' => true,
                 ],
@@ -50,13 +44,12 @@ final class VendorReleaseBaselineReaderTest extends TestCase
 
         $payload = $this->buildReader()->build('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')->toArray();
 
-        self::assertSame(75, $payload['profileSummary']['completionPercent']);
-        self::assertFalse($payload['profileSummary']['readyForPublishing']);
-        self::assertSame('assign_owner', $payload['profileSummary']['nextAction']);
-        self::assertContains('profile.assign_owner.required', $payload['issues']);
+        self::assertSame('warn', $payload['status']);
+        self::assertContains('surface.finance.missing', $payload['issues']);
+        self::assertTrue($payload['artifactStatus']['runtimeStatusCommand']);
     }
 
-    public function testBuildMarksProfileSummaryUnavailableWhenRuntimeStatusHasNoProfile(): void
+    public function testBuildMarksOwnershipSurfaceUnavailableWhenRuntimeStatusHasNoOwnership(): void
     {
         $this->runtimeStatusViewBuilder
             ->expects(self::once())
@@ -66,13 +59,11 @@ final class VendorReleaseBaselineReaderTest extends TestCase
                 vendorId: 'vendor-abc',
                 currency: 'USD',
                 ownership: null,
-                profile: null,
                 finance: [],
                 statementDelivery: [],
                 externalIntegration: [],
                 surfaceStatus: [
                     'ownership' => false,
-                    'profile' => false,
                     'finance' => false,
                     'statementDelivery' => false,
                     'externalIntegration' => false,
@@ -82,9 +73,9 @@ final class VendorReleaseBaselineReaderTest extends TestCase
 
         $payload = $this->buildReader()->build('tenant-1', 'vendor-abc')->toArray();
 
-        self::assertFalse($payload['profileSummary']['available']);
-        self::assertNull($payload['profileSummary']['completionPercent']);
-        self::assertContains('surface.profile.missing', $payload['issues']);
+        self::assertNull($payload['runtimeStatus']['ownership']);
+        self::assertContains('surface.ownership.missing', $payload['issues']);
+        self::assertContains('surface.finance.missing', $payload['issues']);
     }
 
     private function buildReader(): VendorReleaseBaselineReader

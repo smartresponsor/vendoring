@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$bundles = (string) file_get_contents($root.'/config/bundles.php');
-$routesRuntime = (string) file_get_contents($root.'/config/routes_runtime.php');
-$routes = (string) file_get_contents($root.'/config/routes/vendor_nelmio_api_doc.yaml');
-$package = (string) file_get_contents($root.'/config/packages/nelmio_api_doc.yaml');
+$bundles = (string) file_get_contents($root . '/config/bundles.php');
+$routesRuntime = (string) file_get_contents($root . '/config/routes_runtime.php');
+$routes = (string) file_get_contents($root . '/config/routes/vendor_nelmio_api_doc.yaml');
+$package = (string) file_get_contents($root . '/config/packages/nelmio_api_doc.yaml');
 
 $checks = [
     [str_contains($bundles, 'Nelmio\\ApiDocBundle\\NelmioApiDocBundle::class'), 'bundles.php must register NelmioApiDocBundle'],
@@ -20,9 +20,9 @@ $checks = [
 
 foreach ($checks as [$ok, $message]) {
     if (true !== $ok) {
-        fwrite(STDERR, $message.PHP_EOL);
+        fwrite(STDERR, $message . PHP_EOL);
         exit(1);
     }
 }
 
-echo 'api doc contract smoke OK'.PHP_EOL;
+echo 'api doc contract smoke OK' . PHP_EOL;

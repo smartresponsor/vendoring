@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-$root = realpath(__DIR__.'/../..');
+$root = realpath(__DIR__ . '/../..');
 if (!is_string($root) || '' === $root) {
     fwrite(STDERR, "Unable to resolve project root.\n");
     exit(2);
 }
 
-$entityPath = $root.'/src/Entity/VendorTransaction.php';
-$interfacePath = $root.'/src/EntityInterface/VendorTransactionInterface.php';
+$entityPath = $root . '/src/Entity/VendorTransaction.php';
+$interfacePath = $root . '/src/EntityInterface/VendorTransactionInterface.php';
 
 foreach ([$entityPath, $interfacePath] as $path) {
     if (!is_file($path)) {
-        fwrite(STDERR, sprintf("Missing required doctrine artifact: %s\n", str_replace($root.'/', '', $path)));
+        fwrite(STDERR, sprintf("Missing required doctrine artifact: %s\n", str_replace($root . '/', '', $path)));
         exit(1);
     }
 }

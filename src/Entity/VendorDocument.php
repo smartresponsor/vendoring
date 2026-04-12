@@ -6,6 +6,9 @@ namespace App\Entity;
 
 use DateTimeImmutable;
 
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class VendorDocument
 {
     private ?int $id = null;

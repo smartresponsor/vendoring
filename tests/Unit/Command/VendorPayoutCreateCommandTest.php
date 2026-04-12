@@ -38,6 +38,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $exitCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             '--vendorId' => 'vendor-1',
             '--currency' => 'USD',
             '--thresholdCents' => '1000',
@@ -67,6 +68,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $exitCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             '--vendorId' => 'vendor-1',
             '--currency' => 'USD',
             '--thresholdCents' => '1000',
@@ -92,6 +94,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $exitCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             '--currency' => 'USD',
             '--thresholdCents' => '1000',
             '--retentionFeePercent' => '0.1',
@@ -118,6 +121,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $exitCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             '--vendorId' => 'vendor-1',
             '--currency' => 'USD',
             '--thresholdCents' => '1000',

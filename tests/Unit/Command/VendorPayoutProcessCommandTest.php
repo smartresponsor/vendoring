@@ -62,6 +62,7 @@ final class VendorPayoutProcessCommandTest extends TestCase
         self::assertSame([
             'payoutId' => 'payout-1',
             'processed' => false,
+            'status' => 'rejected',
         ], $payload);
     }
 }

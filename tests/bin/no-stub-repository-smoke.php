@@ -42,7 +42,7 @@ foreach ($iterator as $file) {
 }
 
 if ([] !== $violations) {
-    fwrite(STDERR, 'Forbidden repository stub markers found: '.implode(', ', $violations).PHP_EOL);
+    fwrite(STDERR, 'Forbidden repository stub markers found: ' . implode(', ', $violations) . PHP_EOL);
     exit(1);
 }
 

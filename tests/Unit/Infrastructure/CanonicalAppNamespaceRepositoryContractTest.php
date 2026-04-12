@@ -10,7 +10,7 @@ final class CanonicalAppNamespaceRepositoryContractTest extends TestCase
 {
     public function testRepositoryOperationalServiceConfigUsesCanonicalAppNamespace(): void
     {
-        $file = __DIR__.'/../../../ops/policy/config/services_interface.yaml';
+        $file = __DIR__ . '/../../../ops/policy/config/services_interface.yaml';
 
         self::assertFileExists($file);
 

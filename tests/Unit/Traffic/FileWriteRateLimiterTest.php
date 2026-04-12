@@ -12,7 +12,7 @@ final class FileWriteRateLimiterTest extends TestCase
     public function testLimiterRejectsRequestAfterConfiguredLimit(): void
     {
         $limiter = new FileWriteRateLimiter();
-        $scope = 'test_write_scope_'.bin2hex(random_bytes(6));
+        $scope = 'test_write_scope_' . bin2hex(random_bytes(6));
         $actor = 'actor-1';
 
         for ($index = 0; $index < 3; ++$index) {

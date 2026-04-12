@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Tests\Support\Runtime\KernelRuntimeHarness;
 
-require dirname(__DIR__, 2).'/vendor/autoload.php';
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 $projectRoot = dirname(__DIR__, 2);
 
@@ -17,8 +17,8 @@ $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot
 
 try {
     $suffix = bin2hex(random_bytes(4));
-    $tenantId = 'probe-tenant-'.$suffix;
-    $vendorId = 'probe-vendor-'.$suffix;
+    $tenantId = 'probe-tenant-' . $suffix;
+    $vendorId = 'probe-vendor-' . $suffix;
     $correlationId = 'finance-synthetic-probe';
 
     $accountResponse = KernelRuntimeHarness::requestJson(
@@ -29,11 +29,11 @@ try {
             'tenantId' => $tenantId,
             'vendorId' => $vendorId,
             'provider' => 'bank',
-            'accountRef' => 'acct-'.$suffix,
+            'accountRef' => 'acct-' . $suffix,
             'currency' => 'USD',
             'active' => true,
         ],
-        ['X-Correlation-ID' => $correlationId]
+        ['X-Correlation-ID' => $correlationId],
     );
 
     if (200 !== $accountResponse->getStatusCode()) {
@@ -45,13 +45,13 @@ try {
         throw new RuntimeException('Finance synthetic probe payout account provider mismatch.');
     }
 
-    $statementPath = '/api/payouts/statements/'.$vendorId.'?tenantId='.$tenantId.'&from=2026-01-01&to=2026-01-31&currency=USD';
+    $statementPath = '/api/payouts/statements/' . $vendorId . '?tenantId=' . $tenantId . '&from=2026-01-01&to=2026-01-31&currency=USD';
     $statementResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'GET',
         $statementPath,
         null,
-        ['X-Correlation-ID' => $correlationId]
+        ['X-Correlation-ID' => $correlationId],
     );
 
     if (200 !== $statementResponse->getStatusCode()) {
@@ -63,13 +63,13 @@ try {
         throw new RuntimeException('Finance synthetic probe statement build did not return data payload.');
     }
 
-    $exportPath = '/api/payouts/statements/'.$vendorId.'/export?tenantId='.$tenantId.'&from=2026-01-01&to=2026-01-31&currency=USD';
+    $exportPath = '/api/payouts/statements/' . $vendorId . '/export?tenantId=' . $tenantId . '&from=2026-01-01&to=2026-01-31&currency=USD';
     $exportResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'GET',
         $exportPath,
         null,
-        ['X-Correlation-ID' => $correlationId]
+        ['X-Correlation-ID' => $correlationId],
     );
 
     if (200 !== $exportResponse->getStatusCode()) {
@@ -82,8 +82,8 @@ try {
         throw new RuntimeException('Finance synthetic probe statement export did not return base64 content.');
     }
 
-    fwrite(STDOUT, "finance synthetic probe OK
-");
+    fwrite(STDOUT, 'finance synthetic probe OK
+');
 } finally {
     KernelRuntimeHarness::cleanupRuntimeState($kernel);
 }

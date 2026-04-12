@@ -10,7 +10,7 @@ final class KernelConfigurationContractTest extends TestCase
 {
     public function testServicesYamlImportsVendorTransactionsAndAppResource(): void
     {
-        $services = (string) file_get_contents(dirname(__DIR__, 3).'/config/vendor_services.yaml');
+        $services = (string) file_get_contents(dirname(__DIR__, 3) . '/config/vendor_services.yaml');
 
         self::assertStringContainsString('vendor_services_transactions.yaml', $services);
         self::assertStringContainsString('App\\:', $services);
@@ -19,7 +19,7 @@ final class KernelConfigurationContractTest extends TestCase
 
     public function testRoutesYamlImportsControllerAttributesAndVendorTransactionsRoutes(): void
     {
-        $routes = (string) file_get_contents(dirname(__DIR__, 3).'/config/vendor_routes.yaml');
+        $routes = (string) file_get_contents(dirname(__DIR__, 3) . '/config/vendor_routes.yaml');
 
         self::assertStringContainsString('../src/Controller/', $routes);
         self::assertStringContainsString('type: attribute', $routes);
@@ -28,7 +28,7 @@ final class KernelConfigurationContractTest extends TestCase
 
     public function testDoctrineYamlMapsAppEntityNamespace(): void
     {
-        $doctrine = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/doctrine.yaml');
+        $doctrine = (string) file_get_contents(dirname(__DIR__, 3) . '/config/packages/doctrine.yaml');
 
         self::assertStringContainsString("prefix: 'App\\Entity'", $doctrine);
         self::assertStringContainsString("dir: '%kernel.project_dir%/src/Entity'", $doctrine);

@@ -9,9 +9,9 @@ use App\Observability\Service\RuntimeMetricCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-require dirname(__DIR__, 2).'/vendor/autoload.php';
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
-$dir = sys_get_temp_dir().'/vendoring-observability-smoke-'.bin2hex(random_bytes(4));
+$dir = sys_get_temp_dir() . '/vendoring-observability-smoke-' . bin2hex(random_bytes(4));
 $exporter = new FileObservabilityRecordExporter($dir);
 $correlationContext = new CorrelationContext();
 $correlationContext->beginRequest('smoke-correlation-id');
@@ -27,8 +27,8 @@ $metrics = new RuntimeMetricCollector($correlationContext, $exporter);
 $logger->info('observability_backend_smoke', ['vendor_id' => 'vendor-1']);
 $metrics->increment('observability_backend_smoke_total', ['scope' => 'synthetic']);
 
-$logPath = $dir.'/runtime_logs.ndjson';
-$metricPath = $dir.'/runtime_metrics.ndjson';
+$logPath = $dir . '/runtime_logs.ndjson';
+$metricPath = $dir . '/runtime_metrics.ndjson';
 
 if (!is_file($logPath) || !is_file($metricPath)) {
     fwrite(STDERR, "observability backend smoke failed: export files were not created\n");

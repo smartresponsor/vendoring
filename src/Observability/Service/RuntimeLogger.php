@@ -29,8 +29,7 @@ final class RuntimeLogger implements RuntimeLoggerInterface
         private readonly CorrelationContextInterface $correlationContext,
         private readonly RequestStack $requestStack,
         private readonly ?ObservabilityRecordExporterInterface $exporter = null,
-    ) {
-    }
+    ) {}
 
     /**
      * {@inheritdoc}
@@ -76,7 +75,7 @@ final class RuntimeLogger implements RuntimeLoggerInterface
 
         /** @var array<string, scalar|null> $record */
         $record = [
-            'timestamp' => new DateTimeImmutable()->format(DATE_ATOM),
+            'timestamp' => (new DateTimeImmutable())->format(DATE_ATOM),
             'level' => $level,
             'message' => $message,
             'request_id' => $correlationId,

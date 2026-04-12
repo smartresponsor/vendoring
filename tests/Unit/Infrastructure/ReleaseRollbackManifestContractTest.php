@@ -6,7 +6,7 @@ namespace App\Tests\Unit\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 
-require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+require_once dirname(__DIR__, 2) . '/bin/_composer_json.php';
 
 final class ReleaseRollbackManifestContractTest extends TestCase
 {
@@ -16,7 +16,7 @@ final class ReleaseRollbackManifestContractTest extends TestCase
         $scripts = vendoring_composer_section($composer, 'scripts');
 
         foreach (['docs:release-manifest', 'test:release-rollback-manifest'] as $script) {
-            self::assertArrayHasKey($script, $scripts, 'Missing release manifest script: '.$script);
+            self::assertArrayHasKey($script, $scripts, 'Missing release manifest script: ' . $script);
         }
     }
 
@@ -24,9 +24,9 @@ final class ReleaseRollbackManifestContractTest extends TestCase
     {
         $root = dirname(__DIR__, 3);
 
-        self::assertFileExists($root.'/bin/generate-release-manifest.php');
-        self::assertFileExists($root.'/docs/release/RC_RELEASE_MANIFEST.md');
-        self::assertFileExists($root.'/docs/release/RC_ROLLBACK_MANIFEST.md');
-        self::assertFileExists($root.'/tests/bin/release-rollback-manifest-contract-smoke.php');
+        self::assertFileExists($root . '/bin/generate-release-manifest.php');
+        self::assertFileExists($root . '/docs/release/RC_RELEASE_MANIFEST.md');
+        self::assertFileExists($root . '/docs/release/RC_ROLLBACK_MANIFEST.md');
+        self::assertFileExists($root . '/tests/bin/release-rollback-manifest-contract-smoke.php');
     }
 }

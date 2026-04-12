@@ -14,9 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/ledger/vendor')]
 final class VendorSummaryController extends AbstractController
 {
-    public function __construct(private readonly VendorSummaryServiceInterface $vendorSummaryService)
-    {
-    }
+    public function __construct(private readonly VendorSummaryServiceInterface $vendorSummaryService) {}
 
     #[Route('/{vendorId}/summary', methods: ['GET'])]
     public function summary(string $vendorId, Request $r): JsonResponse

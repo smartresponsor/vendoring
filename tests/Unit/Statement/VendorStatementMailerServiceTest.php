@@ -128,6 +128,6 @@ final class VendorStatementMailerServiceTest extends TestCase
 
     private function breaker(): FileOutboundCircuitBreaker
     {
-        return new FileOutboundCircuitBreaker(sys_get_temp_dir().'/vendoring-breaker-mailer-'.bin2hex(random_bytes(4)));
+        return new FileOutboundCircuitBreaker(sys_get_temp_dir() . '/vendoring-breaker-mailer-' . bin2hex(random_bytes(4)));
     }
 }

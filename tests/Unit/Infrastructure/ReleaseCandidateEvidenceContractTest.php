@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure;
 
-require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+require_once dirname(__DIR__, 2) . '/bin/_composer_json.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +16,7 @@ final class ReleaseCandidateEvidenceContractTest extends TestCase
         $scripts = vendoring_composer_section($composer, 'scripts');
 
         foreach (['docs:rc-evidence', 'test:rc-evidence'] as $script) {
-            self::assertArrayHasKey($script, $scripts, 'Missing RC evidence script: '.$script);
+            self::assertArrayHasKey($script, $scripts, 'Missing RC evidence script: ' . $script);
         }
     }
 
@@ -24,13 +24,13 @@ final class ReleaseCandidateEvidenceContractTest extends TestCase
     {
         $root = dirname(__DIR__, 3);
 
-        self::assertFileExists($root.'/bin/generate-rc-evidence.php');
-        self::assertFileExists($root.'/docs/release/RC_EVIDENCE_PACK.md');
+        self::assertFileExists($root . '/bin/generate-rc-evidence.php');
+        self::assertFileExists($root . '/docs/release/RC_EVIDENCE_PACK.md');
     }
 
     public function testReleaseCandidateWorkflowPublishesReleaseArtifactsAndUsesSqliteCapablePhp(): void
     {
-        $workflow = (string) file_get_contents(dirname(__DIR__, 3).'/.github/workflows/release-candidate.yml');
+        $workflow = (string) file_get_contents(dirname(__DIR__, 3) . '/.github/workflows/release-candidate.yml');
 
         self::assertStringContainsString('pdo_sqlite', $workflow);
         self::assertStringContainsString('Upload RC evidence artifacts', $workflow);
@@ -39,7 +39,7 @@ final class ReleaseCandidateEvidenceContractTest extends TestCase
 
     public function testRuntimeWorkflowUsesSqliteCapablePhpForVerticalSliceProofs(): void
     {
-        $workflow = (string) file_get_contents(dirname(__DIR__, 3).'/.github/workflows/runtime.yml');
+        $workflow = (string) file_get_contents(dirname(__DIR__, 3) . '/.github/workflows/runtime.yml');
 
         self::assertStringContainsString('pdo_sqlite', $workflow);
         self::assertStringContainsString('build/release/**', $workflow);

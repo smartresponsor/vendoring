@@ -16,8 +16,7 @@ final readonly class CatalogReviewAssignmentService
         private CategoryChangeRequestRepository    $requestRepository,
         private CategoryReviewAssignmentRepository $assignmentRepository,
         private CategoryReviewAssignmentPolicy     $policy,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<string, string>

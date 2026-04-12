@@ -9,6 +9,9 @@ namespace App\Event;
 use App\Entity\VendorTransaction;
 use Symfony\Contracts\EventDispatcher\Event;
 
+/**
+ * @noinspection PhpConstantNamingConventionInspection
+ */
 final class VendorTransactionEvent extends Event
 {
     public const string EVENT_NAME = 'vendor.transaction.action';

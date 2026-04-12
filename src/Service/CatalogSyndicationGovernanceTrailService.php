@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -15,8 +16,7 @@ final readonly class CatalogSyndicationGovernanceTrailService implements Catalog
 {
     public function __construct(
         private CategorySyndicationGovernanceTrailPolicyInterface $policy,
-    ) {
-    }
+    ) {}
 
     public function recordTrail(CatalogSyndicationGovernanceTrailRequestDTO $request): CategorySyndicationGovernanceTrailRecordedInterface
     {

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
 $paths = ['.deploy', 'ops', 'config', 'scripts', '.smoke', 'bin', 'public', 'tools', 'src'];
 $hits = [];
 $allowedPrefixes = ['.deploy/_template/', '.deploy/systemd/', '.consuming/', 'vendor/'];
 foreach ($paths as $path) {
-    $absolutePath = $root.DIRECTORY_SEPARATOR.$path;
+    $absolutePath = $root . DIRECTORY_SEPARATOR . $path;
     if (!is_dir($absolutePath)) {
         continue;
     }
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($absolutePath, FilesystemIterator::SKIP_DOTS));
     foreach (vendoring_php_files($iterator) as $file) {
-        $relative = str_replace($root.DIRECTORY_SEPARATOR, '', $file->getPathname());
+        $relative = str_replace($root . DIRECTORY_SEPARATOR, '', $file->getPathname());
         foreach ($allowedPrefixes as $prefix) {
             if (str_starts_with($relative, $prefix)) {
                 continue 2;
@@ -28,7 +28,7 @@ foreach ($paths as $path) {
     }
 }
 if ([] !== $hits) {
-    fwrite(STDERR, 'Found example wording markers in repository: '.implode(', ', $hits).PHP_EOL);
+    fwrite(STDERR, 'Found example wording markers in repository: ' . implode(', ', $hits) . PHP_EOL);
     exit(1);
 }
 $composer = vendoring_load_composer_json($root);

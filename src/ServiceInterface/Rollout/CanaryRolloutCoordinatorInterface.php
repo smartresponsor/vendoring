@@ -19,21 +19,21 @@ interface CanaryRolloutCoordinatorInterface
      * @param int         $windowSeconds Monitoring and rollback evaluation lookback window.
      *
      * @return array{
-     *   generatedAt:string,
-     *   flagDecision:array{flag:string, enabled:bool, cohort:string, reason:string},
-     *   manifest:array<string,mixed>,
-     *   rollback:array<string,mixed>,
-     *   canary:array{
-     *     cohort:string,
-     *     decision:string,
-     *     recommendedAction:string,
-     *     nextCohort:?string,
-     *     reason:string,
-     *     probeGate:array{
-     *       transaction:bool,
-     *       finance:bool,
-     *       payout:bool,
-     *       postDeploy:bool
+     *   'generatedAt': string,
+     *   'flagDecision': array{'flag': string, 'enabled': bool, 'cohort': string, 'reason': string},
+     *   'manifest': array<string, mixed>,
+     *   'rollback': array<string, mixed>,
+     *   'canary': array{
+     *     'cohort': string,
+     *     'decision': string,
+     *     'recommendedAction': string,
+     *     'nextCohort': ?string,
+     *     'reason': string,
+     *     'probeGate': array{
+     *       'transaction': bool,
+     *       'finance': bool,
+     *       'payout': bool,
+     *       'postDeploy': bool
      *     }
      *   }
      * }

@@ -18,7 +18,7 @@ $required = [
 ];
 
 foreach ($required as $path) {
-    if (!is_file($root.'/'.$path)) {
+    if (!is_file($root . '/' . $path)) {
         fwrite(STDERR, sprintf("Missing runtime activation artifact: %s\n", $path));
         exit(1);
     }

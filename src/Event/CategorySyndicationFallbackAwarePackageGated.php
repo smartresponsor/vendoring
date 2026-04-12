@@ -6,6 +6,4 @@ namespace App\Event;
 
 use App\EventInterface\CategorySyndicationFallbackAwarePackageGatedInterface;
 
-final class CategorySyndicationFallbackAwarePackageGated extends AbstractPayloadEvent implements CategorySyndicationFallbackAwarePackageGatedInterface
-{
-}
+final class CategorySyndicationFallbackAwarePackageGated extends AbstractPayloadEvent implements CategorySyndicationFallbackAwarePackageGatedInterface {}

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Command\Support\CommandIoException;
+use App\Command\Support\CommandJsonArtifactWriter;
+use App\Command\Support\CommandOutputFormat;
+use App\Command\Support\CommandResultEmitter;
 use App\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
 use App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -11,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * CLI entrypoint for rendering and optionally writing release/rollback manifests.
@@ -21,6 +26,8 @@ final class VendorReleaseManifestCommand extends Command
     public function __construct(
         private readonly ReleaseManifestBuilderInterface $releaseManifestBuilder,
         private readonly RollbackDecisionEvaluatorInterface $rollbackDecisionEvaluator,
+        private readonly CommandJsonArtifactWriter $commandJsonArtifactWriter,
+        private readonly CommandResultEmitter $commandResultEmitter,
     ) {
         parent::__construct();
     }
@@ -42,26 +49,50 @@ final class VendorReleaseManifestCommand extends Command
         $windowOption = $input->getOption('windowSeconds');
         $formatOption = $input->getOption('format');
         $windowSeconds = is_scalar($windowOption) ? max(1, (int) $windowOption) : 900;
-        $format = is_scalar($formatOption) ? (string) $formatOption : 'text';
+        $format = CommandOutputFormat::normalize($formatOption);
 
-        $manifest = $this->releaseManifestBuilder->build($windowSeconds);
-        $rollback = $this->rollbackDecisionEvaluator->evaluate($manifest);
+        try {
+            $manifest = $this->releaseManifestBuilder->build($windowSeconds);
+            $rollback = $this->rollbackDecisionEvaluator->evaluate($manifest);
+        } catch (Throwable $throwable) {
+            $this->commandResultEmitter->emitThrowableError(
+                $output,
+                $format,
+                'failed',
+                'Failed to build release manifest',
+                $throwable,
+                ['windowSeconds' => $windowSeconds],
+            );
 
-        if ($input->getOption('write')) {
-            $this->writeJson(
-                is_scalar($input->getOption('manifest-output')) ? (string) $input->getOption('manifest-output') : dirname(__DIR__, 2).'/build/release/release-manifest.json',
-                $manifest,
-            );
-            $this->writeJson(
-                is_scalar($input->getOption('rollback-output')) ? (string) $input->getOption('rollback-output') : dirname(__DIR__, 2).'/build/release/rollback-manifest.json',
-                $rollback,
-            );
+            return Command::FAILURE;
         }
 
-        if ('json' === $format) {
-            $output->writeln((string) json_encode(['manifest' => $manifest, 'rollback' => $rollback], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        try {
+            $manifestPath = $this->commandJsonArtifactWriter->writeIfRequested(
+                (bool) $input->getOption('write'),
+                $input->getOption('manifest-output'),
+                dirname(__DIR__, 2) . '/build/release/release-manifest.json',
+                $manifest,
+            );
+            $rollbackPath = $this->commandJsonArtifactWriter->writeIfRequested(
+                (bool) $input->getOption('write'),
+                $input->getOption('rollback-output'),
+                dirname(__DIR__, 2) . '/build/release/rollback-manifest.json',
+                $rollback,
+            );
+        } catch (CommandIoException $exception) {
+            $this->commandResultEmitter->emitError($output, $format, 'failed', $exception->getMessage(), [
+                'windowSeconds' => $windowSeconds,
+            ]);
 
-            return Command::SUCCESS;
+            return Command::FAILURE;
+        }
+
+        if (CommandOutputFormat::isJson($format)) {
+            return $this->commandResultEmitter->emitJson($output, [
+                'manifest' => $manifest,
+                'rollback' => $rollback,
+            ]) ? Command::SUCCESS : Command::FAILURE;
         }
 
         $output->writeln(sprintf(
@@ -73,18 +104,14 @@ final class VendorReleaseManifestCommand extends Command
         ));
         $output->writeln(sprintf('alerts=%d reasons=%d', (int) $manifest['monitoring']['alertCount'], count($rollback['reasons'])));
 
-        return Command::SUCCESS;
-    }
-
-    /**
-     * @param array<string,mixed> $payload
-     */
-    private function writeJson(string $path, array $payload): void
-    {
-        $dir = dirname($path);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
+        if (null !== $manifestPath) {
+            $output->writeln(sprintf('manifestWritten=%s', $manifestPath));
         }
-        file_put_contents($path, (string) json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+        if (null !== $rollbackPath) {
+            $output->writeln(sprintf('rollbackWritten=%s', $rollbackPath));
+        }
+
+        return Command::SUCCESS;
     }
 }

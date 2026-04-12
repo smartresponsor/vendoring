@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -13,7 +14,7 @@ declare(strict_types=1);
  * - Formatting, auto-fixing, or deep static analysis.
  */
 
-$repoRoot = realpath(__DIR__.'/..') ?: getcwd();
+$repoRoot = realpath(__DIR__ . '/..') ?: getcwd();
 if (!is_string($repoRoot) || '' === $repoRoot) {
     fwrite(STDERR, "ERROR: cannot resolve repo root\n");
     exit(2);
@@ -35,7 +36,7 @@ foreach ($args as $a) {
     }
 }
 
-$srcRoot = $repoRoot.DIRECTORY_SEPARATOR.'src';
+$srcRoot = $repoRoot . DIRECTORY_SEPARATOR . 'src';
 if (!is_dir($srcRoot)) {
     fwrite(STDERR, "ERROR: src/ not found\n");
     exit(2);
@@ -102,7 +103,7 @@ function parsePhp(string $code): array
                     $chunk = trim($chunk);
                     $chunk = preg_replace('/^(function|const)\s+/i', '', $chunk) ?? $chunk;
 
-                    $parts = array_values(array_filter(array_map('trim', explode(',', $chunk)), static fn (string $v): bool => '' !== $v));
+                    $parts = array_values(array_filter(array_map('trim', explode(',', $chunk)), static fn(string $v): bool => '' !== $v));
                     foreach ($parts as $p) {
                         $p = preg_replace('/\s+/', ' ', $p) ?? $p;
 
@@ -171,7 +172,7 @@ function parsePhp(string $code): array
 }
 
 $it = new RecursiveIteratorIterator(
-    new RecursiveDirectoryIterator($srcRoot, FilesystemIterator::SKIP_DOTS)
+    new RecursiveDirectoryIterator($srcRoot, FilesystemIterator::SKIP_DOTS),
 );
 
 $fileList = [];
@@ -196,7 +197,7 @@ foreach ($fileList as $abs) {
     }
 
     foreach ($meta['typeList'] as $t) {
-        $fqn = $ns.'\\'.$t['name'];
+        $fqn = $ns . '\\' . $t['name'];
         $knownTypeSet[$fqn] = true;
     }
 }
@@ -246,14 +247,14 @@ if ($asJson) {
         'issueCount' => count($issueList),
         'issueList' => $limit > 0 ? array_slice($issueList, 0, $limit) : $issueList,
     ];
-    echo json_encode($out, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n";
+    echo json_encode($out, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
     exit(($strict && count($issueList) > 0) ? 1 : 0);
 }
 
 echo "Vendoring missing class scan\n";
-echo "- PHP files under src/: ".count($fileList)."\n";
-echo "- Known types: ".count($knownTypeSet)."\n";
-echo "- Issue count: ".count($issueList)."\n";
+echo '- PHP files under src/: ' . count($fileList) . "\n";
+echo '- Known types: ' . count($knownTypeSet) . "\n";
+echo '- Issue count: ' . count($issueList) . "\n";
 
 $shown = 0;
 foreach ($issueList as $it) {

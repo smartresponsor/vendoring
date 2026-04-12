@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: 'App\\Repository\\VendorRepository')]
 #[ORM\Table(name: 'vendor')]
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class Vendor implements VendorEntityInterface
 {
     #[ORM\Id]

@@ -73,7 +73,7 @@ final class PayoutAccountRepositoryTest extends TestCase
                 [
                     'tenant_id' => 'tenant-1',
                     'vendor_id' => 'vendor-1',
-                ]
+                ],
             );
         $this->connection->expects(self::never())->method('insert');
 
@@ -105,7 +105,7 @@ final class PayoutAccountRepositoryTest extends TestCase
                     'currency' => 'USD',
                     'active' => 1,
                     'created_at' => '2026-03-30 10:00:00',
-                ]
+                ],
             );
 
         (new PayoutAccountRepository($this->connection))->upsert($account);

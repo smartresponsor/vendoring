@@ -13,18 +13,18 @@ final class ReleaseManifestBuilderTest extends TestCase
 {
     public function testBuildAggregatesMonitoringAndReleaseArtifacts(): void
     {
-        $projectDir = sys_get_temp_dir().'/vendoring-release-manifest-'.bin2hex(random_bytes(4));
-        mkdir($projectDir.'/docs/release', 0777, true);
-        mkdir($projectDir.'/build/release', 0777, true);
-        mkdir($projectDir.'/build/docs/phpdocumentor', 0777, true);
+        $projectDir = sys_get_temp_dir() . '/vendoring-release-manifest-' . bin2hex(random_bytes(4));
+        mkdir($projectDir . '/docs/release', 0777, true);
+        mkdir($projectDir . '/build/release', 0777, true);
+        mkdir($projectDir . '/build/docs/phpdocumentor', 0777, true);
 
         foreach (['RC_BASELINE.md', 'RC_RUNTIME_SURFACES.md', 'RC_OPERATOR_SURFACE.md', 'RC_EVIDENCE_PACK.md', 'RC_ROLLBACK_MANIFEST.md', 'RC_RELEASE_MANIFEST.md'] as $file) {
-            file_put_contents($projectDir.'/docs/release/'.$file, '# ok');
+            file_put_contents($projectDir . '/docs/release/' . $file, '# ok');
         }
         foreach (['rc-evidence.json', 'rc-evidence.md', 'release-manifest.json', 'rollback-manifest.json'] as $file) {
-            file_put_contents($projectDir.'/build/release/'.$file, '{}');
+            file_put_contents($projectDir . '/build/release/' . $file, '{}');
         }
-        file_put_contents($projectDir.'/build/docs/phpdocumentor/index.html', '<html></html>');
+        file_put_contents($projectDir . '/build/docs/phpdocumentor/index.html', '<html></html>');
 
         $snapshotBuilder = new class implements MonitoringSnapshotBuilderInterface {
             public function build(int $windowSeconds = 900): array

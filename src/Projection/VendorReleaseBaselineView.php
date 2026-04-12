@@ -23,8 +23,7 @@ final readonly class VendorReleaseBaselineView
         private array  $issues,
         private string $status,
         private string $generatedAt,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{

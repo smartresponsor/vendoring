@@ -32,17 +32,11 @@ final class VendorRuntimeStatusCommandTest extends TestCase
                 vendorId: '42',
                 currency: 'USD',
                 ownership: ['ownerUserId' => 7],
-                profile: [
-                    'completionPercent' => 88,
-                    'readyForPublishing' => false,
-                    'nextAction' => 'add_website',
-                ],
                 finance: ['metricOverview' => []],
                 statementDelivery: ['statement' => []],
                 externalIntegration: ['surfaces' => []],
                 surfaceStatus: [
                     'ownership' => true,
-                    'profile' => true,
                     'finance' => true,
                     'statementDelivery' => true,
                     'externalIntegration' => true,
@@ -60,9 +54,7 @@ final class VendorRuntimeStatusCommandTest extends TestCase
         ]);
 
         self::assertSame(Command::SUCCESS, $statusCode);
-        self::assertStringContainsString('profile=ready', $tester->getDisplay());
-        self::assertStringContainsString('profileCompletion=88', $tester->getDisplay());
-        self::assertStringContainsString('profilePublishing=incomplete', $tester->getDisplay());
-        self::assertStringContainsString('profileNextAction=add_website', $tester->getDisplay());
+        self::assertStringContainsString('tenantId=tenant-1 vendorId=42 currency=USD', $tester->getDisplay());
+        self::assertStringContainsString('ownership=ready finance=ready statementDelivery=ready externalIntegration=ready', $tester->getDisplay());
     }
 }

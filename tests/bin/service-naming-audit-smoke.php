@@ -4,10 +4,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
-$command = sprintf('php %s', escapeshellarg($root.'/tools/vendoring-service-naming-audit.php'));
+$command = sprintf('php %s', escapeshellarg($root . '/tools/vendoring-service-naming-audit.php'));
 exec($command, $output, $exitCode);
 
 if (0 !== $exitCode) {

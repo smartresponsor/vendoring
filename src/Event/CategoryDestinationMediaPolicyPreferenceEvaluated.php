@@ -6,6 +6,4 @@ namespace App\Event;
 
 use App\EventInterface\CategoryDestinationMediaPolicyPreferenceEvaluatedInterface;
 
-final class CategoryDestinationMediaPolicyPreferenceEvaluated extends AbstractPayloadEvent implements CategoryDestinationMediaPolicyPreferenceEvaluatedInterface
-{
-}
+final class CategoryDestinationMediaPolicyPreferenceEvaluated extends AbstractPayloadEvent implements CategoryDestinationMediaPolicyPreferenceEvaluatedInterface {}

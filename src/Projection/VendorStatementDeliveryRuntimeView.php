@@ -26,8 +26,7 @@ final readonly class VendorStatementDeliveryRuntimeView
         private array  $statement,
         private ?array $export,
         private array  $recipients,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{

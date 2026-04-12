@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Command\Support\CommandIoException;
+use App\Command\Support\CommandJsonArtifactWriter;
+use App\Command\Support\CommandOutputFormat;
+use App\Command\Support\CommandResultEmitter;
 use App\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
 use App\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -11,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * CLI entrypoint for rendering the current monitoring snapshot and alerts.
@@ -21,6 +26,8 @@ final class VendorMonitoringSnapshotCommand extends Command
     public function __construct(
         private readonly MonitoringSnapshotBuilderInterface $snapshotBuilder,
         private readonly AlertRuleEvaluatorInterface $alertRuleEvaluator,
+        private readonly CommandJsonArtifactWriter $commandJsonArtifactWriter,
+        private readonly CommandResultEmitter $commandResultEmitter,
     ) {
         parent::__construct();
     }
@@ -30,7 +37,9 @@ final class VendorMonitoringSnapshotCommand extends Command
         parent::configure();
         $this
             ->addOption('windowSeconds', null, InputOption::VALUE_OPTIONAL, 'Lookback window in seconds', '900')
-            ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Output format: text|json', 'text');
+            ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Output format: text|json', 'text')
+            ->addOption('write', null, InputOption::VALUE_NONE, 'Write monitoring snapshot JSON to build/release/monitoring-snapshot.json')
+            ->addOption('output', null, InputOption::VALUE_OPTIONAL, 'Custom monitoring snapshot output path');
     }
 
     /** @noinspection PhpMissingParentCallCommonInspection */
@@ -39,15 +48,48 @@ final class VendorMonitoringSnapshotCommand extends Command
         $windowOption = $input->getOption('windowSeconds');
         $formatOption = $input->getOption('format');
         $windowSeconds = is_scalar($windowOption) ? max(1, (int) $windowOption) : 900;
-        $format = is_scalar($formatOption) ? (string) $formatOption : 'text';
+        $format = CommandOutputFormat::normalize($formatOption);
 
-        $snapshot = $this->snapshotBuilder->build($windowSeconds);
-        $alerts = $this->alertRuleEvaluator->evaluate($snapshot);
+        try {
+            $snapshot = $this->snapshotBuilder->build($windowSeconds);
+            $alerts = $this->alertRuleEvaluator->evaluate($snapshot);
+        } catch (Throwable $throwable) {
+            $this->commandResultEmitter->emitThrowableError(
+                $output,
+                $format,
+                'failed',
+                'Failed to build monitoring snapshot',
+                $throwable,
+                ['windowSeconds' => $windowSeconds],
+            );
 
-        if ('json' === $format) {
-            $output->writeln((string) json_encode(['snapshot' => $snapshot, 'alerts' => $alerts], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            return Command::FAILURE;
+        }
 
-            return Command::SUCCESS;
+        $payload = [
+            'snapshot' => $snapshot,
+            'alerts' => $alerts,
+        ];
+
+        try {
+            $writtenPath = $this->commandJsonArtifactWriter->writeIfRequested(
+                (bool) $input->getOption('write'),
+                $input->getOption('output'),
+                dirname(__DIR__, 2) . '/build/release/monitoring-snapshot.json',
+                $payload,
+            );
+        } catch (CommandIoException $exception) {
+            $this->commandResultEmitter->emitError($output, $format, 'failed', $exception->getMessage(), [
+                'windowSeconds' => $windowSeconds,
+            ]);
+
+            return Command::FAILURE;
+        }
+
+        if (CommandOutputFormat::isJson($format)) {
+            return $this->commandResultEmitter->emitJson($output, $payload)
+                ? Command::SUCCESS
+                : Command::FAILURE;
         }
 
         $output->writeln(sprintf('status=%s windowSeconds=%d', $snapshot['status'], $windowSeconds));
@@ -59,6 +101,10 @@ final class VendorMonitoringSnapshotCommand extends Command
             (int) $snapshot['breakerSummary']['open'],
         ));
         $output->writeln(sprintf('alerts=%d', count($alerts)));
+
+        if (null !== $writtenPath) {
+            $output->writeln(sprintf('written=%s', $writtenPath));
+        }
 
         return Command::SUCCESS;
     }

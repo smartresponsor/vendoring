@@ -13,6 +13,5 @@ final readonly class VendorMetricTrendRequestDTO
         public string $to,
         public string $bucket = 'month',
         public string $currency = 'USD',
-    ) {
-    }
+    ) {}
 }

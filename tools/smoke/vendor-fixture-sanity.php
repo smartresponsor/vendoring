@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use Symfony\Component\Process\Process;
 
-require dirname(__DIR__, 2).'/vendor/autoload.php';
-require __DIR__.'/vendor-fixture-smoke-lib.php';
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
+require __DIR__ . '/vendor-fixture-smoke-lib.php';
 
 if (!extension_loaded('pdo_sqlite')) {
     fwrite(STDOUT, "vendor fixture sanity smoke skipped: pdo_sqlite is required\n");

@@ -15,6 +15,5 @@ final class PayoutAccount
         public string $currency,
         public bool $active,
         public string $createdAt,
-    ) {
-    }
+    ) {}
 }

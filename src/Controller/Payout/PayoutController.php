@@ -8,9 +8,12 @@ namespace App\Controller\Payout;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
+use Doctrine\DBAL\Exception;
 use InvalidArgumentException;
+use JsonException;
+use Random\RandomException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Exception\JsonException;
+use Symfony\Component\HttpFoundation\Exception\JsonException as HttpFoundationJsonException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,8 +22,8 @@ use Symfony\Component\Routing\Attribute\Route;
 final class PayoutController extends AbstractController
 {
     public function __construct(
-        private readonly VendorPayoutServiceInterface $svc,
-        private readonly PayoutRepositoryInterface $repo,
+        private readonly VendorPayoutServiceInterface $payoutService,
+        private readonly PayoutRepositoryInterface $payoutRepository,
         private readonly VendorPayoutRequestServiceInterface $payoutRequestService,
     ) {}
 
@@ -29,13 +32,18 @@ final class PayoutController extends AbstractController
     {
         try {
             $dto = $this->payoutRequestService->toCreateDto($request->toArray());
-        } catch (JsonException) {
+            $id = $this->payoutService->create($dto);
+        } catch (HttpFoundationJsonException) {
             return new JsonResponse(['error' => 'malformed_json'], 400);
         } catch (InvalidArgumentException $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 422);
+        } catch (Exception|JsonException|RandomException $exception) {
+            return new JsonResponse([
+                'error' => 'payout_create_failed',
+                'message' => $exception->getMessage(),
+            ], 500);
         }
 
-        $id = $this->svc->create($dto);
         if (null === $id) {
             return new JsonResponse(['data' => ['created' => false, 'reason' => 'threshold_not_met']], 200);
         }
@@ -46,7 +54,14 @@ final class PayoutController extends AbstractController
     #[Route('/process/{payoutId}', methods: ['POST'])]
     public function process(string $payoutId): JsonResponse
     {
-        $ok = $this->svc->process($payoutId);
+        try {
+            $ok = $this->payoutService->process($payoutId);
+        } catch (Exception|JsonException|RandomException $exception) {
+            return new JsonResponse([
+                'error' => 'payout_process_failed',
+                'message' => $exception->getMessage(),
+            ], 500);
+        }
 
         return new JsonResponse(['data' => ['processed' => $ok]], $ok ? 200 : 404);
     }
@@ -54,8 +69,16 @@ final class PayoutController extends AbstractController
     #[Route('/{payoutId}', methods: ['GET'])]
     public function getOne(string $payoutId): JsonResponse
     {
-        $payout = $this->repo->byId($payoutId);
-        if (!$payout) {
+        try {
+            $payout = $this->payoutRepository->byId($payoutId);
+        } catch (Exception $exception) {
+            return new JsonResponse([
+                'error' => 'payout_lookup_failed',
+                'message' => $exception->getMessage(),
+            ], 500);
+        }
+
+        if (null === $payout) {
             return new JsonResponse(['error' => 'not_found'], 404);
         }
 

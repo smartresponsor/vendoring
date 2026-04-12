@@ -20,8 +20,7 @@ final class VendorMonitoringController extends AbstractController
     public function __construct(
         private readonly MonitoringSnapshotBuilderInterface $snapshotBuilder,
         private readonly AlertRuleEvaluatorInterface $alertRuleEvaluator,
-    ) {
-    }
+    ) {}
 
     /**
      * Render the current monitoring snapshot and evaluated alerts.

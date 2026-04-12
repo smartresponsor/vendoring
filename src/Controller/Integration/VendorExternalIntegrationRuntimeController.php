@@ -15,8 +15,7 @@ final class VendorExternalIntegrationRuntimeController extends AbstractControlle
 {
     public function __construct(
         private readonly VendorExternalIntegrationRuntimeViewBuilderInterface $runtimeViewBuilder,
-    ) {
-    }
+    ) {}
 
     #[Route('/{vendorId}/external-integrations', methods: ['GET'])]
     public function show(string $vendorId, Request $request): JsonResponse

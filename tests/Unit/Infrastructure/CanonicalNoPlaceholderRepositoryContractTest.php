@@ -12,26 +12,28 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
     {
         $root = dirname(__DIR__, 3);
         $allowedPrefixes = [
-            $root.'/report/',
-            $root.'/tests/',
-            $root.'/.idea/',
-            $root.'/.deploy/_template/',
-            $root.'/.phpunit.cache/',
-            $root.'/build/docs/phpdocumentor/',
-            $root.'/docs/release/',
-            $root.'/var/',
-            $root.'/.deploy/systemd/',
-            $root.'/.consuming/',
+            $root . '/report/',
+            $root . '/tests/',
+            $root . '/.idea/',
+            $root . '/.deploy/_template/',
+            $root . '/.phpunit.cache/',
+            $root . '/build/docs/phpdocumentor/',
+            $root . '/docs/',
+            $root . '/docs/release/',
+            $root . '/var/',
+            $root . '/.deploy/systemd/',
+            $root . '/.consuming/',
         ];
         $allowedFiles = [
-            $root.'/composer.json',
-            $root.'/bin/generate-phpdocumentor-site.php',
-            $root.'/bin/generate-rc-evidence.php',
-            $root.'/config/reference.php',
+            $root . '/composer.json',
+            $root . '/package-lock.json',
+            $root . '/bin/generate-phpdocumentor-site.php',
+            $root . '/bin/generate-rc-evidence.php',
+            $root . '/config/reference.php',
         ];
 
         $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS)
+            new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS),
         );
 
         /** @var \SplFileInfo $file */
@@ -46,12 +48,13 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
             if (
                 str_contains($normalized, '/.git/')
                 || str_contains($normalized, '/vendor/')
+                || str_contains($normalized, '/node_modules/')
                 || str_contains($normalized, '/.deploy/_template/')
             ) {
                 continue;
             }
 
-            if (in_array($normalized, array_map(static fn (string $item): string => str_replace('\\', '/', $item), $allowedFiles), true)) {
+            if (in_array($normalized, array_map(static fn(string $item): string => str_replace('\\', '/', $item), $allowedFiles), true)) {
                 continue;
             }
 

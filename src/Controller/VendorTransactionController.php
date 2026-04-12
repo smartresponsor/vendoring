@@ -14,6 +14,7 @@ use App\ServiceInterface\VendorTransactionInputResolverServiceInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\Traffic\WriteRateLimitDecision;
 use App\ValueObject\VendorTransactionErrorCode;
+use Doctrine\ORM\Exception\ManagerException;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
@@ -24,6 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/vendor-transactions')]
 final class VendorTransactionController extends AbstractController
 {
+    private const string WRITE_TRANSACTIONS_PERMISSION = 'write:transactions';
     public function __construct(
         private readonly VendorTransactionRepositoryInterface $repo,
         private readonly VendorTransactionManagerInterface $manager,
@@ -31,8 +33,7 @@ final class VendorTransactionController extends AbstractController
         private readonly RuntimeLoggerInterface $runtimeLogger,
         private readonly WriteRateLimiterInterface $writeRateLimiter,
         private readonly VendorApiKeyServiceInterface $apiKeyService,
-    ) {
-    }
+    ) {}
 
     /**
      * Create a vendor transaction from a JSON payload.
@@ -41,10 +42,13 @@ final class VendorTransactionController extends AbstractController
      * Success response: {id:int,status:string}.
      * Error responses: malformed_json(400), duplicate_transaction(409), validation errors(422).
      */
+    /**
+     * @throws ManagerException
+     */
     #[Route('', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        if ($authenticationResponse = $this->enforceWriteAuthentication($request, 'write:transactions', null, null)) {
+        if ($authenticationResponse = $this->enforceTransactionWriteAuthentication($request, null, null)) {
             return $authenticationResponse;
         }
 
@@ -112,10 +116,13 @@ final class VendorTransactionController extends AbstractController
      * Success response: {id:int,status:string}.
      * Error responses: malformed_json(400), not_found(404), validation errors(422).
      */
+    /**
+     * @throws ManagerException
+     */
     #[Route('/vendor/{vendorId}/{id}/status', methods: ['POST'])]
     public function updateStatus(string $vendorId, int $id, Request $request): JsonResponse
     {
-        if ($authenticationResponse = $this->enforceWriteAuthentication($request, 'write:transactions', $vendorId, $id)) {
+        if ($authenticationResponse = $this->enforceTransactionWriteAuthentication($request, $vendorId, $id)) {
             return $authenticationResponse;
         }
 
@@ -185,8 +192,20 @@ final class VendorTransactionController extends AbstractController
         ];
     }
 
-    private function enforceWriteAuthentication(Request $request, string $requiredPermission, ?string $vendorId, ?int $transactionId): ?JsonResponse
+    /**
+     * @throws ManagerException
+     */
+    private function enforceTransactionWriteAuthentication(Request $request, ?string $vendorId, ?int $transactionId): ?JsonResponse
     {
+        return $this->enforceWriteAuthentication($request, $vendorId, $transactionId);
+    }
+
+    /**
+     * @throws ManagerException
+     */
+    private function enforceWriteAuthentication(Request $request, ?string $vendorId, ?int $transactionId): ?JsonResponse
+    {
+        $requiredPermission = self::WRITE_TRANSACTIONS_PERMISSION;
         $authorization = trim((string) $request->headers->get('Authorization', ''));
 
         if ('' === $authorization) {
@@ -263,20 +282,20 @@ final class VendorTransactionController extends AbstractController
     {
         $explicitTestKey = trim((string) $request->headers->get('X-Rate-Limit-Key', ''));
         if ('' !== $explicitTestKey) {
-            return sha1($explicitTestKey.'|'.(null === $vendorId ? '' : $vendorId));
+            return sha1($explicitTestKey . '|' . (null === $vendorId ? '' : $vendorId));
         }
 
         $authorization = trim((string) $request->headers->get('Authorization', ''));
         $clientIp = $request->getClientIp() ?? 'unknown';
 
         if (defined('PHPUNIT_COMPOSER_INSTALL')) {
-            return sha1(uniqid('vendoring_phpunit_rate_', true).'|'.(null === $vendorId ? '' : $vendorId));
+            return sha1(uniqid('vendoring_phpunit_rate_', true) . '|' . (null === $vendorId ? '' : $vendorId));
         }
 
         if ('' === $authorization && 'unknown' === $clientIp) {
-            return sha1(uniqid('vendoring_test_rate_', true).'|'.(null === $vendorId ? '' : $vendorId));
+            return sha1(uniqid('vendoring_test_rate_', true) . '|' . (null === $vendorId ? '' : $vendorId));
         }
 
-        return sha1($authorization.'|'.$clientIp.'|'.(null === $vendorId ? '' : $vendorId));
+        return sha1($authorization . '|' . $clientIp . '|' . (null === $vendorId ? '' : $vendorId));
     }
 }

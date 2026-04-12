@@ -22,7 +22,7 @@ final class InMemoryVendorTransactionRepository implements VendorTransactionRepo
     {
         return array_values(array_filter(
             $this->items,
-            static fn (VendorTransaction $transaction): bool => $transaction->getVendorId() === $vendorId
+            static fn(VendorTransaction $transaction): bool => $transaction->getVendorId() === $vendorId,
         ));
     }
 

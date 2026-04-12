@@ -54,13 +54,13 @@ final class RuntimeLoggerTest extends TestCase
         $correlationContext = new CorrelationContext();
         $correlationContext->beginRequest('corr-log-1');
 
-        $dir = sys_get_temp_dir().'/vendoring-logs-'.bin2hex(random_bytes(4));
+        $dir = sys_get_temp_dir() . '/vendoring-logs-' . bin2hex(random_bytes(4));
         $exporter = new FileObservabilityRecordExporter($dir);
 
         $logger = new RuntimeLogger($correlationContext, $requestStack, $exporter);
         $logger->info('vendor_transaction_created', ['vendor_id' => 'vendor-1']);
 
-        $path = $dir.'/runtime_logs.ndjson';
+        $path = $dir . '/runtime_logs.ndjson';
 
         self::assertFileExists($path);
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

@@ -15,9 +15,7 @@ final class FakeMailer implements MailerInterface
     /** @var list<RawMessage> */
     private array $messages = [];
 
-    public function __construct(private readonly bool $shouldThrow = false)
-    {
-    }
+    public function __construct(private readonly bool $shouldThrow = false) {}
 
     public function send(RawMessage $message, ?Envelope $envelope = null): void
     {

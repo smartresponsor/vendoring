@@ -10,7 +10,7 @@ final class NelmioApiDocContractTest extends TestCase
 {
     public function testNelmioApiDocPackageConfigDefinesReleaseCandidateSurface(): void
     {
-        $config = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/nelmio_api_doc.yaml');
+        $config = (string) file_get_contents(dirname(__DIR__, 3) . '/config/packages/nelmio_api_doc.yaml');
 
         self::assertStringContainsString('nelmio_api_doc:', $config);
         self::assertStringContainsString("title: 'Vendoring API'", $config);
@@ -22,8 +22,8 @@ final class NelmioApiDocContractTest extends TestCase
 
     public function testRuntimeRoutingImportsNelmioSwaggerUiSurface(): void
     {
-        $routesRuntime = (string) file_get_contents(dirname(__DIR__, 3).'/config/routes_runtime.php');
-        $routes = (string) file_get_contents(dirname(__DIR__, 3).'/config/routes/vendor_nelmio_api_doc.yaml');
+        $routesRuntime = (string) file_get_contents(dirname(__DIR__, 3) . '/config/routes_runtime.php');
+        $routes = (string) file_get_contents(dirname(__DIR__, 3) . '/config/routes/vendor_nelmio_api_doc.yaml');
 
         self::assertStringContainsString("routes->import(__DIR__.'/routes/vendor_nelmio_api_doc.yaml');", $routesRuntime);
         self::assertStringContainsString("resource: '@NelmioApiDocBundle/Resources/config/routing/swaggerui.xml'", $routes);

@@ -16,9 +16,7 @@ use RuntimeException;
  */
 final readonly class FileObservabilityRecordExporter implements ObservabilityRecordExporterInterface
 {
-    public function __construct(private string $observabilityDir)
-    {
-    }
+    public function __construct(private string $observabilityDir) {}
 
     /**
      * {@inheritdoc}
@@ -33,7 +31,7 @@ final readonly class FileObservabilityRecordExporter implements ObservabilityRec
             return;
         }
 
-        file_put_contents($this->streamPath($normalizedStream), $encoded.PHP_EOL, FILE_APPEND | LOCK_EX);
+        file_put_contents($this->streamPath($normalizedStream), $encoded . PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 
     /**
@@ -41,7 +39,7 @@ final readonly class FileObservabilityRecordExporter implements ObservabilityRec
      */
     public function streamPath(string $stream): string
     {
-        return rtrim($this->observabilityDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$stream.'.ndjson';
+        return rtrim($this->observabilityDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $stream . '.ndjson';
     }
 
     /**

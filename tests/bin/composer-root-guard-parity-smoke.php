@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $composer = vendoring_load_composer_json(dirname(__DIR__, 2));
 $scripts = vendoring_composer_section($composer, 'scripts');
@@ -40,15 +40,15 @@ $expected = [
 
 foreach ($expected as $scriptName => $commands) {
     if (!array_key_exists($scriptName, $scripts)) {
-        fwrite(STDERR, 'Missing composer script: '.$scriptName.PHP_EOL);
+        fwrite(STDERR, 'Missing composer script: ' . $scriptName . PHP_EOL);
         exit(1);
     }
     if (!is_array($scripts[$scriptName])) {
-        fwrite(STDERR, 'Composer root guard script must be an array: '.$scriptName.PHP_EOL);
+        fwrite(STDERR, 'Composer root guard script must be an array: ' . $scriptName . PHP_EOL);
         exit(1);
     }
     if ($scripts[$scriptName] !== $commands) {
-        fwrite(STDERR, 'Composer root guard script mismatch: '.$scriptName.PHP_EOL);
+        fwrite(STDERR, 'Composer root guard script mismatch: ' . $scriptName . PHP_EOL);
         exit(1);
     }
 }

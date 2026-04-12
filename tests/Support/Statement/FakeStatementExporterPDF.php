@@ -9,9 +9,7 @@ use App\ServiceInterface\Statement\StatementExporterPDFInterface;
 
 final class FakeStatementExporterPDF implements StatementExporterPDFInterface
 {
-    public function __construct(private readonly string $path)
-    {
-    }
+    public function __construct(private readonly string $path) {}
 
     public function export(VendorStatementRequestDTO $dto, array $data, ?string $logoPath = null): string
     {

@@ -11,8 +11,8 @@ final class CanonicalNoStubConfigContractTest extends TestCase
     public function testOpsPolicyConfigsDoNotUseStubProviders(): void
     {
         $pairs = [
-            dirname(__DIR__, 3).'/ops/policy/config/crm.yaml' => 'provider: "stub"',
-            dirname(__DIR__, 3).'/ops/policy/config/kms.yaml' => "provider: 'stub'",
+            dirname(__DIR__, 3) . '/ops/policy/config/crm.yaml' => 'provider: "stub"',
+            dirname(__DIR__, 3) . '/ops/policy/config/kms.yaml' => "provider: 'stub'",
         ];
 
         foreach ($pairs as $file => $forbidden) {

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$script = $root.'/.commanding/reorganize-tests.ps1';
+$script = $root . '/.commanding/reorganize-tests.ps1';
 
 if (!is_file($script)) {
     echo "no-legacy-vendor-script-smoke: skipped (no .commanding/reorganize-tests.ps1)\n";

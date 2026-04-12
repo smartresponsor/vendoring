@@ -18,7 +18,5 @@ final class VendorTransactionErrorCode
     public const string NOT_FOUND = 'not_found';
     public const string MALFORMED_JSON = 'malformed_json';
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 }

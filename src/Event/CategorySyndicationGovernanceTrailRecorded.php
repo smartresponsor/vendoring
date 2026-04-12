@@ -6,6 +6,4 @@ namespace App\Event;
 
 use App\EventInterface\CategorySyndicationGovernanceTrailRecordedInterface;
 
-final class CategorySyndicationGovernanceTrailRecorded extends AbstractPayloadEvent implements CategorySyndicationGovernanceTrailRecordedInterface
-{
-}
+final class CategorySyndicationGovernanceTrailRecorded extends AbstractPayloadEvent implements CategorySyndicationGovernanceTrailRecordedInterface {}

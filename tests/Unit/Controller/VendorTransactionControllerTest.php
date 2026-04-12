@@ -314,14 +314,14 @@ final class VendorTransactionControllerTest extends TestCase
     {
         $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
-        $rateLimitKey = 'controller-rate-limit-test-'.bin2hex(random_bytes(6));
+        $rateLimitKey = 'controller-rate-limit-test-' . bin2hex(random_bytes(6));
 
         $controller = $this->controller($transaction);
 
         for ($attempt = 0; $attempt < 5; ++$attempt) {
             $accepted = $controller->create($this->authorizedJsonRequest([
                 'vendorId' => 'vendor-1',
-                'orderId' => 'order-'.$attempt,
+                'orderId' => 'order-' . $attempt,
                 'amount' => '10.00',
             ], ['HTTP_X_RATE_LIMIT_KEY' => $rateLimitKey]));
 

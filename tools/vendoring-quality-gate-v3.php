@@ -51,7 +51,7 @@ foreach ($cmdList as $cmd) {
         array_merge([$php], $cmd),
         [0 => STDIN, 1 => STDOUT, 2 => STDERR],
         $pipes,
-        $repoRoot
+        $repoRoot,
     );
 
     if (!is_resource($proc)) {

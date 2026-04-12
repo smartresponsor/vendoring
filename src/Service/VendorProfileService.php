@@ -13,6 +13,7 @@ use App\Event\VendorProfileUpdatedEvent;
 use App\RepositoryInterface\VendorProfileRepositoryInterface;
 use App\ServiceInterface\VendorProfileServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorProfileService implements VendorProfileServiceInterface
@@ -26,11 +27,22 @@ final readonly class VendorProfileService implements VendorProfileServiceInterfa
     public function upsert(Vendor $vendor, VendorProfileDTO $dto): VendorProfile
     {
         $profile = $this->repository->findOneBy(['vendor' => $vendor]) ?? new VendorProfile($vendor);
-        $profile->updateContent($dto->displayName, $dto->about, $dto->website);
-        $profile->replaceSocials($dto->socials);
-        $profile->updateSeo($dto->seoTitle, $dto->seoDescription);
+        $profile->updateContent(
+            $this->normalizeNullableString($dto->displayName),
+            $this->normalizeNullableString($dto->about),
+            $this->normalizeNullableString($dto->website),
+        );
+        $profile->replaceSocials($this->normalizeSocials($dto->socials));
+        $profile->updateSeo(
+            $this->normalizeNullableString($dto->seoTitle),
+            $this->normalizeNullableString($dto->seoDescription),
+        );
 
-        if ('publish' === $dto->publicationAction && $profile->isPublishable()) {
+        if ('publish' === $dto->publicationAction) {
+            if (!$this->isPublishable($profile)) {
+                throw new InvalidArgumentException('public_profile_incomplete');
+            }
+
             $profile->publish();
         } elseif ('unpublish' === $dto->publicationAction) {
             $profile->unpublish();
@@ -42,5 +54,50 @@ final readonly class VendorProfileService implements VendorProfileServiceInterfa
         $this->dispatcher->dispatch(new VendorProfileUpdatedEvent($profile));
 
         return $profile;
+    }
+
+    private function normalizeNullableString(?string $value): ?string
+    {
+        if (null === $value) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        return '' === $trimmed ? null : $trimmed;
+    }
+
+    /**
+     * @param array<string, string>|null $socials
+     * @return array<string, string>|null
+     */
+    private function normalizeSocials(?array $socials): ?array
+    {
+        if (null === $socials) {
+            return null;
+        }
+
+        $normalized = [];
+        foreach ($socials as $network => $url) {
+            $normalizedNetwork = trim($network);
+            $normalizedUrl = trim($url);
+
+            if ('' === $normalizedNetwork || '' === $normalizedUrl) {
+                continue;
+            }
+
+            $normalized[$normalizedNetwork] = $normalizedUrl;
+        }
+
+        return [] === $normalized ? null : $normalized;
+    }
+
+    private function isPublishable(VendorProfile $profile): bool
+    {
+        return null !== $profile->getDisplayName()
+            && null !== $profile->getAbout()
+            && null !== $profile->getWebsite()
+            && null !== $profile->getSeoTitle()
+            && null !== $profile->getSeoDescription();
     }
 }

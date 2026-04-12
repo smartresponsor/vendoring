@@ -17,9 +17,7 @@ final readonly class AlertRuleEvaluator implements AlertRuleEvaluatorInterface
     /**
      * @param array{errorLogThreshold?:int,openBreakerThreshold?:int,missingProbeThreshold?:int} $thresholds
      */
-    public function __construct(private array $thresholds = [])
-    {
-    }
+    public function __construct(private array $thresholds = []) {}
 
     public function evaluate(array $snapshot): array
     {
@@ -49,7 +47,7 @@ final readonly class AlertRuleEvaluator implements AlertRuleEvaluatorInterface
 
         $missingProbes = array_keys(array_filter(
             $snapshot['probeSummary'] ?? [],
-            static fn (bool $present): bool => false === $present
+            static fn(bool $present): bool => false === $present,
         ));
         if (count($missingProbes) >= $missingProbeThreshold) {
             $alerts[] = [

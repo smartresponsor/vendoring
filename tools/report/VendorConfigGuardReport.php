@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require __DIR__.'/_vendor_report_bootstrap.php';
+require __DIR__ . '/_vendor_report_bootstrap.php';
 
 vendorReportHeader('Vendor config guard report');
 $root = vendorReportProjectRoot();
@@ -27,11 +27,11 @@ foreach ($requiredFiles as $relativePath) {
 }
 
 $configFiles = new RecursiveIteratorIterator(
-    new RecursiveDirectoryIterator($root.'/config', FilesystemIterator::SKIP_DOTS)
+    new RecursiveDirectoryIterator($root . '/config', FilesystemIterator::SKIP_DOTS),
 );
 
 $ignoredConfigFiles = [
-    $root.'/config/reference.php',
+    $root . '/config/reference.php',
 ];
 
 $forbiddenNeedles = ['example', 'stub', 'todo'];
@@ -41,14 +41,14 @@ foreach ($configFiles as $file) {
     }
 
     $pathname = str_replace('\\', '/', $file->getPathname());
-    if (in_array($pathname, array_map(static fn (string $path): string => str_replace('\\', '/', $path), $ignoredConfigFiles), true)) {
+    if (in_array($pathname, array_map(static fn(string $path): string => str_replace('\\', '/', $path), $ignoredConfigFiles), true)) {
         continue;
     }
 
     $contents = strtolower((string) file_get_contents($file->getPathname()));
     foreach ($forbiddenNeedles as $needle) {
         if (str_contains($contents, $needle)) {
-            vendorReportPrintCheck('config contains '.$needle, false, str_replace($root.'/', '', $file->getPathname()));
+            vendorReportPrintCheck('config contains ' . $needle, false, str_replace($root . '/', '', $file->getPathname()));
             $hasWarning = true;
             break;
         }

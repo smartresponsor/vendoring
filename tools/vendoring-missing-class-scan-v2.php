@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -26,7 +27,7 @@ declare(strict_types=1);
  *   php tools/vendoring-missing-class-scan-v2.php --json > report/vendoring-missing-class-scan-v2.json
  */
 
-$repoRoot = realpath(__DIR__.'/..') ?: getcwd();
+$repoRoot = realpath(__DIR__ . '/..') ?: getcwd();
 if (!is_string($repoRoot) || '' === $repoRoot) {
     fwrite(STDERR, "ERROR: cannot resolve repo root\n");
     exit(2);
@@ -48,7 +49,7 @@ foreach ($args as $a) {
     }
 }
 
-$srcRoot = $repoRoot.DIRECTORY_SEPARATOR.'src';
+$srcRoot = $repoRoot . DIRECTORY_SEPARATOR . 'src';
 if (!is_dir($srcRoot)) {
     fwrite(STDERR, "ERROR: src/ not found\n");
     exit(2);
@@ -59,8 +60,8 @@ if (!is_dir($srcRoot)) {
  */
 function normalizeOpenTag(string $code): string
 {
-    if (str_starts_with($code, "<?php") && isset($code[5]) && !ctype_space($code[5])) {
-        return "<?php\n".substr($code, 5);
+    if (str_starts_with($code, '<?php') && isset($code[5]) && !ctype_space($code[5])) {
+        return "<?php\n" . substr($code, 5);
     }
 
     return $code;
@@ -170,7 +171,7 @@ function expandClassImportExpression(string $expr): array
                 continue;
             }
 
-            $out[] = ltrim($prefix.'\\'.$chunk, '\\');
+            $out[] = ltrim($prefix . '\\' . $chunk, '\\');
         }
 
         return $out;
@@ -340,7 +341,7 @@ function buildKnownNamespaceList(array $knownTypeSet): array
         $acc = '';
         $max = count($parts) - 1; // exclude terminal type segment
         for ($i = 0; $i < $max; $i++) {
-            $acc = '' === $acc ? $parts[$i] : $acc.'\\'.$parts[$i];
+            $acc = '' === $acc ? $parts[$i] : $acc . '\\' . $parts[$i];
             $set[$acc] = true;
         }
     }
@@ -387,7 +388,7 @@ function extractAppReferences(string $scanText): array
 }
 
 $it = new RecursiveIteratorIterator(
-    new RecursiveDirectoryIterator($srcRoot, FilesystemIterator::SKIP_DOTS)
+    new RecursiveDirectoryIterator($srcRoot, FilesystemIterator::SKIP_DOTS),
 );
 
 $fileList = [];
@@ -416,7 +417,7 @@ foreach ($fileList as $abs) {
     }
 
     foreach ($meta['typeList'] as $t) {
-        $fqn = $ns.'\\'.$t['name'];
+        $fqn = $ns . '\\' . $t['name'];
         $knownTypeSet[$fqn] = true;
     }
 }
@@ -435,7 +436,7 @@ $pushIssue = static function (array $row) use (&$issueList, &$issueKeySet): void
     $fqn = (string) ($row['fqn'] ?? '');
     $msg = (string) ($row['message'] ?? '');
 
-    $key = $type.'|'.$file.'|'.$fqn.'|'.$msg;
+    $key = $type . '|' . $file . '|' . $fqn . '|' . $msg;
     if (isset($issueKeySet[$key])) {
         return;
     }
@@ -496,11 +497,11 @@ foreach ($fileList as $abs) {
 usort(
     $issueList,
     static function (array $a, array $b): int {
-        $ak = ($a['type'] ?? '').'|'.($a['file'] ?? '').'|'.($a['fqn'] ?? '').'|'.($a['message'] ?? '');
-        $bk = ($b['type'] ?? '').'|'.($b['file'] ?? '').'|'.($b['fqn'] ?? '').'|'.($b['message'] ?? '');
+        $ak = ($a['type'] ?? '') . '|' . ($a['file'] ?? '') . '|' . ($a['fqn'] ?? '') . '|' . ($a['message'] ?? '');
+        $bk = ($b['type'] ?? '') . '|' . ($b['file'] ?? '') . '|' . ($b['fqn'] ?? '') . '|' . ($b['message'] ?? '');
 
         return strcmp((string) $ak, (string) $bk);
-    }
+    },
 );
 
 if ($asJson) {
@@ -517,10 +518,10 @@ if ($asJson) {
 }
 
 echo "Vendoring missing class scan (v2)\n";
-echo "- PHP files scanned: " . count($fileList) . "\n";
-echo "- Known types: " . count($knownTypeSet) . "\n";
-echo "- Known namespaces: " . count($knownNamespaceSet) . "\n";
-echo "- Issue count: " . count($issueList) . "\n";
+echo '- PHP files scanned: ' . count($fileList) . "\n";
+echo '- Known types: ' . count($knownTypeSet) . "\n";
+echo '- Known namespaces: ' . count($knownNamespaceSet) . "\n";
+echo '- Issue count: ' . count($issueList) . "\n";
 
 $printList = $limit > 0 ? array_slice($issueList, 0, $limit) : $issueList;
 foreach ($printList as $issue) {

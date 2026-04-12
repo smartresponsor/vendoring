@@ -27,8 +27,7 @@ final readonly class VendorRuntimeStatusView
         private array  $externalIntegration,
         private array  $surfaceStatus,
         private string $generatedAt,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{

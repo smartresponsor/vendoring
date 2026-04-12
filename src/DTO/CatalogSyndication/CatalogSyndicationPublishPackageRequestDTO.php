@@ -22,6 +22,5 @@ final readonly class CatalogSyndicationPublishPackageRequestDTO
         public array $requiredFields,
         public string $actorId,
         public string $reason,
-    ) {
-    }
+    ) {}
 }

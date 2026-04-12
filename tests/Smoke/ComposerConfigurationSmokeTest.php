@@ -13,7 +13,7 @@ final class ComposerConfigurationSmokeTest extends TestCase
 
     protected function setUp(): void
     {
-        $composerFile = dirname(__DIR__, 2).'/composer.json';
+        $composerFile = dirname(__DIR__, 2) . '/composer.json';
         $decoded = json_decode((string) file_get_contents($composerFile), true, 512, JSON_THROW_ON_ERROR);
         self::assertIsArray($decoded);
         /* @var array<string, mixed> $decoded */

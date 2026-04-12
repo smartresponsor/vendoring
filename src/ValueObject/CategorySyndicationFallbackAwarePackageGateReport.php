@@ -25,8 +25,7 @@ final readonly class CategorySyndicationFallbackAwarePackageGateReport
         private array $fallbackMatchedBindingIds,
         private bool  $strictPublishable,
         private bool  $fallbackPublishable,
-    ) {
-    }
+    ) {}
 
     /** @return list<string> */
     public function packageMissingRequiredFields(): array

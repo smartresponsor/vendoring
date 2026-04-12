@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
 $checks = [
-    $root.'/ops/policy/config/crm.yaml' => 'provider: "stub"',
-    $root.'/ops/policy/config/kms.yaml' => "provider: 'stub'",
+    $root . '/ops/policy/config/crm.yaml' => 'provider: "stub"',
+    $root . '/ops/policy/config/kms.yaml' => "provider: 'stub'",
 ];
 
 foreach ($checks as $file => $needle) {

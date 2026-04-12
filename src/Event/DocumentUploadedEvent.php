@@ -8,7 +8,5 @@ use App\Entity\VendorDocument;
 
 final readonly class DocumentUploadedEvent
 {
-    public function __construct(public VendorDocument $document)
-    {
-    }
+    public function __construct(public VendorDocument $document) {}
 }

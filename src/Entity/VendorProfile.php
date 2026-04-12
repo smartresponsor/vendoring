@@ -6,8 +6,10 @@ namespace App\Entity;
 
 use DateTimeImmutable;
 
-/** @noinspection PhpPropertyNamingConventionInspection */
-/** @noinspection PhpTooManyParametersInspection */
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ * @noinspection PhpTooManyParametersInspection
+ */
 final class VendorProfile
 {
     private ?int $id = null;
@@ -23,7 +25,10 @@ final class VendorProfile
 
     public function __construct(private readonly Vendor $vendor) {}
 
-    /** @param array<string, string>|null $socials */
+    /**
+     * @noinspection PhpTooManyParametersInspection
+     * @param array<string, string>|null $socials
+     */
     public function updateProfile(
         ?string $displayName = null,
         ?string $about = null,
@@ -36,6 +41,25 @@ final class VendorProfile
         $this->about = $about;
         $this->website = $website;
         $this->socials = $socials;
+        $this->seoTitle = $seoTitle;
+        $this->seoDescription = $seoDescription;
+    }
+
+    public function updateContent(?string $displayName = null, ?string $about = null, ?string $website = null): void
+    {
+        $this->displayName = $displayName;
+        $this->about = $about;
+        $this->website = $website;
+    }
+
+    /** @param array<string, string>|null $socials */
+    public function replaceSocials(?array $socials): void
+    {
+        $this->socials = $socials;
+    }
+
+    public function updateSeo(?string $seoTitle = null, ?string $seoDescription = null): void
+    {
         $this->seoTitle = $seoTitle;
         $this->seoDescription = $seoDescription;
     }

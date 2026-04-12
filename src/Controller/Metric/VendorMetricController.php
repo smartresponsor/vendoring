@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Metric;
 
+use Doctrine\DBAL\Exception;
 use App\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\DTO\Metric\VendorMetricTrendRequestDTO;
 use App\ServiceInterface\Metric\VendorMetricServiceInterface;
@@ -15,11 +16,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/metrics/vendor')]
 final class VendorMetricController extends AbstractController
 {
-    public function __construct(private readonly VendorMetricServiceInterface $svc)
-    {
-    }
+    public function __construct(private readonly VendorMetricServiceInterface $svc) {}
 
     #[Route('/{vendorId}/overview', methods: ['GET'])]
+    /** @throws Exception */
     public function overview(string $vendorId, Request $r): JsonResponse
     {
         $tenantId = (string) ($r->query->get('tenantId') ?? '');
@@ -41,6 +41,7 @@ final class VendorMetricController extends AbstractController
     }
 
     #[Route('/{vendorId}/trends', methods: ['GET'])]
+    /** @throws Exception */
     public function trends(string $vendorId, Request $r): JsonResponse
     {
         $tenantId = (string) ($r->query->get('tenantId') ?? '');

@@ -11,9 +11,7 @@ final class FakeVendorStatementMailerService implements VendorStatementMailerSer
     /** @var list<array{tenantId:string,vendorId:string,email:string,pdfPath:string,periodLabel:string}> */
     private array $calls = [];
 
-    public function __construct(private readonly bool $ok = true, private readonly string $message = 'sent')
-    {
-    }
+    public function __construct(private readonly bool $ok = true, private readonly string $message = 'sent') {}
 
     public function send(string $tenantId, string $vendorId, string $email, string $pdfPath, string $periodLabel): array
     {

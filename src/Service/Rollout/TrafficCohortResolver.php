@@ -17,11 +17,11 @@ final class TrafficCohortResolver implements TrafficCohortResolverInterface
     public function resolve(?string $tenantId = null, ?string $vendorId = null): string
     {
         if (null !== $vendorId && '' !== trim($vendorId)) {
-            return 'vendor:'.trim($vendorId);
+            return 'vendor:' . trim($vendorId);
         }
 
         if (null !== $tenantId && '' !== trim($tenantId)) {
-            return 'tenant:'.trim($tenantId);
+            return 'tenant:' . trim($tenantId);
         }
 
         return 'global';

@@ -36,7 +36,7 @@ final class InMemoryLedgerEntryRepository implements LedgerEntryRepositoryInterf
                 }
 
                 return true;
-            }
+            },
         ));
     }
 
@@ -91,7 +91,7 @@ final class InMemoryLedgerEntryRepository implements LedgerEntryRepositoryInterf
         }
 
         return array_map(
-            static fn (string $currency, int $balanceCents): object => (object) [
+            static fn(string $currency, int $balanceCents): object => (object) [
                 'currency' => $currency,
                 'balanceCents' => $balanceCents,
             ],

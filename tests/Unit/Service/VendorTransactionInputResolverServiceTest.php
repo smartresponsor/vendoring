@@ -72,7 +72,7 @@ final class VendorTransactionInputResolverServiceTest extends TestCase
 
         self::assertSame(
             VendorTransactionErrorCode::INVALID_STATUS_TRANSITION,
-            $service->normalizeErrorCode('invalid_status_transition:pending->refunded')
+            $service->normalizeErrorCode('invalid_status_transition:pending->refunded'),
         );
         self::assertSame('transaction_validation_error', $service->normalizeErrorCode('unexpected_failure'));
     }

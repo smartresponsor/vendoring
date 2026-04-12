@@ -11,10 +11,10 @@ final class CanonicalNoExampleConfigContractTest extends TestCase
     public function testRepositoryDoesNotContainActiveExampleDomainMarkersInOperationalConfig(): void
     {
         $files = [
-            __DIR__.'/../../../ops/policy/config/crm.yaml',
-            __DIR__.'/../../../ops/policy/config/shadow.yaml',
-            __DIR__.'/../../../ops/policy/config/api_v1_cors.yaml',
-            __DIR__.'/../../../ops/policy/config/services_interface.yaml',
+            __DIR__ . '/../../../ops/policy/config/crm.yaml',
+            __DIR__ . '/../../../ops/policy/config/shadow.yaml',
+            __DIR__ . '/../../../ops/policy/config/api_v1_cors.yaml',
+            __DIR__ . '/../../../ops/policy/config/services_interface.yaml',
         ];
 
         foreach ($files as $file) {

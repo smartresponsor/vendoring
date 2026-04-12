@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Tests\Support\Runtime\KernelRuntimeHarness;
 
-require dirname(__DIR__, 2).'/vendor/autoload.php';
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 $projectRoot = dirname(__DIR__, 2);
 
@@ -16,7 +16,7 @@ $requiredDocs = [
 ];
 
 foreach ($requiredDocs as $relativePath) {
-    $absolutePath = $projectRoot.'/'.$relativePath;
+    $absolutePath = $projectRoot . '/' . $relativePath;
 
     if (!is_file($absolutePath)) {
         throw new RuntimeException(sprintf('Post-deploy verification pack missing required document: %s', $relativePath));
@@ -32,10 +32,10 @@ $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot
 
 try {
     $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
-    $authHeaders = ['Authorization' => 'Bearer '.$token];
+    $authHeaders = ['Authorization' => 'Bearer ' . $token];
     $suffix = bin2hex(random_bytes(4));
-    $vendorId = 'post-deploy-vendor-'.$suffix;
-    $orderId = 'post-deploy-order-'.$suffix;
+    $vendorId = 'post-deploy-vendor-' . $suffix;
+    $orderId = 'post-deploy-order-' . $suffix;
     $correlationId = 'post-deploy-verification-pack';
 
     $createResponse = KernelRuntimeHarness::requestJson(
@@ -48,7 +48,7 @@ try {
             'projectId' => 'post-deploy-check',
             'amount' => '18.25',
         ],
-        ['X-Correlation-ID' => $correlationId] + $authHeaders
+        ['X-Correlation-ID' => $correlationId] + $authHeaders,
     );
 
     if (201 !== $createResponse->getStatusCode()) {
@@ -77,9 +77,9 @@ try {
     $listResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'GET',
-        '/api/vendor-transactions/vendor/'.$vendorId,
+        '/api/vendor-transactions/vendor/' . $vendorId,
         null,
-        ['X-Correlation-ID' => $correlationId] + $authHeaders
+        ['X-Correlation-ID' => $correlationId] + $authHeaders,
     );
 
     if (200 !== $listResponse->getStatusCode()) {
@@ -110,9 +110,9 @@ try {
     $updateResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'POST',
-        '/api/vendor-transactions/vendor/'.$vendorId.'/'.(string) $transactionId.'/status',
+        '/api/vendor-transactions/vendor/' . $vendorId . '/' . (string) $transactionId . '/status',
         ['status' => 'authorized'],
-        ['X-Correlation-ID' => $correlationId] + $authHeaders
+        ['X-Correlation-ID' => $correlationId] + $authHeaders,
     );
 
     if (200 !== $updateResponse->getStatusCode()) {

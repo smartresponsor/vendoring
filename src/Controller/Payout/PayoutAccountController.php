@@ -15,9 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/payouts/account')]
 final class PayoutAccountController extends AbstractController
 {
-    public function __construct(private readonly VendorPayoutAccountServiceInterface $payoutAccountService)
-    {
-    }
+    public function __construct(private readonly VendorPayoutAccountServiceInterface $payoutAccountService) {}
 
     #[Route('', methods: ['POST'])]
     public function upsert(Request $r): JsonResponse

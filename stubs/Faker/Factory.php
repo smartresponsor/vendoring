@@ -6,7 +6,8 @@ namespace Faker;
 
 final class Factory
 {
-    public static function create(string $locale = 'en_US'): Generator
+    /** @noinspection PhpUnusedParameterInspection */
+    public static function create(string $_locale = 'en_US'): Generator
     {
         return new Generator();
     }

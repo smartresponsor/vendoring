@@ -11,6 +11,5 @@ final class PayoutItem
         public string $payoutId,
         public string $entryId,
         public int $amountCents,
-    ) {
-    }
+    ) {}
 }

@@ -27,8 +27,7 @@ final readonly class VendorExternalIntegrationRuntimeView
         private array  $webhooks,
         private array  $payoutBridge,
         private array  $surfaces,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{

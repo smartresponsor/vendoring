@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class VendorAnalytics
 {
     private ?int $id = null;
@@ -12,8 +15,7 @@ final class VendorAnalytics
     public function __construct(
         private readonly Vendor $vendor,
         private readonly array  $metrics = [],
-    ) {
-    }
+    ) {}
 
     public function getId(): ?int
     {

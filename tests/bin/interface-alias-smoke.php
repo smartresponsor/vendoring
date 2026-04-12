@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$services = (string) file_get_contents($root.'/config/vendor_services.yaml');
-$servicesVendorTransactions = (string) file_get_contents($root.'/config/vendor_services_transactions.yaml');
-$config = $services."\n".$servicesVendorTransactions;
+$services = (string) file_get_contents($root . '/config/vendor_services.yaml');
+$servicesVendorTransactions = (string) file_get_contents($root . '/config/vendor_services_transactions.yaml');
+$config = $services . "\n" . $servicesVendorTransactions;
 
 $required = [
     'App\\RepositoryInterface\\VendorAnalyticsRepositoryInterface',
@@ -26,8 +26,8 @@ $required = [
 ];
 
 foreach ($required as $interfaceClass) {
-    if (!str_contains($config, $interfaceClass.':')) {
-        fwrite(STDERR, 'Missing interface alias: '.$interfaceClass.PHP_EOL);
+    if (!str_contains($config, $interfaceClass . ':')) {
+        fwrite(STDERR, 'Missing interface alias: ' . $interfaceClass . PHP_EOL);
         exit(1);
     }
 }

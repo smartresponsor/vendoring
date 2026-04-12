@@ -6,7 +6,5 @@ namespace App\Event\Payout;
 
 final class PayoutCreatedEvent
 {
-    public function __construct(public string $payoutId, public string $vendorId)
-    {
-    }
+    public function __construct(public string $payoutId, public string $vendorId) {}
 }

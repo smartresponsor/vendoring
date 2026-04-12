@@ -15,9 +15,7 @@ final class FakeVendorTransactionManager implements VendorTransactionManagerInte
     public ?VendorTransactionData $createdData = null;
     public ?\InvalidArgumentException $exceptionToThrow = null;
 
-    public function __construct(private readonly VendorTransaction $transaction)
-    {
-    }
+    public function __construct(private readonly VendorTransaction $transaction) {}
 
     public function createTransaction(VendorTransactionData $data): VendorTransaction
     {

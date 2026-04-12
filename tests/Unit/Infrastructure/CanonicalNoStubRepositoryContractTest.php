@@ -32,7 +32,7 @@ final class CanonicalNoStubRepositoryContractTest extends TestCase
             }
         }
 
-        self::assertSame([], $violations, 'Repository contains forbidden stub markers: '.implode(', ', $violations));
+        self::assertSame([], $violations, 'Repository contains forbidden stub markers: ' . implode(', ', $violations));
     }
 
     private function isIgnoredPath(string $path): bool

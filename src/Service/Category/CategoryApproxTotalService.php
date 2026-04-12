@@ -9,9 +9,7 @@ use App\ServiceInterface\Category\CategoryApproxTotalServiceInterface;
 
 final readonly class CategoryApproxTotalService implements CategoryApproxTotalServiceInterface
 {
-    public function __construct(private string $file = '')
-    {
-    }
+    public function __construct(private string $file = '') {}
 
     /** @return array{value:int,accuracy:string} */
     public function get(string $key, bool $withTotal): array

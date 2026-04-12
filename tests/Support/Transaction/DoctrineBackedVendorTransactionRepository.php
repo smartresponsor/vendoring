@@ -11,9 +11,7 @@ use Doctrine\ORM\QueryBuilder;
 
 final class DoctrineBackedVendorTransactionRepository implements VendorTransactionRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
-    }
+    public function __construct(private readonly EntityManagerInterface $entityManager) {}
 
     public function findByVendorId(string $vendorId): array
     {

@@ -10,7 +10,7 @@ final class TransactionMigrationContractTest extends TestCase
 {
     public function testPostgresMigrationContainsVendorTransactionTable(): void
     {
-        $source = file_get_contents(__DIR__.'/../../../migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
+        $source = file_get_contents(__DIR__ . '/../../../migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
 
         self::assertIsString($source);
         self::assertStringContainsString('CREATE TABLE vendor_transaction', $source);
@@ -19,7 +19,7 @@ final class TransactionMigrationContractTest extends TestCase
 
     public function testSqliteMigrationContainsVendorTransactionTable(): void
     {
-        $source = file_get_contents(__DIR__.'/../../../migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
+        $source = file_get_contents(__DIR__ . '/../../../migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
 
         self::assertIsString($source);
         self::assertStringContainsString('CREATE TABLE vendor_transaction', $source);
@@ -28,8 +28,8 @@ final class TransactionMigrationContractTest extends TestCase
 
     public function testUniqueIndexesExistForNullAndNonNullProjectId(): void
     {
-        $pg = file_get_contents(__DIR__.'/../../../migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
-        $sqlite = file_get_contents(__DIR__.'/../../../migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
+        $pg = file_get_contents(__DIR__ . '/../../../migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
+        $sqlite = file_get_contents(__DIR__ . '/../../../migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
 
         self::assertIsString($pg);
         self::assertIsString($sqlite);
@@ -41,7 +41,7 @@ final class TransactionMigrationContractTest extends TestCase
 
     public function testStatusCheckConstraintExistsInPostgresMigration(): void
     {
-        $source = file_get_contents(__DIR__.'/../../../migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
+        $source = file_get_contents(__DIR__ . '/../../../migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
 
         self::assertIsString($source);
         self::assertStringContainsString("CHECK (status IN ('pending', 'authorized', 'failed', 'cancelled', 'settled', 'refunded'))", $source);
@@ -49,7 +49,7 @@ final class TransactionMigrationContractTest extends TestCase
 
     public function testStatusCheckConstraintExistsInSqliteMigration(): void
     {
-        $source = file_get_contents(__DIR__.'/../../../migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
+        $source = file_get_contents(__DIR__ . '/../../../migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
 
         self::assertIsString($source);
         self::assertStringContainsString("CHECK (status IN ('pending', 'authorized', 'failed', 'cancelled', 'settled', 'refunded'))", $source);

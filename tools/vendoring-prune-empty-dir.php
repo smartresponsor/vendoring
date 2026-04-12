@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -9,7 +10,7 @@ declare(strict_types=1);
  * Not a formatter; no code rewriting.
  */
 
-$repoRoot = realpath(__DIR__.'/..') ?: getcwd();
+$repoRoot = realpath(__DIR__ . '/..') ?: getcwd();
 if (!is_string($repoRoot) || '' === $repoRoot) {
     fwrite(STDERR, "ERROR: cannot resolve repo root\n");
     exit(2);
@@ -27,7 +28,7 @@ foreach ($args as $arg) {
     }
 }
 
-$rootAbs = $repoRoot.DIRECTORY_SEPARATOR.$rootRel;
+$rootAbs = $repoRoot . DIRECTORY_SEPARATOR . $rootRel;
 if (!is_dir($rootAbs)) {
     fwrite(STDERR, "ERROR: root not found: {$rootRel}\n");
     exit(2);
@@ -43,7 +44,7 @@ function pruneEmptyDir(string $dirAbs, bool $dryRun, string $repoRoot): array
 
     $it = new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator($dirAbs, FilesystemIterator::SKIP_DOTS),
-        RecursiveIteratorIterator::CHILD_FIRST
+        RecursiveIteratorIterator::CHILD_FIRST,
     );
 
     foreach ($it as $node) {
@@ -76,7 +77,7 @@ function pruneEmptyDir(string $dirAbs, bool $dryRun, string $repoRoot): array
         }
 
         $rel = str_replace('\\', '/', substr($path, strlen($repoRoot) + 1));
-        echo ($dryRun ? '[DRY] ' : '')."rmdir {$rel}\n";
+        echo ($dryRun ? '[DRY] ' : '') . "rmdir {$rel}\n";
 
         if (!$dryRun) {
             if (!rmdir($path)) {
@@ -102,7 +103,7 @@ function pruneEmptyDir(string $dirAbs, bool $dryRun, string $repoRoot): array
 
         if (!$hasChild) {
             $rel = str_replace('\\', '/', substr($dirAbs, strlen($repoRoot) + 1));
-            echo ($dryRun ? '[DRY] ' : '')."rmdir {$rel}\n";
+            echo ($dryRun ? '[DRY] ' : '') . "rmdir {$rel}\n";
             if (!$dryRun) {
                 if (!rmdir($dirAbs)) {
                     fwrite(STDERR, sprintf("WARN: failed to remove directory: %s\n", $dirAbs));
@@ -120,7 +121,7 @@ function pruneEmptyDir(string $dirAbs, bool $dryRun, string $repoRoot): array
 
 echo "Vendoring empty-dir prune\n";
 echo "- root: {$rootRel}\n";
-echo "- mode: ".($dryRun ? 'dry-run' : 'apply')."\n";
+echo '- mode: ' . ($dryRun ? 'dry-run' : 'apply') . "\n";
 
 $stats = pruneEmptyDir($rootAbs, $dryRun, $repoRoot);
 echo "- visited dir: {$stats['visited']}\n";

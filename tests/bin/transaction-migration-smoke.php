@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
-$composerJsonPath = $root.'/composer.json';
-$pgMigrationPath = $root.'/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql';
-$sqliteMigrationPath = $root.'/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql';
+$composerJsonPath = $root . '/composer.json';
+$pgMigrationPath = $root . '/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql';
+$sqliteMigrationPath = $root . '/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql';
 
 if (!is_file($composerJsonPath)) {
     fwrite(STDERR, "composer.json missing\n");

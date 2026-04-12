@@ -7,29 +7,29 @@ use App\Observability\Service\MonitoringSnapshotBuilder;
 use App\Service\Ops\ReleaseManifestBuilder;
 use App\Service\Ops\RollbackDecisionEvaluator;
 
-require dirname(__DIR__, 2).'/vendor/autoload.php';
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 $projectDir = dirname(__DIR__, 2);
-$observabilityDir = $projectDir.'/var/observability';
-$faultToleranceDir = $projectDir.'/var/fault-tolerance';
-$breakerDir = $faultToleranceDir.'/circuit-breakers';
+$observabilityDir = $projectDir . '/var/observability';
+$faultToleranceDir = $projectDir . '/var/fault-tolerance';
+$breakerDir = $faultToleranceDir . '/circuit-breakers';
 
 @mkdir($observabilityDir, 0777, true);
 @mkdir($breakerDir, 0777, true);
-@mkdir($projectDir.'/build/release', 0777, true);
-@mkdir($projectDir.'/build/docs/phpdocumentor', 0777, true);
+@mkdir($projectDir . '/build/release', 0777, true);
+@mkdir($projectDir . '/build/docs/phpdocumentor', 0777, true);
 
-file_put_contents($observabilityDir.'/runtime_logs.ndjson', json_encode([
+file_put_contents($observabilityDir . '/runtime_logs.ndjson', json_encode([
     'timestamp' => date(DATE_ATOM),
     'level' => 'error',
     'route' => '/api/vendor-transactions',
     'error_code' => 'statement_mail_circuit_open',
-], JSON_THROW_ON_ERROR).PHP_EOL);
-file_put_contents($observabilityDir.'/runtime_metrics.ndjson', json_encode([
+], JSON_THROW_ON_ERROR) . PHP_EOL);
+file_put_contents($observabilityDir . '/runtime_metrics.ndjson', json_encode([
     'timestamp' => date(DATE_ATOM),
     'name' => 'vendor.transaction.create',
-], JSON_THROW_ON_ERROR).PHP_EOL);
-file_put_contents($breakerDir.'/statement_mail_send__tenant_1_vendor_42.json', json_encode([
+], JSON_THROW_ON_ERROR) . PHP_EOL);
+file_put_contents($breakerDir . '/statement_mail_send__tenant_1_vendor_42.json', json_encode([
     'operation' => 'statement_mail_send',
     'scopeKey' => 'tenant:1:vendor:42',
     'state' => 'open',
@@ -43,13 +43,13 @@ foreach ([
     'docs/release/RC_ROLLBACK_MANIFEST.md',
     'docs/release/RC_RELEASE_MANIFEST.md',
 ] as $relative) {
-    if (!is_file($projectDir.'/'.$relative)) {
-        throw new RuntimeException('Missing required release doc: '.$relative);
+    if (!is_file($projectDir . '/' . $relative)) {
+        throw new RuntimeException('Missing required release doc: ' . $relative);
     }
 }
-file_put_contents($projectDir.'/build/release/rc-evidence.json', '{}');
-file_put_contents($projectDir.'/build/release/rc-evidence.md', '# ok');
-file_put_contents($projectDir.'/build/docs/phpdocumentor/index.html', '<html></html>');
+file_put_contents($projectDir . '/build/release/rc-evidence.json', '{}');
+file_put_contents($projectDir . '/build/release/rc-evidence.md', '# ok');
+file_put_contents($projectDir . '/build/docs/phpdocumentor/index.html', '<html></html>');
 
 $builder = new ReleaseManifestBuilder(
     new MonitoringSnapshotBuilder($observabilityDir, $faultToleranceDir, $projectDir),

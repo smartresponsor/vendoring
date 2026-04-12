@@ -8,6 +8,9 @@ namespace App\Service\Search;
 
 use App\ServiceInterface\Search\TfidfSearchInterface;
 
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class TfidfSearch implements TfidfSearchInterface
 {
     /** @var array<int, array{tokens: array<string, int>, tfidf: array<string, float>}> */
@@ -26,7 +29,7 @@ final class TfidfSearch implements TfidfSearchInterface
         $preparedText = is_string($normalizedText) ? $normalizedText : $lowercaseText;
         $tokens = preg_split('/\s+/u', trim($preparedText)) ?: [];
 
-        return array_values(array_filter($tokens, static fn (string $token): bool => '' !== $token));
+        return array_values(array_filter($tokens, static fn(string $token): bool => '' !== $token));
     }
 
     public function addDocument(string $text): int
@@ -85,7 +88,7 @@ final class TfidfSearch implements TfidfSearchInterface
 
         return array_slice(
             array_map(
-                fn (int $documentId): array => ['id' => $documentId, 'score' => $scores[$documentId]],
+                fn(int $documentId): array => ['id' => $documentId, 'score' => $scores[$documentId]],
                 array_keys($scores),
             ),
             0,

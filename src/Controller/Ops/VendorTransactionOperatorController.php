@@ -14,6 +14,7 @@ use App\Form\Ops\VendorTransactionStatusUpdateType;
 use App\RepositoryInterface\VendorTransactionRepositoryInterface;
 use App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
+use App\ValueObject\VendorTransactionStatus;
 use App\ValueObject\VendorTransactionData;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,8 +33,7 @@ final class VendorTransactionOperatorController extends AbstractController
         private readonly VendorTransactionManagerInterface $manager,
         private readonly VendorTransactionOperatorPageBuilderInterface $pageBuilder,
         private readonly FormFactoryInterface $formFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * Render the minimal operator page for a vendor transaction contour.
@@ -83,7 +83,7 @@ final class VendorTransactionOperatorController extends AbstractController
 
             try {
                 $this->manager->createTransaction(new VendorTransactionData(
-                    vendorId: trim($input->vendorId),
+                    vendorId: $vendorId,
                     orderId: trim($input->orderId),
                     projectId: $this->normalizeNullableString($input->projectId),
                     amount: trim($input->amount),
@@ -99,7 +99,7 @@ final class VendorTransactionOperatorController extends AbstractController
             $this->manager->createTransaction(new VendorTransactionData(
                 vendorId: $vendorId,
                 orderId: trim((string) $request->request->get('orderId', '')),
-                projectId: $this->nullableTrimmedPostValue($request, 'projectId'),
+                projectId: $this->nullableTrimmedProjectId($request),
                 amount: trim((string) $request->request->get('amount', '')),
             ));
         } catch (InvalidArgumentException $exception) {
@@ -182,6 +182,7 @@ final class VendorTransactionOperatorController extends AbstractController
             'transactions' => $transactions,
             'flashMessage' => $flashMessage,
             'errorMessage' => $errorMessage,
+            'statusLabels' => VendorTransactionStatus::labels(),
             'createForm' => $createForm->createView(),
             'statusForms' => $statusForms,
         ]);
@@ -252,7 +253,7 @@ final class VendorTransactionOperatorController extends AbstractController
             $this->manager->createTransaction(new VendorTransactionData(
                 vendorId: $vendorId,
                 orderId: $orderId,
-                projectId: $this->nullableTrimmedPostValue($request, 'projectId'),
+                projectId: $this->nullableTrimmedProjectId($request),
                 amount: $amount,
             ));
         } catch (InvalidArgumentException $exception) {
@@ -291,9 +292,9 @@ final class VendorTransactionOperatorController extends AbstractController
         return new RedirectResponse(sprintf('/ops/vendor-transactions/%s?%s=%s', rawurlencode($vendorId), rawurlencode($key), rawurlencode($value)));
     }
 
-    private function nullableTrimmedPostValue(Request $request, string $key): ?string
+    private function nullableTrimmedProjectId(Request $request): ?string
     {
-        $value = trim((string) $request->request->get($key, ''));
+        $value = trim((string) $request->request->get('projectId', ''));
 
         return '' === $value ? null : $value;
     }

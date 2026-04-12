@@ -14,6 +14,5 @@ final readonly class VendorDocumentDTO
         public string             $filePath,
         public ?DateTimeImmutable $expiresAt = null,
         public ?int               $uploaderId = null,
-    ) {
-    }
+    ) {}
 }

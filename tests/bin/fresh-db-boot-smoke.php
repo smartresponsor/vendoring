@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Tests\Support\Runtime\KernelRuntimeHarness;
 
-require dirname(__DIR__, 2).'/vendor/autoload.php';
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 if (!extension_loaded('pdo_sqlite')) {
     fwrite(STDOUT, "fresh db boot smoke skipped: pdo_sqlite is required\n");

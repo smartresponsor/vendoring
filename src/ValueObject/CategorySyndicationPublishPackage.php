@@ -19,8 +19,7 @@ final readonly class CategorySyndicationPublishPackage
         private array  $payload,
         private array  $missingRequiredFields,
         private bool   $publishable,
-    ) {
-    }
+    ) {}
 
     public function packageId(): string
     {

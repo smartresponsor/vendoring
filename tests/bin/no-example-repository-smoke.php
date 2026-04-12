@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
 $paths = ['.commanding', '.deploy', 'ops', 'config', 'scripts', '.smoke', 'bin', 'public', 'tools', 'src'];
 $hits = [];
 foreach ($paths as $path) {
-    $absolutePath = $root.DIRECTORY_SEPARATOR.$path;
+    $absolutePath = $root . DIRECTORY_SEPARATOR . $path;
     if (!is_dir($absolutePath)) {
         continue;
     }
@@ -20,12 +20,12 @@ foreach ($paths as $path) {
             exit(1);
         }
         if (str_contains($contents, 'example.com')) {
-            $hits[] = str_replace($root.DIRECTORY_SEPARATOR, '', $file->getPathname());
+            $hits[] = str_replace($root . DIRECTORY_SEPARATOR, '', $file->getPathname());
         }
     }
 }
 if ([] !== $hits) {
-    fwrite(STDERR, 'Found example.com markers in operational repository layers: '.implode(', ', $hits).PHP_EOL);
+    fwrite(STDERR, 'Found example.com markers in operational repository layers: ' . implode(', ', $hits) . PHP_EOL);
     exit(1);
 }
 $composer = vendoring_load_composer_json($root);

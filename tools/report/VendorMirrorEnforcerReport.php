@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require __DIR__.'/_vendor_report_bootstrap.php';
+require __DIR__ . '/_vendor_report_bootstrap.php';
 
 vendorReportHeader('Vendor mirror enforcer report');
 $root = vendorReportProjectRoot();
@@ -27,8 +27,8 @@ $checks = [
 
 $hasWarning = false;
 foreach ($checks as [$implementation, $contract]) {
-    $ok = is_file($root.'/'.$implementation) && is_file($root.'/'.$contract);
-    vendorReportPrintCheck($implementation.' <-> '.$contract, $ok);
+    $ok = is_file($root . '/' . $implementation) && is_file($root . '/' . $contract);
+    vendorReportPrintCheck($implementation . ' <-> ' . $contract, $ok);
     if (!$ok) {
         $hasWarning = true;
     }

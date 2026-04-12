@@ -89,7 +89,7 @@ final class PayoutRepositoryTest extends TestCase
 
                     return true;
                 }),
-                ['id' => 'payout-1']
+                ['id' => 'payout-1'],
             );
 
         $repository = new PayoutRepository($this->connection);
@@ -120,7 +120,7 @@ final class PayoutRepositoryTest extends TestCase
 
                     return true;
                 }),
-                ['id' => 'missing-payout']
+                ['id' => 'missing-payout'],
             );
 
         $repository = new PayoutRepository($this->connection);

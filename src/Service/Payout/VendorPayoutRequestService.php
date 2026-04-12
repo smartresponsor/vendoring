@@ -10,23 +10,23 @@ use App\Entity\Payout\Payout;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use InvalidArgumentException;
 
-/** @noinspection PhpSameParameterValueInspection */
 final class VendorPayoutRequestService implements VendorPayoutRequestServiceInterface
 {
     /** @param array<string, mixed> $payload */
     public function toCreateDto(array $payload): CreatePayoutDTO
     {
-        foreach (['vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
+        foreach (['tenantId', 'vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
             if (!isset($payload[$field])) {
                 throw new InvalidArgumentException(sprintf('%s required', $field));
             }
         }
 
         return new CreatePayoutDTO(
-            $this->requiredString($payload, 'vendorId'),
-            $this->requiredString($payload, 'currency'),
-            $this->requiredInt($payload, 'thresholdCents'),
-            $this->requiredFloat($payload, 'retentionFeePercent'),
+            vendorId: $this->requiredString($payload, 'vendorId'),
+            currency: $this->requiredString($payload, 'currency'),
+            thresholdCents: $this->requiredThresholdCents($payload),
+            retentionFeePercent: $this->requiredRetentionFeePercent($payload),
+            tenantId: $this->requiredString($payload, 'tenantId'),
         );
     }
 
@@ -42,6 +42,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             'status' => $payout->status,
             'createdAt' => $payout->createdAt,
             'processedAt' => $payout->processedAt,
+            'meta' => $payout->meta,
         ];
     }
 
@@ -62,9 +63,9 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
     }
 
     /** @param array<string, mixed> $payload */
-    private function requiredInt(array $payload, string $field): int
+    private function requiredThresholdCents(array $payload): int
     {
-        $value = $payload[$field] ?? null;
+        $value = $payload['thresholdCents'] ?? null;
 
         if (is_int($value)) {
             return $value;
@@ -74,13 +75,13 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             return (int) $value;
         }
 
-        throw new InvalidArgumentException(sprintf('%s required', $field));
+        throw new InvalidArgumentException('thresholdCents required');
     }
 
     /** @param array<string, mixed> $payload */
-    private function requiredFloat(array $payload, string $field): float
+    private function requiredRetentionFeePercent(array $payload): float
     {
-        $value = $payload[$field] ?? null;
+        $value = $payload['retentionFeePercent'] ?? null;
 
         if (is_float($value) || is_int($value)) {
             return (float) $value;
@@ -90,6 +91,6 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             return (float) $value;
         }
 
-        throw new InvalidArgumentException(sprintf('%s required', $field));
+        throw new InvalidArgumentException('retentionFeePercent required');
     }
 }

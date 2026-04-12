@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-require_once __DIR__.'/_composer_json.php';
+require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
-$entity = (string) file_get_contents($root.'/src/Entity/VendorTransaction.php');
-$pg = (string) file_get_contents($root.'/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
-$sqlite = (string) file_get_contents($root.'/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
+$entity = (string) file_get_contents($root . '/src/Entity/VendorTransaction.php');
+$pg = (string) file_get_contents($root . '/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
+$sqlite = (string) file_get_contents($root . '/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
 $composer = vendoring_load_composer_json($root);
 $scripts = vendoring_composer_section($composer, 'scripts');
 
@@ -22,9 +22,9 @@ $checks = [
 
 foreach ($checks as [$ok, $message]) {
     if (true !== $ok) {
-        fwrite(STDERR, $message.PHP_EOL);
+        fwrite(STDERR, $message . PHP_EOL);
         exit(1);
     }
 }
 
-echo 'transaction uniqueness contract smoke OK'.PHP_EOL;
+echo 'transaction uniqueness contract smoke OK' . PHP_EOL;

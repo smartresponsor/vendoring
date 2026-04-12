@@ -10,10 +10,10 @@ $required = [
 ];
 
 foreach ($required as $relativePath) {
-    if (!is_file($root.'/'.$relativePath)) {
-        fwrite(STDERR, '[FAIL] missing required file: '.$relativePath.PHP_EOL);
+    if (!is_file($root . '/' . $relativePath)) {
+        fwrite(STDERR, '[FAIL] missing required file: ' . $relativePath . PHP_EOL);
         exit(1);
     }
 }
 
-fwrite(STDOUT, '[OK] statement service smoke surface is present'.PHP_EOL);
+fwrite(STDOUT, '[OK] statement service smoke surface is present' . PHP_EOL);

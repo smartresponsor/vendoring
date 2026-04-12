@@ -12,7 +12,6 @@ use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-use Throwable;
 
 /**
  * Write-side outbound mail transport for vendor statements.
@@ -31,6 +30,9 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
         private OutboundCircuitBreakerInterface  $circuitBreaker,
     ) {}
 
+    /**
+     * @throws \JsonException
+     */
     public function send(string $tenantId, string $vendorId, string $email, string $pdfPath, string $periodLabel): array
     {
         $policy = $this->outboundPolicy->forOperation('statement_mail_send');
@@ -97,7 +99,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             return $result;
         }
 
-        $message = new Email()
+        $message = (new Email())
             ->to($email)
             ->subject(sprintf('Monthly Vendor Statement for %s', $periodLabel))
             ->text(sprintf(
@@ -124,7 +126,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
 
         try {
             $this->mailer->send($message);
-        } catch (TransportExceptionInterface $exception) {
+        } catch (TransportExceptionInterface $transportException) {
             $updatedBreaker = $this->circuitBreaker->recordFailure(
                 'statement_mail_send',
                 $scopeKey,
@@ -135,13 +137,13 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             $this->metrics->increment('statement_mail_failed_total', [
                 'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
-                'errorClass' => $exception::class,
+                'errorClass' => $transportException::class,
             ]);
             $this->runtimeLogger->error('vendor_statement_mail_failed', [
                 'tenant_id' => $tenantId,
                 'vendor_id' => $vendorId,
                 'email' => $email,
-                'error_class' => $exception::class,
+                'error_class' => $transportException::class,
                 'error_code' => 'statement_mail_send_failed',
                 'circuit_state' => $updatedBreaker['state'],
             ]);
@@ -149,45 +151,12 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             $result['attached'] = $attached;
             $result['attemptCount'] = 1;
             $result['circuitState'] = $updatedBreaker['state'];
-            $result['errorClass'] = $exception::class;
-            $result['errorMessage'] = '' !== trim($exception->getMessage())
-                ? $exception->getMessage()
+            $result['errorClass'] = $transportException::class;
+            $result['errorMessage'] = '' !== trim($transportException->getMessage())
+                ? $transportException->getMessage()
                 : 'statement_mail_unknown_failure';
 
             return $result;
-        } catch (Throwable $exception) {
-            $updatedBreaker = $this->circuitBreaker->recordFailure(
-                'statement_mail_send',
-                $scopeKey,
-                $policy['breakerThreshold'],
-                $policy['cooldownSeconds'],
-            );
-
-            $this->metrics->increment('statement_mail_failed_total', [
-                'tenantId' => $tenantId,
-                'vendorId' => $vendorId,
-                'errorClass' => $exception::class,
-            ]);
-            $this->runtimeLogger->error('vendor_statement_mail_failed', [
-                'tenant_id' => $tenantId,
-                'vendor_id' => $vendorId,
-                'email' => $email,
-                'error_class' => $exception::class,
-                'error_code' => 'statement_mail_unexpected_failure',
-                'circuit_state' => $updatedBreaker['state'],
-            ]);
-
-            $result['attached'] = $attached;
-            $result['attemptCount'] = 1;
-            $result['circuitState'] = $updatedBreaker['state'];
-            $result['errorClass'] = $exception::class;
-            $result['errorMessage'] = '' !== trim($exception->getMessage())
-                ? $exception->getMessage()
-                : 'statement_mail_unknown_failure';
-
-            return $result;
-        } catch (\JsonException $e) {
-        } catch (\JsonException $e) {
         }
 
         $this->circuitBreaker->recordSuccess('statement_mail_send', $scopeKey);

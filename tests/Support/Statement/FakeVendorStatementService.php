@@ -67,7 +67,7 @@ final class FakeVendorStatementService implements VendorStatementServiceInterfac
     {
         $this->requests[] = $dto;
 
-        return sys_get_temp_dir().'/fake-statement.csv';
+        return sys_get_temp_dir() . '/fake-statement.csv';
     }
 
     /** @return list<VendorStatementRequestDTO> */

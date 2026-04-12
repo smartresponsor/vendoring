@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -281,7 +282,7 @@ function parsePhpMetaV3(string $code): array
 function findPhpFileListV3(string $root): array
 {
     $rii = new RecursiveIteratorIterator(
-        new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS)
+        new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS),
     );
 
     $list = [];
@@ -422,7 +423,7 @@ usort(
         $ak = (string) (($a['type'] ?? '') . '|' . ($a['file'] ?? '') . '|' . ($a['fqn'] ?? '') . '|' . ($a['message'] ?? ''));
         $bk = (string) (($b['type'] ?? '') . '|' . ($b['file'] ?? '') . '|' . ($b['fqn'] ?? '') . '|' . ($b['message'] ?? ''));
         return strcmp($ak, $bk);
-    }
+    },
 );
 
 if ($asJson) {
@@ -438,10 +439,10 @@ if ($asJson) {
 }
 
 echo "Vendoring missing class scan (v3)\n";
-echo "- PHP files under src/: " . count($fileList) . "\n";
-echo "- Known types: " . count($knownTypeSet) . "\n";
-echo "- Known namespaces: " . count($knownNamespaceSet) . "\n";
-echo "- Issue count: " . count($issueList) . "\n";
+echo '- PHP files under src/: ' . count($fileList) . "\n";
+echo '- Known types: ' . count($knownTypeSet) . "\n";
+echo '- Known namespaces: ' . count($knownNamespaceSet) . "\n";
+echo '- Issue count: ' . count($issueList) . "\n";
 
 $shown = 0;
 foreach ($issueList as $row) {

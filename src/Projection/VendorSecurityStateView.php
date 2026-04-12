@@ -15,8 +15,7 @@ final readonly class VendorSecurityStateView
     public function __construct(
         public ?int $vendorId,
         public string $status,
-    ) {
-    }
+    ) {}
 
     /** @return array<string, mixed> */
     public function toArray(): array

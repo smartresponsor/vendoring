@@ -18,9 +18,7 @@ final readonly class RollbackDecisionEvaluator implements RollbackDecisionEvalua
     /**
      * @param array{criticalAlertCodes?:list<string>,warningAlertCodes?:list<string>} $thresholds
      */
-    public function __construct(private array $thresholds = [])
-    {
-    }
+    public function __construct(private array $thresholds = []) {}
 
     public function evaluate(array $manifest): array
     {
@@ -31,15 +29,15 @@ final readonly class RollbackDecisionEvaluator implements RollbackDecisionEvalua
         $decision = 'proceed';
         $severity = 'info';
 
-        $missingDocs = array_keys(array_filter($manifest['releaseDocs'], static fn (bool $present): bool => false === $present));
-        $missingArtifacts = array_keys(array_filter($manifest['buildArtifacts'], static fn (bool $present): bool => false === $present));
+        $missingDocs = array_keys(array_filter($manifest['releaseDocs'], static fn(bool $present): bool => false === $present));
+        $missingArtifacts = array_keys(array_filter($manifest['buildArtifacts'], static fn(bool $present): bool => false === $present));
         $alertCodes = $manifest['monitoring']['alertCodes'] ?? [];
 
         foreach ($alertCodes as $code) {
             if (in_array($code, $criticalAlertCodes, true)) {
                 $decision = 'rollback';
                 $severity = 'critical';
-                $reasons[] = 'critical_alert:'.$code;
+                $reasons[] = 'critical_alert:' . $code;
             }
         }
 
@@ -54,26 +52,26 @@ final readonly class RollbackDecisionEvaluator implements RollbackDecisionEvalua
                 if (in_array($code, $warningAlertCodes, true)) {
                     $decision = 'hold';
                     $severity = 'warning';
-                    $reasons[] = 'warning_alert:'.$code;
+                    $reasons[] = 'warning_alert:' . $code;
                 }
             }
 
             if ([] !== $missingDocs) {
                 $decision = 'hold';
                 $severity = 'warning';
-                $reasons[] = 'missing_release_docs:'.implode(',', $missingDocs);
+                $reasons[] = 'missing_release_docs:' . implode(',', $missingDocs);
             }
 
             if ([] !== $missingArtifacts) {
                 $decision = 'hold';
                 $severity = 'warning';
-                $reasons[] = 'missing_build_artifacts:'.implode(',', $missingArtifacts);
+                $reasons[] = 'missing_build_artifacts:' . implode(',', $missingArtifacts);
             }
 
             if ([] !== ($manifest['monitoring']['missingProbes'] ?? [])) {
                 $decision = 'hold';
                 $severity = 'warning';
-                $reasons[] = 'missing_probes:'.implode(',', $manifest['monitoring']['missingProbes']);
+                $reasons[] = 'missing_probes:' . implode(',', $manifest['monitoring']['missingProbes']);
             }
         }
 
@@ -82,7 +80,7 @@ final readonly class RollbackDecisionEvaluator implements RollbackDecisionEvalua
         }
 
         return [
-            'generatedAt' => new DateTimeImmutable()->format(DATE_ATOM),
+            'generatedAt' => (new DateTimeImmutable())->format(DATE_ATOM),
             'decision' => $decision,
             'severity' => $severity,
             'reasons' => $reasons,

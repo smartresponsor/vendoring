@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Statement;
 
+use Doctrine\DBAL\Exception;
 use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\DTO\Statement\VendorStatementRequestDTO;
 use App\Projection\VendorStatementDeliveryRuntimeView;
@@ -24,9 +25,9 @@ final readonly class VendorStatementDeliveryRuntimeViewBuilder implements Vendor
         private VendorStatementServiceInterface $statementService,
         private StatementExporterPDFInterface $statementExporter,
         private VendorStatementRecipientProviderInterface $recipientProvider,
-    ) {
-    }
+    ) {}
 
+    /** @throws Exception */
     public function build(VendorStatementDeliveryRuntimeRequestDTO $request): VendorStatementDeliveryRuntimeView
     {
         $dto = new VendorStatementRequestDTO(

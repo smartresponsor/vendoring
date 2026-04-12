@@ -11,6 +11,6 @@ final class CreatePayoutDTO
         public string $currency,
         public int $thresholdCents,
         public float $retentionFeePercent, // e.g. 0.05 for 5%
-    ) {
-    }
+        public string $tenantId = '',
+    ) {}
 }

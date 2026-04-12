@@ -7,6 +7,9 @@ namespace App\Entity;
 use App\EntityInterface\VendorUserAssignmentEntityInterface;
 use DateTimeImmutable;
 
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class VendorUserAssignment implements VendorUserAssignmentEntityInterface
 {
     private ?int $id = null;

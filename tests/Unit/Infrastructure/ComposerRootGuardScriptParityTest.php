@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure;
 
-require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
+require_once dirname(__DIR__, 2) . '/bin/_composer_json.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -27,12 +27,12 @@ final class ComposerRootGuardScriptParityTest extends TestCase
 
         foreach ($expected as $scriptName => $filter) {
             self::assertArrayHasKey($scriptName, $scripts);
-            self::assertIsArray($scripts[$scriptName], $scriptName.' must be an array script.');
-            self::assertCount(2, $scripts[$scriptName], $scriptName.' must have smoke + phpunit.');
-            self::assertSame('php tests/bin/'.self::smokeScriptName($scriptName), $scripts[$scriptName][0]);
+            self::assertIsArray($scripts[$scriptName], $scriptName . ' must be an array script.');
+            self::assertCount(2, $scripts[$scriptName], $scriptName . ' must have smoke + phpunit.');
+            self::assertSame('php tests/bin/' . self::smokeScriptName($scriptName), $scripts[$scriptName][0]);
             self::assertSame(
-                'php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter '.$filter,
-                $scripts[$scriptName][1]
+                'php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ' . $filter,
+                $scripts[$scriptName][1],
             );
         }
     }
@@ -45,7 +45,7 @@ final class ComposerRootGuardScriptParityTest extends TestCase
             'test:root-runtime-artifacts' => 'root-runtime-artifact-smoke.php',
             'test:idea-runtime-artifact' => 'idea-runtime-artifact-smoke.php',
             'test:idea-module-artifact' => 'idea-module-artifact-smoke.php',
-            default => throw new \LogicException('Unsupported script '.$scriptName),
+            default => throw new \LogicException('Unsupported script ' . $scriptName),
         };
     }
 }

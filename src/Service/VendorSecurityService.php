@@ -19,9 +19,7 @@ use App\ServiceInterface\VendorSecurityServiceInterface;
  */
 final readonly class VendorSecurityService implements VendorSecurityServiceInterface
 {
-    public function __construct(private VendorApiKeyServiceInterface $apiKeyService)
-    {
-    }
+    public function __construct(private VendorApiKeyServiceInterface $apiKeyService) {}
 
     public function createKey(Vendor $vendor, string $permissions): string
     {

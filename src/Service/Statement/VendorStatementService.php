@@ -8,16 +8,16 @@ use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
 use App\DTO\Statement\VendorStatementRequestDTO;
 use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
+use Doctrine\DBAL\Exception;
 use RuntimeException;
 
 final readonly class VendorStatementService implements VendorStatementServiceInterface
 {
-    public function __construct(private LedgerEntryRepositoryInterface $ledger)
-    {
-    }
+    public function __construct(private LedgerEntryRepositoryInterface $ledger) {}
 
     /**
      * @return array{tenantId:string, vendorId:string, from:string, to:string, currency:string, opening:float, earnings:float, refunds:float, fees:float, closing:float, items:list<array{type:string, amount:float, currency:string}>}
+     * @throws Exception
      */
     public function build(VendorStatementRequestDTO $dto): array
     {
@@ -61,10 +61,11 @@ final readonly class VendorStatementService implements VendorStatementServiceInt
         ];
     }
 
+    /** @throws Exception */
     public function exportCsv(VendorStatementRequestDTO $dto): string
     {
         $data = $this->build($dto);
-        $path = sys_get_temp_dir().'/statement_'.$dto->vendorId.'_'.date('YmdHis').'.csv';
+        $path = sys_get_temp_dir() . '/statement_' . $dto->vendorId . '_' . date('YmdHis') . '.csv';
         $stream = fopen($path, 'w');
 
         if (false === $stream) {

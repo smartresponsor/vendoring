@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Command\Support\CommandOutputFormat;
+use App\Command\Support\CommandResultEmitter;
+use App\Command\Support\CommandResultEmitterInterface;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
@@ -14,6 +17,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 #[AsCommand(
     name: 'app:vendor:payout:create',
@@ -21,11 +25,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 final class VendorPayoutCreateCommand extends Command
 {
+    private readonly VendorPayoutRequestServiceInterface $requestService;
+    private readonly VendorPayoutServiceInterface $payoutService;
+    private readonly PayoutRepositoryInterface $payoutRepository;
+    private readonly CommandResultEmitterInterface $commandResultEmitter;
+
     public function __construct(
-        private readonly VendorPayoutRequestServiceInterface $requestService,
-        private readonly VendorPayoutServiceInterface $payoutService,
-        private readonly PayoutRepositoryInterface $payoutRepository,
+        VendorPayoutRequestServiceInterface $requestService,
+        VendorPayoutServiceInterface $payoutService,
+        PayoutRepositoryInterface $payoutRepository,
+        ?CommandResultEmitterInterface $commandResultEmitter = null,
     ) {
+        $this->requestService = $requestService;
+        $this->payoutService = $payoutService;
+        $this->payoutRepository = $payoutRepository;
+        $this->commandResultEmitter = $commandResultEmitter ?? self::defaultCommandResultEmitter();
         parent::__construct();
     }
 
@@ -33,6 +47,7 @@ final class VendorPayoutCreateCommand extends Command
     {
         parent::configure();
         $this
+            ->addOption('tenantId', null, InputOption::VALUE_REQUIRED, 'Tenant ID')
             ->addOption('vendorId', null, InputOption::VALUE_REQUIRED, 'Vendor ID')
             ->addOption('currency', null, InputOption::VALUE_OPTIONAL, 'Currency', 'USD')
             ->addOption('thresholdCents', null, InputOption::VALUE_OPTIONAL, 'Minimum balance in cents required to create payout', '1000')
@@ -44,44 +59,72 @@ final class VendorPayoutCreateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $payload = [
+            'tenantId' => $input->getOption('tenantId'),
             'vendorId' => $input->getOption('vendorId'),
             'currency' => $input->getOption('currency'),
             'thresholdCents' => $input->getOption('thresholdCents'),
             'retentionFeePercent' => $input->getOption('retentionFeePercent'),
         ];
 
-        $format = self::stringValue($input->getOption('format'));
+        $format = CommandOutputFormat::normalize($input->getOption('format'));
 
         try {
             $dto = $this->requestService->toCreateDto($payload);
+            $payoutId = $this->payoutService->create($dto);
         } catch (InvalidArgumentException $exception) {
-            $output->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
+            $this->commandResultEmitter->emitError($output, $format, 'invalid', $exception->getMessage(), [
+                'payload' => $payload,
+            ]);
+
+            return Command::FAILURE;
+        } catch (Throwable $throwable) {
+            $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to create payout', $throwable, [
+                'payload' => $payload,
+            ]);
 
             return Command::FAILURE;
         }
 
-        $payoutId = $this->payoutService->create($dto);
-
         if (null === $payoutId) {
+            if (CommandOutputFormat::isJson($format)) {
+                return $this->commandResultEmitter->emitJson($output, [
+                    'status' => 'skipped',
+                    'reason' => 'balance_below_threshold',
+                    'payload' => $payload,
+                ]) ? Command::SUCCESS : Command::FAILURE;
+            }
+
             $output->writeln('NO_PAYOUT: balance below threshold');
 
             return Command::SUCCESS;
         }
 
-        $payout = $this->payoutRepository->byId($payoutId);
+        try {
+            $payout = $this->payoutRepository->byId($payoutId);
+        } catch (Throwable $throwable) {
+            $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to load payout', $throwable, [
+                'payoutId' => $payoutId,
+                'payload' => $payload,
+            ]);
+
+            return Command::FAILURE;
+        }
 
         if (null === $payout) {
-            $output->writeln('<error>Payout was created but cannot be loaded from repository.</error>');
+            $this->commandResultEmitter->emitError($output, $format, 'failed', 'Payout was created but cannot be loaded from repository.', [
+                'payoutId' => $payoutId,
+                'payload' => $payload,
+            ]);
 
             return Command::FAILURE;
         }
 
         $normalized = $this->requestService->normalizePayout($payout);
 
-        if ('json' === $format) {
-            $output->writeln((string) json_encode($normalized, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-
-            return Command::SUCCESS;
+        if (CommandOutputFormat::isJson($format)) {
+            return $this->commandResultEmitter->emitJson($output, $normalized)
+                ? Command::SUCCESS
+                : Command::FAILURE;
         }
 
         $output->writeln(sprintf(
@@ -106,5 +149,10 @@ final class VendorPayoutCreateCommand extends Command
     private static function intValue(mixed $value): int
     {
         return is_numeric($value) ? (int) $value : 0;
+    }
+
+    private static function defaultCommandResultEmitter(): CommandResultEmitterInterface
+    {
+        return new CommandResultEmitter(new \App\Command\Support\CommandJsonEncoder());
     }
 }

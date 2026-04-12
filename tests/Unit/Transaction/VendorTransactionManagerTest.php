@@ -77,7 +77,7 @@ final class VendorTransactionManagerTest extends TestCase
                     return $event instanceof VendorTransactionEvent
                         && 'vendor-1' === $event->transaction->getVendorId();
                 }),
-                VendorTransactionEvent::NAME
+                VendorTransactionEvent::NAME,
             )
             ->willReturnArgument(0);
 
@@ -309,7 +309,7 @@ final class VendorTransactionManagerTest extends TestCase
                         && $event->transaction === $transaction
                         && 'authorized' === $event->transaction->getStatus();
                 }),
-                VendorTransactionEvent::NAME
+                VendorTransactionEvent::NAME,
             )
             ->willReturnArgument(0);
 

@@ -20,8 +20,7 @@ final readonly class VendorAccessResolver implements VendorAccessResolverInterfa
     public function __construct(
         private VendorUserAssignmentRepositoryInterface $assignmentRepository,
         private VendorAuthorizationMatrixInterface      $authorizationMatrix,
-    ) {
-    }
+    ) {}
 
     public function canUserAccessVendorCapability(int $vendorId, int $userId, string $capability): bool
     {

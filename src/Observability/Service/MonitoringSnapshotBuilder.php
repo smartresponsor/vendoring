@@ -19,8 +19,7 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
         private string $observabilityDir,
         private string $faultToleranceDir,
         private string $projectDir,
-    ) {
-    }
+    ) {}
 
     public function build(int $windowSeconds = 900): array
     {
@@ -38,7 +37,7 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
         }
 
         return [
-            'generatedAt' => new DateTimeImmutable()->format(DATE_ATOM),
+            'generatedAt' => (new DateTimeImmutable())->format(DATE_ATOM),
             'windowSeconds' => $windowSeconds,
             'logSummary' => $logSummary,
             'metricSummary' => $metricSummary,
@@ -53,7 +52,7 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
      */
     private function readLogs(int $cutoff): array
     {
-        $path = rtrim($this->observabilityDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'runtime_logs.ndjson';
+        $path = rtrim($this->observabilityDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'runtime_logs.ndjson';
         $total = 0;
         $error = 0;
         $warning = 0;
@@ -96,7 +95,7 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
      */
     private function readMetrics(int $cutoff): array
     {
-        $path = rtrim($this->observabilityDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'runtime_metrics.ndjson';
+        $path = rtrim($this->observabilityDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'runtime_metrics.ndjson';
         $total = 0;
         $names = [];
 
@@ -124,7 +123,7 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
      */
     private function readBreakers(): array
     {
-        $dir = rtrim($this->faultToleranceDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'circuit-breakers';
+        $dir = rtrim($this->faultToleranceDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'circuit-breakers';
         $open = 0;
         $halfOpen = 0;
         $closed = 0;
@@ -134,7 +133,7 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
             return ['open' => 0, 'halfOpen' => 0, 'closed' => 0, 'scopes' => []];
         }
 
-        foreach (glob($dir.DIRECTORY_SEPARATOR.'*.json') ?: [] as $path) {
+        foreach (glob($dir . DIRECTORY_SEPARATOR . '*.json') ?: [] as $path) {
             $payload = json_decode((string) file_get_contents($path), true);
             if (!is_array($payload)) {
                 continue;
@@ -167,10 +166,10 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
     private function probeArtifacts(): array
     {
         return [
-            'transaction' => is_file($this->projectDir.'/docs/PHASE59_SYNTHETIC_RUNTIME_PROBES.md'),
-            'finance' => is_file($this->projectDir.'/docs/PHASE61_FINANCE_SYNTHETIC_PROBE.md'),
-            'payout' => is_file($this->projectDir.'/docs/PHASE62_PAYOUT_PROCESSING_SYNTHETIC_PROBE.md'),
-            'postDeploy' => is_file($this->projectDir.'/docs/PHASE60_DEPLOY_READINESS_POST_DEPLOY_PACK.md'),
+            'transaction' => is_file($this->projectDir . '/docs/PHASE59_SYNTHETIC_RUNTIME_PROBES.md'),
+            'finance' => is_file($this->projectDir . '/docs/PHASE61_FINANCE_SYNTHETIC_PROBE.md'),
+            'payout' => is_file($this->projectDir . '/docs/PHASE62_PAYOUT_PROCESSING_SYNTHETIC_PROBE.md'),
+            'postDeploy' => is_file($this->projectDir . '/docs/PHASE60_DEPLOY_READINESS_POST_DEPLOY_PACK.md'),
         ];
     }
 

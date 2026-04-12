@@ -18,8 +18,7 @@ final readonly class VendorPassportService implements VendorPassportServiceInter
     public function __construct(
         private EntityManagerInterface   $em,
         private EventDispatcherInterface $dispatcher,
-    ) {
-    }
+    ) {}
 
     public function issue(Vendor $vendor, string $taxId, string $country): VendorPassport
     {

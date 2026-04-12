@@ -8,6 +8,9 @@ use App\DTO\VendorProfileDTO;
 use App\ServiceInterface\VendorProfileRequestResolverInterface;
 use InvalidArgumentException;
 
+/**
+ * @noinspection DuplicatedCode
+ */
 final class VendorProfileRequestResolver implements VendorProfileRequestResolverInterface
 {
     /**

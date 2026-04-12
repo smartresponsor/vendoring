@@ -6,6 +6,4 @@ namespace App\Event;
 
 use App\EventInterface\CategorySyndicationPublishPackageBuiltInterface;
 
-final class CategorySyndicationPublishPackageBuilt extends AbstractPayloadEvent implements CategorySyndicationPublishPackageBuiltInterface
-{
-}
+final class CategorySyndicationPublishPackageBuilt extends AbstractPayloadEvent implements CategorySyndicationPublishPackageBuiltInterface {}

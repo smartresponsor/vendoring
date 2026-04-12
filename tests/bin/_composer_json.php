@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 function vendoring_load_composer_json(string $root): array
 {
-    $composerPath = $root.'/composer.json';
+    $composerPath = $root . '/composer.json';
     $decoded = json_decode((string) file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
 
     if (!is_array($decoded)) {

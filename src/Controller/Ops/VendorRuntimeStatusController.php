@@ -13,9 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/vendor-runtime-status')]
 final class VendorRuntimeStatusController extends AbstractController
 {
-    public function __construct(private readonly VendorRuntimeStatusViewBuilderInterface $runtimeStatusViewBuilder)
-    {
-    }
+    public function __construct(private readonly VendorRuntimeStatusViewBuilderInterface $runtimeStatusViewBuilder) {}
 
     #[Route('/tenant/{tenantId}/vendor/{vendorId}', methods: ['GET'])]
     public function show(string $tenantId, string $vendorId, Request $request): JsonResponse

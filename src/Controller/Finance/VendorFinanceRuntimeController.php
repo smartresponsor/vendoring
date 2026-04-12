@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Finance;
 
+use Doctrine\DBAL\Exception;
 use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,11 +14,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/vendor/runtime')]
 final class VendorFinanceRuntimeController extends AbstractController
 {
-    public function __construct(private readonly VendorFinanceRuntimeViewBuilderInterface $runtimeViewBuilder)
-    {
-    }
+    public function __construct(private readonly VendorFinanceRuntimeViewBuilderInterface $runtimeViewBuilder) {}
 
     #[Route('/{vendorId}/finance', methods: ['GET'])]
+    /** @throws Exception */
     public function finance(string $vendorId, Request $request): JsonResponse
     {
         $tenantId = (string) ($request->query->get('tenantId') ?? '');

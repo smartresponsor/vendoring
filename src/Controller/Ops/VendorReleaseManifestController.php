@@ -20,8 +20,7 @@ final class VendorReleaseManifestController extends AbstractController
     public function __construct(
         private readonly ReleaseManifestBuilderInterface $releaseManifestBuilder,
         private readonly RollbackDecisionEvaluatorInterface $rollbackDecisionEvaluator,
-    ) {
-    }
+    ) {}
 
     /**
      * Render the current release manifest and rollback decision.

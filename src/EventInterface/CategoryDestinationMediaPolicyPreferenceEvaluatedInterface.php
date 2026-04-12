@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventInterface;
 
-interface CategoryDestinationMediaPolicyPreferenceEvaluatedInterface extends PayloadEventInterface
-{
-}
+/**
+ * @noinspection PhpClassNamingConventionInspection
+ */
+interface CategoryDestinationMediaPolicyPreferenceEvaluatedInterface extends PayloadEventInterface {}

@@ -16,7 +16,7 @@ final class VendorPayoutProviderService implements VendorPayoutProviderServiceIn
      */
     public function transfer(VendorPayoutTransferDTO $transfer): array
     {
-        $reference = $transfer->provider.'_payout_'.bin2hex(random_bytes(4));
+        $reference = $transfer->provider . '_payout_' . bin2hex(random_bytes(4));
 
         return [
             'ok' => true,

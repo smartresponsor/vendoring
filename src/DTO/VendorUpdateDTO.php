@@ -11,8 +11,7 @@ final readonly class VendorUpdateDTO
         public ?string $status = null,
         public ?int $ownerUserId = null,
         public ?int $userId = null,
-    ) {
-    }
+    ) {}
 
     public function resolveOwnerUserId(): ?int
     {

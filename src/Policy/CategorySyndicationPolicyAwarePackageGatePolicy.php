@@ -9,12 +9,14 @@ use App\ValueObject\CategorySyndicationPolicyAwarePackageGateReport;
 
 final class CategorySyndicationPolicyAwarePackageGatePolicy implements CategorySyndicationPolicyAwarePackageGatePolicyInterface
 {
+    private const string DEFAULT_MEDIA_POLICY_MODE = 'prefer_exact';
+
     public function buildReport(
         array $packageMissingRequiredFields,
         array $policyPayload,
         array $fallbackGatePayload,
     ): CategorySyndicationPolicyAwarePackageGateReport {
-        $mediaPolicyMode = self::stringOrDefault($policyPayload['mediaPolicyMode'] ?? null, 'prefer_exact');
+        $mediaPolicyMode = self::mediaPolicyModeOrDefault($policyPayload['mediaPolicyMode'] ?? null);
         $strictPublishable = (bool) ($policyPayload['strictPublishable'] ?? $fallbackGatePayload['strictPublishable'] ?? false);
         $fallbackPublishable = (bool) ($policyPayload['fallbackPublishable'] ?? $fallbackGatePayload['fallbackPublishable'] ?? false);
         $resolvedPublishable = (bool) ($policyPayload['resolvedPublishable'] ?? $fallbackPublishable);
@@ -50,9 +52,9 @@ final class CategorySyndicationPolicyAwarePackageGatePolicy implements CategoryS
         );
     }
 
-    private static function stringOrDefault(mixed $value, string $default): string
+    private static function mediaPolicyModeOrDefault(mixed $value): string
     {
-        return is_scalar($value) && '' !== trim((string) $value) ? trim((string) $value) : $default;
+        return is_scalar($value) && '' !== trim((string) $value) ? trim((string) $value) : self::DEFAULT_MEDIA_POLICY_MODE;
     }
 
     /**

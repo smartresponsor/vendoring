@@ -15,7 +15,7 @@ final readonly class VendorProfileView
      * @param array<string, mixed>                                                    $publicProfile
      * @param array<string, mixed>                                                    $searchProfile
      * @param array<string, mixed>                                                    $publication
-     * @param array<string, array{label:string, complete:bool, missing:list<string>}> $sections
+     * @param array<string, array{'label': string, 'complete': bool, 'missing': list<string>}> $sections
      */
     public function __construct(
         private int     $vendorId,
@@ -30,23 +30,22 @@ final readonly class VendorProfileView
         private int     $completionPercent,
         private bool    $readyForPublishing,
         private ?string $nextAction,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{
-     *   vendorId:int,
-     *   brandName:string,
-     *   vendorStatus:string,
-     *   profile:array<string,mixed>,
-     *   businessProfile:array<string,mixed>,
-     *   publicProfile:array<string,mixed>,
-     *   searchProfile:array<string,mixed>,
-     *   publication:array<string,mixed>,
-     *   sections:array<string, array{label:string, complete:bool, missing:list<string>}>,
-     *   completionPercent:int,
-     *   readyForPublishing:bool,
-     *   nextAction:?string
+     *   'vendorId': int,
+     *   'brandName': string,
+     *   'vendorStatus': string,
+     *   'profile': array<string, mixed>,
+     *   'businessProfile': array<string, mixed>,
+     *   'publicProfile': array<string, mixed>,
+     *   'searchProfile': array<string, mixed>,
+     *   'publication': array<string, mixed>,
+     *   'sections': array<string, array{'label': string, 'complete': bool, 'missing': list<string>}>,
+     *   'completionPercent': int,
+     *   'readyForPublishing': bool,
+     *   'nextAction': ?string
      * }
      */
     public function toArray(): array

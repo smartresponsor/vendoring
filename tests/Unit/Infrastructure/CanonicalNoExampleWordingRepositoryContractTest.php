@@ -18,7 +18,7 @@ final class CanonicalNoExampleWordingRepositoryContractTest extends TestCase
         $hits = [];
 
         foreach ($files as $file) {
-            $absolutePath = $root.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $file);
+            $absolutePath = $root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $file);
             if (!is_file($absolutePath)) {
                 continue;
             }
@@ -33,6 +33,6 @@ final class CanonicalNoExampleWordingRepositoryContractTest extends TestCase
             }
         }
 
-        self::assertSame([], $hits, 'Found repository-level example wording markers: '.implode(', ', $hits));
+        self::assertSame([], $hits, 'Found repository-level example wording markers: ' . implode(', ', $hits));
     }
 }

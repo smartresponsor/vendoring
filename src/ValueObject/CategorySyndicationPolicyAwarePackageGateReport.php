@@ -26,8 +26,7 @@ final readonly class CategorySyndicationPolicyAwarePackageGateReport
         private bool   $fallbackPublishable,
         private bool   $resolvedPublishable,
         private bool   $fallbackUsed,
-    ) {
-    }
+    ) {}
 
     public function mediaPolicyMode(): string
     {

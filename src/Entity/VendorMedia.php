@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class VendorMedia
 {
     private ?int $id = null;
@@ -12,9 +15,7 @@ final class VendorMedia
     /** @var list<string>|null */
     private ?array $gallery = null;
 
-    public function __construct(private readonly Vendor $vendor)
-    {
-    }
+    public function __construct(private readonly Vendor $vendor) {}
 
     /** @param list<string>|null $gallery */
     public function update(?string $logoPath = null, ?string $bannerPath = null, ?array $gallery = null): void

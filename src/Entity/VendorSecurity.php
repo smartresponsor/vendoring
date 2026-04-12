@@ -14,6 +14,9 @@ use App\EntityInterface\VendorSecurityEntityInterface;
  * access lives in VendorApiKey and external human credentials remain outside
  * this boundary.
  */
+/**
+ * @noinspection PhpPropertyNamingConventionInspection
+ */
 final class VendorSecurity implements VendorSecurityEntityInterface
 {
     private ?int $id = null;
@@ -21,8 +24,7 @@ final class VendorSecurity implements VendorSecurityEntityInterface
     public function __construct(
         private readonly Vendor $vendor,
         private readonly string $status = 'active',
-    ) {
-    }
+    ) {}
 
     public function getId(): ?int
     {

@@ -12,9 +12,7 @@ use Doctrine\DBAL\Exception;
 
 final readonly class LedgerEntryRepository implements LedgerEntryRepositoryInterface
 {
-    public function __construct(private Connection $connection)
-    {
-    }
+    public function __construct(private Connection $connection) {}
 
     /** @throws Exception */
     public function insert(LedgerEntry $entry): void
@@ -64,7 +62,7 @@ final readonly class LedgerEntryRepository implements LedgerEntryRepositoryInter
                 $createdAtValue = self::stringValue($row['created_at'] ?? null);
 
                 return new LedgerEntry(
-                    id: self::stringValue($row['id'] ?? sha1($tenantValue.'|'.$referenceTypeValue.'|'.$referenceIdValue.'|'.$createdAtValue)),
+                    id: self::stringValue($row['id'] ?? sha1($tenantValue . '|' . $referenceTypeValue . '|' . $referenceIdValue . '|' . $createdAtValue)),
                     tenantId: $tenantValue,
                     debitAccount: $debitAccountValue,
                     creditAccount: $creditAccountValue,
@@ -124,7 +122,7 @@ final readonly class LedgerEntryRepository implements LedgerEntryRepositoryInter
         );
 
         return array_map(
-            static fn (array $row): object => (object) [
+            static fn(array $row): object => (object) [
                 'currency' => self::stringValue($row['currency'] ?? null),
                 'balanceCents' => self::intValue($row['balance_cents'] ?? null),
             ],

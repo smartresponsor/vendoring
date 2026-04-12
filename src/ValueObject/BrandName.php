@@ -10,9 +10,7 @@ use InvalidArgumentException;
 
 final readonly class BrandName
 {
-    private function __construct(private string $value)
-    {
-    }
+    private function __construct(private string $value) {}
 
     public static function fromRaw(string $value): self
     {

@@ -25,7 +25,7 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
         self::assertCount(1, $entityAttributes);
         self::assertSame(
             'App\\Repository\\VendorTransactionRepository',
-            $entityAttributes[0]->getArguments()['repositoryClass'] ?? null
+            $entityAttributes[0]->getArguments()['repositoryClass'] ?? null,
         );
 
         $tableAttributes = $reflection->getAttributes(Table::class);
@@ -57,7 +57,7 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
 
     public function testRepositoryOrdersVendorTransactionsByNewestFirst(): void
     {
-        $repositorySource = file_get_contents(__DIR__.'/../../../src/Repository/VendorTransactionRepository.php');
+        $repositorySource = file_get_contents(__DIR__ . '/../../../src/Repository/VendorTransactionRepository.php');
         self::assertIsString($repositorySource);
         self::assertStringContainsString("['createdAt' => 'DESC', 'id' => 'DESC']", $repositorySource);
     }

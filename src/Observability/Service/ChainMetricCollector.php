@@ -14,9 +14,7 @@ final readonly class ChainMetricCollector implements MetricCollectorInterface
     /**
      * @param iterable<MetricCollectorInterface> $collectors Downstream collectors that will all receive the increment.
      */
-    public function __construct(private iterable $collectors)
-    {
-    }
+    public function __construct(private iterable $collectors) {}
 
     /**
      * {@inheritdoc}

@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace App\EventInterface;
 
-interface CategorySyndicationGovernanceTrailRecordedInterface extends PayloadEventInterface
-{
-}
+interface CategorySyndicationGovernanceTrailRecordedInterface extends PayloadEventInterface {}

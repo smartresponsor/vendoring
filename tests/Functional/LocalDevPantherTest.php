@@ -93,7 +93,7 @@ final class LocalDevPantherTest extends PantherTestCase
     private static function configurePantherEnvironment(): void
     {
         self::setPantherEnv('PANTHER_NO_SANDBOX', '1');
-        self::prependPath(self::projectRoot().'/drivers');
+        self::prependPath(self::projectRoot() . '/drivers');
     }
 
     private static function allocatePort(): int
@@ -141,7 +141,7 @@ final class LocalDevPantherTest extends PantherTestCase
     private static function prependPath(string $directory): void
     {
         $path = getenv('PATH');
-        $normalizedPath = is_string($path) && '' !== $path ? $directory.PATH_SEPARATOR.$path : $directory;
+        $normalizedPath = is_string($path) && '' !== $path ? $directory . PATH_SEPARATOR . $path : $directory;
 
         self::setPantherEnv('PATH', $normalizedPath);
     }
@@ -186,7 +186,7 @@ final class LocalDevPantherTest extends PantherTestCase
 
     private static function projectPath(string $relativePath): string
     {
-        return self::projectRoot().'/'.ltrim($relativePath, '/');
+        return self::projectRoot() . '/' . ltrim($relativePath, '/');
     }
 
     private static function chromeDriverBinaryPath(): string

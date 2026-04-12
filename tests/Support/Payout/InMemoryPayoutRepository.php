@@ -37,7 +37,7 @@ final class InMemoryPayoutRepository implements PayoutRepositoryInterface
         return $this->items[$payoutId] ?? [];
     }
 
-    public function markProcessed(string $id, string $processedAt): void
+    public function markProcessed(string $id, string $processedAt, array $meta = []): void
     {
         if (!isset($this->payouts[$id])) {
             return;
@@ -45,6 +45,18 @@ final class InMemoryPayoutRepository implements PayoutRepositoryInterface
 
         $this->payouts[$id]->status = 'processed';
         $this->payouts[$id]->processedAt = $processedAt;
+        $this->payouts[$id]->meta = [...$this->payouts[$id]->meta, ...$meta];
+    }
+
+    public function markFailed(string $id, string $processedAt, array $meta = []): void
+    {
+        if (!isset($this->payouts[$id])) {
+            return;
+        }
+
+        $this->payouts[$id]->status = 'failed';
+        $this->payouts[$id]->processedAt = $processedAt;
+        $this->payouts[$id]->meta = [...$this->payouts[$id]->meta, ...$meta];
     }
 
     /** @return list<Payout> */

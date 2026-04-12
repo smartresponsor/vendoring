@@ -119,9 +119,9 @@ arsort($fileHitMap);
 
 echo "Vendoring missing class triage\n";
 echo "- Scanner: {$scanScript}\n";
-echo "- File count: " . (int) ($payload['fileCount'] ?? 0) . "\n";
-echo "- Issue count (payload): " . (int) ($payload['issueCount'] ?? count($issueList)) . "\n";
-echo "- Issue count (loaded): " . count($issueList) . "\n";
+echo '- File count: ' . (int) ($payload['fileCount'] ?? 0) . "\n";
+echo '- Issue count (payload): ' . (int) ($payload['issueCount'] ?? count($issueList)) . "\n";
+echo '- Issue count (loaded): ' . count($issueList) . "\n";
 
 foreach ($bucketMap as $name => $rows) {
     echo "\n[{$name}] count=" . count($rows) . "\n";
@@ -133,7 +133,7 @@ foreach ($bucketMap as $name => $rows) {
         echo "  - {$t} {$f} :: {$q}\n";
     }
     if (count($rows) > count($show)) {
-        echo "  ... (" . (count($rows) - count($show)) . " more)\n";
+        echo '  ... (' . (count($rows) - count($show)) . " more)\n";
     }
 }
 

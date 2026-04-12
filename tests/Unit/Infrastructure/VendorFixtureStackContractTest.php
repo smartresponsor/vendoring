@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -10,7 +11,7 @@ final class VendorFixtureStackContractTest extends TestCase
 {
     public function testDemoFixtureUsesDoctrineFixturesAndFakerWithoutDql(): void
     {
-        $fixturePath = dirname(__DIR__, 3).'/src/DataFixtures/VendorTransactionDemoFixture.php';
+        $fixturePath = dirname(__DIR__, 3) . '/src/DataFixtures/VendorTransactionDemoFixture.php';
         $source = file_get_contents($fixturePath);
 
         self::assertIsString($source);

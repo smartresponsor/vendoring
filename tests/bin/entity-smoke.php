@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-require $root.'/vendor/autoload.php';
+require $root . '/vendor/autoload.php';
 
 $requiredClasses = [
     App\Entity\Vendor::class,
@@ -22,9 +22,9 @@ $requiredClasses = [
 
 foreach ($requiredClasses as $className) {
     if (!class_exists($className)) {
-        fwrite(STDERR, '[FAIL] missing class '.$className.PHP_EOL);
+        fwrite(STDERR, '[FAIL] missing class ' . $className . PHP_EOL);
         exit(1);
     }
 
-    fwrite(STDOUT, '[OK] '.$className.PHP_EOL);
+    fwrite(STDOUT, '[OK] ' . $className . PHP_EOL);
 }

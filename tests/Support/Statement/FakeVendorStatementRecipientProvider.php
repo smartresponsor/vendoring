@@ -10,9 +10,7 @@ use App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
 final class FakeVendorStatementRecipientProvider implements VendorStatementRecipientProviderInterface
 {
     /** @param list<VendorStatementRecipientDTO> $recipients */
-    public function __construct(private readonly array $recipients)
-    {
-    }
+    public function __construct(private readonly array $recipients) {}
 
     public function forPeriod(string $from, string $to): array
     {

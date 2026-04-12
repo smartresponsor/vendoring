@@ -11,6 +11,5 @@ final class VendorTransactionCreateInput
         public string $orderId = '',
         public ?string $projectId = null,
         public string $amount = '',
-    ) {
-    }
+    ) {}
 }

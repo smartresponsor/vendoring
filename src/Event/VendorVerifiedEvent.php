@@ -8,7 +8,5 @@ use App\Entity\VendorPassport;
 
 final readonly class VendorVerifiedEvent
 {
-    public function __construct(public VendorPassport $passport)
-    {
-    }
+    public function __construct(public VendorPassport $passport) {}
 }

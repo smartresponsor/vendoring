@@ -8,6 +8,7 @@ namespace App\Service\Ops;
 
 use App\Entity\VendorTransaction;
 use App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
+use App\ValueObject\VendorTransactionStatus;
 
 final class VendorTransactionOperatorPageBuilder implements VendorTransactionOperatorPageBuilderInterface
 {
@@ -17,8 +18,8 @@ final class VendorTransactionOperatorPageBuilder implements VendorTransactionOpe
     public function renderIndex(string $vendorId, array $transactions, ?string $flashMessage = null, ?string $errorMessage = null): string
     {
         $vendorIdEscaped = $this->escape($vendorId);
-        $flashMarkup = null === $flashMessage ? '' : '<div class="alert alert-success" role="alert">'.$this->escape($flashMessage).'</div>';
-        $errorMarkup = null === $errorMessage ? '' : '<div class="alert alert-danger" role="alert">'.$this->escape($errorMessage).'</div>';
+        $flashMarkup = null === $flashMessage ? '' : '<div class="alert alert-success" role="alert">' . $this->escape($flashMessage) . '</div>';
+        $errorMarkup = null === $errorMessage ? '' : '<div class="alert alert-danger" role="alert">' . $this->escape($errorMessage) . '</div>';
 
         $rows = '';
         foreach ($transactions as $transaction) {
@@ -49,7 +50,7 @@ HTML,
                 $this->escape($transaction->getOrderId()),
                 $this->escape($transaction->getProjectId() ?? '—'),
                 $this->escape($transaction->getAmount()),
-                $this->escape($transaction->getStatus()),
+                $this->escape(VendorTransactionStatus::label($transaction->getStatus())),
                 $vendorIdEscaped,
                 $transaction->getId(),
                 $transaction->getId(),
@@ -90,8 +91,8 @@ HTML,
         <div class="card-body">
             <form method="post" action="/ops/vendor-transactions/%s/create" class="row g-3">
                 <div class="col-md-3">
-                    <label for="vendorId" class="form-label">Vendor ID</label>
-                    <input id="vendorId" name="vendorId" class="form-control" value="%s" required>
+                    <label for="vendorIdDisplay" class="form-label">Vendor ID</label>
+                    <input id="vendorIdDisplay" class="form-control" value="%s" readonly disabled>
                 </div>
                 <div class="col-md-3">
                     <label for="orderId" class="form-label">Order ID</label>
@@ -151,12 +152,11 @@ HTML,
 
     private function renderStatusOptions(string $currentStatus): string
     {
-        $statuses = ['pending', 'authorized', 'captured', 'failed', 'refunded'];
         $options = '';
 
-        foreach ($statuses as $status) {
+        foreach (VendorTransactionStatus::labels() as $status => $label) {
             $selected = $status === $currentStatus ? ' selected' : '';
-            $options .= sprintf('<option value="%s"%s>%s</option>', $this->escape($status), $selected, $this->escape(ucfirst($status)));
+            $options .= sprintf('<option value="%s"%s>%s</option>', $this->escape($status), $selected, $this->escape($label));
         }
 
         return $options;

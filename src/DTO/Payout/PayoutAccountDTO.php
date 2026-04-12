@@ -13,6 +13,5 @@ final class PayoutAccountDTO
         public string $accountRef,
         public string $currency,
         public bool $active,
-    ) {
-    }
+    ) {}
 }

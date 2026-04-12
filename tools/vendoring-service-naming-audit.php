@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -94,7 +95,7 @@ foreach ($rii as $file) {
 
 usort(
     $violations,
-    static fn (array $a, array $b): int => strcmp($a['class'], $b['class'])
+    static fn(array $a, array $b): int => strcmp($a['class'], $b['class']),
 );
 
 $result = [

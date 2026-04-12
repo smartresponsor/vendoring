@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Command\Support\CommandOutputFormat;
+use App\Command\Support\CommandResultEmitter;
+use App\Command\Support\CommandResultEmitterInterface;
 use App\DTO\Statement\VendorStatementRecipientDTO;
 use App\DTO\Statement\VendorStatementRequestDTO;
 use App\ServiceInterface\Statement\StatementExporterPDFInterface;
@@ -15,16 +18,29 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 #[AsCommand(name: 'finance:send-vendor-statements', description: 'Send monthly vendor statements')]
 final class SendVendorStatementsCommand extends Command
 {
+    private readonly VendorStatementServiceInterface $svc;
+    private readonly StatementExporterPDFInterface $pdf;
+    private readonly VendorStatementMailerServiceInterface $mailer;
+    private readonly VendorStatementRecipientProviderInterface $recipientProvider;
+    private readonly CommandResultEmitterInterface $commandResultEmitter;
+
     public function __construct(
-        private readonly VendorStatementServiceInterface $svc,
-        private readonly StatementExporterPDFInterface $pdf,
-        private readonly VendorStatementMailerServiceInterface $mailer,
-        private readonly VendorStatementRecipientProviderInterface $recipientProvider,
+        VendorStatementServiceInterface $svc,
+        StatementExporterPDFInterface $pdf,
+        VendorStatementMailerServiceInterface $mailer,
+        VendorStatementRecipientProviderInterface $recipientProvider,
+        ?CommandResultEmitterInterface $commandResultEmitter = null,
     ) {
+        $this->svc = $svc;
+        $this->pdf = $pdf;
+        $this->mailer = $mailer;
+        $this->recipientProvider = $recipientProvider;
+        $this->commandResultEmitter = $commandResultEmitter ?? self::defaultCommandResultEmitter();
         parent::__construct();
     }
 
@@ -38,7 +54,8 @@ final class SendVendorStatementsCommand extends Command
             ->addOption('currency', null, InputOption::VALUE_REQUIRED, 'Statement currency', 'USD')
             ->addOption('from', null, InputOption::VALUE_REQUIRED)
             ->addOption('to', null, InputOption::VALUE_REQUIRED)
-            ->addOption('period-label', null, InputOption::VALUE_REQUIRED);
+            ->addOption('period-label', null, InputOption::VALUE_REQUIRED)
+            ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Output format: text|json', 'text');
     }
 
     /** @noinspection PhpMissingParentCallCommonInspection */
@@ -47,34 +64,104 @@ final class SendVendorStatementsCommand extends Command
         $from = $this->resolveDateOption($this->stringOption($input, 'from'), date('Y-m-01'));
         $to = $this->resolveDateOption($this->stringOption($input, 'to'), date('Y-m-t'));
         $period = $this->resolvePeriodLabel($this->stringOption($input, 'period-label'), $from, $to);
+        $format = CommandOutputFormat::normalize($input->getOption('format'));
 
-        $recipients = $this->resolveRecipients($input, $from, $to);
+        try {
+            $recipients = $this->resolveRecipients($input, $from, $to);
+        } catch (Throwable $throwable) {
+            $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to resolve statement recipients', $throwable, [
+                'period' => $period,
+                'from' => $from,
+                'to' => $to,
+            ]);
+
+            return Command::FAILURE;
+        }
+
         if ([] === $recipients) {
+            if (CommandOutputFormat::isJson($format)) {
+                return $this->commandResultEmitter->emitJson($output, [
+                    'status' => 'no_recipients',
+                    'period' => $period,
+                    'from' => $from,
+                    'to' => $to,
+                    'recipients' => [],
+                    'results' => [],
+                ]) ? Command::SUCCESS : Command::FAILURE;
+            }
+
             $output->writeln(sprintf('NO_RECIPIENTS period=%s from=%s to=%s', $period, $from, $to));
 
             return Command::SUCCESS;
         }
 
+        $results = [];
+        $failures = 0;
+
         foreach ($recipients as $recipient) {
-            $dto = new VendorStatementRequestDTO($recipient->tenantId, $recipient->vendorId, $from, $to, $recipient->currency);
-            $data = $this->svc->build($dto);
-            $pdfPath = $this->pdf->export($dto, $data);
-            $res = $this->mailer->send($recipient->tenantId, $recipient->vendorId, $recipient->email, $pdfPath, $period);
-            $output->writeln(sprintf(
-                '[%s/%s] %s email=%s period=%s currency=%s pdf=%s attached=%s message=%s',
-                $recipient->tenantId,
-                $recipient->vendorId,
-                $res['ok'] ? 'SENT' : 'FAIL',
-                $res['email'],
-                $res['periodLabel'],
-                $dto->currency,
-                $res['pdfPath'],
-                $res['attached'] ? 'yes' : 'no',
-                $res['message']
-            ));
+            try {
+                $dto = new VendorStatementRequestDTO($recipient->tenantId, $recipient->vendorId, $from, $to, $recipient->currency);
+                $data = $this->svc->build($dto);
+                $pdfPath = $this->pdf->export($dto, $data);
+                $result = $this->mailer->send($recipient->tenantId, $recipient->vendorId, $recipient->email, $pdfPath, $period);
+            } catch (Throwable $throwable) {
+                $result = [
+                    'ok' => false,
+                    'message' => 'statement_generation_failed',
+                    'tenantId' => $recipient->tenantId,
+                    'vendorId' => $recipient->vendorId,
+                    'email' => $recipient->email,
+                    'pdfPath' => '',
+                    'periodLabel' => $period,
+                    'attached' => false,
+                    'retryable' => false,
+                    'timeoutSeconds' => 0,
+                    'maxAttempts' => 0,
+                    'attemptCount' => 0,
+                    'failureMode' => 'hard',
+                    'circuitState' => 'unknown',
+                    'errorClass' => $throwable::class,
+                    'errorMessage' => $throwable->getMessage(),
+                ];
+            }
+
+            if (true !== ($result['ok'] ?? false)) {
+                ++$failures;
+            }
+
+            $results[] = $result;
+
+            if (!CommandOutputFormat::isJson($format)) {
+                $output->writeln(sprintf(
+                    '[%s/%s] %s email=%s period=%s currency=%s pdf=%s attached=%s message=%s',
+                    $recipient->tenantId,
+                    $recipient->vendorId,
+                    ($result['ok'] ?? false) ? 'SENT' : 'FAIL',
+                    $result['email'] ?? $recipient->email,
+                    $result['periodLabel'] ?? $period,
+                    $recipient->currency,
+                    $result['pdfPath'] ?? '',
+                    $result['attached'] ?? false ? 'yes' : 'no',
+                    $result['message'] ?? 'statement_mail_send_failed',
+                ));
+            }
         }
 
-        return Command::SUCCESS;
+        if (CommandOutputFormat::isJson($format)) {
+            if (!$this->commandResultEmitter->emitJson($output, [
+                'status' => 0 === $failures ? 'completed' : 'completed_with_failures',
+                'period' => $period,
+                'from' => $from,
+                'to' => $to,
+                'recipientCount' => count($recipients),
+                'failureCount' => $failures,
+                'results' => $results,
+            ])) {
+                return Command::FAILURE;
+            }
+        }
+
+        return 0 === $failures ? Command::SUCCESS : Command::FAILURE;
     }
 
     /** @return list<VendorStatementRecipientDTO> */
@@ -129,5 +216,10 @@ final class SendVendorStatementsCommand extends Command
         $timestamp = strtotime($value);
 
         return false === $timestamp ? time() : $timestamp;
+    }
+
+    private static function defaultCommandResultEmitter(): CommandResultEmitterInterface
+    {
+        return new CommandResultEmitter(new \App\Command\Support\CommandJsonEncoder());
     }
 }

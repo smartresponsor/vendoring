@@ -19,7 +19,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
 
         try {
             $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
-            $headers = ['Authorization' => 'Bearer '.$token];
+            $headers = ['Authorization' => 'Bearer ' . $token];
 
             $createResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', [
                 'vendorId' => 'vendor-1',
@@ -48,7 +48,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
             self::assertSame('10.50', $firstRow['amount'] ?? null);
             self::assertSame('pending', $firstRow['status'] ?? null);
 
-            $updateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions/vendor/vendor-1/'.$createPayload['id'].'/status', [
+            $updateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions/vendor/vendor-1/' . $createPayload['id'] . '/status', [
                 'status' => 'authorized',
             ], $headers);
             $updatePayload = KernelRuntimeHarness::decodeJson($updateResponse);
@@ -114,7 +114,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
 
         try {
             $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
-            $headers = ['Authorization' => 'Bearer '.$token];
+            $headers = ['Authorization' => 'Bearer ' . $token];
 
             $malformedResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', null, $headers);
             $malformedPayload = KernelRuntimeHarness::decodeJson($malformedResponse);
@@ -154,7 +154,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
                 ],
                 [
                     'X-Correlation-ID' => 'corr-runtime-001',
-                    'Authorization' => 'Bearer '.$token,
+                    'Authorization' => 'Bearer ' . $token,
                 ],
             );
 

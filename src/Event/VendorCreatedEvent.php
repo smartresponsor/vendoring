@@ -8,7 +8,5 @@ use App\Entity\Vendor;
 
 final readonly class VendorCreatedEvent
 {
-    public function __construct(public Vendor $vendor)
-    {
-    }
+    public function __construct(public Vendor $vendor) {}
 }
