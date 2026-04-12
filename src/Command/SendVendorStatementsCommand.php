@@ -221,6 +221,6 @@ final class SendVendorStatementsCommand extends Command
 
     private static function defaultCommandResultEmitter(): CommandResultEmitterInterface
     {
-        return new CommandResultEmitter(new CommandJsonEncoder);
+        return new CommandResultEmitter(new CommandJsonEncoder());
     }
 }
