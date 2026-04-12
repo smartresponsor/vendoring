@@ -24,7 +24,10 @@ final readonly class VendorLedgerService implements VendorLedgerServiceInterface
      */
     public function record(LedgerEntryDTO $dto): LedgerEntry
     {
-        $createdAt = $dto->occurredAt ?? (new DateTimeImmutable())->format('Y-m-d H:i:s');
+        $createdAt = $dto->occurredAt;
+        if (null === $createdAt) {
+            $createdAt = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+        }
         $amount = $dto->amountCents / 100;
 
         [$debitAccount, $creditAccount] = match ($dto->direction) {

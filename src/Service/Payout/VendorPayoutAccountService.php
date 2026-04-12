@@ -30,6 +30,8 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
             }
         }
 
+        $createdAt = new DateTimeImmutable();
+
         $account = new PayoutAccount(
             Uuid::v4()->toRfc4122(),
             $this->requiredString($payload, 'tenantId'),
@@ -38,7 +40,7 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
             $this->requiredString($payload, 'accountRef'),
             strtoupper($this->requiredString($payload, 'currency')),
             $this->boolValue($payload['active'] ?? true),
-            (new DateTimeImmutable())->format('Y-m-d H:i:s'),
+            $createdAt->format('Y-m-d H:i:s'),
         );
 
         $this->accounts->upsert($account);

@@ -42,9 +42,11 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
     {
         $correlationId = $this->correlationContext->currentCorrelationId();
 
+        $timestamp = new DateTimeImmutable();
+
         /** @var array{'timestamp': string,'type': string,'name': string,'tags': array<string, string>,'request_id': ?string,'correlation_id': ?string} $record */
         $record = [
-            'timestamp' => (new DateTimeImmutable())->format(DATE_ATOM),
+            'timestamp' => $timestamp->format(DATE_ATOM),
             'type' => 'metric',
             'name' => $name,
             'tags' => $this->normalizeTags($tags),

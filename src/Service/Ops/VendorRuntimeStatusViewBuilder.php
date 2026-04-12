@@ -68,7 +68,7 @@ final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStat
             'externalIntegration' => [] !== $externalIntegration,
         ];
 
-        $generatedAt = (new DateTimeImmutable())->format(DATE_ATOM);
+        $generatedAt = new DateTimeImmutable();
 
         return new VendorRuntimeStatusView(
             tenantId: $tenantId,
@@ -79,7 +79,7 @@ final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStat
             statementDelivery: $statementDelivery,
             externalIntegration: $externalIntegration,
             surfaceStatus: $surfaceStatus,
-            generatedAt: $generatedAt,
+            generatedAt: $generatedAt->format(DATE_ATOM),
         );
     }
 }

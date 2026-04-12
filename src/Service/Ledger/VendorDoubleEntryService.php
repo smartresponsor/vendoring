@@ -25,7 +25,10 @@ final readonly class VendorDoubleEntryService implements VendorDoubleEntryServic
      */
     public function post(DoubleEntryDTO $dto): array
     {
-        $timestamp = $dto->occurredAt ?? (new DateTimeImmutable())->format('Y-m-d H:i:s');
+        $timestamp = $dto->occurredAt;
+        if (null === $timestamp) {
+            $timestamp = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+        }
 
         $entry = new LedgerEntry(
             Uuid::v4()->toRfc4122(),

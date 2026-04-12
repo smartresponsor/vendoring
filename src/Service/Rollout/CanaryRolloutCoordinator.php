@@ -35,8 +35,10 @@ final readonly class CanaryRolloutCoordinator implements CanaryRolloutCoordinato
 
         [$decision, $recommendedAction, $reason] = $this->rolloutDecision($flagDecision, $rollback, $probeGate);
 
+        $generatedAt = new DateTimeImmutable();
+
         return [
-            'generatedAt' => (new DateTimeImmutable())->format(DATE_ATOM),
+            'generatedAt' => $generatedAt->format(DATE_ATOM),
             'flagDecision' => $flagDecision,
             'manifest' => $manifest,
             'rollback' => $rollback,

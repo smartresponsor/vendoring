@@ -73,9 +73,11 @@ final class RuntimeLogger implements RuntimeLoggerInterface
         $request = $this->requestStack->getCurrentRequest();
         $correlationId = $this->correlationContext->currentCorrelationId();
 
+        $timestamp = new DateTimeImmutable();
+
         /** @var array<string, scalar|null> $record */
         $record = [
-            'timestamp' => (new DateTimeImmutable())->format(DATE_ATOM),
+            'timestamp' => $timestamp->format(DATE_ATOM),
             'level' => $level,
             'message' => $message,
             'request_id' => $correlationId,

@@ -99,7 +99,8 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             return $result;
         }
 
-        $message = (new Email())
+        $message = new Email();
+        $message
             ->to($email)
             ->subject(sprintf('Monthly Vendor Statement for %s', $periodLabel))
             ->text(sprintf(

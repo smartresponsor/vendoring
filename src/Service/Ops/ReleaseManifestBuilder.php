@@ -50,8 +50,10 @@ final readonly class ReleaseManifestBuilder implements ReleaseManifestBuilderInt
             $status = 'warn';
         }
 
+        $generatedAt = new DateTimeImmutable();
+
         return [
-            'generatedAt' => (new DateTimeImmutable())->format(DATE_ATOM),
+            'generatedAt' => $generatedAt->format(DATE_ATOM),
             'windowSeconds' => max(1, $windowSeconds),
             'releaseDocs' => $releaseDocs,
             'buildArtifacts' => $buildArtifacts,

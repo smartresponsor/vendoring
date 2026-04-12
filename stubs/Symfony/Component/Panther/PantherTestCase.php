@@ -21,6 +21,8 @@ abstract class PantherTestCase extends TestCase
      */
     protected static function createPantherClient(array $options = [], array $kernelOptions = [], array $managerOptions = []): Client
     {
+        unset($options, $kernelOptions, $managerOptions);
+
         return new Client();
     }
 

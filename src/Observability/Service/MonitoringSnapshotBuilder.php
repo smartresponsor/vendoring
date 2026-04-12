@@ -36,8 +36,10 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
             $status = 'warn';
         }
 
+        $generatedAt = new DateTimeImmutable();
+
         return [
-            'generatedAt' => (new DateTimeImmutable())->format(DATE_ATOM),
+            'generatedAt' => $generatedAt->format(DATE_ATOM),
             'windowSeconds' => $windowSeconds,
             'logSummary' => $logSummary,
             'metricSummary' => $metricSummary,

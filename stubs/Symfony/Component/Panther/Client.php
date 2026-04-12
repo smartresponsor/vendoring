@@ -12,8 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class Client
 {
+    /** @noinspection PhpTooManyParametersInspection */
     public function request(string $method, string $uri, array $parameters = [], array $files = [], array $server = [], ?string $content = null): void
     {
+        unset($method, $uri, $parameters, $files, $server, $content);
     }
 
     public function getInternalResponse(): Response

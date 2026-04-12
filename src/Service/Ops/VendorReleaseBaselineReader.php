@@ -63,6 +63,8 @@ final readonly class VendorReleaseBaselineReader implements VendorReleaseBaselin
 
         $status = [] === $issues ? 'ok' : 'warn';
 
+        $generatedAt = new DateTimeImmutable();
+
         return new VendorReleaseBaselineView(
             tenantId: $tenantId,
             vendorId: $vendorId,
@@ -70,7 +72,7 @@ final readonly class VendorReleaseBaselineReader implements VendorReleaseBaselin
             artifactStatus: $artifactStatus,
             issues: $issues,
             status: $status,
-            generatedAt: (new DateTimeImmutable())->format(DATE_ATOM),
+            generatedAt: $generatedAt->format(DATE_ATOM),
         );
     }
 }

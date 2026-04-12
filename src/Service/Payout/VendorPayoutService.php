@@ -65,6 +65,8 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
 
         // 3) Создаём payout
         $payoutId = Uuid::v4()->toRfc4122();
+        $createdAt = new DateTimeImmutable();
+
         $payout = new Payout(
             id: $payoutId,
             vendorId: $dto->vendorId,
@@ -73,7 +75,7 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
             feeCents: $fee,
             netCents: $net,
             status: 'pending',
-            createdAt: (new DateTimeImmutable())->format('Y-m-d H:i:s'),
+            createdAt: $createdAt->format('Y-m-d H:i:s'),
             meta: [
                 'tenantId' => $dto->tenantId,
                 'threshold' => $dto->thresholdCents,
@@ -149,7 +151,8 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
             ));
         }
 
-        $this->repo->markProcessed($payoutId, (new DateTimeImmutable())->format('Y-m-d H:i:s'));
+        $processedAt = new DateTimeImmutable();
+        $this->repo->markProcessed($payoutId, $processedAt->format('Y-m-d H:i:s'));
         $this->metrics->increment('payout_processed_total', ['currency' => $payout->currency]);
         $this->runtimeLogger->info('vendor_payout_processed', [
             'vendor_id' => $payout->vendorId,

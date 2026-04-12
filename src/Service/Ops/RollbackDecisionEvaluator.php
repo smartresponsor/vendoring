@@ -79,8 +79,10 @@ final readonly class RollbackDecisionEvaluator implements RollbackDecisionEvalua
             $reasons[] = 'release_manifest_green';
         }
 
+        $generatedAt = new DateTimeImmutable();
+
         return [
-            'generatedAt' => (new DateTimeImmutable())->format(DATE_ATOM),
+            'generatedAt' => $generatedAt->format(DATE_ATOM),
             'decision' => $decision,
             'severity' => $severity,
             'reasons' => $reasons,
