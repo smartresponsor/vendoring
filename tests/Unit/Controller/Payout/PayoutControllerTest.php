@@ -9,6 +9,7 @@ use App\DTO\Payout\CreatePayoutDTO;
 use App\Entity\Payout\Payout;
 use App\Entity\Payout\PayoutItem;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
+use App\Service\Payout\VendorPayoutRequestService;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +20,7 @@ final class PayoutControllerTest extends TestCase
 {
     public function testCreateReturnsValidationErrorWhenRequiredFieldIsMissing(): void
     {
-        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), new FakeVendorPayoutRequestService());
+        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), new VendorPayoutRequestService());
 
         $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
             'tenantId' => 'tenant-1',
@@ -38,7 +39,7 @@ final class PayoutControllerTest extends TestCase
     public function testCreateReturnsCreatedPayload(): void
     {
         $service = new FakeVendorPayoutService('payout-1');
-        $controller = new PayoutController($service, new FakePayoutRepository(), new FakeVendorPayoutRequestService());
+        $controller = new PayoutController($service, new FakePayoutRepository(), new VendorPayoutRequestService());
 
         $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
             'tenantId' => 'tenant-1',
@@ -107,7 +108,7 @@ final class PayoutControllerTest extends TestCase
 
     public function testProcessReturnsNotFoundForUnknownPendingPayout(): void
     {
-        $controller = new PayoutController(new FakeVendorPayoutService(null, false), new FakePayoutRepository(), new FakeVendorPayoutRequestService());
+        $controller = new PayoutController(new FakeVendorPayoutService(null, false), new FakePayoutRepository(), new VendorPayoutRequestService());
 
         $response = $controller->process('missing-payout');
         $payload = self::decodePayload($response);
@@ -134,7 +135,7 @@ final class PayoutControllerTest extends TestCase
             public function markFailed(string $id, string $processedAt, array $meta = []): void {}
         };
 
-        $controller = new PayoutController(new FakeVendorPayoutService(), $repository, new FakeVendorPayoutRequestService());
+        $controller = new PayoutController(new FakeVendorPayoutService(), $repository, new VendorPayoutRequestService());
         $response = $controller->getOne('payout-1');
         $payload = self::decodePayload($response);
 
@@ -214,78 +215,4 @@ final class FakePayoutRepository implements PayoutRepositoryInterface
     public function markProcessed(string $id, string $processedAt, array $meta = []): void {}
 
     public function markFailed(string $id, string $processedAt, array $meta = []): void {}
-}
-
-final class FakeVendorPayoutRequestService implements VendorPayoutRequestServiceInterface
-{
-    /** @param array<string, mixed> $payload */
-    public function toCreateDto(array $payload): CreatePayoutDTO
-    {
-        foreach (['tenantId', 'vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
-            if (!isset($payload[$field])) {
-                throw new \InvalidArgumentException(sprintf('%s required', $field));
-            }
-        }
-
-        return new CreatePayoutDTO(
-            vendorId: self::requiredString($payload, 'vendorId'),
-            currency: self::requiredString($payload, 'currency'),
-            thresholdCents: self::requiredInt($payload, 'thresholdCents'),
-            retentionFeePercent: self::requiredFloat($payload, 'retentionFeePercent'),
-            tenantId: self::requiredString($payload, 'tenantId'),
-        );
-    }
-
-    public function normalizePayout(Payout $payout): array
-    {
-        return ['id' => $payout->id];
-    }
-
-    /** @param array<string, mixed> $payload */
-    private static function requiredString(array $payload, string $field): string
-    {
-        $value = $payload[$field] ?? null;
-
-        if (is_string($value)) {
-            return $value;
-        }
-
-        if (is_int($value) || is_float($value)) {
-            return (string) $value;
-        }
-
-        throw new \InvalidArgumentException(sprintf('%s required', $field));
-    }
-
-    /** @param array<string, mixed> $payload */
-    private static function requiredInt(array $payload, string $field): int
-    {
-        $value = $payload[$field] ?? null;
-
-        if (is_int($value)) {
-            return $value;
-        }
-
-        if (is_numeric($value)) {
-            return (int) $value;
-        }
-
-        throw new \InvalidArgumentException(sprintf('%s required', $field));
-    }
-
-    /** @param array<string, mixed> $payload */
-    private static function requiredFloat(array $payload, string $field): float
-    {
-        $value = $payload[$field] ?? null;
-
-        if (is_float($value) || is_int($value)) {
-            return (float) $value;
-        }
-
-        if (is_numeric($value)) {
-            return (float) $value;
-        }
-
-        throw new \InvalidArgumentException(sprintf('%s required', $field));
-    }
 }
