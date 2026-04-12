@@ -85,20 +85,14 @@ final class PayoutControllerTest extends TestCase
 
     public function testCreateMapsRetentionFeePercentOutOfRangeToDedicatedErrorCode(): void
     {
-        $requestService = new class implements VendorPayoutRequestServiceInterface {
-            public function toCreateDto(array $payload): CreatePayoutDTO
-            {
-                throw new \InvalidArgumentException('retentionFeePercent out_of_range');
-            }
-
-            public function normalizePayout(Payout $payout): array
-            {
-                return ['id' => $payout->id];
-            }
-        };
-
-        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), $requestService);
-        $response = $controller->create(Request::create('/api/payout/create', 'POST', content: '{}'));
+        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), new VendorPayoutRequestService());
+        $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => 1000,
+            'retentionFeePercent' => 1.5,
+        ], JSON_THROW_ON_ERROR)));
         $payload = self::decodePayload($response);
 
         self::assertSame(422, $response->getStatusCode());
