@@ -62,7 +62,8 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $normalized = $service->normalizePayout($payout);
 
         self::assertSame('payout-1', $normalized['id']);
-        self::assertSame('tenant-1', $normalized['meta']['tenantId']);
-        self::assertSame('bank_ref_123', $normalized['meta']['providerRef']);
+        self::assertIsArray($normalized['meta'] ?? null);
+        self::assertSame('tenant-1', $normalized['meta']['tenantId'] ?? null);
+        self::assertSame('bank_ref_123', $normalized['meta']['providerRef'] ?? null);
     }
 }

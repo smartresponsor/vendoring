@@ -16,7 +16,7 @@ final class CanaryRolloutCoordinatorTest extends TestCase
     public function testDisabledFlagReturnsDisabledDecision(): void
     {
         $coordinator = new CanaryRolloutCoordinator(
-            $this->featureFlagService(['flag' => 'test_flag', 'enabled' => false, 'cohort' => 'vendor:42', 'reason' => 'cohort_disabled']),
+            $this->featureFlagService(['flag' => 'test_flag', 'enabled' => false, 'cohort' => 'vendor:42', 'reason' => 'cohort_disabled', 'decision' => 'hold', 'severity' => 'warning', 'reasons' => [], 'actions' => []]),
             $this->cohortResolver('vendor:42'),
             $this->manifestBuilder([]),
             $this->rollbackEvaluator(['decision' => 'proceed']),
@@ -31,7 +31,7 @@ final class CanaryRolloutCoordinatorTest extends TestCase
     public function testProceedingVendorCanarySuggestsTenantExpansion(): void
     {
         $coordinator = new CanaryRolloutCoordinator(
-            $this->featureFlagService(['flag' => 'test_flag', 'enabled' => true, 'cohort' => 'vendor:42', 'reason' => 'cohort_enabled']),
+            $this->featureFlagService(['flag' => 'test_flag', 'enabled' => true, 'cohort' => 'vendor:42', 'reason' => 'cohort_enabled', 'decision' => 'proceed', 'severity' => 'info', 'reasons' => [], 'actions' => []]),
             $this->cohortResolver('vendor:42'),
             $this->manifestBuilder([]),
             $this->rollbackEvaluator(['decision' => 'proceed']),
@@ -47,7 +47,7 @@ final class CanaryRolloutCoordinatorTest extends TestCase
     public function testRollbackDecisionWinsOverEnabledFlag(): void
     {
         $coordinator = new CanaryRolloutCoordinator(
-            $this->featureFlagService(['flag' => 'test_flag', 'enabled' => true, 'cohort' => 'tenant:tenant-1', 'reason' => 'cohort_enabled']),
+            $this->featureFlagService(['flag' => 'test_flag', 'enabled' => true, 'cohort' => 'tenant:tenant-1', 'reason' => 'cohort_enabled', 'decision' => 'rollback', 'severity' => 'warning', 'reasons' => [], 'actions' => []]),
             $this->cohortResolver('tenant:tenant-1'),
             $this->manifestBuilder([]),
             $this->rollbackEvaluator(['decision' => 'rollback']),
@@ -62,7 +62,7 @@ final class CanaryRolloutCoordinatorTest extends TestCase
     public function testMissingProbeForcesHold(): void
     {
         $coordinator = new CanaryRolloutCoordinator(
-            $this->featureFlagService(['flag' => 'test_flag', 'enabled' => true, 'cohort' => 'tenant:tenant-1', 'reason' => 'cohort_enabled']),
+            $this->featureFlagService(['flag' => 'test_flag', 'enabled' => true, 'cohort' => 'tenant:tenant-1', 'reason' => 'cohort_enabled', 'decision' => 'hold', 'severity' => 'warning', 'reasons' => [], 'actions' => []]),
             $this->cohortResolver('tenant:tenant-1'),
             $this->manifestBuilder(['transaction']),
             $this->rollbackEvaluator(['decision' => 'proceed']),
@@ -76,12 +76,12 @@ final class CanaryRolloutCoordinatorTest extends TestCase
     }
 
     /**
-     * @param array{flag:string, enabled:bool, cohort:string, reason:string} $decision
+     * @param array{flag:string, enabled:bool, cohort:string, reason:string, decision?:string, severity?:string, reasons?:list<string>, actions?:list<string>} $decision
      */
     private function featureFlagService(array $decision): FeatureFlagServiceInterface
     {
         return new class ($decision) implements FeatureFlagServiceInterface {
-            /** @param array{flag:string, enabled:bool, cohort:string, reason:string} $decision */
+            /** @param array{flag:string, enabled:bool, cohort:string, reason:string, decision?:string, severity?:string, reasons?:list<string>, actions?:list<string>} $decision */
             public function __construct(private readonly array $decision) {}
             public function isEnabled(string $flagName, ?string $tenantId = null, ?string $vendorId = null): bool
             {
@@ -89,7 +89,12 @@ final class CanaryRolloutCoordinatorTest extends TestCase
             }
             public function explain(string $flagName, ?string $tenantId = null, ?string $vendorId = null): array
             {
-                return $this->decision;
+                return [
+                    'flag' => (string) ($this->decision['flag'] ?? $flagName),
+                    'enabled' => true === ($this->decision['enabled'] ?? false),
+                    'cohort' => (string) ($this->decision['cohort'] ?? ''),
+                    'reason' => (string) ($this->decision['reason'] ?? ''),
+                ];
             }
         };
     }
@@ -116,9 +121,18 @@ final class CanaryRolloutCoordinatorTest extends TestCase
             public function build(int $windowSeconds = 900): array
             {
                 return [
+                    'generatedAt' => '2026-03-31T10:00:00+00:00',
+                    'windowSeconds' => $windowSeconds,
+                    'releaseDocs' => [],
+                    'buildArtifacts' => [],
                     'monitoring' => [
+                        'status' => [] === $this->missingProbes ? 'green' : 'warn',
+                        'alertCount' => 0,
+                        'alertCodes' => [],
+                        'openBreakers' => 0,
                         'missingProbes' => $this->missingProbes,
                     ],
+                    'status' => [] === $this->missingProbes ? 'green' : 'warn',
                 ];
             }
         };
@@ -134,7 +148,18 @@ final class CanaryRolloutCoordinatorTest extends TestCase
             public function __construct(private readonly array $decision) {}
             public function evaluate(array $manifest): array
             {
-                return $this->decision;
+                $decisionValue = $this->decision['decision'] ?? 'hold';
+                $severityValue = $this->decision['severity'] ?? 'warning';
+                $reasonsValue = $this->decision['reasons'] ?? [];
+                $actionsValue = $this->decision['actions'] ?? [];
+
+                return [
+                    'generatedAt' => '2026-03-31T10:00:00+00:00',
+                    'decision' => is_string($decisionValue) ? $decisionValue : 'hold',
+                    'severity' => is_string($severityValue) ? $severityValue : 'warning',
+                    'reasons' => is_array($reasonsValue) ? array_values(array_filter($reasonsValue, 'is_string')) : [],
+                    'actions' => is_array($actionsValue) ? array_values(array_filter($actionsValue, 'is_string')) : [],
+                ];
             }
         };
     }

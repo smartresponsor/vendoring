@@ -30,7 +30,7 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
         $billing->update(
             $this->normalizeNullableString($dto->iban),
             $this->normalizeNullableString($dto->swift),
-            $this->normalizeRequiredString($dto->payoutMethod, 'bank'),
+            $this->normalizeRequiredPayoutMethod($dto->payoutMethod),
             $this->normalizeNullableString($dto->billingEmail),
         );
 
@@ -67,10 +67,10 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
         return '' === $trimmed ? null : $trimmed;
     }
 
-    private function normalizeRequiredString(?string $value, string $default): string
+    private function normalizeRequiredPayoutMethod(?string $value): string
     {
         $trimmed = null === $value ? '' : trim($value);
 
-        return '' === $trimmed ? $default : $trimmed;
+        return '' === $trimmed ? 'bank' : $trimmed;
     }
 }

@@ -86,6 +86,7 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
     /**
      * @param array<string, mixed> $meta
      * @throws Exception
+     * @throws JsonException
      */
     public function markProcessed(string $id, string $processedAt, array $meta = []): void
     {
@@ -99,6 +100,7 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
     /**
      * @param array<string, mixed> $meta
      * @throws Exception
+     * @throws JsonException
      */
     public function markFailed(string $id, string $processedAt, array $meta = []): void
     {
@@ -141,8 +143,11 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
     }
 
     /**
+     * @param string $id
      * @param array<string, mixed> $meta
+     * @return string
      * @throws Exception
+     * @throws JsonException
      */
     private function encodeMergedMeta(string $id, array $meta): string
     {

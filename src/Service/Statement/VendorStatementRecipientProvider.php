@@ -18,7 +18,7 @@ final readonly class VendorStatementRecipientProvider implements VendorStatement
 
         foreach ($this->billings->findAll() as $billing) {
             $vendorId = $billing->getVendor()->getId();
-            $email = trim((string) ($billing->getBillingEmail() ?? ''));
+            $email = $billing->getBillingEmail() !== null ? trim($billing->getBillingEmail()) : '';
 
             if (null === $vendorId || '' === $email) {
                 continue;

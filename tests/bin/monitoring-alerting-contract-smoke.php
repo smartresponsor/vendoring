@@ -39,17 +39,17 @@ $builder = new MonitoringSnapshotBuilder($observabilityDir, $faultToleranceDir, 
 $snapshot = $builder->build(900);
 $alerts = (new AlertRuleEvaluator())->evaluate($snapshot);
 
-if ('warn' !== ($snapshot['status'] ?? null)) {
+if ('warn' !== $snapshot['status']) {
     fwrite(STDERR, "monitoring alerting smoke failed: snapshot status mismatch\n");
     exit(1);
 }
 
-if (1 !== ($snapshot['breakerSummary']['open'] ?? null)) {
+if (1 !== $snapshot['breakerSummary']['open']) {
     fwrite(STDERR, "monitoring alerting smoke failed: breaker summary mismatch\n");
     exit(1);
 }
 
-$codes = array_map(static fn(array $alert): string => (string) ($alert['code'] ?? ''), $alerts);
+$codes = array_map(static fn(array $alert): string => $alert['code'], $alerts);
 if (!in_array('runtime_error_spike', $codes, true) || !in_array('outbound_circuit_open', $codes, true)) {
     fwrite(STDERR, "monitoring alerting smoke failed: expected alerts missing\n");
     exit(1);

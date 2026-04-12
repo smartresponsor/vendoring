@@ -84,7 +84,11 @@ final readonly class VendorService implements VendorServiceInterface
             return;
         }
 
-        throw new InvalidArgumentException((string) $violations[0]->getMessage());
+        $firstViolation = $violations[0] ?? null;
+        $message = null !== $firstViolation ? $firstViolation->getMessage() : 'vendor_validation_failed';
+        $message = is_string($message) ? $message : (string) $message;
+
+        throw new InvalidArgumentException($message);
     }
 
     private function normalizeRequiredBrandName(string $brandName): string

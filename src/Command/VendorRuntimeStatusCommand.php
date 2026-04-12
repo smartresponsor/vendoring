@@ -7,6 +7,8 @@ namespace App\Command;
 use App\Command\Support\CommandIoException;
 use App\Command\Support\CommandJsonArtifactWriter;
 use App\Command\Support\CommandJsonArtifactWriterInterface;
+use App\Command\Support\CommandJsonEncoder;
+use App\Command\Support\CommandJsonFileWriter;
 use App\Command\Support\CommandOutputFormat;
 use App\Command\Support\CommandResultEmitter;
 use App\Command\Support\CommandResultEmitterInterface;
@@ -142,13 +144,13 @@ final class VendorRuntimeStatusCommand extends Command
 
     private static function defaultCommandJsonArtifactWriter(): CommandJsonArtifactWriterInterface
     {
-        $encoder = new \App\Command\Support\CommandJsonEncoder();
+        $encoder = new CommandJsonEncoder();
 
-        return new CommandJsonArtifactWriter(new \App\Command\Support\CommandJsonFileWriter($encoder));
+        return new CommandJsonArtifactWriter(new CommandJsonFileWriter($encoder));
     }
 
     private static function defaultCommandResultEmitter(): CommandResultEmitterInterface
     {
-        return new CommandResultEmitter(new \App\Command\Support\CommandJsonEncoder());
+        return new CommandResultEmitter(new CommandJsonEncoder());
     }
 }

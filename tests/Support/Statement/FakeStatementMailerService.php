@@ -32,6 +32,12 @@ final class FakeVendorStatementMailerService implements VendorStatementMailerSer
             'pdfPath' => $pdfPath,
             'periodLabel' => $periodLabel,
             'attached' => '' !== $pdfPath,
+            'retryable' => false,
+            'timeoutSeconds' => 0,
+            'maxAttempts' => 0,
+            'attemptCount' => 1,
+            'failureMode' => 'hard',
+            'circuitState' => 'closed',
         ];
     }
 

@@ -35,7 +35,15 @@ final class VendorExternalIntegrationRuntimeViewBuilderTest extends TestCase
             ->expects(self::once())
             ->method('buildForVendorId')
             ->with(101)
-            ->willReturn(new VendorOwnershipView(101, 5001, [['userId' => 5002, 'role' => 'manager']]));
+            ->willReturn(new VendorOwnershipView(101, 5001, [[
+                'userId' => 5002,
+                'role' => 'manager',
+                'status' => 'active',
+                'isPrimary' => false,
+                'grantedAt' => '2026-03-31T10:00:00+00:00',
+                'revokedAt' => null,
+                'capabilities' => [],
+            ]]));
         $this->webhooks->expects(self::once())->method('ok')->willReturn(true);
 
         $payload = (new VendorExternalIntegrationRuntimeViewBuilder(
@@ -47,7 +55,8 @@ final class VendorExternalIntegrationRuntimeViewBuilderTest extends TestCase
 
         self::assertSame('tenant-1', $payload['tenantId']);
         self::assertSame('101', $payload['vendorId']);
-        self::assertSame(5001, $payload['ownership']['ownerUserId']);
+        self::assertIsArray($payload['ownership'] ?? null);
+        self::assertSame(5001, $payload['ownership']['ownerUserId'] ?? null);
         self::assertSame($this->crm::class, $payload['crm']['serviceClass']);
         self::assertSame('write-only', $payload['crm']['registerMode']);
         self::assertFalse($payload['crm']['runtimeReadable']);

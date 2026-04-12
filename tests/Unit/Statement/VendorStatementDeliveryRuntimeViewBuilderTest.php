@@ -69,7 +69,7 @@ final class VendorStatementDeliveryRuntimeViewBuilderTest extends TestCase
             ->expects(self::once())
             ->method('buildForVendorId')
             ->with(101)
-            ->willReturn(new VendorOwnershipView(101, 5001, [['userId' => 5002, 'role' => 'manager']]));
+            ->willReturn(new VendorOwnershipView(101, 5001, [['userId' => 5002, 'role' => 'manager', 'status' => 'active', 'isPrimary' => false, 'grantedAt' => '2026-03-01T00:00:00+00:00', 'revokedAt' => null, 'capabilities' => []]]));
 
         $this->exporter
             ->expects(self::once())

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Command\Support\CommandJsonEncoder;
 use App\Command\Support\CommandOutputFormat;
 use App\Command\Support\CommandResultEmitter;
 use App\Command\Support\CommandResultEmitterInterface;
@@ -91,6 +92,6 @@ final class VendorPayoutProcessCommand extends Command
 
     private static function defaultCommandResultEmitter(): CommandResultEmitterInterface
     {
-        return new CommandResultEmitter(new \App\Command\Support\CommandJsonEncoder());
+        return new CommandResultEmitter(new CommandJsonEncoder());
     }
 }

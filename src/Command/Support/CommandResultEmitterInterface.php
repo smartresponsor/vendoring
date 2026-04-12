@@ -20,6 +20,7 @@ interface CommandResultEmitterInterface
     public function emitError(OutputInterface $output, string $format, string $status, string $message, array $context = []): bool;
 
     /**
+     * @noinspection PhpTooManyParametersInspection
      * @param array<string, mixed> $context
      */
     public function emitThrowableError(OutputInterface $output, string $format, string $status, string $prefix, Throwable $throwable, array $context = []): bool;

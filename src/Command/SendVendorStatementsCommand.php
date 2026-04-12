@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Command\Support\CommandJsonEncoder;
 use App\Command\Support\CommandOutputFormat;
 use App\Command\Support\CommandResultEmitter;
 use App\Command\Support\CommandResultEmitterInterface;
@@ -125,7 +126,7 @@ final class SendVendorStatementsCommand extends Command
                 ];
             }
 
-            if (true !== ($result['ok'] ?? false)) {
+            if (true !== $result['ok']) {
                 ++$failures;
             }
 
@@ -136,13 +137,13 @@ final class SendVendorStatementsCommand extends Command
                     '[%s/%s] %s email=%s period=%s currency=%s pdf=%s attached=%s message=%s',
                     $recipient->tenantId,
                     $recipient->vendorId,
-                    ($result['ok'] ?? false) ? 'SENT' : 'FAIL',
-                    $result['email'] ?? $recipient->email,
-                    $result['periodLabel'] ?? $period,
+                    $result['ok'] ? 'SENT' : 'FAIL',
+                    $result['email'],
+                    $result['periodLabel'],
                     $recipient->currency,
-                    $result['pdfPath'] ?? '',
-                    $result['attached'] ?? false ? 'yes' : 'no',
-                    $result['message'] ?? 'statement_mail_send_failed',
+                    $result['pdfPath'],
+                    $result['attached'] ? 'yes' : 'no',
+                    $result['message'],
                 ));
             }
         }
@@ -220,6 +221,6 @@ final class SendVendorStatementsCommand extends Command
 
     private static function defaultCommandResultEmitter(): CommandResultEmitterInterface
     {
-        return new CommandResultEmitter(new \App\Command\Support\CommandJsonEncoder());
+        return new CommandResultEmitter(new CommandJsonEncoder);
     }
 }

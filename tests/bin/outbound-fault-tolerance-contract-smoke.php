@@ -20,8 +20,11 @@ $scopeKey = 'tenant-1:vendor-1';
 $breaker->recordFailure('statement_mail_send', $scopeKey, 2, 60);
 $breaker->recordFailure('statement_mail_send', $scopeKey, 2, 60);
 
+/** @var \Symfony\Component\Mailer\MailerInterface $mailer */
+$mailer = new FakeMailer();
+
 $service = new VendorStatementMailerService(
-    new FakeMailer(),
+    $mailer,
     new MetricEmitter(),
     new RuntimeLogger(new CorrelationContext(), new RequestStack()),
     $policy,

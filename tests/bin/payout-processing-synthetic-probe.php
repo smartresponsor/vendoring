@@ -38,11 +38,12 @@ try {
     }
 
     $createPayload = KernelRuntimeHarness::decodeJson($createResponse);
-    if (($createPayload['data']['created'] ?? null) != true) {
+    $createData = $createPayload['data'] ?? null;
+    if (!is_array($createData) || ($createData['created'] ?? null) != true) {
         throw new RuntimeException('Payout processing synthetic probe did not mark payout as created.');
     }
 
-    $payoutId = $createPayload['data']['payoutId'] ?? null;
+    $payoutId = $createData['payoutId'] ?? null;
     if (!is_string($payoutId) || '' === $payoutId) {
         throw new RuntimeException('Payout processing synthetic probe did not return payout id.');
     }
@@ -60,7 +61,8 @@ try {
     }
 
     $getPayload = KernelRuntimeHarness::decodeJson($getResponse);
-    if (($getPayload['data']['status'] ?? null) !== 'pending') {
+    $getData = $getPayload['data'] ?? null;
+    if (!is_array($getData) || ($getData['status'] ?? null) !== 'pending') {
         throw new RuntimeException('Payout processing synthetic probe did not expose pending payout before processing.');
     }
 
@@ -77,7 +79,8 @@ try {
     }
 
     $processPayload = KernelRuntimeHarness::decodeJson($processResponse);
-    if (($processPayload['data']['processed'] ?? null) != true) {
+    $processData = $processPayload['data'] ?? null;
+    if (!is_array($processData) || ($processData['processed'] ?? null) != true) {
         throw new RuntimeException('Payout processing synthetic probe did not mark payout as processed.');
     }
 
@@ -94,7 +97,8 @@ try {
     }
 
     $afterPayload = KernelRuntimeHarness::decodeJson($afterResponse);
-    if (($afterPayload['data']['status'] ?? null) !== 'processed') {
+    $afterData = $afterPayload['data'] ?? null;
+    if (!is_array($afterData) || ($afterData['status'] ?? null) !== 'processed') {
         throw new RuntimeException('Payout processing synthetic probe did not expose processed payout after processing.');
     }
 

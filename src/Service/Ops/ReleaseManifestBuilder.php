@@ -32,21 +32,21 @@ final readonly class ReleaseManifestBuilder implements ReleaseManifestBuilderInt
         $buildArtifacts = $this->buildArtifacts();
         $alertCodes = [];
         foreach ($alerts as $alert) {
-            $code = $alert['code'] ?? null;
+            $code = $alert['code'];
             if (is_string($code) && '' !== $code) {
                 $alertCodes[] = $code;
             }
         }
 
         $missingProbes = [];
-        foreach (($snapshot['probeSummary'] ?? []) as $probe => $present) {
+        foreach ($snapshot['probeSummary'] as $probe => $present) {
             if (false === $present) {
                 $missingProbes[] = (string) $probe;
             }
         }
 
         $status = 'ok';
-        if (in_array(false, $releaseDocs, true) || in_array(false, $buildArtifacts, true) || 'warn' === ($snapshot['status'] ?? 'ok')) {
+        if (in_array(false, $releaseDocs, true) || in_array(false, $buildArtifacts, true) || 'warn' === $snapshot['status']) {
             $status = 'warn';
         }
 
@@ -56,10 +56,10 @@ final readonly class ReleaseManifestBuilder implements ReleaseManifestBuilderInt
             'releaseDocs' => $releaseDocs,
             'buildArtifacts' => $buildArtifacts,
             'monitoring' => [
-                'status' => (string) ($snapshot['status'] ?? 'ok'),
+                'status' => $snapshot['status'],
                 'alertCount' => count($alerts),
                 'alertCodes' => array_values(array_unique($alertCodes)),
-                'openBreakers' => (int) ($snapshot['breakerSummary']['open'] ?? 0),
+                'openBreakers' => $snapshot['breakerSummary']['open'],
                 'missingProbes' => $missingProbes,
             ],
             'status' => $status,

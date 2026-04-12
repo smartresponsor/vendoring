@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\RepositoryInterface\VendorRepositoryInterface;
+use App\Service\VendorProfileRequestResolver;
 use App\ServiceInterface\VendorProfileRequestResolverInterface;
 use App\ServiceInterface\VendorProfileServiceInterface;
 use App\ServiceInterface\VendorProfileViewBuilderInterface;
@@ -34,7 +35,7 @@ final class VendorProfileController extends AbstractController
         $this->vendorRepository = $vendorRepository;
         $this->profileService = $profileService;
         $this->profileViewBuilder = $profileViewBuilder;
-        $this->profileRequestResolver = $profileRequestResolver ?? new \App\Service\VendorProfileRequestResolver();
+        $this->profileRequestResolver = $profileRequestResolver ?? new VendorProfileRequestResolver();
     }
 
     #[Route('/vendor/{vendorId}', methods: ['PATCH'])]

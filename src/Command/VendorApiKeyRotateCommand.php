@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Command\Support\CommandOutputFormat;
-use App\Command\Support\CommandResultEmitter;
 use App\Command\Support\CommandResultEmitterInterface;
 use App\RepositoryInterface\VendorApiKeyRepositoryInterface;
 use App\ServiceInterface\VendorApiKeyServiceInterface;

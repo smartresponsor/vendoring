@@ -59,7 +59,7 @@ final class VendorFinanceRuntimeViewBuilderTest extends TestCase
         ];
 
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(101)
-            ->willReturn(new VendorOwnershipView(101, 5001, [['userId' => 5002, 'role' => 'manager']]));
+            ->willReturn(new VendorOwnershipView(101, 5001, [['userId' => 5002, 'role' => 'manager', 'status' => 'active', 'isPrimary' => false, 'grantedAt' => '2026-03-01T00:00:00+00:00', 'revokedAt' => null, 'capabilities' => []]]));
         $this->metrics->expects(self::once())->method('overview')->with(self::callback(function (VendorMetricOverviewRequestDTO $request): bool {
             self::assertSame('tenant-1', $request->tenantId);
             self::assertSame('101', $request->vendorId);

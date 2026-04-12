@@ -68,7 +68,10 @@ final readonly class CanaryRolloutCoordinator implements CanaryRolloutCoordinato
             return ['hold', 'keep_current_canary_scope', 'required_probe_missing'];
         }
 
-        $rollbackDecision = (string) ($rollback['decision'] ?? 'hold');
+        $rollbackDecision = $rollback['decision'];
+        if (!is_string($rollbackDecision) || '' === $rollbackDecision) {
+            $rollbackDecision = 'hold';
+        }
         if ('rollback' === $rollbackDecision) {
             return ['rollback', 'disable_flag_for_current_cohort', 'rollback_decision_triggered'];
         }
@@ -91,9 +94,13 @@ final readonly class CanaryRolloutCoordinator implements CanaryRolloutCoordinato
      */
     private function probeGate(array $manifest): array
     {
-        $missing = $manifest['monitoring']['missingProbes'] ?? [];
-        if (!is_array($missing)) {
-            $missing = [];
+        $monitoring = $manifest['monitoring'] ?? null;
+        $missing = [];
+        if (is_array($monitoring)) {
+            $missingCandidate = $monitoring['missingProbes'] ?? [];
+            if (is_array($missingCandidate)) {
+                $missing = $missingCandidate;
+            }
         }
 
         return [

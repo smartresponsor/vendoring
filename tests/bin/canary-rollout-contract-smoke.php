@@ -68,16 +68,16 @@ $coordinator = new CanaryRolloutCoordinator(
 
 $report = $coordinator->evaluate('transaction_canary', 'tenant-1', '42', 900);
 
-if (($report['canary']['decision'] ?? null) !== 'proceed') {
+if ($report['canary']['decision'] !== 'proceed') {
     throw new RuntimeException('Canary rollout coordinator did not return proceed for a green vendor canary.');
 }
-if (($report['canary']['recommendedAction'] ?? null) !== 'expand_canary_scope') {
+if ($report['canary']['recommendedAction'] !== 'expand_canary_scope') {
     throw new RuntimeException('Canary rollout coordinator did not recommend expansion.');
 }
 if (($report['canary']['nextCohort'] ?? null) !== 'tenant:tenant-1') {
     throw new RuntimeException('Canary rollout coordinator did not suggest tenant expansion.');
 }
-if (($report['flagDecision']['cohort'] ?? null) !== 'vendor:42') {
+if ($report['flagDecision']['cohort'] !== 'vendor:42') {
     throw new RuntimeException('Canary rollout coordinator did not preserve vendor cohort.');
 }
 

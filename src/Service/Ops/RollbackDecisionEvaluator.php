@@ -31,7 +31,7 @@ final readonly class RollbackDecisionEvaluator implements RollbackDecisionEvalua
 
         $missingDocs = array_keys(array_filter($manifest['releaseDocs'], static fn(bool $present): bool => false === $present));
         $missingArtifacts = array_keys(array_filter($manifest['buildArtifacts'], static fn(bool $present): bool => false === $present));
-        $alertCodes = $manifest['monitoring']['alertCodes'] ?? [];
+        $alertCodes = $manifest['monitoring']['alertCodes'];
 
         foreach ($alertCodes as $code) {
             if (in_array($code, $criticalAlertCodes, true)) {
@@ -41,7 +41,7 @@ final readonly class RollbackDecisionEvaluator implements RollbackDecisionEvalua
             }
         }
 
-        if (($manifest['monitoring']['openBreakers'] ?? 0) > 0) {
+        if ($manifest['monitoring']['openBreakers'] > 0) {
             $decision = 'rollback';
             $severity = 'critical';
             $reasons[] = 'open_breakers_present';
@@ -68,7 +68,7 @@ final readonly class RollbackDecisionEvaluator implements RollbackDecisionEvalua
                 $reasons[] = 'missing_build_artifacts:' . implode(',', $missingArtifacts);
             }
 
-            if ([] !== ($manifest['monitoring']['missingProbes'] ?? [])) {
+            if ([] !== $manifest['monitoring']['missingProbes']) {
                 $decision = 'hold';
                 $severity = 'warning';
                 $reasons[] = 'missing_probes:' . implode(',', $manifest['monitoring']['missingProbes']);

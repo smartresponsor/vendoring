@@ -34,7 +34,6 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
      * @throws Exception
      * @throws \JsonException
      * @throws RandomException
-     * @throws RandomException
      */
     public function create(CreatePayoutDTO $dto): ?string
     {

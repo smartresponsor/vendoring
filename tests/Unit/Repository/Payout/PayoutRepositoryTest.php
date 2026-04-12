@@ -82,10 +82,10 @@ final class PayoutRepositoryTest extends TestCase
                     self::assertSame('2026-03-30 11:00:00', $data['processed_at']);
                     self::assertJson($data['meta']);
 
-                    $meta = json_decode((string) $data['meta'], true, 512, JSON_THROW_ON_ERROR);
-                    self::assertSame('tenant-1', $meta['tenantId']);
-                    self::assertSame('bank', $meta['provider']);
-                    self::assertSame('bank_ref_123', $meta['providerRef']);
+                    $meta = self::decodeMetaPayload($data);
+                    self::assertSame('tenant-1', $meta['tenantId'] ?? null);
+                    self::assertSame('bank', $meta['provider'] ?? null);
+                    self::assertSame('bank_ref_123', $meta['providerRef'] ?? null);
 
                     return true;
                 }),
@@ -114,9 +114,9 @@ final class PayoutRepositoryTest extends TestCase
                     self::assertSame('2026-03-30 11:30:00', $data['processed_at']);
                     self::assertJson($data['meta']);
 
-                    $meta = json_decode((string) $data['meta'], true, 512, JSON_THROW_ON_ERROR);
-                    self::assertSame('tenant-1', $meta['tenantId']);
-                    self::assertSame('provider_declined', $meta['error']);
+                    $meta = self::decodeMetaPayload($data);
+                    self::assertSame('tenant-1', $meta['tenantId'] ?? null);
+                    self::assertSame('provider_declined', $meta['error'] ?? null);
 
                     return true;
                 }),
@@ -128,5 +128,20 @@ final class PayoutRepositoryTest extends TestCase
             'tenantId' => 'tenant-1',
             'error' => 'provider_declined',
         ]);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private static function decodeMetaPayload(array $data): array
+    {
+        self::assertArrayHasKey('meta', $data);
+        self::assertIsString($data['meta']);
+
+        $decoded = json_decode($data['meta'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertIsArray($decoded);
+
+        return $decoded;
     }
 }

@@ -71,7 +71,10 @@ final class VendorRuntimeStatusViewBuilderTest extends TestCase
 
         self::assertTrue($payload['surfaceStatus']['ownership']);
         self::assertSame(7, $ownership['ownerUserId']);
-        self::assertSame(1000, $payload['finance']['metricOverview']['gmv']);
+        $finance = self::assertArrayPayload($payload['finance']);
+        $metricOverview = self::assertArrayPayload($finance['metricOverview']);
+
+        self::assertSame(1000, $metricOverview['gmv'] ?? null);
         self::assertSame(['crm', 'webhooks'], $payload['externalIntegration']['surfaces']);
     }
 

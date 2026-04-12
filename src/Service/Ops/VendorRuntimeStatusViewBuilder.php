@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Ops;
 
-use Doctrine\DBAL\Exception;
 use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Projection\VendorRuntimeStatusView;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
@@ -13,6 +12,7 @@ use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInte
 use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
 use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
 use DateTimeImmutable;
+use Doctrine\DBAL\Exception;
 
 /**
  * Builds a release-facing vendor runtime status view that aggregates existing

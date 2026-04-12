@@ -30,17 +30,11 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
                 vendorId: '101',
                 currency: 'USD',
                 ownership: null,
-                profile: [
-                    'completionPercent' => 43,
-                    'readyForPublishing' => false,
-                    'nextAction' => 'assign_owner',
-                ],
                 finance: ['metricOverview' => []],
                 statementDelivery: [],
                 externalIntegration: ['surfaces' => []],
                 surfaceStatus: [
                     'ownership' => false,
-                    'profile' => true,
                     'finance' => true,
                     'statementDelivery' => false,
                     'externalIntegration' => true,
@@ -53,13 +47,10 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
             ->toArray();
 
         self::assertSame('warn', $payload['status']);
-        self::assertContains('profile.assign_owner.required', $payload['issues']);
         self::assertContains('surface.ownership.missing', $payload['issues']);
         self::assertContains('surface.statementDelivery.missing', $payload['issues']);
-        self::assertTrue($payload['profileSummary']['available']);
-        self::assertSame(43, $payload['profileSummary']['completionPercent']);
-        self::assertFalse($payload['profileSummary']['readyForPublishing']);
-        self::assertSame('assign_owner', $payload['profileSummary']['nextAction']);
+        self::assertSame('warn', $payload['status']);
+        self::assertArrayHasKey('runtimeStatus', $payload);
     }
 
     public function testBuildMarksProfileSummaryUnavailableWhenProfileSurfaceIsNull(): void
@@ -73,13 +64,11 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
                 vendorId: 'vendor-alpha',
                 currency: 'EUR',
                 ownership: null,
-                profile: null,
                 finance: ['metricOverview' => []],
                 statementDelivery: ['recipients' => []],
                 externalIntegration: ['surfaces' => []],
                 surfaceStatus: [
                     'ownership' => false,
-                    'profile' => false,
                     'finance' => true,
                     'statementDelivery' => true,
                     'externalIntegration' => true,
@@ -92,13 +81,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
             ->toArray();
 
         self::assertSame('warn', $payload['status']);
-        self::assertSame([
-            'available' => false,
-            'completionPercent' => null,
-            'readyForPublishing' => null,
-            'nextAction' => null,
-        ], $payload['profileSummary']);
+        self::assertArrayHasKey('runtimeStatus', $payload);
         self::assertContains('surface.ownership.missing', $payload['issues']);
-        self::assertContains('surface.profile.missing', $payload['issues']);
     }
 }

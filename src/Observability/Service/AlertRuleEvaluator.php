@@ -27,26 +27,26 @@ final readonly class AlertRuleEvaluator implements AlertRuleEvaluatorInterface
         $openBreakerThreshold = (int) ($this->thresholds['openBreakerThreshold'] ?? 1);
         $missingProbeThreshold = (int) ($this->thresholds['missingProbeThreshold'] ?? 1);
 
-        if (($snapshot['logSummary']['error'] ?? 0) >= $errorThreshold) {
+        if ($snapshot['logSummary']['error'] >= $errorThreshold) {
             $alerts[] = [
                 'code' => 'runtime_error_spike',
                 'severity' => 'warning',
-                'message' => sprintf('Runtime error count reached %d within the monitoring window.', (int) $snapshot['logSummary']['error']),
-                'context' => ['errorCodes' => $snapshot['logSummary']['errorCodes'] ?? []],
+                'message' => sprintf('Runtime error count reached %d within the monitoring window.', $snapshot['logSummary']['error']),
+                'context' => ['errorCodes' => $snapshot['logSummary']['errorCodes']],
             ];
         }
 
-        if (($snapshot['breakerSummary']['open'] ?? 0) >= $openBreakerThreshold) {
+        if ($snapshot['breakerSummary']['open'] >= $openBreakerThreshold) {
             $alerts[] = [
                 'code' => 'outbound_circuit_open',
                 'severity' => 'critical',
-                'message' => sprintf('Open outbound breakers detected: %d.', (int) $snapshot['breakerSummary']['open']),
-                'context' => ['scopes' => $snapshot['breakerSummary']['scopes'] ?? []],
+                'message' => sprintf('Open outbound breakers detected: %d.', $snapshot['breakerSummary']['open']),
+                'context' => ['scopes' => $snapshot['breakerSummary']['scopes']],
             ];
         }
 
         $missingProbes = array_keys(array_filter(
-            $snapshot['probeSummary'] ?? [],
+            $snapshot['probeSummary'],
             static fn(bool $present): bool => false === $present,
         ));
         if (count($missingProbes) >= $missingProbeThreshold) {
@@ -58,7 +58,7 @@ final readonly class AlertRuleEvaluator implements AlertRuleEvaluatorInterface
             ];
         }
 
-        if (0 === (int) ($snapshot['metricSummary']['total'] ?? 0)) {
+        if (0 === $snapshot['metricSummary']['total']) {
             $alerts[] = [
                 'code' => 'observability_metrics_empty',
                 'severity' => 'warning',

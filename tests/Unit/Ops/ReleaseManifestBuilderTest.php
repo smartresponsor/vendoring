@@ -30,16 +30,20 @@ final class ReleaseManifestBuilderTest extends TestCase
             public function build(int $windowSeconds = 900): array
             {
                 return [
-                    'status' => 'warn',
-                    'breakerSummary' => ['open' => 1],
+                    'generatedAt' => '2026-03-31T10:00:00+00:00',
+                    'windowSeconds' => $windowSeconds,
+                    'logSummary' => ['total' => 1, 'error' => 1, 'warning' => 0, 'routes' => ['vendor_transaction_create'], 'errorCodes' => ['authentication_required']],
+                    'metricSummary' => ['total' => 1, 'names' => ['runtime_probe_total' => 1]],
+                    'breakerSummary' => ['open' => 1, 'halfOpen' => 0, 'closed' => 0, 'scopes' => ['tenant-1:vendor-1']],
                     'probeSummary' => ['transaction' => true, 'finance' => true, 'payout' => false, 'postDeploy' => true],
+                    'status' => 'warn',
                 ];
             }
         };
         $alertEvaluator = new class implements AlertRuleEvaluatorInterface {
             public function evaluate(array $snapshot): array
             {
-                return [['code' => 'outbound_circuit_open']];
+                return [['code' => 'outbound_circuit_open', 'severity' => 'critical', 'message' => 'Open breaker detected.', 'context' => []]];
             }
         };
 

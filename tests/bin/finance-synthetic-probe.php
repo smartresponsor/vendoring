@@ -41,7 +41,8 @@ try {
     }
 
     $accountPayload = KernelRuntimeHarness::decodeJson($accountResponse);
-    if (($accountPayload['data']['provider'] ?? null) !== 'bank') {
+    $accountData = $accountPayload['data'] ?? null;
+    if (!is_array($accountData) || ($accountData['provider'] ?? null) !== 'bank') {
         throw new RuntimeException('Finance synthetic probe payout account provider mismatch.');
     }
 
@@ -77,7 +78,8 @@ try {
     }
 
     $exportPayload = KernelRuntimeHarness::decodeJson($exportResponse);
-    $pdfBase64 = $exportPayload['data']['pdfBase64'] ?? null;
+    $exportData = $exportPayload['data'] ?? null;
+    $pdfBase64 = is_array($exportData) ? ($exportData['pdfBase64'] ?? null) : null;
     if (!is_string($pdfBase64) || '' === $pdfBase64) {
         throw new RuntimeException('Finance synthetic probe statement export did not return base64 content.');
     }

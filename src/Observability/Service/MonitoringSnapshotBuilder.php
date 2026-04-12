@@ -64,7 +64,8 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
                 continue;
             }
             ++$total;
-            $level = (string) ($record['level'] ?? '');
+            $levelValue = $record['level'] ?? null;
+            $level = is_string($levelValue) ? $levelValue : '';
             if ('error' === $level) {
                 ++$error;
             }
@@ -134,7 +135,12 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
         }
 
         foreach (glob($dir . DIRECTORY_SEPARATOR . '*.json') ?: [] as $path) {
-            $payload = json_decode((string) file_get_contents($path), true);
+            $rawPayload = file_get_contents($path);
+            if (!is_string($rawPayload)) {
+                continue;
+            }
+
+            $payload = json_decode($rawPayload, true);
             if (!is_array($payload)) {
                 continue;
             }

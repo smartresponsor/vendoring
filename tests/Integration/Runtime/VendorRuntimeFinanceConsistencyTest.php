@@ -7,7 +7,6 @@ namespace App\Tests\Integration\Runtime;
 use App\Projection\VendorExternalIntegrationRuntimeView;
 use App\Projection\VendorFinanceRuntimeView;
 use App\Projection\VendorOwnershipView;
-use App\Projection\VendorProfileView;
 use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Projection\VendorStatementDeliveryRuntimeView;
 use App\Service\Ops\VendorRuntimeStatusViewBuilder;
@@ -15,14 +14,12 @@ use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilder
 use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
 use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
 use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
-use App\ServiceInterface\VendorProfileViewBuilderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorRuntimeFinanceConsistencyTest extends TestCase
 {
     private VendorOwnershipViewBuilderInterface&MockObject $ownership;
-    private VendorProfileViewBuilderInterface&MockObject $profile;
     private VendorFinanceRuntimeViewBuilderInterface&MockObject $finance;
     private VendorStatementDeliveryRuntimeViewBuilderInterface&MockObject $statementDelivery;
     private VendorExternalIntegrationRuntimeViewBuilderInterface&MockObject $externalIntegration;
@@ -30,7 +27,6 @@ final class VendorRuntimeFinanceConsistencyTest extends TestCase
     protected function setUp(): void
     {
         $this->ownership = $this->createMock(VendorOwnershipViewBuilderInterface::class);
-        $this->profile = $this->createMock(VendorProfileViewBuilderInterface::class);
         $this->finance = $this->createMock(VendorFinanceRuntimeViewBuilderInterface::class);
         $this->statementDelivery = $this->createMock(VendorStatementDeliveryRuntimeViewBuilderInterface::class);
         $this->externalIntegration = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderInterface::class);
@@ -40,25 +36,6 @@ final class VendorRuntimeFinanceConsistencyTest extends TestCase
     {
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(101)
             ->willReturn(new VendorOwnershipView(101, 5001, []));
-        $this->profile->expects(self::once())->method('buildForVendorId')->with(101)
-            ->willReturn(new VendorProfileView(
-                vendorId: 101,
-                brandName: 'Vendor Brand',
-                vendorStatus: 'active',
-                profile: ['brandName' => 'Vendor Brand'],
-                businessProfile: ['ownerUserId' => 5001],
-                publicProfile: ['displayName' => 'Vendor Public'],
-                searchProfile: ['seoTitle' => 'Vendor SEO'],
-                publication: ['status' => 'draft', 'publishedAt' => null, 'canPublish' => false],
-                sections: [
-                    'business' => ['label' => 'Business profile', 'complete' => true, 'missing' => []],
-                    'public' => ['label' => 'Public profile', 'complete' => true, 'missing' => []],
-                    'search' => ['label' => 'Search metadata', 'complete' => true, 'missing' => []],
-                ],
-                completionPercent: 100,
-                readyForPublishing: true,
-                nextAction: null,
-            ));
         $this->finance->expects(self::once())->method('build')->with('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')
             ->willReturn(new VendorFinanceRuntimeView(
                 tenantId: 'tenant-1',
@@ -69,7 +46,15 @@ final class VendorRuntimeFinanceConsistencyTest extends TestCase
                 payoutAccount: null,
                 statement: null,
             ));
-        $this->statementDelivery->expects(self::once())->method('build')->with('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')
+        $this->statementDelivery->expects(self::once())->method('build')->with(self::callback(function (VendorStatementDeliveryRuntimeRequestDTO $dto): bool {
+            self::assertSame('tenant-1', $dto->tenantId);
+            self::assertSame('101', $dto->vendorId);
+            self::assertSame('2026-03-01', $dto->from);
+            self::assertSame('2026-03-31', $dto->to);
+            self::assertSame('USD', $dto->currency);
+
+            return true;
+        }))
             ->willReturn(new VendorStatementDeliveryRuntimeView(
                 tenantId: 'tenant-1',
                 vendorId: '101',
@@ -92,7 +77,6 @@ final class VendorRuntimeFinanceConsistencyTest extends TestCase
 
         $payload = (new VendorRuntimeStatusViewBuilder(
             $this->ownership,
-            $this->profile,
             $this->finance,
             $this->statementDelivery,
             $this->externalIntegration,
