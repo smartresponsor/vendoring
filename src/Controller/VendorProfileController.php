@@ -1,11 +1,10 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\RepositoryInterface\VendorRepositoryInterface;
-use App\Service\VendorProfileRequestResolver;
 use App\ServiceInterface\VendorProfileRequestResolverInterface;
 use App\ServiceInterface\VendorProfileServiceInterface;
 use App\ServiceInterface\VendorProfileViewBuilderInterface;
@@ -30,12 +29,12 @@ final class VendorProfileController extends AbstractController
         VendorRepositoryInterface $vendorRepository,
         VendorProfileServiceInterface $profileService,
         VendorProfileViewBuilderInterface $profileViewBuilder,
-        ?VendorProfileRequestResolverInterface $profileRequestResolver = null,
+        VendorProfileRequestResolverInterface $profileRequestResolver,
     ) {
         $this->vendorRepository = $vendorRepository;
         $this->profileService = $profileService;
         $this->profileViewBuilder = $profileViewBuilder;
-        $this->profileRequestResolver = $profileRequestResolver ?? new VendorProfileRequestResolver();
+        $this->profileRequestResolver = $profileRequestResolver;
     }
 
     #[Route('/vendor/{vendorId}', methods: ['PATCH'])]

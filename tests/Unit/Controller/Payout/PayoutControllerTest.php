@@ -70,6 +70,33 @@ final class PayoutControllerTest extends TestCase
         self::assertFalse((bool) ($data['processed'] ?? true));
     }
 
+    public function testGetOneReturnsStableRuntimeFailureWithoutInternalMessageLeak(): void
+    {
+        $repository = new class implements PayoutRepositoryInterface {
+            public function insert(Payout $payout): void {}
+            public function insertItem(PayoutItem $item): void {}
+            public function byId(string $id): ?Payout
+            {
+                throw new \Doctrine\DBAL\Exception('sensitive_sql_message');
+            }
+            public function items(string $payoutId): array
+            {
+                return [];
+            }
+            public function markProcessed(string $id, string $processedAt, array $meta = []): void {}
+            public function markFailed(string $id, string $processedAt, array $meta = []): void {}
+        };
+
+        $controller = new PayoutController(new FakeVendorPayoutService(), $repository, new FakeVendorPayoutRequestService());
+        $response = $controller->getOne('payout-1');
+        $payload = self::decodePayload($response);
+
+        self::assertSame(500, $response->getStatusCode());
+        self::assertSame('payout_lookup_failed', $payload['error'] ?? null);
+        self::assertSame('Check runtime logs for details and retry the operation.', $payload['hint'] ?? null);
+        self::assertArrayNotHasKey('message', $payload);
+    }
+
     /** @return array<string, mixed> */
     private static function decodePayload(JsonResponse $response): array
     {

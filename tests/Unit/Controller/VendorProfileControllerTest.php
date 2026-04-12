@@ -9,6 +9,7 @@ use App\DTO\VendorProfileDTO;
 use App\Entity\Vendor;
 use App\Projection\VendorProfileView;
 use App\RepositoryInterface\VendorRepositoryInterface;
+use App\Service\VendorProfileRequestResolver;
 use App\ServiceInterface\VendorProfileServiceInterface;
 use App\ServiceInterface\VendorProfileViewBuilderInterface;
 use PHPUnit\Framework\TestCase;
@@ -23,6 +24,7 @@ final class VendorProfileControllerTest extends TestCase
             new FakeVendorRepository(null),
             new FakeVendorProfileService(),
             new FakeVendorProfileViewBuilder(null),
+            new VendorProfileRequestResolver(),
         );
 
         $response = $controller->show(404);
@@ -87,6 +89,7 @@ final class VendorProfileControllerTest extends TestCase
             new FakeVendorRepository(new Vendor('Brand')),
             new FakeVendorProfileService(),
             new FakeVendorProfileViewBuilder($view),
+            new VendorProfileRequestResolver(),
         );
         $response = $controller->show(12);
         $payload = self::decodePayload($response);
@@ -104,6 +107,7 @@ final class VendorProfileControllerTest extends TestCase
             new FakeVendorRepository(null),
             new FakeVendorProfileService(),
             new FakeVendorProfileViewBuilder(null),
+            new VendorProfileRequestResolver(),
         );
 
         $response = $controller->update(404, Request::create('/', 'PATCH', content: json_encode(['displayName' => 'Brand'], JSON_THROW_ON_ERROR)));
@@ -119,6 +123,7 @@ final class VendorProfileControllerTest extends TestCase
             new FakeVendorRepository(new Vendor('Brand')),
             new FakeVendorProfileService(),
             new FakeVendorProfileViewBuilder(null),
+            new VendorProfileRequestResolver(),
         );
 
         $response = $controller->update(12, Request::create('/', 'PATCH', content: '{invalid-json'));
@@ -134,6 +139,7 @@ final class VendorProfileControllerTest extends TestCase
             new FakeVendorRepository(new Vendor('Brand')),
             new FakeVendorProfileService(),
             new FakeVendorProfileViewBuilder(null),
+            new VendorProfileRequestResolver(),
         );
 
         $response = $controller->update(12, Request::create('/', 'PATCH', content: json_encode(['socials' => 'x'], JSON_THROW_ON_ERROR)));
@@ -200,6 +206,7 @@ final class VendorProfileControllerTest extends TestCase
             new FakeVendorRepository($vendor),
             $profileService,
             new FakeVendorProfileViewBuilder($view),
+            new VendorProfileRequestResolver(),
         );
 
         $response = $controller->update(12, Request::create('/', 'PATCH', content: json_encode([
@@ -281,6 +288,7 @@ final class VendorProfileControllerTest extends TestCase
             new FakeVendorRepository($vendor),
             $profileService,
             new FakeVendorProfileViewBuilder($view),
+            new VendorProfileRequestResolver(),
         );
 
         $response = $controller->update(12, Request::create('/', 'PATCH', content: json_encode([

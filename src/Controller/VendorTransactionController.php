@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -80,10 +79,11 @@ final class VendorTransactionController extends AbstractController
             // Unknown validation failures must collapse to transaction_validation_error.
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
             $statusCode = VendorTransactionErrorCode::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
+            $payload = $this->payloadForValidationLog($request);
             $this->runtimeLogger->warning('vendor_transaction_create_rejected', [
-                'vendor_id' => $data->vendorId,
-                'order_id' => $data->orderId,
-                'project_id' => $data->projectId,
+                'vendor_id' => $data?->vendorId ?? $payload['vendorId'],
+                'order_id' => $data?->orderId ?? $payload['orderId'],
+                'project_id' => $data?->projectId ?? $payload['projectId'],
                 'error_code' => $errorCode,
                 'status_code' => (string) $statusCode,
             ]);
@@ -276,6 +276,28 @@ final class VendorTransactionController extends AbstractController
         $response->headers->set('Retry-After', (string) $decision->retryAfterSeconds());
 
         return $response;
+    }
+
+    /**
+     * @return array{vendorId: ?string, orderId: ?string, projectId: ?string}
+     */
+    private function payloadForValidationLog(Request $request): array
+    {
+        try {
+            $payload = $request->toArray();
+        } catch (JsonException) {
+            return ['vendorId' => null, 'orderId' => null, 'projectId' => null];
+        }
+
+        $vendorId = isset($payload['vendorId']) ? trim((string) $payload['vendorId']) : null;
+        $orderId = isset($payload['orderId']) ? trim((string) $payload['orderId']) : null;
+        $projectId = isset($payload['projectId']) ? trim((string) $payload['projectId']) : null;
+
+        return [
+            'vendorId' => '' === (string) $vendorId ? null : $vendorId,
+            'orderId' => '' === (string) $orderId ? null : $orderId,
+            'projectId' => '' === (string) $projectId ? null : $projectId,
+        ];
     }
 
     private function writeActorKey(Request $request, ?string $vendorId = null): string
