@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Finance;
 
 use App\Controller\ApiErrorResponseTrait;
+use App\ServiceInterface\Api\TenantQueryRequestResolverInterface;
 use Doctrine\DBAL\Exception;
 use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,14 +18,18 @@ final class VendorFinanceRuntimeController extends AbstractController
 {
     use ApiErrorResponseTrait;
 
-    public function __construct(private readonly VendorFinanceRuntimeViewBuilderInterface $runtimeViewBuilder) {}
+    public function __construct(
+        private readonly VendorFinanceRuntimeViewBuilderInterface $runtimeViewBuilder,
+        private readonly TenantQueryRequestResolverInterface $tenantQueryRequestResolver,
+    ) {}
 
     #[Route('/{vendorId}/finance', methods: ['GET'])]
     /** @throws Exception */
     public function finance(string $vendorId, Request $request): JsonResponse
     {
-        $tenantId = (string) ($request->query->get('tenantId') ?? '');
-        if ('' === $tenantId) {
+        try {
+            $tenantQuery = $this->tenantQueryRequestResolver->resolve($request);
+        } catch (\InvalidArgumentException) {
             return $this->validationErrorResponse(
                 'tenant_id_required',
                 'Provide the tenantId query parameter.',
@@ -36,7 +41,7 @@ final class VendorFinanceRuntimeController extends AbstractController
         $currency = (string) ($request->query->get('currency') ?? 'USD');
 
         $view = $this->runtimeViewBuilder->build(
-            $tenantId,
+            $tenantQuery->tenantId,
             $vendorId,
             $from ? (string) $from : null,
             $to ? (string) $to : null,

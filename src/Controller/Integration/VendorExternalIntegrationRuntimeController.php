@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Integration;
 
 use App\Controller\ApiErrorResponseTrait;
+use App\ServiceInterface\Api\TenantQueryRequestResolverInterface;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,20 +19,22 @@ final class VendorExternalIntegrationRuntimeController extends AbstractControlle
 
     public function __construct(
         private readonly VendorExternalIntegrationRuntimeViewBuilderInterface $runtimeViewBuilder,
+        private readonly TenantQueryRequestResolverInterface $tenantQueryRequestResolver,
     ) {}
 
     #[Route('/{vendorId}/external-integrations', methods: ['GET'])]
     public function show(string $vendorId, Request $request): JsonResponse
     {
-        $tenantId = (string) ($request->query->get('tenantId') ?? '');
-        if ('' === $tenantId) {
+        try {
+            $tenantQuery = $this->tenantQueryRequestResolver->resolve($request);
+        } catch (\InvalidArgumentException) {
             return $this->validationErrorResponse(
                 'tenant_id_required',
                 'Provide the tenantId query parameter.',
             );
         }
 
-        $view = $this->runtimeViewBuilder->build($tenantId, $vendorId);
+        $view = $this->runtimeViewBuilder->build($tenantQuery->tenantId, $vendorId);
 
         return new JsonResponse(['data' => $view->toArray()], 200);
     }

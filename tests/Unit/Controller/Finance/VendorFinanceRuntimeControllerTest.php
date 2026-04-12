@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller\Finance;
 
 use App\Controller\Finance\VendorFinanceRuntimeController;
+use App\DTO\Api\TenantQueryRequestDTO;
 use App\Projection\VendorFinanceRuntimeView;
+use App\ServiceInterface\Api\TenantQueryRequestResolverInterface;
 use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,8 +18,12 @@ final class VendorFinanceRuntimeControllerTest extends TestCase
     {
         $builder = $this->createMock(VendorFinanceRuntimeViewBuilderInterface::class);
         $builder->expects(self::never())->method('build');
+        $resolver = $this->createMock(TenantQueryRequestResolverInterface::class);
+        $resolver->expects(self::once())
+            ->method('resolve')
+            ->willThrowException(new \InvalidArgumentException('tenant_id_required'));
 
-        $controller = new VendorFinanceRuntimeController($builder);
+        $controller = new VendorFinanceRuntimeController($builder, $resolver);
         $response = $controller->finance('vendor-1', new Request());
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -29,6 +35,10 @@ final class VendorFinanceRuntimeControllerTest extends TestCase
     public function testFinanceReturnsDataPayloadWhenTenantIdIsProvided(): void
     {
         $builder = $this->createMock(VendorFinanceRuntimeViewBuilderInterface::class);
+        $resolver = $this->createMock(TenantQueryRequestResolverInterface::class);
+        $resolver->expects(self::once())
+            ->method('resolve')
+            ->willReturn(new TenantQueryRequestDTO('tenant-1'));
         $builder->expects(self::once())
             ->method('build')
             ->with('tenant-1', 'vendor-1', null, null, 'USD')
@@ -42,7 +52,7 @@ final class VendorFinanceRuntimeControllerTest extends TestCase
                 statement: null,
             ));
 
-        $controller = new VendorFinanceRuntimeController($builder);
+        $controller = new VendorFinanceRuntimeController($builder, $resolver);
         $response = $controller->finance('vendor-1', new Request(['tenantId' => 'tenant-1']));
 
         self::assertSame(200, $response->getStatusCode());

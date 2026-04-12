@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller\Integration;
 
 use App\Controller\Integration\VendorExternalIntegrationRuntimeController;
+use App\DTO\Api\TenantQueryRequestDTO;
 use App\Projection\VendorExternalIntegrationRuntimeView;
+use App\ServiceInterface\Api\TenantQueryRequestResolverInterface;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,8 +18,12 @@ final class VendorExternalIntegrationRuntimeControllerTest extends TestCase
     {
         $builder = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderInterface::class);
         $builder->expects(self::never())->method('build');
+        $resolver = $this->createMock(TenantQueryRequestResolverInterface::class);
+        $resolver->expects(self::once())
+            ->method('resolve')
+            ->willThrowException(new \InvalidArgumentException('tenant_id_required'));
 
-        $controller = new VendorExternalIntegrationRuntimeController($builder);
+        $controller = new VendorExternalIntegrationRuntimeController($builder, $resolver);
         $response = $controller->show('vendor-1', new Request());
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -29,6 +35,10 @@ final class VendorExternalIntegrationRuntimeControllerTest extends TestCase
     public function testShowReturnsRuntimeProjectionWhenTenantIdIsProvided(): void
     {
         $builder = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderInterface::class);
+        $resolver = $this->createMock(TenantQueryRequestResolverInterface::class);
+        $resolver->expects(self::once())
+            ->method('resolve')
+            ->willReturn(new TenantQueryRequestDTO('tenant-1'));
         $builder->expects(self::once())
             ->method('build')
             ->with('tenant-1', 'vendor-1')
@@ -42,7 +52,7 @@ final class VendorExternalIntegrationRuntimeControllerTest extends TestCase
                 surfaces: ['crm', 'webhooks'],
             ));
 
-        $controller = new VendorExternalIntegrationRuntimeController($builder);
+        $controller = new VendorExternalIntegrationRuntimeController($builder, $resolver);
         $response = $controller->show('vendor-1', new Request(['tenantId' => 'tenant-1']));
 
         self::assertSame(200, $response->getStatusCode());
