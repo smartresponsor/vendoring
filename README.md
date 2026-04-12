@@ -174,6 +174,7 @@ Common error codes:
 - validation/invariant violations (422)
 - `tenant_id_required`, `statement_from_required`, `statement_to_required` (422 for statement/runtime query validation)
 - `retention_fee_percent_required`, `retention_fee_percent_out_of_range`, and `payout_validation_error` (422 for payout create validation)
+- `retentionFeePercent` domain for payout create is inclusive `0.0..1.0`
 
 Authentication expectation: Bearer token in `Authorization` header for write operations.
 

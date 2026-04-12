@@ -82,4 +82,27 @@ final class VendorPayoutRequestServiceTest extends TestCase
             'retentionFeePercent' => 1.5,
         ]);
     }
+
+    public function testToCreateDtoAcceptsRetentionFeePercentAtBoundaryValues(): void
+    {
+        $service = new VendorPayoutRequestService();
+
+        $zeroFeeDto = $service->toCreateDto([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => 1000,
+            'retentionFeePercent' => 0.0,
+        ]);
+        $fullFeeDto = $service->toCreateDto([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => 1000,
+            'retentionFeePercent' => 1.0,
+        ]);
+
+        self::assertSame(0.0, $zeroFeeDto->retentionFeePercent);
+        self::assertSame(1.0, $fullFeeDto->retentionFeePercent);
+    }
 }
