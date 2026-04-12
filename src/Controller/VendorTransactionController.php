@@ -16,6 +16,7 @@ use App\ValueObject\Traffic\WriteRateLimitDecision;
 use App\ValueObject\VendorTransactionErrorCode;
 use Doctrine\ORM\Exception\ManagerException;
 use InvalidArgumentException;
+use Throwable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -41,13 +42,13 @@ final class VendorTransactionController extends AbstractController
      * Request schema: vendorId:string, orderId:string, projectId:?string, amount:string(decimal).
      * Success response: {id:int,status:string}.
      * Error responses: malformed_json(400), duplicate_transaction(409), validation errors(422).
-     */
-    /**
      * @throws ManagerException
+     * @throws Throwable
      */
     #[Route('', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
+        $data = null;
         if ($authenticationResponse = $this->enforceTransactionWriteAuthentication($request, null, null)) {
             return $authenticationResponse;
         }
@@ -80,9 +81,9 @@ final class VendorTransactionController extends AbstractController
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
             $statusCode = VendorTransactionErrorCode::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
             $this->runtimeLogger->warning('vendor_transaction_create_rejected', [
-                'vendor_id' => isset($data) ? $data->vendorId : null,
-                'order_id' => isset($data) ? $data->orderId : null,
-                'project_id' => isset($data) ? $data->projectId : null,
+                'vendor_id' => $data->vendorId,
+                'order_id' => $data->orderId,
+                'project_id' => $data->projectId,
                 'error_code' => $errorCode,
                 'status_code' => (string) $statusCode,
             ]);
@@ -115,9 +116,8 @@ final class VendorTransactionController extends AbstractController
      * Request schema: {status:string}.
      * Success response: {id:int,status:string}.
      * Error responses: malformed_json(400), not_found(404), validation errors(422).
-     */
-    /**
      * @throws ManagerException
+     * @throws Throwable
      */
     #[Route('/vendor/{vendorId}/{id}/status', methods: ['POST'])]
     public function updateStatus(string $vendorId, int $id, Request $request): JsonResponse

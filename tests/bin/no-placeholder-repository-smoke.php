@@ -20,6 +20,7 @@ $skipFiles = [
     $root . '/bin/generate-phpdocumentor-site.php',
     $root . '/bin/generate-rc-evidence.php',
     $root . '/config/reference.php',
+    $root . '/.php-cs-fixer.cache',
 ];
 
 $iterator = new RecursiveIteratorIterator(

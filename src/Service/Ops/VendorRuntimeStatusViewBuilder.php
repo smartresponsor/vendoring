@@ -61,14 +61,19 @@ final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStat
             vendorId: $vendorId,
         )->toArray();
 
+        $statement = $statementDelivery['statement'];
+        $export = $statementDelivery['export'];
+        $recipients = $statementDelivery['recipients'];
+
         $surfaceStatus = [
             'ownership' => null !== $ownership,
             'finance' => [] !== $finance,
-            'statementDelivery' => [] !== $statementDelivery,
+            'statementDelivery' => [] !== $statement || null !== $export || [] !== $recipients,
             'externalIntegration' => [] !== $externalIntegration,
         ];
 
-        $generatedAt = new DateTimeImmutable();
+        $generatedAtObject = new DateTimeImmutable();
+        $generatedAt = $generatedAtObject->format(DATE_ATOM);
 
         return new VendorRuntimeStatusView(
             tenantId: $tenantId,
@@ -79,7 +84,7 @@ final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStat
             statementDelivery: $statementDelivery,
             externalIntegration: $externalIntegration,
             surfaceStatus: $surfaceStatus,
-            generatedAt: $generatedAt->format(DATE_ATOM),
+            generatedAt: $generatedAt,
         );
     }
 }

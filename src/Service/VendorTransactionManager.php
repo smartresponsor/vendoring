@@ -15,8 +15,10 @@ use App\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
 use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\VendorTransactionData;
 use App\ValueObject\VendorTransactionErrorCode;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
+use Throwable;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorTransactionManager implements VendorTransactionManagerInterface
@@ -31,6 +33,9 @@ final readonly class VendorTransactionManager implements VendorTransactionManage
         private RuntimeLoggerInterface                 $runtimeLogger,
     ) {}
 
+    /**
+     * @throws Throwable
+     */
     public function createTransaction(VendorTransactionData $data): VendorTransaction
     {
         $vendorId = $this->normalizeRequiredIdentity($data->vendorId, VendorTransactionErrorCode::VENDOR_ID_REQUIRED);
@@ -56,7 +61,23 @@ final readonly class VendorTransactionManager implements VendorTransactionManage
         );
 
         $this->em->persist($tx);
-        $this->em->flush();
+
+        try {
+            $this->em->flush();
+        } catch (Throwable $exception) {
+            if (!$exception instanceof UniqueConstraintViolationException) {
+                throw $exception;
+            }
+
+            $this->runtimeLogger->warning('vendor_transaction_duplicate_rejected', [
+                'vendor_id' => $vendorId,
+                'order_id' => $orderId,
+                'project_id' => $projectId,
+                'error_code' => VendorTransactionErrorCode::DUPLICATE_TRANSACTION,
+            ]);
+
+            throw new InvalidArgumentException(VendorTransactionErrorCode::DUPLICATE_TRANSACTION, previous: $exception);
+        }
 
         $this->dispatcher->dispatch(new VendorTransactionEvent($tx), VendorTransactionEvent::EVENT_NAME);
         $this->runtimeLogger->info('vendor_transaction_created', [

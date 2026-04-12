@@ -17,6 +17,7 @@ use App\ServiceInterface\VendorTransactionManagerInterface;
 use App\ValueObject\VendorTransactionStatus;
 use App\ValueObject\VendorTransactionData;
 use InvalidArgumentException;
+use Throwable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -56,6 +57,8 @@ final class VendorTransactionOperatorController extends AbstractController
 
     /**
      * Handle minimal operator creation form submission.
+     *
+     * @throws Throwable
      */
     #[Route('/{vendorId}/create', name: 'app_ops_vendor_transaction_operator_create', methods: ['POST'])]
     public function create(string $vendorId, Request $request): RedirectResponse
@@ -236,6 +239,9 @@ final class VendorTransactionOperatorController extends AbstractController
             || $request->request->has('amount');
     }
 
+    /**
+     * @throws Throwable
+     */
     private function handleFlatCreateSubmission(string $vendorId, Request $request): RedirectResponse
     {
         $orderId = trim((string) $request->request->get('orderId', ''));

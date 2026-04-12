@@ -87,6 +87,6 @@ final class VendorRuntimeFinanceConsistencyTest extends TestCase
         self::assertNull($payload['finance']['statement']);
         self::assertSame([], $payload['statementDelivery']['recipients']);
         self::assertTrue($payload['surfaceStatus']['finance']);
-        self::assertTrue($payload['surfaceStatus']['statementDelivery']);
+        self::assertFalse($payload['surfaceStatus']['statementDelivery']);
     }
 }

@@ -26,6 +26,7 @@ foreach ($iterator as $file) {
         '.deploy/',
         '.consuming/',
         'tools/report/VendorConfigGuardReport.php',
+        '.php-cs-fixer.cache',
         'var/.php-cs-fixer.cache',
         'composer.json',
         'composer.lock',

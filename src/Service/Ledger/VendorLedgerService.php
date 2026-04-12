@@ -26,7 +26,8 @@ final readonly class VendorLedgerService implements VendorLedgerServiceInterface
     {
         $createdAt = $dto->occurredAt;
         if (null === $createdAt) {
-            $createdAt = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+            $occurredAt = new DateTimeImmutable();
+            $createdAt = $occurredAt->format('Y-m-d H:i:s');
         }
         $amount = $dto->amountCents / 100;
 

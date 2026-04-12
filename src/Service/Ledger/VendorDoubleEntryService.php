@@ -27,7 +27,8 @@ final readonly class VendorDoubleEntryService implements VendorDoubleEntryServic
     {
         $timestamp = $dto->occurredAt;
         if (null === $timestamp) {
-            $timestamp = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+            $occurredAt = new DateTimeImmutable();
+            $timestamp = $occurredAt->format('Y-m-d H:i:s');
         }
 
         $entry = new LedgerEntry(

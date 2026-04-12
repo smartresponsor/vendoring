@@ -11,6 +11,9 @@ use App\ValueObject\VendorTransactionData;
 
 interface VendorTransactionManagerInterface
 {
+    /**
+     * @throws \Throwable
+     */
     public function createTransaction(VendorTransactionData $data): VendorTransaction;
 
     public function updateStatus(VendorTransaction $tx, string $status): VendorTransaction;

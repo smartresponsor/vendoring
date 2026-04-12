@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 // This file is auto-generated and is for apps only. Bundles SHOULD NOT rely on its content.
 
@@ -33,7 +34,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     type?: string|null,
  *     ignore_errors?: bool,
  * }>
- * @psalm-type ParametersConfig = array<string, scalar|\UnitEnum|array<scalar|\UnitEnum|array<mixed>|Param|null>|Param|null>
+ * @psalm-type ParametersConfig = array<string, scalar|\UnitEnum|array<scalar|\UnitEnum|array|Param|null>|Param|null>
  * @psalm-type ArgumentsType = list<mixed>|array<string, mixed>
  * @psalm-type CallType = array<string, ArgumentsType>|array{0:string, 1?:ArgumentsType, 2?:bool}|array{method:string, arguments?:ArgumentsType, returns_clone?:bool}
  * @psalm-type TagsType = list<string|array<string, array<string, mixed>>> // arrays inside the list must have only one element, with the tag name as the key
@@ -911,10 +912,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     media_types?: list<scalar|Param|null>,
  *     html_config?: array{ // UI configuration options
  *         assets_mode?: scalar|Param|null, // Default: "cdn"
- *         swagger_ui_config?: array<mixed>,
- *         redocly_config?: array<mixed>,
- *         scalar_config?: array<mixed>,
- *         stoplight_config?: array<mixed>,
+ *         swagger_ui_config?: array<array-key, mixed>,
+ *         redocly_config?: array<array-key, mixed>,
+ *         stoplight_config?: array<array-key, mixed>,
  *     },
  *     areas?: array<string, array{ // Default: {"default":{"path_patterns":[],"host_patterns":[],"with_attribute":false,"documentation":[],"name_patterns":[],"disable_default_routes":false,"cache":[],"security":[]}}
  *         path_patterns?: list<scalar|Param|null>,

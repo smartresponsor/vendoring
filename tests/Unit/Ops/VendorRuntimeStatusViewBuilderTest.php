@@ -113,7 +113,7 @@ final class VendorRuntimeStatusViewBuilderTest extends TestCase
         self::assertNull($payload['ownership']);
         self::assertFalse($payload['surfaceStatus']['ownership']);
         self::assertTrue($payload['surfaceStatus']['finance']);
-        self::assertTrue($payload['surfaceStatus']['statementDelivery']);
+        self::assertFalse($payload['surfaceStatus']['statementDelivery']);
         self::assertTrue($payload['surfaceStatus']['externalIntegration']);
     }
 
