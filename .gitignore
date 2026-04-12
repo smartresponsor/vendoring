@@ -35,6 +35,7 @@ Thumbs.db
 /var/runtime/
 /report/
 /var/report/
+/var/.php-cs-fixer.cache
 
 # ──────────────────────────────────────────────
 #  📦 Node / Frontend
