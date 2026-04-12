@@ -105,4 +105,20 @@ final class VendorPayoutRequestServiceTest extends TestCase
         self::assertSame(0.0, $zeroFeeDto->retentionFeePercent);
         self::assertSame(1.0, $fullFeeDto->retentionFeePercent);
     }
+
+    public function testToCreateDtoAcceptsTrimmedNumericStringInputsForPayoutThresholdAndFee(): void
+    {
+        $service = new VendorPayoutRequestService();
+
+        $dto = $service->toCreateDto([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => ' 1000 ',
+            'retentionFeePercent' => ' 0.25 ',
+        ]);
+
+        self::assertSame(1000, $dto->thresholdCents);
+        self::assertSame(0.25, $dto->retentionFeePercent);
+    }
 }

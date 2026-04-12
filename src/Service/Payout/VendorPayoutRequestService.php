@@ -70,8 +70,10 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             return $value;
         }
 
-        if (is_numeric($value)) {
-            return (int) $value;
+        $numericCandidate = $this->normalizedNumericCandidate($value);
+
+        if (null !== $numericCandidate && is_numeric($numericCandidate)) {
+            return (int) $numericCandidate;
         }
 
         throw new InvalidArgumentException('thresholdCents required');
@@ -87,8 +89,10 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             $parsed = (float) $value;
         }
 
-        if (is_numeric($value)) {
-            $parsed = (float) $value;
+        $numericCandidate = $this->normalizedNumericCandidate($value);
+
+        if (null !== $numericCandidate && is_numeric($numericCandidate)) {
+            $parsed = (float) $numericCandidate;
         }
 
         if (null === $parsed) {
@@ -100,5 +104,20 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
         }
 
         return $parsed;
+    }
+
+    private function normalizedNumericCandidate(mixed $value): string|int|float|null
+    {
+        if (is_string($value)) {
+            $trimmed = trim($value);
+
+            return '' === $trimmed ? null : $trimmed;
+        }
+
+        if (is_int($value) || is_float($value)) {
+            return $value;
+        }
+
+        return null;
     }
 }
