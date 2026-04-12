@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Statement;
 
 use App\Controller\ApiErrorResponseTrait;
-use App\Controller\StatementQueryValidationResponseTrait;
+use App\Exception\ApiQueryValidationException;
 use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
 use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
@@ -18,7 +18,6 @@ use Symfony\Component\Routing\Attribute\Route;
 final class VendorStatementDeliveryRuntimeController extends AbstractController
 {
     use ApiErrorResponseTrait;
-    use StatementQueryValidationResponseTrait;
 
     public function __construct(
         private readonly VendorStatementDeliveryRuntimeViewBuilderInterface $runtimeViewBuilder,
@@ -31,8 +30,8 @@ final class VendorStatementDeliveryRuntimeController extends AbstractController
     {
         try {
             $this->statementWindowQueryRequestResolver->resolve($request);
-        } catch (\InvalidArgumentException $exception) {
-            return $this->statementQueryValidationResponse($exception);
+        } catch (ApiQueryValidationException $exception) {
+            return $this->validationErrorResponse($exception->errorCode(), $exception->hint());
         }
 
         $runtimeRequest = $this->requestResolver->resolveDeliveryRuntimeRequest($vendorId, $request);

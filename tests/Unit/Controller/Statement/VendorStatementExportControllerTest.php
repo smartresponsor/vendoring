@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Controller\Statement;
 
 use App\Controller\Statement\VendorStatementExportController;
 use App\DTO\Api\StatementWindowQueryRequestDTO;
+use App\Exception\ApiQueryValidationException;
 use App\Service\Statement\VendorStatementRequestResolver;
 use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\Tests\Support\Statement\FakeStatementExporterPDF;
@@ -22,7 +23,7 @@ final class VendorStatementExportControllerTest extends TestCase
         $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
         $windowResolver->expects(self::once())
             ->method('resolve')
-            ->willThrowException(new \InvalidArgumentException('tenant_id_required'));
+            ->willThrowException(ApiQueryValidationException::fromConstraintMessage('tenant_id_required'));
 
         $controller = new VendorStatementExportController(
             $statementService,

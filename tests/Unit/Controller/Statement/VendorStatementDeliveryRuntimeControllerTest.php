@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Controller\Statement;
 use App\Controller\Statement\VendorStatementDeliveryRuntimeController;
 use App\DTO\Api\StatementWindowQueryRequestDTO;
 use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
+use App\Exception\ApiQueryValidationException;
 use App\Projection\VendorStatementDeliveryRuntimeView;
 use App\Service\Statement\VendorStatementRequestResolver;
 use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
@@ -30,7 +31,7 @@ final class VendorStatementDeliveryRuntimeControllerTest extends TestCase
     {
         $this->statementWindowQueryRequestResolver->expects(self::once())
             ->method('resolve')
-            ->willThrowException(new \InvalidArgumentException('statement_to_required'));
+            ->willThrowException(ApiQueryValidationException::fromConstraintMessage('statement_to_required'));
         $controller = new VendorStatementDeliveryRuntimeController(
             $this->builder,
             new VendorStatementRequestResolver(),

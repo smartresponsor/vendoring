@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Finance;
 
 use App\Controller\ApiErrorResponseTrait;
+use App\Exception\ApiQueryValidationException;
 use App\ServiceInterface\Api\TenantQueryRequestResolverInterface;
 use Doctrine\DBAL\Exception;
 use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
@@ -29,10 +30,10 @@ final class VendorFinanceRuntimeController extends AbstractController
     {
         try {
             $tenantQuery = $this->tenantQueryRequestResolver->resolve($request);
-        } catch (\InvalidArgumentException) {
+        } catch (ApiQueryValidationException $exception) {
             return $this->validationErrorResponse(
-                'tenant_id_required',
-                'Provide the tenantId query parameter.',
+                $exception->errorCode(),
+                $exception->hint(),
             );
         }
 

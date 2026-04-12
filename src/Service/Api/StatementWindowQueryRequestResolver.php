@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Service\Api;
 
 use App\DTO\Api\StatementWindowQueryRequestDTO;
+use App\Exception\ApiQueryValidationException;
 use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
-use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -26,7 +26,7 @@ final readonly class StatementWindowQueryRequestResolver implements StatementWin
         $violations = $this->validator->validate($dto);
         if (0 !== $violations->count()) {
             $firstViolation = $violations->get(0);
-            throw new InvalidArgumentException((string) $firstViolation?->getMessage());
+            throw ApiQueryValidationException::fromConstraintMessage((string) $firstViolation?->getMessage());
         }
 
         return $dto;

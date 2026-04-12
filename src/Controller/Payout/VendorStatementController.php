@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Payout;
 
 use App\Controller\ApiErrorResponseTrait;
-use App\Controller\StatementQueryValidationResponseTrait;
+use App\Exception\ApiQueryValidationException;
 use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use Doctrine\DBAL\Exception;
 use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
@@ -19,7 +19,6 @@ use Symfony\Component\Routing\Attribute\Route;
 final class VendorStatementController extends AbstractController
 {
     use ApiErrorResponseTrait;
-    use StatementQueryValidationResponseTrait;
 
     public function __construct(
         private readonly VendorStatementServiceInterface $svc,
@@ -33,8 +32,8 @@ final class VendorStatementController extends AbstractController
     {
         try {
             $this->statementWindowQueryRequestResolver->resolve($r);
-        } catch (\InvalidArgumentException $exception) {
-            return $this->statementQueryValidationResponse($exception);
+        } catch (ApiQueryValidationException $exception) {
+            return $this->validationErrorResponse($exception->errorCode(), $exception->hint());
         }
 
         $dto = $this->requestResolver->resolveStatementRequest($vendorId, $r);

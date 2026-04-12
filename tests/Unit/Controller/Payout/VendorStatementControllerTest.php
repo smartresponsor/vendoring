@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Controller\Payout;
 
 use App\Controller\Payout\VendorStatementController;
 use App\DTO\Api\StatementWindowQueryRequestDTO;
+use App\Exception\ApiQueryValidationException;
 use App\Service\Statement\VendorStatementRequestResolver;
 use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\Tests\Support\Statement\FakeVendorStatementService;
@@ -19,7 +20,7 @@ final class VendorStatementControllerTest extends TestCase
         $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
         $windowResolver->expects(self::once())
             ->method('resolve')
-            ->willThrowException(new \InvalidArgumentException('statement_from_required'));
+            ->willThrowException(ApiQueryValidationException::fromConstraintMessage('statement_from_required'));
         $controller = new VendorStatementController(new FakeVendorStatementService(['items' => []]), new VendorStatementRequestResolver(), $windowResolver);
 
         $response = $controller->build('vendor-1', new Request());

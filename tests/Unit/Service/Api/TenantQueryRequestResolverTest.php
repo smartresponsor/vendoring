@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Service\Api;
 
 use App\Service\Api\TenantQueryRequestResolver;
-use InvalidArgumentException;
+use App\Exception\ApiQueryValidationException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validation;
@@ -25,7 +25,7 @@ final class TenantQueryRequestResolverTest extends TestCase
     {
         $resolver = new TenantQueryRequestResolver(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ApiQueryValidationException::class);
         $this->expectExceptionMessage('tenant_id_required');
 
         $resolver->resolve(new Request());

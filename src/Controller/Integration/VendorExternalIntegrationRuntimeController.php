@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Integration;
 
 use App\Controller\ApiErrorResponseTrait;
+use App\Exception\ApiQueryValidationException;
 use App\ServiceInterface\Api\TenantQueryRequestResolverInterface;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,10 +28,10 @@ final class VendorExternalIntegrationRuntimeController extends AbstractControlle
     {
         try {
             $tenantQuery = $this->tenantQueryRequestResolver->resolve($request);
-        } catch (\InvalidArgumentException) {
+        } catch (ApiQueryValidationException $exception) {
             return $this->validationErrorResponse(
-                'tenant_id_required',
-                'Provide the tenantId query parameter.',
+                $exception->errorCode(),
+                $exception->hint(),
             );
         }
 
