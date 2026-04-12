@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Payout;
 
 use App\Controller\ApiErrorResponseTrait;
+use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use Doctrine\DBAL\Exception;
 use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
@@ -21,12 +22,22 @@ final class VendorStatementController extends AbstractController
     public function __construct(
         private readonly VendorStatementServiceInterface $svc,
         private readonly VendorStatementRequestResolverInterface $requestResolver,
+        private readonly StatementWindowQueryRequestResolverInterface $statementWindowQueryRequestResolver,
     ) {}
 
     #[Route('/{vendorId}', methods: ['GET'])]
     /** @throws Exception */
     public function build(string $vendorId, Request $r): JsonResponse
     {
+        try {
+            $this->statementWindowQueryRequestResolver->resolve($r);
+        } catch (\InvalidArgumentException) {
+            return $this->validationErrorResponse(
+                'statement_params_required',
+                'Provide tenantId, from, and to query parameters.',
+            );
+        }
+
         $dto = $this->requestResolver->resolveStatementRequest($vendorId, $r);
         if (null === $dto) {
             return $this->validationErrorResponse(

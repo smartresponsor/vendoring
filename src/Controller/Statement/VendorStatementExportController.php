@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Statement;
 
 use App\Controller\ApiErrorResponseTrait;
+use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\ServiceInterface\Statement\StatementExporterPDFInterface;
 use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
@@ -30,6 +31,7 @@ final class VendorStatementExportController extends AbstractController
         private readonly VendorStatementServiceInterface $svc,
         private readonly StatementExporterPDFInterface $pdf,
         private readonly VendorStatementRequestResolverInterface $requestResolver,
+        private readonly StatementWindowQueryRequestResolverInterface $statementWindowQueryRequestResolver,
     ) {}
 
     /**
@@ -50,6 +52,15 @@ final class VendorStatementExportController extends AbstractController
     #[Route('/{vendorId}/export', methods: ['GET'])]
     public function export(string $vendorId, Request $r): JsonResponse
     {
+        try {
+            $this->statementWindowQueryRequestResolver->resolve($r);
+        } catch (\InvalidArgumentException) {
+            return $this->validationErrorResponse(
+                'statement_params_required',
+                'Provide tenantId, from, and to query parameters.',
+            );
+        }
+
         $dto = $this->requestResolver->resolveStatementRequest($vendorId, $r);
         if (null === $dto) {
             return $this->validationErrorResponse(

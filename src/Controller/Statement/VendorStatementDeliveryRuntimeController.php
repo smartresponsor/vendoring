@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Statement;
 
 use App\Controller\ApiErrorResponseTrait;
+use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
 use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,11 +21,21 @@ final class VendorStatementDeliveryRuntimeController extends AbstractController
     public function __construct(
         private readonly VendorStatementDeliveryRuntimeViewBuilderInterface $runtimeViewBuilder,
         private readonly VendorStatementRequestResolverInterface $requestResolver,
+        private readonly StatementWindowQueryRequestResolverInterface $statementWindowQueryRequestResolver,
     ) {}
 
     #[Route('/{vendorId}/statement-delivery', methods: ['GET'])]
     public function show(string $vendorId, Request $request): JsonResponse
     {
+        try {
+            $this->statementWindowQueryRequestResolver->resolve($request);
+        } catch (\InvalidArgumentException) {
+            return $this->validationErrorResponse(
+                'statement_runtime_params_required',
+                'Provide tenantId, from, and to query parameters.',
+            );
+        }
+
         $runtimeRequest = $this->requestResolver->resolveDeliveryRuntimeRequest($vendorId, $request);
         if (null === $runtimeRequest) {
             return $this->validationErrorResponse(

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller\Statement;
 
 use App\Controller\Statement\VendorStatementExportController;
+use App\DTO\Api\StatementWindowQueryRequestDTO;
 use App\Service\Statement\VendorStatementRequestResolver;
+use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\Tests\Support\Statement\FakeStatementExporterPDF;
 use App\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
@@ -30,7 +32,16 @@ final class VendorStatementExportControllerTest extends TestCase
             'closing' => 10.0,
             'items' => [],
         ]);
-        $controller = new VendorStatementExportController($statementService, new FakeStatementExporterPDF($pdfPath), new VendorStatementRequestResolver());
+        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver->expects(self::once())
+            ->method('resolve')
+            ->willReturn(new StatementWindowQueryRequestDTO('tenant-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD'));
+        $controller = new VendorStatementExportController(
+            $statementService,
+            new FakeStatementExporterPDF($pdfPath),
+            new VendorStatementRequestResolver(),
+            $windowResolver,
+        );
 
         $response = $controller->export('vendor-1', new Request([
             'tenantId' => 'tenant-1',
@@ -65,7 +76,16 @@ final class VendorStatementExportControllerTest extends TestCase
             'closing' => 10.0,
             'items' => [],
         ]);
-        $controller = new VendorStatementExportController($statementService, new FakeStatementExporterPDF(sys_get_temp_dir() . '/missing-vendoring-export.pdf'), new VendorStatementRequestResolver());
+        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver->expects(self::once())
+            ->method('resolve')
+            ->willReturn(new StatementWindowQueryRequestDTO('tenant-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD'));
+        $controller = new VendorStatementExportController(
+            $statementService,
+            new FakeStatementExporterPDF(sys_get_temp_dir() . '/missing-vendoring-export.pdf'),
+            new VendorStatementRequestResolver(),
+            $windowResolver,
+        );
 
         $response = $controller->export('vendor-1', new Request([
             'tenantId' => 'tenant-1',

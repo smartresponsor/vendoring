@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller\Payout;
 
 use App\Controller\Payout\VendorStatementController;
+use App\DTO\Api\StatementWindowQueryRequestDTO;
 use App\Service\Statement\VendorStatementRequestResolver;
+use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +16,11 @@ final class VendorStatementControllerTest extends TestCase
 {
     public function testBuildReturnsValidationErrorWhenParamsMissing(): void
     {
-        $controller = new VendorStatementController(new FakeVendorStatementService(['items' => []]), new VendorStatementRequestResolver());
+        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver->expects(self::once())
+            ->method('resolve')
+            ->willThrowException(new \InvalidArgumentException('statement_params_required'));
+        $controller = new VendorStatementController(new FakeVendorStatementService(['items' => []]), new VendorStatementRequestResolver(), $windowResolver);
 
         $response = $controller->build('vendor-1', new Request());
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -38,7 +44,11 @@ final class VendorStatementControllerTest extends TestCase
             ],
         ]);
 
-        $controller = new VendorStatementController($service, new VendorStatementRequestResolver());
+        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver->expects(self::once())
+            ->method('resolve')
+            ->willReturn(new StatementWindowQueryRequestDTO('tenant-1', '2026-03-01', '2026-03-31', 'USD'));
+        $controller = new VendorStatementController($service, new VendorStatementRequestResolver(), $windowResolver);
         $request = new Request([
             'tenantId' => 'tenant-1',
             'from' => '2026-03-01',

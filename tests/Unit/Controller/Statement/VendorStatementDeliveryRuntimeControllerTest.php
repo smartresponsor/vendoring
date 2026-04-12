@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Controller\Statement;
 
 use App\Controller\Statement\VendorStatementDeliveryRuntimeController;
+use App\DTO\Api\StatementWindowQueryRequestDTO;
 use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Projection\VendorStatementDeliveryRuntimeView;
 use App\Service\Statement\VendorStatementRequestResolver;
+use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -16,15 +18,24 @@ use Symfony\Component\HttpFoundation\Request;
 final class VendorStatementDeliveryRuntimeControllerTest extends TestCase
 {
     private VendorStatementDeliveryRuntimeViewBuilderInterface&MockObject $builder;
+    private StatementWindowQueryRequestResolverInterface&MockObject $statementWindowQueryRequestResolver;
 
     protected function setUp(): void
     {
         $this->builder = $this->createMock(VendorStatementDeliveryRuntimeViewBuilderInterface::class);
+        $this->statementWindowQueryRequestResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
     }
 
     public function testShowReturnsValidationErrorWhenParamsMissing(): void
     {
-        $controller = new VendorStatementDeliveryRuntimeController($this->builder, new VendorStatementRequestResolver());
+        $this->statementWindowQueryRequestResolver->expects(self::once())
+            ->method('resolve')
+            ->willThrowException(new \InvalidArgumentException('statement_runtime_params_required'));
+        $controller = new VendorStatementDeliveryRuntimeController(
+            $this->builder,
+            new VendorStatementRequestResolver(),
+            $this->statementWindowQueryRequestResolver,
+        );
 
         $response = $controller->show('vendor-1', new Request());
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -36,6 +47,9 @@ final class VendorStatementDeliveryRuntimeControllerTest extends TestCase
 
     public function testShowBuildsRuntimeViewFromResolvedRequest(): void
     {
+        $this->statementWindowQueryRequestResolver->expects(self::once())
+            ->method('resolve')
+            ->willReturn(new StatementWindowQueryRequestDTO('tenant-1', '2026-03-01', '2026-03-31', 'USD'));
         $this->builder->expects(self::once())
             ->method('build')
             ->with(self::callback(function (VendorStatementDeliveryRuntimeRequestDTO $request): bool {
@@ -56,7 +70,11 @@ final class VendorStatementDeliveryRuntimeControllerTest extends TestCase
                 recipients: [],
             ));
 
-        $controller = new VendorStatementDeliveryRuntimeController($this->builder, new VendorStatementRequestResolver());
+        $controller = new VendorStatementDeliveryRuntimeController(
+            $this->builder,
+            new VendorStatementRequestResolver(),
+            $this->statementWindowQueryRequestResolver,
+        );
         $response = $controller->show('vendor-1', new Request([
             'tenantId' => 'tenant-1',
             'from' => '2026-03-01',
