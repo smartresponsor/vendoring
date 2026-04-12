@@ -121,4 +121,20 @@ final class VendorPayoutRequestServiceTest extends TestCase
         self::assertSame(1000, $dto->thresholdCents);
         self::assertSame(0.25, $dto->retentionFeePercent);
     }
+
+    public function testToCreateDtoRejectsWhitespaceOnlyRetentionFeePercent(): void
+    {
+        $service = new VendorPayoutRequestService();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('retentionFeePercent required');
+
+        $service->toCreateDto([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => 1000,
+            'retentionFeePercent' => '   ',
+        ]);
+    }
 }
