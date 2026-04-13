@@ -54,6 +54,7 @@ Typical status semantics:
 * `422` statement/runtime query validation (`tenant_id_required`, `statement_from_required`, `statement_to_required`)
 * `422` payout query/payload validation (`retention_fee_percent_required`, `retention_fee_percent_out_of_range`, `payout_validation_error`)
 * `retentionFeePercent` is accepted only in the inclusive range `0.0..1.0`
+* whitespace-only `retentionFeePercent` is treated as missing (`retention_fee_percent_required`)
 
 == Lifecycle/status semantics
 
