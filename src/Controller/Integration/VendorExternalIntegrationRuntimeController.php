@@ -1,9 +1,13 @@
 <?php
 
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller\Integration;
 
+use App\Controller\ApiErrorResponseTrait;
+use App\Exception\ApiQueryValidationException;
+use App\ServiceInterface\Api\TenantQueryRequestResolverInterface;
 use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,19 +17,26 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/vendor/runtime')]
 final class VendorExternalIntegrationRuntimeController extends AbstractController
 {
+    use ApiErrorResponseTrait;
+
     public function __construct(
         private readonly VendorExternalIntegrationRuntimeViewBuilderInterface $runtimeViewBuilder,
+        private readonly TenantQueryRequestResolverInterface $tenantQueryRequestResolver,
     ) {}
 
     #[Route('/{vendorId}/external-integrations', methods: ['GET'])]
     public function show(string $vendorId, Request $request): JsonResponse
     {
-        $tenantId = (string) ($request->query->get('tenantId') ?? '');
-        if ('' === $tenantId) {
-            return new JsonResponse(['error' => 'tenantId is required'], 422);
+        try {
+            $tenantQuery = $this->tenantQueryRequestResolver->resolve($request);
+        } catch (ApiQueryValidationException $exception) {
+            return $this->validationErrorResponse(
+                $exception->errorCode(),
+                $exception->hint(),
+            );
         }
 
-        $view = $this->runtimeViewBuilder->build($tenantId, $vendorId);
+        $view = $this->runtimeViewBuilder->build($tenantQuery->tenantId, $vendorId);
 
         return new JsonResponse(['data' => $view->toArray()], 200);
     }

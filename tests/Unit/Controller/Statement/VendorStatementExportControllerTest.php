@@ -1,12 +1,15 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Controller\Statement;
 
 use App\Controller\Statement\VendorStatementExportController;
+use App\DTO\Api\StatementWindowQueryRequestDTO;
+use App\Exception\ApiQueryValidationException;
 use App\Service\Statement\VendorStatementRequestResolver;
+use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\Tests\Support\Statement\FakeStatementExporterPDF;
 use App\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
@@ -15,6 +18,29 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class VendorStatementExportControllerTest extends TestCase
 {
+    public function testExportReturnsValidationErrorWhenTenantIdIsMissing(): void
+    {
+        $statementService = new FakeVendorStatementService(['items' => []]);
+        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver->expects(self::once())
+            ->method('resolve')
+            ->willThrowException(ApiQueryValidationException::fromConstraintMessage('tenant_id_required'));
+
+        $controller = new VendorStatementExportController(
+            $statementService,
+            new FakeStatementExporterPDF(sys_get_temp_dir() . '/unused-vendoring-export.pdf'),
+            new VendorStatementRequestResolver(),
+            $windowResolver,
+        );
+
+        $response = $controller->export('vendor-1', new Request());
+        $payload = self::decodePayload($response);
+
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('tenant_id_required', $payload['error'] ?? null);
+        self::assertSame('Provide the tenantId query parameter.', $payload['hint'] ?? null);
+    }
+
     public function testExportReturnsBase64PayloadWhenPdfWasGenerated(): void
     {
         $pdfPath = sys_get_temp_dir() . '/vendoring-export-test.pdf';
@@ -31,7 +57,16 @@ final class VendorStatementExportControllerTest extends TestCase
             'closing' => 10.0,
             'items' => [],
         ]);
-        $controller = new VendorStatementExportController($statementService, new FakeStatementExporterPDF($pdfPath), new VendorStatementRequestResolver());
+        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver->expects(self::once())
+            ->method('resolve')
+            ->willReturn(new StatementWindowQueryRequestDTO('tenant-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD'));
+        $controller = new VendorStatementExportController(
+            $statementService,
+            new FakeStatementExporterPDF($pdfPath),
+            new VendorStatementRequestResolver(),
+            $windowResolver,
+        );
 
         $response = $controller->export('vendor-1', new Request([
             'tenantId' => 'tenant-1',
@@ -66,7 +101,16 @@ final class VendorStatementExportControllerTest extends TestCase
             'closing' => 10.0,
             'items' => [],
         ]);
-        $controller = new VendorStatementExportController($statementService, new FakeStatementExporterPDF(sys_get_temp_dir() . '/missing-vendoring-export.pdf'), new VendorStatementRequestResolver());
+        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver->expects(self::once())
+            ->method('resolve')
+            ->willReturn(new StatementWindowQueryRequestDTO('tenant-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD'));
+        $controller = new VendorStatementExportController(
+            $statementService,
+            new FakeStatementExporterPDF(sys_get_temp_dir() . '/missing-vendoring-export.pdf'),
+            new VendorStatementRequestResolver(),
+            $windowResolver,
+        );
 
         $response = $controller->export('vendor-1', new Request([
             'tenantId' => 'tenant-1',
@@ -75,11 +119,11 @@ final class VendorStatementExportControllerTest extends TestCase
         ]));
 
         $payload = self::decodePayload($response);
-        $data = self::payloadData($payload);
 
         self::assertSame(500, $response->getStatusCode());
-        self::assertSame('statement_export_unreadable', $payload['error'] ?? null);
-        self::assertSame('vendor-1', $data['vendorId'] ?? null);
+        self::assertSame('statement_export_unreadable', self::payloadString($payload, 'error'));
+        self::assertNotNull(self::payloadString($payload, 'hint'));
+        self::assertStringContainsString('Unable to read export file at path:', self::payloadString($payload, 'hint'));
     }
 
     /** @return array<string, mixed> */
@@ -109,4 +153,14 @@ final class VendorStatementExportControllerTest extends TestCase
 
         return $data;
     }
+    /**
+     * @param array<string, mixed> $payload
+     */
+    private static function payloadString(array $payload, string $key): ?string
+    {
+        $value = $payload[$key] ?? null;
+
+        return is_string($value) ? $value : null;
+    }
+
 }

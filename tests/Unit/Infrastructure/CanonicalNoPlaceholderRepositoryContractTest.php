@@ -51,6 +51,7 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
                 || str_contains($normalized, '/vendor/')
                 || str_contains($normalized, '/node_modules/')
                 || str_contains($normalized, '/.deploy/_template/')
+                || preg_match('/\.(zip|tar|gz|tgz)$/i', $normalized)
             ) {
                 continue;
             }

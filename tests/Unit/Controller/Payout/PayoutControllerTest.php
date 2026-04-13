@@ -1,5 +1,6 @@
 <?php
 
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Controller\Payout;
@@ -9,6 +10,7 @@ use App\DTO\Payout\CreatePayoutDTO;
 use App\Entity\Payout\Payout;
 use App\Entity\Payout\PayoutItem;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
+use App\Service\Payout\VendorPayoutRequestService;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +21,7 @@ final class PayoutControllerTest extends TestCase
 {
     public function testCreateReturnsValidationErrorWhenRequiredFieldIsMissing(): void
     {
-        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), new FakeVendorPayoutRequestService());
+        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), new VendorPayoutRequestService());
 
         $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
             'tenantId' => 'tenant-1',
@@ -31,13 +33,52 @@ final class PayoutControllerTest extends TestCase
         $payload = self::decodePayload($response);
 
         self::assertSame(422, $response->getStatusCode());
-        self::assertSame('retentionFeePercent required', $payload['error'] ?? null);
+        self::assertSame('retention_fee_percent_required', $payload['error'] ?? null);
+        self::assertSame('Check payout request fields and try again.', $payload['hint'] ?? null);
+    }
+
+    public function testCreateTreatsWhitespaceOnlyRetentionFeePercentAsRequiredValidationFailure(): void
+    {
+        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), new VendorPayoutRequestService());
+
+        $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => 1000,
+            'retentionFeePercent' => '   ',
+        ], JSON_THROW_ON_ERROR)));
+
+        $payload = self::decodePayload($response);
+
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('retention_fee_percent_required', $payload['error'] ?? null);
+        self::assertSame('Check payout request fields and try again.', $payload['hint'] ?? null);
+    }
+
+    public function testCreateTreatsWhitespaceOnlyThresholdCentsAsRequiredValidationFailure(): void
+    {
+        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), new VendorPayoutRequestService());
+
+        $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => '   ',
+            'retentionFeePercent' => 0.05,
+        ], JSON_THROW_ON_ERROR)));
+
+        $payload = self::decodePayload($response);
+
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('threshold_cents_required', $payload['error'] ?? null);
+        self::assertSame('Check payout request fields and try again.', $payload['hint'] ?? null);
     }
 
     public function testCreateReturnsCreatedPayload(): void
     {
         $service = new FakeVendorPayoutService('payout-1');
-        $controller = new PayoutController($service, new FakePayoutRepository(), new FakeVendorPayoutRequestService());
+        $controller = new PayoutController($service, new FakePayoutRepository(), new VendorPayoutRequestService());
 
         $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
             'tenantId' => 'tenant-1',
@@ -58,9 +99,73 @@ final class PayoutControllerTest extends TestCase
         self::assertSame('vendor-1', $service->lastCreateDto->vendorId);
     }
 
+    public function testCreateAcceptsTrimmedNumericStringValuesInPayload(): void
+    {
+        $service = new FakeVendorPayoutService('payout-1');
+        $controller = new PayoutController($service, new FakePayoutRepository(), new VendorPayoutRequestService());
+
+        $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => ' 1000 ',
+            'retentionFeePercent' => ' 0.05 ',
+        ], JSON_THROW_ON_ERROR)));
+
+        $payload = self::decodePayload($response);
+        $data = self::payloadData($payload);
+
+        self::assertSame(201, $response->getStatusCode());
+        self::assertTrue((bool) ($data['created'] ?? false));
+        self::assertSame('payout-1', $data['payoutId'] ?? null);
+        self::assertInstanceOf(CreatePayoutDTO::class, $service->lastCreateDto);
+        self::assertSame(1000, $service->lastCreateDto->thresholdCents);
+        self::assertSame(0.05, $service->lastCreateDto->retentionFeePercent);
+    }
+
+    public function testCreateMapsUnknownValidationFailureToStableErrorCode(): void
+    {
+        $requestService = new class implements VendorPayoutRequestServiceInterface {
+            public function toCreateDto(array $payload): CreatePayoutDTO
+            {
+                throw new \InvalidArgumentException('validation pipeline broke');
+            }
+
+            public function normalizePayout(Payout $payout): array
+            {
+                return ['id' => $payout->id];
+            }
+        };
+
+        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), $requestService);
+        $response = $controller->create(Request::create('/api/payout/create', 'POST', content: '{}'));
+        $payload = self::decodePayload($response);
+
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('payout_validation_error', $payload['error'] ?? null);
+        self::assertSame('Check payout request fields and try again.', $payload['hint'] ?? null);
+    }
+
+    public function testCreateMapsRetentionFeePercentOutOfRangeToDedicatedErrorCode(): void
+    {
+        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), new VendorPayoutRequestService());
+        $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => 1000,
+            'retentionFeePercent' => 1.5,
+        ], JSON_THROW_ON_ERROR)));
+        $payload = self::decodePayload($response);
+
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('retention_fee_percent_out_of_range', $payload['error'] ?? null);
+        self::assertSame('Check payout request fields and try again.', $payload['hint'] ?? null);
+    }
+
     public function testProcessReturnsNotFoundForUnknownPendingPayout(): void
     {
-        $controller = new PayoutController(new FakeVendorPayoutService(null, false), new FakePayoutRepository(), new FakeVendorPayoutRequestService());
+        $controller = new PayoutController(new FakeVendorPayoutService(null, false), new FakePayoutRepository(), new VendorPayoutRequestService());
 
         $response = $controller->process('missing-payout');
         $payload = self::decodePayload($response);
@@ -68,6 +173,33 @@ final class PayoutControllerTest extends TestCase
 
         self::assertSame(404, $response->getStatusCode());
         self::assertFalse((bool) ($data['processed'] ?? true));
+    }
+
+    public function testGetOneReturnsStableRuntimeFailureWithoutInternalMessageLeak(): void
+    {
+        $repository = new class implements PayoutRepositoryInterface {
+            public function insert(Payout $payout): void {}
+            public function insertItem(PayoutItem $item): void {}
+            public function byId(string $id): ?Payout
+            {
+                throw new \Doctrine\DBAL\ConnectionException('sensitive_sql_message');
+            }
+            public function items(string $payoutId): array
+            {
+                return [];
+            }
+            public function markProcessed(string $id, string $processedAt, array $meta = []): void {}
+            public function markFailed(string $id, string $processedAt, array $meta = []): void {}
+        };
+
+        $controller = new PayoutController(new FakeVendorPayoutService(), $repository, new VendorPayoutRequestService());
+        $response = $controller->getOne('payout-1');
+        $payload = self::decodePayload($response);
+
+        self::assertSame(500, $response->getStatusCode());
+        self::assertSame('payout_lookup_failed', $payload['error'] ?? null);
+        self::assertSame('Check runtime logs for details and retry the operation.', $payload['hint'] ?? null);
+        self::assertArrayNotHasKey('message', $payload);
     }
 
     /** @return array<string, mixed> */
@@ -140,78 +272,4 @@ final class FakePayoutRepository implements PayoutRepositoryInterface
     public function markProcessed(string $id, string $processedAt, array $meta = []): void {}
 
     public function markFailed(string $id, string $processedAt, array $meta = []): void {}
-}
-
-final class FakeVendorPayoutRequestService implements VendorPayoutRequestServiceInterface
-{
-    /** @param array<string, mixed> $payload */
-    public function toCreateDto(array $payload): CreatePayoutDTO
-    {
-        foreach (['tenantId', 'vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
-            if (!isset($payload[$field])) {
-                throw new \InvalidArgumentException(sprintf('%s required', $field));
-            }
-        }
-
-        return new CreatePayoutDTO(
-            vendorId: self::requiredString($payload, 'vendorId'),
-            currency: self::requiredString($payload, 'currency'),
-            thresholdCents: self::requiredInt($payload, 'thresholdCents'),
-            retentionFeePercent: self::requiredFloat($payload, 'retentionFeePercent'),
-            tenantId: self::requiredString($payload, 'tenantId'),
-        );
-    }
-
-    public function normalizePayout(Payout $payout): array
-    {
-        return ['id' => $payout->id];
-    }
-
-    /** @param array<string, mixed> $payload */
-    private static function requiredString(array $payload, string $field): string
-    {
-        $value = $payload[$field] ?? null;
-
-        if (is_string($value)) {
-            return $value;
-        }
-
-        if (is_int($value) || is_float($value)) {
-            return (string) $value;
-        }
-
-        throw new \InvalidArgumentException(sprintf('%s required', $field));
-    }
-
-    /** @param array<string, mixed> $payload */
-    private static function requiredInt(array $payload, string $field): int
-    {
-        $value = $payload[$field] ?? null;
-
-        if (is_int($value)) {
-            return $value;
-        }
-
-        if (is_numeric($value)) {
-            return (int) $value;
-        }
-
-        throw new \InvalidArgumentException(sprintf('%s required', $field));
-    }
-
-    /** @param array<string, mixed> $payload */
-    private static function requiredFloat(array $payload, string $field): float
-    {
-        $value = $payload[$field] ?? null;
-
-        if (is_float($value) || is_int($value)) {
-            return (float) $value;
-        }
-
-        if (is_numeric($value)) {
-            return (float) $value;
-        }
-
-        throw new \InvalidArgumentException(sprintf('%s required', $field));
-    }
 }

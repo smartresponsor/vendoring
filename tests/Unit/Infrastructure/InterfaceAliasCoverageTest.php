@@ -1,5 +1,6 @@
 <?php
 
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Infrastructure;
@@ -61,6 +62,9 @@ final class InterfaceAliasCoverageTest extends TestCase
             'App\\ServiceInterface\\Statement\\VendorStatementMailerServiceInterface' => 'App\\Service\\Statement\\VendorStatementMailerService',
             'App\\ServiceInterface\\Statement\\VendorStatementRecipientProviderInterface' => 'App\\Service\\Statement\\VendorStatementRecipientProvider',
             'App\\ServiceInterface\\Statement\\VendorStatementServiceInterface' => 'App\\Service\\Statement\\VendorStatementService',
+            'App\\ServiceInterface\\Api\\TenantQueryRequestResolverInterface' => 'App\\Service\\Api\\TenantQueryRequestResolver',
+            'App\\ServiceInterface\\Api\\StatementWindowQueryRequestResolverInterface' => 'App\\Service\\Api\\StatementWindowQueryRequestResolver',
+            'App\\ServiceInterface\\VendorProfileRequestResolverInterface' => 'App\\Service\\VendorProfileRequestResolver',
             'App\ServiceInterface\Rollout\FeatureFlagServiceInterface' => 'App\Service\Rollout\FeatureFlagService',
             'App\ServiceInterface\Rollout\CanaryRolloutCoordinatorInterface' => 'App\Service\Rollout\CanaryRolloutCoordinator',
         ];

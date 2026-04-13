@@ -1,0 +1,32 @@
+= Boundaries
+
+== Canonical boundary map
+
+[cols="1,2,2",options="header"]
+|===
+| Domain | Vendoring owns | Vendoring does not own
+
+| Vendor onboarding
+| profile completion and readiness metadata
+| legal/procurement negotiation workflow
+
+| Vendor identity/profile
+| canonical vendor profile and ownership projection
+| buyer/customer identity domain
+
+| Capability/status
+| runtime capability and readiness projections
+| fulfillment and order orchestration engines
+
+| Settlement prerequisites
+| payout account and readiness checks
+| payment rail internals and gateway settlement engines
+
+| Contract/eligibility metadata
+| eligibility and operational gating metadata
+| legal document drafting/signature platforms
+|===
+
+== Integration contract rule
+
+When neighboring domains use different terms (supplier/merchant/partner/seller), map them at the edge and normalize internal contracts to `vendor`.

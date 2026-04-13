@@ -1,5 +1,6 @@
 <?php
 
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Payout;
@@ -65,5 +66,92 @@ final class VendorPayoutRequestServiceTest extends TestCase
         self::assertIsArray($normalized['meta'] ?? null);
         self::assertSame('tenant-1', $normalized['meta']['tenantId'] ?? null);
         self::assertSame('bank_ref_123', $normalized['meta']['providerRef'] ?? null);
+    }
+
+    public function testToCreateDtoRejectsRetentionFeePercentOutsideExpectedRange(): void
+    {
+        $service = new VendorPayoutRequestService();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('retentionFeePercent out_of_range');
+
+        $service->toCreateDto([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => 1000,
+            'retentionFeePercent' => 1.5,
+        ]);
+    }
+
+    public function testToCreateDtoAcceptsRetentionFeePercentAtBoundaryValues(): void
+    {
+        $service = new VendorPayoutRequestService();
+
+        $zeroFeeDto = $service->toCreateDto([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => 1000,
+            'retentionFeePercent' => 0.0,
+        ]);
+        $fullFeeDto = $service->toCreateDto([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => 1000,
+            'retentionFeePercent' => 1.0,
+        ]);
+
+        self::assertSame(0.0, $zeroFeeDto->retentionFeePercent);
+        self::assertSame(1.0, $fullFeeDto->retentionFeePercent);
+    }
+
+    public function testToCreateDtoAcceptsTrimmedNumericStringInputsForPayoutThresholdAndFee(): void
+    {
+        $service = new VendorPayoutRequestService();
+
+        $dto = $service->toCreateDto([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => ' 1000 ',
+            'retentionFeePercent' => ' 0.25 ',
+        ]);
+
+        self::assertSame(1000, $dto->thresholdCents);
+        self::assertSame(0.25, $dto->retentionFeePercent);
+    }
+
+    public function testToCreateDtoRejectsWhitespaceOnlyRetentionFeePercent(): void
+    {
+        $service = new VendorPayoutRequestService();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('retentionFeePercent required');
+
+        $service->toCreateDto([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => 1000,
+            'retentionFeePercent' => '   ',
+        ]);
+    }
+
+    public function testToCreateDtoRejectsWhitespaceOnlyThresholdCents(): void
+    {
+        $service = new VendorPayoutRequestService();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('thresholdCents required');
+
+        $service->toCreateDto([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => '   ',
+            'retentionFeePercent' => 0.05,
+        ]);
     }
 }

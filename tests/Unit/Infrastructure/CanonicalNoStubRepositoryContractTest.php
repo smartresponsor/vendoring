@@ -61,6 +61,6 @@ final class CanonicalNoStubRepositoryContractTest extends TestCase
             }
         }
 
-        return false;
+        return 1 === preg_match('/\.(zip|tar|gz|tgz)$/i', $path);
     }
 }

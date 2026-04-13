@@ -1,9 +1,13 @@
 <?php
 
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller\Statement;
 
+use App\Controller\ApiErrorResponseTrait;
+use App\Controller\VendorStatementRequestHttpResolutionTrait;
+use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\ServiceInterface\Statement\StatementExporterPDFInterface;
 use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
 use App\ServiceInterface\Statement\VendorStatementServiceInterface;
@@ -23,10 +27,14 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/payouts/statements')]
 final class VendorStatementExportController extends AbstractController
 {
+    use ApiErrorResponseTrait;
+    use VendorStatementRequestHttpResolutionTrait;
+
     public function __construct(
         private readonly VendorStatementServiceInterface $svc,
         private readonly StatementExporterPDFInterface $pdf,
         private readonly VendorStatementRequestResolverInterface $requestResolver,
+        private readonly StatementWindowQueryRequestResolverInterface $statementWindowQueryRequestResolver,
     ) {}
 
     /**
@@ -47,35 +55,33 @@ final class VendorStatementExportController extends AbstractController
     #[Route('/{vendorId}/export', methods: ['GET'])]
     public function export(string $vendorId, Request $r): JsonResponse
     {
-        $dto = $this->requestResolver->resolveStatementRequest($vendorId, $r);
-        if (null === $dto) {
-            return new JsonResponse(['error' => 'params required'], 422);
+        $dto = $this->resolveStatementRequestOrValidationResponse(
+            $vendorId,
+            $r,
+            $this->statementWindowQueryRequestResolver,
+            $this->requestResolver,
+        );
+        if ($dto instanceof JsonResponse) {
+            return $dto;
         }
+
 
         $data = $this->svc->build($dto);
         $path = $this->pdf->export($dto, $data);
 
         if (!is_file($path) || !is_readable($path)) {
-            return new JsonResponse([
-                'error' => 'statement_export_unreadable',
-                'data' => [
-                    'tenantId' => $dto->tenantId,
-                    'vendorId' => $dto->vendorId,
-                    'path' => $path,
-                ],
-            ], 500);
+            return $this->runtimeErrorResponse(
+                'statement_export_unreadable',
+                sprintf('Unable to read export file at path: %s.', $path),
+            );
         }
 
         $content = file_get_contents($path);
         if (false === $content) {
-            return new JsonResponse([
-                'error' => 'statement_export_unreadable',
-                'data' => [
-                    'tenantId' => $dto->tenantId,
-                    'vendorId' => $dto->vendorId,
-                    'path' => $path,
-                ],
-            ], 500);
+            return $this->runtimeErrorResponse(
+                'statement_export_unreadable',
+                sprintf('Unable to read export file at path: %s.', $path),
+            );
         }
 
         return new JsonResponse(['data' => [

@@ -1,0 +1,28 @@
+= Use cases
+
+== 1) Vendor onboarding
+
+* Upsert profile via `PATCH /api/vendor-profile/vendor/{vendorId}`
+* Check ownership/runtime projections
+* Gate downstream activation based on readiness state
+
+== 2) Vendor identity/profile maintenance
+
+* Partner/backoffice updates legal and operational profile attributes
+* Consumer reads normalized projection with `GET /api/vendor-profile/vendor/{vendorId}`
+
+== 3) Capability/status gating
+
+* Runtime orchestrator reads finance/external integration status
+* Activation proceeds only when readiness contracts are satisfied
+
+== 4) Settlement prerequisites
+
+* Finance app validates payout readiness and account state
+* Creates payout with `POST /api/payout/create`
+* Processes payout with `POST /api/payout/process/{payoutId}`
+
+== 5) Contract/eligibility metadata consumption
+
+* Compliance or marketplace policy engine consumes vendor ownership/finance projections
+* Decisions remain external, while vendoring provides canonical vendor data

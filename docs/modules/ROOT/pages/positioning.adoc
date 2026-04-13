@@ -1,0 +1,33 @@
+= Positioning
+
+Vendoring is the Symfony component that owns vendor lifecycle and readiness signals.
+It packages a vendor-facing API/runtime surface that downstream domains can consume.
+
+== Core responsibility
+
+Vendoring owns:
+
+* vendor onboarding and profile state
+* vendor capability/runtime status projections
+* settlement prerequisites and payout-readiness metadata
+* vendor-facing operational/eligibility projections
+
+== Explicit non-goals
+
+Vendoring does not own:
+
+* Ordering lifecycle
+* buyer-side Billing
+* payment authorization/capture (Paying)
+* Shipping orchestration
+* tax calculation/remittance
+
+== Minimal use case
+
+A minimal production use case is:
+
+. upsert vendor profile
+. read vendor runtime/ownership status
+. create and process payout when readiness gates pass
+
+This gives a practical integration path without adopting all optional surfaces.

@@ -1,20 +1,74 @@
 = API
 
-Vendoring keeps the HTTP contract documentation split between narrative guidance and generated OpenAPI artifacts.
+Vendoring API is grouped by consumer jobs, not by internal module names.
 
-== Narrative/API sources
+== Endpoint groups
+
+=== Vendor profile and identity
+
+* `GET /api/vendor-profile/vendor/{vendorId}`
+* `PATCH /api/vendor-profile/vendor/{vendorId}`
+* `GET /api/vendor-ownership/vendor/{vendorId}`
+
+=== Vendor operational runtime
+
+* `GET /api/vendor/runtime/{vendorId}/finance`
+* `GET /api/vendor/runtime/{vendorId}/external-integrations`
+* `GET /api/vendor/runtime/{vendorId}/statement-delivery`
+
+=== Transactions and payout readiness
+
+* `POST /api/vendor-transactions`
+* `GET /api/vendor-transactions/vendor/{vendorId}`
+* `POST /api/vendor-transactions/vendor/{vendorId}/{id}/status`
+* `POST /api/payout/create`
+* `POST /api/payout/process/{payoutId}`
+* `GET /api/payout/{payoutId}`
+
+== Auth expectation
+
+Write endpoints expect `Authorization: Bearer <token>` and may return:
+
+* `authentication_required` (401)
+* `invalid_api_token` (401)
+* `permission_denied` (403)
+
+== Error model
+
+Stable error payload shape:
+
+[source,json]
+----
+{
+  "error": "machine_readable_code",
+  "hint": "Actionable guidance for the client"
+}
+----
+
+Typical status semantics:
+
+* `400` malformed payload
+* `404` entity/projection missing
+* `409` state conflict (for example duplicate transaction)
+* `422` domain validation failure
+* `422` statement/runtime query validation (`tenant_id_required`, `statement_from_required`, `statement_to_required`)
+* `422` payout query/payload validation (`retention_fee_percent_required`, `retention_fee_percent_out_of_range`, `payout_validation_error`)
+* `retentionFeePercent` is accepted only in the inclusive range `0.0..1.0`
+* whitespace-only `retentionFeePercent` is treated as missing (`retention_fee_percent_required`)
+* whitespace-only `thresholdCents` is treated as missing (`threshold_cents_required`)
+
+== Lifecycle/status semantics
+
+For transaction and payout flows, consumers should treat status values as lifecycle markers (`new`, updated transaction status, payout created/processed) and avoid assuming hidden transitions.
+
+== Generated OpenAPI artifacts
+
+* `build/docs/openapi.json`
+* `build/docs/openapi.yaml`
+
+== Related narrative/API sources
 
 * `docs/release/RC_OPENAPI_SURFACE.md`
 * `docs/internal/API_DOCUMENTATION_CANON.md`
 * `docs/internal/API_ENDPOINT_INVENTORY.md`
 * `docs/integration.md`
-
-== Generated API artifacts
-
-* `build/docs/openapi.json`
-* `build/docs/openapi.yaml`
-
-== Nelmio integration seam
-
-Nelmio/OpenAPI configuration remains repository-owned under `config/` and `bin/generate-openapi.php`.
-Generated contract files stay under `build/docs/`; they are not duplicated into Antora narrative pages.

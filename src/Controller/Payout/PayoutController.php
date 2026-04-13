@@ -1,10 +1,11 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller\Payout;
 
+use App\Controller\ApiErrorResponseTrait;
 use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
 use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
@@ -21,6 +22,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/payout')]
 final class PayoutController extends AbstractController
 {
+    use ApiErrorResponseTrait;
+
     public function __construct(
         private readonly VendorPayoutServiceInterface $payoutService,
         private readonly PayoutRepositoryInterface $payoutRepository,
@@ -36,12 +39,12 @@ final class PayoutController extends AbstractController
         } catch (HttpFoundationJsonException) {
             return new JsonResponse(['error' => 'malformed_json'], 400);
         } catch (InvalidArgumentException $exception) {
-            return new JsonResponse(['error' => $exception->getMessage()], 422);
-        } catch (Exception|JsonException|RandomException $exception) {
-            return new JsonResponse([
-                'error' => 'payout_create_failed',
-                'message' => $exception->getMessage(),
-            ], 500);
+            return $this->validationErrorResponse(
+                $this->normalizePayoutValidationErrorCode($exception->getMessage()),
+                'Check payout request fields and try again.',
+            );
+        } catch (Exception|JsonException|RandomException) {
+            return $this->runtimeErrorResponse('payout_create_failed', 'Check runtime logs for details and retry the operation.');
         }
 
         if (null === $id) {
@@ -56,11 +59,8 @@ final class PayoutController extends AbstractController
     {
         try {
             $ok = $this->payoutService->process($payoutId);
-        } catch (Exception|JsonException|RandomException $exception) {
-            return new JsonResponse([
-                'error' => 'payout_process_failed',
-                'message' => $exception->getMessage(),
-            ], 500);
+        } catch (Exception|JsonException|RandomException) {
+            return $this->runtimeErrorResponse('payout_process_failed', 'Check runtime logs for details and retry the operation.');
         }
 
         return new JsonResponse(['data' => ['processed' => $ok]], $ok ? 200 : 404);
@@ -71,11 +71,8 @@ final class PayoutController extends AbstractController
     {
         try {
             $payout = $this->payoutRepository->byId($payoutId);
-        } catch (Exception $exception) {
-            return new JsonResponse([
-                'error' => 'payout_lookup_failed',
-                'message' => $exception->getMessage(),
-            ], 500);
+        } catch (Exception) {
+            return $this->runtimeErrorResponse('payout_lookup_failed', 'Check runtime logs for details and retry the operation.');
         }
 
         if (null === $payout) {
@@ -83,5 +80,18 @@ final class PayoutController extends AbstractController
         }
 
         return new JsonResponse(['data' => $this->payoutRequestService->normalizePayout($payout)], 200);
+    }
+
+    private function normalizePayoutValidationErrorCode(string $message): string
+    {
+        return match (trim($message)) {
+            'tenantId required' => 'tenant_id_required',
+            'vendorId required' => 'vendor_id_required',
+            'currency required' => 'currency_required',
+            'thresholdCents required' => 'threshold_cents_required',
+            'retentionFeePercent required' => 'retention_fee_percent_required',
+            'retentionFeePercent out_of_range' => 'retention_fee_percent_out_of_range',
+            default => 'payout_validation_error',
+        };
     }
 }

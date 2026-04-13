@@ -98,6 +98,8 @@ services:
     App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface: '@App\Repository\Payout\PayoutAccountRepository'
 
     App\ServiceInterface\VendorApiKeyServiceInterface: '@App\Service\VendorApiKeyService'
+    App\ServiceInterface\Api\TenantQueryRequestResolverInterface: '@App\Service\Api\TenantQueryRequestResolver'
+    App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface: '@App\Service\Api\StatementWindowQueryRequestResolver'
     App\ServiceInterface\VendorSecurityServiceInterface: '@App\Service\VendorSecurityService'
     App\ServiceInterface\VendorSecurityStateViewBuilderInterface: '@App\Service\VendorSecurityStateViewBuilder'
     App\ServiceInterface\VendorOwnershipViewBuilderInterface: '@App\Service\VendorOwnershipViewBuilder'
@@ -177,4 +179,3 @@ services:
         arguments: []
 
     App\ServiceInterface\VendorProfileRequestResolverInterface: '@App\Service\VendorProfileRequestResolver'
-
