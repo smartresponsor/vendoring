@@ -55,6 +55,7 @@ Typical status semantics:
 * `422` payout query/payload validation (`retention_fee_percent_required`, `retention_fee_percent_out_of_range`, `payout_validation_error`)
 * `retentionFeePercent` is accepted only in the inclusive range `0.0..1.0`
 * whitespace-only `retentionFeePercent` is treated as missing (`retention_fee_percent_required`)
+* whitespace-only `thresholdCents` is treated as missing (`threshold_cents_required`)
 
 == Lifecycle/status semantics
 
