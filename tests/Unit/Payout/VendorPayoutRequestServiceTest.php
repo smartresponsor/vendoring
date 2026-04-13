@@ -137,4 +137,20 @@ final class VendorPayoutRequestServiceTest extends TestCase
             'retentionFeePercent' => '   ',
         ]);
     }
+
+    public function testToCreateDtoRejectsWhitespaceOnlyThresholdCents(): void
+    {
+        $service = new VendorPayoutRequestService();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('thresholdCents required');
+
+        $service->toCreateDto([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => '   ',
+            'retentionFeePercent' => 0.05,
+        ]);
+    }
 }

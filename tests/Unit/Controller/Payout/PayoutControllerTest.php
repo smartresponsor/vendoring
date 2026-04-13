@@ -55,6 +55,25 @@ final class PayoutControllerTest extends TestCase
         self::assertSame('Check payout request fields and try again.', $payload['hint'] ?? null);
     }
 
+    public function testCreateTreatsWhitespaceOnlyThresholdCentsAsRequiredValidationFailure(): void
+    {
+        $controller = new PayoutController(new FakeVendorPayoutService(), new FakePayoutRepository(), new VendorPayoutRequestService());
+
+        $response = $controller->create(Request::create('/api/payout/create', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode([
+            'tenantId' => 'tenant-1',
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => '   ',
+            'retentionFeePercent' => 0.05,
+        ], JSON_THROW_ON_ERROR)));
+
+        $payload = self::decodePayload($response);
+
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('threshold_cents_required', $payload['error'] ?? null);
+        self::assertSame('Check payout request fields and try again.', $payload['hint'] ?? null);
+    }
+
     public function testCreateReturnsCreatedPayload(): void
     {
         $service = new FakeVendorPayoutService('payout-1');
