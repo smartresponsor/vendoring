@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -42,7 +43,7 @@ final class PayoutController extends AbstractController
                 $this->normalizePayoutValidationErrorCode($exception->getMessage()),
                 'Check payout request fields and try again.',
             );
-        } catch (Exception|JsonException|RandomException $exception) {
+        } catch (Exception|JsonException|RandomException) {
             return $this->runtimeErrorResponse('payout_create_failed', 'Check runtime logs for details and retry the operation.');
         }
 
@@ -58,7 +59,7 @@ final class PayoutController extends AbstractController
     {
         try {
             $ok = $this->payoutService->process($payoutId);
-        } catch (Exception|JsonException|RandomException $exception) {
+        } catch (Exception|JsonException|RandomException) {
             return $this->runtimeErrorResponse('payout_process_failed', 'Check runtime logs for details and retry the operation.');
         }
 
@@ -70,7 +71,7 @@ final class PayoutController extends AbstractController
     {
         try {
             $payout = $this->payoutRepository->byId($payoutId);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return $this->runtimeErrorResponse('payout_lookup_failed', 'Check runtime logs for details and retry the operation.');
         }
 

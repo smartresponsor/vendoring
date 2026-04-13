@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -120,8 +121,9 @@ final class VendorStatementExportControllerTest extends TestCase
         $payload = self::decodePayload($response);
 
         self::assertSame(500, $response->getStatusCode());
-        self::assertSame('statement_export_unreadable', $payload['error'] ?? null);
-        self::assertStringContainsString('Unable to read export file at path:', (string) ($payload['hint'] ?? ''));
+        self::assertSame('statement_export_unreadable', self::payloadString($payload, 'error'));
+        self::assertNotNull(self::payloadString($payload, 'hint'));
+        self::assertStringContainsString('Unable to read export file at path:', self::payloadString($payload, 'hint'));
     }
 
     /** @return array<string, mixed> */
@@ -151,4 +153,14 @@ final class VendorStatementExportControllerTest extends TestCase
 
         return $data;
     }
+    /**
+     * @param array<string, mixed> $payload
+     */
+    private static function payloadString(array $payload, string $key): ?string
+    {
+        $value = $payload[$key] ?? null;
+
+        return is_string($value) ? $value : null;
+    }
+
 }

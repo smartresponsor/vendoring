@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -47,7 +48,6 @@ final class VendorTransactionController extends AbstractController
     #[Route('', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        $data = null;
         if ($authenticationResponse = $this->enforceTransactionWriteAuthentication($request, null, null)) {
             return $authenticationResponse;
         }
@@ -63,9 +63,10 @@ final class VendorTransactionController extends AbstractController
             return $this->rateLimitResponse('vendor_transaction_create_rate_limited', $rateLimitDecision, $request, null, null);
         }
 
+        $payload = $this->payloadForValidationLog($request);
+
         try {
             $data = $this->inputResolver->resolveCreateData($request);
-            $tx = $this->manager->createTransaction($data);
         } catch (JsonException $exception) {
             $this->runtimeLogger->warning('vendor_transaction_create_rejected', [
                 'error_code' => VendorTransactionErrorCode::MALFORMED_JSON,
@@ -76,14 +77,28 @@ final class VendorTransactionController extends AbstractController
                 'jsonErrorCode' => $exception->getCode(),
             ], 400);
         } catch (InvalidArgumentException $exception) {
-            // Unknown validation failures must collapse to transaction_validation_error.
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
             $statusCode = VendorTransactionErrorCode::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
-            $payload = $this->payloadForValidationLog($request);
             $this->runtimeLogger->warning('vendor_transaction_create_rejected', [
-                'vendor_id' => $data?->vendorId ?? $payload['vendorId'],
-                'order_id' => $data?->orderId ?? $payload['orderId'],
-                'project_id' => $data?->projectId ?? $payload['projectId'],
+                'vendor_id' => $payload['vendorId'],
+                'order_id' => $payload['orderId'],
+                'project_id' => $payload['projectId'],
+                'error_code' => $errorCode,
+                'status_code' => (string) $statusCode,
+            ]);
+
+            return new JsonResponse(['error' => $errorCode], $statusCode);
+        }
+
+        try {
+            $tx = $this->manager->createTransaction($data);
+        } catch (InvalidArgumentException $exception) {
+            $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
+            $statusCode = VendorTransactionErrorCode::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
+            $this->runtimeLogger->warning('vendor_transaction_create_rejected', [
+                'vendor_id' => $data->vendorId,
+                'order_id' => $data->orderId,
+                'project_id' => $data->projectId,
                 'error_code' => $errorCode,
                 'status_code' => (string) $statusCode,
             ]);

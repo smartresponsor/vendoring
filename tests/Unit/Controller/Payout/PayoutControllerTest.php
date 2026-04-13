@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -181,7 +182,7 @@ final class PayoutControllerTest extends TestCase
             public function insertItem(PayoutItem $item): void {}
             public function byId(string $id): ?Payout
             {
-                throw new \Doctrine\DBAL\Exception('sensitive_sql_message');
+                throw new \Doctrine\DBAL\ConnectionException('sensitive_sql_message');
             }
             public function items(string $payoutId): array
             {

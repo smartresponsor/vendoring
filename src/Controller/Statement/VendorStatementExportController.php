@@ -1,11 +1,12 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller\Statement;
 
 use App\Controller\ApiErrorResponseTrait;
-use App\Exception\ApiQueryValidationException;
+use App\Controller\VendorStatementRequestHttpResolutionTrait;
 use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use App\ServiceInterface\Statement\StatementExporterPDFInterface;
 use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
@@ -27,6 +28,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class VendorStatementExportController extends AbstractController
 {
     use ApiErrorResponseTrait;
+    use VendorStatementRequestHttpResolutionTrait;
 
     public function __construct(
         private readonly VendorStatementServiceInterface $svc,
@@ -53,19 +55,16 @@ final class VendorStatementExportController extends AbstractController
     #[Route('/{vendorId}/export', methods: ['GET'])]
     public function export(string $vendorId, Request $r): JsonResponse
     {
-        try {
-            $this->statementWindowQueryRequestResolver->resolve($r);
-        } catch (ApiQueryValidationException $exception) {
-            return $this->validationErrorResponse($exception->errorCode(), $exception->hint());
+        $dto = $this->resolveStatementRequestOrValidationResponse(
+            $vendorId,
+            $r,
+            $this->statementWindowQueryRequestResolver,
+            $this->requestResolver,
+        );
+        if ($dto instanceof JsonResponse) {
+            return $dto;
         }
 
-        $dto = $this->requestResolver->resolveStatementRequest($vendorId, $r);
-        if (null === $dto) {
-            return $this->validationErrorResponse(
-                'statement_params_required',
-                'Provide tenantId, from, and to query parameters.',
-            );
-        }
 
         $data = $this->svc->build($dto);
         $path = $this->pdf->export($dto, $data);

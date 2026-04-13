@@ -3,6 +3,8 @@
 Vendoring is a Symfony 8 component that owns the **vendor lifecycle and operational readiness** surface.
 It is focused on vendor onboarding/profile/readiness contracts and does **not** replace Ordering, Billing, Paying, Shipping, or Taxation domains.
 
+Vendoring is a headless/backend component for Symfony-oriented vendor onboarding, readiness, runtime, and payout-preparation workflows.
+
 ## Product positioning (2–3 minute read)
 
 ### What Vendoring is
@@ -203,6 +205,7 @@ Use these terms consistently in code/docs/API:
 composer quality:runtime
 composer quality:contracts
 composer quality:api
+composer quality:release-candidate
 composer quality
 ```
 
@@ -214,6 +217,7 @@ composer quality
 - `docs/release/RC_OPENAPI_SURFACE.md`
 - `docs/release/RC_RUNTIME_SURFACES.md`
 - `docs/release/RC_GATE_CHECKLIST.md`
+- `docs/release/RC_ROADMAP.md`
 
 Generated artifacts:
 

@@ -63,7 +63,7 @@ final class KernelRuntimeHarness
         if (!$entityManager instanceof EntityManagerInterface) {
             throw new \RuntimeException('Runtime harness expected an EntityManagerInterface instance.');
         }
-        self::createVendorTransactionSchema($entityManager);
+        self::createRuntimeSchema($entityManager);
 
         register_shutdown_function(static function () use ($databaseFile, $entityManager, $kernel, $cacheDir): void {
             try {
@@ -219,7 +219,7 @@ final class KernelRuntimeHarness
         return $plainToken;
     }
 
-    private static function createVendorTransactionSchema(EntityManagerInterface $entityManager): void
+    private static function createRuntimeSchema(EntityManagerInterface $entityManager): void
     {
         $schemaTool = new SchemaTool($entityManager);
         $metadata = [
@@ -229,6 +229,45 @@ final class KernelRuntimeHarness
         ];
         $schemaTool->dropSchema($metadata);
         $schemaTool->createSchema($metadata);
+
+        $connection = $entityManager->getConnection();
+        $platform = $connection->getDatabasePlatform();
+
+        $connection->executeStatement(sprintf(
+            'CREATE TABLE payouts (
+                id VARCHAR(64) PRIMARY KEY,
+                vendor_id VARCHAR(255) NOT NULL,
+                currency VARCHAR(16) NOT NULL,
+                gross_cents INTEGER NOT NULL,
+                fee_cents INTEGER NOT NULL,
+                net_cents INTEGER NOT NULL,
+                status VARCHAR(32) NOT NULL,
+                created_at VARCHAR(32) NOT NULL,
+                processed_at VARCHAR(32) DEFAULT NULL,
+                meta %s NOT NULL
+            )',
+            $platform->getClobTypeDeclarationSQL([]),
+        ));
+
+        $connection->executeStatement('CREATE TABLE payout_items (
+            id VARCHAR(64) PRIMARY KEY,
+            payout_id VARCHAR(64) NOT NULL,
+            entry_id VARCHAR(64) NOT NULL,
+            amount_cents INTEGER NOT NULL
+        )');
+
+        $connection->executeStatement('CREATE TABLE vendor_ledger_entries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tenant_id VARCHAR(255) NOT NULL,
+            vendor_id VARCHAR(255) DEFAULT NULL,
+            reference_type VARCHAR(255) NOT NULL,
+            reference_id VARCHAR(255) NOT NULL,
+            debit_account VARCHAR(255) NOT NULL,
+            credit_account VARCHAR(255) NOT NULL,
+            amount NUMERIC NOT NULL,
+            currency VARCHAR(16) NOT NULL,
+            created_at VARCHAR(32) NOT NULL
+        )');
     }
 
     private static function removeDirectory(string $path): void

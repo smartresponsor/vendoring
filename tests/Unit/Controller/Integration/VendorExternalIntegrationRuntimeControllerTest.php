@@ -1,10 +1,12 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Controller\Integration;
 
 use App\Controller\Integration\VendorExternalIntegrationRuntimeController;
+use App\Exception\ApiQueryValidationException;
 use App\DTO\Api\TenantQueryRequestDTO;
 use App\Projection\VendorExternalIntegrationRuntimeView;
 use App\ServiceInterface\Api\TenantQueryRequestResolverInterface;
@@ -21,15 +23,15 @@ final class VendorExternalIntegrationRuntimeControllerTest extends TestCase
         $resolver = $this->createMock(TenantQueryRequestResolverInterface::class);
         $resolver->expects(self::once())
             ->method('resolve')
-            ->willThrowException(new \InvalidArgumentException('tenant_id_required'));
+            ->willThrowException(ApiQueryValidationException::fromConstraintMessage('tenant_id_required'));
 
         $controller = new VendorExternalIntegrationRuntimeController($builder, $resolver);
         $response = $controller->show('vendor-1', new Request());
-        $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $payload = self::decodePayload($response);
 
         self::assertSame(422, $response->getStatusCode());
-        self::assertSame('tenant_id_required', $payload['error'] ?? null);
-        self::assertSame('Provide the tenantId query parameter.', $payload['hint'] ?? null);
+        self::assertSame('tenant_id_required', self::payloadString($payload, 'error'));
+        self::assertSame('Provide the tenantId query parameter.', self::payloadString($payload, 'hint'));
     }
 
     public function testShowReturnsRuntimeProjectionWhenTenantIdIsProvided(): void
@@ -58,4 +60,27 @@ final class VendorExternalIntegrationRuntimeControllerTest extends TestCase
         self::assertSame(200, $response->getStatusCode());
         self::assertStringContainsString('connected', (string) $response->getContent());
     }
+    /**
+     * @return array<string, mixed>
+     */
+    private static function decodePayload(\Symfony\Component\HttpFoundation\JsonResponse $response): array
+    {
+        $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertIsArray($payload);
+
+        return $payload;
+    }
+
+    private static function payloadString(mixed $payload, string $key): ?string
+    {
+        if (!is_array($payload)) {
+            return null;
+        }
+
+        $value = $payload[$key] ?? null;
+
+        return is_string($value) ? $value : null;
+    }
+
 }

@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -72,7 +73,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
 
         $numericCandidate = $this->normalizedNumericCandidate($value);
 
-        if (null !== $numericCandidate && is_numeric($numericCandidate)) {
+        if (is_numeric($numericCandidate)) {
             return (int) $numericCandidate;
         }
 
@@ -91,7 +92,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
 
         $numericCandidate = $this->normalizedNumericCandidate($value);
 
-        if (null !== $numericCandidate && is_numeric($numericCandidate)) {
+        if (is_numeric($numericCandidate)) {
             $parsed = (float) $numericCandidate;
         }
 

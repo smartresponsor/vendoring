@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -26,7 +27,7 @@ final readonly class StatementWindowQueryRequestResolver implements StatementWin
         $violations = $this->validator->validate($dto);
         if (0 !== $violations->count()) {
             $firstViolation = $violations->get(0);
-            throw ApiQueryValidationException::fromConstraintMessage((string) $firstViolation?->getMessage());
+            throw ApiQueryValidationException::fromConstraintMessage((string) $firstViolation->getMessage());
         }
 
         return $dto;
