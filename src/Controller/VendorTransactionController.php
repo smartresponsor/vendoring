@@ -27,6 +27,11 @@ use Symfony\Component\Routing\Attribute\Route;
 final class VendorTransactionController extends AbstractController
 {
     private const string WRITE_TRANSACTIONS_PERMISSION = 'write:transactions';
+    private const string EVENT_CREATE_REJECTED = 'vendor_transaction_create_rejected';
+    private const string EVENT_STATUS_UPDATE_REJECTED = 'vendor_transaction_status_update_rejected';
+    private const string EVENT_AUTHENTICATION_REJECTED = 'vendor_transaction_authentication_rejected';
+    private const string EVENT_AUTHORIZATION_REJECTED = 'vendor_transaction_authorization_rejected';
+
     public function __construct(
         private readonly VendorTransactionRepositoryInterface $repo,
         private readonly VendorTransactionManagerInterface $manager,
@@ -48,7 +53,7 @@ final class VendorTransactionController extends AbstractController
     #[Route('', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        if ($authenticationResponse = $this->enforceTransactionWriteAuthentication($request, null, null)) {
+        if ($authenticationResponse = $this->enforceWriteAuthentication($request, null, null)) {
             return $authenticationResponse;
         }
 
@@ -68,42 +73,41 @@ final class VendorTransactionController extends AbstractController
         try {
             $data = $this->inputResolver->resolveCreateData($request);
         } catch (JsonException $exception) {
-            $this->runtimeLogger->warning('vendor_transaction_create_rejected', [
-                'error_code' => VendorTransactionErrorCode::MALFORMED_JSON,
-            ]);
-
-            return new JsonResponse([
-                'error' => VendorTransactionErrorCode::MALFORMED_JSON,
-                'jsonErrorCode' => $exception->getCode(),
-            ], 400);
+            return $this->malformedJsonResponse(self::EVENT_CREATE_REJECTED, [], $exception);
         } catch (InvalidArgumentException $exception) {
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
-            $statusCode = VendorTransactionErrorCode::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
-            $this->runtimeLogger->warning('vendor_transaction_create_rejected', [
-                'vendor_id' => $payload['vendorId'],
-                'order_id' => $payload['orderId'],
-                'project_id' => $payload['projectId'],
-                'error_code' => $errorCode,
-                'status_code' => (string) $statusCode,
-            ]);
+            $statusCode = $this->validationStatusCode($errorCode);
 
-            return new JsonResponse(['error' => $errorCode], $statusCode);
+            return $this->validationFailureResponse(
+                self::EVENT_CREATE_REJECTED,
+                [
+                    'vendor_id' => $payload['vendorId'],
+                    'order_id' => $payload['orderId'],
+                    'project_id' => $payload['projectId'],
+                ],
+                $errorCode,
+                $statusCode,
+                true,
+            );
         }
 
         try {
             $tx = $this->manager->createTransaction($data);
         } catch (InvalidArgumentException $exception) {
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
-            $statusCode = VendorTransactionErrorCode::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
-            $this->runtimeLogger->warning('vendor_transaction_create_rejected', [
-                'vendor_id' => $data->vendorId,
-                'order_id' => $data->orderId,
-                'project_id' => $data->projectId,
-                'error_code' => $errorCode,
-                'status_code' => (string) $statusCode,
-            ]);
+            $statusCode = $this->validationStatusCode($errorCode);
 
-            return new JsonResponse(['error' => $errorCode], $statusCode);
+            return $this->validationFailureResponse(
+                self::EVENT_CREATE_REJECTED,
+                [
+                    'vendor_id' => $data->vendorId,
+                    'order_id' => $data->orderId,
+                    'project_id' => $data->projectId,
+                ],
+                $errorCode,
+                $statusCode,
+                true,
+            );
         }
 
         return new JsonResponse(['id' => $tx->getId(), 'status' => $tx->getStatus()], 201);
@@ -137,7 +141,7 @@ final class VendorTransactionController extends AbstractController
     #[Route('/vendor/{vendorId}/{id}/status', methods: ['POST'])]
     public function updateStatus(string $vendorId, int $id, Request $request): JsonResponse
     {
-        if ($authenticationResponse = $this->enforceTransactionWriteAuthentication($request, $vendorId, $id)) {
+        if ($authenticationResponse = $this->enforceWriteAuthentication($request, $vendorId, $id)) {
             return $authenticationResponse;
         }
 
@@ -155,7 +159,7 @@ final class VendorTransactionController extends AbstractController
         $transaction = $this->repo->findOneByIdAndVendorId($id, $vendorId);
 
         if (!$transaction instanceof VendorTransaction) {
-            $this->runtimeLogger->warning('vendor_transaction_status_update_rejected', [
+            $this->runtimeLogger->warning(self::EVENT_STATUS_UPDATE_REJECTED, [
                 'vendor_id' => $vendorId,
                 'transaction_id' => (string) $id,
                 'error_code' => VendorTransactionErrorCode::NOT_FOUND,
@@ -168,25 +172,19 @@ final class VendorTransactionController extends AbstractController
             $status = $this->inputResolver->resolveStatus($request);
             $updated = $this->manager->updateStatus($transaction, $status);
         } catch (JsonException $exception) {
-            $this->runtimeLogger->warning('vendor_transaction_status_update_rejected', [
-                'vendor_id' => $vendorId,
-                'transaction_id' => (string) $id,
-                'error_code' => VendorTransactionErrorCode::MALFORMED_JSON,
-            ]);
-
-            return new JsonResponse([
-                'error' => VendorTransactionErrorCode::MALFORMED_JSON,
-                'jsonErrorCode' => $exception->getCode(),
-            ], 400);
+            return $this->malformedJsonResponse(
+                self::EVENT_STATUS_UPDATE_REJECTED,
+                ['vendor_id' => $vendorId, 'transaction_id' => (string) $id],
+                $exception,
+            );
         } catch (InvalidArgumentException $exception) {
-            $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
-            $this->runtimeLogger->warning('vendor_transaction_status_update_rejected', [
-                'vendor_id' => $vendorId,
-                'transaction_id' => (string) $id,
-                'error_code' => $errorCode,
-            ]);
-
-            return new JsonResponse(['error' => $errorCode], 422);
+            return $this->validationFailureResponse(
+                self::EVENT_STATUS_UPDATE_REJECTED,
+                ['vendor_id' => $vendorId, 'transaction_id' => (string) $id],
+                $this->inputResolver->normalizeErrorCode($exception->getMessage()),
+                422,
+                false,
+            );
         }
 
         return new JsonResponse(['id' => $updated->getId(), 'status' => $updated->getStatus()]);
@@ -210,55 +208,50 @@ final class VendorTransactionController extends AbstractController
     /**
      * @throws ManagerException
      */
-    private function enforceTransactionWriteAuthentication(Request $request, ?string $vendorId, ?int $transactionId): ?JsonResponse
-    {
-        return $this->enforceWriteAuthentication($request, $vendorId, $transactionId);
-    }
-
-    /**
-     * @throws ManagerException
-     */
     private function enforceWriteAuthentication(Request $request, ?string $vendorId, ?int $transactionId): ?JsonResponse
     {
         $requiredPermission = self::WRITE_TRANSACTIONS_PERMISSION;
         $authorization = trim((string) $request->headers->get('Authorization', ''));
 
         if ('' === $authorization) {
-            $this->runtimeLogger->warning('vendor_transaction_authentication_rejected', [
-                'vendor_id' => $vendorId,
-                'transaction_id' => null !== $transactionId ? (string) $transactionId : null,
-                'error_code' => 'authentication_required',
-                'required_permission' => $requiredPermission,
-            ]);
+            $this->logAuthorizationRejection(
+                self::EVENT_AUTHENTICATION_REJECTED,
+                'authentication_required',
+                $vendorId,
+                $transactionId,
+                $requiredPermission,
+            );
 
             return $this->authenticationResponse('authentication_required', 401, $requiredPermission);
         }
 
+        $authorizedVendor = $this->apiKeyService->validateAuthorizationHeader($authorization, $requiredPermission);
+        if (null !== $authorizedVendor) {
+            return null;
+        }
+
         $authenticatedVendor = $this->apiKeyService->resolveVendorFromAuthHeader($authorization);
         if (null === $authenticatedVendor) {
-            $this->runtimeLogger->warning('vendor_transaction_authentication_rejected', [
-                'vendor_id' => $vendorId,
-                'transaction_id' => null !== $transactionId ? (string) $transactionId : null,
-                'error_code' => 'invalid_api_token',
-                'required_permission' => $requiredPermission,
-            ]);
+            $this->logAuthorizationRejection(
+                self::EVENT_AUTHENTICATION_REJECTED,
+                'invalid_api_token',
+                $vendorId,
+                $transactionId,
+                $requiredPermission,
+            );
 
             return $this->authenticationResponse('invalid_api_token', 401, $requiredPermission);
         }
 
-        $authorizedVendor = $this->apiKeyService->validateAuthorizationHeader($authorization, $requiredPermission);
-        if (null === $authorizedVendor) {
-            $this->runtimeLogger->warning('vendor_transaction_authorization_rejected', [
-                'vendor_id' => $vendorId,
-                'transaction_id' => null !== $transactionId ? (string) $transactionId : null,
-                'error_code' => 'permission_denied',
-                'required_permission' => $requiredPermission,
-            ]);
+        $this->logAuthorizationRejection(
+            self::EVENT_AUTHORIZATION_REJECTED,
+            'permission_denied',
+            $vendorId,
+            $transactionId,
+            $requiredPermission,
+        );
 
-            return $this->authenticationResponse('permission_denied', 403, $requiredPermission);
-        }
-
-        return null;
+        return $this->authenticationResponse('permission_denied', 403, $requiredPermission);
     }
 
     private function authenticationResponse(string $errorCode, int $statusCode, string $requiredPermission): JsonResponse
@@ -268,10 +261,68 @@ final class VendorTransactionController extends AbstractController
             'requiredPermission' => $requiredPermission,
         ], $statusCode);
 
-        $response->headers->set('WWW-Authenticate', 'Bearer');
+        if (401 === $statusCode) {
+            $response->headers->set('WWW-Authenticate', 'Bearer');
+        }
         $response->headers->set('X-Auth-Required-Permission', $requiredPermission);
 
         return $response;
+    }
+
+    /**
+     * @param array<string, scalar|null> $context
+     */
+    private function malformedJsonResponse(string $eventName, array $context, JsonException $exception): JsonResponse
+    {
+        $this->runtimeLogger->warning($eventName, $context + [
+            'error_code' => VendorTransactionErrorCode::MALFORMED_JSON,
+        ]);
+
+        return new JsonResponse([
+            'error' => VendorTransactionErrorCode::MALFORMED_JSON,
+            'jsonErrorCode' => $exception->getCode(),
+        ], 400);
+    }
+
+    /**
+     * @param array<string, scalar|null> $context
+     */
+    private function validationFailureResponse(
+        string $eventName,
+        array $context,
+        string $errorCode,
+        int $statusCode,
+        bool $includeStatusCodeInLog,
+    ): JsonResponse
+    {
+        $logContext = $context + ['error_code' => $errorCode];
+        if ($includeStatusCodeInLog) {
+            $logContext['status_code'] = (string) $statusCode;
+        }
+
+        $this->runtimeLogger->warning($eventName, $logContext);
+
+        return new JsonResponse(['error' => $errorCode], $statusCode);
+    }
+
+    private function validationStatusCode(string $errorCode): int
+    {
+        return VendorTransactionErrorCode::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
+    }
+
+    private function logAuthorizationRejection(
+        string $eventName,
+        string $errorCode,
+        ?string $vendorId,
+        ?int $transactionId,
+        string $requiredPermission,
+    ): void {
+        $this->runtimeLogger->warning($eventName, [
+            'vendor_id' => $vendorId,
+            'transaction_id' => null !== $transactionId ? (string) $transactionId : null,
+            'error_code' => $errorCode,
+            'required_permission' => $requiredPermission,
+        ]);
     }
 
     private function rateLimitResponse(string $message, WriteRateLimitDecision $decision, Request $request, ?string $vendorId, ?int $transactionId): JsonResponse
@@ -317,20 +368,23 @@ final class VendorTransactionController extends AbstractController
 
     private function writeActorKey(Request $request, ?string $vendorId = null): string
     {
-        $explicitTestKey = trim((string) $request->headers->get('X-Rate-Limit-Key', ''));
-        if ('' !== $explicitTestKey) {
-            return sha1($explicitTestKey . '|' . (null === $vendorId ? '' : $vendorId));
+        if (defined('PHPUNIT_COMPOSER_INSTALL')) {
+            $explicitTestKey = trim((string) $request->headers->get('X-Rate-Limit-Key', ''));
+            if ('' !== $explicitTestKey) {
+                return sha1($explicitTestKey . '|' . (null === $vendorId ? '' : $vendorId));
+            }
         }
 
         $authorization = trim((string) $request->headers->get('Authorization', ''));
         $clientIp = $request->getClientIp() ?? 'unknown';
 
-        if (defined('PHPUNIT_COMPOSER_INSTALL')) {
-            return sha1(uniqid('vendoring_phpunit_rate_', true) . '|' . (null === $vendorId ? '' : $vendorId));
-        }
-
         if ('' === $authorization && 'unknown' === $clientIp) {
-            return sha1(uniqid('vendoring_test_rate_', true) . '|' . (null === $vendorId ? '' : $vendorId));
+            return sha1(
+                'vendoring_anonymous_rate'
+                . '|' . $request->getMethod()
+                . '|' . $request->getPathInfo()
+                . '|' . (null === $vendorId ? '' : $vendorId),
+            );
         }
 
         return sha1($authorization . '|' . $clientIp . '|' . (null === $vendorId ? '' : $vendorId));

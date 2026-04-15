@@ -8,18 +8,17 @@ namespace App\Tests\Unit\Controller;
 use App\Controller\VendorTransactionController;
 use App\Entity\Vendor;
 use App\Entity\VendorTransaction;
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\RuntimeLogger;
+use App\ServiceInterface\Observability\RuntimeLoggerInterface;
 use App\Service\Traffic\FileWriteRateLimiter;
 use App\Service\VendorTransactionInputResolverService;
 use App\ServiceInterface\VendorApiKeyServiceInterface;
+use App\Tests\Support\Observability\InMemoryRuntimeLogger;
 use App\Tests\Support\Transaction\FakeVendorTransactionManager;
 use App\Tests\Support\Transaction\InMemoryVendorTransactionRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 final class VendorTransactionControllerTest extends TestCase
 {
@@ -28,7 +27,12 @@ final class VendorTransactionControllerTest extends TestCase
         $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
-        $controller = $this->controller($transaction, apiKeyService: $this->createMock(VendorApiKeyServiceInterface::class));
+        $runtimeLogger = $this->runtimeLogger();
+        $controller = $this->controller(
+            $transaction,
+            apiKeyService: $this->createMock(VendorApiKeyServiceInterface::class),
+            runtimeLogger: $runtimeLogger,
+        );
 
         $response = $controller->create(Request::create('/', 'POST', content: json_encode([
             'vendorId' => 'vendor-1',
@@ -41,6 +45,14 @@ final class VendorTransactionControllerTest extends TestCase
         self::assertSame('authentication_required', $payload['error']);
         self::assertSame('write:transactions', $payload['requiredPermission']);
         self::assertSame('Bearer', $response->headers->get('WWW-Authenticate'));
+        self::assertSame('write:transactions', $response->headers->get('X-Auth-Required-Permission'));
+
+        $records = $runtimeLogger->snapshot();
+        self::assertNotEmpty($records);
+        $lastRecord = $records[array_key_last($records)];
+        self::assertSame('vendor_transaction_authentication_rejected', $lastRecord['message']);
+        self::assertSame('authentication_required', $lastRecord['error_code']);
+        self::assertSame('write:transactions', $lastRecord['required_permission']);
     }
 
     public function testCreateRejectsInvalidAuthenticationHeader(): void
@@ -48,7 +60,12 @@ final class VendorTransactionControllerTest extends TestCase
         $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
-        $controller = $this->controller($transaction, apiKeyService: $this->invalidApiKeyService());
+        $runtimeLogger = $this->runtimeLogger();
+        $controller = $this->controller(
+            $transaction,
+            apiKeyService: $this->invalidApiKeyService(),
+            runtimeLogger: $runtimeLogger,
+        );
 
         $response = $controller->create($this->authorizedJsonRequest([
             'vendorId' => 'vendor-1',
@@ -59,7 +76,16 @@ final class VendorTransactionControllerTest extends TestCase
 
         self::assertSame(401, $response->getStatusCode());
         self::assertSame('invalid_api_token', $payload['error']);
+        self::assertSame('write:transactions', $payload['requiredPermission']);
+        self::assertSame('Bearer', $response->headers->get('WWW-Authenticate'));
         self::assertSame('write:transactions', $response->headers->get('X-Auth-Required-Permission'));
+
+        $records = $runtimeLogger->snapshot();
+        self::assertNotEmpty($records);
+        $lastRecord = $records[array_key_last($records)];
+        self::assertSame('vendor_transaction_authentication_rejected', $lastRecord['message']);
+        self::assertSame('invalid_api_token', $lastRecord['error_code']);
+        self::assertSame('write:transactions', $lastRecord['required_permission']);
     }
 
     public function testCreateRejectsUnderScopedToken(): void
@@ -67,7 +93,12 @@ final class VendorTransactionControllerTest extends TestCase
         $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
-        $controller = $this->controller($transaction, apiKeyService: $this->underScopedApiKeyService());
+        $runtimeLogger = $this->runtimeLogger();
+        $controller = $this->controller(
+            $transaction,
+            apiKeyService: $this->underScopedApiKeyService(),
+            runtimeLogger: $runtimeLogger,
+        );
 
         $response = $controller->create($this->authorizedJsonRequest([
             'vendorId' => 'vendor-1',
@@ -79,6 +110,15 @@ final class VendorTransactionControllerTest extends TestCase
         self::assertSame(403, $response->getStatusCode());
         self::assertSame('permission_denied', $payload['error']);
         self::assertSame('write:transactions', $payload['requiredPermission']);
+        self::assertNull($response->headers->get('WWW-Authenticate'));
+        self::assertSame('write:transactions', $response->headers->get('X-Auth-Required-Permission'));
+
+        $records = $runtimeLogger->snapshot();
+        self::assertNotEmpty($records);
+        $lastRecord = $records[array_key_last($records)];
+        self::assertSame('vendor_transaction_authorization_rejected', $lastRecord['message']);
+        self::assertSame('permission_denied', $lastRecord['error_code']);
+        self::assertSame('write:transactions', $lastRecord['required_permission']);
     }
 
     public function testCreateNormalizesBlankProjectIdBeforePassingToManager(): void
@@ -184,13 +224,21 @@ final class VendorTransactionControllerTest extends TestCase
         $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
-        $controller = $this->controller($transaction);
+        $runtimeLogger = $this->runtimeLogger();
+        $controller = $this->controller($transaction, runtimeLogger: $runtimeLogger);
 
         $response = $controller->create($this->authorizedJsonRequest(content: '{invalid-json'));
         $payload = self::decodePayload($response);
 
         self::assertSame(400, $response->getStatusCode());
         self::assertSame('malformed_json', $payload['error']);
+
+        $records = $runtimeLogger->snapshot();
+        self::assertNotEmpty($records);
+        $lastRecord = $records[array_key_last($records)];
+        self::assertSame('vendor_transaction_create_rejected', $lastRecord['message']);
+        self::assertSame('malformed_json', $lastRecord['error_code']);
+        self::assertArrayNotHasKey('status_code', $lastRecord);
     }
 
     public function testUpdateStatusUsesRepositoryLookupByVendorAndId(): void
@@ -212,12 +260,47 @@ final class VendorTransactionControllerTest extends TestCase
         self::assertSame($transaction, $manager->updatedTransaction);
     }
 
+    public function testUpdateStatusRejectsMissingAuthenticationHeader(): void
+    {
+        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $this->forceId($transaction, 42);
+
+        $runtimeLogger = $this->runtimeLogger();
+        $controller = $this->controller(
+            $transaction,
+            apiKeyService: $this->createMock(VendorApiKeyServiceInterface::class),
+            runtimeLogger: $runtimeLogger,
+        );
+
+        $request = Request::create('/', 'POST', content: json_encode(['status' => 'settled'], JSON_THROW_ON_ERROR));
+        $response = $controller->updateStatus('vendor-1', 42, $request);
+        $payload = self::decodePayload($response);
+
+        self::assertSame(401, $response->getStatusCode());
+        self::assertSame('authentication_required', $payload['error']);
+        self::assertSame('write:transactions', $payload['requiredPermission']);
+        self::assertSame('Bearer', $response->headers->get('WWW-Authenticate'));
+        self::assertSame('write:transactions', $response->headers->get('X-Auth-Required-Permission'));
+
+        $records = $runtimeLogger->snapshot();
+        self::assertNotEmpty($records);
+        $lastRecord = $records[array_key_last($records)];
+        self::assertSame('vendor_transaction_authentication_rejected', $lastRecord['message']);
+        self::assertSame('authentication_required', $lastRecord['error_code']);
+        self::assertSame('write:transactions', $lastRecord['required_permission']);
+    }
+
     public function testUpdateStatusRejectsUnderScopedToken(): void
     {
         $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
-        $controller = $this->controller($transaction, apiKeyService: $this->underScopedApiKeyService());
+        $runtimeLogger = $this->runtimeLogger();
+        $controller = $this->controller(
+            $transaction,
+            apiKeyService: $this->underScopedApiKeyService(),
+            runtimeLogger: $runtimeLogger,
+        );
 
         $response = $controller->updateStatus('vendor-1', 42, $this->authorizedJsonRequest([
             'status' => 'settled',
@@ -226,6 +309,47 @@ final class VendorTransactionControllerTest extends TestCase
 
         self::assertSame(403, $response->getStatusCode());
         self::assertSame('permission_denied', $payload['error']);
+        self::assertSame('write:transactions', $payload['requiredPermission']);
+        self::assertNull($response->headers->get('WWW-Authenticate'));
+        self::assertSame('write:transactions', $response->headers->get('X-Auth-Required-Permission'));
+
+        $records = $runtimeLogger->snapshot();
+        self::assertNotEmpty($records);
+        $lastRecord = $records[array_key_last($records)];
+        self::assertSame('vendor_transaction_authorization_rejected', $lastRecord['message']);
+        self::assertSame('permission_denied', $lastRecord['error_code']);
+        self::assertSame('write:transactions', $lastRecord['required_permission']);
+    }
+
+    public function testUpdateStatusRejectsInvalidAuthenticationHeader(): void
+    {
+        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $this->forceId($transaction, 42);
+
+        $runtimeLogger = $this->runtimeLogger();
+        $controller = $this->controller(
+            $transaction,
+            apiKeyService: $this->invalidApiKeyService(),
+            runtimeLogger: $runtimeLogger,
+        );
+
+        $response = $controller->updateStatus('vendor-1', 42, $this->authorizedJsonRequest([
+            'status' => 'settled',
+        ]));
+        $payload = self::decodePayload($response);
+
+        self::assertSame(401, $response->getStatusCode());
+        self::assertSame('invalid_api_token', $payload['error']);
+        self::assertSame('write:transactions', $payload['requiredPermission']);
+        self::assertSame('Bearer', $response->headers->get('WWW-Authenticate'));
+        self::assertSame('write:transactions', $response->headers->get('X-Auth-Required-Permission'));
+
+        $records = $runtimeLogger->snapshot();
+        self::assertNotEmpty($records);
+        $lastRecord = $records[array_key_last($records)];
+        self::assertSame('vendor_transaction_authentication_rejected', $lastRecord['message']);
+        self::assertSame('invalid_api_token', $lastRecord['error_code']);
+        self::assertSame('write:transactions', $lastRecord['required_permission']);
     }
 
     public function testUpdateStatusReturnsNotFoundWhenVendorDoesNotOwnTransaction(): void
@@ -249,13 +373,21 @@ final class VendorTransactionControllerTest extends TestCase
         $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
-        $controller = $this->controller($transaction);
+        $runtimeLogger = $this->runtimeLogger();
+        $controller = $this->controller($transaction, runtimeLogger: $runtimeLogger);
 
         $response = $controller->updateStatus('vendor-1', 42, $this->authorizedJsonRequest(content: '{invalid-json'));
         $payload = self::decodePayload($response);
 
         self::assertSame(400, $response->getStatusCode());
         self::assertSame('malformed_json', $payload['error']);
+
+        $records = $runtimeLogger->snapshot();
+        self::assertNotEmpty($records);
+        $lastRecord = $records[array_key_last($records)];
+        self::assertSame('vendor_transaction_status_update_rejected', $lastRecord['message']);
+        self::assertSame('malformed_json', $lastRecord['error_code']);
+        self::assertArrayNotHasKey('status_code', $lastRecord);
     }
 
     public function testUpdateStatusReturnsValidationErrorWhenStatusMissing(): void
@@ -277,9 +409,10 @@ final class VendorTransactionControllerTest extends TestCase
         $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
+        $runtimeLogger = $this->runtimeLogger();
         $manager = new FakeVendorTransactionManager($transaction);
         $manager->exceptionToThrow = new \InvalidArgumentException('invalid_status_transition');
-        $controller = $this->controller($transaction, $manager);
+        $controller = $this->controller($transaction, $manager, runtimeLogger: $runtimeLogger);
 
         $response = $controller->updateStatus('vendor-1', 42, $this->authorizedJsonRequest([
             'status' => 'refunded',
@@ -288,6 +421,12 @@ final class VendorTransactionControllerTest extends TestCase
 
         self::assertSame(422, $response->getStatusCode());
         self::assertSame('invalid_status_transition', $payload['error']);
+
+        $records = $runtimeLogger->snapshot();
+        self::assertNotEmpty($records);
+        $lastRecord = $records[array_key_last($records)];
+        self::assertSame('vendor_transaction_status_update_rejected', $lastRecord['message']);
+        self::assertArrayNotHasKey('status_code', $lastRecord);
     }
 
     public function testCreateMapsUnknownValidationMessageToStableErrorCode(): void
@@ -308,6 +447,33 @@ final class VendorTransactionControllerTest extends TestCase
 
         self::assertSame(422, $response->getStatusCode());
         self::assertSame('transaction_validation_error', $payload['error']);
+    }
+
+    public function testCreateLogsStatusCodeForValidationFailures(): void
+    {
+        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $this->forceId($transaction, 42);
+
+        $runtimeLogger = $this->runtimeLogger();
+        $manager = new FakeVendorTransactionManager($transaction);
+        $manager->exceptionToThrow = new \InvalidArgumentException('duplicate_transaction');
+        $controller = $this->controller($transaction, $manager, runtimeLogger: $runtimeLogger);
+
+        $response = $controller->create($this->authorizedJsonRequest([
+            'vendorId' => 'vendor-1',
+            'orderId' => 'order-1',
+            'amount' => '10.00',
+        ]));
+        $payload = self::decodePayload($response);
+
+        self::assertSame(409, $response->getStatusCode());
+        self::assertSame('duplicate_transaction', $payload['error']);
+
+        $records = $runtimeLogger->snapshot();
+        self::assertNotEmpty($records);
+        $lastRecord = $records[array_key_last($records)];
+        self::assertSame('vendor_transaction_create_rejected', $lastRecord['message']);
+        self::assertSame('409', $lastRecord['status_code']);
     }
 
     public function testCreateReturnsTooManyRequestsWhenWriteRateLimitIsExceeded(): void
@@ -340,6 +506,21 @@ final class VendorTransactionControllerTest extends TestCase
         self::assertTrue($rejected->headers->has('Retry-After'));
     }
 
+    public function testWriteActorKeyIsDeterministicForAnonymousUnknownClientFallback(): void
+    {
+        $controller = $this->controller();
+        $request = Request::create('/api/vendor-transactions', 'POST');
+
+        $reflection = new \ReflectionObject($controller);
+        $method = $reflection->getMethod('writeActorKey');
+
+        $first = $method->invoke($controller, $request, null);
+        $second = $method->invoke($controller, $request, null);
+
+        self::assertSame($first, $second);
+        self::assertSame(sha1('vendoring_anonymous_rate|POST|/api/vendor-transactions|'), $first);
+    }
+
     /** @return array<string, mixed> */
     private static function decodePayload(JsonResponse $response): array
     {
@@ -359,21 +540,27 @@ final class VendorTransactionControllerTest extends TestCase
         $property->setValue($transaction, $id);
     }
 
-    private function runtimeLogger(): RuntimeLogger
+    private function runtimeLogger(): RuntimeLoggerInterface
     {
-        return new RuntimeLogger(new CorrelationContext(), new RequestStack());
+        return new InMemoryRuntimeLogger();
     }
 
-    private function controller(?VendorTransaction $transaction = null, ?FakeVendorTransactionManager $manager = null, ?VendorApiKeyServiceInterface $apiKeyService = null): VendorTransactionController
+    private function controller(
+        ?VendorTransaction $transaction = null,
+        ?FakeVendorTransactionManager $manager = null,
+        ?VendorApiKeyServiceInterface $apiKeyService = null,
+        ?RuntimeLoggerInterface $runtimeLogger = null,
+    ): VendorTransactionController
     {
         $transaction ??= new VendorTransaction('vendor-1', 'order-1', null, '10.00');
         $manager ??= new FakeVendorTransactionManager($transaction);
+        $runtimeLogger ??= $this->runtimeLogger();
 
         return new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             $manager,
             new VendorTransactionInputResolverService(),
-            $this->runtimeLogger(),
+            $runtimeLogger,
             new FileWriteRateLimiter(),
             $apiKeyService ?? $this->authorizedApiKeyService(),
         );
@@ -384,8 +571,8 @@ final class VendorTransactionControllerTest extends TestCase
     {
         $vendor = new Vendor('Vendor A');
         $service = $this->createMock(VendorApiKeyServiceInterface::class);
-        $service->method('resolveVendorFromAuthHeader')->willReturn($vendor);
         $service->method('validateAuthorizationHeader')->with('Bearer valid-token', 'write:transactions')->willReturn($vendor);
+        $service->expects(self::never())->method('resolveVendorFromAuthHeader');
 
         return $service;
     }
@@ -394,8 +581,8 @@ final class VendorTransactionControllerTest extends TestCase
     private function invalidApiKeyService(): VendorApiKeyServiceInterface
     {
         $service = $this->createMock(VendorApiKeyServiceInterface::class);
+        $service->method('validateAuthorizationHeader')->with('Bearer valid-token', 'write:transactions')->willReturn(null);
         $service->method('resolveVendorFromAuthHeader')->with('Bearer valid-token')->willReturn(null);
-        $service->expects(self::never())->method('validateAuthorizationHeader');
 
         return $service;
     }
@@ -405,8 +592,8 @@ final class VendorTransactionControllerTest extends TestCase
     {
         $vendor = new Vendor('Vendor A');
         $service = $this->createMock(VendorApiKeyServiceInterface::class);
-        $service->method('resolveVendorFromAuthHeader')->with('Bearer valid-token')->willReturn($vendor);
         $service->method('validateAuthorizationHeader')->with('Bearer valid-token', 'write:transactions')->willReturn(null);
+        $service->method('resolveVendorFromAuthHeader')->with('Bearer valid-token')->willReturn($vendor);
 
         return $service;
     }
