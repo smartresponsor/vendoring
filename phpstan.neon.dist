@@ -1,8 +1,8 @@
 parameters:
-    level: 0
+    level: 2
     paths:
         - src
         - tests
     bootstrapFiles:
         - phpstan.bootstrap.php
-    tmpDir: var/smartresponsor-tagging/phpstan
+    tmpDir: var/phpstan

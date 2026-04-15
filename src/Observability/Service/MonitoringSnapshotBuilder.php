@@ -6,6 +6,7 @@ namespace App\Observability\Service;
 
 use App\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface;
 use DateTimeImmutable;
+use DateTimeZone;
 
 /**
  * File-backed monitoring snapshot builder for runtime operators.
@@ -15,6 +16,36 @@ use DateTimeImmutable;
  */
 final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuilderInterface
 {
+    /**
+     * @var array<string, string>
+     */
+    private const array PROBE_ARTIFACTS = [
+        'transaction' => 'docs/PHASE59_SYNTHETIC_RUNTIME_PROBES.md',
+        'finance' => 'docs/PHASE61_FINANCE_SYNTHETIC_PROBE.md',
+        'payout' => 'docs/PHASE62_PAYOUT_PROCESSING_SYNTHETIC_PROBE.md',
+        'postDeploy' => 'docs/PHASE60_DEPLOY_READINESS_POST_DEPLOY_PACK.md',
+    ];
+
+    /**
+     * @var list<array{0:string,1:bool}>
+     */
+    private const array TIMESTAMP_FORMATS = [
+        [DATE_ATOM, false],
+        [DATE_RFC3339_EXTENDED, false],
+        ['Y-m-d\TH:i:s.uP', false],
+        ['Y-m-d\TH:i:s\Z', true],
+        ['Y-m-d\TH:i:s.u\Z', true],
+        ['Y-m-d\TH:i:s.v\Z', true],
+    ];
+
+    /**
+     * Signed numeric epoch formats:
+     * - integer: 1713000000, +1713000000, -1713000000
+     * - decimal: 1713000000.625
+     * - scientific: 1.713E+09
+     */
+    private const string NUMERIC_TIMESTAMP_PATTERN = '/^[+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$/';
+
     public function __construct(
         private string $observabilityDir,
         private string $faultToleranceDir,
@@ -24,23 +55,24 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
     public function build(int $windowSeconds = 900): array
     {
         $now = time();
-        $cutoff = $now - max(1, $windowSeconds);
+        $normalizedWindowSeconds = max(1, $windowSeconds);
+        $cutoff = $now - $normalizedWindowSeconds;
 
-        $logSummary = $this->readLogs($cutoff);
-        $metricSummary = $this->readMetrics($cutoff);
+        $logSummary = $this->readLogs($cutoff, $now);
+        $metricSummary = $this->readMetrics($cutoff, $now);
         $breakerSummary = $this->readBreakers();
         $probeSummary = $this->probeArtifacts();
 
         $status = 'ok';
-        if ($logSummary['error'] > 0 || $breakerSummary['open'] > 0 || in_array(false, $probeSummary, true)) {
+        if ($logSummary['error'] > 0 || $logSummary['warning'] > 0 || $breakerSummary['open'] > 0 || in_array(false, $probeSummary, true)) {
             $status = 'warn';
         }
 
-        $generatedAt = new DateTimeImmutable();
+        $generatedAt = new DateTimeImmutable('now', new DateTimeZone('UTC'));
 
         return [
             'generatedAt' => $generatedAt->format(DATE_ATOM),
-            'windowSeconds' => $windowSeconds,
+            'windowSeconds' => $normalizedWindowSeconds,
             'logSummary' => $logSummary,
             'metricSummary' => $metricSummary,
             'breakerSummary' => $breakerSummary,
@@ -52,7 +84,7 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
     /**
      * @return array{total:int,error:int,warning:int,routes:list<string>,errorCodes:list<string>}
      */
-    private function readLogs(int $cutoff): array
+    private function readLogs(int $cutoff, int $now): array
     {
         $path = rtrim($this->observabilityDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'runtime_logs.ndjson';
         $total = 0;
@@ -62,7 +94,7 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
         $errorCodes = [];
 
         foreach ($this->readJsonLines($path) as $record) {
-            if (!$this->isRecentRecord($record, $cutoff)) {
+            if (!$this->isRecentRecord($record, $cutoff, $now)) {
                 continue;
             }
             ++$total;
@@ -84,26 +116,32 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
             }
         }
 
+        $routeList = array_values(array_keys($routes));
+        sort($routeList, SORT_STRING);
+
+        $errorCodeList = array_values(array_keys($errorCodes));
+        sort($errorCodeList, SORT_STRING);
+
         return [
             'total' => $total,
             'error' => $error,
             'warning' => $warning,
-            'routes' => array_values(array_keys($routes)),
-            'errorCodes' => array_values(array_keys($errorCodes)),
+            'routes' => $routeList,
+            'errorCodes' => $errorCodeList,
         ];
     }
 
     /**
      * @return array{total:int,names:array<string,int>}
      */
-    private function readMetrics(int $cutoff): array
+    private function readMetrics(int $cutoff, int $now): array
     {
         $path = rtrim($this->observabilityDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'runtime_metrics.ndjson';
         $total = 0;
         $names = [];
 
         foreach ($this->readJsonLines($path) as $record) {
-            if (!$this->isRecentRecord($record, $cutoff)) {
+            if (!$this->isRecentRecord($record, $cutoff, $now)) {
                 continue;
             }
             ++$total;
@@ -136,7 +174,10 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
             return ['open' => 0, 'halfOpen' => 0, 'closed' => 0, 'scopes' => []];
         }
 
-        foreach (glob($dir . DIRECTORY_SEPARATOR . '*.json') ?: [] as $path) {
+        $breakerFiles = glob($dir . DIRECTORY_SEPARATOR . '*.json') ?: [];
+        sort($breakerFiles, SORT_STRING);
+
+        foreach ($breakerFiles as $path) {
             $rawPayload = file_get_contents($path);
             if (!is_string($rawPayload)) {
                 continue;
@@ -158,7 +199,7 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
             }
         }
 
-        sort($scopes);
+        sort($scopes, SORT_STRING);
 
         return [
             'open' => $open,
@@ -173,52 +214,130 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
      */
     private function probeArtifacts(): array
     {
-        return [
-            'transaction' => is_file($this->projectDir . '/docs/PHASE59_SYNTHETIC_RUNTIME_PROBES.md'),
-            'finance' => is_file($this->projectDir . '/docs/PHASE61_FINANCE_SYNTHETIC_PROBE.md'),
-            'payout' => is_file($this->projectDir . '/docs/PHASE62_PAYOUT_PROCESSING_SYNTHETIC_PROBE.md'),
-            'postDeploy' => is_file($this->projectDir . '/docs/PHASE60_DEPLOY_READINESS_POST_DEPLOY_PACK.md'),
+        $probeSummary = [
+            'transaction' => false,
+            'finance' => false,
+            'payout' => false,
+            'postDeploy' => false,
         ];
+
+        foreach (self::PROBE_ARTIFACTS as $probeKey => $relativePath) {
+            $probeSummary[$probeKey] = is_file(rtrim($this->projectDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath);
+        }
+
+        return $probeSummary;
     }
 
     /**
-     * @return list<array<string,mixed>>
+     * @return \Generator<int, array<string,mixed>, void, void>
      */
-    private function readJsonLines(string $path): array
+    private function readJsonLines(string $path): \Generator
     {
         if (!is_file($path)) {
-            return [];
-        }
-        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        if (!is_array($lines)) {
-            return [];
+            return;
         }
 
-        $records = [];
-        foreach ($lines as $line) {
-            $decoded = json_decode((string) $line, true);
-            if (is_array($decoded)) {
-                $records[] = $decoded;
+        $handle = fopen($path, 'rb');
+        if (false === $handle) {
+            return;
+        }
+
+        try {
+            $isFirstLine = true;
+            while (($line = fgets($handle)) !== false) {
+                if ($isFirstLine) {
+                    $line = preg_replace('/^\xEF\xBB\xBF/u', '', $line) ?? $line;
+                    $isFirstLine = false;
+                }
+                $line = trim($line);
+                if ('' === $line) {
+                    continue;
+                }
+
+                $decoded = json_decode($line, true);
+                if (is_array($decoded)) {
+                    yield $decoded;
+                }
             }
+        } finally {
+            fclose($handle);
         }
-
-        return $records;
     }
 
     /**
      * @param array<string,mixed> $record
      */
-    private function isRecentRecord(array $record, int $cutoff): bool
+    private function isRecentRecord(array $record, int $cutoff, int $now): bool
     {
         $timestamp = $record['timestamp'] ?? null;
-        if (!is_string($timestamp) || '' === $timestamp) {
-            return true;
-        }
-        $unix = strtotime($timestamp);
-        if (false === $unix) {
-            return true;
+        if (is_int($timestamp) || is_float($timestamp)) {
+            $unix = (int) $timestamp;
+        } elseif (is_string($timestamp)) {
+            $timestamp = trim($timestamp);
+            if ('' === $timestamp) {
+                return false;
+            }
+
+            $unix = $this->parseNumericTimestamp($timestamp) ?? $this->parseTimestamp($timestamp);
+        } else {
+            return false;
         }
 
-        return $unix >= $cutoff;
+        if (null === $unix) {
+            return false;
+        }
+        if ($unix < 0) {
+            return false;
+        }
+
+        return $unix >= $cutoff && $unix <= $now;
+    }
+
+    private function parseNumericTimestamp(string $timestamp): ?int
+    {
+        if (preg_match(self::NUMERIC_TIMESTAMP_PATTERN, $timestamp) !== 1) {
+            return null;
+        }
+
+        if (preg_match('/^[+-]?\d+$/', $timestamp) === 1) {
+            $normalizedInteger = str_starts_with($timestamp, '+') ? substr($timestamp, 1) : $timestamp;
+            $validatedInteger = filter_var($normalizedInteger, FILTER_VALIDATE_INT);
+            if (false === $validatedInteger) {
+                return null;
+            }
+
+            return (int) $validatedInteger;
+        }
+
+        $numericTimestamp = (float) $timestamp;
+        if (!is_finite($numericTimestamp)) {
+            return null;
+        }
+        if ($numericTimestamp > PHP_INT_MAX || $numericTimestamp < PHP_INT_MIN) {
+            return null;
+        }
+
+        return (int) $numericTimestamp;
+    }
+
+    private function parseTimestamp(string $timestamp): ?int
+    {
+        $utc = new DateTimeZone('UTC');
+        foreach (self::TIMESTAMP_FORMATS as [$format, $useUtcTimezone]) {
+            $timezone = $useUtcTimezone ? $utc : null;
+            $parsed = DateTimeImmutable::createFromFormat($format, $timestamp, $timezone);
+            if (false === $parsed) {
+                continue;
+            }
+
+            $errors = DateTimeImmutable::getLastErrors();
+            if (false !== $errors && (0 !== $errors['warning_count'] || 0 !== $errors['error_count'])) {
+                continue;
+            }
+
+            return $parsed->getTimestamp();
+        }
+
+        return null;
     }
 }
