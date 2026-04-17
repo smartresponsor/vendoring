@@ -155,7 +155,7 @@ final class KernelRuntimeHarness
 
     public static function assertRedirectTo(RedirectResponse|Response $response, string $expectedLocation): void
     {
-        if (!$response instanceof RedirectResponse && !($response instanceof Response && $response->isRedirect())) {
+        if (!$response instanceof RedirectResponse && !$response->isRedirect()) {
             throw new \RuntimeException('Expected redirect response from kernel runtime harness.');
         }
 

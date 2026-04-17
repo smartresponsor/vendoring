@@ -79,7 +79,7 @@ final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterfac
 
         $completionPercent = (int) round(($completedFields / max($totalFields, 1)) * 100);
         $readyForPublishing = [] === $missingFields;
-        $nextAction = [] === $missingFields ? null : self::NEXT_ACTIONS[$missingFields[0]];
+        $nextAction = [] === $missingFields ? null : (self::NEXT_ACTIONS[$missingFields[0]] ?? null);
 
         return new VendorProfileView(
             vendorId: $vendorId,

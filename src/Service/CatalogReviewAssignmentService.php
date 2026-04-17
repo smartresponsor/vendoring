@@ -6,15 +6,15 @@ namespace App\Service;
 
 use App\Entity\VendorCatalogReviewAssignment;
 use App\Policy\CategoryReviewAssignmentPolicy;
-use App\Repository\CategoryChangeRequestRepository;
-use App\Repository\CategoryReviewAssignmentRepository;
+use App\Repository\VendorCatalogCategoryChangeRequestRepository;
+use App\Repository\VendorCatalogReviewAssignmentRepository;
 use InvalidArgumentException;
 
 final readonly class CatalogReviewAssignmentService
 {
     public function __construct(
-        private CategoryChangeRequestRepository    $requestRepository,
-        private CategoryReviewAssignmentRepository $assignmentRepository,
+        private VendorCatalogCategoryChangeRequestRepository $requestRepository,
+        private VendorCatalogReviewAssignmentRepository $assignmentRepository,
         private CategoryReviewAssignmentPolicy     $policy,
     ) {}
 

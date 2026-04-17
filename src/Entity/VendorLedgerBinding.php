@@ -9,6 +9,7 @@ namespace App\Entity;
  */
 final class VendorLedgerBinding
 {
+    /** @var int|null */
     private ?int $id = null;
 
     public function __construct(
@@ -18,7 +19,7 @@ final class VendorLedgerBinding
 
     public function getId(): ?int
     {
-        return $this->id;
+        return is_int($this->id) ? $this->id : null;
     }
 
     public function getVendor(): Vendor

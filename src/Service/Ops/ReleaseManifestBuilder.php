@@ -33,7 +33,7 @@ final readonly class ReleaseManifestBuilder implements ReleaseManifestBuilderInt
         $alertCodes = [];
         foreach ($alerts as $alert) {
             $code = $alert['code'];
-            if (is_string($code) && '' !== $code) {
+            if ('' !== $code) {
                 $alertCodes[] = $code;
             }
         }

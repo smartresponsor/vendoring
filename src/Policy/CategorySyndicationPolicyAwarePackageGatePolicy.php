@@ -39,9 +39,9 @@ final class CategorySyndicationPolicyAwarePackageGatePolicy implements CategoryS
 
         return new CategorySyndicationPolicyAwarePackageGateReport(
             $mediaPolicyMode,
-            array_values($packageMissingRequiredFields),
+            ($packageMissingRequiredFields),
             $requiredMissing,
-            array_values(array_unique($warnings)),
+            self::stringList(array_unique($warnings)),
             $checks,
             self::stringList($fallbackGatePayload['exactMatchedBindingIds'] ?? []),
             self::stringList($fallbackGatePayload['fallbackMatchedBindingIds'] ?? []),

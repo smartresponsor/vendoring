@@ -11,7 +11,8 @@ abstract class ExternalBasePantherTestCase extends PantherTestCase
 {
     protected static function createExternalBaseClient(): Client
     {
-        $baseUri = (string) ($_SERVER['PANTHER_EXTERNAL_BASE_URI'] ?? $_ENV['PANTHER_EXTERNAL_BASE_URI'] ?? '');
+        $baseUriValue = $_SERVER['PANTHER_EXTERNAL_BASE_URI'] ?? $_ENV['PANTHER_EXTERNAL_BASE_URI'] ?? '';
+        $baseUri = is_scalar($baseUriValue) ? (string) $baseUriValue : '';
         $baseUri = rtrim(trim($baseUri), '/');
 
         if ('' === $baseUri) {
@@ -30,7 +31,6 @@ abstract class ExternalBasePantherTestCase extends PantherTestCase
     {
         $response = $client->getInternalResponse();
 
-        self::assertNotNull($response);
         self::assertSame($expectedStatusCode, $response->getStatusCode());
         self::assertNotFalse($response->getContent());
 

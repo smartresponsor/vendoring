@@ -139,7 +139,12 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
         }
         $decoded = json_decode((string) $value, true);
 
-        return is_array($decoded) ? $decoded : [];
+        if (!is_array($decoded)) {
+            return [];
+        }
+
+        /** @var array<string, mixed> $decoded */
+        return $decoded;
     }
 
     /**
@@ -151,7 +156,8 @@ final readonly class PayoutRepository implements PayoutRepositoryInterface
      */
     private function encodeMergedMeta(string $id, array $meta): string
     {
-        $existing = $this->byId($id)?->meta ?? [];
+        $existingPayout = $this->byId($id);
+        $existing = $existingPayout instanceof Payout ? $existingPayout->meta : [];
 
         return json_encode([...$existing, ...$meta], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
     }

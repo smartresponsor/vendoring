@@ -25,6 +25,10 @@ foreach ($checks as $label => $result) {
 }
 
 $bundles = require $root . '/config/bundles.php';
+if (!is_array($bundles)) {
+    fwrite(STDERR, '[FAIL] bundles.php must return array' . PHP_EOL);
+    exit(1);
+}
 
 foreach ([
     'Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle',

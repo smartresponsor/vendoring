@@ -9,6 +9,7 @@ namespace App\Entity;
  */
 final class VendorMedia
 {
+    /** @var int|null */
     private ?int $id = null;
     private ?string $logoPath = null;
     private ?string $bannerPath = null;
@@ -27,7 +28,7 @@ final class VendorMedia
 
     public function getId(): ?int
     {
-        return $this->id;
+        return is_int($this->id) ? $this->id : null;
     }
 
     public function getVendor(): Vendor

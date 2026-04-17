@@ -54,7 +54,7 @@ final readonly class AlertRuleEvaluator implements AlertRuleEvaluatorInterface
                 'code' => 'probe_artifacts_missing',
                 'severity' => 'warning',
                 'message' => 'One or more synthetic probe artifacts are missing.',
-                'context' => ['missing' => array_values($missingProbes)],
+                'context' => ['missing' => $missingProbes],
             ];
         }
 

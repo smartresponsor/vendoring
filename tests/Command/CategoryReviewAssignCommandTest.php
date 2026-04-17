@@ -10,10 +10,9 @@ declare(strict_types=1);
 namespace App\Tests\Command;
 
 use App\Command\CategoryReviewAssignCommand;
-use App\Entity\CategoryChangeRequest;
 use App\Policy\CategoryReviewAssignmentPolicy;
-use App\Repository\CategoryChangeRequestRepository;
-use App\Repository\CategoryReviewAssignmentRepository;
+use App\Repository\VendorCatalogCategoryChangeRequestRepository;
+use App\Repository\VendorCatalogReviewAssignmentRepository;
 use App\Service\CatalogReviewAssignmentService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -22,12 +21,12 @@ final class CategoryReviewAssignCommandTest extends TestCase
 {
     public function testExecutePrintsAssignmentPayload(): void
     {
-        $requestRepository = new CategoryChangeRequestRepository();
-        $requestRepository->save(CategoryChangeRequest::open('req-100', 'cat-100', 'submitter-1', 'Promote category', ['title' => 'Garden']));
+        $requestRepository = new VendorCatalogCategoryChangeRequestRepository();
+        $requestRepository->save(\App\Entity\VendorCatalogCategoryChangeRequest::open('req-100', 'cat-100', 'submitter-1', 'Promote category', ['title' => 'Garden']));
 
         $service = new CatalogReviewAssignmentService(
             $requestRepository,
-            new CategoryReviewAssignmentRepository(),
+            new VendorCatalogReviewAssignmentRepository(),
             new CategoryReviewAssignmentPolicy(),
         );
 

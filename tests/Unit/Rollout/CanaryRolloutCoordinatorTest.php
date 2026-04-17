@@ -90,10 +90,10 @@ final class CanaryRolloutCoordinatorTest extends TestCase
             public function explain(string $flagName, ?string $tenantId = null, ?string $vendorId = null): array
             {
                 return [
-                    'flag' => (string) ($this->decision['flag'] ?? $flagName),
-                    'enabled' => true === ($this->decision['enabled'] ?? false),
-                    'cohort' => (string) ($this->decision['cohort'] ?? ''),
-                    'reason' => (string) ($this->decision['reason'] ?? ''),
+                    'flag' => (string) $this->decision['flag'],
+                    'enabled' => true === $this->decision['enabled'],
+                    'cohort' => (string) $this->decision['cohort'],
+                    'reason' => (string) $this->decision['reason'],
                 ];
             }
         };

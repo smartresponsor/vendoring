@@ -82,17 +82,19 @@ if (extension_loaded('pdo_sqlite')) {
 
     $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    if (!is_array($rows) || 2 !== count($rows)) {
+    if (2 !== count($rows)) {
         fwrite(STDERR, "Unexpected vendor_transaction row count\n");
         exit(1);
     }
 
-    if (($rows[0]['order_id'] ?? null) !== 'order-2' || ($rows[0]['status'] ?? null) !== 'settled') {
+    $firstRow = is_array($rows[0] ?? null) ? $rows[0] : null;
+    $secondRow = is_array($rows[1] ?? null) ? $rows[1] : null;
+    if (($firstRow['order_id'] ?? null) !== 'order-2' || ($firstRow['status'] ?? null) !== 'settled') {
         fwrite(STDERR, "Newest transaction row must be order-2 with settled status\n");
         exit(1);
     }
 
-    if (($rows[1]['order_id'] ?? null) !== 'order-1' || ($rows[1]['status'] ?? null) !== 'pending') {
+    if (($secondRow['order_id'] ?? null) !== 'order-1' || ($secondRow['status'] ?? null) !== 'pending') {
         fwrite(STDERR, "Older transaction row must remain order-1 with pending status\n");
         exit(1);
     }

@@ -9,7 +9,7 @@ namespace App\Entity;
  */
 final class VendorCatalogCategoryPin
 {
-    private ?string $id;
+    private string $id;
 
     public function __construct(
         private readonly string $categoryId,
@@ -19,7 +19,7 @@ final class VendorCatalogCategoryPin
         $this->id = sprintf('%s:%s', $categoryId, $recordId);
     }
 
-    public function id(): ?string
+    public function id(): string
     {
         return $this->id;
     }

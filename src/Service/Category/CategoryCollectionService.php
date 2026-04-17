@@ -22,7 +22,7 @@ final class CategoryCollectionService implements CategoryCollectionServiceInterf
         $predicates = [];
 
         foreach ($tokenList as $token) {
-            if (!is_string($token) || '' === $token) {
+            if ('' === $token) {
                 continue;
             }
 

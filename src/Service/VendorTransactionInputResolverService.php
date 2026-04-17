@@ -22,8 +22,7 @@ final class VendorTransactionInputResolverService implements VendorTransactionIn
             'orderId' => VendorTransactionErrorCode::ORDER_ID_REQUIRED,
             'amount' => VendorTransactionErrorCode::AMOUNT_REQUIRED,
         ] as $field => $errorCode) {
-            $value = $payload[$field] ?? null;
-            $normalized = null === $value ? '' : trim((string) $value);
+            $normalized = self::trimmedScalar($payload[$field] ?? null);
 
             if ('' === $normalized) {
                 throw new InvalidArgumentException($errorCode);
@@ -32,28 +31,33 @@ final class VendorTransactionInputResolverService implements VendorTransactionIn
 
         $projectId = null;
         if (array_key_exists('projectId', $payload) && null !== $payload['projectId']) {
-            $normalizedProjectId = trim((string) $payload['projectId']);
+            $normalizedProjectId = self::trimmedScalar($payload['projectId']);
             $projectId = '' === $normalizedProjectId ? null : $normalizedProjectId;
         }
 
         return new VendorTransactionData(
-            vendorId: trim((string) $payload['vendorId']),
-            orderId: trim((string) $payload['orderId']),
+            vendorId: self::trimmedScalar($payload['vendorId'] ?? null),
+            orderId: self::trimmedScalar($payload['orderId'] ?? null),
             projectId: $projectId,
-            amount: trim((string) $payload['amount']),
+            amount: self::trimmedScalar($payload['amount'] ?? null),
         );
     }
 
     public function resolveStatus(Request $request): string
     {
         $payload = $request->toArray();
-        $status = isset($payload['status']) ? trim((string) $payload['status']) : '';
+        $status = self::trimmedScalar($payload['status'] ?? null);
 
         if ('' === $status) {
             throw new InvalidArgumentException(VendorTransactionErrorCode::STATUS_REQUIRED);
         }
 
         return $status;
+    }
+
+    private static function trimmedScalar(mixed $value): string
+    {
+        return is_scalar($value) ? trim((string) $value) : '';
     }
 
     public function normalizeErrorCode(string $message): string

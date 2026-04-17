@@ -39,7 +39,13 @@ if (200 !== $listResponse->getStatusCode() || !is_array($listData) || 1 !== coun
     exit(1);
 }
 
-$updateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions/vendor/vendor-smoke/' . $createPayload['id'] . '/status', [
+$createId = $createPayload['id'] ?? null;
+if (!is_scalar($createId) || '' === (string) $createId) {
+    fwrite(STDERR, "Create payload id missing\n");
+    exit(1);
+}
+
+$updateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions/vendor/vendor-smoke/' . (string) $createId . '/status', [
     'status' => 'authorized',
 ], $authHeaders);
 $updatePayload = KernelRuntimeHarness::decodeJson($updateResponse);

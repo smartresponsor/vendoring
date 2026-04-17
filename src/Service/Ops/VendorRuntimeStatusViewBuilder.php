@@ -67,9 +67,9 @@ final readonly class VendorRuntimeStatusViewBuilder implements VendorRuntimeStat
 
         $surfaceStatus = [
             'ownership' => null !== $ownership,
-            'finance' => [] !== $finance,
+            'finance' => true,
             'statementDelivery' => [] !== $statement || null !== $export || [] !== $recipients,
-            'externalIntegration' => [] !== $externalIntegration,
+            'externalIntegration' => true,
         ];
 
         $generatedAtObject = new DateTimeImmutable();

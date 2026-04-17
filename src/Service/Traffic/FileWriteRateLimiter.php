@@ -126,7 +126,7 @@ final class FileWriteRateLimiter implements WriteRateLimiterInterface
 
         rewind($handle);
         ftruncate($handle, 0);
-        fwrite($handle, json_encode(array_values($timestamps), JSON_THROW_ON_ERROR));
+        fwrite($handle, json_encode($timestamps, JSON_THROW_ON_ERROR));
         fflush($handle);
     }
 }

@@ -17,6 +17,6 @@ final class VendorCrmServiceTest extends TestCase
         $service = new VendorCrmService();
         $service->registerVendor($vendor);
 
-        self::assertTrue(true);
+        self::expectNotToPerformAssertions();
     }
 }

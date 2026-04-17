@@ -26,3 +26,5 @@ parameters:
       $observabilityDir: '%vendoring_observability_dir%'
       $faultToleranceDir: '%vendoring_fault_tolerance_dir%'
       $projectDir: '%kernel.project_dir%'
+  App\Repository\VendorCatalogCategoryChangeRequestRepository: ~
+  App\Repository\VendorCatalogReviewAssignmentRepository: ~

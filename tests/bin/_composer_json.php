@@ -14,7 +14,11 @@ function vendoring_load_composer_json(string $root): array
         throw new RuntimeException('composer.json must decode to an associative array.');
     }
 
-    /* @var array<string, mixed> $decoded */
+    if (array_is_list($decoded)) {
+        throw new RuntimeException('composer.json must decode to an associative array.');
+    }
+
+    /** @var array<string, mixed> $decoded */
     return $decoded;
 }
 
@@ -31,7 +35,11 @@ function vendoring_composer_section(array $composer, string $section): array
         return [];
     }
 
-    /* @var array<string, mixed> $value */
+    if (array_is_list($value)) {
+        return [];
+    }
+
+    /** @var array<string, mixed> $value */
     return $value;
 }
 
@@ -118,6 +126,10 @@ function vendoring_decode_json_array(string $json): array
         throw new RuntimeException('Expected JSON object/array payload.');
     }
 
-    /* @var array<string, mixed> $decoded */
+    if (array_is_list($decoded)) {
+        throw new RuntimeException('composer.json must decode to an associative array.');
+    }
+
+    /** @var array<string, mixed> $decoded */
     return $decoded;
 }

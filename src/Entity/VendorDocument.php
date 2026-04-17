@@ -11,6 +11,7 @@ use DateTimeImmutable;
  */
 final class VendorDocument
 {
+    /** @var int|null */
     private ?int $id = null;
     private ?DateTimeImmutable $expiresAt = null;
     private ?int $uploaderId = null;
@@ -32,7 +33,7 @@ final class VendorDocument
 
     public function getId(): ?int
     {
-        return $this->id;
+        return is_int($this->id) ? $this->id : null;
     }
 
     public function getVendor(): Vendor
@@ -60,7 +61,7 @@ final class VendorDocument
         return $this->uploaderId;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }

@@ -9,6 +9,7 @@ namespace App\Entity;
  */
 final class VendorBilling
 {
+    /** @var int|null */
     private ?int $id = null;
     private ?string $iban = null;
     private ?string $swift = null;
@@ -28,7 +29,7 @@ final class VendorBilling
 
     public function getId(): ?int
     {
-        return $this->id;
+        return is_int($this->id) ? $this->id : null;
     }
 
     public function getVendor(): Vendor
@@ -66,7 +67,7 @@ final class VendorBilling
         return $this->swift;
     }
 
-    public function getPayoutMethod(): ?string
+    public function getPayoutMethod(): string
     {
         return $this->payoutMethod;
     }

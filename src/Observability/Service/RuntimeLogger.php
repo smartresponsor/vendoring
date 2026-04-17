@@ -99,7 +99,7 @@ final class RuntimeLogger implements RuntimeLoggerInterface
             $this->exporter->export('runtime_logs', $record);
         }
 
-        $environment = (string) ($_ENV['APP_ENV'] ?? $_SERVER['APP_ENV'] ?? 'dev');
+        $environment = $this->appEnv();
         if ('test' === $environment) {
             return;
         }
@@ -122,5 +122,20 @@ final class RuntimeLogger implements RuntimeLoggerInterface
         $route = $request->attributes->get('_route');
 
         return is_string($route) && '' !== trim($route) ? $route : null;
+    }
+
+    private function appEnv(): string
+    {
+        $serverAppEnv = $_SERVER['APP_ENV'] ?? null;
+        if (is_string($serverAppEnv) && '' !== trim($serverAppEnv)) {
+            return $serverAppEnv;
+        }
+
+        $envAppEnv = $_ENV['APP_ENV'] ?? null;
+        if (is_string($envAppEnv) && '' !== trim($envAppEnv)) {
+            return $envAppEnv;
+        }
+
+        return 'dev';
     }
 }

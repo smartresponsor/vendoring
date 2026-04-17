@@ -74,7 +74,18 @@ final class CategoryRuleEngine implements CategoryRuleEngineInterface
      */
     private function arrayMap(mixed $value): array
     {
-        return is_array($value) ? $value : [];
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $result = [];
+        foreach ($value as $key => $item) {
+            if (is_string($key)) {
+                $result[$key] = $item;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -90,9 +101,18 @@ final class CategoryRuleEngine implements CategoryRuleEngineInterface
 
         $result = [];
         foreach ($value as $item) {
-            if (is_array($item)) {
-                $result[] = $item;
+            if (!is_array($item)) {
+                continue;
             }
+
+            $normalized = [];
+            foreach ($item as $key => $child) {
+                if (is_string($key)) {
+                    $normalized[$key] = $child;
+                }
+            }
+
+            $result[] = $normalized;
         }
 
         return $result;

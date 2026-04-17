@@ -31,6 +31,7 @@ if (!is_array($quality)) {
     exit(1);
 }
 
+$quality = array_values(array_filter($quality, 'is_string'));
 if ($quality !== array_values(array_unique($quality))) {
     fwrite(STDERR, "quality script contains duplicate entries\n");
     exit(1);

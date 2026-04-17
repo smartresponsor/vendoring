@@ -70,7 +70,6 @@ final class CatalogSyndicationPolicyAwarePackageGateServiceTest extends TestCase
         $event = $service->buildGatedPublishPackage(new CatalogSyndicationPublishPackageRequestDTO('pkg-1', 'dst-1', 'cat-1', 'v1', 'per_locale', ['slug' => 'chairs'], ['slug' => 'slug'], ['slug'], 'actor-1', 'test'));
         $payload = $event->payload();
 
-        self::assertIsArray($payload);
         self::assertSame('allow_fallback', $payload['mediaPolicyMode'] ?? null);
         self::assertTrue((bool) ($payload['resolvedPublishable'] ?? false));
         self::assertTrue((bool) ($payload['fallbackUsed'] ?? false));

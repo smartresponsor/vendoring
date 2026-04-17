@@ -9,6 +9,7 @@ namespace App\Entity;
  */
 final class VendorAnalytics
 {
+    /** @var int|null */
     private ?int $id = null;
 
     /** @param array<string,mixed> $metrics */
@@ -19,7 +20,7 @@ final class VendorAnalytics
 
     public function getId(): ?int
     {
-        return $this->id;
+        return is_int($this->id) ? $this->id : null;
     }
 
     public function getVendor(): Vendor

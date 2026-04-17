@@ -12,7 +12,7 @@ final class CanonicalNoLegacyVendorScriptContractTest extends TestCase
     {
         $path = dirname(__DIR__, 3) . '/.commanding/reorganize-tests.ps1';
         if (!is_file($path)) {
-            self::assertTrue(true);
+            self::expectNotToPerformAssertions();
 
             return;
         }

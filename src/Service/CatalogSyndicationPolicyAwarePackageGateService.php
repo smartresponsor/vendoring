@@ -69,7 +69,18 @@ final readonly class CatalogSyndicationPolicyAwarePackageGateService implements 
     /** @return array<string, mixed> */
     private static function arrayMap(mixed $value): array
     {
-        return is_array($value) ? $value : [];
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $result = [];
+        foreach ($value as $key => $item) {
+            if (is_string($key)) {
+                $result[$key] = $item;
+            }
+        }
+
+        return $result;
     }
 
     /** @return array<string, string> */

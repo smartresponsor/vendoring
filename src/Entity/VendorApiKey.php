@@ -26,6 +26,7 @@ final class VendorApiKey
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /** @var int|null */
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 32)]
@@ -52,7 +53,7 @@ final class VendorApiKey
 
     public function getId(): ?int
     {
-        return $this->id;
+        return is_int($this->id) ? $this->id : null;
     }
 
     public function getVendor(): Vendor

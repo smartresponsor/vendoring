@@ -48,6 +48,7 @@ final class VendorProfileController extends AbstractController
         }
 
         try {
+            /** @var array<string, mixed> $payload */
             $payload = $request->toArray();
             $this->profileService->upsert($vendor, $this->profileRequestResolver->resolve($vendorId, $payload));
         } catch (JsonException) {

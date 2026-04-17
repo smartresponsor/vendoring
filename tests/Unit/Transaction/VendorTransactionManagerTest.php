@@ -57,8 +57,7 @@ final class VendorTransactionManagerTest extends TestCase
             ->expects(self::once())
             ->method('persist')
             ->with(self::callback(static function (VendorTransaction $transaction): bool {
-                return $transaction instanceof VendorTransaction
-                    && 'vendor-1' === $transaction->getVendorId()
+                return 'vendor-1' === $transaction->getVendorId()
                     && 'order-1' === $transaction->getOrderId()
                     && 'project-1' === $transaction->getProjectId()
                     && '10.50' === $transaction->getAmount()
@@ -74,8 +73,7 @@ final class VendorTransactionManagerTest extends TestCase
             ->method('dispatch')
             ->with(
                 self::callback(static function (VendorTransactionEvent $event): bool {
-                    return $event instanceof VendorTransactionEvent
-                        && 'vendor-1' === $event->transaction->getVendorId();
+                    return 'vendor-1' === $event->transaction->getVendorId();
                 }),
                 VendorTransactionEvent::NAME,
             )
@@ -113,8 +111,7 @@ final class VendorTransactionManagerTest extends TestCase
             ->expects(self::once())
             ->method('persist')
             ->with(self::callback(static function (VendorTransaction $transaction): bool {
-                return $transaction instanceof VendorTransaction
-                    && null === $transaction->getProjectId();
+                return null === $transaction->getProjectId();
             }));
 
         $this->entityManager
@@ -191,8 +188,7 @@ final class VendorTransactionManagerTest extends TestCase
             ->expects(self::once())
             ->method('persist')
             ->with(self::callback(static function (VendorTransaction $transaction): bool {
-                return $transaction instanceof VendorTransaction
-                    && 'vendor-1' === $transaction->getVendorId()
+                return 'vendor-1' === $transaction->getVendorId()
                     && 'order-1' === $transaction->getOrderId();
             }));
 
@@ -305,7 +301,7 @@ final class VendorTransactionManagerTest extends TestCase
             ->method('dispatch')
             ->with(
                 self::callback(static function (object $event) use ($transaction): bool {
-                    return $event instanceof VendorTransactionEvent
+                    return $event instanceof \App\Event\VendorTransactionEvent
                         && $event->transaction === $transaction
                         && 'authorized' === $event->transaction->getStatus();
                 }),

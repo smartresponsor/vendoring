@@ -49,6 +49,16 @@ HTML;
 
     private function resolveAppEnv(): string
     {
-        return $_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? 'dev';
+        $serverAppEnv = $_SERVER['APP_ENV'] ?? null;
+        if (is_string($serverAppEnv) && '' !== trim($serverAppEnv)) {
+            return $serverAppEnv;
+        }
+
+        $envAppEnv = $_ENV['APP_ENV'] ?? null;
+        if (is_string($envAppEnv) && '' !== trim($envAppEnv)) {
+            return $envAppEnv;
+        }
+
+        return 'dev';
     }
 }

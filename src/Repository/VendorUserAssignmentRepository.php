@@ -46,7 +46,7 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
             'isPrimary' => true,
         ]);
 
-        return $entity instanceof VendorUserAssignmentInterface ? $entity : null;
+        return $entity;
     }
 
     public function findActiveByVendorId(int $vendorId): array
@@ -56,7 +56,8 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
             'status' => 'active',
         ]);
 
-        return array_values(array_filter($entities, static fn(mixed $entity): bool => $entity instanceof VendorUserAssignmentInterface));
+        /** @var list<VendorUserAssignmentInterface> $entities */
+        return $entities;
     }
 
     public function findActiveByUserId(int $userId): array
@@ -66,7 +67,8 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
             'status' => 'active',
         ]);
 
-        return array_values(array_filter($entities, static fn(mixed $entity): bool => $entity instanceof VendorUserAssignmentInterface));
+        /** @var list<VendorUserAssignmentInterface> $entities */
+        return $entities;
     }
 
     public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?VendorUserAssignmentInterface
@@ -76,6 +78,6 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
             'userId' => $userId,
         ]);
 
-        return $entity instanceof VendorUserAssignmentInterface ? $entity : null;
+        return $entity;
     }
 }
