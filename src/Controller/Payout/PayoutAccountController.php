@@ -21,7 +21,9 @@ final class PayoutAccountController extends AbstractController
     public function upsert(Request $r): JsonResponse
     {
         try {
-            $account = $this->payoutAccountService->upsertFromPayload($r->toArray());
+            /** @var array<string, mixed> $payload */
+            $payload = $r->toArray();
+            $account = $this->payoutAccountService->upsertFromPayload($payload);
         } catch (InvalidArgumentException $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 422);
         }

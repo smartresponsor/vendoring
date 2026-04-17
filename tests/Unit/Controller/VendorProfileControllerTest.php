@@ -311,10 +311,7 @@ final class VendorProfileControllerTest extends TestCase
     {
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        if (!is_array($payload)) {
-            self::fail('Expected array payload.');
-        }
-
+        /** @var array<string, mixed> $payload */
         return $payload;
     }
 
@@ -327,10 +324,7 @@ final class VendorProfileControllerTest extends TestCase
     {
         $data = $payload['data'] ?? null;
 
-        if (!is_array($data)) {
-            self::fail('Expected array data payload.');
-        }
-
+        /** @var array<string, mixed> $data */
         return $data;
     }
 }

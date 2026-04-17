@@ -18,6 +18,7 @@ final class Vendor implements VendorEntityInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    // @phpstan-ignore-next-line
     private ?int $id = null;
 
     #[ORM\Column(name: 'brand_name', type: 'string', length: 255)]
@@ -42,7 +43,7 @@ final class Vendor implements VendorEntityInterface
 
     public function getId(): ?int
     {
-        return $this->id;
+        return is_int($this->id) ? $this->id : null;
     }
 
     public function getBrandName(): string

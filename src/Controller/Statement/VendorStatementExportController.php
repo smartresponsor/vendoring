@@ -55,7 +55,7 @@ final class VendorStatementExportController extends AbstractController
     #[Route('/{vendorId}/export', methods: ['GET'])]
     public function export(string $vendorId, Request $r): JsonResponse
     {
-        $dto = $this->resolveStatementRequestOrValidationResponse(
+        $dto = $this->resolveStatementRequestOrErrorResponse(
             $vendorId,
             $r,
             $this->statementWindowQueryRequestResolver,

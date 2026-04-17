@@ -11,6 +11,8 @@ use DateTimeImmutable;
  */
 final class VendorPassport
 {
+    /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
     private bool $verified = false;
     private DateTimeImmutable $createdAt;
@@ -25,7 +27,7 @@ final class VendorPassport
 
     public function getId(): ?int
     {
-        return $this->id;
+        return is_int($this->id) ? $this->id : null;
     }
 
     public function getVendor(): Vendor
@@ -53,7 +55,7 @@ final class VendorPassport
         $this->verified = true;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }

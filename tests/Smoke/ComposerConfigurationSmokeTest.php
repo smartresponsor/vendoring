@@ -16,7 +16,7 @@ final class ComposerConfigurationSmokeTest extends TestCase
         $composerFile = dirname(__DIR__, 2) . '/composer.json';
         $decoded = json_decode((string) file_get_contents($composerFile), true, 512, JSON_THROW_ON_ERROR);
         self::assertIsArray($decoded);
-        /* @var array<string, mixed> $decoded */
+        /** @var array<string, mixed> $decoded */
         $this->composer = $decoded;
     }
 
@@ -82,7 +82,7 @@ final class ComposerConfigurationSmokeTest extends TestCase
             return [];
         }
 
-        /* @var array<string, mixed> $value */
+        /** @var array<string, mixed> $value */
         return $value;
     }
 }

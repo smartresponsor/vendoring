@@ -129,6 +129,7 @@ final readonly class FileOutboundCircuitBreaker implements OutboundCircuitBreake
             return $this->emptyStatePayload();
         }
 
+        /** @var array<string, mixed> $decoded */
         return $this->normalizeStatePayload($decoded);
     }
 

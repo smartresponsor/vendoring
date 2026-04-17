@@ -43,6 +43,7 @@ final class ComposerScriptInvocationParityTest extends TestCase
 
         $quality = $scripts['quality'] ?? [];
         self::assertIsArray($quality);
+        $quality = array_values(array_filter($quality, 'is_string'));
         self::assertSame($quality, array_values(array_unique($quality)), 'Quality script contains duplicate entries.');
     }
 }

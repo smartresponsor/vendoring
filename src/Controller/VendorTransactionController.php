@@ -299,14 +299,15 @@ final class VendorTransactionController extends AbstractController
     private function payloadForValidationLog(Request $request): array
     {
         try {
+            /** @var array<string, mixed> $payload */
             $payload = $request->toArray();
         } catch (JsonException) {
             return ['vendorId' => null, 'orderId' => null, 'projectId' => null];
         }
 
-        $vendorId = isset($payload['vendorId']) ? trim((string) $payload['vendorId']) : null;
-        $orderId = isset($payload['orderId']) ? trim((string) $payload['orderId']) : null;
-        $projectId = isset($payload['projectId']) ? trim((string) $payload['projectId']) : null;
+        $vendorId = $this->nullableTrimmedString($payload['vendorId'] ?? null);
+        $orderId = $this->nullableTrimmedString($payload['orderId'] ?? null);
+        $projectId = $this->nullableTrimmedString($payload['projectId'] ?? null);
 
         return [
             'vendorId' => '' === (string) $vendorId ? null : $vendorId,
@@ -334,5 +335,16 @@ final class VendorTransactionController extends AbstractController
         }
 
         return sha1($authorization . '|' . $clientIp . '|' . (null === $vendorId ? '' : $vendorId));
+    }
+
+    private function nullableTrimmedString(mixed $value): ?string
+    {
+        if (!is_scalar($value)) {
+            return null;
+        }
+
+        $normalized = trim((string) $value);
+
+        return '' === $normalized ? null : $normalized;
     }
 }

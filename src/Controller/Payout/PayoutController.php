@@ -34,7 +34,9 @@ final class PayoutController extends AbstractController
     public function create(Request $request): JsonResponse
     {
         try {
-            $dto = $this->payoutRequestService->toCreateDto($request->toArray());
+            /** @var array<string, mixed> $payload */
+            $payload = $request->toArray();
+            $dto = $this->payoutRequestService->toCreateDto($payload);
             $id = $this->payoutService->create($dto);
         } catch (HttpFoundationJsonException) {
             return new JsonResponse(['error' => 'malformed_json'], 400);

@@ -22,7 +22,7 @@ final class VendorTransactionSchemaParityTest extends TestCase
 
         $index = null;
         foreach ($indexes as $candidate) {
-            if ($candidate instanceof Index && 'idx_vendor_transaction_vendor_created' === $candidate->name) {
+            if ('idx_vendor_transaction_vendor_created' === $candidate->name) {
                 $index = $candidate;
                 break;
             }
@@ -39,11 +39,10 @@ final class VendorTransactionSchemaParityTest extends TestCase
 
         $uniqueConstraints = $table->uniqueConstraints ?? [];
 
-        self::assertIsArray($uniqueConstraints);
 
         foreach ($uniqueConstraints as $candidate) {
             self::assertFalse(
-                $candidate instanceof UniqueConstraint && 'uniq_vendor_transaction_vendor_order_project' === $candidate->name,
+                'uniq_vendor_transaction_vendor_order_project' === $candidate->name,
                 'Entity metadata must not pretend a full three-column unique constraint; migrations own split partial uniqueness.',
             );
         }

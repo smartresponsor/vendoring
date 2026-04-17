@@ -1,0 +1,27 @@
+= Vendoring CategoryPin Entity Rename
+
+This patch removes the generic `App\Entity\CategoryPin` runtime class from `Vendoring`.
+
+== Refactor
+
+----
+src/Entity/CategoryPin.php
+----
+
+is renamed to:
+
+----
+src/Entity/VendorCatalogCategoryPin.php
+----
+
+and the class is renamed from `CategoryPin` to `VendorCatalogCategoryPin`.
+
+== Reason
+
+The combined App Kernel cannot load multiple components that declare the same FQCN:
+
+----
+App\Entity\CategoryPin
+----
+
+Both Cataloging and Vendoring now use component-scoped class names.

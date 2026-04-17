@@ -40,7 +40,7 @@ final class ControllerInfrastructureContractTest extends TestCase
         self::assertTrue(is_a($controllerClass, AbstractController::class, true));
 
         self::assertTrue(class_exists($controllerClass));
-        /** @var class-string $controllerClass */
+        /** @var class-string<AbstractController> $controllerClass */
         $reflection = new \ReflectionClass($controllerClass);
         self::assertNotEmpty($reflection->getAttributes(Route::class));
 

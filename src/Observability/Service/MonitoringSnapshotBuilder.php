@@ -88,8 +88,8 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
             'total' => $total,
             'error' => $error,
             'warning' => $warning,
-            'routes' => array_values(array_keys($routes)),
-            'errorCodes' => array_values(array_keys($errorCodes)),
+            'routes' => array_keys($routes),
+            'errorCodes' => array_keys($errorCodes),
         ];
     }
 
@@ -146,8 +146,8 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
             if (!is_array($payload)) {
                 continue;
             }
-            $state = (string) ($payload['state'] ?? 'closed');
-            $scopeKey = (string) ($payload['scopeKey'] ?? basename($path));
+            $state = $this->scalarStringOrDefault($payload['state'] ?? null, 'closed');
+            $scopeKey = $this->scalarStringOrDefault($payload['scopeKey'] ?? null, basename($path));
             if ('open' === $state) {
                 ++$open;
                 $scopes[] = $scopeKey;
@@ -198,6 +198,7 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
         foreach ($lines as $line) {
             $decoded = json_decode((string) $line, true);
             if (is_array($decoded)) {
+                /** @var array<string, mixed> $decoded */
                 $records[] = $decoded;
             }
         }
@@ -220,5 +221,10 @@ final readonly class MonitoringSnapshotBuilder implements MonitoringSnapshotBuil
         }
 
         return $unix >= $cutoff;
+    }
+
+    private function scalarStringOrDefault(mixed $value, string $default): string
+    {
+        return is_scalar($value) ? (string) $value : $default;
     }
 }

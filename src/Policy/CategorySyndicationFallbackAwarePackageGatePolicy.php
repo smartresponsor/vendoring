@@ -28,15 +28,31 @@ final class CategorySyndicationFallbackAwarePackageGatePolicy implements Categor
         $checks['fallbackPackageGatePublishable'] = $fallbackPublishable;
 
         return new CategorySyndicationFallbackAwarePackageGateReport(
-            array_values($input->packageMissingRequiredFields),
-            array_values($input->strictMediaRequiredMissing),
-            array_values($input->fallbackMediaRequiredMissing),
-            array_values(array_unique($mergedWarnings)),
+            ($input->packageMissingRequiredFields),
+            ($input->strictMediaRequiredMissing),
+            ($input->fallbackMediaRequiredMissing),
+            self::stringList(array_unique($mergedWarnings)),
             $checks,
-            array_values(array_unique($input->exactMatchedBindingIds)),
-            array_values(array_unique($input->fallbackMatchedBindingIds)),
+            self::stringList(array_unique($input->exactMatchedBindingIds)),
+            self::stringList(array_unique($input->fallbackMatchedBindingIds)),
             $strictPublishable,
             $fallbackPublishable,
         );
+    }
+
+    /**
+     * @param array<int, mixed> $value
+     * @return list<string>
+     */
+    private static function stringList(array $value): array
+    {
+        $result = [];
+        foreach ($value as $item) {
+            if (is_scalar($item)) {
+                $result[] = (string) $item;
+            }
+        }
+
+        return $result;
     }
 }

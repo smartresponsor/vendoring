@@ -130,8 +130,11 @@ final class VendorRuntimeStatusViewBuilderTest extends TestCase
     /** @return array<string, mixed> */
     private static function assertArrayPayload(mixed $value): array
     {
-        self::assertIsArray($value);
+        if (!is_array($value)) {
+            self::fail('Expected array payload.');
+        }
 
+        /** @var array<string, mixed> $value */
         return $value;
     }
 }

@@ -80,8 +80,11 @@ final class PayoutRepositoryTest extends TestCase
                 self::callback(function (array $data): bool {
                     self::assertSame('processed', $data['status']);
                     self::assertSame('2026-03-30 11:00:00', $data['processed_at']);
-                    self::assertJson($data['meta']);
+                    $metaJson = $data['meta'] ?? null;
+                    self::assertIsString($metaJson);
+                    self::assertJson($metaJson);
 
+                    /** @var array<string, mixed> $data */
                     $meta = self::decodeMetaPayload($data);
                     self::assertSame('tenant-1', $meta['tenantId'] ?? null);
                     self::assertSame('bank', $meta['provider'] ?? null);
@@ -112,8 +115,11 @@ final class PayoutRepositoryTest extends TestCase
                 self::callback(function (array $data): bool {
                     self::assertSame('failed', $data['status']);
                     self::assertSame('2026-03-30 11:30:00', $data['processed_at']);
-                    self::assertJson($data['meta']);
+                    $metaJson = $data['meta'] ?? null;
+                    self::assertIsString($metaJson);
+                    self::assertJson($metaJson);
 
+                    /** @var array<string, mixed> $data */
                     $meta = self::decodeMetaPayload($data);
                     self::assertSame('tenant-1', $meta['tenantId'] ?? null);
                     self::assertSame('provider_declined', $meta['error'] ?? null);
@@ -139,9 +145,13 @@ final class PayoutRepositoryTest extends TestCase
         self::assertArrayHasKey('meta', $data);
         self::assertIsString($data['meta']);
 
-        $decoded = json_decode($data['meta'], true, 512, JSON_THROW_ON_ERROR);
-        self::assertIsArray($decoded);
+        $meta = $data['meta'];
+        $decoded = json_decode($meta, true, 512, JSON_THROW_ON_ERROR);
+        if (!is_array($decoded)) {
+            self::fail('Decoded meta payload must be an array.');
+        }
 
+        /** @var array<string, mixed> $decoded */
         return $decoded;
     }
 }

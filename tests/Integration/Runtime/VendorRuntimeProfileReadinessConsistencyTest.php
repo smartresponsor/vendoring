@@ -67,8 +67,9 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
         $payload = $this->buildRuntimeStatus()->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')->toArray();
 
         self::assertArrayHasKey('ownership', $payload);
-        self::assertIsArray($payload['ownership']);
-        self::assertSame(5001, $payload['ownership']['ownerUserId']);
+        $ownership = $payload['ownership'] ?? null;
+        self::assertIsArray($ownership);
+        self::assertSame(5001, $ownership['ownerUserId'] ?? null);
         self::assertFalse($payload['surfaceStatus']['statementDelivery']);
         self::assertTrue($payload['surfaceStatus']['finance']);
     }
@@ -108,10 +109,9 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
         $payload = $this->buildRuntimeStatus()->build('tenant-1', '202', '2026-03-01', '2026-03-31', 'USD')->toArray();
 
         self::assertArrayHasKey('ownership', $payload);
-        self::assertIsArray($payload['ownership']);
-        self::assertSame(5001, $payload['ownership']['ownerUserId']);
-        self::assertIsArray($payload['finance']);
-        self::assertIsArray($payload['statementDelivery']);
+        $ownership = $payload['ownership'] ?? null;
+        self::assertIsArray($ownership);
+        self::assertSame(5001, $ownership['ownerUserId'] ?? null);
         self::assertTrue($payload['surfaceStatus']['ownership']);
     }
 

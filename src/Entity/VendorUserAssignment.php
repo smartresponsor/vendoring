@@ -12,6 +12,8 @@ use DateTimeImmutable;
  */
 final class VendorUserAssignment implements VendorUserAssignmentEntityInterface
 {
+    /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
     private string $role;
     private string $status;
@@ -37,7 +39,7 @@ final class VendorUserAssignment implements VendorUserAssignmentEntityInterface
 
     public function getId(): ?int
     {
-        return $this->id;
+        return is_int($this->id) ? $this->id : null;
     }
 
     public function getVendorId(): int

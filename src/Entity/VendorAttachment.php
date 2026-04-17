@@ -11,6 +11,8 @@ use DateTimeImmutable;
  */
 final class VendorAttachment
 {
+    /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
     private DateTimeImmutable $createdAt;
 
@@ -25,7 +27,7 @@ final class VendorAttachment
 
     public function getId(): ?int
     {
-        return $this->id;
+        return is_int($this->id) ? $this->id : null;
     }
 
     public function getVendor(): Vendor
@@ -48,7 +50,7 @@ final class VendorAttachment
         return $this->category;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }

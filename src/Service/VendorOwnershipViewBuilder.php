@@ -44,7 +44,7 @@ final readonly class VendorOwnershipViewBuilder implements VendorOwnershipViewBu
 
         return new VendorOwnershipView(
             vendorId: $vendorId,
-            ownerUserId: method_exists($vendor, 'getOwnerUserId') ? $vendor->getOwnerUserId() : null,
+            ownerUserId: $vendor->getOwnerUserId(),
             assignments: $assignments,
         );
     }

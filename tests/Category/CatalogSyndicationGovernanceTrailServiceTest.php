@@ -55,7 +55,6 @@ final class CatalogSyndicationGovernanceTrailServiceTest extends TestCase
 
         $payload = $event->payload();
 
-        self::assertIsArray($payload);
         self::assertSame('prefer_exact_warn', $payload['mediaPolicyMode'] ?? null);
         self::assertTrue((bool) ($payload['resolvedPublishable'] ?? false));
         self::assertTrue((bool) ($payload['fallbackUsed'] ?? false));

@@ -95,9 +95,12 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         self::assertTrue($found, 'Created transaction not found in vendor list');
 
         // update status
+        $transactionId = is_scalar($id) ? (string) $id : '';
+        self::assertNotSame('', $transactionId);
+
         $client->request(
             'POST',
-            '/api/vendor-transactions/vendor/' . $vendorId . '/' . $id . '/status',
+            '/api/vendor-transactions/vendor/' . $vendorId . '/' . $transactionId . '/status',
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
@@ -107,7 +110,7 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         $updatePayload = self::decodeJsonResponse($client);
 
         self::assertSame($id, $updatePayload['id']);
-        self::assertSame('authorized', $updatePayload['status']);
+        self::assertSame('authorized', is_string($updatePayload['status'] ?? null) ? $updatePayload['status'] : null);
     }
 
     public function testVendorTransactionDuplicatePayloadReturnsConflict(): void

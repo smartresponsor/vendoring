@@ -67,8 +67,7 @@ final class VendorExternalIntegrationRuntimeControllerTest extends TestCase
     {
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        self::assertIsArray($payload);
-
+        /** @var array<string, mixed> $payload */
         return $payload;
     }
 

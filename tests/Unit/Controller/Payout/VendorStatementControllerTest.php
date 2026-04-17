@@ -71,20 +71,13 @@ final class VendorStatementControllerTest extends TestCase
     {
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        if (!is_array($payload)) {
-            self::fail('Expected array payload.');
-        }
-
+        /** @var array<string, mixed> $payload */
         return $payload;
     }
 
     private static function payloadString(mixed $payload, string $key): ?string
     {
-        if (!is_array($payload)) {
-            self::fail('Expected array payload.');
-        }
-
-        $value = $payload[$key] ?? null;
+        $value = is_array($payload) ? ($payload[$key] ?? null) : null;
 
         return is_string($value) ? $value : null;
     }

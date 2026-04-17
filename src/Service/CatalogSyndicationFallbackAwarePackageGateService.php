@@ -47,10 +47,10 @@ final readonly class CatalogSyndicationFallbackAwarePackageGateService implement
             packageMissingRequiredFields: self::stringList($packagePayload['missingRequiredFields'] ?? null),
             strictMediaRequiredMissing: self::stringList($strictMedia['requiredMissing'] ?? null),
             fallbackMediaRequiredMissing: self::stringList($fallbackMedia['requiredMissing'] ?? null),
-            warnings: array_values(array_merge(
+            warnings: array_merge(
                 self::stringList($strictMedia['warnings'] ?? null),
                 self::stringList($fallbackMedia['warnings'] ?? null),
-            )),
+            ),
             strictChecks: self::boolMap($strictMedia['checks'] ?? null),
             fallbackChecks: self::boolMap($fallbackMedia['checks'] ?? null),
             exactMatchedBindingIds: self::stringList($fallbackMedia['exactMatchedBindingIds'] ?? null),
@@ -86,7 +86,13 @@ final readonly class CatalogSyndicationFallbackAwarePackageGateService implement
     /** @return array<string, mixed> */
     private static function arrayMap(mixed $value): array
     {
-        return is_array($value) ? $value : [];
+        if (!is_array($value)) {
+            return [];
+        }
+
+        return array_filter($value, static function ($key): bool {
+            return is_string($key);
+        }, ARRAY_FILTER_USE_KEY);
     }
 
     /** @return array<string, string> */

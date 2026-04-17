@@ -1,0 +1,35 @@
+parameters:
+  vendoring_observability_dir: '%kernel.project_dir%/var/observability'
+  vendoring_fault_tolerance_dir: '%kernel.project_dir%/var/fault-tolerance'
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  # Symfony-native component export surface.
+  # The host application may import this file from the component root.
+  App\:
+    resource: '../../src/'
+    exclude:
+      - '../../src/Kernel.php'
+      - '../../src/DependencyInjection/'
+      - '../../src/Entity/'
+      - '../../src/Tests/'
+
+  App\Observability\Service\FileObservabilityRecordExporter:
+    arguments:
+      $observabilityDir: '%vendoring_observability_dir%'
+
+  App\Observability\Service\MonitoringSnapshotBuilder:
+    arguments:
+      $observabilityDir: '%vendoring_observability_dir%'
+      $faultToleranceDir: '%vendoring_fault_tolerance_dir%'
+      $projectDir: '%kernel.project_dir%'
+
+  App\Repository\VendorCatalogCategoryChangeRequestRepository: ~
+  App\Repository\VendorCatalogReviewAssignmentRepository: ~
+  
+  App\Service\Ops\ReleaseManifestBuilder:
+    arguments:
+      $projectDir: '%kernel.project_dir%'

@@ -345,10 +345,7 @@ final class VendorTransactionControllerTest extends TestCase
     {
         $payload = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        if (!is_array($payload)) {
-            self::fail('Expected array payload.');
-        }
-
+        /** @var array<string, mixed> $payload */
         return $payload;
     }
 

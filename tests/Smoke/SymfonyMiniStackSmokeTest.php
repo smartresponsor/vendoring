@@ -25,6 +25,7 @@ final class SymfonyMiniStackSmokeTest extends TestCase
     public function testBundlesDeclareFrameworkAndDoctrine(): void
     {
         $bundles = require dirname(__DIR__, 2) . '/config/bundles.php';
+        self::assertIsArray($bundles);
 
         self::assertArrayHasKey(\Symfony\Bundle\FrameworkBundle\FrameworkBundle::class, $bundles);
         self::assertArrayHasKey(\Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class, $bundles);

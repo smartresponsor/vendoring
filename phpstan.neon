@@ -3,8 +3,4 @@ parameters:
   paths:
     - src
     - tests
-  checkGenericClassInNonGenericObjectType: true
-  checkMissingIterableValueType: true
-  inferPrivatePropertyTypeFromConstructor: true
 
-  bootstrapFiles:

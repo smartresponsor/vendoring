@@ -46,7 +46,7 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
                 break;
             }
         }
-        $balanceCents = $matchedBalance?->balanceCents ?? 0;
+        $balanceCents = null === $matchedBalance ? 0 : $matchedBalance->balanceCents;
 
         if ($balanceCents < $dto->thresholdCents) {
             $this->runtimeLogger->info('vendor_payout_skipped_insufficient_balance', [

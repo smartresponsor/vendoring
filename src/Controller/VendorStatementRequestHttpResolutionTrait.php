@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 trait VendorStatementRequestHttpResolutionTrait
 {
-    private function resolveStatementRequestOrValidationResponse(
+    private function resolveStatementRequestOrErrorResponse(
         string $vendorId,
         Request $request,
         StatementWindowQueryRequestResolverInterface $statementWindowQueryRequestResolver,
