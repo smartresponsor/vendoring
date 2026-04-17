@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Observability\Service;
 
+use App\Support\AppEnvResolver;
 use App\ServiceInterface\Observability\CorrelationContextInterface;
 use App\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
 use App\ServiceInterface\Observability\RuntimeLoggerInterface;
@@ -99,7 +100,7 @@ final class RuntimeLogger implements RuntimeLoggerInterface
             $this->exporter->export('runtime_logs', $record);
         }
 
-        $environment = $this->appEnv();
+        $environment = AppEnvResolver::resolve();
         if ('test' === $environment) {
             return;
         }
@@ -124,18 +125,4 @@ final class RuntimeLogger implements RuntimeLoggerInterface
         return is_string($route) && '' !== trim($route) ? $route : null;
     }
 
-    private function appEnv(): string
-    {
-        $serverAppEnv = $_SERVER['APP_ENV'] ?? null;
-        if (is_string($serverAppEnv) && '' !== trim($serverAppEnv)) {
-            return $serverAppEnv;
-        }
-
-        $envAppEnv = $_ENV['APP_ENV'] ?? null;
-        if (is_string($envAppEnv) && '' !== trim($envAppEnv)) {
-            return $envAppEnv;
-        }
-
-        return 'dev';
-    }
 }

@@ -32,7 +32,7 @@ final class VendorStatementController extends AbstractController
     /** @throws Exception */
     public function build(string $vendorId, Request $r): JsonResponse
     {
-        $dto = $this->resolveStatementRequestOrValidationResponse(
+        $dto = $this->resolveStatementRequestOrErrorResponse(
             $vendorId,
             $r,
             $this->statementWindowQueryRequestResolver,

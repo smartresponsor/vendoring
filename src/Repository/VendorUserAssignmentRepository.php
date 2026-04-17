@@ -40,44 +40,57 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
 
     public function findPrimaryForVendorId(int $vendorId): ?VendorUserAssignmentInterface
     {
-        $entity = $this->findOneBy([
-            'vendorId' => $vendorId,
-            'status' => 'active',
-            'isPrimary' => true,
-        ]);
-
-        return $entity;
+        return $this->typedOne(
+            $this->findOneBy([
+                'vendorId' => $vendorId,
+                'status' => 'active',
+                'isPrimary' => true,
+            ]),
+        );
     }
 
     public function findActiveByVendorId(int $vendorId): array
     {
-        $entities = $this->findBy([
-            'vendorId' => $vendorId,
-            'status' => 'active',
-        ]);
-
-        /** @var list<VendorUserAssignmentInterface> $entities */
-        return $entities;
+        return $this->typedList(
+            $this->findBy([
+                'vendorId' => $vendorId,
+                'status' => 'active',
+            ]),
+        );
     }
 
     public function findActiveByUserId(int $userId): array
     {
-        $entities = $this->findBy([
-            'userId' => $userId,
-            'status' => 'active',
-        ]);
-
-        /** @var list<VendorUserAssignmentInterface> $entities */
-        return $entities;
+        return $this->typedList(
+            $this->findBy([
+                'userId' => $userId,
+                'status' => 'active',
+            ]),
+        );
     }
 
     public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?VendorUserAssignmentInterface
     {
-        $entity = $this->findOneBy([
-            'vendorId' => $vendorId,
-            'userId' => $userId,
-        ]);
+        return $this->typedOne(
+            $this->findOneBy([
+                'vendorId' => $vendorId,
+                'userId' => $userId,
+            ]),
+        );
+    }
 
+    /**
+     * @param list<VendorUserAssignment> $entities
+     *
+     * @return list<VendorUserAssignmentInterface>
+     */
+    private function typedList(array $entities): array
+    {
+        return $entities;
+    }
+
+    private function typedOne(?VendorUserAssignment $entity): ?VendorUserAssignmentInterface
+    {
         return $entity;
     }
 }

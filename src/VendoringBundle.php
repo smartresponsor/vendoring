@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App;
 
 use App\DependencyInjection\VendoringExtension;
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -16,7 +15,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 final class VendoringBundle extends Bundle
 {
-    public function getContainerExtension(): ExtensionInterface
+    protected function createContainerExtension(): VendoringExtension
     {
         return new VendoringExtension();
     }

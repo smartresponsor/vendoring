@@ -78,11 +78,9 @@ final class CategoryRuleEngine implements CategoryRuleEngineInterface
             return [];
         }
 
-        $result = array_filter($value, function ($key) {
+        return array_filter($value, static function ($key): bool {
             return is_string($key);
         }, ARRAY_FILTER_USE_KEY);
-
-        return $result;
     }
 
     /**

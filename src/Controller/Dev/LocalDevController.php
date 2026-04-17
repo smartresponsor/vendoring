@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Dev;
 
+use App\Support\AppEnvResolver;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -43,22 +44,8 @@ HTML;
     {
         return new JsonResponse([
             'status' => 'ok',
-            'appEnv' => $this->resolveAppEnv(),
+            'appEnv' => AppEnvResolver::resolve(),
         ]);
     }
 
-    private function resolveAppEnv(): string
-    {
-        $serverAppEnv = $_SERVER['APP_ENV'] ?? null;
-        if (is_string($serverAppEnv) && '' !== trim($serverAppEnv)) {
-            return $serverAppEnv;
-        }
-
-        $envAppEnv = $_ENV['APP_ENV'] ?? null;
-        if (is_string($envAppEnv) && '' !== trim($envAppEnv)) {
-            return $envAppEnv;
-        }
-
-        return 'dev';
-    }
 }

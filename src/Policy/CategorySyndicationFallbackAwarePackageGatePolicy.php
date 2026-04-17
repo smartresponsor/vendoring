@@ -41,7 +41,7 @@ final class CategorySyndicationFallbackAwarePackageGatePolicy implements Categor
     }
 
     /**
-     * @param array $value
+     * @param array<int, mixed> $value
      * @return list<string>
      */
     private static function stringList(array $value): array

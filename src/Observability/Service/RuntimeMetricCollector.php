@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Observability\Service;
 
+use App\Support\AppEnvResolver;
 use App\ServiceInterface\Observability\CorrelationContextInterface;
 use App\ServiceInterface\Observability\MetricCollectorInterface;
 use App\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
@@ -60,7 +61,7 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
             $this->exporter->export('runtime_metrics', $record);
         }
 
-        $environment = $this->appEnv();
+        $environment = AppEnvResolver::resolve();
         if ('test' === $environment) {
             return;
         }
@@ -95,18 +96,4 @@ final class RuntimeMetricCollector implements MetricCollectorInterface
         return array_map(static fn(mixed $value): string => (string) $value, $tags);
     }
 
-    private function appEnv(): string
-    {
-        $serverAppEnv = $_SERVER['APP_ENV'] ?? null;
-        if (is_string($serverAppEnv) && '' !== trim($serverAppEnv)) {
-            return $serverAppEnv;
-        }
-
-        $envAppEnv = $_ENV['APP_ENV'] ?? null;
-        if (is_string($envAppEnv) && '' !== trim($envAppEnv)) {
-            return $envAppEnv;
-        }
-
-        return 'dev';
-    }
 }
