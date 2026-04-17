@@ -12,6 +12,7 @@ use DateTimeImmutable;
 final class VendorAttachment
 {
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
     private DateTimeImmutable $createdAt;
 

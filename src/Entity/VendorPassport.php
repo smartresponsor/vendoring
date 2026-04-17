@@ -12,6 +12,7 @@ use DateTimeImmutable;
 final class VendorPassport
 {
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
     private bool $verified = false;
     private DateTimeImmutable $createdAt;

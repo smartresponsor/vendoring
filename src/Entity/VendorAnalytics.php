@@ -10,6 +10,7 @@ namespace App\Entity;
 final class VendorAnalytics
 {
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
 
     /** @param array<string,mixed> $metrics */

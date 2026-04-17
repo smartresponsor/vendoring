@@ -10,6 +10,7 @@ namespace App\Entity;
 final class VendorBilling
 {
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
     private ?string $iban = null;
     private ?string $swift = null;

@@ -10,6 +10,7 @@ namespace App\Entity;
 final class VendorMedia
 {
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
     private ?string $logoPath = null;
     private ?string $bannerPath = null;

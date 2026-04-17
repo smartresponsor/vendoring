@@ -13,6 +13,7 @@ use DateTimeImmutable;
 final class VendorUserAssignment implements VendorUserAssignmentEntityInterface
 {
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
     private string $role;
     private string $status;

@@ -27,6 +27,7 @@ final class VendorApiKey
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 32)]

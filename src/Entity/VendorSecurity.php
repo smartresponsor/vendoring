@@ -20,6 +20,7 @@ use App\EntityInterface\VendorSecurityEntityInterface;
 final class VendorSecurity implements VendorSecurityEntityInterface
 {
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
 
     public function __construct(

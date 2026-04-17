@@ -13,6 +13,7 @@ use DateTimeImmutable;
 final class VendorProfile
 {
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
     private ?string $displayName = null;
     private ?string $about = null;

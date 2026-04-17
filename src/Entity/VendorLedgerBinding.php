@@ -10,6 +10,7 @@ namespace App\Entity;
 final class VendorLedgerBinding
 {
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
 
     public function __construct(

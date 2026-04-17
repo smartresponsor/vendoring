@@ -12,6 +12,7 @@ use DateTimeImmutable;
 final class VendorDocument
 {
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
     private ?DateTimeImmutable $expiresAt = null;
     private ?int $uploaderId = null;

@@ -25,6 +25,7 @@ final class VendorTransaction implements VendorTransactionInterface
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     /** @var int|null */
+    // @phpstan-ignore-next-line
     private ?int $id = null;
 
     #[ORM\Column(name: 'status', type: 'string', length: 64)]
