@@ -18,7 +18,15 @@ final class LocalDevPantherTest extends PantherTestCase
     private const HOME_PAGE_BODY = 'Local runtime is up.';
     private const HEALTH_RESPONSE_FRAGMENT = '"status":"ok"';
     private const CHROMEDRIVER_SKIP_MESSAGE = 'chromedriver is not available on this host';
+    private const CHROME_SKIP_MESSAGE = 'Chrome binary is not available on this host';
     private const CHROMEDRIVER_BINARY = 'drivers/chromedriver';
+    private const CHROME_BINARY_CANDIDATES = [
+        'google-chrome',
+        'google-chrome-stable',
+        'chromium',
+        'chromium-browser',
+        'chrome',
+    ];
     private const PROCESS_TIMEOUT_SECONDS = 30;
     private const CHROMEDRIVER_CHECK_TIMEOUT_SECONDS = 5;
     private const EXCEPTION_HANDLER_RESTORE_ATTEMPTS = 32;
@@ -40,6 +48,7 @@ final class LocalDevPantherTest extends PantherTestCase
     public function testHomePageAndHealthEndpointLoadInChromium(): void
     {
         self::requireChromeDriver();
+        self::requireChromeBinary();
         $client = $this->createLocalDevClient();
 
         try {
@@ -170,6 +179,21 @@ final class LocalDevPantherTest extends PantherTestCase
         } catch (\Throwable) {
             // Panther may already have torn down chromedriver on shutdown.
         }
+    }
+
+    private static function requireChromeBinary(): void
+    {
+        foreach (self::CHROME_BINARY_CANDIDATES as $candidate) {
+            $process = new Process([$candidate, '--version'], self::projectRoot());
+            $process->setTimeout(self::CHROMEDRIVER_CHECK_TIMEOUT_SECONDS);
+            $process->run();
+
+            if ($process->isSuccessful()) {
+                return;
+            }
+        }
+
+        self::markTestSkipped(self::CHROME_SKIP_MESSAGE);
     }
 
     private static function projectRoot(): string
