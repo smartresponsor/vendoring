@@ -33,3 +33,8 @@ services:
   App\Service\Ops\ReleaseManifestBuilder:
     arguments:
       $projectDir: '%kernel.project_dir%'
+  App\ServiceInterface\Observability\MetricCollectorInterface:
+    alias: App\Observability\Service\RuntimeMetricCollector
+  App\Service\Reliability\FileOutboundCircuitBreaker:
+    arguments:
+      $stateDir: '%vendoring_fault_tolerance_dir%'
