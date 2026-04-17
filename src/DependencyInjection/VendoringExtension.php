@@ -16,6 +16,8 @@ final class VendoringExtension extends Extension
 {
     /**
      * @param array<int, array<string, mixed>> $configs
+     * @param ContainerBuilder $container
+     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {

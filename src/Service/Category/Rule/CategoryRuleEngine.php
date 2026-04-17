@@ -78,12 +78,9 @@ final class CategoryRuleEngine implements CategoryRuleEngineInterface
             return [];
         }
 
-        $result = [];
-        foreach ($value as $key => $item) {
-            if (is_string($key)) {
-                $result[$key] = $item;
-            }
-        }
+        $result = array_filter($value, function ($key) {
+            return is_string($key);
+        }, ARRAY_FILTER_USE_KEY);
 
         return $result;
     }
@@ -105,12 +102,9 @@ final class CategoryRuleEngine implements CategoryRuleEngineInterface
                 continue;
             }
 
-            $normalized = [];
-            foreach ($item as $key => $child) {
-                if (is_string($key)) {
-                    $normalized[$key] = $child;
-                }
-            }
+            $normalized = array_filter($item, function ($key) {
+                return is_string($key);
+            }, ARRAY_FILTER_USE_KEY);
 
             $result[] = $normalized;
         }

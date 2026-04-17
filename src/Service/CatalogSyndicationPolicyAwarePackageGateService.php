@@ -73,12 +73,9 @@ final readonly class CatalogSyndicationPolicyAwarePackageGateService implements 
             return [];
         }
 
-        $result = [];
-        foreach ($value as $key => $item) {
-            if (is_string($key)) {
-                $result[$key] = $item;
-            }
-        }
+        $result = array_filter($value, function ($key) {
+            return is_string($key);
+        }, ARRAY_FILTER_USE_KEY);
 
         return $result;
     }
