@@ -1,379 +1,379 @@
 {
-    "name": "vendoring/vendor",
-    "description": "Vendoring component",
-    "type": "project",
-    "license": "proprietary",
-    "require": {
-        "php": "^8.4",
-        "ext-json": "*",
-        "doctrine/dbal": "^4.2",
-        "doctrine/doctrine-bundle": "^3.2",
-        "doctrine/orm": "^3.3",
-        "doctrine/persistence": "^4.0",
-        "symfony/console": "^8.0",
-        "symfony/event-dispatcher-contracts": "^3.6",
-        "symfony/framework-bundle": "^8.0",
-        "symfony/http-foundation": "^8.0",
-        "symfony/mailer": "^8.0",
-        "symfony/mime": "^8.0",
-        "symfony/routing": "^8.0",
-        "symfony/uid": "^8.0",
-        "symfony/var-exporter": "^8.0",
-        "twig/twig": "^3.15",
-        "symfony/twig-bundle": "^8.0",
-        "symfony/form": "^8.0",
-        "symfony/validator": "^8.0",
-        "symfony/security-csrf": "^8.0",
-        "nelmio/api-doc-bundle": "^5.3",
-        "ext-pdo": "*"
-    },
-    "require-dev": {
-        "doctrine/doctrine-fixtures-bundle": "^4.2",
-        "fakerphp/faker": "^1.24",
-        "friendsofphp/php-cs-fixer": "^3.66",
-        "phpstan/phpstan": "^1.12",
-        "phpunit/phpunit": "^11.5",
-        "symfony/panther": "^2.2"
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "App\\Tests\\": "tests/",
-            "Doctrine\\Bundle\\FixturesBundle\\": "stubs/Doctrine/Bundle/FixturesBundle/",
-            "Faker\\": "stubs/Faker/",
-            "Symfony\\Component\\Panther\\": "stubs/Symfony/Component/Panther/"
-        }
-    },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "php-http/discovery": true
-        }
-    },
-    "scripts": {
-        "cs:check": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff",
-        "cs:check-quiet": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run",
-        "cs:fix": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
-        "docs:rc-evidence": "@php bin/generate-rc-evidence.php",
-        "lint": "@php tools/php/php84.php tools/qa/VendoringPhpLint.php",
-        "lint:php": "@php tools/php/php84.php tools/qa/VendoringPhpLint.php",
-        "md": "@php tools/php/php84.php vendor/bin/phpmd src text phpmd.xml.dist",
-        "md:tests": "@php tools/php/php84.php vendor/bin/phpmd tests text phpmd.xml.dist",
-        "phpstan": "@php tools/php/php84.php vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G",
-        "pipeline:local": "powershell -ExecutionPolicy Bypass -File tools/ci/run-vendor-local-pipeline.ps1",
-        "pipeline:local:full": "powershell -ExecutionPolicy Bypass -File tools/ci/run-vendor-local-pipeline.ps1 -IncludeSmokes -IncludeReports",
-        "pipeline:local:strict": "powershell -ExecutionPolicy Bypass -File tools/ci/run-vendor-local-pipeline.ps1 -FailOnErrors",
-        "qa:canon": [
-            "@report:canonical-structure",
-            "@report:mirror-enforcer",
-            "@report:config-guard",
-            "@report:config-drift",
-            "@report:php-surface"
-        ],
-        "qa:full": [
-            "@qa:style",
-            "@qa:static",
-            "@qa:smell",
-            "@qa:test",
-            "@qa:canon"
-        ],
-        "qa:smell": [
-            "@md",
-            "@md:tests"
-        ],
-        "qa:static": [
-            "@stan"
-        ],
-        "qa:style": [
-            "@lint",
-            "@cs:check"
-        ],
-        "qa:test": [
-            "@test"
-        ],
-        "quality": [
-            "@test:symfony-stack",
-            "@test:di",
-            "@test:entrypoint",
-            "@lint:php",
-            "@test:compat",
-            "@test:smoke",
-            "@phpstan",
-            "@test:mail",
-            "@test:statement-command",
-            "@test:statement",
-            "@test:payout",
-            "@test:repository",
-            "@test:fixtures-stack",
-            "@test:unit",
-            "@test:controller",
-            "@test:entity",
-            "@test:transaction-persistence",
-            "@test:transaction-amount",
-            "@test:transaction-status-persistence",
-            "@test:transaction-doctrine",
-            "@test:transaction",
-            "@test:transaction-policy",
-            "@test:transaction-migration",
-            "@test:transaction-idempotency",
-            "@test:transaction-identity",
-            "@test:transaction-error-surface",
-            "@test:transaction-mapping",
-            "@test:transaction-schema-parity",
-            "@test:transaction-uniqueness-contract",
-            "@test:transaction-json",
-            "@test:root-structure",
-            "@test:root-protocol-cleanup",
-            "@test:root-vendor-cleanup",
-            "@test:root-removed-files",
-            "@test:root-runtime-artifacts",
-            "@test:idea-runtime-artifact",
-            "@test:idea-module-artifact",
-            "@test:no-stub-config",
-            "@test:no-placeholder-source",
-            "@test:no-placeholder-repository",
-            "@test:no-stub-source",
-            "@test:no-stub-repository",
-            "@test:no-example-config",
-            "@test:no-example-repository",
-            "@test:no-example-wording-repository",
-            "@test:no-example-command-help",
-            "@test:app-namespace-repository",
-            "@test:no-legacy-vendor-script",
-            "@test:composer-guard-parity",
-            "@test:composer-root-guard-parity",
-            "@test:composer-quality-parity",
-            "@test:composer-script-invocation-parity"
-        ],
-        "quality:api": [
-            "@test:mail",
-            "@test:statement-command",
-            "@test:statement",
-            "@test:payout",
-            "@test:transaction",
-            "@test:transaction-policy",
-            "@test:transaction-amount",
-            "@test:transaction-idempotency",
-            "@test:transaction-identity",
-            "@test:transaction-error-surface",
-            "@test:transaction-json",
-            "@test:transaction-mapping",
-            "@test:transaction-schema-parity",
-            "@test:transaction-uniqueness-contract"
-        ],
-        "quality:contracts": [
-            "@test:symfony-stack",
-            "@test:di",
-            "@test:entrypoint",
-            "@test:compat",
-            "@test:repository",
-            "@test:fixtures-stack",
-            "@test:unit",
-            "@test:controller",
-            "@test:entity"
-        ],
-        "quality:docs": [
-            "@docs:rc-evidence",
-            "@docs:release-manifest",
-            "@test:rc-evidence",
-            "@test:release-candidate-docs",
-            "@test:release-rollback-manifest"
-        ],
-        "quality:persistence": [
-            "@test:transaction-persistence",
-            "@test:transaction-doctrine",
-            "@test:transaction-migration",
-            "@test:transaction-sqlite-integration"
-        ],
-        "quality:release-candidate": [
-            "@quality:static",
-            "@quality:contracts",
-            "@quality:runtime",
-            "@quality:persistence",
-            "@quality:api",
-            "@quality:docs"
-        ],
-        "quality:runtime": [
-            "@test",
-            "@test:smoke"
-        ],
-        "quality:static": [
-            "@lint:php",
-            "@phpstan"
-        ],
-        "report:canonical-structure": "@php tools/php/php84.php tools/report/VendorCanonicalStructureReport.php",
-        "report:config-drift": "@php tools/php/php84.php tools/report/VendorConfigDriftReport.php",
-        "report:config-guard": "@php tools/php/php84.php tools/report/VendorConfigGuardReport.php",
-        "report:contract": "@php tools/php/php84.php tools/report/VendorContractReport.php",
-        "report:mirror-enforcer": "@php tools/php/php84.php tools/report/VendorMirrorEnforcerReport.php",
-        "report:php-surface": "@php tools/php/php84.php tools/report/VendorPhpSurfaceReport.php",
-        "report:prod-marker": "@php tools/php/php84.php tools/report/VendorProductionMarkerReport.php",
-        "report:quality-residue": "@php tools/php/php84.php tools/report/VendorQualityResidueReport.php",
-        "report:readiness": "@php tools/php/php84.php tools/report/VendorReadinessReport.php",
-        "smoke:admin": "@php tools/php/php84.php tools/smoke/vendor-admin-smoke.php",
-        "smoke:container": "@php tools/php/php84.php tools/smoke/vendor-container-boot-smoke.php",
-        "smoke:doctrine": "@php tools/php/php84.php tools/smoke/vendor-doctrine-mapping-smoke.php",
-        "smoke:fixture-load": "@php tools/php/php84.php tools/smoke/vendor-fixture-load-smoke.php",
-        "smoke:fixtures": "@php tools/php/php84.php tools/smoke/vendor-fixture-sanity.php",
-        "smoke:runtime": "@php tools/php/php84.php tools/smoke/vendor-runtime-smoke.php",
-        "stan": "@php tools/php/php84.php vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G",
-        "stan:conservative": "@php tools/php/php82.php vendor/bin/phpstan analyse",
-        "stan:max": "@php tools/php/php84.php vendor/bin/phpstan analyse --level=max",
-        "stan:runtime-target": "@php tools/php/php84.php vendor/bin/phpstan analyse",
-        "test": "php vendor/bin/phpunit --configuration phpunit.xml.dist",
-        "test:app-namespace-repository": [
-            "php tests/bin/app-namespace-repository-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalAppNamespaceRepositoryContractTest"
-        ],
-        "test:compat": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Compatibility",
-        "test:composer-guard-parity": [
-            "php tests/bin/composer-guard-parity-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ComposerGuardScriptParityTest"
-        ],
-        "test:composer-quality-parity": [
-            "php tests/bin/composer-quality-parity-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ComposerQualityScriptParityTest"
-        ],
-        "test:composer-root-guard-parity": [
-            "php tests/bin/composer-root-guard-parity-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ComposerRootGuardScriptParityTest"
-        ],
-        "test:composer-script-invocation-parity": [
-            "php tests/bin/composer-script-invocation-parity-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ComposerScriptInvocationParityTest"
-        ],
-        "test:contract": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite contract",
-        "test:controller": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Controller",
-        "test:di": [
-            "php tests/bin/interface-alias-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ServiceWiringContractTest"
-        ],
-        "test:entity": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Entity",
-        "test:entrypoint": [
-            "php tests/bin/entrypoint-contract-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter EntryPointConstructorContractTest"
-        ],
-        "test:fixtures-stack": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorFixtureStackContractTest",
-        "test:functional": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
-        "test:idea-module-artifact": [
-            "php tests/bin/idea-module-artifact-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalIdeRuntimeArtifactContractTest"
-        ],
-        "test:idea-runtime-artifact": [
-            "php tests/bin/idea-runtime-artifact-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalIdeRuntimeArtifactContractTest"
-        ],
-        "test:integration": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration",
-        "test:mail": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorStatementMailerServiceTest",
-        "test:no-example-command-help": [
-            "php tests/bin/no-example-command-help-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoExampleCommandHelpContractTest"
-        ],
-        "test:no-example-config": [
-            "php tests/bin/no-example-config-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoExampleConfigContractTest"
-        ],
-        "test:no-example-repository": [
-            "php tests/bin/no-example-repository-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoExampleRepositoryContractTest"
-        ],
-        "test:no-example-wording-repository": [
-            "php tests/bin/no-example-wording-repository-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoExampleWordingRepositoryContractTest"
-        ],
-        "test:no-legacy-vendor-script": [
-            "php tests/bin/no-legacy-vendor-script-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoLegacyVendorScriptContractTest"
-        ],
-        "test:no-placeholder-repository": [
-            "php tests/bin/no-placeholder-repository-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoPlaceholderRepositoryContractTest"
-        ],
-        "test:no-placeholder-source": [
-            "php tests/bin/no-placeholder-source-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoPlaceholderSourceContractTest"
-        ],
-        "test:no-stub-config": [
-            "php tests/bin/no-stub-config-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoStubConfigContractTest"
-        ],
-        "test:no-stub-repository": [
-            "php tests/bin/no-stub-repository-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoStubRepositoryContractTest"
-        ],
-        "test:no-stub-source": [
-            "php tests/bin/no-stub-source-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoStubSourceContractTest"
-        ],
-        "test:payout": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Payout",
-        "test:post-deploy-verification": "php tests/bin/post-deploy-verification-pack.php",
-        "test:rc-evidence": [
-            "php tests/bin/rc-evidence-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ReleaseCandidateEvidenceContractTest"
-        ],
-        "test:release-candidate-docs": [
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ReleaseCandidateDocumentationContractTest"
-        ],
-        "test:repository": [
-            "php tests/bin/repository-contract-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter DoctrineRepositoryContractTest"
-        ],
-        "test:root-protocol-cleanup": [
-            "php tests/bin/root-structure-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalRootStructureContractTest"
-        ],
-        "test:root-removed-files": [
-            "php tests/bin/root-removed-files-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalRootRemovedFilesContractTest"
-        ],
-        "test:root-runtime-artifacts": [
-            "php tests/bin/root-runtime-artifact-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalRootRuntimeArtifactContractTest"
-        ],
-        "test:root-structure": [
-            "php tests/bin/root-structure-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalRootStructureContractTest"
-        ],
-        "test:root-vendor-cleanup": [
-            "php tests/bin/root-structure-smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalRootStructureContractTest"
-        ],
-        "test:runtime-synthetic-probe": "php tests/bin/runtime-synthetic-probe.php",
-        "test:smoke": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite smoke",
-        "test:statement": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorStatementServiceTest",
-        "test:statement-command": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter SendVendorStatementsCommandTest",
-        "test:symfony-security": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Security",
-        "test:symfony-stack": [
-            "php tests/bin/smoke.php",
-            "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ControllerInfrastructureContractTest"
-        ],
-        "test:transaction": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter VendorTransaction",
-        "test:transaction-amount": "php tests/bin/transaction-amount-smoke.php",
-        "test:transaction-doctrine": "php tests/bin/transaction-doctrine-smoke.php",
-        "test:transaction-error-surface": "php tests/bin/transaction-error-surface-smoke.php",
-        "test:transaction-idempotency": "php tests/bin/transaction-idempotency-smoke.php",
-        "test:transaction-identity": "php tests/bin/transaction-identity-smoke.php",
-        "test:transaction-json": "php tests/bin/transaction-json-surface-smoke.php",
-        "test:transaction-mapping": "php tests/bin/transaction-mapping-parity-smoke.php",
-        "test:transaction-migration": "php tests/bin/transaction-migration-smoke.php",
-        "test:transaction-persistence": "php tests/bin/transaction-persistence-smoke.php",
-        "test:transaction-policy": "php tests/bin/transaction-policy-smoke.php",
-        "test:transaction-schema-parity": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorTransactionSchemaParityTest",
-        "test:transaction-sqlite-integration": "php tests/bin/transaction-sqlite-integration-smoke.php",
-        "test:transaction-status-persistence": "php tests/bin/transaction-persistence-smoke.php",
-        "test:transaction-uniqueness-contract": "php tests/bin/transaction-uniqueness-contract-smoke.php",
-        "test:unit": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
-        "test:finance-synthetic-probe": "php tests/bin/finance-synthetic-probe.php",
-        "test:vendor-rbac-contract": "php tests/bin/vendor-rbac-contract-smoke.php",
-        "test:observability-backend": "php tests/bin/observability-backend-contract-smoke.php",
-        "test:monitoring-alerting": "php tests/bin/monitoring-alerting-contract-smoke.php",
-        "test:outbound-fault-tolerance": "php tests/bin/outbound-fault-tolerance-contract-smoke.php",
-        "docs:release-manifest": "@php bin/generate-release-manifest.php",
-        "test:release-rollback-manifest": "php tests/bin/release-rollback-manifest-contract-smoke.php",
-        "test:canary-rollout": "php tests/bin/canary-rollout-contract-smoke.php"
+  "name": "vendoring/vendor",
+  "description": "Vendoring component",
+  "type": "symfony-bundle",
+  "license": "proprietary",
+  "require": {
+    "php": "^8.4",
+    "ext-json": "*",
+    "doctrine/dbal": "^4.3",
+    "doctrine/doctrine-bundle": "^3.2",
+    "doctrine/orm": "^3.3",
+    "doctrine/persistence": "^4.0",
+    "symfony/console": "^8.0",
+    "symfony/event-dispatcher-contracts": "^3.6",
+    "symfony/framework-bundle": "^8.0",
+    "symfony/http-foundation": "^8.0",
+    "symfony/mailer": "^8.0",
+    "symfony/mime": "^8.0",
+    "symfony/routing": "^8.0",
+    "symfony/uid": "^8.0",
+    "symfony/var-exporter": "^8.0",
+    "twig/twig": "^3.15",
+    "symfony/twig-bundle": "^8.0",
+    "symfony/form": "^8.0",
+    "symfony/validator": "^8.0",
+    "symfony/security-csrf": "^8.0",
+    "nelmio/api-doc-bundle": "^5.3",
+    "ext-pdo": "*"
+  },
+  "require-dev": {
+    "doctrine/doctrine-fixtures-bundle": "^4.3",
+    "fakerphp/faker": "^1.24",
+    "friendsofphp/php-cs-fixer": "^3.66",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^11.5",
+    "symfony/panther": "^2.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "App\\Tests\\": "tests/",
+      "Doctrine\\Bundle\\FixturesBundle\\": "stubs/Doctrine/Bundle/FixturesBundle/",
+      "Faker\\": "stubs/Faker/",
+      "Symfony\\Component\\Panther\\": "stubs/Symfony/Component/Panther/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  },
+  "scripts": {
+    "cs:check": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff",
+    "cs:check-quiet": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run",
+    "cs:fix": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
+    "docs:rc-evidence": "@php bin/generate-rc-evidence.php",
+    "lint": "@php tools/php/php84.php tools/qa/VendoringPhpLint.php",
+    "lint:php": "@php tools/php/php84.php tools/qa/VendoringPhpLint.php",
+    "md": "@php tools/php/php84.php vendor/bin/phpmd src text phpmd.xml.dist",
+    "md:tests": "@php tools/php/php84.php vendor/bin/phpmd tests text phpmd.xml.dist",
+    "phpstan": "@php tools/php/php84.php vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G",
+    "pipeline:local": "powershell -ExecutionPolicy Bypass -File tools/ci/run-vendor-local-pipeline.ps1",
+    "pipeline:local:full": "powershell -ExecutionPolicy Bypass -File tools/ci/run-vendor-local-pipeline.ps1 -IncludeSmokes -IncludeReports",
+    "pipeline:local:strict": "powershell -ExecutionPolicy Bypass -File tools/ci/run-vendor-local-pipeline.ps1 -FailOnErrors",
+    "qa:canon": [
+      "@report:canonical-structure",
+      "@report:mirror-enforcer",
+      "@report:config-guard",
+      "@report:config-drift",
+      "@report:php-surface"
+    ],
+    "qa:full": [
+      "@qa:style",
+      "@qa:static",
+      "@qa:smell",
+      "@qa:test",
+      "@qa:canon"
+    ],
+    "qa:smell": [
+      "@md",
+      "@md:tests"
+    ],
+    "qa:static": [
+      "@stan"
+    ],
+    "qa:style": [
+      "@lint",
+      "@cs:check"
+    ],
+    "qa:test": [
+      "@test"
+    ],
+    "quality": [
+      "@test:symfony-stack",
+      "@test:di",
+      "@test:entrypoint",
+      "@lint:php",
+      "@test:compat",
+      "@test:smoke",
+      "@phpstan",
+      "@test:mail",
+      "@test:statement-command",
+      "@test:statement",
+      "@test:payout",
+      "@test:repository",
+      "@test:fixtures-stack",
+      "@test:unit",
+      "@test:controller",
+      "@test:entity",
+      "@test:transaction-persistence",
+      "@test:transaction-amount",
+      "@test:transaction-status-persistence",
+      "@test:transaction-doctrine",
+      "@test:transaction",
+      "@test:transaction-policy",
+      "@test:transaction-migration",
+      "@test:transaction-idempotency",
+      "@test:transaction-identity",
+      "@test:transaction-error-surface",
+      "@test:transaction-mapping",
+      "@test:transaction-schema-parity",
+      "@test:transaction-uniqueness-contract",
+      "@test:transaction-json",
+      "@test:root-structure",
+      "@test:root-protocol-cleanup",
+      "@test:root-vendor-cleanup",
+      "@test:root-removed-files",
+      "@test:root-runtime-artifacts",
+      "@test:idea-runtime-artifact",
+      "@test:idea-module-artifact",
+      "@test:no-stub-config",
+      "@test:no-placeholder-source",
+      "@test:no-placeholder-repository",
+      "@test:no-stub-source",
+      "@test:no-stub-repository",
+      "@test:no-example-config",
+      "@test:no-example-repository",
+      "@test:no-example-wording-repository",
+      "@test:no-example-command-help",
+      "@test:app-namespace-repository",
+      "@test:no-legacy-vendor-script",
+      "@test:composer-guard-parity",
+      "@test:composer-root-guard-parity",
+      "@test:composer-quality-parity",
+      "@test:composer-script-invocation-parity"
+    ],
+    "quality:api": [
+      "@test:mail",
+      "@test:statement-command",
+      "@test:statement",
+      "@test:payout",
+      "@test:transaction",
+      "@test:transaction-policy",
+      "@test:transaction-amount",
+      "@test:transaction-idempotency",
+      "@test:transaction-identity",
+      "@test:transaction-error-surface",
+      "@test:transaction-json",
+      "@test:transaction-mapping",
+      "@test:transaction-schema-parity",
+      "@test:transaction-uniqueness-contract"
+    ],
+    "quality:contracts": [
+      "@test:symfony-stack",
+      "@test:di",
+      "@test:entrypoint",
+      "@test:compat",
+      "@test:repository",
+      "@test:fixtures-stack",
+      "@test:unit",
+      "@test:controller",
+      "@test:entity"
+    ],
+    "quality:docs": [
+      "@docs:rc-evidence",
+      "@docs:release-manifest",
+      "@test:rc-evidence",
+      "@test:release-candidate-docs",
+      "@test:release-rollback-manifest"
+    ],
+    "quality:persistence": [
+      "@test:transaction-persistence",
+      "@test:transaction-doctrine",
+      "@test:transaction-migration",
+      "@test:transaction-sqlite-integration"
+    ],
+    "quality:release-candidate": [
+      "@quality:static",
+      "@quality:contracts",
+      "@quality:runtime",
+      "@quality:persistence",
+      "@quality:api",
+      "@quality:docs"
+    ],
+    "quality:runtime": [
+      "@test",
+      "@test:smoke"
+    ],
+    "quality:static": [
+      "@lint:php",
+      "@phpstan"
+    ],
+    "report:canonical-structure": "@php tools/php/php84.php tools/report/VendorCanonicalStructureReport.php",
+    "report:config-drift": "@php tools/php/php84.php tools/report/VendorConfigDriftReport.php",
+    "report:config-guard": "@php tools/php/php84.php tools/report/VendorConfigGuardReport.php",
+    "report:contract": "@php tools/php/php84.php tools/report/VendorContractReport.php",
+    "report:mirror-enforcer": "@php tools/php/php84.php tools/report/VendorMirrorEnforcerReport.php",
+    "report:php-surface": "@php tools/php/php84.php tools/report/VendorPhpSurfaceReport.php",
+    "report:prod-marker": "@php tools/php/php84.php tools/report/VendorProductionMarkerReport.php",
+    "report:quality-residue": "@php tools/php/php84.php tools/report/VendorQualityResidueReport.php",
+    "report:readiness": "@php tools/php/php84.php tools/report/VendorReadinessReport.php",
+    "smoke:admin": "@php tools/php/php84.php tools/smoke/vendor-admin-smoke.php",
+    "smoke:container": "@php tools/php/php84.php tools/smoke/vendor-container-boot-smoke.php",
+    "smoke:doctrine": "@php tools/php/php84.php tools/smoke/vendor-doctrine-mapping-smoke.php",
+    "smoke:fixture-load": "@php tools/php/php84.php tools/smoke/vendor-fixture-load-smoke.php",
+    "smoke:fixtures": "@php tools/php/php84.php tools/smoke/vendor-fixture-sanity.php",
+    "smoke:runtime": "@php tools/php/php84.php tools/smoke/vendor-runtime-smoke.php",
+    "stan": "@php tools/php/php84.php vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G",
+    "stan:conservative": "@php tools/php/php82.php vendor/bin/phpstan analyse",
+    "stan:max": "@php tools/php/php84.php vendor/bin/phpstan analyse --level=max",
+    "stan:runtime-target": "@php tools/php/php84.php vendor/bin/phpstan analyse",
+    "test": "php vendor/bin/phpunit --configuration phpunit.xml.dist",
+    "test:app-namespace-repository": [
+      "php tests/bin/app-namespace-repository-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalAppNamespaceRepositoryContractTest"
+    ],
+    "test:compat": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Compatibility",
+    "test:composer-guard-parity": [
+      "php tests/bin/composer-guard-parity-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ComposerGuardScriptParityTest"
+    ],
+    "test:composer-quality-parity": [
+      "php tests/bin/composer-quality-parity-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ComposerQualityScriptParityTest"
+    ],
+    "test:composer-root-guard-parity": [
+      "php tests/bin/composer-root-guard-parity-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ComposerRootGuardScriptParityTest"
+    ],
+    "test:composer-script-invocation-parity": [
+      "php tests/bin/composer-script-invocation-parity-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ComposerScriptInvocationParityTest"
+    ],
+    "test:contract": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite contract",
+    "test:controller": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Controller",
+    "test:di": [
+      "php tests/bin/interface-alias-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ServiceWiringContractTest"
+    ],
+    "test:entity": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Entity",
+    "test:entrypoint": [
+      "php tests/bin/entrypoint-contract-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter EntryPointConstructorContractTest"
+    ],
+    "test:fixtures-stack": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorFixtureStackContractTest",
+    "test:functional": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
+    "test:idea-module-artifact": [
+      "php tests/bin/idea-module-artifact-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalIdeRuntimeArtifactContractTest"
+    ],
+    "test:idea-runtime-artifact": [
+      "php tests/bin/idea-runtime-artifact-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalIdeRuntimeArtifactContractTest"
+    ],
+    "test:integration": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration",
+    "test:mail": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorStatementMailerServiceTest",
+    "test:no-example-command-help": [
+      "php tests/bin/no-example-command-help-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoExampleCommandHelpContractTest"
+    ],
+    "test:no-example-config": [
+      "php tests/bin/no-example-config-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoExampleConfigContractTest"
+    ],
+    "test:no-example-repository": [
+      "php tests/bin/no-example-repository-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoExampleRepositoryContractTest"
+    ],
+    "test:no-example-wording-repository": [
+      "php tests/bin/no-example-wording-repository-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoExampleWordingRepositoryContractTest"
+    ],
+    "test:no-legacy-vendor-script": [
+      "php tests/bin/no-legacy-vendor-script-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoLegacyVendorScriptContractTest"
+    ],
+    "test:no-placeholder-repository": [
+      "php tests/bin/no-placeholder-repository-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoPlaceholderRepositoryContractTest"
+    ],
+    "test:no-placeholder-source": [
+      "php tests/bin/no-placeholder-source-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoPlaceholderSourceContractTest"
+    ],
+    "test:no-stub-config": [
+      "php tests/bin/no-stub-config-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoStubConfigContractTest"
+    ],
+    "test:no-stub-repository": [
+      "php tests/bin/no-stub-repository-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoStubRepositoryContractTest"
+    ],
+    "test:no-stub-source": [
+      "php tests/bin/no-stub-source-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoStubSourceContractTest"
+    ],
+    "test:payout": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Payout",
+    "test:post-deploy-verification": "php tests/bin/post-deploy-verification-pack.php",
+    "test:rc-evidence": [
+      "php tests/bin/rc-evidence-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ReleaseCandidateEvidenceContractTest"
+    ],
+    "test:release-candidate-docs": [
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ReleaseCandidateDocumentationContractTest"
+    ],
+    "test:repository": [
+      "php tests/bin/repository-contract-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter DoctrineRepositoryContractTest"
+    ],
+    "test:root-protocol-cleanup": [
+      "php tests/bin/root-structure-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalRootStructureContractTest"
+    ],
+    "test:root-removed-files": [
+      "php tests/bin/root-removed-files-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalRootRemovedFilesContractTest"
+    ],
+    "test:root-runtime-artifacts": [
+      "php tests/bin/root-runtime-artifact-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalRootRuntimeArtifactContractTest"
+    ],
+    "test:root-structure": [
+      "php tests/bin/root-structure-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalRootStructureContractTest"
+    ],
+    "test:root-vendor-cleanup": [
+      "php tests/bin/root-structure-smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalRootStructureContractTest"
+    ],
+    "test:runtime-synthetic-probe": "php tests/bin/runtime-synthetic-probe.php",
+    "test:smoke": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite smoke",
+    "test:statement": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorStatementServiceTest",
+    "test:statement-command": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter SendVendorStatementsCommandTest",
+    "test:symfony-security": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Security",
+    "test:symfony-stack": [
+      "php tests/bin/smoke.php",
+      "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ControllerInfrastructureContractTest"
+    ],
+    "test:transaction": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter VendorTransaction",
+    "test:transaction-amount": "php tests/bin/transaction-amount-smoke.php",
+    "test:transaction-doctrine": "php tests/bin/transaction-doctrine-smoke.php",
+    "test:transaction-error-surface": "php tests/bin/transaction-error-surface-smoke.php",
+    "test:transaction-idempotency": "php tests/bin/transaction-idempotency-smoke.php",
+    "test:transaction-identity": "php tests/bin/transaction-identity-smoke.php",
+    "test:transaction-json": "php tests/bin/transaction-json-surface-smoke.php",
+    "test:transaction-mapping": "php tests/bin/transaction-mapping-parity-smoke.php",
+    "test:transaction-migration": "php tests/bin/transaction-migration-smoke.php",
+    "test:transaction-persistence": "php tests/bin/transaction-persistence-smoke.php",
+    "test:transaction-policy": "php tests/bin/transaction-policy-smoke.php",
+    "test:transaction-schema-parity": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorTransactionSchemaParityTest",
+    "test:transaction-sqlite-integration": "php tests/bin/transaction-sqlite-integration-smoke.php",
+    "test:transaction-status-persistence": "php tests/bin/transaction-persistence-smoke.php",
+    "test:transaction-uniqueness-contract": "php tests/bin/transaction-uniqueness-contract-smoke.php",
+    "test:unit": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
+    "test:finance-synthetic-probe": "php tests/bin/finance-synthetic-probe.php",
+    "test:vendor-rbac-contract": "php tests/bin/vendor-rbac-contract-smoke.php",
+    "test:observability-backend": "php tests/bin/observability-backend-contract-smoke.php",
+    "test:monitoring-alerting": "php tests/bin/monitoring-alerting-contract-smoke.php",
+    "test:outbound-fault-tolerance": "php tests/bin/outbound-fault-tolerance-contract-smoke.php",
+    "docs:release-manifest": "@php bin/generate-release-manifest.php",
+    "test:release-rollback-manifest": "php tests/bin/release-rollback-manifest-contract-smoke.php",
+    "test:canary-rollout": "php tests/bin/canary-rollout-contract-smoke.php"
+  }
 }

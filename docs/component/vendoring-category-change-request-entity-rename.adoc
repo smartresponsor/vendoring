@@ -1,0 +1,27 @@
+= Vendoring CategoryChangeRequest Entity Rename
+
+This patch removes the generic `App\Entity\CategoryChangeRequest` runtime class from `Vendoring`.
+
+== Refactor
+
+----
+src/Entity/CategoryChangeRequest.php
+----
+
+is renamed to:
+
+----
+src/Entity/VendorCatalogCategoryChangeRequest.php
+----
+
+and the class is renamed from `CategoryChangeRequest` to `VendorCatalogCategoryChangeRequest`.
+
+== Reason
+
+The combined App Kernel cannot load multiple components that declare the same FQCN:
+
+----
+App\Entity\CategoryChangeRequest
+----
+
+Both Cataloging and Vendoring now use component-scoped class names.

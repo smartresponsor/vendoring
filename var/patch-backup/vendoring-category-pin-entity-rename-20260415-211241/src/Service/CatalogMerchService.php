@@ -18,7 +18,7 @@ final readonly class CatalogMerchService implements CatalogMerchServiceInterface
 
     public function pinCreate(string $categoryId, string $recordId, int $position): void
     {
-        $pin = new VendorCatalogCategoryPin($categoryId, $recordId, $position);
+        $pin = new CategoryPin($categoryId, $recordId, $position);
         $this->entityManager->persist($pin);
         $this->entityManager->flush();
     }

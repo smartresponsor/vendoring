@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\CategoryReviewAssignment;
+use App\Entity\VendorCatalogReviewAssignment;
 use App\Policy\CategoryReviewAssignmentPolicy;
 use App\Repository\CategoryChangeRequestRepository;
 use App\Repository\CategoryReviewAssignmentRepository;
@@ -29,7 +29,7 @@ final readonly class CatalogReviewAssignmentService
             throw new InvalidArgumentException(sprintf('category_change_request_not_found:%s', $requestId));
         }
 
-        $assignment = new CategoryReviewAssignment(
+        $assignment = new VendorCatalogReviewAssignment(
             $requestId,
             $request->categoryId(),
             trim($reviewer),

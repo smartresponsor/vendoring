@@ -6,8 +6,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\VendorCatalogCategoryBanner;
-use App\Entity\VendorCatalogCategoryHtmlBlock;
-use App\Entity\VendorCatalogCategoryPin;
+use App\Entity\CategoryHtmlBlock;
+use App\Entity\CategoryPin;
 use App\ServiceInterface\CatalogMerchServiceInterface;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,14 +18,14 @@ final readonly class CatalogMerchService implements CatalogMerchServiceInterface
 
     public function pinCreate(string $categoryId, string $recordId, int $position): void
     {
-        $pin = new VendorCatalogCategoryPin($categoryId, $recordId, $position);
+        $pin = new CategoryPin($categoryId, $recordId, $position);
         $this->entityManager->persist($pin);
         $this->entityManager->flush();
     }
 
     public function pinDelete(string $categoryId, string $recordId): void
     {
-        $pin = $this->entityManager->getRepository(VendorCatalogCategoryPin::class)->findOneBy([
+        $pin = $this->entityManager->getRepository(CategoryPin::class)->findOneBy([
             'categoryId' => $categoryId,
             'recordId' => $recordId,
         ]);
@@ -56,7 +56,7 @@ final readonly class CatalogMerchService implements CatalogMerchServiceInterface
 
     public function bannerPublish(string $categoryId, string $title, string $content): string
     {
-        $banner = new VendorCatalogCategoryBanner($categoryId, $title, $content);
+        $banner = new CategoryBanner($categoryId, $title, $content);
         $banner->publish();
         $this->entityManager->persist($banner);
         $this->entityManager->flush();
@@ -66,7 +66,7 @@ final readonly class CatalogMerchService implements CatalogMerchServiceInterface
 
     public function htmlPublish(string $categoryId, string $html): string
     {
-        $htmlBlock = new VendorCatalogCategoryHtmlBlock($categoryId, $html);
+        $htmlBlock = new CategoryHtmlBlock($categoryId, $html);
         $htmlBlock->publish();
         $this->entityManager->persist($htmlBlock);
         $this->entityManager->flush();
