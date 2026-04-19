@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\Entity\Vendor;
-use App\Service\VendorCrmService;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Service\VendorCrmService;
 use PHPUnit\Framework\TestCase;
 
 final class VendorCrmServiceTest extends TestCase

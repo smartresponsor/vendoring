@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Repository;
+namespace App\Vendoring\Repository;
 
-use App\Entity\VendorAnalytics;
-use App\RepositoryInterface\VendorAnalyticsRepositoryInterface;
+use App\Vendoring\Entity\VendorAnalytics;
+use App\Vendoring\RepositoryInterface\VendorAnalyticsRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

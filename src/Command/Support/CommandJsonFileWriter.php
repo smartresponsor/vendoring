@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Support;
+namespace App\Vendoring\Command\Support;
 
 use JsonException;
 

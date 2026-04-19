@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\Entity\Vendor;
-use App\Entity\VendorApiKey;
-use App\RepositoryInterface\VendorApiKeyRepositoryInterface;
-use App\Service\VendorApiKeyService;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorApiKey;
+use App\Vendoring\RepositoryInterface\VendorApiKeyRepositoryInterface;
+use App\Vendoring\Service\VendorApiKeyService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

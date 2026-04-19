@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Repository\Payout;
+namespace App\Vendoring\Repository\Payout;
 
-use App\Entity\Payout\Payout;
-use App\Entity\Payout\PayoutItem;
-use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
+use App\Vendoring\Entity\Payout\Payout;
+use App\Vendoring\Entity\Payout\PayoutItem;
+use App\Vendoring\RepositoryInterface\Payout\PayoutRepositoryInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use JsonException;

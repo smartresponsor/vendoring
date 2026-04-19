@@ -4,9 +4,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Search;
+namespace App\Vendoring\Service\Search;
 
-use App\ServiceInterface\Search\TfidfSearchInterface;
+use App\Vendoring\ServiceInterface\Search\TfidfSearchInterface;
 
 /**
  * @noinspection PhpPropertyNamingConventionInspection

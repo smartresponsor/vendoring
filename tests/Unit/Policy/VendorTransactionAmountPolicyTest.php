@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Policy;
+namespace App\Vendoring\Tests\Unit\Policy;
 
-use App\Service\Policy\VendorTransactionAmountPolicy;
+use App\Vendoring\Service\Policy\VendorTransactionAmountPolicy;
 use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionAmountPolicyTest extends TestCase

@@ -7,5 +7,5 @@ doctrine:
             Vendoring:
                 type: attribute
                 dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
+                prefix: 'App\Vendoring\Entity'
                 is_bundle: false

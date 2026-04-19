@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Support\Repository;
+namespace App\Vendoring\Tests\Support\Repository;
 
-use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
-use App\Entity\Ledger\LedgerEntry;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\Vendoring\Entity\Ledger\LedgerEntry;
+use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 
 final class InMemoryLedgerEntryRepository implements LedgerEntryRepositoryInterface
 {

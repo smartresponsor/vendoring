@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Vendoring\Entity;
 
-use App\EntityInterface\VendorEntityInterface;
+use App\Vendoring\EntityInterface\VendorEntityInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: 'App\\Repository\\VendorRepository')]
+#[ORM\Entity(repositoryClass: 'App\Vendoring\\Repository\\VendorRepository')]
 #[ORM\Table(name: 'vendor')]
 /**
  * @noinspection PhpPropertyNamingConventionInspection

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Observability;
+namespace App\Vendoring\ServiceInterface\Observability;
 
 /**
  * Write-side contract for structured runtime logging.

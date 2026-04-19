@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Vendoring\Repository;
 
-use App\Entity\VendorAttachment;
-use App\RepositoryInterface\VendorAttachmentRepositoryInterface;
+use App\Vendoring\Entity\VendorAttachment;
+use App\Vendoring\RepositoryInterface\VendorAttachmentRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

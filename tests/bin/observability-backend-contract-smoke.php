@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\FileObservabilityRecordExporter;
-use App\Observability\Service\RuntimeLogger;
-use App\Observability\Service\RuntimeMetricCollector;
+use App\Vendoring\Observability\Service\CorrelationContext;
+use App\Vendoring\Observability\Service\FileObservabilityRecordExporter;
+use App\Vendoring\Observability\Service\RuntimeLogger;
+use App\Vendoring\Observability\Service\RuntimeMetricCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 

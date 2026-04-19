@@ -10,8 +10,8 @@ The host application should only enable the bundle and import route configuratio
 
 == Runtime entry points
 
-* Bundle class: `App\VendoringBundle`
-* Extension class: `App\DependencyInjection\VendoringExtension`
+* Bundle class: `App\Vendoring\VendoringBundle`
+* Extension class: `App\Vendoring\DependencyInjection\VendoringExtension`
 * Service export: `config/component/services.yaml`
 * Route export: `config/component/routes.yaml`
 
@@ -20,7 +20,7 @@ The host application should only enable the bundle and import route configuratio
 [source,php]
 ----
 // config/bundles.php
-App\VendoringBundle::class => ['all' => true],
+App\Vendoring\VendoringBundle::class => ['all' => true],
 ----
 
 If the component exports HTTP routes, the host imports the route file using the bundle resource path or the package path agreed for the installation mode.

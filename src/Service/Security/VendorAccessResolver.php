@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Security;
+namespace App\Vendoring\Service\Security;
 
-use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
-use App\ServiceInterface\Security\VendorAccessResolverInterface;
-use App\ServiceInterface\Security\VendorAuthorizationMatrixInterface;
-use App\ValueObject\VendorRole;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\ServiceInterface\Security\VendorAccessResolverInterface;
+use App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixInterface;
+use App\Vendoring\ValueObject\VendorRole;
 
 /**
  * Repository-backed resolver for vendor-local human/operator access decisions.

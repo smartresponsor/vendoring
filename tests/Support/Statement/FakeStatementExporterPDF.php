@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Support\Statement;
+namespace App\Vendoring\Tests\Support\Statement;
 
-use App\DTO\Statement\VendorStatementRequestDTO;
-use App\ServiceInterface\Statement\StatementExporterPDFInterface;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\ServiceInterface\Statement\StatementExporterPDFInterface;
 
 final class FakeStatementExporterPDF implements StatementExporterPDFInterface
 {

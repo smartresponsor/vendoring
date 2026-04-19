@@ -3,12 +3,12 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Vendoring\Controller;
 
-use App\DTO\Statement\VendorStatementRequestDTO;
-use App\Exception\ApiQueryValidationException;
-use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
-use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\Exception\ApiQueryValidationException;
+use App\Vendoring\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Vendoring\Entity;
 
-use App\EntityInterface\VendorSecurityEntityInterface;
+use App\Vendoring\EntityInterface\VendorSecurityEntityInterface;
 
 /**
  * Transitional vendor-owned security state.

@@ -3,12 +3,12 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\Entity\VendorCatalogCategoryBanner;
-use App\Entity\VendorCatalogCategoryHtmlBlock;
-use App\Entity\VendorCatalogCategoryPin;
-use App\ServiceInterface\CatalogMerchServiceInterface;
+use App\Vendoring\Entity\VendorCatalogCategoryBanner;
+use App\Vendoring\Entity\VendorCatalogCategoryHtmlBlock;
+use App\Vendoring\Entity\VendorCatalogCategoryPin;
+use App\Vendoring\ServiceInterface\CatalogMerchServiceInterface;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 

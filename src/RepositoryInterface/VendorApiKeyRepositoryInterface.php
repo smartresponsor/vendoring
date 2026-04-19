@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\RepositoryInterface;
+namespace App\Vendoring\RepositoryInterface;
 
-use App\Entity\VendorApiKey;
+use App\Vendoring\Entity\VendorApiKey;
 use Doctrine\Persistence\ObjectRepository;
 
 /**

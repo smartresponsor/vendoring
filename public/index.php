@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Kernel;
+use App\Vendoring\Kernel;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/bootstrap.php';
 
 if (($_SERVER['APP_DEBUG'] ?? '1') === '1') {
     Debug::enable();

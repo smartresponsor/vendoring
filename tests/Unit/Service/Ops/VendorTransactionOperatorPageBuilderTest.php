@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\Ops;
+namespace App\Vendoring\Tests\Unit\Service\Ops;
 
-use App\Entity\VendorTransaction;
-use App\Service\Ops\VendorTransactionOperatorPageBuilder;
-use App\ValueObject\VendorTransactionStatus;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Service\Ops\VendorTransactionOperatorPageBuilder;
+use App\Vendoring\ValueObject\VendorTransactionStatus;
 use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionOperatorPageBuilderTest extends TestCase

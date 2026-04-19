@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Metric;
+namespace App\Vendoring\ServiceInterface\Metric;
 
-use App\DTO\Metric\VendorMetricOverviewRequestDTO;
-use App\DTO\Metric\VendorMetricTrendRequestDTO;
+use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
+use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
 use Doctrine\DBAL\Exception;
 
 interface VendorMetricServiceInterface

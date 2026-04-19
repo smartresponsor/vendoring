@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace App\Vendoring;
 
-use App\DependencyInjection\VendoringExtension;
+use App\Vendoring\DependencyInjection\VendoringExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**

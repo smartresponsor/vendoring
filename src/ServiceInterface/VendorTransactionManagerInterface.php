@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\Entity\VendorTransaction;
-use App\ValueObject\VendorTransactionData;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\ValueObject\VendorTransactionData;
 
 interface VendorTransactionManagerInterface
 {

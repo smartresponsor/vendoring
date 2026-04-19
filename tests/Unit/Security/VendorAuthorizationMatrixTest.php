@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Security;
+namespace App\Vendoring\Tests\Unit\Security;
 
-use App\Service\Security\VendorAuthorizationMatrix;
-use App\ValueObject\VendorRole;
+use App\Vendoring\Service\Security\VendorAuthorizationMatrix;
+use App\Vendoring\ValueObject\VendorRole;
 use PHPUnit\Framework\TestCase;
 
 final class VendorAuthorizationMatrixTest extends TestCase

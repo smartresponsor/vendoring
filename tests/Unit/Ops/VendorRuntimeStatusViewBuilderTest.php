@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Ops;
+namespace App\Vendoring\Tests\Unit\Ops;
 
-use App\Projection\VendorExternalIntegrationRuntimeView;
-use App\Projection\VendorFinanceRuntimeView;
-use App\Projection\VendorOwnershipView;
-use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\Projection\VendorStatementDeliveryRuntimeView;
-use App\Service\Ops\VendorRuntimeStatusViewBuilder;
-use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
-use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
-use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
-use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\Projection\VendorExternalIntegrationRuntimeView;
+use App\Vendoring\Projection\VendorFinanceRuntimeView;
+use App\Vendoring\Projection\VendorOwnershipView;
+use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
+use App\Vendoring\Projection\VendorStatementDeliveryRuntimeView;
+use App\Vendoring\Service\Ops\VendorRuntimeStatusViewBuilder;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
+use App\Vendoring\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
+use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

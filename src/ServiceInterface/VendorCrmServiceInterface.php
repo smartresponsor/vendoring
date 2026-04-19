@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\Entity\Vendor;
+use App\Vendoring\Entity\Vendor;
 
 interface VendorCrmServiceInterface
 {

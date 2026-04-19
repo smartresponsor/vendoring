@@ -3,16 +3,16 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Controller\Statement;
+namespace App\Vendoring\Tests\Unit\Controller\Statement;
 
-use App\Controller\Statement\VendorStatementDeliveryRuntimeController;
-use App\DTO\Api\StatementWindowQueryRequestDTO;
-use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\Exception\ApiQueryValidationException;
-use App\Projection\VendorStatementDeliveryRuntimeView;
-use App\Service\Statement\VendorStatementRequestResolver;
-use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
-use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
+use App\Vendoring\Controller\Statement\VendorStatementDeliveryRuntimeController;
+use App\Vendoring\DTO\Api\StatementWindowQueryRequestDTO;
+use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
+use App\Vendoring\Exception\ApiQueryValidationException;
+use App\Vendoring\Projection\VendorStatementDeliveryRuntimeView;
+use App\Vendoring\Service\Statement\VendorStatementRequestResolver;
+use App\Vendoring\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;

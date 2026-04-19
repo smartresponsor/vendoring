@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Runtime;
+namespace App\Vendoring\Tests\Integration\Runtime;
 
-use App\Tests\Support\Runtime\KernelRuntimeHarness;
+use App\Vendoring\Tests\Support\Runtime\KernelRuntimeHarness;
 use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionOperatorSurfaceTest extends TestCase

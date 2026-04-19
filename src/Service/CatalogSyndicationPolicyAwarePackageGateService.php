@@ -3,15 +3,15 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
-use App\Event\CategorySyndicationPolicyAwarePackageGated;
-use App\EventInterface\CategorySyndicationPolicyAwarePackageGatedInterface;
-use App\PolicyInterface\CategorySyndicationPolicyAwarePackageGatePolicyInterface;
-use App\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface;
-use App\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface;
-use App\ServiceInterface\CatalogSyndicationPolicyAwarePackageGateServiceInterface;
+use App\Vendoring\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
+use App\Vendoring\Event\CategorySyndicationPolicyAwarePackageGated;
+use App\Vendoring\EventInterface\CategorySyndicationPolicyAwarePackageGatedInterface;
+use App\Vendoring\PolicyInterface\CategorySyndicationPolicyAwarePackageGatePolicyInterface;
+use App\Vendoring\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface;
+use App\Vendoring\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface;
+use App\Vendoring\ServiceInterface\CatalogSyndicationPolicyAwarePackageGateServiceInterface;
 use DateTimeImmutable;
 
 final readonly class CatalogSyndicationPolicyAwarePackageGateService implements CatalogSyndicationPolicyAwarePackageGateServiceInterface

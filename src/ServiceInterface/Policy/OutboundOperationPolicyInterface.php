@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Policy;
+namespace App\Vendoring\ServiceInterface\Policy;
 
 /**
  * Read-side contract for outbound reliability policy lookup.

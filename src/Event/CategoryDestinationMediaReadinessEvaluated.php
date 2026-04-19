@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Vendoring\Event;
 
-use App\EventInterface\CategoryDestinationMediaReadinessEvaluatedInterface;
+use App\Vendoring\EventInterface\CategoryDestinationMediaReadinessEvaluatedInterface;
 
 final class CategoryDestinationMediaReadinessEvaluated extends AbstractPayloadEvent implements CategoryDestinationMediaReadinessEvaluatedInterface {}

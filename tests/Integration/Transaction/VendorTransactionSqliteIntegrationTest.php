@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Transaction;
+namespace App\Vendoring\Tests\Integration\Transaction;
 
-use App\Entity\VendorTransaction;
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\RuntimeLogger;
-use App\Service\Policy\VendorTransactionAmountPolicy;
-use App\Service\Policy\VendorTransactionStatusPolicy;
-use App\Service\VendorTransactionManager;
-use App\Tests\Support\Transaction\DoctrineBackedVendorTransactionRepository;
-use App\Tests\Support\Transaction\DoctrineEntityManagerFactory;
-use App\ValueObject\VendorTransactionData;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Observability\Service\CorrelationContext;
+use App\Vendoring\Observability\Service\RuntimeLogger;
+use App\Vendoring\Service\Policy\VendorTransactionAmountPolicy;
+use App\Vendoring\Service\Policy\VendorTransactionStatusPolicy;
+use App\Vendoring\Service\VendorTransactionManager;
+use App\Vendoring\Tests\Support\Transaction\DoctrineBackedVendorTransactionRepository;
+use App\Vendoring\Tests\Support\Transaction\DoctrineEntityManagerFactory;
+use App\Vendoring\ValueObject\VendorTransactionData;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;

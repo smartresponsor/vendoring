@@ -3,10 +3,10 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Payout;
+namespace App\Vendoring\Tests\Unit\Payout;
 
-use App\Entity\Payout\Payout;
-use App\Service\Payout\VendorPayoutRequestService;
+use App\Vendoring\Entity\Payout\Payout;
+use App\Vendoring\Service\Payout\VendorPayoutRequestService;
 use PHPUnit\Framework\TestCase;
 
 final class VendorPayoutRequestServiceTest extends TestCase

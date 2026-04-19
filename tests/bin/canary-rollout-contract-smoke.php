@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Service\Rollout\CanaryRolloutCoordinator;
-use App\Service\Rollout\FeatureFlagService;
-use App\Service\Rollout\TrafficCohortResolver;
-use App\Service\Ops\ReleaseManifestBuilder;
-use App\Service\Ops\RollbackDecisionEvaluator;
-use App\Observability\Service\MonitoringSnapshotBuilder;
-use App\Observability\Service\AlertRuleEvaluator;
+use App\Vendoring\Service\Rollout\CanaryRolloutCoordinator;
+use App\Vendoring\Service\Rollout\FeatureFlagService;
+use App\Vendoring\Service\Rollout\TrafficCohortResolver;
+use App\Vendoring\Service\Ops\ReleaseManifestBuilder;
+use App\Vendoring\Service\Ops\RollbackDecisionEvaluator;
+use App\Vendoring\Observability\Service\MonitoringSnapshotBuilder;
+use App\Vendoring\Observability\Service\AlertRuleEvaluator;
 
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 

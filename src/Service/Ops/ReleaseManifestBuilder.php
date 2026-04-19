@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Ops;
+namespace App\Vendoring\Service\Ops;
 
-use App\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
-use App\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface;
-use App\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
+use App\Vendoring\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
+use App\Vendoring\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface;
+use App\Vendoring\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
 use DateTimeImmutable;
 
 /**

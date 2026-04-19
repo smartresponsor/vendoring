@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Security;
+namespace App\Vendoring\Tests\Unit\Security;
 
-use App\Entity\VendorUserAssignment;
-use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
-use App\Service\VendorUserAssignmentService;
+use App\Vendoring\Entity\VendorUserAssignment;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Service\VendorUserAssignmentService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

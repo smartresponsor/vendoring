@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Projection;
+namespace App\Vendoring\Projection;
 
 /**
  * Vendor profile readiness view for self-serve profile completion and publishability.

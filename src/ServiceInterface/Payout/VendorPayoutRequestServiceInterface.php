@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Payout;
+namespace App\Vendoring\ServiceInterface\Payout;
 
-use App\DTO\Payout\CreatePayoutDTO;
-use App\Entity\Payout\Payout;
+use App\Vendoring\DTO\Payout\CreatePayoutDTO;
+use App\Vendoring\Entity\Payout\Payout;
 
 interface VendorPayoutRequestServiceInterface
 {

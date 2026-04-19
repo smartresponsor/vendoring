@@ -4,18 +4,18 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Ops;
+namespace App\Vendoring\Controller\Ops;
 
-use App\EntityInterface\VendorTransactionInterface;
-use App\Form\Ops\VendorTransactionCreateInput;
-use App\Form\Ops\VendorTransactionCreateType;
-use App\Form\Ops\VendorTransactionStatusUpdateInput;
-use App\Form\Ops\VendorTransactionStatusUpdateType;
-use App\RepositoryInterface\VendorTransactionRepositoryInterface;
-use App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
-use App\ServiceInterface\VendorTransactionManagerInterface;
-use App\ValueObject\VendorTransactionStatus;
-use App\ValueObject\VendorTransactionData;
+use App\Vendoring\EntityInterface\VendorTransactionInterface;
+use App\Vendoring\Form\Ops\VendorTransactionCreateInput;
+use App\Vendoring\Form\Ops\VendorTransactionCreateType;
+use App\Vendoring\Form\Ops\VendorTransactionStatusUpdateInput;
+use App\Vendoring\Form\Ops\VendorTransactionStatusUpdateType;
+use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
+use App\Vendoring\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
+use App\Vendoring\ServiceInterface\VendorTransactionManagerInterface;
+use App\Vendoring\ValueObject\VendorTransactionStatus;
+use App\Vendoring\ValueObject\VendorTransactionData;
 use InvalidArgumentException;
 use Throwable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

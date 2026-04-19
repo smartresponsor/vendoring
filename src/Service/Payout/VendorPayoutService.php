@@ -4,17 +4,17 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Payout;
+namespace App\Vendoring\Service\Payout;
 
-use App\DTO\Ledger\LedgerEntryDTO;
-use App\DTO\Payout\CreatePayoutDTO;
-use App\Entity\Payout\Payout;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
-use App\ServiceInterface\Ledger\VendorLedgerServiceInterface;
-use App\ServiceInterface\Observability\MetricCollectorInterface;
-use App\ServiceInterface\Observability\RuntimeLoggerInterface;
-use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
+use App\Vendoring\DTO\Ledger\LedgerEntryDTO;
+use App\Vendoring\DTO\Payout\CreatePayoutDTO;
+use App\Vendoring\Entity\Payout\Payout;
+use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Payout\PayoutRepositoryInterface;
+use App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface;
+use App\Vendoring\ServiceInterface\Observability\MetricCollectorInterface;
+use App\Vendoring\ServiceInterface\Observability\RuntimeLoggerInterface;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
 use Random\RandomException;

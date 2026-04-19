@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Ops;
+namespace App\Vendoring\ServiceInterface\Ops;
 
-use App\Projection\VendorReleaseBaselineView;
+use App\Vendoring\Projection\VendorReleaseBaselineView;
 
 interface VendorReleaseBaselineReaderInterface
 {

@@ -3,10 +3,10 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\Api;
+namespace App\Vendoring\Tests\Unit\Service\Api;
 
-use App\Service\Api\StatementWindowQueryRequestResolver;
-use App\Exception\ApiQueryValidationException;
+use App\Vendoring\Service\Api\StatementWindowQueryRequestResolver;
+use App\Vendoring\Exception\ApiQueryValidationException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validation;

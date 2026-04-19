@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\ValueObject\VendorTransactionData;
+use App\Vendoring\ValueObject\VendorTransactionData;
 use Symfony\Component\HttpFoundation\Request;
 
 interface VendorTransactionInputResolverServiceInterface

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Statement;
+namespace App\Vendoring\ServiceInterface\Statement;
 
-use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
 use Symfony\Component\HttpFoundation\Request;
 
 interface VendorStatementRequestResolverInterface

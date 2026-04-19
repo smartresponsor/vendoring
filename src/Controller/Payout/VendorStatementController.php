@@ -3,14 +3,14 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller\Payout;
+namespace App\Vendoring\Controller\Payout;
 
-use App\Controller\ApiErrorResponseTrait;
-use App\Controller\VendorStatementRequestHttpResolutionTrait;
-use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
+use App\Vendoring\Controller\ApiErrorResponseTrait;
+use App\Vendoring\Controller\VendorStatementRequestHttpResolutionTrait;
+use App\Vendoring\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
 use Doctrine\DBAL\Exception;
-use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
-use App\ServiceInterface\Statement\VendorStatementServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

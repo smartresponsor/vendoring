@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Ops;
+namespace App\Vendoring\Tests\Unit\Ops;
 
-use App\Projection\VendorRuntimeStatusView;
-use App\Service\Ops\VendorReleaseBaselineReader;
-use App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
+use App\Vendoring\Projection\VendorRuntimeStatusView;
+use App\Vendoring\Service\Ops\VendorReleaseBaselineReader;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

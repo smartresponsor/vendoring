@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Category;
+namespace App\Vendoring\ServiceInterface\Category;
 
 interface CategoryApproxTotalServiceInterface
 {

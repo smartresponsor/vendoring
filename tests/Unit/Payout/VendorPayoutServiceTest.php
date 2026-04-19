@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Payout;
+namespace App\Vendoring\Tests\Unit\Payout;
 
-use App\DTO\Payout\CreatePayoutDTO;
-use App\Entity\Ledger\LedgerEntry;
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\MetricEmitter;
-use App\Observability\Service\RuntimeLogger;
-use App\Service\Ledger\VendorLedgerService;
-use App\Service\Payout\VendorPayoutService;
-use App\Tests\Support\Payout\InMemoryPayoutRepository;
-use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
+use App\Vendoring\DTO\Payout\CreatePayoutDTO;
+use App\Vendoring\Entity\Ledger\LedgerEntry;
+use App\Vendoring\Observability\Service\CorrelationContext;
+use App\Vendoring\Observability\Service\MetricEmitter;
+use App\Vendoring\Observability\Service\RuntimeLogger;
+use App\Vendoring\Service\Ledger\VendorLedgerService;
+use App\Vendoring\Service\Payout\VendorPayoutService;
+use App\Vendoring\Tests\Support\Payout\InMemoryPayoutRepository;
+use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 

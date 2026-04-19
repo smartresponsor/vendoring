@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Repository\Payout;
+namespace App\Vendoring\Repository\Payout;
 
-use App\Entity\Payout\PayoutAccount;
-use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
+use App\Vendoring\Entity\Payout\PayoutAccount;
+use App\Vendoring\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 

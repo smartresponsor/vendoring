@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
 interface CatalogMerchServiceInterface
 {

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Statement;
+namespace App\Vendoring\Tests\Integration\Statement;
 
-use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\DTO\Statement\VendorStatementRecipientDTO;
-use App\Projection\VendorOwnershipView;
-use App\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder;
-use App\ServiceInterface\Statement\StatementExporterPDFInterface;
-use App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
-use App\ServiceInterface\Statement\VendorStatementServiceInterface;
-use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
+use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
+use App\Vendoring\Projection\VendorOwnershipView;
+use App\Vendoring\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder;
+use App\Vendoring\ServiceInterface\Statement\StatementExporterPDFInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
+use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

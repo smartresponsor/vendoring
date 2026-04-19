@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-namespace App\EntityInterface;
+namespace App\Vendoring\EntityInterface;
 
 interface VendorLedgerBindingInterface {}

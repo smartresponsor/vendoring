@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Rollout;
+namespace App\Vendoring\Service\Rollout;
 
-use App\ServiceInterface\Rollout\FeatureFlagServiceInterface;
-use App\ServiceInterface\Rollout\TrafficCohortResolverInterface;
+use App\Vendoring\ServiceInterface\Rollout\FeatureFlagServiceInterface;
+use App\Vendoring\ServiceInterface\Rollout\TrafficCohortResolverInterface;
 
 /**
  * In-memory feature-flag evaluator for controlled rollout decisions.

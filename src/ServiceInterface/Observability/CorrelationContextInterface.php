@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Observability;
+namespace App\Vendoring\ServiceInterface\Observability;
 
 /**
  * Request-scoped contract for storing and reading the active correlation identifier.

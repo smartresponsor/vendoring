@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\DTO\VendorCreateDTO;
-use App\DTO\VendorUpdateDTO;
-use App\Entity\Vendor;
-use App\Event\VendorActivatedEvent;
-use App\Event\VendorCreatedEvent;
-use App\ServiceInterface\VendorServiceInterface;
-use App\ServiceInterface\VendorUserAssignmentServiceInterface;
+use App\Vendoring\DTO\VendorCreateDTO;
+use App\Vendoring\DTO\VendorUpdateDTO;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Event\VendorActivatedEvent;
+use App\Vendoring\Event\VendorCreatedEvent;
+use App\Vendoring\ServiceInterface\VendorServiceInterface;
+use App\Vendoring\ServiceInterface\VendorUserAssignmentServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

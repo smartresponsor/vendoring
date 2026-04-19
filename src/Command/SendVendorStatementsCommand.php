@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Vendoring\Command;
 
-use App\Command\Support\CommandJsonEncoder;
-use App\Command\Support\CommandOutputFormat;
-use App\Command\Support\CommandResultEmitter;
-use App\Command\Support\CommandResultEmitterInterface;
-use App\DTO\Statement\VendorStatementRecipientDTO;
-use App\DTO\Statement\VendorStatementRequestDTO;
-use App\ServiceInterface\Statement\StatementExporterPDFInterface;
-use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
-use App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
-use App\ServiceInterface\Statement\VendorStatementServiceInterface;
+use App\Vendoring\Command\Support\CommandJsonEncoder;
+use App\Vendoring\Command\Support\CommandOutputFormat;
+use App\Vendoring\Command\Support\CommandResultEmitter;
+use App\Vendoring\Command\Support\CommandResultEmitterInterface;
+use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\ServiceInterface\Statement\StatementExporterPDFInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

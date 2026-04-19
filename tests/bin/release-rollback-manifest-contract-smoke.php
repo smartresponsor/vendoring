@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Observability\Service\AlertRuleEvaluator;
-use App\Observability\Service\MonitoringSnapshotBuilder;
-use App\Service\Ops\ReleaseManifestBuilder;
-use App\Service\Ops\RollbackDecisionEvaluator;
+use App\Vendoring\Observability\Service\AlertRuleEvaluator;
+use App\Vendoring\Observability\Service\MonitoringSnapshotBuilder;
+use App\Vendoring\Service\Ops\ReleaseManifestBuilder;
+use App\Vendoring\Service\Ops\RollbackDecisionEvaluator;
 
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 

@@ -1,7 +1,7 @@
 = Architecture
 
 Vendoring is a Symfony-oriented business component centered on vendor-facing runtime and operational flows.
-The repository keeps the canonical `App\` namespace, avoids `/src/Domain/`, and does not introduce ports-and-adapters drift.
+The repository keeps the canonical `App\Vendoring\` namespace, avoids `/src/Domain/`, and does not introduce ports-and-adapters drift.
 
 == Primary architecture sources
 

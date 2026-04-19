@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Command;
+namespace App\Vendoring\Command;
 
-use App\Command\Support\CommandOutputFormat;
-use App\Command\Support\CommandResultEmitterInterface;
-use App\RepositoryInterface\VendorApiKeyRepositoryInterface;
+use App\Vendoring\Command\Support\CommandOutputFormat;
+use App\Vendoring\Command\Support\CommandResultEmitterInterface;
+use App\Vendoring\RepositoryInterface\VendorApiKeyRepositoryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

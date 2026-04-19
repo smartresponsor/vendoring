@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\RepositoryInterface;
+namespace App\Vendoring\RepositoryInterface;
 
-use App\Entity\VendorSecurity;
-use App\EntityInterface\VendorSecurityInterface;
+use App\Vendoring\Entity\VendorSecurity;
+use App\Vendoring\EntityInterface\VendorSecurityInterface;
 use Doctrine\Persistence\ObjectRepository;
 
 /**

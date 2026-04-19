@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Form\Ops;
+namespace App\Vendoring\Tests\Unit\Form\Ops;
 
-use App\Form\Ops\VendorTransactionStatusUpdateInput;
-use App\Form\Ops\VendorTransactionStatusUpdateType;
-use App\ValueObject\VendorTransactionStatus;
+use App\Vendoring\Form\Ops\VendorTransactionStatusUpdateInput;
+use App\Vendoring\Form\Ops\VendorTransactionStatusUpdateType;
+use App\Vendoring\ValueObject\VendorTransactionStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;

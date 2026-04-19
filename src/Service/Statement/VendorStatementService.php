@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Statement;
+namespace App\Vendoring\Service\Statement;
 
-use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
-use App\DTO\Statement\VendorStatementRequestDTO;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\ServiceInterface\Statement\VendorStatementServiceInterface;
+use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Doctrine\DBAL\Exception;
 use RuntimeException;
 

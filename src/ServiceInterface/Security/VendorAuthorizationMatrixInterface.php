@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Security;
+namespace App\Vendoring\ServiceInterface\Security;
 
 /**
  * Read-side authorization matrix for vendor-local human roles.

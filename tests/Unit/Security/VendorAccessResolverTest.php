@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Security;
+namespace App\Vendoring\Tests\Unit\Security;
 
-use App\Entity\VendorUserAssignment;
-use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
-use App\Service\Security\VendorAccessResolver;
-use App\Service\Security\VendorAuthorizationMatrix;
+use App\Vendoring\Entity\VendorUserAssignment;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Service\Security\VendorAccessResolver;
+use App\Vendoring\Service\Security\VendorAuthorizationMatrix;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

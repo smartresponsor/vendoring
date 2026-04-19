@@ -4,7 +4,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Search;
+namespace App\Vendoring\ServiceInterface\Search;
 
 interface TfidfSearchInterface
 {

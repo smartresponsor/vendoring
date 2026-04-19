@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\ServiceInterface\VendorTransactionInputResolverServiceInterface;
-use App\ValueObject\VendorTransactionData;
-use App\ValueObject\VendorTransactionErrorCode;
+use App\Vendoring\ServiceInterface\VendorTransactionInputResolverServiceInterface;
+use App\Vendoring\ValueObject\VendorTransactionData;
+use App\Vendoring\ValueObject\VendorTransactionErrorCode;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 

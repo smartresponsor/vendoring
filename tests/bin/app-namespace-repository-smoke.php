@@ -13,9 +13,9 @@ if (!is_file($file)) {
 $content = (string) file_get_contents($file);
 
 $required = [
-    'App\\:',
-    'App\\ServiceInterface\\Order\\OrderPaymentInterface:',
-    'alias: App\\Service\\Order\\OrderPaymentService',
+    'App\Vendoring\\:',
+    'App\Vendoring\\ServiceInterface\\Order\\OrderPaymentInterface:',
+    'alias: App\Vendoring\\Service\\Order\\OrderPaymentService',
 ];
 
 foreach ($required as $needle) {

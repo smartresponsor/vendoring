@@ -1,8 +1,8 @@
 services:
-    App\Repository\VendorTransactionRepository: ~
+    App\Vendoring\Repository\VendorTransactionRepository: ~
 
-    App\RepositoryInterface\VendorTransactionRepositoryInterface: '@App\Repository\VendorTransactionRepository'
+    App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface: '@App\Vendoring\Repository\VendorTransactionRepository'
 
-    App\Service\VendorTransactionManager: ~
+    App\Vendoring\Service\VendorTransactionManager: ~
 
-    App\ServiceInterface\VendorTransactionManagerInterface: '@App\Service\VendorTransactionManager'
+    App\Vendoring\ServiceInterface\VendorTransactionManagerInterface: '@App\Vendoring\Service\VendorTransactionManager'

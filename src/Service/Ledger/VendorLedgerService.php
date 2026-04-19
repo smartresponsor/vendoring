@@ -4,12 +4,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Ledger;
+namespace App\Vendoring\Service\Ledger;
 
-use App\DTO\Ledger\LedgerEntryDTO;
-use App\Entity\Ledger\LedgerEntry;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\ServiceInterface\Ledger\VendorLedgerServiceInterface;
+use App\Vendoring\DTO\Ledger\LedgerEntryDTO;
+use App\Vendoring\Entity\Ledger\LedgerEntry;
+use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface;
 use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
 use InvalidArgumentException;

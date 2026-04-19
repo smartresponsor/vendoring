@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Ops;
+namespace App\Vendoring\Controller\Ops;
 
-use App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

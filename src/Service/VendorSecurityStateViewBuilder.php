@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\EntityInterface\VendorSecurityInterface;
-use App\Projection\VendorSecurityStateView;
-use App\ServiceInterface\VendorSecurityStateViewBuilderInterface;
+use App\Vendoring\EntityInterface\VendorSecurityInterface;
+use App\Vendoring\Projection\VendorSecurityStateView;
+use App\Vendoring\ServiceInterface\VendorSecurityStateViewBuilderInterface;
 
 /**
  * Builds a lightweight read model for transitional vendor-local security state.

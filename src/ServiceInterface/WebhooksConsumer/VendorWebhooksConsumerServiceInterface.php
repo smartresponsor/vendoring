@@ -4,7 +4,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\WebhooksConsumer;
+namespace App\Vendoring\ServiceInterface\WebhooksConsumer;
 
 interface VendorWebhooksConsumerServiceInterface
 {

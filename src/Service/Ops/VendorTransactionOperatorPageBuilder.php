@@ -4,11 +4,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Ops;
+namespace App\Vendoring\Service\Ops;
 
-use App\Entity\VendorTransaction;
-use App\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
-use App\ValueObject\VendorTransactionStatus;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface;
+use App\Vendoring\ValueObject\VendorTransactionStatus;
 
 final class VendorTransactionOperatorPageBuilder implements VendorTransactionOperatorPageBuilderInterface
 {

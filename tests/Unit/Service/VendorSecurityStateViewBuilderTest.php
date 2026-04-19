@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\EntityInterface\VendorSecurityInterface;
-use App\Service\VendorSecurityStateViewBuilder;
+use App\Vendoring\EntityInterface\VendorSecurityInterface;
+use App\Vendoring\Service\VendorSecurityStateViewBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

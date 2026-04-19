@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Form\Ops;
+namespace App\Vendoring\Form\Ops;
 
-use App\ValueObject\VendorTransactionStatus;
+use App\Vendoring\ValueObject\VendorTransactionStatus;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;

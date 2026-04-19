@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Ops;
+namespace App\Vendoring\ServiceInterface\Ops;
 
 /**
  * Read-side contract for assembling a release manifest from runtime monitoring, release artifacts,

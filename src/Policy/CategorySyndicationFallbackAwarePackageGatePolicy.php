@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Policy;
+namespace App\Vendoring\Policy;
 
-use App\DTO\CatalogSyndication\CategorySyndicationFallbackAwarePackageGateReportInputDTO;
-use App\PolicyInterface\CategorySyndicationFallbackAwarePackageGatePolicyInterface;
-use App\ValueObject\CategorySyndicationFallbackAwarePackageGateReport;
+use App\Vendoring\DTO\CatalogSyndication\CategorySyndicationFallbackAwarePackageGateReportInputDTO;
+use App\Vendoring\PolicyInterface\CategorySyndicationFallbackAwarePackageGatePolicyInterface;
+use App\Vendoring\ValueObject\CategorySyndicationFallbackAwarePackageGateReport;
 
 final class CategorySyndicationFallbackAwarePackageGatePolicy implements CategorySyndicationFallbackAwarePackageGatePolicyInterface
 {

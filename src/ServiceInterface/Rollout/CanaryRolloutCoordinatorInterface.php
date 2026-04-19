@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Rollout;
+namespace App\Vendoring\ServiceInterface\Rollout;
 
 /**
  * Read-side contract for wiring feature flags, cohorts, runtime probes, and rollback decisions

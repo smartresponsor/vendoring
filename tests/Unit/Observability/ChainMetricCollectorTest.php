@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Observability;
+namespace App\Vendoring\Tests\Unit\Observability;
 
-use App\Observability\Service\ChainMetricCollector;
-use App\Observability\Service\MetricEmitter;
+use App\Vendoring\Observability\Service\ChainMetricCollector;
+use App\Vendoring\Observability\Service\MetricEmitter;
 use PHPUnit\Framework\TestCase;
 
 final class ChainMetricCollectorTest extends TestCase

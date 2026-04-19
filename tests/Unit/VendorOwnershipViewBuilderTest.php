@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Vendoring\Tests\Unit;
 
-use App\Entity\Vendor;
-use App\Entity\VendorUserAssignment;
-use App\RepositoryInterface\VendorRepositoryInterface;
-use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
-use App\Service\Security\VendorAuthorizationMatrix;
-use App\Service\VendorOwnershipViewBuilder;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorUserAssignment;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Service\Security\VendorAuthorizationMatrix;
+use App\Vendoring\Service\VendorOwnershipViewBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Vendoring\Repository;
 
-use App\Entity\VendorSecurity;
-use App\EntityInterface\VendorSecurityInterface;
-use App\RepositoryInterface\VendorSecurityRepositoryInterface;
+use App\Vendoring\Entity\VendorSecurity;
+use App\Vendoring\EntityInterface\VendorSecurityInterface;
+use App\Vendoring\RepositoryInterface\VendorSecurityRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Observability\EventSubscriber;
+namespace App\Vendoring\Observability\EventSubscriber;
 
-use App\ServiceInterface\Observability\CorrelationContextInterface;
+use App\Vendoring\ServiceInterface\Observability\CorrelationContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;

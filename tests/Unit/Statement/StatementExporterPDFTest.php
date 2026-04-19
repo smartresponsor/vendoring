@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Statement;
+namespace App\Vendoring\Tests\Unit\Statement;
 
-use App\DTO\Statement\VendorStatementRequestDTO;
-use App\Service\Statement\StatementExporterPDF;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\Service\Statement\StatementExporterPDF;
 use PHPUnit\Framework\TestCase;
 
 final class StatementExporterPDFTest extends TestCase

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Ops;
+namespace App\Vendoring\Service\Ops;
 
-use App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
+use App\Vendoring\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
 use DateTimeImmutable;
 
 /**

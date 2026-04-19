@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\RepositoryInterface\Payout;
+namespace App\Vendoring\RepositoryInterface\Payout;
 
-use App\Entity\Payout\PayoutAccount;
+use App\Vendoring\Entity\Payout\PayoutAccount;
 use Doctrine\DBAL\Exception;
 
 interface PayoutAccountRepositoryInterface

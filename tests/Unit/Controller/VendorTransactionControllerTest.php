@@ -3,18 +3,18 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Controller;
+namespace App\Vendoring\Tests\Unit\Controller;
 
-use App\Controller\VendorTransactionController;
-use App\Entity\Vendor;
-use App\Entity\VendorTransaction;
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\RuntimeLogger;
-use App\Service\Traffic\FileWriteRateLimiter;
-use App\Service\VendorTransactionInputResolverService;
-use App\ServiceInterface\VendorApiKeyServiceInterface;
-use App\Tests\Support\Transaction\FakeVendorTransactionManager;
-use App\Tests\Support\Transaction\InMemoryVendorTransactionRepository;
+use App\Vendoring\Controller\VendorTransactionController;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Observability\Service\CorrelationContext;
+use App\Vendoring\Observability\Service\RuntimeLogger;
+use App\Vendoring\Service\Traffic\FileWriteRateLimiter;
+use App\Vendoring\Service\VendorTransactionInputResolverService;
+use App\Vendoring\ServiceInterface\VendorApiKeyServiceInterface;
+use App\Vendoring\Tests\Support\Transaction\FakeVendorTransactionManager;
+use App\Vendoring\Tests\Support\Transaction\InMemoryVendorTransactionRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;

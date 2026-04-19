@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DTO\Metric;
+namespace App\Vendoring\DTO\Metric;
 
 final readonly class VendorMetricTrendRequestDTO
 {

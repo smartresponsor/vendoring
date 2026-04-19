@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\WebhooksConsumer;
+namespace App\Vendoring\Tests\Unit\WebhooksConsumer;
 
-use App\Service\WebhooksConsumer\VendorWebhooksConsumerService;
+use App\Vendoring\Service\WebhooksConsumer\VendorWebhooksConsumerService;
 use PHPUnit\Framework\TestCase;
 
 final class VendorWebhooksConsumerServiceTest extends TestCase

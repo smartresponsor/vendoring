@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\Entity\Vendor;
-use App\ServiceInterface\VendorCrmServiceInterface;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\ServiceInterface\VendorCrmServiceInterface;
 
 final class VendorCrmService implements VendorCrmServiceInterface
 {

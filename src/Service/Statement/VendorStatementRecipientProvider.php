@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Statement;
+namespace App\Vendoring\Service\Statement;
 
-use App\DTO\Statement\VendorStatementRecipientDTO;
-use App\RepositoryInterface\VendorBillingRepositoryInterface;
-use App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
+use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
+use App\Vendoring\RepositoryInterface\VendorBillingRepositoryInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
 
 final readonly class VendorStatementRecipientProvider implements VendorStatementRecipientProviderInterface
 {

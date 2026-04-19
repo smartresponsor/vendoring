@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Vendoring\Controller;
 
-use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;

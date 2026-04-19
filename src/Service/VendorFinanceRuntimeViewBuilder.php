@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\DTO\Metric\VendorMetricOverviewRequestDTO;
-use App\DTO\Statement\VendorStatementRequestDTO;
-use App\Projection\VendorFinanceRuntimeView;
-use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
-use App\ServiceInterface\Metric\VendorMetricServiceInterface;
-use App\ServiceInterface\Statement\VendorStatementServiceInterface;
-use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
-use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\Projection\VendorFinanceRuntimeView;
+use App\Vendoring\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
+use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
+use App\Vendoring\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
+use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
 use Doctrine\DBAL\Exception;
 
 /**

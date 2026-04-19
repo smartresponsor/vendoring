@@ -102,13 +102,13 @@ foreach ($issueList as $row) {
     }
 
     $bucket = 'other';
-    if (preg_match('/^App\\\\Entity\\\\Vendor\\\\/', $fqn)) {
+    if (preg_match('/^App\Vendoring\\\\Entity\\\\Vendor\\\\/', $fqn)) {
         $bucket = 'vendor-entity-missing';
-    } elseif (preg_match('/^App\\\\ServiceInterface\\\\/', $fqn)) {
+    } elseif (preg_match('/^App\Vendoring\\\\ServiceInterface\\\\/', $fqn)) {
         $bucket = 'serviceinterface-missing';
-    } elseif (preg_match('/^App\\\\(Service|DTO)\\\\(Ledger|Observability)\\\\/', $fqn)) {
+    } elseif (preg_match('/^App\Vendoring\\\\(Service|DTO)\\\\(Ledger|Observability)\\\\/', $fqn)) {
         $bucket = 'cross-domain-ledger-observability';
-    } elseif ('reference' === $type && preg_match('/^App\\\\[A-Z][A-Za-z0-9_]*$/', $fqn)) {
+    } elseif ('reference' === $type && preg_match('/^App\Vendoring\\\\[A-Z][A-Za-z0-9_]*$/', $fqn)) {
         $bucket = 'namespace-noise';
     }
 
@@ -149,7 +149,7 @@ foreach ($fileHitMap as $file => $count) {
 
 echo "\nSuggested next structural action\n";
 echo "- First: run v3 scanner + triage (this tool) to remove scanner noise from decision making.\n";
-echo "- Then: quarantine or relocate entity-dependent legacy slices that reference missing App\\Entity\\Vendor\\* types.\n";
+echo "- Then: quarantine or relocate entity-dependent legacy slices that reference missing App\Vendoring\\Entity\\Vendor\\* types.\n";
 echo "- Then: normalize remaining imports file-by-file (PSR naming + path correctness) without formatter churn.\n";
 
 exit(0);

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Ops;
+namespace App\Vendoring\Service\Ops;
 
-use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\Projection\VendorRuntimeStatusView;
-use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
-use App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
-use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
-use App\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
-use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
+use App\Vendoring\Projection\VendorRuntimeStatusView;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
+use App\Vendoring\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
+use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
 use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
 

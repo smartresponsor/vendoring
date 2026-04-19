@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Payout;
+namespace App\Vendoring\Service\Payout;
 
 use Doctrine\DBAL\Exception;
-use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\ServiceInterface\Payout\VendorSettlementCalculatorServiceInterface;
+use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\ServiceInterface\Payout\VendorSettlementCalculatorServiceInterface;
 
 final readonly class VendorSettlementCalculatorService implements VendorSettlementCalculatorServiceInterface
 {

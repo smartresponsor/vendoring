@@ -9,7 +9,7 @@ services:
 
   # Symfony-native component export surface.
   # The host application may import this file from the component root.
-  App\:
+  App\Vendoring\:
     resource: '../../src/'
     exclude:
       - '../../src/Kernel.php'
@@ -17,24 +17,24 @@ services:
       - '../../src/Entity/'
       - '../../src/Tests/'
 
-  App\Observability\Service\FileObservabilityRecordExporter:
+  App\Vendoring\Observability\Service\FileObservabilityRecordExporter:
     arguments:
       $observabilityDir: '%vendoring_observability_dir%'
 
-  App\Observability\Service\MonitoringSnapshotBuilder:
+  App\Vendoring\Observability\Service\MonitoringSnapshotBuilder:
     arguments:
       $observabilityDir: '%vendoring_observability_dir%'
       $faultToleranceDir: '%vendoring_fault_tolerance_dir%'
       $projectDir: '%kernel.project_dir%'
 
-  App\Repository\VendorCatalogCategoryChangeRequestRepository: ~
-  App\Repository\VendorCatalogReviewAssignmentRepository: ~
+  App\Vendoring\Repository\VendorCatalogCategoryChangeRequestRepository: ~
+  App\Vendoring\Repository\VendorCatalogReviewAssignmentRepository: ~
   
-  App\Service\Ops\ReleaseManifestBuilder:
+  App\Vendoring\Service\Ops\ReleaseManifestBuilder:
     arguments:
       $projectDir: '%kernel.project_dir%'
-  App\ServiceInterface\Observability\MetricCollectorInterface:
-    alias: App\Observability\Service\RuntimeMetricCollector
-  App\Service\Reliability\FileOutboundCircuitBreaker:
+  App\Vendoring\ServiceInterface\Observability\MetricCollectorInterface:
+    alias: App\Vendoring\Observability\Service\RuntimeMetricCollector
+  App\Vendoring\Service\Reliability\FileOutboundCircuitBreaker:
     arguments:
       $stateDir: '%vendoring_fault_tolerance_dir%'

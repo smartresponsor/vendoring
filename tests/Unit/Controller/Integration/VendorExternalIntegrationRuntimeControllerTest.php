@@ -3,14 +3,14 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Controller\Integration;
+namespace App\Vendoring\Tests\Unit\Controller\Integration;
 
-use App\Controller\Integration\VendorExternalIntegrationRuntimeController;
-use App\Exception\ApiQueryValidationException;
-use App\DTO\Api\TenantQueryRequestDTO;
-use App\Projection\VendorExternalIntegrationRuntimeView;
-use App\ServiceInterface\Api\TenantQueryRequestResolverInterface;
-use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
+use App\Vendoring\Controller\Integration\VendorExternalIntegrationRuntimeController;
+use App\Vendoring\Exception\ApiQueryValidationException;
+use App\Vendoring\DTO\Api\TenantQueryRequestDTO;
+use App\Vendoring\Projection\VendorExternalIntegrationRuntimeView;
+use App\Vendoring\ServiceInterface\Api\TenantQueryRequestResolverInterface;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 

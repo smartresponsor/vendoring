@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Vendoring\Repository;
 
-use App\Entity\VendorCatalogReviewAssignment;
+use App\Vendoring\Entity\VendorCatalogReviewAssignment;
 
 final class VendorCatalogReviewAssignmentRepository
 {

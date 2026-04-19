@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Panther;
+namespace App\Vendoring\Tests\Functional\Panther;
 
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Statement;
+namespace App\Vendoring\ServiceInterface\Statement;
 
 /**
  * Write-side contract for outbound vendor statement delivery.

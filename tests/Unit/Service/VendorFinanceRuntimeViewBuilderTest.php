@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\DTO\Metric\VendorMetricOverviewRequestDTO;
-use App\DTO\Statement\VendorStatementRequestDTO;
-use App\Entity\Payout\PayoutAccount;
-use App\Projection\VendorOwnershipView;
-use App\Service\VendorFinanceRuntimeViewBuilder;
-use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
-use App\ServiceInterface\Metric\VendorMetricServiceInterface;
-use App\ServiceInterface\Statement\VendorStatementServiceInterface;
-use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\Entity\Payout\PayoutAccount;
+use App\Vendoring\Projection\VendorOwnershipView;
+use App\Vendoring\Service\VendorFinanceRuntimeViewBuilder;
+use App\Vendoring\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
+use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
+use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

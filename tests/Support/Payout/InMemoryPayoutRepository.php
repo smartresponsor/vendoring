@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Support\Payout;
+namespace App\Vendoring\Tests\Support\Payout;
 
-use App\Entity\Payout\Payout;
-use App\Entity\Payout\PayoutItem;
-use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
+use App\Vendoring\Entity\Payout\Payout;
+use App\Vendoring\Entity\Payout\PayoutItem;
+use App\Vendoring\RepositoryInterface\Payout\PayoutRepositoryInterface;
 
 final class InMemoryPayoutRepository implements PayoutRepositoryInterface
 {

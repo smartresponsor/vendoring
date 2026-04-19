@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Vendoring\Entity;
 
-use App\EntityInterface\VendorTransactionInterface;
-use App\ValueObject\VendorTransactionStatus;
+use App\Vendoring\EntityInterface\VendorTransactionInterface;
+use App\Vendoring\ValueObject\VendorTransactionStatus;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: 'App\\Repository\\VendorTransactionRepository')]
+#[ORM\Entity(repositoryClass: 'App\Vendoring\\Repository\\VendorTransactionRepository')]
 #[ORM\Table(
     name: 'vendor_transaction',
     indexes: [

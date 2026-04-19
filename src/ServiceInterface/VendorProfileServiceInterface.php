@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\DTO\VendorProfileDTO;
-use App\Entity\Vendor;
-use App\Entity\VendorProfile;
+use App\Vendoring\DTO\VendorProfileDTO;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorProfile;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 

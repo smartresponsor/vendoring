@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Infrastructure;
+namespace App\Vendoring\Tests\Unit\Infrastructure;
 
-use App\Command\SendVendorStatementsCommand;
-use App\Command\VendorApiKeyCreateCommand;
-use App\Command\VendorApiKeyListCommand;
-use App\Command\VendorApiKeyRotateCommand;
-use App\Controller\Ledger\VendorSummaryController;
-use App\Controller\Metric\VendorMetricController;
-use App\Controller\Payout\PayoutAccountController;
-use App\Controller\Payout\PayoutController;
-use App\Controller\Payout\VendorStatementController;
-use App\Controller\Statement\VendorStatementExportController;
-use App\Controller\VendorTransactionController;
+use App\Vendoring\Command\SendVendorStatementsCommand;
+use App\Vendoring\Command\VendorApiKeyCreateCommand;
+use App\Vendoring\Command\VendorApiKeyListCommand;
+use App\Vendoring\Command\VendorApiKeyRotateCommand;
+use App\Vendoring\Controller\Ledger\VendorSummaryController;
+use App\Vendoring\Controller\Metric\VendorMetricController;
+use App\Vendoring\Controller\Payout\PayoutAccountController;
+use App\Vendoring\Controller\Payout\PayoutController;
+use App\Vendoring\Controller\Payout\VendorStatementController;
+use App\Vendoring\Controller\Statement\VendorStatementExportController;
+use App\Vendoring\Controller\VendorTransactionController;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 

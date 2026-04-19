@@ -3,9 +3,9 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Category\Suggest;
+namespace App\Vendoring\Service\Category\Suggest;
 
-use App\ServiceInterface\Category\CategoryRuleSuggestServiceInterface;
+use App\Vendoring\ServiceInterface\Category\CategoryRuleSuggestServiceInterface;
 
 final class CategoryRuleSuggestService implements CategoryRuleSuggestServiceInterface
 {

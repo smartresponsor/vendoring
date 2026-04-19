@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\RepositoryInterface;
+namespace App\Vendoring\RepositoryInterface;
 
-use App\Entity\VendorUserAssignment;
-use App\EntityInterface\VendorUserAssignmentInterface;
+use App\Vendoring\Entity\VendorUserAssignment;
+use App\Vendoring\EntityInterface\VendorUserAssignmentInterface;
 use Doctrine\Persistence\ObjectRepository;
 
 /**

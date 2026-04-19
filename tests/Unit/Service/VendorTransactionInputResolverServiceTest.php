@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\Service\VendorTransactionInputResolverService;
-use App\ValueObject\VendorTransactionErrorCode;
+use App\Vendoring\Service\VendorTransactionInputResolverService;
+use App\Vendoring\ValueObject\VendorTransactionErrorCode;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 

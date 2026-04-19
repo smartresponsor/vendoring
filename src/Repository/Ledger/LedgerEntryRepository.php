@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Repository\Ledger;
+namespace App\Vendoring\Repository\Ledger;
 
-use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
-use App\Entity\Ledger\LedgerEntry;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\Vendoring\Entity\Ledger\LedgerEntry;
+use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 

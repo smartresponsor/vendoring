@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Metric;
+namespace App\Vendoring\Tests\Unit\Metric;
 
-use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
-use App\DTO\Metric\VendorMetricOverviewRequestDTO;
-use App\DTO\Metric\VendorMetricTrendRequestDTO;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\Service\Metric\VendorMetricService;
+use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
+use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
+use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\Service\Metric\VendorMetricService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

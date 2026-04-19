@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Vendoring\Command;
 
-use App\Command\Support\CommandIoException;
-use App\Command\Support\CommandJsonArtifactWriter;
-use App\Command\Support\CommandOutputFormat;
-use App\Command\Support\CommandResultEmitter;
-use App\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
-use App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
+use App\Vendoring\Command\Support\CommandIoException;
+use App\Vendoring\Command\Support\CommandJsonArtifactWriter;
+use App\Vendoring\Command\Support\CommandOutputFormat;
+use App\Vendoring\Command\Support\CommandResultEmitter;
+use App\Vendoring\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
+use App\Vendoring\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

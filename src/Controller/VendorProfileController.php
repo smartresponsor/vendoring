@@ -3,12 +3,12 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Vendoring\Controller;
 
-use App\RepositoryInterface\VendorRepositoryInterface;
-use App\ServiceInterface\VendorProfileRequestResolverInterface;
-use App\ServiceInterface\VendorProfileServiceInterface;
-use App\ServiceInterface\VendorProfileViewBuilderInterface;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\ServiceInterface\VendorProfileRequestResolverInterface;
+use App\Vendoring\ServiceInterface\VendorProfileServiceInterface;
+use App\Vendoring\ServiceInterface\VendorProfileViewBuilderInterface;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use InvalidArgumentException;

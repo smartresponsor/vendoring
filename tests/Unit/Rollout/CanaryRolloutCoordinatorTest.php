@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Rollout;
+namespace App\Vendoring\Tests\Unit\Rollout;
 
-use App\Service\Rollout\CanaryRolloutCoordinator;
-use App\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
-use App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
-use App\ServiceInterface\Rollout\FeatureFlagServiceInterface;
-use App\ServiceInterface\Rollout\TrafficCohortResolverInterface;
+use App\Vendoring\Service\Rollout\CanaryRolloutCoordinator;
+use App\Vendoring\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
+use App\Vendoring\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
+use App\Vendoring\ServiceInterface\Rollout\FeatureFlagServiceInterface;
+use App\Vendoring\ServiceInterface\Rollout\TrafficCohortResolverInterface;
 use PHPUnit\Framework\TestCase;
 
 final class CanaryRolloutCoordinatorTest extends TestCase

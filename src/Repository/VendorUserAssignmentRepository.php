@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Vendoring\Repository;
 
-use App\Entity\VendorUserAssignment;
-use App\EntityInterface\VendorUserAssignmentInterface;
-use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Entity\VendorUserAssignment;
+use App\Vendoring\EntityInterface\VendorUserAssignmentInterface;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

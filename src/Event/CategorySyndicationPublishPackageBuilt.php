@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Vendoring\Event;
 
-use App\EventInterface\CategorySyndicationPublishPackageBuiltInterface;
+use App\Vendoring\EventInterface\CategorySyndicationPublishPackageBuiltInterface;
 
 final class CategorySyndicationPublishPackageBuilt extends AbstractPayloadEvent implements CategorySyndicationPublishPackageBuiltInterface {}

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Traffic;
+namespace App\Vendoring\Service\Traffic;
 
-use App\ServiceInterface\Traffic\WriteRateLimiterInterface;
-use App\ValueObject\Traffic\WriteRateLimitDecision;
+use App\Vendoring\ServiceInterface\Traffic\WriteRateLimiterInterface;
+use App\Vendoring\ValueObject\Traffic\WriteRateLimitDecision;
 use JsonException;
 
 /**

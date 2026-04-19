@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Policy;
+namespace App\Vendoring\Service\Policy;
 
-use App\ServiceInterface\Policy\OutboundOperationPolicyInterface;
+use App\Vendoring\ServiceInterface\Policy\OutboundOperationPolicyInterface;
 
 /**
  * Canonical reliability policy registry for outbound operations.

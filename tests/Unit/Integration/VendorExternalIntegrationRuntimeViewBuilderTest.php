@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Integration;
+namespace App\Vendoring\Tests\Unit\Integration;
 
-use App\Projection\VendorOwnershipView;
-use App\Service\Integration\VendorExternalIntegrationRuntimeViewBuilder;
-use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
-use App\ServiceInterface\Payout\VendorPayoutProviderServiceInterface;
-use App\ServiceInterface\VendorCrmServiceInterface;
-use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
-use App\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface;
+use App\Vendoring\Projection\VendorOwnershipView;
+use App\Vendoring\Service\Integration\VendorExternalIntegrationRuntimeViewBuilder;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutProviderServiceInterface;
+use App\Vendoring\ServiceInterface\VendorCrmServiceInterface;
+use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

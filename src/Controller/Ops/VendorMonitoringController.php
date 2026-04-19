@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Ops;
+namespace App\Vendoring\Controller\Ops;
 
-use App\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
-use App\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface;
+use App\Vendoring\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
+use App\Vendoring\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

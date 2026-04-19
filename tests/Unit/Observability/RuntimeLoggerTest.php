@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Observability;
+namespace App\Vendoring\Tests\Unit\Observability;
 
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\FileObservabilityRecordExporter;
-use App\Observability\Service\RuntimeLogger;
+use App\Vendoring\Observability\Service\CorrelationContext;
+use App\Vendoring\Observability\Service\FileObservabilityRecordExporter;
+use App\Vendoring\Observability\Service\RuntimeLogger;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;

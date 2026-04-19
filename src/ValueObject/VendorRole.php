@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ValueObject;
+namespace App\Vendoring\ValueObject;
 
 /**
  * Canonical RBAC role registry for human/operator access within the vendor bounded context.

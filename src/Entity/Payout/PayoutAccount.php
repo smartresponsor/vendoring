@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Payout;
+namespace App\Vendoring\Entity\Payout;
 
 final class PayoutAccount
 {

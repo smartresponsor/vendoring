@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DTO\CatalogSyndication;
+namespace App\Vendoring\DTO\CatalogSyndication;
 
 final readonly class CategorySyndicationFallbackAwarePackageGateReportInputDTO
 {

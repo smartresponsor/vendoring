@@ -7,8 +7,8 @@ declare(strict_types=1);
  * Missing class scan for Vendoring.
  *
  * Scope:
- * - App\\* imports that do not resolve to a known type in this repository.
- * - App\\* fully-qualified references (best-effort regex) that do not resolve.
+ * - App\Vendoring\\* imports that do not resolve to a known type in this repository.
+ * - App\Vendoring\\* fully-qualified references (best-effort regex) that do not resolve.
  *
  * Non-goals:
  * - Formatting, auto-fixing, or deep static analysis.
@@ -215,9 +215,9 @@ foreach ($fileList as $abs) {
 
     $meta = parsePhp($code);
 
-    // 1) Missing App\\* imports.
+    // 1) Missing App\Vendoring\\* imports.
     foreach ($meta['importList'] as $fqn) {
-        if (!str_starts_with($fqn, 'App\\')) {
+        if (!str_starts_with($fqn, 'App\Vendoring\\')) {
             continue;
         }
         if (!isset($knownTypeSet[$fqn])) {
@@ -227,7 +227,7 @@ foreach ($fileList as $abs) {
 
     // 2) Best-effort missing fully qualified references in code.
     // Note: this may catch doc comments; we accept some noise (report-only).
-    if (preg_match_all('/\\\\?App\\\\[A-Za-z_][A-Za-z0-9_\\\\]*/', $code, $m)) {
+    if (preg_match_all('/\\\\?App\Vendoring\\\\[A-Za-z_][A-Za-z0-9_\\\\]*/', $code, $m)) {
         foreach (array_unique($m[0]) as $raw) {
             $fqn = ltrim($raw, '\\');
             if (!isset($knownTypeSet[$fqn])) {

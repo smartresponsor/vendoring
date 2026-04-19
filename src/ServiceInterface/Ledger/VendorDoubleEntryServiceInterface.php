@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Ledger;
+namespace App\Vendoring\ServiceInterface\Ledger;
 
-use App\DTO\Ledger\DoubleEntryDTO;
-use App\Entity\Ledger\LedgerEntry;
+use App\Vendoring\DTO\Ledger\DoubleEntryDTO;
+use App\Vendoring\Entity\Ledger\LedgerEntry;
 
 interface VendorDoubleEntryServiceInterface
 {

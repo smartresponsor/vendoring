@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\EventInterface\CategoryDestinationMediaReadinessEvaluatedInterface;
+use App\Vendoring\EventInterface\CategoryDestinationMediaReadinessEvaluatedInterface;
 
 interface CatalogDestinationMediaReadinessServiceInterface
 {

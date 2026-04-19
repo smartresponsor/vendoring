@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Metric;
+namespace App\Vendoring\Service\Metric;
 
-use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
-use App\DTO\Metric\VendorMetricOverviewRequestDTO;
-use App\DTO\Metric\VendorMetricTrendRequestDTO;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\ServiceInterface\Metric\VendorMetricServiceInterface;
+use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
+use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
+use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
 use Doctrine\DBAL\Exception;
 
 final readonly class VendorMetricService implements VendorMetricServiceInterface

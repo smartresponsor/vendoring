@@ -4,9 +4,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\ValueObject;
+namespace App\Vendoring\Tests\Unit\ValueObject;
 
-use App\ValueObject\BrandName;
+use App\Vendoring\ValueObject\BrandName;
 use PHPUnit\Framework\TestCase;
 
 final class BrandNameTest extends TestCase

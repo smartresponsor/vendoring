@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Traffic;
+namespace App\Vendoring\ServiceInterface\Traffic;
 
-use App\ValueObject\Traffic\WriteRateLimitDecision;
+use App\Vendoring\ValueObject\Traffic\WriteRateLimitDecision;
 
 interface WriteRateLimiterInterface
 {

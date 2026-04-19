@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\Entity\VendorProfile;
-use App\Projection\VendorProfileView;
-use App\RepositoryInterface\VendorProfileRepositoryInterface;
-use App\RepositoryInterface\VendorRepositoryInterface;
-use App\ServiceInterface\VendorProfileViewBuilderInterface;
+use App\Vendoring\Entity\VendorProfile;
+use App\Vendoring\Projection\VendorProfileView;
+use App\Vendoring\RepositoryInterface\VendorProfileRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\ServiceInterface\VendorProfileViewBuilderInterface;
 
 final class VendorProfileViewBuilder implements VendorProfileViewBuilderInterface
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\PolicyInterface;
+namespace App\Vendoring\PolicyInterface;
 
-use App\DTO\CatalogSyndication\CategorySyndicationFallbackAwarePackageGateReportInputDTO;
-use App\ValueObject\CategorySyndicationFallbackAwarePackageGateReport;
+use App\Vendoring\DTO\CatalogSyndication\CategorySyndicationFallbackAwarePackageGateReportInputDTO;
+use App\Vendoring\ValueObject\CategorySyndicationFallbackAwarePackageGateReport;
 
 /**
  * @noinspection PhpClassNamingConventionInspection

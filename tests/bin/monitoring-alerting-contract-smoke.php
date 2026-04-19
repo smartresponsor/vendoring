@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Observability\Service\AlertRuleEvaluator;
-use App\Observability\Service\MonitoringSnapshotBuilder;
+use App\Vendoring\Observability\Service\AlertRuleEvaluator;
+use App\Vendoring\Observability\Service\MonitoringSnapshotBuilder;
 
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Observability\Service;
+namespace App\Vendoring\Observability\Service;
 
-use App\ServiceInterface\Observability\MetricCollectorInterface;
+use App\Vendoring\ServiceInterface\Observability\MetricCollectorInterface;
 
 /**
  * In-memory metric collector used for tests and inspection-only runtime scenarios.

@@ -3,12 +3,12 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller\Integration;
+namespace App\Vendoring\Controller\Integration;
 
-use App\Controller\ApiErrorResponseTrait;
-use App\Exception\ApiQueryValidationException;
-use App\ServiceInterface\Api\TenantQueryRequestResolverInterface;
-use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
+use App\Vendoring\Controller\ApiErrorResponseTrait;
+use App\Vendoring\Exception\ApiQueryValidationException;
+use App\Vendoring\ServiceInterface\Api\TenantQueryRequestResolverInterface;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

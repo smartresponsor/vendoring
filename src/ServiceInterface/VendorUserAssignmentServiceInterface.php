@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\EntityInterface\VendorUserAssignmentInterface;
+use App\Vendoring\EntityInterface\VendorUserAssignmentInterface;
 
 /**
  * Write-side service for vendor-local human role assignments.

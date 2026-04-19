@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Security;
+namespace App\Vendoring\ServiceInterface\Security;
 
 /**
  * Repository-backed access resolver for vendor-local human assignments.

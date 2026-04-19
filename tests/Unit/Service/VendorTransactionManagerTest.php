@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\Service\VendorTransactionManager;
-use App\ServiceInterface\Observability\RuntimeLoggerInterface;
-use App\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface;
-use App\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
-use App\RepositoryInterface\VendorTransactionRepositoryInterface;
-use App\ValueObject\VendorTransactionData;
-use App\ValueObject\VendorTransactionErrorCode;
+use App\Vendoring\Service\VendorTransactionManager;
+use App\Vendoring\ServiceInterface\Observability\RuntimeLoggerInterface;
+use App\Vendoring\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface;
+use App\Vendoring\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
+use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
+use App\Vendoring\ValueObject\VendorTransactionData;
+use App\Vendoring\ValueObject\VendorTransactionErrorCode;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;

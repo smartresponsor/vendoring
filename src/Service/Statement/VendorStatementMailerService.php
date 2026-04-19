@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Statement;
+namespace App\Vendoring\Service\Statement;
 
-use App\ServiceInterface\Observability\MetricCollectorInterface;
-use App\ServiceInterface\Observability\RuntimeLoggerInterface;
-use App\ServiceInterface\Policy\OutboundOperationPolicyInterface;
-use App\ServiceInterface\Reliability\OutboundCircuitBreakerInterface;
-use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
+use App\Vendoring\ServiceInterface\Observability\MetricCollectorInterface;
+use App\Vendoring\ServiceInterface\Observability\RuntimeLoggerInterface;
+use App\Vendoring\ServiceInterface\Policy\OutboundOperationPolicyInterface;
+use App\Vendoring\ServiceInterface\Reliability\OutboundCircuitBreakerInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;

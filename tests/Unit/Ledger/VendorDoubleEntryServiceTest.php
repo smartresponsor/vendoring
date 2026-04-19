@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Ledger;
+namespace App\Vendoring\Tests\Unit\Ledger;
 
-use App\DTO\Ledger\DoubleEntryDTO;
-use App\Service\Ledger\VendorDoubleEntryService;
-use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
+use App\Vendoring\DTO\Ledger\DoubleEntryDTO;
+use App\Vendoring\Service\Ledger\VendorDoubleEntryService;
+use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
 
 final class VendorDoubleEntryServiceTest extends TestCase

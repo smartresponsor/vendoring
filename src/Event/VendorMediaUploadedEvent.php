@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Vendoring\Event;
 
-use App\Entity\VendorMedia;
+use App\Vendoring\Entity\VendorMedia;
 
 final readonly class VendorMediaUploadedEvent
 {

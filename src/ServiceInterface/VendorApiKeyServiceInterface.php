@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\Entity\Vendor;
-use App\Entity\VendorApiKey;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorApiKey;
 use Doctrine\ORM\Exception\ManagerException;
 use Random\RandomException;
 

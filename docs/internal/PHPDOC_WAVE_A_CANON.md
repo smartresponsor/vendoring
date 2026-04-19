@@ -13,11 +13,11 @@ The goal is to make the codebase readable in a deterministic way for:
 ## Scope
 
 Wave A covers runtime and release-facing read models:
-- `App\Service\Ops\VendorRuntimeStatusViewBuilder`
-- `App\Service\Ops\VendorReleaseBaselineReader`
-- `App\Service\VendorFinanceRuntimeViewBuilder`
-- `App\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder`
-- `App\Service\Integration\VendorExternalIntegrationRuntimeViewBuilder`
+- `App\Vendoring\Service\Ops\VendorRuntimeStatusViewBuilder`
+- `App\Vendoring\Service\Ops\VendorReleaseBaselineReader`
+- `App\Vendoring\Service\VendorFinanceRuntimeViewBuilder`
+- `App\Vendoring\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder`
+- `App\Vendoring\Service\Integration\VendorExternalIntegrationRuntimeViewBuilder`
 - matching `ServiceInterface` contracts for the same surfaces
 
 ## Required class-level PHPDoc

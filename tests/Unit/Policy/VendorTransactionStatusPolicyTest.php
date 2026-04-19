@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Policy;
 
-use App\Service\Policy\VendorTransactionStatusPolicy;
+use App\Vendoring\Service\Policy\VendorTransactionStatusPolicy;
 use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionStatusPolicyTest extends TestCase

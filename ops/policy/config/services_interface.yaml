@@ -2,10 +2,10 @@ services:
     _defaults: { autowire: true, autoconfigure: true, public: false }
 
     # Generic resource scan
-    App\:
+    App\Vendoring\:
         resource: '../src/'
         exclude: [ '../src/**/{Tests,Test}/' ]
 
     # Explicit service alias
-    App\ServiceInterface\Order\OrderPaymentInterface:
-        alias: App\Service\Order\OrderPaymentService
+    App\Vendoring\ServiceInterface\Order\OrderPaymentInterface:
+        alias: App\Vendoring\Service\Order\OrderPaymentService

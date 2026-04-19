@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Projection;
+namespace App\Vendoring\Projection;
 
 /**
  * Vendor-local runtime summary for CRM, webhook and payout-provider seams.

@@ -3,13 +3,13 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\DTO\CatalogSyndication\CatalogSyndicationGovernanceTrailRequestDTO;
-use App\Event\CategorySyndicationGovernanceTrailRecorded;
-use App\EventInterface\CategorySyndicationGovernanceTrailRecordedInterface;
-use App\PolicyInterface\CategorySyndicationGovernanceTrailPolicyInterface;
-use App\ServiceInterface\CatalogSyndicationGovernanceTrailServiceInterface;
+use App\Vendoring\DTO\CatalogSyndication\CatalogSyndicationGovernanceTrailRequestDTO;
+use App\Vendoring\Event\CategorySyndicationGovernanceTrailRecorded;
+use App\Vendoring\EventInterface\CategorySyndicationGovernanceTrailRecordedInterface;
+use App\Vendoring\PolicyInterface\CategorySyndicationGovernanceTrailPolicyInterface;
+use App\Vendoring\ServiceInterface\CatalogSyndicationGovernanceTrailServiceInterface;
 use DateTimeImmutable;
 
 final readonly class CatalogSyndicationGovernanceTrailService implements CatalogSyndicationGovernanceTrailServiceInterface

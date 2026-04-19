@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller\Payout;
+namespace App\Vendoring\Controller\Payout;
 
-use App\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

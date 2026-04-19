@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Policy;
+namespace App\Vendoring\Service\Policy;
 
-use App\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
-use App\ValueObject\VendorTransactionErrorCode;
-use App\ValueObject\VendorTransactionStatus;
+use App\Vendoring\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
+use App\Vendoring\ValueObject\VendorTransactionErrorCode;
+use App\Vendoring\ValueObject\VendorTransactionStatus;
 
 /**
  * Read-side policy for canonical transaction status normalization and transition rules.

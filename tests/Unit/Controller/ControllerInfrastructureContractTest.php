@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Controller;
+namespace App\Vendoring\Tests\Unit\Controller;
 
-use App\Controller\Ledger\VendorSummaryController;
-use App\Controller\Metric\VendorMetricController;
-use App\Controller\Payout\PayoutAccountController;
-use App\Controller\Payout\PayoutController;
-use App\Controller\Payout\VendorStatementController;
-use App\Controller\Statement\VendorStatementExportController;
-use App\Controller\VendorTransactionController;
+use App\Vendoring\Controller\Ledger\VendorSummaryController;
+use App\Vendoring\Controller\Metric\VendorMetricController;
+use App\Vendoring\Controller\Payout\PayoutAccountController;
+use App\Vendoring\Controller\Payout\PayoutController;
+use App\Vendoring\Controller\Payout\VendorStatementController;
+use App\Vendoring\Controller\Statement\VendorStatementExportController;
+use App\Vendoring\Controller\VendorTransactionController;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

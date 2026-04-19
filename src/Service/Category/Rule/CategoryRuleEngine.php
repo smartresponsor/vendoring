@@ -3,9 +3,9 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Category\Rule;
+namespace App\Vendoring\Service\Category\Rule;
 
-use App\ServiceInterface\Category\CategoryRuleEngineInterface;
+use App\Vendoring\ServiceInterface\Category\CategoryRuleEngineInterface;
 
 final class CategoryRuleEngine implements CategoryRuleEngineInterface
 {

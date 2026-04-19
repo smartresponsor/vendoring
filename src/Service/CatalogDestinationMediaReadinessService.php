@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\Event\CategoryDestinationMediaReadinessEvaluated;
-use App\EventInterface\CategoryDestinationMediaReadinessEvaluatedInterface;
-use App\ServiceInterface\CatalogDestinationMediaReadinessServiceInterface;
+use App\Vendoring\Event\CategoryDestinationMediaReadinessEvaluated;
+use App\Vendoring\EventInterface\CategoryDestinationMediaReadinessEvaluatedInterface;
+use App\Vendoring\ServiceInterface\CatalogDestinationMediaReadinessServiceInterface;
 use DateTimeImmutable;
 
 final class CatalogDestinationMediaReadinessService implements CatalogDestinationMediaReadinessServiceInterface

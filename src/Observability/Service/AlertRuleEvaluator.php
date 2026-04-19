@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Observability\Service;
+namespace App\Vendoring\Observability\Service;
 
-use App\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
+use App\Vendoring\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
 
 /**
  * Deterministic alert evaluator for monitoring snapshots.

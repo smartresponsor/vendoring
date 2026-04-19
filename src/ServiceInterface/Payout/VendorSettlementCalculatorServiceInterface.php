@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Payout;
+namespace App\Vendoring\ServiceInterface\Payout;
 
 interface VendorSettlementCalculatorServiceInterface
 {

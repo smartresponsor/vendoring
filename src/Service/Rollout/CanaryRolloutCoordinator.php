@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Rollout;
+namespace App\Vendoring\Service\Rollout;
 
-use App\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
-use App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
-use App\ServiceInterface\Rollout\CanaryRolloutCoordinatorInterface;
-use App\ServiceInterface\Rollout\FeatureFlagServiceInterface;
-use App\ServiceInterface\Rollout\TrafficCohortResolverInterface;
+use App\Vendoring\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
+use App\Vendoring\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
+use App\Vendoring\ServiceInterface\Rollout\CanaryRolloutCoordinatorInterface;
+use App\Vendoring\ServiceInterface\Rollout\FeatureFlagServiceInterface;
+use App\Vendoring\ServiceInterface\Rollout\TrafficCohortResolverInterface;
 use DateTimeImmutable;
 
 /**

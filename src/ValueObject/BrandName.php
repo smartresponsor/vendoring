@@ -4,7 +4,7 @@
 
 declare(strict_types=1);
 
-namespace App\ValueObject;
+namespace App\Vendoring\ValueObject;
 
 use InvalidArgumentException;
 

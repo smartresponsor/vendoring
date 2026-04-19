@@ -3,12 +3,12 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Security;
+namespace App\Vendoring\Tests\Unit\Security;
 
-use App\Entity\Vendor;
-use App\Entity\VendorApiKey;
-use App\Service\VendorSecurityService;
-use App\ServiceInterface\VendorApiKeyServiceInterface;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorApiKey;
+use App\Vendoring\Service\VendorSecurityService;
+use App\Vendoring\ServiceInterface\VendorApiKeyServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

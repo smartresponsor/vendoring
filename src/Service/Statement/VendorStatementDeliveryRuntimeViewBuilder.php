@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Statement;
+namespace App\Vendoring\Service\Statement;
 
 use Doctrine\DBAL\Exception;
-use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\DTO\Statement\VendorStatementRequestDTO;
-use App\Projection\VendorStatementDeliveryRuntimeView;
-use App\ServiceInterface\Statement\StatementExporterPDFInterface;
-use App\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
-use App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
-use App\ServiceInterface\Statement\VendorStatementServiceInterface;
-use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\Projection\VendorStatementDeliveryRuntimeView;
+use App\Vendoring\ServiceInterface\Statement\StatementExporterPDFInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
+use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
 
 /**
  * Builds a vendor-local statement delivery summary with ownership, export and

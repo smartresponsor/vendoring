@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Payout;
+namespace App\Vendoring\ServiceInterface\Payout;
 
-use App\DTO\Payout\CreatePayoutDTO;
+use App\Vendoring\DTO\Payout\CreatePayoutDTO;
 use Doctrine\DBAL\Exception;
 use JsonException;
 use Random\RandomException;

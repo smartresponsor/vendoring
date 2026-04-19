@@ -4,9 +4,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Ops;
+namespace App\Vendoring\ServiceInterface\Ops;
 
-use App\Entity\VendorTransaction;
+use App\Vendoring\Entity\VendorTransaction;
 
 interface VendorTransactionOperatorPageBuilderInterface
 {

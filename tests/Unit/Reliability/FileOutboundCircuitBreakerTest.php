@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Reliability;
+namespace App\Vendoring\Tests\Unit\Reliability;
 
-use App\Service\Reliability\FileOutboundCircuitBreaker;
+use App\Vendoring\Service\Reliability\FileOutboundCircuitBreaker;
 use PHPUnit\Framework\TestCase;
 
 final class FileOutboundCircuitBreakerTest extends TestCase

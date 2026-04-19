@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\DTO\CatalogSyndication\CatalogSyndicationGovernanceTrailRequestDTO;
-use App\EventInterface\CategorySyndicationGovernanceTrailRecordedInterface;
+use App\Vendoring\DTO\CatalogSyndication\CatalogSyndicationGovernanceTrailRequestDTO;
+use App\Vendoring\EventInterface\CategorySyndicationGovernanceTrailRecordedInterface;
 
 interface CatalogSyndicationGovernanceTrailServiceInterface
 {

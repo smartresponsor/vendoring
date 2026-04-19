@@ -37,12 +37,12 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "src/"
+      "App\\Vendoring\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "App\\Tests\\": "tests/",
+      "App\\Vendoring\\Tests\\": "tests/",
       "Doctrine\\Bundle\\FixturesBundle\\": "stubs/Doctrine/Bundle/FixturesBundle/",
       "Faker\\": "stubs/Faker/",
       "Symfony\\Component\\Panther\\": "stubs/Symfony/Component/Panther/"

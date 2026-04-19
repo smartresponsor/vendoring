@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\Entity\VendorUserAssignment;
-use App\EntityInterface\VendorUserAssignmentInterface;
-use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
-use App\ServiceInterface\VendorUserAssignmentServiceInterface;
-use App\ValueObject\VendorRole;
+use App\Vendoring\Entity\VendorUserAssignment;
+use App\Vendoring\EntityInterface\VendorUserAssignmentInterface;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\ServiceInterface\VendorUserAssignmentServiceInterface;
+use App\Vendoring\ValueObject\VendorRole;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 

@@ -8,7 +8,7 @@ declare(strict_types=1);
  *
  * Focus:
  * - structure / namespace / import placement
- * - detect unresolved App\\* imports and FQCN references
+ * - detect unresolved App\Vendoring\\* imports and FQCN references
  * - reduce false positives (group use, namespace aliases, strings/comments)
  *
  * Usage:
@@ -307,7 +307,7 @@ function findPhpFileListV3(string $root): array
 function extractAppRefsV3(string $codeOnlyText): array
 {
     $matchList = [];
-    preg_match_all('~(?:^|[^A-Za-z0-9_])((?:\\\\)?App\\\\[A-Za-z_][A-Za-z0-9_\\\\]*)~', $codeOnlyText, $m);
+    preg_match_all('~(?:^|[^A-Za-z0-9_])((?:\\\\)?App\Vendoring\\\\[A-Za-z_][A-Za-z0-9_\\\\]*)~', $codeOnlyText, $m);
     foreach (($m[1] ?? []) as $raw) {
         $fqn = ltrim(trim((string) $raw), '\\');
         if ('App' === $fqn || str_ends_with($fqn, '\\')) {
@@ -390,7 +390,7 @@ $pushIssue = static function (array $issue) use (&$issueList, &$seenIssueKeySet)
 
 foreach ($fileMetaMap as $rel => $meta) {
     foreach (($meta['importList'] ?? []) as $fqn) {
-        if (!is_string($fqn) || !str_starts_with($fqn, 'App\\')) {
+        if (!is_string($fqn) || !str_starts_with($fqn, 'App\Vendoring\\')) {
             continue;
         }
         if (isset($knownTypeSet[$fqn])) {

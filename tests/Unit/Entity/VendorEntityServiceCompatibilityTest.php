@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity;
+namespace App\Vendoring\Tests\Unit\Entity;
 
-use App\Entity\VendorBilling;
-use App\Entity\VendorDocument;
-use App\Entity\VendorMedia;
-use App\Entity\VendorProfile;
+use App\Vendoring\Entity\VendorBilling;
+use App\Vendoring\Entity\VendorDocument;
+use App\Vendoring\Entity\VendorMedia;
+use App\Vendoring\Entity\VendorProfile;
 use PHPUnit\Framework\TestCase;
 
 final class VendorEntityServiceCompatibilityTest extends TestCase

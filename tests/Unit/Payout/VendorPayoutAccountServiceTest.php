@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Payout;
+namespace App\Vendoring\Tests\Unit\Payout;
 
-use App\Entity\Payout\PayoutAccount;
-use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
-use App\Service\Payout\VendorPayoutAccountService;
+use App\Vendoring\Entity\Payout\PayoutAccount;
+use App\Vendoring\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
+use App\Vendoring\Service\Payout\VendorPayoutAccountService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

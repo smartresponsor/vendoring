@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Missing class scan for Vendoring (v2, noise-reduced).
  *
  * Goal:
- * - Detect App\* imports and App\* FQCN references that do not resolve to a known type in repo.
+ * - Detect App\Vendoring\* imports and App\Vendoring\* FQCN references that do not resolve to a known type in repo.
  *
  * Focus:
  * - Structure / namespace / imports / legacy references.
@@ -16,7 +16,7 @@ declare(strict_types=1);
  * Improvements vs earlier scanner:
  * - Handles group-use imports: use Foo\Bar\{Baz, Qux as Alias};
  * - Ignores "use function" and "use const" imports.
- * - Ignores namespace-only tokens (e.g. App\Command\Vendor) when they are known namespace prefixes.
+ * - Ignores namespace-only tokens (e.g. App\Vendoring\Command\Vendor) when they are known namespace prefixes.
  * - Ignores trailing namespace fragments ending with "\\".
  * - Avoids most string/comment/docblock false positives by scanning tokenized non-string/non-comment code.
  * - Dedupe output entries for stable reports.
@@ -120,9 +120,9 @@ function splitTopLevelComma(string $s): array
  * Expand a class import expression (already stripped from "use ").
  *
  * Accepted forms:
- *   App\Foo\Bar
- *   App\Foo\Bar as Baz
- *   App\Foo\{Bar,Baz as Qux}
+ *   App\Vendoring\Foo\Bar
+ *   App\Vendoring\Foo\Bar as Baz
+ *   App\Vendoring\Foo\{Bar,Baz as Qux}
  *
  * @return list<string> canonical FQCN imports (without leading slash)
  */
@@ -458,9 +458,9 @@ foreach ($fileList as $abs) {
 
     $fileNamespace = is_string($meta['namespace']) ? $meta['namespace'] : null;
 
-    // 1) Missing App\* imports.
+    // 1) Missing App\Vendoring\* imports.
     foreach ($meta['importList'] as $fqn) {
-        if (!str_starts_with($fqn, 'App\\')) {
+        if (!str_starts_with($fqn, 'App\Vendoring\\')) {
             continue;
         }
 
@@ -476,7 +476,7 @@ foreach ($fileList as $abs) {
         $pushIssue(['type' => 'import', 'file' => $rel, 'fqn' => $fqn]);
     }
 
-    // 2) Missing App\* references in code-only text.
+    // 2) Missing App\Vendoring\* references in code-only text.
     foreach (extractAppReferences($meta['scanText']) as $fqn) {
         if (isset($knownTypeSet[$fqn])) {
             continue;

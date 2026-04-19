@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\Entity\Vendor;
-use App\Entity\VendorApiKey;
-use App\ServiceInterface\VendorApiKeyServiceInterface;
-use App\ServiceInterface\VendorSecurityServiceInterface;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorApiKey;
+use App\Vendoring\ServiceInterface\VendorApiKeyServiceInterface;
+use App\Vendoring\ServiceInterface\VendorSecurityServiceInterface;
 
 /**
  * Backward-compatible wrapper around VendorApiKeyService.

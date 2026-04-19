@@ -3,15 +3,15 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
-use App\Event\CategorySyndicationPublishPackageBuilt;
-use App\EventInterface\CategorySyndicationPublishPackageBuiltInterface;
-use App\PolicyInterface\CategorySyndicationMappingPolicyInterface;
-use App\ServiceInterface\CatalogSyndicationMappingServiceInterface;
-use App\ValueObject\CategorySyndicationMappingProfile;
-use App\ValueObject\CategorySyndicationPublishPackage;
+use App\Vendoring\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
+use App\Vendoring\Event\CategorySyndicationPublishPackageBuilt;
+use App\Vendoring\EventInterface\CategorySyndicationPublishPackageBuiltInterface;
+use App\Vendoring\PolicyInterface\CategorySyndicationMappingPolicyInterface;
+use App\Vendoring\ServiceInterface\CatalogSyndicationMappingServiceInterface;
+use App\Vendoring\ValueObject\CategorySyndicationMappingProfile;
+use App\Vendoring\ValueObject\CategorySyndicationPublishPackage;
 use DateTimeImmutable;
 
 final readonly class CatalogSyndicationMappingService implements CatalogSyndicationMappingServiceInterface

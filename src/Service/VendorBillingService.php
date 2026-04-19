@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\DTO\VendorBillingDTO;
-use App\Entity\Vendor;
-use App\Entity\VendorBilling;
-use App\Event\VendorPayoutCompletedEvent;
-use App\Event\VendorPayoutRequestedEvent;
-use App\RepositoryInterface\VendorBillingRepositoryInterface;
-use App\ServiceInterface\VendorBillingServiceInterface;
+use App\Vendoring\DTO\VendorBillingDTO;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorBilling;
+use App\Vendoring\Event\VendorPayoutCompletedEvent;
+use App\Vendoring\Event\VendorPayoutRequestedEvent;
+use App\Vendoring\RepositoryInterface\VendorBillingRepositoryInterface;
+use App\Vendoring\ServiceInterface\VendorBillingServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 

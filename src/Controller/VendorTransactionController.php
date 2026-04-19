@@ -3,17 +3,17 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Vendoring\Controller;
 
-use App\Entity\VendorTransaction;
-use App\RepositoryInterface\VendorTransactionRepositoryInterface;
-use App\ServiceInterface\Observability\RuntimeLoggerInterface;
-use App\ServiceInterface\Traffic\WriteRateLimiterInterface;
-use App\ServiceInterface\VendorApiKeyServiceInterface;
-use App\ServiceInterface\VendorTransactionInputResolverServiceInterface;
-use App\ServiceInterface\VendorTransactionManagerInterface;
-use App\ValueObject\Traffic\WriteRateLimitDecision;
-use App\ValueObject\VendorTransactionErrorCode;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
+use App\Vendoring\ServiceInterface\Observability\RuntimeLoggerInterface;
+use App\Vendoring\ServiceInterface\Traffic\WriteRateLimiterInterface;
+use App\Vendoring\ServiceInterface\VendorApiKeyServiceInterface;
+use App\Vendoring\ServiceInterface\VendorTransactionInputResolverServiceInterface;
+use App\Vendoring\ServiceInterface\VendorTransactionManagerInterface;
+use App\Vendoring\ValueObject\Traffic\WriteRateLimitDecision;
+use App\Vendoring\ValueObject\VendorTransactionErrorCode;
 use Doctrine\ORM\Exception\ManagerException;
 use InvalidArgumentException;
 use Throwable;

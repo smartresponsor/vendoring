@@ -64,8 +64,8 @@ if (Test-Path $src) {
     foreach ($file in $phpFiles) {
         $path = $file.FullName
 
-        Replace-In-File $path 'App\\Entity\\CategoryBanner' 'App\Entity\VendorCatalogCategoryBanner'
-        Replace-In-File $path 'use\s+App\\Entity\\CategoryBanner;' 'use App\Entity\VendorCatalogCategoryBanner;'
+        Replace-In-File $path 'App\Vendoring\\Entity\\CategoryBanner' 'App\Vendoring\Entity\VendorCatalogCategoryBanner'
+        Replace-In-File $path 'use\s+App\Vendoring\\Entity\\CategoryBanner;' 'use App\Vendoring\Entity\VendorCatalogCategoryBanner;'
         Replace-In-File $path '\bCategoryBanner::class\b' 'VendorCatalogCategoryBanner::class'
         Replace-In-File $path '\bnew\s+CategoryBanner\s*\(' 'new VendorCatalogCategoryBanner('
         Replace-In-File $path '\bCategoryBanner\s+\$categoryBanner\b' 'VendorCatalogCategoryBanner $categoryBanner'

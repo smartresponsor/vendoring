@@ -22,11 +22,11 @@ if (!str_contains($statusPolicy, 'VendorTransactionErrorCode::STATUS_REQUIRED') 
     fwrite(STDERR, "Status policy must use stable status error codes.\n");
     exit(1);
 }
-if (!str_contains($servicesYaml, "App\\ServiceInterface\\Policy\\VendorTransactionAmountPolicyInterface: '@App\\Service\\Policy\\VendorTransactionAmountPolicy'")) {
+if (!str_contains($servicesYaml, "App\Vendoring\\ServiceInterface\\Policy\\VendorTransactionAmountPolicyInterface: '@App\Vendoring\\Service\\Policy\\VendorTransactionAmountPolicy'")) {
     fwrite(STDERR, "vendor_services.yaml must alias VendorTransactionAmountPolicyInterface.\n");
     exit(1);
 }
-if (!str_contains($servicesYaml, "App\\ServiceInterface\\Policy\\VendorTransactionStatusPolicyInterface: '@App\\Service\\Policy\\VendorTransactionStatusPolicy'")) {
+if (!str_contains($servicesYaml, "App\Vendoring\\ServiceInterface\\Policy\\VendorTransactionStatusPolicyInterface: '@App\Vendoring\\Service\\Policy\\VendorTransactionStatusPolicy'")) {
     fwrite(STDERR, "vendor_services.yaml must alias VendorTransactionStatusPolicyInterface.\n");
     exit(1);
 }

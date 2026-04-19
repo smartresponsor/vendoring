@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Smoke;
+namespace App\Vendoring\Tests\Smoke;
 
 use PHPUnit\Framework\TestCase;
 

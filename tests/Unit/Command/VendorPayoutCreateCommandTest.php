@@ -3,18 +3,18 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Command;
+namespace App\Vendoring\Tests\Unit\Command;
 
-use App\Command\VendorPayoutCreateCommand;
-use App\Entity\Ledger\LedgerEntry;
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\MetricEmitter;
-use App\Observability\Service\RuntimeLogger;
-use App\Service\Ledger\VendorLedgerService;
-use App\Service\Payout\VendorPayoutRequestService;
-use App\Service\Payout\VendorPayoutService;
-use App\Tests\Support\Payout\InMemoryPayoutRepository;
-use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
+use App\Vendoring\Command\VendorPayoutCreateCommand;
+use App\Vendoring\Entity\Ledger\LedgerEntry;
+use App\Vendoring\Observability\Service\CorrelationContext;
+use App\Vendoring\Observability\Service\MetricEmitter;
+use App\Vendoring\Observability\Service\RuntimeLogger;
+use App\Vendoring\Service\Ledger\VendorLedgerService;
+use App\Vendoring\Service\Payout\VendorPayoutRequestService;
+use App\Vendoring\Service\Payout\VendorPayoutService;
+use App\Vendoring\Tests\Support\Payout\InMemoryPayoutRepository;
+use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpFoundation\RequestStack;

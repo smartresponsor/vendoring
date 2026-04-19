@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Reliability;
+namespace App\Vendoring\Service\Reliability;
 
-use App\DTO\Reliability\OutboundCircuitBreakerStateDTO;
-use App\ServiceInterface\Reliability\OutboundCircuitBreakerInterface;
+use App\Vendoring\DTO\Reliability\OutboundCircuitBreakerStateDTO;
+use App\Vendoring\ServiceInterface\Reliability\OutboundCircuitBreakerInterface;
 use JsonException;
 use RuntimeException;
 

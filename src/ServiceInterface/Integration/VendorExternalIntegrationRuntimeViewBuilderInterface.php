@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Integration;
+namespace App\Vendoring\ServiceInterface\Integration;
 
-use App\Projection\VendorExternalIntegrationRuntimeView;
+use App\Vendoring\Projection\VendorExternalIntegrationRuntimeView;
 
 interface VendorExternalIntegrationRuntimeViewBuilderInterface
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Form\Ops;
+namespace App\Vendoring\Tests\Unit\Form\Ops;
 
-use App\Form\Ops\VendorTransactionCreateInput;
-use App\Form\Ops\VendorTransactionCreateType;
+use App\Vendoring\Form\Ops\VendorTransactionCreateInput;
+use App\Vendoring\Form\Ops\VendorTransactionCreateType;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;

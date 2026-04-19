@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Projection;
+namespace App\Vendoring\Projection;
 
 /**
  * Read-side representation of vendor-local security state.

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\Entity\VendorCatalogReviewAssignment;
-use App\Policy\CategoryReviewAssignmentPolicy;
-use App\Repository\VendorCatalogCategoryChangeRequestRepository;
-use App\Repository\VendorCatalogReviewAssignmentRepository;
+use App\Vendoring\Entity\VendorCatalogReviewAssignment;
+use App\Vendoring\Policy\CategoryReviewAssignmentPolicy;
+use App\Vendoring\Repository\VendorCatalogCategoryChangeRequestRepository;
+use App\Vendoring\Repository\VendorCatalogReviewAssignmentRepository;
 use InvalidArgumentException;
 
 final readonly class CatalogReviewAssignmentService

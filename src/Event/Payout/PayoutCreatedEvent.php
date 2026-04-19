@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Event\Payout;
+namespace App\Vendoring\Event\Payout;
 
 final class PayoutCreatedEvent
 {

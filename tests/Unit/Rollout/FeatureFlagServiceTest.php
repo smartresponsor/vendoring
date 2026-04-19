@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Rollout;
+namespace App\Vendoring\Tests\Unit\Rollout;
 
-use App\Service\Rollout\FeatureFlagService;
-use App\Service\Rollout\TrafficCohortResolver;
+use App\Vendoring\Service\Rollout\FeatureFlagService;
+use App\Vendoring\Service\Rollout\TrafficCohortResolver;
 use PHPUnit\Framework\TestCase;
 
 final class FeatureFlagServiceTest extends TestCase

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\EntityInterface\VendorSecurityInterface;
-use App\Projection\VendorSecurityStateView;
+use App\Vendoring\EntityInterface\VendorSecurityInterface;
+use App\Vendoring\Projection\VendorSecurityStateView;
 
 interface VendorSecurityStateViewBuilderInterface
 {

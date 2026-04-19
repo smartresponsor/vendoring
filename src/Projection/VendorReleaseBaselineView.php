@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Projection;
+namespace App\Vendoring\Projection;
 
 /**
  * Release-facing baseline view built from the current runtime status and

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Vendoring\Repository;
 
-use App\Entity\VendorCatalogCategoryChangeRequest;
+use App\Vendoring\Entity\VendorCatalogCategoryChangeRequest;
 
 final class VendorCatalogCategoryChangeRequestRepository
 {

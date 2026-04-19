@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Transaction;
+namespace App\Vendoring\Tests\Unit\Transaction;
 
-use App\Entity\VendorTransaction;
-use App\Event\VendorTransactionEvent;
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\RuntimeLogger;
-use App\RepositoryInterface\VendorTransactionRepositoryInterface;
-use App\Service\Policy\VendorTransactionAmountPolicy;
-use App\Service\Policy\VendorTransactionStatusPolicy;
-use App\Service\VendorTransactionManager;
-use App\ValueObject\VendorTransactionData;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Event\VendorTransactionEvent;
+use App\Vendoring\Observability\Service\CorrelationContext;
+use App\Vendoring\Observability\Service\RuntimeLogger;
+use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
+use App\Vendoring\Service\Policy\VendorTransactionAmountPolicy;
+use App\Vendoring\Service\Policy\VendorTransactionStatusPolicy;
+use App\Vendoring\Service\VendorTransactionManager;
+use App\Vendoring\ValueObject\VendorTransactionData;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -301,7 +301,7 @@ final class VendorTransactionManagerTest extends TestCase
             ->method('dispatch')
             ->with(
                 self::callback(static function (object $event) use ($transaction): bool {
-                    return $event instanceof \App\Event\VendorTransactionEvent
+                    return $event instanceof \App\Vendoring\Event\VendorTransactionEvent
                         && $event->transaction === $transaction
                         && 'authorized' === $event->transaction->getStatus();
                 }),

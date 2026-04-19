@@ -75,7 +75,7 @@ function scanForbiddenNamespaceChain(file) {
   const r = rel(file);
   const head = readHead(file, 65536);
   if (/Smartresponsor\\/i.test(head) || /Smartresponsor\//i.test(head)) {
-    pushIssue('namespace-chain', r, 'Forbidden namespace chain found. Use App\\* only.');
+    pushIssue('namespace-chain', r, 'Forbidden namespace chain found. Use App\\Vendoring\\* only.');
   }
 }
 
@@ -130,16 +130,16 @@ function scanPhpFile(file) {
     pushIssue('namespace', r, `Forbidden namespace root: ${ns}. Use only App namespace rooted at src/.`);
   }
 
-  const isAppNamespace = ns === 'App' || ns.startsWith('App\\');
+  const isAppNamespace = ns === 'App\\Vendoring' || ns.startsWith('App\\Vendoring\\');
   if (!isAppNamespace) {
     pushIssue('namespace', r, `Unexpected namespace root: ${ns}.`);
   }
 
-  // quick heuristic: file path after src/ should match namespace after App\
-  if (ns.startsWith('App\\')) {
+  // quick heuristic: file path after src/ should match namespace after App\Vendoring\
+  if (ns === 'App\\Vendoring' || ns.startsWith('App\\Vendoring\\')) {
     const after = r.startsWith('src/') ? r.slice(4) : r;
     const expectedPrefix = after.split('/').slice(0, -1).join('\\');
-    const expected = expectedPrefix ? `App\\${expectedPrefix}` : 'App';
+    const expected = expectedPrefix ? `App\\Vendoring\\${expectedPrefix}` : 'App\\Vendoring';
     if (!ns.startsWith(expected)) {
       pushIssue('ns-path', r, `Namespace does not follow path. ns='${ns}' expectedPrefix='${expected}'.`);
     }

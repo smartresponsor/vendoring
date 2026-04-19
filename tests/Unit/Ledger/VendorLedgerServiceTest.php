@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Ledger;
+namespace App\Vendoring\Tests\Unit\Ledger;
 
-use App\DTO\Ledger\LedgerEntryDTO;
-use App\Entity\Ledger\LedgerEntry;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\Service\Ledger\VendorLedgerService;
+use App\Vendoring\DTO\Ledger\LedgerEntryDTO;
+use App\Vendoring\Entity\Ledger\LedgerEntry;
+use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\Service\Ledger\VendorLedgerService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

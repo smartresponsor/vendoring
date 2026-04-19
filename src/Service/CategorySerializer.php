@@ -3,9 +3,9 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\ServiceInterface\CategorySerializerInterface;
+use App\Vendoring\ServiceInterface\CategorySerializerInterface;
 
 final class CategorySerializer implements CategorySerializerInterface
 {

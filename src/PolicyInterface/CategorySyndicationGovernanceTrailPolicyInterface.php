@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\PolicyInterface;
+namespace App\Vendoring\PolicyInterface;
 
-use App\ValueObject\CategorySyndicationGovernanceTrailReport;
+use App\Vendoring\ValueObject\CategorySyndicationGovernanceTrailReport;
 
 interface CategorySyndicationGovernanceTrailPolicyInterface
 {

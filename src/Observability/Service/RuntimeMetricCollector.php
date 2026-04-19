@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Observability\Service;
+namespace App\Vendoring\Observability\Service;
 
-use App\Support\AppEnvResolver;
-use App\ServiceInterface\Observability\CorrelationContextInterface;
-use App\ServiceInterface\Observability\MetricCollectorInterface;
-use App\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
+use App\Vendoring\Support\AppEnvResolver;
+use App\Vendoring\ServiceInterface\Observability\CorrelationContextInterface;
+use App\Vendoring\ServiceInterface\Observability\MetricCollectorInterface;
+use App\Vendoring\ServiceInterface\Observability\ObservabilityRecordExporterInterface;
 use DateTimeImmutable;
 
 /**

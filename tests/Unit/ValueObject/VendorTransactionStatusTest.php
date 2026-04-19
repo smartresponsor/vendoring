@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\ValueObject;
+namespace App\Vendoring\Tests\Unit\ValueObject;
 
-use App\ValueObject\VendorTransactionStatus;
+use App\Vendoring\ValueObject\VendorTransactionStatus;
 use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionStatusTest extends TestCase

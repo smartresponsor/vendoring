@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Payout;
+namespace App\Vendoring\Service\Payout;
 
-use App\Entity\Payout\PayoutAccount;
-use App\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
-use App\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
+use App\Vendoring\Entity\Payout\PayoutAccount;
+use App\Vendoring\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
 use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
 use InvalidArgumentException;

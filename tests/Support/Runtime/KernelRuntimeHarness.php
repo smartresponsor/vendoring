@@ -3,12 +3,12 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Support\Runtime;
+namespace App\Vendoring\Tests\Support\Runtime;
 
-use App\Entity\Vendor;
-use App\Entity\VendorApiKey;
-use App\Entity\VendorTransaction;
-use App\Kernel;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorApiKey;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Kernel;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;

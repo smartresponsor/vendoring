@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Vendoring\Repository;
 
-use App\Entity\VendorBilling;
-use App\RepositoryInterface\VendorBillingRepositoryInterface;
+use App\Vendoring\Entity\VendorBilling;
+use App\Vendoring\RepositoryInterface\VendorBillingRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

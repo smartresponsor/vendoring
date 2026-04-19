@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Observability;
+namespace App\Vendoring\Tests\Unit\Observability;
 
-use App\Observability\Service\FileObservabilityRecordExporter;
+use App\Vendoring\Observability\Service\FileObservabilityRecordExporter;
 use PHPUnit\Framework\TestCase;
 
 final class FileObservabilityRecordExporterTest extends TestCase

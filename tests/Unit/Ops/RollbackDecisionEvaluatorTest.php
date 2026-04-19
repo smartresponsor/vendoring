@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Ops;
+namespace App\Vendoring\Tests\Unit\Ops;
 
-use App\Service\Ops\RollbackDecisionEvaluator;
+use App\Vendoring\Service\Ops\RollbackDecisionEvaluator;
 use PHPUnit\Framework\TestCase;
 
 final class RollbackDecisionEvaluatorTest extends TestCase

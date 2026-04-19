@@ -7,7 +7,7 @@ declare(strict_types=1);
 /**
  * Vendor canon guard (fast scan).
  * - detects obvious path segment repeats (e.g. src/Controller/Controller/Controller)
- * - detects namespace/path mismatch for App\\* classes under src/
+ * - detects namespace/path mismatch for App\Vendoring\\* classes under src/
  *
  * Usage:
  *   php tools/canon/vendor-scan.php
@@ -58,14 +58,14 @@ foreach ($rii as $file) {
         continue;
     }
     $ns = trim($m[1]);
-    if (!str_starts_with($ns, 'App\\')) {
+    if (!str_starts_with($ns, 'App\Vendoring\\')) {
         continue;
     }
 
     // expected PSR-4 relative path
     $rel = trim(str_replace($src . '/', '', $path), '/');
     $relNoExt = preg_replace('/\.php$/', '', $rel);
-    $expected = 'App\\' . str_replace('/', '\\', $relNoExt);
+    $expected = 'App\Vendoring\\' . str_replace('/', '\\', $relNoExt);
 
     // allow files that declare multiple classes (rare) - just compare namespace+basename class pattern
     $base = basename($relNoExt);

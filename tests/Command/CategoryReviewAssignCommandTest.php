@@ -7,13 +7,13 @@ declare(strict_types=1);
  * Owner: Marketing America Corp
  */
 
-namespace App\Tests\Command;
+namespace App\Vendoring\Tests\Command;
 
-use App\Command\CategoryReviewAssignCommand;
-use App\Policy\CategoryReviewAssignmentPolicy;
-use App\Repository\VendorCatalogCategoryChangeRequestRepository;
-use App\Repository\VendorCatalogReviewAssignmentRepository;
-use App\Service\CatalogReviewAssignmentService;
+use App\Vendoring\Command\CategoryReviewAssignCommand;
+use App\Vendoring\Policy\CategoryReviewAssignmentPolicy;
+use App\Vendoring\Repository\VendorCatalogCategoryChangeRequestRepository;
+use App\Vendoring\Repository\VendorCatalogReviewAssignmentRepository;
+use App\Vendoring\Service\CatalogReviewAssignmentService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -22,7 +22,7 @@ final class CategoryReviewAssignCommandTest extends TestCase
     public function testExecutePrintsAssignmentPayload(): void
     {
         $requestRepository = new VendorCatalogCategoryChangeRequestRepository();
-        $requestRepository->save(\App\Entity\VendorCatalogCategoryChangeRequest::open('req-100', 'cat-100', 'submitter-1', 'Promote category', ['title' => 'Garden']));
+        $requestRepository->save(\App\Vendoring\Entity\VendorCatalogCategoryChangeRequest::open('req-100', 'cat-100', 'submitter-1', 'Promote category', ['title' => 'Garden']));
 
         $service = new CatalogReviewAssignmentService(
             $requestRepository,

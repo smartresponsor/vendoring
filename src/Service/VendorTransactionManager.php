@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\Entity\VendorTransaction;
-use App\Event\VendorTransactionEvent;
-use App\RepositoryInterface\VendorTransactionRepositoryInterface;
-use App\ServiceInterface\Observability\RuntimeLoggerInterface;
-use App\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface;
-use App\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
-use App\ServiceInterface\VendorTransactionManagerInterface;
-use App\ValueObject\VendorTransactionData;
-use App\ValueObject\VendorTransactionErrorCode;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Event\VendorTransactionEvent;
+use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
+use App\Vendoring\ServiceInterface\Observability\RuntimeLoggerInterface;
+use App\Vendoring\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface;
+use App\Vendoring\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
+use App\Vendoring\ServiceInterface\VendorTransactionManagerInterface;
+use App\Vendoring\ValueObject\VendorTransactionData;
+use App\Vendoring\ValueObject\VendorTransactionErrorCode;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;

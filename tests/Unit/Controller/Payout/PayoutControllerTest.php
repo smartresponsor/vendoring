@@ -3,16 +3,16 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Controller\Payout;
+namespace App\Vendoring\Tests\Unit\Controller\Payout;
 
-use App\Controller\Payout\PayoutController;
-use App\DTO\Payout\CreatePayoutDTO;
-use App\Entity\Payout\Payout;
-use App\Entity\Payout\PayoutItem;
-use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
-use App\Service\Payout\VendorPayoutRequestService;
-use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
-use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
+use App\Vendoring\Controller\Payout\PayoutController;
+use App\Vendoring\DTO\Payout\CreatePayoutDTO;
+use App\Vendoring\Entity\Payout\Payout;
+use App\Vendoring\Entity\Payout\PayoutItem;
+use App\Vendoring\RepositoryInterface\Payout\PayoutRepositoryInterface;
+use App\Vendoring\Service\Payout\VendorPayoutRequestService;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

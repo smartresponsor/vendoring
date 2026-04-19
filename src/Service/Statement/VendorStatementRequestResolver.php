@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Statement;
+namespace App\Vendoring\Service\Statement;
 
-use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\DTO\Statement\VendorStatementRequestDTO;
-use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
+use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 final readonly class VendorStatementRequestResolver implements VendorStatementRequestResolverInterface

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\RepositoryInterface;
+namespace App\Vendoring\RepositoryInterface;
 
-use App\Entity\VendorAnalytics;
+use App\Vendoring\Entity\VendorAnalytics;
 use Doctrine\Persistence\ObjectRepository;
 
 /**

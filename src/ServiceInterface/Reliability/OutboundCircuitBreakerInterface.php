@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Reliability;
+namespace App\Vendoring\ServiceInterface\Reliability;
 
 use JsonException;
 use RuntimeException;

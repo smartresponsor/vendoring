@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Statement;
+namespace App\Vendoring\Tests\Unit\Statement;
 
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\MetricEmitter;
-use App\Observability\Service\RuntimeLogger;
-use App\Service\Policy\OutboundOperationPolicy;
-use App\Service\Reliability\FileOutboundCircuitBreaker;
-use App\Service\Statement\VendorStatementMailerService;
-use App\Tests\Support\Statement\FakeMailer;
+use App\Vendoring\Observability\Service\CorrelationContext;
+use App\Vendoring\Observability\Service\MetricEmitter;
+use App\Vendoring\Observability\Service\RuntimeLogger;
+use App\Vendoring\Service\Policy\OutboundOperationPolicy;
+use App\Vendoring\Service\Reliability\FileOutboundCircuitBreaker;
+use App\Vendoring\Service\Statement\VendorStatementMailerService;
+use App\Vendoring\Tests\Support\Statement\FakeMailer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mailer\Envelope;

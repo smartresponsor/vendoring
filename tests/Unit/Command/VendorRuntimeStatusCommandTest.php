@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Command;
+namespace App\Vendoring\Tests\Unit\Command;
 
-use App\Command\VendorRuntimeStatusCommand;
-use App\Projection\VendorRuntimeStatusView;
-use App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
+use App\Vendoring\Command\VendorRuntimeStatusCommand;
+use App\Vendoring\Projection\VendorRuntimeStatusView;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;

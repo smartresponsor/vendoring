@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Statement;
+namespace App\Vendoring\Tests\Unit\Statement;
 
-use App\Entity\Vendor;
-use App\Entity\VendorBilling;
-use App\RepositoryInterface\VendorBillingRepositoryInterface;
-use App\Service\Statement\VendorStatementRecipientProvider;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorBilling;
+use App\Vendoring\RepositoryInterface\VendorBillingRepositoryInterface;
+use App\Vendoring\Service\Statement\VendorStatementRecipientProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

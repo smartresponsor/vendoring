@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Support\Statement;
+namespace App\Vendoring\Tests\Support\Statement;
 
-use App\DTO\Statement\VendorStatementRecipientDTO;
-use App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
+use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
 
 final class FakeVendorStatementRecipientProvider implements VendorStatementRecipientProviderInterface
 {

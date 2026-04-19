@@ -7,13 +7,13 @@ Scope: protocol/canon audit against the user-declared Vendoring/Vendor rules.
 
 The slice is **not canon-compliant** in its current state.
 
-The active code under canonical roots such as `src/Controller/Vendor`, `src/DTO/Vendor`, `src/Entity/Vendor`, `src/Event/Vendor`, `src/Repository/Vendor`, `src/Service/Vendor`, and `src/ValueObject/Vendor` is present and aligned with the intended `App\ -> src/` production root.
+The active code under canonical roots such as `src/Controller/Vendor`, `src/DTO/Vendor`, `src/Entity/Vendor`, `src/Event/Vendor`, `src/Repository/Vendor`, `src/Service/Vendor`, and `src/ValueObject/Vendor` is present and aligned with the intended `App\Vendoring\ -> src/` production root.
 
 However, the repository also contains a large amount of **structural debris** and **forbidden competing trees**, mostly as empty directories. The main debt is structural, not business-code correctness.
 
 ## Canonical positives
 
-- `composer.json` uses `App\\` => `src/` for PSR-4 autoload.
+- `composer.json` uses `App\Vendoring\\` => `src/` for PSR-4 autoload.
 - Core Vendor responsibility is placed under canonical layer roots, for example:
   - `src/Controller/Vendor/...`
   - `src/DTO/Vendor/...`

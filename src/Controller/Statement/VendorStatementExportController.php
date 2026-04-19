@@ -3,14 +3,14 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller\Statement;
+namespace App\Vendoring\Controller\Statement;
 
-use App\Controller\ApiErrorResponseTrait;
-use App\Controller\VendorStatementRequestHttpResolutionTrait;
-use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
-use App\ServiceInterface\Statement\StatementExporterPDFInterface;
-use App\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
-use App\ServiceInterface\Statement\VendorStatementServiceInterface;
+use App\Vendoring\Controller\ApiErrorResponseTrait;
+use App\Vendoring\Controller\VendorStatementRequestHttpResolutionTrait;
+use App\Vendoring\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
+use App\Vendoring\ServiceInterface\Statement\StatementExporterPDFInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

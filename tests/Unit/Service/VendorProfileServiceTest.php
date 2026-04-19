@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\DTO\VendorProfileDTO;
-use App\Entity\Vendor;
-use App\Entity\VendorProfile;
-use App\RepositoryInterface\VendorProfileRepositoryInterface;
-use App\Service\VendorProfileService;
+use App\Vendoring\DTO\VendorProfileDTO;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorProfile;
+use App\Vendoring\RepositoryInterface\VendorProfileRepositoryInterface;
+use App\Vendoring\Service\VendorProfileService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

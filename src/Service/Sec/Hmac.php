@@ -4,10 +4,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Sec;
+namespace App\Vendoring\Service\Sec;
 
-use App\DTO\Sec\HmacVerificationDTO;
-use App\ServiceInterface\Sec\HmacInterface;
+use App\Vendoring\DTO\Sec\HmacVerificationDTO;
+use App\Vendoring\ServiceInterface\Sec\HmacInterface;
 
 final class Hmac implements HmacInterface
 {

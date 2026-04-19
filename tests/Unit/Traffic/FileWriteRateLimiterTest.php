@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Traffic;
+namespace App\Vendoring\Tests\Unit\Traffic;
 
-use App\Service\Traffic\FileWriteRateLimiter;
+use App\Vendoring\Service\Traffic\FileWriteRateLimiter;
 use PHPUnit\Framework\TestCase;
 
 final class FileWriteRateLimiterTest extends TestCase

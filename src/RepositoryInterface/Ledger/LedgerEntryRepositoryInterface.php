@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\RepositoryInterface\Ledger;
+namespace App\Vendoring\RepositoryInterface\Ledger;
 
-use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
-use App\Entity\Ledger\LedgerEntry;
+use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\Vendoring\Entity\Ledger\LedgerEntry;
 use Doctrine\DBAL\Exception;
 
 interface LedgerEntryRepositoryInterface

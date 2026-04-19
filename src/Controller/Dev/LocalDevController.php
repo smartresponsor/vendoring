@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Dev;
+namespace App\Vendoring\Controller\Dev;
 
-use App\Support\AppEnvResolver;
+use App\Vendoring\Support\AppEnvResolver;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

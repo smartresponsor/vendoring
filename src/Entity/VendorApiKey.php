@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Vendoring\Entity;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: 'App\\Repository\\VendorApiKeyRepository')]
+#[ORM\Entity(repositoryClass: 'App\Vendoring\\Repository\\VendorApiKeyRepository')]
 #[ORM\Table(
     name: 'vendor_api_key',
     indexes: [

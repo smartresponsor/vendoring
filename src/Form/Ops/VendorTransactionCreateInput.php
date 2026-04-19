@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Form\Ops;
+namespace App\Vendoring\Form\Ops;
 
 final class VendorTransactionCreateInput
 {

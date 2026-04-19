@@ -7,13 +7,13 @@ declare(strict_types=1);
  * Owner: Marketing America Corp
  */
 
-namespace App\Tests\Category;
+namespace App\Vendoring\Tests\Category;
 
-use App\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
-use App\Policy\CategorySyndicationPolicyAwarePackageGatePolicy;
-use App\Service\CatalogSyndicationPolicyAwarePackageGateService;
-use App\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface;
-use App\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface;
+use App\Vendoring\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
+use App\Vendoring\Policy\CategorySyndicationPolicyAwarePackageGatePolicy;
+use App\Vendoring\Service\CatalogSyndicationPolicyAwarePackageGateService;
+use App\Vendoring\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface;
+use App\Vendoring\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface;
 use PHPUnit\Framework\TestCase;
 
 final class CatalogSyndicationPolicyAwarePackageGateServiceTest extends TestCase
@@ -21,9 +21,9 @@ final class CatalogSyndicationPolicyAwarePackageGateServiceTest extends TestCase
     public function testBuildGatedPublishPackageResolvesPublishabilityViaPolicy(): void
     {
         $fallbackAwareGateService = new class implements CatalogSyndicationFallbackAwarePackageGateServiceInterface {
-            public function buildGatedPublishPackage(CatalogSyndicationPublishPackageRequestDTO $request): \App\EventInterface\CategorySyndicationFallbackAwarePackageGatedInterface
+            public function buildGatedPublishPackage(CatalogSyndicationPublishPackageRequestDTO $request): \App\Vendoring\EventInterface\CategorySyndicationFallbackAwarePackageGatedInterface
             {
-                return new \App\Event\CategorySyndicationFallbackAwarePackageGated([
+                return new \App\Vendoring\Event\CategorySyndicationFallbackAwarePackageGated([
                     'packageId' => $request->packageId,
                     'destinationId' => $request->destinationId,
                     'categoryId' => $request->categoryId,
@@ -42,9 +42,9 @@ final class CatalogSyndicationPolicyAwarePackageGateServiceTest extends TestCase
         };
 
         $preferenceService = new class implements CatalogDestinationMediaPolicyPreferenceServiceInterface {
-            public function evaluate(string $destinationId, string $categoryId, string $actorId, string $reason): \App\EventInterface\CategoryDestinationMediaPolicyPreferenceEvaluatedInterface
+            public function evaluate(string $destinationId, string $categoryId, string $actorId, string $reason): \App\Vendoring\EventInterface\CategoryDestinationMediaPolicyPreferenceEvaluatedInterface
             {
-                return new \App\Event\CategoryDestinationMediaPolicyPreferenceEvaluated([
+                return new \App\Vendoring\Event\CategoryDestinationMediaPolicyPreferenceEvaluated([
                     'destinationId' => $destinationId,
                     'categoryId' => $categoryId,
                     'mediaPolicyMode' => 'allow_fallback',

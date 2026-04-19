@@ -4,13 +4,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\DTO\VendorCreateDTO;
-use App\DTO\VendorUpdateDTO;
-use App\Entity\Vendor;
-use App\Service\VendorService;
-use App\ServiceInterface\VendorUserAssignmentServiceInterface;
+use App\Vendoring\DTO\VendorCreateDTO;
+use App\Vendoring\DTO\VendorUpdateDTO;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Service\VendorService;
+use App\Vendoring\ServiceInterface\VendorUserAssignmentServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

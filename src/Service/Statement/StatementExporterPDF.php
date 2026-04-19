@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Statement;
+namespace App\Vendoring\Service\Statement;
 
-use App\DTO\Statement\VendorStatementRequestDTO;
-use App\ServiceInterface\Statement\StatementExporterPDFInterface;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\ServiceInterface\Statement\StatementExporterPDFInterface;
 
 final class StatementExporterPDF implements StatementExporterPDFInterface
 {

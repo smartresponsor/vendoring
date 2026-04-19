@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\Projection\VendorOwnershipView;
-use App\RepositoryInterface\VendorRepositoryInterface;
-use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
-use App\ServiceInterface\Security\VendorAuthorizationMatrixInterface;
-use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\Projection\VendorOwnershipView;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixInterface;
+use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
 
 /**
  * Builds a vendor-local ownership/access summary without pulling any external User aggregate.

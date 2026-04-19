@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller\Ledger;
+namespace App\Vendoring\Controller\Ledger;
 
-use App\ServiceInterface\Ledger\VendorSummaryServiceInterface;
+use App\Vendoring\ServiceInterface\Ledger\VendorSummaryServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

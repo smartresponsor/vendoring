@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity;
+namespace App\Vendoring\Tests\Unit\Entity;
 
-use App\Entity\VendorTransaction;
-use App\EntityInterface\VendorTransactionInterface;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\EntityInterface\VendorTransactionInterface;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -24,7 +24,7 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
         $entityAttributes = $reflection->getAttributes(Entity::class);
         self::assertCount(1, $entityAttributes);
         self::assertSame(
-            'App\\Repository\\VendorTransactionRepository',
+            'App\Vendoring\\Repository\\VendorTransactionRepository',
             $entityAttributes[0]->getArguments()['repositoryClass'] ?? null,
         );
 

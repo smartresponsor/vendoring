@@ -6,18 +6,18 @@ $root = dirname(__DIR__, 2);
 require $root . '/vendor/autoload.php';
 
 $requiredClasses = [
-    App\Entity\Vendor::class,
-    App\Entity\VendorApiKey::class,
-    App\Entity\VendorAnalytics::class,
-    App\Entity\VendorAttachment::class,
-    App\Entity\VendorBilling::class,
-    App\Entity\VendorDocument::class,
-    App\Entity\VendorLedgerBinding::class,
-    App\Entity\VendorMedia::class,
-    App\Entity\VendorPassport::class,
-    App\Entity\VendorProfile::class,
-    App\Entity\VendorSecurity::class,
-    App\Entity\VendorTransaction::class,
+    App\Vendoring\Entity\Vendor::class,
+    App\Vendoring\Entity\VendorApiKey::class,
+    App\Vendoring\Entity\VendorAnalytics::class,
+    App\Vendoring\Entity\VendorAttachment::class,
+    App\Vendoring\Entity\VendorBilling::class,
+    App\Vendoring\Entity\VendorDocument::class,
+    App\Vendoring\Entity\VendorLedgerBinding::class,
+    App\Vendoring\Entity\VendorMedia::class,
+    App\Vendoring\Entity\VendorPassport::class,
+    App\Vendoring\Entity\VendorProfile::class,
+    App\Vendoring\Entity\VendorSecurity::class,
+    App\Vendoring\Entity\VendorTransaction::class,
 ];
 
 foreach ($requiredClasses as $className) {

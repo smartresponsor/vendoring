@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Ops;
+namespace App\Vendoring\Controller\Ops;
 
-use App\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
-use App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
+use App\Vendoring\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
+use App\Vendoring\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

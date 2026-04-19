@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Statement;
+namespace App\Vendoring\Tests\Unit\Statement;
 
-use App\DTO\Statement\VendorStatementRequestDTO;
-use App\Entity\Ledger\LedgerEntry;
-use App\Service\Statement\VendorStatementService;
-use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
+use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\Entity\Ledger\LedgerEntry;
+use App\Vendoring\Service\Statement\VendorStatementService;
+use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
 
 final class VendorStatementServiceTest extends TestCase

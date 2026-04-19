@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-namespace App\EventInterface;
+namespace App\Vendoring\EventInterface;
 
 interface CategorySyndicationGovernanceTrailRecordedInterface extends PayloadEventInterface {}

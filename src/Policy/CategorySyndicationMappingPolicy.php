@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Policy;
+namespace App\Vendoring\Policy;
 
-use App\PolicyInterface\CategorySyndicationMappingPolicyInterface;
+use App\Vendoring\PolicyInterface\CategorySyndicationMappingPolicyInterface;
 use InvalidArgumentException;
 
 final class CategorySyndicationMappingPolicy implements CategorySyndicationMappingPolicyInterface

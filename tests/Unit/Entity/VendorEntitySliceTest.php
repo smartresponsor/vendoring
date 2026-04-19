@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity;
+namespace App\Vendoring\Tests\Unit\Entity;
 
-use App\Entity\Vendor;
-use App\Entity\VendorApiKey;
-use App\Entity\VendorBilling;
-use App\Entity\VendorDocument;
-use App\Entity\VendorPassport;
-use App\Entity\VendorTransaction;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorApiKey;
+use App\Vendoring\Entity\VendorBilling;
+use App\Vendoring\Entity\VendorDocument;
+use App\Vendoring\Entity\VendorPassport;
+use App\Vendoring\Entity\VendorTransaction;
 use PHPUnit\Framework\TestCase;
 
 final class VendorEntitySliceTest extends TestCase

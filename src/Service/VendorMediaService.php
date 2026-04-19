@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\DTO\VendorAttachmentDTO;
-use App\DTO\VendorMediaUploadDTO;
-use App\Entity\Vendor;
-use App\Entity\VendorAttachment;
-use App\Entity\VendorMedia;
-use App\Event\VendorAttachmentUploadedEvent;
-use App\Event\VendorMediaUploadedEvent;
-use App\RepositoryInterface\VendorMediaRepositoryInterface;
-use App\ServiceInterface\VendorMediaServiceInterface;
+use App\Vendoring\DTO\VendorAttachmentDTO;
+use App\Vendoring\DTO\VendorMediaUploadDTO;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorAttachment;
+use App\Vendoring\Entity\VendorMedia;
+use App\Vendoring\Event\VendorAttachmentUploadedEvent;
+use App\Vendoring\Event\VendorMediaUploadedEvent;
+use App\Vendoring\RepositoryInterface\VendorMediaRepositoryInterface;
+use App\Vendoring\ServiceInterface\VendorMediaServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 

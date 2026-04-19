@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Vendoring\Event;
 
-use App\Entity\VendorAttachment;
+use App\Vendoring\Entity\VendorAttachment;
 
 final readonly class VendorAttachmentUploadedEvent
 {

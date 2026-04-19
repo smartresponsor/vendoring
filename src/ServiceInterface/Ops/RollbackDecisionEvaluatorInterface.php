@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Ops;
+namespace App\Vendoring\ServiceInterface\Ops;
 
 /**
  * Read-side contract for converting a release manifest into an operational rollback decision.

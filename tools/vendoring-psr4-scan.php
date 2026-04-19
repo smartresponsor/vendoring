@@ -214,7 +214,7 @@ foreach ($it as $node) {
     $expectedNs = 'App';
     if (str_starts_with($dirRel . '/', 'src/')) {
         $suffix = substr($dirRel, strlen('src/'));
-        // Legacy path alias: src/ServiceInterface/<Domain>/Service/<X> -> App\ServiceInterface\<Domain>\<X>
+        // Legacy path alias: src/ServiceInterface/<Domain>/Service/<X> -> App\Vendoring\ServiceInterface\<Domain>\<X>
         $suffix = preg_replace('#^ServiceInterface/([^/]+)/Service/#', 'ServiceInterface/$1/', $suffix) ?? $suffix;
         if ('' !== $suffix && '.' !== $suffix) {
             $expectedNs .= '\\' . str_replace('/', '\\', $suffix);

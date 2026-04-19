@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\Event\CategoryDestinationMediaPolicyPreferenceEvaluated;
-use App\EventInterface\CategoryDestinationMediaPolicyPreferenceEvaluatedInterface;
-use App\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface;
+use App\Vendoring\Event\CategoryDestinationMediaPolicyPreferenceEvaluated;
+use App\Vendoring\EventInterface\CategoryDestinationMediaPolicyPreferenceEvaluatedInterface;
+use App\Vendoring\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface;
 use DateTimeImmutable;
 
 final class CatalogDestinationMediaPolicyPreferenceService implements CatalogDestinationMediaPolicyPreferenceServiceInterface

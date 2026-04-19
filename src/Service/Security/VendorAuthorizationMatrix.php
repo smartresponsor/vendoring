@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Security;
+namespace App\Vendoring\Service\Security;
 
-use App\ServiceInterface\Security\VendorAuthorizationMatrixInterface;
-use App\ValueObject\VendorRole;
+use App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixInterface;
+use App\Vendoring\ValueObject\VendorRole;
 
 /**
  * Canonical capability matrix for vendor-local human roles.

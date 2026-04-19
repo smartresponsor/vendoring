@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Service\Ledger;
+namespace App\Vendoring\Service\Ledger;
 
-use App\DTO\Ledger\DoubleEntryDTO;
-use App\Entity\Ledger\LedgerEntry;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\ServiceInterface\Ledger\VendorDoubleEntryServiceInterface;
+use App\Vendoring\DTO\Ledger\DoubleEntryDTO;
+use App\Vendoring\Entity\Ledger\LedgerEntry;
+use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\ServiceInterface\Ledger\VendorDoubleEntryServiceInterface;
 use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
 use Symfony\Component\Uid\Uuid;

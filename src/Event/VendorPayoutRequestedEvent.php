@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Vendoring\Event;
 
-use App\Entity\VendorBilling;
+use App\Vendoring\Entity\VendorBilling;
 
 final readonly class VendorPayoutRequestedEvent
 {

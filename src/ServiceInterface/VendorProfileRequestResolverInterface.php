@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\DTO\VendorProfileDTO;
+use App\Vendoring\DTO\VendorProfileDTO;
 
 interface VendorProfileRequestResolverInterface
 {

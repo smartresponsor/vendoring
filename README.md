@@ -103,11 +103,11 @@ If you only need transaction + payout surfaces, keep only required routes in con
 # config/routes/vendoring_minimal.yaml
 vendor_transactions:
   path: /api/vendor-transactions
-  controller: App\Controller\VendorTransactionController
+  controller: App\Vendoring\Controller\VendorTransactionController
 
 payout:
   path: /api/payout
-  controller: App\Controller\Payout\PayoutController
+  controller: App\Vendoring\Controller\Payout\PayoutController
 ```
 
 In DI, you can alias only required interfaces in slim deployments and skip optional runtime/ops consumers.

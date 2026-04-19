@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Repository\Payout;
+namespace App\Vendoring\Tests\Unit\Repository\Payout;
 
-use App\Entity\Payout\PayoutAccount;
-use App\Repository\Payout\PayoutAccountRepository;
+use App\Vendoring\Entity\Payout\PayoutAccount;
+use App\Vendoring\Repository\Payout\PayoutAccountRepository;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

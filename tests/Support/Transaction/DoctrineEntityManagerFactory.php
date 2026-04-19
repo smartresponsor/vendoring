@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Support\Transaction;
+namespace App\Vendoring\Tests\Support\Transaction;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;

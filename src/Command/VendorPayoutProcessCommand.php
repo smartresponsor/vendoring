@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Vendoring\Command;
 
-use App\Command\Support\CommandJsonEncoder;
-use App\Command\Support\CommandOutputFormat;
-use App\Command\Support\CommandResultEmitter;
-use App\Command\Support\CommandResultEmitterInterface;
-use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
+use App\Vendoring\Command\Support\CommandJsonEncoder;
+use App\Vendoring\Command\Support\CommandOutputFormat;
+use App\Vendoring\Command\Support\CommandResultEmitter;
+use App\Vendoring\Command\Support\CommandResultEmitterInterface;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

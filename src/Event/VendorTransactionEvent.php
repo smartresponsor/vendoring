@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Event;
+namespace App\Vendoring\Event;
 
-use App\Entity\VendorTransaction;
+use App\Vendoring\Entity\VendorTransaction;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**

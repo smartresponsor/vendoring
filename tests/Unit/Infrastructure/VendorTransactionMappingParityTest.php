@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Infrastructure;
+namespace App\Vendoring\Tests\Unit\Infrastructure;
 
-use App\Entity\VendorTransaction;
+use App\Vendoring\Entity\VendorTransaction;
 use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionMappingParityTest extends TestCase

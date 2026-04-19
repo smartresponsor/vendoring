@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Command;
+namespace App\Vendoring\Tests\Unit\Command;
 
-use App\Command\VendorPayoutProcessCommand;
-use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
+use App\Vendoring\Command\VendorPayoutProcessCommand;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;

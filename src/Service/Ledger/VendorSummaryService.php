@@ -3,12 +3,12 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Ledger;
+namespace App\Vendoring\Service\Ledger;
 
 use Doctrine\DBAL\Exception;
-use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\ServiceInterface\Ledger\VendorSummaryServiceInterface;
+use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\ServiceInterface\Ledger\VendorSummaryServiceInterface;
 
 final class VendorSummaryService implements VendorSummaryServiceInterface
 {

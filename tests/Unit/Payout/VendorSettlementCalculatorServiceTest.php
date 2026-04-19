@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Payout;
+namespace App\Vendoring\Tests\Unit\Payout;
 
-use App\Entity\Ledger\LedgerEntry;
-use App\Service\Payout\VendorSettlementCalculatorService;
-use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
+use App\Vendoring\Entity\Ledger\LedgerEntry;
+use App\Vendoring\Service\Payout\VendorSettlementCalculatorService;
+use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
 
 final class VendorSettlementCalculatorServiceTest extends TestCase

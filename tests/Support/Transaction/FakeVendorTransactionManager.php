@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Support\Transaction;
+namespace App\Vendoring\Tests\Support\Transaction;
 
-use App\Entity\VendorTransaction;
-use App\ServiceInterface\VendorTransactionManagerInterface;
-use App\ValueObject\VendorTransactionData;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\ServiceInterface\VendorTransactionManagerInterface;
+use App\Vendoring\ValueObject\VendorTransactionData;
 
 final class FakeVendorTransactionManager implements VendorTransactionManagerInterface
 {

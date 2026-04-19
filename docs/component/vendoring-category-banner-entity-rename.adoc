@@ -1,6 +1,6 @@
 = Vendoring CategoryBanner Entity Rename
 
-This patch removes the generic `App\Entity\CategoryBanner` runtime class from `Vendoring`.
+This patch removes the generic `App\Vendoring\Entity\CategoryBanner` runtime class from `Vendoring`.
 
 == Refactor
 
@@ -21,7 +21,7 @@ and the class is renamed from `CategoryBanner` to `VendorCatalogCategoryBanner`.
 The combined App Kernel cannot load multiple components that declare the same FQCN:
 
 ----
-App\Entity\CategoryBanner
+App\Vendoring\Entity\CategoryBanner
 ----
 
 Both Cataloging and Vendoring now use component-scoped class names.

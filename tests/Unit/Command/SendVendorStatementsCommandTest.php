@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Command;
+namespace App\Vendoring\Tests\Unit\Command;
 
-use App\Command\SendVendorStatementsCommand;
-use App\DTO\Statement\VendorStatementRecipientDTO;
-use App\Tests\Support\Statement\FakeStatementExporterPDF;
-use App\Tests\Support\Statement\FakeVendorStatementMailerService;
-use App\Tests\Support\Statement\FakeVendorStatementRecipientProvider;
-use App\Tests\Support\Statement\FakeVendorStatementService;
+use App\Vendoring\Command\SendVendorStatementsCommand;
+use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
+use App\Vendoring\Tests\Support\Statement\FakeStatementExporterPDF;
+use App\Vendoring\Tests\Support\Statement\FakeVendorStatementMailerService;
+use App\Vendoring\Tests\Support\Statement\FakeVendorStatementRecipientProvider;
+use App\Vendoring\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 

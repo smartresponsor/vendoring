@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Policy;
+namespace App\Vendoring\Policy;
 
-use App\PolicyInterface\CategorySyndicationPolicyAwarePackageGatePolicyInterface;
-use App\ValueObject\CategorySyndicationPolicyAwarePackageGateReport;
+use App\Vendoring\PolicyInterface\CategorySyndicationPolicyAwarePackageGatePolicyInterface;
+use App\Vendoring\ValueObject\CategorySyndicationPolicyAwarePackageGateReport;
 
 final class CategorySyndicationPolicyAwarePackageGatePolicy implements CategorySyndicationPolicyAwarePackageGatePolicyInterface
 {

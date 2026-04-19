@@ -4,9 +4,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Sec;
+namespace App\Vendoring\ServiceInterface\Sec;
 
-use App\DTO\Sec\HmacVerificationDTO;
+use App\Vendoring\DTO\Sec\HmacVerificationDTO;
 
 interface HmacInterface
 {

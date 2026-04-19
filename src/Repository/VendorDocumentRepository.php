@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Repository;
+namespace App\Vendoring\Repository;
 
-use App\Entity\VendorDocument;
-use App\RepositoryInterface\VendorDocumentRepositoryInterface;
+use App\Vendoring\Entity\VendorDocument;
+use App\Vendoring\RepositoryInterface\VendorDocumentRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

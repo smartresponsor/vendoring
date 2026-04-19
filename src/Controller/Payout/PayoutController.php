@@ -3,12 +3,12 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller\Payout;
+namespace App\Vendoring\Controller\Payout;
 
-use App\Controller\ApiErrorResponseTrait;
-use App\RepositoryInterface\Payout\PayoutRepositoryInterface;
-use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
-use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
+use App\Vendoring\Controller\ApiErrorResponseTrait;
+use App\Vendoring\RepositoryInterface\Payout\PayoutRepositoryInterface;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use Doctrine\DBAL\Exception;
 use InvalidArgumentException;
 use JsonException;

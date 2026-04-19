@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Statement;
+namespace App\Vendoring\ServiceInterface\Statement;
 
-use App\DTO\Statement\VendorStatementRecipientDTO;
+use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
 
 interface VendorStatementRecipientProviderInterface
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Policy;
+namespace App\Vendoring\Service\Policy;
 
-use App\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface;
-use App\ValueObject\VendorTransactionErrorCode;
+use App\Vendoring\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface;
+use App\Vendoring\ValueObject\VendorTransactionErrorCode;
 use InvalidArgumentException;
 
 /**

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Ops;
+namespace App\Vendoring\Service\Ops;
 
-use App\Projection\VendorReleaseBaselineView;
-use App\ServiceInterface\Ops\VendorReleaseBaselineReaderInterface;
-use App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
+use App\Vendoring\Projection\VendorReleaseBaselineView;
+use App\Vendoring\ServiceInterface\Ops\VendorReleaseBaselineReaderInterface;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
 use DateTimeImmutable;
 
 /**

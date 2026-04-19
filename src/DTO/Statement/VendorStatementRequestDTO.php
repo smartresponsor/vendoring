@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DTO\Statement;
+namespace App\Vendoring\DTO\Statement;
 
 final class VendorStatementRequestDTO
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Documentation;
+namespace App\Vendoring\Tests\Unit\Documentation;
 
 use PHPUnit\Framework\TestCase;
 

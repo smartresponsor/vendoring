@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Ops;
+namespace App\Vendoring\Tests\Unit\Ops;
 
-use App\Service\Ops\ReleaseManifestBuilder;
-use App\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
-use App\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface;
+use App\Vendoring\Service\Ops\ReleaseManifestBuilder;
+use App\Vendoring\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
+use App\Vendoring\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface;
 use PHPUnit\Framework\TestCase;
 
 final class ReleaseManifestBuilderTest extends TestCase

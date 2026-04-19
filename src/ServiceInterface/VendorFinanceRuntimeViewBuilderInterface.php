@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\Projection\VendorFinanceRuntimeView;
+use App\Vendoring\Projection\VendorFinanceRuntimeView;
 use Doctrine\DBAL\Exception;
 
 interface VendorFinanceRuntimeViewBuilderInterface

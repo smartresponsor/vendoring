@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Controller;
+namespace App\Vendoring\Tests\Unit\Controller;
 
-use App\Controller\VendorProfileController;
-use App\DTO\VendorProfileDTO;
-use App\Entity\Vendor;
-use App\Projection\VendorProfileView;
-use App\RepositoryInterface\VendorRepositoryInterface;
-use App\Service\VendorProfileRequestResolver;
-use App\ServiceInterface\VendorProfileServiceInterface;
-use App\ServiceInterface\VendorProfileViewBuilderInterface;
+use App\Vendoring\Controller\VendorProfileController;
+use App\Vendoring\DTO\VendorProfileDTO;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Projection\VendorProfileView;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\Service\VendorProfileRequestResolver;
+use App\Vendoring\ServiceInterface\VendorProfileServiceInterface;
+use App\Vendoring\ServiceInterface\VendorProfileViewBuilderInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -364,12 +364,12 @@ final class FakeVendorProfileService implements VendorProfileServiceInterface
     public ?VendorProfileDTO $lastDto = null;
     public ?Vendor $lastVendor = null;
 
-    public function upsert(Vendor $vendor, VendorProfileDTO $dto): \App\Entity\VendorProfile
+    public function upsert(Vendor $vendor, VendorProfileDTO $dto): \App\Vendoring\Entity\VendorProfile
     {
         $this->lastVendor = $vendor;
         $this->lastDto = $dto;
 
-        return new \App\Entity\VendorProfile($vendor);
+        return new \App\Vendoring\Entity\VendorProfile($vendor);
     }
 }
 

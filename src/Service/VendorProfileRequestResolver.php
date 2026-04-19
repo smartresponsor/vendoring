@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\DTO\VendorProfileDTO;
-use App\ServiceInterface\VendorProfileRequestResolverInterface;
+use App\Vendoring\DTO\VendorProfileDTO;
+use App\Vendoring\ServiceInterface\VendorProfileRequestResolverInterface;
 use InvalidArgumentException;
 
 /**

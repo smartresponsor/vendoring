@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ValueObject\Traffic;
+namespace App\Vendoring\ValueObject\Traffic;
 
 final readonly class WriteRateLimitDecision
 {

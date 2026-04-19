@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Observability\Service;
+namespace App\Vendoring\Observability\Service;
 
-use App\ServiceInterface\Observability\CorrelationContextInterface;
+use App\Vendoring\ServiceInterface\Observability\CorrelationContextInterface;
 
 /**
  * In-memory request-scoped holder for the active correlation identifier.

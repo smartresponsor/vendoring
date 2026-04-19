@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Metric;
+namespace App\Vendoring\Controller\Metric;
 
 use Doctrine\DBAL\Exception;
-use App\DTO\Metric\VendorMetricOverviewRequestDTO;
-use App\DTO\Metric\VendorMetricTrendRequestDTO;
-use App\ServiceInterface\Metric\VendorMetricServiceInterface;
+use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
+use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
+use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

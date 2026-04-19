@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Policy;
+namespace App\Vendoring\Policy;
 
-use App\PolicyInterface\CategorySyndicationGovernanceTrailPolicyInterface;
-use App\ValueObject\CategorySyndicationGovernanceTrailReport;
+use App\Vendoring\PolicyInterface\CategorySyndicationGovernanceTrailPolicyInterface;
+use App\Vendoring\ValueObject\CategorySyndicationGovernanceTrailReport;
 
 final class CategorySyndicationGovernanceTrailPolicy implements CategorySyndicationGovernanceTrailPolicyInterface
 {

@@ -3,11 +3,11 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Payout;
+namespace App\Vendoring\Service\Payout;
 
-use App\DTO\Payout\CreatePayoutDTO;
-use App\Entity\Payout\Payout;
-use App\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
+use App\Vendoring\DTO\Payout\CreatePayoutDTO;
+use App\Vendoring\Entity\Payout\Payout;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use InvalidArgumentException;
 
 final class VendorPayoutRequestService implements VendorPayoutRequestServiceInterface

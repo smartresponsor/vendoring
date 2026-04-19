@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Ledger;
+namespace App\Vendoring\Entity\Ledger;
 
 final class LedgerEntry
 {

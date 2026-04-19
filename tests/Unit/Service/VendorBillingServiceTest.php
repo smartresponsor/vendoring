@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\DTO\VendorBillingDTO;
-use App\Entity\Vendor;
-use App\Entity\VendorBilling;
-use App\Event\VendorPayoutCompletedEvent;
-use App\Event\VendorPayoutRequestedEvent;
-use App\RepositoryInterface\VendorBillingRepositoryInterface;
-use App\Service\VendorBillingService;
+use App\Vendoring\DTO\VendorBillingDTO;
+use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\VendorBilling;
+use App\Vendoring\Event\VendorPayoutCompletedEvent;
+use App\Vendoring\Event\VendorPayoutRequestedEvent;
+use App\Vendoring\RepositoryInterface\VendorBillingRepositoryInterface;
+use App\Vendoring\Service\VendorBillingService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

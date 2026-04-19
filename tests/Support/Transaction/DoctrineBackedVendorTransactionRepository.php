@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Support\Transaction;
+namespace App\Vendoring\Tests\Support\Transaction;
 
-use App\Entity\VendorTransaction;
-use App\RepositoryInterface\VendorTransactionRepositoryInterface;
+use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 

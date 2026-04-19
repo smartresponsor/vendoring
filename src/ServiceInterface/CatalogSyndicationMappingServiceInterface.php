@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Vendoring\ServiceInterface;
 
-use App\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
-use App\EventInterface\CategorySyndicationPublishPackageBuiltInterface;
+use App\Vendoring\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
+use App\Vendoring\EventInterface\CategorySyndicationPublishPackageBuiltInterface;
 
 interface CatalogSyndicationMappingServiceInterface
 {

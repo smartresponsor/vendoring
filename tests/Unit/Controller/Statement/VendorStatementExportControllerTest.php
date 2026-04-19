@@ -3,15 +3,15 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Controller\Statement;
+namespace App\Vendoring\Tests\Unit\Controller\Statement;
 
-use App\Controller\Statement\VendorStatementExportController;
-use App\DTO\Api\StatementWindowQueryRequestDTO;
-use App\Exception\ApiQueryValidationException;
-use App\Service\Statement\VendorStatementRequestResolver;
-use App\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
-use App\Tests\Support\Statement\FakeStatementExporterPDF;
-use App\Tests\Support\Statement\FakeVendorStatementService;
+use App\Vendoring\Controller\Statement\VendorStatementExportController;
+use App\Vendoring\DTO\Api\StatementWindowQueryRequestDTO;
+use App\Vendoring\Exception\ApiQueryValidationException;
+use App\Vendoring\Service\Statement\VendorStatementRequestResolver;
+use App\Vendoring\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
+use App\Vendoring\Tests\Support\Statement\FakeStatementExporterPDF;
+use App\Vendoring\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

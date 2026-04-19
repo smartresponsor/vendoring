@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Vendoring\Service;
 
-use App\Event\CategoryDestinationMediaFallbackEvaluated;
-use App\EventInterface\CategoryDestinationMediaFallbackEvaluatedInterface;
-use App\ServiceInterface\CatalogDestinationMediaFallbackServiceInterface;
+use App\Vendoring\Event\CategoryDestinationMediaFallbackEvaluated;
+use App\Vendoring\EventInterface\CategoryDestinationMediaFallbackEvaluatedInterface;
+use App\Vendoring\ServiceInterface\CatalogDestinationMediaFallbackServiceInterface;
 use DateTimeImmutable;
 
 final class CatalogDestinationMediaFallbackService implements CatalogDestinationMediaFallbackServiceInterface

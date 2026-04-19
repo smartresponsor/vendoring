@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Vendoring\Event;
 
-use App\EventInterface\CategorySyndicationFallbackAwarePackageGatedInterface;
+use App\Vendoring\EventInterface\CategorySyndicationFallbackAwarePackageGatedInterface;
 
 final class CategorySyndicationFallbackAwarePackageGated extends AbstractPayloadEvent implements CategorySyndicationFallbackAwarePackageGatedInterface {}

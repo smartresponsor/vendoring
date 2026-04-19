@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Service\Security\VendorAuthorizationMatrix;
-use App\Service\Security\VendorAccessResolver;
-use App\ValueObject\VendorRole;
-use App\Entity\VendorUserAssignment;
-use App\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Service\Security\VendorAuthorizationMatrix;
+use App\Vendoring\Service\Security\VendorAccessResolver;
+use App\Vendoring\ValueObject\VendorRole;
+use App\Vendoring\Entity\VendorUserAssignment;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
@@ -21,9 +21,9 @@ if ($matrix->can(VendorRole::VIEWER, 'payouts.write')) {
 }
 
 $repository = new class implements VendorUserAssignmentRepositoryInterface {
-    public function save(\App\EntityInterface\VendorUserAssignmentInterface $assignment, bool $flush = false): void {}
-    public function remove(\App\EntityInterface\VendorUserAssignmentInterface $assignment, bool $flush = false): void {}
-    public function findPrimaryForVendorId(int $vendorId): ?\App\EntityInterface\VendorUserAssignmentInterface
+    public function save(\App\Vendoring\EntityInterface\VendorUserAssignmentInterface $assignment, bool $flush = false): void {}
+    public function remove(\App\Vendoring\EntityInterface\VendorUserAssignmentInterface $assignment, bool $flush = false): void {}
+    public function findPrimaryForVendorId(int $vendorId): ?\App\Vendoring\EntityInterface\VendorUserAssignmentInterface
     {
         return null;
     }
@@ -35,7 +35,7 @@ $repository = new class implements VendorUserAssignmentRepositoryInterface {
     {
         return [];
     }
-    public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?\App\EntityInterface\VendorUserAssignmentInterface
+    public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?\App\Vendoring\EntityInterface\VendorUserAssignmentInterface
     {
         return null;
     }

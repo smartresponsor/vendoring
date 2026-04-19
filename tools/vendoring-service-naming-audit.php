@@ -13,27 +13,27 @@ if (!is_dir($serviceDir)) {
 
 /** @var array<string, true> $componentScopedNamespaces */
 $componentScopedNamespaces = [
-    'App\\Service\\Payout\\' => true,
-    'App\\Service\\Ledger\\' => true,
-    'App\\Service\\Statement\\' => true,
-    'App\\Service\\WebhooksConsumer\\' => true,
-    'App\\Service\\' => true,
+    'App\Vendoring\\Service\\Payout\\' => true,
+    'App\Vendoring\\Service\\Ledger\\' => true,
+    'App\Vendoring\\Service\\Statement\\' => true,
+    'App\Vendoring\\Service\\WebhooksConsumer\\' => true,
+    'App\Vendoring\\Service\\' => true,
 ];
 
 /** @var array<string, true> $alwaysAllowed */
 $alwaysAllowed = [
-    'App\\Service\\VendorService' => true,
-    'App\\Service\\VendorPassportService' => true,
-    'App\\Service\\VendorUserAssignmentService' => true,
-    'App\\Service\\VendorProfileService' => true,
-    'App\\Service\\VendorDocumentService' => true,
-    'App\\Service\\VendorMediaService' => true,
-    'App\\Service\\VendorBillingService' => true,
-    'App\\Service\\VendorApiKeyService' => true,
-    'App\\Service\\VendorSecurityService' => true,
-    'App\\Service\\Statement\\VendorStatementService' => true,
-    'App\\Service\\Metric\\VendorMetricService' => true,
-    'App\\Service\\Ledger\\VendorSummaryService' => true,
+    'App\Vendoring\\Service\\VendorService' => true,
+    'App\Vendoring\\Service\\VendorPassportService' => true,
+    'App\Vendoring\\Service\\VendorUserAssignmentService' => true,
+    'App\Vendoring\\Service\\VendorProfileService' => true,
+    'App\Vendoring\\Service\\VendorDocumentService' => true,
+    'App\Vendoring\\Service\\VendorMediaService' => true,
+    'App\Vendoring\\Service\\VendorBillingService' => true,
+    'App\Vendoring\\Service\\VendorApiKeyService' => true,
+    'App\Vendoring\\Service\\VendorSecurityService' => true,
+    'App\Vendoring\\Service\\Statement\\VendorStatementService' => true,
+    'App\Vendoring\\Service\\Metric\\VendorMetricService' => true,
+    'App\Vendoring\\Service\\Ledger\\VendorSummaryService' => true,
 ];
 
 $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($serviceDir));

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Policy;
+namespace App\Vendoring\Tests\Unit\Policy;
 
-use App\Service\Policy\OutboundOperationPolicy;
+use App\Vendoring\Service\Policy\OutboundOperationPolicy;
 use PHPUnit\Framework\TestCase;
 
 final class OutboundOperationPolicyTest extends TestCase

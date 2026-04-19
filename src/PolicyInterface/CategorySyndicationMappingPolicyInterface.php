@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\PolicyInterface;
+namespace App\Vendoring\PolicyInterface;
 
 interface CategorySyndicationMappingPolicyInterface
 {

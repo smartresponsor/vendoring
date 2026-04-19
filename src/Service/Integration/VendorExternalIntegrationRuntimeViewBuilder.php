@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Integration;
+namespace App\Vendoring\Service\Integration;
 
-use App\Projection\VendorExternalIntegrationRuntimeView;
-use App\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
-use App\ServiceInterface\Payout\VendorPayoutProviderServiceInterface;
-use App\ServiceInterface\VendorCrmServiceInterface;
-use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
-use App\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface;
+use App\Vendoring\Projection\VendorExternalIntegrationRuntimeView;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutProviderServiceInterface;
+use App\Vendoring\ServiceInterface\VendorCrmServiceInterface;
+use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface;
 
 /**
  * Builds a vendor-local summary for neighboring integration seams.

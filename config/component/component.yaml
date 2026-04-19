@@ -4,7 +4,7 @@ component:
   title: Vendoring
   package: vendoring/vendor
   status: rc
-  namespace: App
+  namespace: App\Vendoring
   responsibility: "vendor, supplier, and partner registry surfaces"
   export_contract:
     services: config/component/services.yaml
@@ -23,7 +23,7 @@ component:
     entities_as_transport_contracts: false
 
   symfony_bundle:
-    class: App\VendoringBundle
-    extension: App\DependencyInjection\VendoringExtension
+    class: App\Vendoring\VendoringBundle
+    extension: App\Vendoring\DependencyInjection\VendoringExtension
     services_loaded_by_extension: config/component/services.yaml
     routes_import_required_by_host: config/component/routes.yaml

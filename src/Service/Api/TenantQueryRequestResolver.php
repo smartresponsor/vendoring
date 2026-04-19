@@ -3,11 +3,11 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Api;
+namespace App\Vendoring\Service\Api;
 
-use App\DTO\Api\TenantQueryRequestDTO;
-use App\Exception\ApiQueryValidationException;
-use App\ServiceInterface\Api\TenantQueryRequestResolverInterface;
+use App\Vendoring\DTO\Api\TenantQueryRequestDTO;
+use App\Vendoring\Exception\ApiQueryValidationException;
+use App\Vendoring\ServiceInterface\Api\TenantQueryRequestResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 

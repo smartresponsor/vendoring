@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Support\Statement;
+namespace App\Vendoring\Tests\Support\Statement;
 
-use App\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 
 final class FakeVendorStatementMailerService implements VendorStatementMailerServiceInterface
 {
