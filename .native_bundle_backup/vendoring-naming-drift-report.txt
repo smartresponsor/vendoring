@@ -1,0 +1,156 @@
+Vendoring naming drift report
+Canonical bundle/workspace prefix: vendoring
+Entity names may remain Vendor inside domain classes
+
+config\component\api_platform.yaml:6: - '%kernel.project_dir%/vendor/vendoring/vendor/src/ApiResource'
+config\component\component.yaml:3: name: vendoring
+config\component\component.yaml:4: title: Vendoring
+config\component\component.yaml:5: package: vendoring/vendor
+config\component\component.yaml:7: namespace: App\Vendoring
+config\component\component.yaml:8: responsibility: "vendor, supplier, and partner registry surfaces"
+config\component\component.yaml:26: class: App\Vendoring\VendoringBundle
+config\component\component.yaml:27: extension: App\Vendoring\DependencyInjection\VendoringExtension
+config\component\component.yaml:29: configuration_class: App\Vendoring\DependencyInjection\Configuration
+config\component\doctrine.yaml:6: Vendoring:
+config\component\doctrine.yaml:9: dir: '%kernel.project_dir%/vendor/vendoring/vendor/src/Entity'
+config\component\doctrine.yaml:10: prefix: 'App\Vendoring\Entity'
+config\component\doctrine.yaml:11: alias: Vendoring
+config\component\env.yaml:2: component: vendoring
+config\component\security.yaml:2: component: vendoring
+config\component\services.yaml:2: - { resource: '../vendor_services_transactions.yaml' }
+config\component\services.yaml:5: vendoring_secret: '%kernel.secret%'
+config\component\services.yaml:6: vendoring_feature_flags: { }
+config\component\services.yaml:7: vendoring_observability_dir: '%kernel.project_dir%/var/observability'
+config\component\services.yaml:8: vendoring_fault_tolerance_dir: '%kernel.project_dir%/var/fault-tolerance'
+config\component\services.yaml:9: vendoring_alert_thresholds:
+config\component\services.yaml:13: vendoring_rollback_thresholds:
+config\component\services.yaml:25: App\Vendoring\:
+config\component\services.yaml:40: App\Vendoring\Controller\:
+config\component\services.yaml:44: App\Vendoring\RepositoryInterface\VendorAnalyticsRepositoryInterface: '@App\Vendoring\Repository\VendorAnalyticsRepository'
+config\component\services.yaml:45: App\Vendoring\RepositoryInterface\VendorAttachmentRepositoryInterface: '@App\Vendoring\Repository\VendorAttachmentRepository'
+config\component\services.yaml:46: App\Vendoring\RepositoryInterface\VendorDocumentRepositoryInterface: '@App\Vendoring\Repository\VendorDocumentRepository'
+config\component\services.yaml:47: App\Vendoring\RepositoryInterface\VendorLedgerBindingRepositoryInterface: '@App\Vendoring\Repository\VendorLedgerBindingRepository'
+config\component\services.yaml:48: App\Vendoring\RepositoryInterface\VendorSecurityRepositoryInterface: '@App\Vendoring\Repository\VendorSecurityRepository'
+config\component\services.yaml:49: App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface: '@App\Vendoring\Repository\VendorUserAssignmentRepository'
+config\component\services.yaml:50: App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface: '@App\Vendoring\Repository\VendorTransactionRepository'
+config\component\services.yaml:52: App\Vendoring\ServiceInterface\VendorCrmServiceInterface: '@App\Vendoring\Service\VendorCrmService'
+config\component\services.yaml:53: App\Vendoring\ServiceInterface\Policy\OutboundOperationPolicyInterface: '@App\Vendoring\Service\Policy\OutboundOperationPolicy'
+config\component\services.yaml:54: App\Vendoring\ServiceInterface\Reliability\OutboundCircuitBreakerInterface: '@App\Vendoring\Service\Reliability\FileOutboundCircuitBreaker'
+config\component\services.yaml:55: App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixInterface: '@App\Vendoring\Service\Security\VendorAuthorizationMatrix'
+config\component\services.yaml:56: App\Vendoring\ServiceInterface\Security\VendorAccessResolverInterface: '@App\Vendoring\Service\Security\VendorAccessResolver'
+config\component\services.yaml:57: App\Vendoring\ServiceInterface\VendorBillingServiceInterface: '@App\Vendoring\Service\VendorBillingService'
+config\component\services.yaml:58: App\Vendoring\ServiceInterface\Observability\CorrelationContextInterface: '@App\Vendoring\Observability\Service\CorrelationContext'
+config\component\services.yaml:59: App\Vendoring\ServiceInterface\Observability\ObservabilityRecordExporterInterface: '@App\Vendoring\Observability\Service\FileObservabilityRecordExporter'
+config\component\services.yaml:60: App\Vendoring\ServiceInterface\Observability\MetricCollectorInterface: '@App\Vendoring\Observability\Service\ChainMetricCollector'
+config\component\services.yaml:61: App\Vendoring\ServiceInterface\Observability\RuntimeLoggerInterface: '@App\Vendoring\Observability\Service\RuntimeLogger'
+config\component\services.yaml:62: App\Vendoring\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface: '@App\Vendoring\Observability\Service\MonitoringSnapshotBuilder'
+config\component\services.yaml:63: App\Vendoring\ServiceInterface\Observability\AlertRuleEvaluatorInterface: '@App\Vendoring\Observability\Service\AlertRuleEvaluator'
+config\component\services.yaml:64: App\Vendoring\ServiceInterface\Traffic\WriteRateLimiterInterface: '@App\Vendoring\Service\Traffic\FileWriteRateLimiter'
+config\component\services.yaml:65: App\Vendoring\ServiceInterface\Rollout\TrafficCohortResolverInterface: '@App\Vendoring\Service\Rollout\TrafficCohortResolver'
+config\component\services.yaml:66: App\Vendoring\ServiceInterface\Rollout\FeatureFlagServiceInterface: '@App\Vendoring\Service\Rollout\FeatureFlagService'
+config\component\services.yaml:67: App\Vendoring\ServiceInterface\Rollout\CanaryRolloutCoordinatorInterface: '@App\Vendoring\Service\Rollout\CanaryRolloutCoordinator'
+config\component\services.yaml:68: App\Vendoring\ServiceInterface\CatalogMerchServiceInterface: '@App\Vendoring\Service\CatalogMerchService'
+config\component\services.yaml:69: App\Vendoring\ServiceInterface\CatalogSyndicationMappingServiceInterface: '@App\Vendoring\Service\CatalogSyndicationMappingService'
+config\component\services.yaml:70: App\Vendoring\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface: '@App\Vendoring\Service\CatalogSyndicationFallbackAwarePackageGateService'
+config\component\services.yaml:71: App\Vendoring\ServiceInterface\CatalogSyndicationPolicyAwarePackageGateServiceInterface: '@App\Vendoring\Service\CatalogSyndicationPolicyAwarePackageGateService'
+config\component\services.yaml:72: App\Vendoring\ServiceInterface\CatalogSyndicationGovernanceTrailServiceInterface: '@App\Vendoring\Service\CatalogSyndicationGovernanceTrailService'
+config\component\services.yaml:73: App\Vendoring\ServiceInterface\CatalogDestinationMediaReadinessServiceInterface: '@App\Vendoring\Service\CatalogDestinationMediaReadinessService'
+config\component\services.yaml:74: App\Vendoring\ServiceInterface\CatalogDestinationMediaFallbackServiceInterface: '@App\Vendoring\Service\CatalogDestinationMediaFallbackService'
+config\component\services.yaml:75: App\Vendoring\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface: '@App\Vendoring\Service\CatalogDestinationMediaPolicyPreferenceService'
+config\component\services.yaml:76: App\Vendoring\ServiceInterface\VendorDocumentServiceInterface: '@App\Vendoring\Service\VendorDocumentService'
+config\component\services.yaml:77: App\Vendoring\ServiceInterface\VendorMediaServiceInterface: '@App\Vendoring\Service\VendorMediaService'
+config\component\services.yaml:78: App\Vendoring\ServiceInterface\VendorPassportServiceInterface: '@App\Vendoring\Service\VendorPassportService'
+config\component\services.yaml:79: App\Vendoring\ServiceInterface\VendorProfileServiceInterface: '@App\Vendoring\Service\VendorProfileService'
+config\component\services.yaml:80: App\Vendoring\ServiceInterface\VendorServiceInterface: '@App\Vendoring\Service\VendorService'
+config\component\services.yaml:81: App\Vendoring\ServiceInterface\VendorUserAssignmentServiceInterface: '@App\Vendoring\Service\VendorUserAssignmentService'
+config\component\services.yaml:82: App\Vendoring\ServiceInterface\Ledger\VendorDoubleEntryServiceInterface: '@App\Vendoring\Service\Ledger\VendorDoubleEntryService'
+config\component\services.yaml:83: App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface: '@App\Vendoring\Service\Ledger\VendorLedgerService'
+config\component\services.yaml:84: App\Vendoring\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface: '@App\Vendoring\Service\Ops\VendorTransactionOperatorPageBuilder'
+config\component\services.yaml:85: App\Vendoring\ServiceInterface\Category\CategoryApproxTotalServiceInterface: '@App\Vendoring\Service\Category\CategoryApproxTotalService'
+config\component\services.yaml:86: App\Vendoring\ServiceInterface\Category\CategoryCollectionServiceInterface: '@App\Vendoring\Service\Category\CategoryCollectionService'
+config\component\services.yaml:87: App\Vendoring\ServiceInterface\Category\CategoryRuleEngineInterface: '@App\Vendoring\Service\Category\Rule\CategoryRuleEngine'
+config\component\services.yaml:88: App\Vendoring\ServiceInterface\Category\CategoryRuleSuggestServiceInterface: '@App\Vendoring\Service\Category\Suggest\CategoryRuleSuggestService'
+config\component\services.yaml:89: App\Vendoring\ServiceInterface\Search\TfidfSearchInterface: '@App\Vendoring\Service\Search\TfidfSearch'
+config\component\services.yaml:90: App\Vendoring\ServiceInterface\Sec\HmacInterface: '@App\Vendoring\Service\Sec\Hmac'
+config\component\services.yaml:91: App\Vendoring\ServiceInterface\Payout\VendorPayoutProviderServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutProviderService'
+config\component\services.yaml:92: App\Vendoring\ServiceInterface\Payout\VendorSettlementCalculatorServiceInterface: '@App\Vendoring\Service\Payout\VendorSettlementCalculatorService'
+config\component\services.yaml:93: App\Vendoring\RepositoryInterface\VendorApiKeyRepositoryInterface: '@App\Vendoring\Repository\VendorApiKeyRepository'
+config\component\services.yaml:94: App\Vendoring\RepositoryInterface\VendorRepositoryInterface: '@App\Vendoring\Repository\VendorRepository'
+config\component\services.yaml:95: App\Vendoring\RepositoryInterface\VendorProfileRepositoryInterface: '@App\Vendoring\Repository\VendorProfileRepository'
+config\component\services.yaml:96: App\Vendoring\RepositoryInterface\VendorBillingRepositoryInterface: '@App\Vendoring\Repository\VendorBillingRepository'
+config\component\services.yaml:97: App\Vendoring\RepositoryInterface\VendorMediaRepositoryInterface: '@App\Vendoring\Repository\VendorMediaRepository'
+config\component\services.yaml:98: App\Vendoring\RepositoryInterface\VendorPassportRepositoryInterface: '@App\Vendoring\Repository\VendorPassportRepository'
+config\component\services.yaml:99: App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface: '@App\Vendoring\Repository\Ledger\LedgerEntryRepository'
+config\component\services.yaml:100: App\Vendoring\RepositoryInterface\Payout\PayoutRepositoryInterface: '@App\Vendoring\Repository\Payout\PayoutRepository'
+config\component\services.yaml:101: App\Vendoring\RepositoryInterface\Payout\PayoutAccountRepositoryInterface: '@App\Vendoring\Repository\Payout\PayoutAccountRepository'
+config\component\services.yaml:103: App\Vendoring\ServiceInterface\VendorApiKeyServiceInterface: '@App\Vendoring\Service\VendorApiKeyService'
+config\component\services.yaml:104: App\Vendoring\ServiceInterface\Api\TenantQueryRequestResolverInterface: '@App\Vendoring\Service\Api\TenantQueryRequestResolver'
+config\component\services.yaml:105: App\Vendoring\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface: '@App\Vendoring\Service\Api\StatementWindowQueryRequestResolver'
+config\component\services.yaml:106: App\Vendoring\ServiceInterface\VendorSecurityServiceInterface: '@App\Vendoring\Service\VendorSecurityService'
+config\component\services.yaml:107: App\Vendoring\ServiceInterface\VendorSecurityStateViewBuilderInterface: '@App\Vendoring\Service\VendorSecurityStateViewBuilder'
+config\component\services.yaml:108: App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface: '@App\Vendoring\Service\VendorOwnershipViewBuilder'
+config\component\services.yaml:109: App\Vendoring\ServiceInterface\VendorProfileViewBuilderInterface: '@App\Vendoring\Service\VendorProfileViewBuilder'
+config\component\services.yaml:110: App\Vendoring\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface: '@App\Vendoring\Service\VendorFinanceRuntimeViewBuilder'
+config\component\services.yaml:111: App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface: '@App\Vendoring\Service\Integration\VendorExternalIntegrationRuntimeViewBuilder'
+config\component\services.yaml:112: App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface: '@App\Vendoring\Service\Ops\VendorRuntimeStatusViewBuilder'
+config\component\services.yaml:113: App\Vendoring\ServiceInterface\Ops\VendorReleaseBaselineReaderInterface: '@App\Vendoring\Service\Ops\VendorReleaseBaselineReader'
+config\component\services.yaml:114: App\Vendoring\ServiceInterface\Ops\ReleaseManifestBuilderInterface: '@App\Vendoring\Service\Ops\ReleaseManifestBuilder'
+config\component\services.yaml:115: App\Vendoring\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface: '@App\Vendoring\Service\Ops\RollbackDecisionEvaluator'
+config\component\services.yaml:116: App\Vendoring\ServiceInterface\VendorTransactionManagerInterface: '@App\Vendoring\Service\VendorTransactionManager'
+config\component\services.yaml:117: App\Vendoring\ServiceInterface\VendorTransactionInputResolverServiceInterface: '@App\Vendoring\Service\VendorTransactionInputResolverService'
+config\component\services.yaml:118: App\Vendoring\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface: '@App\Vendoring\Service\Policy\VendorTransactionStatusPolicy'
+config\component\services.yaml:119: App\Vendoring\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface: '@App\Vendoring\Service\Policy\VendorTransactionAmountPolicy'
+config\component\services.yaml:120: App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface: '@App\Vendoring\Service\Metric\VendorMetricService'
+config\component\services.yaml:121: App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutService'
+config\component\services.yaml:122: App\Vendoring\ServiceInterface\Payout\VendorPayoutRequestServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutRequestService'
+config\component\services.yaml:123: App\Vendoring\ServiceInterface\Payout\VendorPayoutAccountServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutAccountService'
+config\component\services.yaml:124: App\Vendoring\ServiceInterface\Ledger\VendorSummaryServiceInterface: '@App\Vendoring\Service\Ledger\VendorSummaryService'
+config\component\services.yaml:125: App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementService'
+config\component\services.yaml:126: App\Vendoring\ServiceInterface\Statement\StatementExporterPDFInterface: '@App\Vendoring\Service\Statement\StatementExporterPDF'
+config\component\services.yaml:127: App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementMailerService'
+config\component\services.yaml:128: App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderInterface: '@App\Vendoring\Service\Statement\VendorStatementRecipientProvider'
+config\component\services.yaml:129: App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface: '@App\Vendoring\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder'
+config\component\services.yaml:130: App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverInterface: '@App\Vendoring\Service\Statement\VendorStatementRequestResolver'
+config\component\services.yaml:131: App\Vendoring\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface: '@App\Vendoring\Service\WebhooksConsumer\VendorWebhooksConsumerService'
+config\component\services.yaml:132: App\Vendoring\PolicyInterface\CategorySyndicationMappingPolicyInterface: '@App\Vendoring\Policy\CategorySyndicationMappingPolicy'
+config\component\services.yaml:133: App\Vendoring\PolicyInterface\CategorySyndicationFallbackAwarePackageGatePolicyInterface: '@App\Vendoring\Policy\CategorySyndicationFallbackAwarePackageGatePolicy'
+config\component\services.yaml:134: App\Vendoring\PolicyInterface\CategorySyndicationPolicyAwarePackageGatePolicyInterface: '@App\Vendoring\Policy\CategorySyndicationPolicyAwarePackageGatePolicy'
+config\component\services.yaml:135: App\Vendoring\PolicyInterface\CategorySyndicationGovernanceTrailPolicyInterface: '@App\Vendoring\Policy\CategorySyndicationGovernanceTrailPolicy'
+config\component\services.yaml:137: App\Vendoring\Observability\Service\FileObservabilityRecordExporter:
+config\component\services.yaml:139: $observabilityDir: '%vendoring_observability_dir%'
+config\component\services.yaml:141: App\Vendoring\Observability\Service\MonitoringSnapshotBuilder:
+config\component\services.yaml:143: $observabilityDir: '%vendoring_observability_dir%'
+config\component\services.yaml:144: $faultToleranceDir: '%vendoring_fault_tolerance_dir%'
+config\component\services.yaml:147: App\Vendoring\Observability\Service\AlertRuleEvaluator:
+config\component\services.yaml:149: $thresholds: '%vendoring_alert_thresholds%'
+config\component\services.yaml:151: App\Vendoring\Service\Reliability\FileOutboundCircuitBreaker:
+config\component\services.yaml:153: $stateDir: '%vendoring_fault_tolerance_dir%/circuit-breakers'
+config\component\services.yaml:155: App\Vendoring\Observability\Service\MetricEmitter:
+config\component\services.yaml:158: App\Vendoring\Observability\Service\RuntimeMetricCollector:
+config\component\services.yaml:161: App\Vendoring\Observability\Service\ChainMetricCollector:
+config\component\services.yaml:164: - '@App\Vendoring\Observability\Service\MetricEmitter'
+config\component\services.yaml:165: - '@App\Vendoring\Observability\Service\RuntimeMetricCollector'
+config\component\services.yaml:167: App\Vendoring\Service\Rollout\FeatureFlagService:
+config\component\services.yaml:169: $flags: '%vendoring_feature_flags%'
+config\component\services.yaml:171: App\Vendoring\Service\Ops\ReleaseManifestBuilder:
+config\component\services.yaml:175: App\Vendoring\Service\Ops\RollbackDecisionEvaluator:
+config\component\services.yaml:177: $thresholds: '%vendoring_rollback_thresholds%'
+config\component\services.yaml:179: App\Vendoring\Service\VendorProfileRequestResolver:
+config\component\services.yaml:182: App\Vendoring\ServiceInterface\VendorProfileRequestResolverInterface: '@App\Vendoring\Service\VendorProfileRequestResolver'
+config\component\smoke.yaml:2: component: vendoring
+config\component\smoke.yaml:6: path: var/evidence/vendoring/
+config\packages\doctrine.yaml:3: url: '%env(default:vendor.dsn:VENDOR_DSN)%'
+config\packages\doctrine.yaml:7: Vendoring:
+config\packages\doctrine.yaml:10: prefix: 'App\Vendoring\Entity'
+config\packages\framework.yaml:2: secret: '%env(default:vendoring_secret:APP_SECRET)%'
+config\packages\vendoring.yaml:1: vendoring:
+config\bundles.php:8: App\Vendoring\VendoringBundle::class => ['all' => true],
+config\reference.php:294: *         vendor_dir?: scalar|Param|null, // The directory to store JavaScript vendors. // Default: "%kernel.project_dir%/assets/vendor"
+config\reference.php:880: *     vendoring?: VendoringConfig,
+config\reference.php:887: *         vendoring?: VendoringConfig,
+config\routes_runtime.php:9: if ('1' === ($_ENV['VENDOR_RUNTIME_HARNESS'] ?? $_SERVER['VENDOR_RUNTIME_HARNESS'] ?? null)) {
+config\routes_runtime.php:25: $routes->import(__DIR__.'/routes/vendor_nelmio_api_doc.yaml');
+config\vendor_services_transactions.yaml:2: App\Vendoring\Repository\VendorTransactionRepository: ~
+config\vendor_services_transactions.yaml:4: App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface: '@App\Vendoring\Repository\VendorTransactionRepository'
+config\vendor_services_transactions.yaml:6: App\Vendoring\Service\VendorTransactionManager: ~
+config\vendor_services_transactions.yaml:8: App\Vendoring\ServiceInterface\VendorTransactionManagerInterface: '@App\Vendoring\Service\VendorTransactionManager'

@@ -1,0 +1,3 @@
+vendoring:
+    observability_dir: '%kernel.project_dir%/var/observability'
+    fault_tolerance_dir: '%kernel.project_dir%/var/fault-tolerance'

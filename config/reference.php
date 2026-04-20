@@ -867,6 +867,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         resolve_target_entities?: array<string, scalar|Param|null>,
  *     },
  * }
+ * @psalm-type VendoringConfig = array{
+ *     observability_dir?: scalar|Param|null, // Default: "%kernel.project_dir%/var/observability"
+ *     fault_tolerance_dir?: scalar|Param|null, // Default: "%kernel.project_dir%/var/fault-tolerance"
+ * }
  * @psalm-type TwigConfig = array{
  *     form_themes?: list<scalar|Param|null>,
  *     globals?: array<string, array{ // Default: []
@@ -955,6 +959,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     services?: ServicesConfig,
  *     framework?: FrameworkConfig,
  *     doctrine?: DoctrineConfig,
+ *     vendoring?: VendoringConfig,
  *     twig?: TwigConfig,
  *     nelmio_api_doc?: NelmioApiDocConfig,
  *     "when@dev"?: array{
@@ -963,15 +968,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
- *         twig?: TwigConfig,
- *         nelmio_api_doc?: NelmioApiDocConfig,
- *     },
- *     "when@test"?: array{
- *         imports?: ImportsConfig,
- *         parameters?: ParametersConfig,
- *         services?: ServicesConfig,
- *         framework?: FrameworkConfig,
- *         doctrine?: DoctrineConfig,
+ *         vendoring?: VendoringConfig,
  *         twig?: TwigConfig,
  *         nelmio_api_doc?: NelmioApiDocConfig,
  *     },
@@ -1058,7 +1055,6 @@ namespace Symfony\Component\Routing\Loader\Configurator;
  * }
  * @psalm-type RoutesConfig = array{
  *     "when@dev"?: array<string, RouteConfig|ImportConfig|AliasConfig>,
- *     "when@test"?: array<string, RouteConfig|ImportConfig|AliasConfig>,
  *     ...<string, RouteConfig|ImportConfig|AliasConfig>
  * }
  */

@@ -11,9 +11,7 @@ final class InterfaceAliasCoverageTest extends TestCase
 {
     public function testServicesConfigurationCoversCanonicalRepositoryAndServiceInterfaces(): void
     {
-        $services = (string) file_get_contents(dirname(__DIR__, 3) . '/config/vendor_services.yaml');
-        $servicesVendorTransactions = (string) file_get_contents(dirname(__DIR__, 3) . '/config/vendor_services_transactions.yaml');
-        $config = $services . "\n" . $servicesVendorTransactions;
+        $config = (string) file_get_contents(dirname(__DIR__, 3) . '/config/component/services.yaml');
 
         foreach ($this->expectedAliasMap() as $interfaceClass => $implementationClass) {
             self::assertStringContainsString($interfaceClass . ':', $config, 'Missing alias for ' . $interfaceClass);

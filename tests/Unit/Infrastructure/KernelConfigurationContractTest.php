@@ -8,13 +8,22 @@ use PHPUnit\Framework\TestCase;
 
 final class KernelConfigurationContractTest extends TestCase
 {
-    public function testServicesYamlImportsVendorTransactionsAndAppResource(): void
+    public function testLegacyHostBridgeImportsCanonicalComponentServices(): void
     {
         $services = (string) file_get_contents(dirname(__DIR__, 3) . '/config/vendor_services.yaml');
 
-        self::assertStringContainsString('vendor_services_transactions.yaml', $services);
-        self::assertStringContainsString('App\Vendoring\\:', $services);
-        self::assertStringContainsString('../src/Entity/', $services);
+        self::assertStringContainsString("resource: 'component/services.yaml'", $services);
+        self::assertStringContainsString('canonical reusable-bundle surface', $services);
+    }
+
+    public function testCanonicalComponentServicesExportOwnsAppResourceAndTransactionsBridge(): void
+    {
+        $services = (string) file_get_contents(dirname(__DIR__, 3) . '/config/component/services.yaml');
+
+        self::assertStringContainsString("resource: '../vendor_services_transactions.yaml'", $services);
+        self::assertStringContainsString('App\\Vendoring\\:', $services);
+        self::assertStringContainsString('../../src/Entity/', $services);
+        self::assertStringContainsString("resource: '../../src/Controller/'", $services);
     }
 
     public function testRoutesYamlImportsControllerAttributesAndVendorTransactionsRoutes(): void

@@ -32,6 +32,37 @@ vendoring_component:
   resource: '@VendoringBundle/config/component/routes.yaml'
 ----
 
+
+== External bundle configuration
+
+The bundle now exposes a canonical `vendoring:` configuration tree for reusable-host consumption.
+Hosts should prefer semantic bundle configuration over ad hoc application parameters.
+
+[source,yaml]
+----
+# config/packages/vendoring.yaml
+vendoring:
+  secret: '%kernel.secret%'
+  observability_dir: '%kernel.project_dir%/var/observability'
+  fault_tolerance_dir: '%kernel.project_dir%/var/fault-tolerance'
+  feature_flags:
+    vendor_portal:
+      enabled: true
+      cohorts: ['beta']
+  alert_thresholds:
+    errorLogThreshold: 1
+    openBreakerThreshold: 1
+    missingProbeThreshold: 1
+  rollback_thresholds:
+    criticalAlertCodes: ['outbound_circuit_open']
+    warningAlertCodes: ['runtime_error_spike', 'probe_artifacts_missing', 'observability_metrics_empty']
+----
+
+== Canonical service export
+
+`config/component/services.yaml` is the canonical service graph for bundle consumption.
+`config/vendor_services.yaml` remains only as a thin legacy host bridge and must not diverge from the component export.
+
 == Boundary rule
 
 Do not move component business logic into the central App.
