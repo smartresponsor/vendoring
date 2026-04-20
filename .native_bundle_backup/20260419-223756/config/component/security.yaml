@@ -1,6 +1,0 @@
-component_security:
-  component: vendoring
-  voters: auto_discovered_by_services
-  roles: []
-  public_routes: []
-  host_security_owner: true

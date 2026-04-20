@@ -1,9 +1,0 @@
-nelmio_api_doc:
-    documentation:
-        info:
-            title: 'Vendoring API'
-            description: 'Release-candidate API documentation surface for the vendoring component.'
-            version: 'rc-runtime'
-    areas:
-        default:
-            path_patterns: ['^/api']

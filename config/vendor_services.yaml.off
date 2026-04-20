@@ -1,5 +1,0 @@
-imports:
-  - { resource: 'component/services.yaml' }
-
-# Legacy host bridge file kept for App-mode kernels.
-# The canonical reusable-bundle surface lives in config/component/services.yaml.

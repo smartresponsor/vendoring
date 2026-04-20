@@ -1,6 +1,0 @@
-smoke:
-  component: vendoring
-  console: []
-  http: []
-  evidence:
-    path: var/evidence/vendoring/
