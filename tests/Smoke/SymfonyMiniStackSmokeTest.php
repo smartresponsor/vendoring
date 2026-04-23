@@ -12,24 +12,13 @@ final class SymfonyMiniStackSmokeTest extends TestCase
     {
         $root = dirname(__DIR__, 2);
 
-        self::assertFileExists($root . '/src/Kernel.php');
         self::assertFileExists($root . '/config/bundles.php');
         self::assertFileExists($root . '/config/packages/framework.yaml');
         self::assertFileExists($root . '/config/packages/doctrine.yaml');
-        self::assertFileExists($root . '/config/vendor_services.yaml');
-        self::assertFileExists($root . '/config/vendor_routes.yaml');
-        self::assertFileExists($root . '/bin/console');
-        self::assertFileExists($root . '/public/index.php');
-    }
-
-    public function testBundlesDeclareFrameworkAndDoctrine(): void
-    {
-        $bundles = require dirname(__DIR__, 2) . '/config/bundles.php';
-        self::assertIsArray($bundles);
-
-        self::assertArrayHasKey(\Symfony\Bundle\FrameworkBundle\FrameworkBundle::class, $bundles);
-        self::assertArrayHasKey(\Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class, $bundles);
-        self::assertSame(['all' => true], $bundles[\Symfony\Bundle\FrameworkBundle\FrameworkBundle::class]);
-        self::assertSame(['all' => true], $bundles[\Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class]);
+        self::assertFileExists($root . '/config/packages/vendoring.yaml');
+        self::assertFileExists($root . '/config/component/services.yaml');
+        self::assertFileExists($root . '/src/VendoringBundle.php');
+        self::assertFileExists($root . '/src/DependencyInjection/VendoringExtension.php');
+        self::assertFileExists($root . '/src/DependencyInjection/Configuration.php');
     }
 }

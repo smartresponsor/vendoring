@@ -1,3 +1,7 @@
+parameters:
+    vendoring.dsn: 'sqlite:%kernel.project_dir%/var/vendor.sqlite'
+    vendor.dsn: '%vendoring.dsn%'
+
 doctrine:
     dbal:
         url: '%env(default:vendor.dsn:VENDOR_DSN)%'

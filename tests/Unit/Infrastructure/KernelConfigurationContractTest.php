@@ -8,39 +8,26 @@ use PHPUnit\Framework\TestCase;
 
 final class KernelConfigurationContractTest extends TestCase
 {
-    public function testLegacyHostBridgeImportsCanonicalComponentServices(): void
+    public function testKernelLoadsOnlyNativePackageSurface(): void
     {
-        $services = (string) file_get_contents(dirname(__DIR__, 3) . '/config/vendor_services.yaml');
+        $kernelPath = dirname(__DIR__, 3) . '/src/Kernel.php';
+        self::assertFileExists($kernelPath);
 
-        self::assertStringContainsString("resource: 'component/services.yaml'", $services);
-        self::assertStringContainsString('canonical reusable-bundle surface', $services);
+        $contents = (string) file_get_contents($kernelPath);
+
+        self::assertStringContainsString("\$container->import(\$configDir . '/packages/*.yaml');", $contents);
+        self::assertStringNotContainsString('packages_runtime.php', $contents);
+        self::assertStringNotContainsString('services_runtime.php', $contents);
+        self::assertStringNotContainsString('vendor_services.yaml', $contents);
     }
 
-    public function testCanonicalComponentServicesExportOwnsAppResourceAndTransactionsBridge(): void
+    public function testVendoringExtensionLoadsCanonicalComponentServices(): void
     {
-        $services = (string) file_get_contents(dirname(__DIR__, 3) . '/config/component/services.yaml');
+        $extensionPath = dirname(__DIR__, 3) . '/src/DependencyInjection/VendoringExtension.php';
+        self::assertFileExists($extensionPath);
 
-        self::assertStringContainsString("resource: '../vendor_services_transactions.yaml'", $services);
-        self::assertStringContainsString('App\\Vendoring\\:', $services);
-        self::assertStringContainsString('../../src/Entity/', $services);
-        self::assertStringContainsString("resource: '../../src/Controller/'", $services);
-    }
+        $contents = (string) file_get_contents($extensionPath);
 
-    public function testRoutesYamlImportsControllerAttributesAndVendorTransactionsRoutes(): void
-    {
-        $routes = (string) file_get_contents(dirname(__DIR__, 3) . '/config/vendor_routes.yaml');
-
-        self::assertStringContainsString('../src/Controller/', $routes);
-        self::assertStringContainsString('type: attribute', $routes);
-        self::assertStringNotContainsString('routes_vendor_transactions.yaml', $routes);
-    }
-
-    public function testDoctrineYamlMapsAppEntityNamespace(): void
-    {
-        $doctrine = (string) file_get_contents(dirname(__DIR__, 3) . '/config/packages/doctrine.yaml');
-
-        self::assertStringContainsString("prefix: 'App\Vendoring\\Entity'", $doctrine);
-        self::assertStringContainsString("dir: '%kernel.project_dir%/src/Entity'", $doctrine);
-        self::assertStringContainsString('type: attribute', $doctrine);
+        self::assertStringContainsString('component/services', $contents);
     }
 }

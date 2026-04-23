@@ -12,7 +12,7 @@ final class DoctrineEntityManagerFactory
 {
     public static function createSqliteMemoryEntityManager(string $projectRoot): EntityManager
     {
-        $config = ORMSetup::createAttributeMetadataConfiguration(
+        $config = ORMSetup::createAttributeMetadataConfig(
             paths: [$projectRoot . '/src/Entity'],
             isDevMode: true,
         );

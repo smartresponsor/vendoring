@@ -17,26 +17,32 @@ final class VendoringExtension extends Extension
 {
     /**
      * @param array<int, array<string, mixed>> $configs
-     * @param ContainerBuilder $container
+     *
      * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $configuration = $this->getConfiguration($configs, $container);
+        $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('vendoring_observability_dir', $config['observability_dir']);
-        $container->setParameter('vendoring_fault_tolerance_dir', $config['fault_tolerance_dir']);
+        /** @var string $observabilityDir */
+        $observabilityDir = $config['observability_dir'];
 
-        $configDirectory = __DIR__ . '/../../config/component';
-        $servicesFile = $configDirectory . '/services.yaml';
+        /** @var string $faultToleranceDir */
+        $faultToleranceDir = $config['fault_tolerance_dir'];
+
+        $container->setParameter('vendoring_observability_dir', $observabilityDir);
+        $container->setParameter('vendoring_fault_tolerance_dir', $faultToleranceDir);
+
+        $configDirectory = __DIR__ . '/../../config';
+        $servicesFile = $configDirectory . '/component/services.yaml';
 
         if (!is_file($servicesFile)) {
             return;
         }
 
         $loader = new YamlFileLoader($container, new FileLocator($configDirectory));
-        $loader->load('services.yaml');
+        $loader->load('component/services.yaml');
     }
 
     public function getAlias(): string
@@ -44,7 +50,10 @@ final class VendoringExtension extends Extension
         return 'vendoring';
     }
 
-    public function getConfiguration(array $config, ContainerBuilder $container): ?ConfigurationInterface
+    /**
+     * @param array<string, mixed> $config
+     */
+    public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
     {
         return new Configuration();
     }

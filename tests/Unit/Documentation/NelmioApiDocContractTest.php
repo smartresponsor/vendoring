@@ -8,25 +8,16 @@ use PHPUnit\Framework\TestCase;
 
 final class NelmioApiDocContractTest extends TestCase
 {
-    public function testNelmioApiDocPackageConfigDefinesReleaseCandidateSurface(): void
+    public function testNelmioApiDocPackageConfigDefinesNativeSurface(): void
     {
-        $config = (string) file_get_contents(dirname(__DIR__, 3) . '/config/packages/nelmio_api_doc.yaml');
+        $path = dirname(__DIR__, 3) . '/config/packages/nelmio_api_doc.yaml';
+        self::assertFileExists($path);
 
-        self::assertStringContainsString('nelmio_api_doc:', $config);
-        self::assertStringContainsString("title: 'Vendoring API'", $config);
-        self::assertStringContainsString("description: 'Release-candidate API documentation surface for the vendoring component.'", $config);
-        self::assertStringContainsString("version: '1.0.0-rc'", $config);
-        self::assertStringContainsString('^/api(?!/doc$)', $config);
-        self::assertStringContainsString('^/api(?!/doc\\.json$)', $config);
-    }
+        $contents = (string) file_get_contents($path);
 
-    public function testRuntimeRoutingImportsNelmioSwaggerUiSurface(): void
-    {
-        $routesRuntime = (string) file_get_contents(dirname(__DIR__, 3) . '/config/routes_runtime.php');
-        $routes = (string) file_get_contents(dirname(__DIR__, 3) . '/config/routes/vendor_nelmio_api_doc.yaml');
-
-        self::assertStringContainsString("routes->import(__DIR__.'/routes/vendor_nelmio_api_doc.yaml');", $routesRuntime);
-        self::assertStringContainsString("resource: '@NelmioApiDocBundle/Resources/config/routing/swaggerui.xml'", $routes);
-        self::assertStringContainsString('prefix: /api/doc', $routes);
+        self::assertStringContainsString("title: 'Vendoring API'", $contents);
+        self::assertStringContainsString("description: 'Vendoring API surface'", $contents);
+        self::assertStringContainsString("version: 'native'", $contents);
+        self::assertStringContainsString("path_patterns: ['^/api']", $contents);
     }
 }

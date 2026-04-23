@@ -962,7 +962,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     vendoring?: VendoringConfig,
  *     twig?: TwigConfig,
  *     nelmio_api_doc?: NelmioApiDocConfig,
- *     "when@dev"?: array{
+ *     "when@test"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
  *         services?: ServicesConfig,
@@ -1054,7 +1054,7 @@ namespace Symfony\Component\Routing\Loader\Configurator;
  *     deprecated?: array{package:string, version:string, message?:string},
  * }
  * @psalm-type RoutesConfig = array{
- *     "when@dev"?: array<string, RouteConfig|ImportConfig|AliasConfig>,
+ *     "when@test"?: array<string, RouteConfig|ImportConfig|AliasConfig>,
  *     ...<string, RouteConfig|ImportConfig|AliasConfig>
  * }
  */
