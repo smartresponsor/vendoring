@@ -9,7 +9,6 @@ use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
 use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
 use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
-use Doctrine\DBAL\Exception;
 
 final readonly class VendorMetricService implements VendorMetricServiceInterface
 {
@@ -17,7 +16,6 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
         private LedgerEntryRepositoryInterface $ledger,
     ) {}
 
-    /** @throws Exception */
     public function overview(VendorMetricOverviewRequestDTO $request): array
     {
         $revenue = max(0.0, $this->ledger->sumByAccount(new LedgerAccountSumCriteriaDTO(
@@ -59,7 +57,6 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
         ];
     }
 
-    /** @throws Exception */
     public function trends(VendorMetricTrendRequestDTO $request): array
     {
         $overview = $this->overview(new VendorMetricOverviewRequestDTO(

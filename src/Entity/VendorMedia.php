@@ -4,20 +4,40 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: 'App\Vendoring\\Repository\\VendorMediaRepository')]
+#[ORM\Table(name: 'vendor_media')]
+#[ORM\UniqueConstraint(name: 'uniq_vendor_media_vendor', columns: ['vendor_id'])]
 /**
  * @noinspection PhpPropertyNamingConventionInspection
  */
 final class VendorMedia
 {
-    /** @var int|null */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     // @phpstan-ignore-next-line
     private ?int $id = null;
+
+    #[ORM\OneToOne(targetEntity: Vendor::class)]
+    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private Vendor $vendor;
+
+    #[ORM\Column(name: 'logo_path', type: 'string', length: 1024, nullable: true)]
     private ?string $logoPath = null;
+
+    #[ORM\Column(name: 'banner_path', type: 'string', length: 1024, nullable: true)]
     private ?string $bannerPath = null;
+
     /** @var list<string>|null */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $gallery = null;
 
-    public function __construct(private readonly Vendor $vendor) {}
+    public function __construct(Vendor $vendor)
+    {
+        $this->vendor = $vendor;
+    }
 
     /** @param list<string>|null $gallery */
     public function update(?string $logoPath = null, ?string $bannerPath = null, ?array $gallery = null): void

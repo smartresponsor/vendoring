@@ -180,3 +180,5 @@ services:
     arguments: []
 
   App\Vendoring\ServiceInterface\VendorProfileRequestResolverInterface: '@App\Vendoring\Service\VendorProfileRequestResolver'
+  App\Vendoring\ServiceInterface\Ownership\VendorOwnershipWriteServiceInterface: '@App\Vendoring\Service\VendorOwnershipWriteService'
+  App\Vendoring\ServiceInterface\Ownership\VendorOwnershipWriteRequestResolverInterface: '@App\Vendoring\Service\VendorOwnershipWriteRequestResolver'

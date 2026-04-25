@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Controller\Metric;
 
-use Doctrine\DBAL\Exception;
 use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
 use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
@@ -19,7 +18,6 @@ final class VendorMetricController extends AbstractController
     public function __construct(private readonly VendorMetricServiceInterface $svc) {}
 
     #[Route('/{vendorId}/overview', methods: ['GET'])]
-    /** @throws Exception */
     public function overview(string $vendorId, Request $r): JsonResponse
     {
         $tenantId = (string) ($r->query->get('tenantId') ?? '');
@@ -41,7 +39,6 @@ final class VendorMetricController extends AbstractController
     }
 
     #[Route('/{vendorId}/trends', methods: ['GET'])]
-    /** @throws Exception */
     public function trends(string $vendorId, Request $r): JsonResponse
     {
         $tenantId = (string) ($r->query->get('tenantId') ?? '');

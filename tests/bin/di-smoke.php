@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$services = (string) file_get_contents($root . '/config/vendor_services.yaml');
+$services = (string) file_get_contents($root . '/config/component/services.yaml');
 
 $checks = [
-    'vendor_services.yaml excludes src/RepositoryInterface' => str_contains($services, '../src/RepositoryInterface/'),
-    'vendor_services.yaml excludes src/ServiceInterface' => str_contains($services, '../src/ServiceInterface/'),
-    'vendor_services.yaml excludes src/DTO' => str_contains($services, '../src/DTO/'),
-    'vendor_services.yaml aliases VendorApiKeyRepositoryInterface' => str_contains($services, 'App\Vendoring\\RepositoryInterface\\VendorApiKeyRepositoryInterface'),
-    'vendor_services.yaml aliases VendorStatementServiceInterface' => str_contains($services, 'App\Vendoring\\ServiceInterface\\Statement\\VendorStatementServiceInterface'),
-    'vendor_services.yaml aliases VendorStatementMailerServiceInterface' => str_contains($services, 'App\Vendoring\\ServiceInterface\\Statement\\VendorStatementMailerServiceInterface'),
-    'vendor_services.yaml aliases VendorWebhooksConsumerServiceInterface' => str_contains($services, 'App\Vendoring\\ServiceInterface\\WebhooksConsumer\\VendorWebhooksConsumerServiceInterface'),
+    'component/services.yaml excludes src/RepositoryInterface' => str_contains($services, '../../src/RepositoryInterface/'),
+    'component/services.yaml excludes src/ServiceInterface' => str_contains($services, '../../src/ServiceInterface/'),
+    'component/services.yaml excludes src/DTO' => str_contains($services, '../../src/DTO/'),
+    'component/services.yaml aliases VendorApiKeyRepositoryInterface' => str_contains($services, 'App\Vendoring\\RepositoryInterface\\VendorApiKeyRepositoryInterface'),
+    'component/services.yaml aliases VendorStatementServiceInterface' => str_contains($services, 'App\Vendoring\\ServiceInterface\\Statement\\VendorStatementServiceInterface'),
+    'component/services.yaml aliases VendorStatementMailerServiceInterface' => str_contains($services, 'App\Vendoring\\ServiceInterface\\Statement\\VendorStatementMailerServiceInterface'),
+    'component/services.yaml aliases VendorWebhooksConsumerServiceInterface' => str_contains($services, 'App\Vendoring\\ServiceInterface\\WebhooksConsumer\\VendorWebhooksConsumerServiceInterface'),
     'VendorApiKeyRepository exists' => is_file($root . '/src/Repository/VendorApiKeyRepository.php'),
 ];
 

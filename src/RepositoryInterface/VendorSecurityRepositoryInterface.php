@@ -16,4 +16,6 @@ use Doctrine\Persistence\ObjectRepository;
 interface VendorSecurityRepositoryInterface extends ObjectRepository
 {
     public function findOneActiveForVendorId(int $vendorId): ?VendorSecurityInterface;
+
+    public function save(VendorSecurity $vendorSecurity, bool $flush = false): void;
 }

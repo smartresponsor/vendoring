@@ -41,7 +41,13 @@ final class VendorAnalyticsRepository extends ServiceEntityRepository implements
 
     public function findOneByVendorId(string $vendorId): ?VendorAnalytics
     {
-        $entity = $this->findOneBy(['vendorId' => $vendorId]);
+        $entity = $this->createQueryBuilder('analytics')
+            ->innerJoin('analytics.vendor', 'vendor')
+            ->andWhere('vendor.id = :vendorId')
+            ->setParameter('vendorId', (int) $vendorId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
 
         return $entity instanceof VendorAnalytics ? $entity : null;
     }

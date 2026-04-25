@@ -9,7 +9,6 @@ use App\Vendoring\Entity\VendorCatalogCategoryBanner;
 use App\Vendoring\Entity\VendorCatalogCategoryHtmlBlock;
 use App\Vendoring\Entity\VendorCatalogCategoryPin;
 use App\Vendoring\ServiceInterface\CatalogMerchServiceInterface;
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class CatalogMerchService implements CatalogMerchServiceInterface
@@ -41,17 +40,27 @@ final readonly class CatalogMerchService implements CatalogMerchServiceInterface
     /**
      * @param string $categoryId
      * @param list<string> $recordIds
-     * @throws Exception
      */
     public function orderSet(string $categoryId, array $recordIds): void
     {
         $position = 0;
+        $repository = $this->entityManager->getRepository(VendorCatalogCategoryPin::class);
         foreach ($recordIds as $recordId) {
-            $this->entityManager->getConnection()->executeStatement(
-                'UPDATE category_pin SET position = ? WHERE category_id = ? AND record_id = ?',
-                [$position++, $categoryId, $recordId],
-            );
+            $pin = $repository->findOneBy([
+                'categoryId' => $categoryId,
+                'recordId' => $recordId,
+            ]);
+
+            if (null === $pin) {
+                ++$position;
+                continue;
+            }
+
+            $pin->reorder($position);
+            ++$position;
         }
+
+        $this->entityManager->flush();
     }
 
     public function bannerPublish(string $categoryId, string $title, string $content): string

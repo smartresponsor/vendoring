@@ -9,6 +9,7 @@ namespace App\Vendoring\Service;
 use App\Vendoring\DTO\VendorBillingDTO;
 use App\Vendoring\Entity\Vendor;
 use App\Vendoring\Entity\VendorBilling;
+use App\Vendoring\Entity\VendorIban;
 use App\Vendoring\Event\VendorPayoutCompletedEvent;
 use App\Vendoring\Event\VendorPayoutRequestedEvent;
 use App\Vendoring\RepositoryInterface\VendorBillingRepositoryInterface;
@@ -35,6 +36,7 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
         );
 
         $this->em->persist($billing);
+        $this->synchronizeIban($vendor, $this->normalizeNullableString($dto->iban), $this->normalizeNullableString($dto->swift));
         $this->em->flush();
 
         return $billing;
@@ -54,6 +56,29 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
         $this->em->flush();
 
         $this->dispatcher->dispatch(new VendorPayoutCompletedEvent($billing, $amountMinor));
+    }
+
+
+    private function synchronizeIban(Vendor $vendor, ?string $iban, ?string $swift): void
+    {
+        $repository = $this->em->getRepository(VendorIban::class);
+        $existing = $repository->findOneBy(['vendor' => $vendor]);
+
+        if (null === $iban) {
+            if ($existing instanceof VendorIban) {
+                $this->em->remove($existing);
+            }
+
+            return;
+        }
+
+        if ($existing instanceof VendorIban) {
+            $existing->update($iban, $swift);
+
+            return;
+        }
+
+        $this->em->persist(new VendorIban($vendor, $iban, $swift));
     }
 
     private function normalizeNullableString(?string $value): ?string

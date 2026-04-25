@@ -5,27 +5,56 @@ declare(strict_types=1);
 namespace App\Vendoring\Entity;
 
 use DateTimeImmutable;
+use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Entity(repositoryClass: 'App\Vendoring\\Repository\\VendorProfileRepository')]
+#[ORM\Table(name: 'vendor_profile')]
+#[ORM\UniqueConstraint(name: 'uniq_vendor_profile_vendor', columns: ['vendor_id'])]
 /**
  * @noinspection PhpPropertyNamingConventionInspection
  * @noinspection PhpTooManyParametersInspection
  */
 final class VendorProfile
 {
-    /** @var int|null */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     // @phpstan-ignore-next-line
     private ?int $id = null;
+
+    #[ORM\OneToOne(targetEntity: Vendor::class)]
+    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private Vendor $vendor;
+
+    #[ORM\Column(name: 'display_name', type: 'string', length: 255, nullable: true)]
     private ?string $displayName = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $about = null;
+
+    #[ORM\Column(type: 'string', length: 512, nullable: true)]
     private ?string $website = null;
+
     /** @var array<string, string>|null */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $socials = null;
+
+    #[ORM\Column(name: 'seo_title', type: 'string', length: 255, nullable: true)]
     private ?string $seoTitle = null;
+
+    #[ORM\Column(name: 'seo_description', type: 'text', nullable: true)]
     private ?string $seoDescription = null;
+
+    #[ORM\Column(name: 'public_profile_status', type: 'string', length: 32)]
     private string $publicProfileStatus = 'draft';
+
+    #[ORM\Column(name: 'public_profile_published_at', type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $publicProfilePublishedAt = null;
 
-    public function __construct(private readonly Vendor $vendor) {}
+    public function __construct(Vendor $vendor)
+    {
+        $this->vendor = $vendor;
+    }
 
     /**
      * @noinspection PhpTooManyParametersInspection

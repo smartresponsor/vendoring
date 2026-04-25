@@ -13,11 +13,13 @@ final readonly class VendorOwnershipView
 {
     /**
      * @param list<array{'userId': int, 'role': string, 'status': string, 'isPrimary': bool, 'grantedAt': string, 'revokedAt': ?string, 'capabilities': list<string>}> $assignments
+     * @param array<string, int> $relationCounts
      */
     public function __construct(
         private int $vendorId,
         private ?int $ownerUserId,
         private array $assignments,
+        private array $relationCounts = [],
     ) {}
 
     public function getVendorId(): int
@@ -39,7 +41,15 @@ final readonly class VendorOwnershipView
     }
 
     /**
-     * @return array{'vendorId': int, 'ownerUserId': ?int, 'assignments': list<array{'userId': int, 'role': string, 'status': string, 'isPrimary': bool, 'grantedAt': string, 'revokedAt': ?string, 'capabilities': list<string>}>}
+     * @return array<string, int>
+     */
+    public function getRelationCounts(): array
+    {
+        return $this->relationCounts;
+    }
+
+    /**
+     * @return array{'vendorId': int, 'ownerUserId': ?int, 'assignments': list<array{'userId': int, 'role': string, 'status': string, 'isPrimary': bool, 'grantedAt': string, 'revokedAt': ?string, 'capabilities': list<string>}>, 'relationCounts': array<string, int>}
      */
     public function toArray(): array
     {
@@ -47,6 +57,7 @@ final readonly class VendorOwnershipView
             'vendorId' => $this->vendorId,
             'ownerUserId' => $this->ownerUserId,
             'assignments' => $this->assignments,
+            'relationCounts' => $this->relationCounts,
         ];
     }
 }

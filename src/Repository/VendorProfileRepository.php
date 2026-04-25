@@ -20,4 +20,22 @@ final class VendorProfileRepository extends ServiceEntityRepository implements V
     {
         parent::__construct($registry, VendorProfile::class);
     }
+
+    public function save(VendorProfile $vendorProfile, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($vendorProfile);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(VendorProfile $vendorProfile, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($vendorProfile);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
 }

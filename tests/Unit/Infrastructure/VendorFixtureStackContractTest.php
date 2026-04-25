@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 final class VendorFixtureStackContractTest extends TestCase
 {
-    public function testDemoFixtureUsesDoctrineFixturesAndFakerWithoutDql(): void
+    public function testTransactionDemoFixtureUsesDoctrineFixturesAndFakerWithoutDql(): void
     {
         $fixturePath = dirname(__DIR__, 3) . '/src/DataFixtures/VendorTransactionDemoFixture.php';
         $source = file_get_contents($fixturePath);
@@ -20,5 +20,18 @@ final class VendorFixtureStackContractTest extends TestCase
         self::assertStringNotContainsString('createQuery(', $source);
         self::assertStringNotContainsString('createQueryBuilder(', $source);
         self::assertStringNotContainsString('DQL', $source);
+    }
+
+    public function testOwnershipDemoFixtureUsesNativeEntityMutatorsWithoutReflectionOrMidLoopFlush(): void
+    {
+        $fixturePath = dirname(__DIR__, 3) . '/src/DataFixtures/VendorOwnershipDemoFixture.php';
+        $source = file_get_contents($fixturePath);
+
+        self::assertIsString($source);
+        self::assertStringContainsString('extends Fixture', $source);
+        self::assertStringContainsString('Factory::create(', $source);
+        self::assertStringNotContainsString('ReflectionClass', $source);
+        self::assertStringNotContainsString('setAccessible(', $source);
+        self::assertSame(1, substr_count($source, 'flush();'));
     }
 }

@@ -4,20 +4,35 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: 'App\Vendoring\\Repository\\VendorAnalyticsRepository')]
+#[ORM\Table(name: 'vendor_analytics')]
+#[ORM\UniqueConstraint(name: 'uniq_vendor_analytics_vendor', columns: ['vendor_id'])]
 /**
  * @noinspection PhpPropertyNamingConventionInspection
  */
 final class VendorAnalytics
 {
-    /** @var int|null */
-    // @phpstan-ignore-next-line
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    #[ORM\OneToOne(targetEntity: Vendor::class)]
+    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private readonly Vendor $vendor;
+
+    /** @var array<string,mixed> */
+    #[ORM\Column(type: 'json')]
+    private array $metrics = [];
+
     /** @param array<string,mixed> $metrics */
-    public function __construct(
-        private readonly Vendor $vendor,
-        private readonly array  $metrics = [],
-    ) {}
+    public function __construct(Vendor $vendor, array $metrics = [])
+    {
+        $this->vendor = $vendor;
+        $this->metrics = $metrics;
+    }
 
     public function getId(): ?int
     {

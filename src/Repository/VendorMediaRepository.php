@@ -20,4 +20,22 @@ final class VendorMediaRepository extends ServiceEntityRepository implements Ven
     {
         parent::__construct($registry, VendorMedia::class);
     }
+
+    public function save(VendorMedia $vendorMedia, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($vendorMedia);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(VendorMedia $vendorMedia, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($vendorMedia);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
 }

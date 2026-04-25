@@ -6,7 +6,6 @@ namespace App\Vendoring\ServiceInterface\Metric;
 
 use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
-use Doctrine\DBAL\Exception;
 
 interface VendorMetricServiceInterface
 {
@@ -22,7 +21,6 @@ interface VendorMetricServiceInterface
      *   'payouts': float,
      *   'balance': float
      * }
-     * @throws Exception
      */
     public function overview(VendorMetricOverviewRequestDTO $request): array;
 
@@ -40,7 +38,6 @@ interface VendorMetricServiceInterface
      *   'payouts': float,
      *   'balance': float
      * }>
-     * @throws Exception
      */
     public function trends(VendorMetricTrendRequestDTO $request): array;
 }

@@ -12,8 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Repository for transitional vendor-local security state records.
- */
-/**
+ *
  * @extends ServiceEntityRepository<VendorSecurity>
  */
 final class VendorSecurityRepository extends ServiceEntityRepository implements VendorSecurityRepositoryInterface
@@ -31,5 +30,14 @@ final class VendorSecurityRepository extends ServiceEntityRepository implements 
         ]);
 
         return $entity instanceof VendorSecurityInterface ? $entity : null;
+    }
+
+    public function save(VendorSecurity $vendorSecurity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($vendorSecurity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
     }
 }

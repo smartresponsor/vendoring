@@ -20,4 +20,22 @@ final class VendorDocumentRepository extends ServiceEntityRepository implements 
     {
         parent::__construct($registry, VendorDocument::class);
     }
+
+    public function save(VendorDocument $vendorDocument, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($vendorDocument);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(VendorDocument $vendorDocument, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($vendorDocument);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
 }

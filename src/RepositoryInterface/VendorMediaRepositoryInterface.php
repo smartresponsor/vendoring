@@ -12,4 +12,9 @@ use Doctrine\Persistence\ObjectRepository;
 /**
  * @extends ObjectRepository<VendorMedia>
  */
-interface VendorMediaRepositoryInterface extends ObjectRepository {}
+interface VendorMediaRepositoryInterface extends ObjectRepository
+{
+    public function save(VendorMedia $vendorMedia, bool $flush = false): void;
+
+    public function remove(VendorMedia $vendorMedia, bool $flush = false): void;
+}
