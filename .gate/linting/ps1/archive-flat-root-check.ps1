@@ -21,8 +21,11 @@ try {
   foreach ($e in $zip.Entries) {
     if ([string]::IsNullOrWhiteSpace($e.FullName)) { continue }
 
-    # Normalize to forward slashes.
-    $name = $e.FullName.Replace('\\', '/').TrimStart('/')
+    # Normalize to forward slashes without relying on TrimStart overloads.
+    $name = $e.FullName.Replace('\\', '/')
+    while ($name.StartsWith('/')) {
+      $name = $name.Substring(1)
+    }
     if ($name.Length -eq 0) { continue }
 
     # Skip pure directory entries.

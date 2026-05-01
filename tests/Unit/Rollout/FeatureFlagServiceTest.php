@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Rollout;
 
-use App\Vendoring\Service\Rollout\FeatureFlagService;
-use App\Vendoring\Service\Rollout\TrafficCohortResolver;
+use App\Vendoring\Service\Rollout\VendorFeatureFlagService;
+use App\Vendoring\Service\Rollout\VendorTrafficCohortResolverService;
 use PHPUnit\Framework\TestCase;
 
 final class FeatureFlagServiceTest extends TestCase
 {
     public function testUndefinedFlagIsDisabled(): void
     {
-        $service = new FeatureFlagService(new TrafficCohortResolver());
+        $service = new VendorFeatureFlagService(new VendorTrafficCohortResolverService());
 
         self::assertFalse($service->isEnabled('missing_flag', 'tenant-1', '42'));
         self::assertSame('flag_not_defined', $service->explain('missing_flag', 'tenant-1', '42')['reason']);
@@ -20,7 +20,7 @@ final class FeatureFlagServiceTest extends TestCase
 
     public function testGloballyEnabledFlagHasStableExplanation(): void
     {
-        $service = new FeatureFlagService(new TrafficCohortResolver(), [
+        $service = new VendorFeatureFlagService(new VendorTrafficCohortResolverService(), [
             'new_operator_surface' => ['enabled' => true],
         ]);
 
@@ -33,7 +33,7 @@ final class FeatureFlagServiceTest extends TestCase
 
     public function testCohortFlagEnablesOnlyMatchingScope(): void
     {
-        $service = new FeatureFlagService(new TrafficCohortResolver(), [
+        $service = new VendorFeatureFlagService(new VendorTrafficCohortResolverService(), [
             'statement_canary' => [
                 'enabled' => false,
                 'cohorts' => ['tenant:tenant-1', 'vendor:42'],

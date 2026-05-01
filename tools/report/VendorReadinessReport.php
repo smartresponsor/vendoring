@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/_vendor_report_bootstrap.php';
 
-vendorReportHeader('Vendor readiness report');
+vendorReportHeader('VendorEntity readiness report');
 
 $checks = [
     'OpenAPI generator' => 'bin/generate-openapi.php',

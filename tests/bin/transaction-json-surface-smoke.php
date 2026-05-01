@@ -11,8 +11,8 @@ if (!isset($scripts['test:transaction-json'])) {
     exit(1);
 }
 
-$controller = (string) file_get_contents(__DIR__ . '/../../src/Controller/VendorTransactionController.php');
-if (!str_contains($controller, 'VendorTransactionErrorCode::MALFORMED_JSON')) {
+$controller = (string) file_get_contents(__DIR__ . '/../../src/Controller/Vendor/VendorTransactionController.php');
+if (!str_contains($controller, 'VendorTransactionErrorCodeValueObject::MALFORMED_JSON')) {
     fwrite(STDERR, 'Controller does not map malformed JSON' . PHP_EOL);
     exit(1);
 }
@@ -31,7 +31,7 @@ if (!str_contains($controller, 'public function updateStatus')) {
     fwrite(STDERR, 'Missing updateStatus() action' . PHP_EOL);
     exit(1);
 }
-if (substr_count($controller, 'VendorTransactionErrorCode::MALFORMED_JSON') < 2) {
+if (substr_count($controller, 'VendorTransactionErrorCodeValueObject::MALFORMED_JSON') < 2) {
     fwrite(STDERR, 'Malformed JSON must be handled in both transaction actions' . PHP_EOL);
     exit(1);
 }

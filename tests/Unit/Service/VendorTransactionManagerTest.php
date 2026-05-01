@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service;
 
-use App\Vendoring\Service\VendorTransactionManager;
-use App\Vendoring\ServiceInterface\Observability\RuntimeLoggerInterface;
-use App\Vendoring\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface;
-use App\Vendoring\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface;
-use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
-use App\Vendoring\ValueObject\VendorTransactionData;
-use App\Vendoring\ValueObject\VendorTransactionErrorCode;
+use App\Vendoring\Service\Transaction\VendorTransactionManagerService;
+use App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface;
+use App\Vendoring\ServiceInterface\Policy\VendorTransactionAmountPolicyServiceInterface;
+use App\Vendoring\ServiceInterface\Policy\VendorTransactionStatusPolicyServiceInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
+use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
+use App\Vendoring\ValueObject\VendorTransactionErrorCodeValueObject;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -21,19 +21,19 @@ final class VendorTransactionManagerTest extends TestCase
 {
     private EntityManagerInterface&MockObject $entityManager;
     private EventDispatcherInterface&MockObject $dispatcher;
-    private VendorTransactionStatusPolicyInterface&MockObject $statusPolicy;
-    private VendorTransactionAmountPolicyInterface&MockObject $amountPolicy;
+    private VendorTransactionStatusPolicyServiceInterface&MockObject $statusPolicy;
+    private VendorTransactionAmountPolicyServiceInterface&MockObject $amountPolicy;
     private VendorTransactionRepositoryInterface&MockObject $transactions;
-    private RuntimeLoggerInterface&MockObject $runtimeLogger;
+    private VendorRuntimeLoggerServiceInterface&MockObject $runtimeLogger;
 
     protected function setUp(): void
     {
         $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->statusPolicy = $this->createMock(VendorTransactionStatusPolicyInterface::class);
-        $this->amountPolicy = $this->createMock(VendorTransactionAmountPolicyInterface::class);
+        $this->statusPolicy = $this->createMock(VendorTransactionStatusPolicyServiceInterface::class);
+        $this->amountPolicy = $this->createMock(VendorTransactionAmountPolicyServiceInterface::class);
         $this->transactions = $this->createMock(VendorTransactionRepositoryInterface::class);
-        $this->runtimeLogger = $this->createMock(RuntimeLoggerInterface::class);
+        $this->runtimeLogger = $this->createMock(VendorRuntimeLoggerServiceInterface::class);
     }
 
     public function testCreateTransactionRejectsDuplicateBeforePersistenceWhenBusinessKeyAlreadyExists(): void
@@ -52,9 +52,9 @@ final class VendorTransactionManagerTest extends TestCase
         $this->runtimeLogger->expects(self::never())->method('info');
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(VendorTransactionErrorCode::DUPLICATE_TRANSACTION);
+        $this->expectExceptionMessage(VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION);
 
-        $this->buildManager()->createTransaction(new VendorTransactionData(
+        $this->buildManager()->createTransaction(new VendorTransactionDataValueObject(
             vendorId: 'vendor-1',
             orderId: 'order-1',
             projectId: 'project-1',
@@ -87,7 +87,7 @@ final class VendorTransactionManagerTest extends TestCase
         $this->runtimeLogger->expects(self::never())->method('info');
 
         try {
-            $this->buildManager()->createTransaction(new VendorTransactionData(
+            $this->buildManager()->createTransaction(new VendorTransactionDataValueObject(
                 vendorId: 'vendor-1',
                 orderId: 'order-1',
                 projectId: 'project-1',
@@ -96,14 +96,14 @@ final class VendorTransactionManagerTest extends TestCase
 
             self::fail('Expected duplicate transaction error.');
         } catch (\InvalidArgumentException $exception) {
-            self::assertSame(VendorTransactionErrorCode::DUPLICATE_TRANSACTION, $exception->getMessage());
+            self::assertSame(VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION, $exception->getMessage());
             self::assertInstanceOf(UniqueConstraintViolationException::class, $exception->getPrevious());
         }
     }
 
-    private function buildManager(): VendorTransactionManager
+    private function buildManager(): VendorTransactionManagerService
     {
-        return new VendorTransactionManager(
+        return new VendorTransactionManagerService(
             $this->entityManager,
             $this->dispatcher,
             $this->statusPolicy,

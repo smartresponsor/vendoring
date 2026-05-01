@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Ledger;
 
-use App\Vendoring\DTO\Ledger\DoubleEntryDTO;
+use App\Vendoring\DTO\Ledger\VendorDoubleEntryDTO;
 use App\Vendoring\Service\Ledger\VendorDoubleEntryService;
 use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +15,7 @@ final class VendorDoubleEntryServiceTest extends TestCase
     {
         $repository = new InMemoryLedgerEntryRepository();
         $service = new VendorDoubleEntryService($repository);
-        $dto = new DoubleEntryDTO(
+        $dto = new VendorDoubleEntryDTO(
             'tenant-1',
             'VENDOR_PAYABLE',
             'REVENUE',
@@ -47,7 +47,7 @@ final class VendorDoubleEntryServiceTest extends TestCase
     {
         $repository = new InMemoryLedgerEntryRepository();
         $service = new VendorDoubleEntryService($repository);
-        $dto = new DoubleEntryDTO('tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 10.0, 'USD', 'invoice', 'inv-101');
+        $dto = new VendorDoubleEntryDTO('tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 10.0, 'USD', 'invoice', 'inv-101');
 
         $result = $service->post($dto);
 

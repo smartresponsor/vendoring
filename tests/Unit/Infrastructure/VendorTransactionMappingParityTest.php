@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Infrastructure;
 
-use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionMappingParityTest extends TestCase
 {
     public function testEntityUsesExplicitSqlAlignedColumnNames(): void
     {
-        $source = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Entity/VendorTransaction.php');
+        $source = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Entity/VendorTransactionEntity.php');
 
         self::assertStringContainsString("name: 'vendor_id'", $source);
         self::assertStringContainsString("name: 'order_id'", $source);
@@ -22,7 +22,7 @@ final class VendorTransactionMappingParityTest extends TestCase
 
     public function testDefaultStatusUsesCanonicalStatusCatalog(): void
     {
-        $transaction = new VendorTransaction(
+        $transaction = new VendorTransactionEntity(
             vendorId: 'vendor-1',
             orderId: 'order-1',
             projectId: null,

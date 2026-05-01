@@ -11,7 +11,7 @@ param(
     "var", "cache", "tmp", "temp", ".tmp", ".temp",
     ".cache", ".turbo",
     "logs", "log", ".gate", ".gating", ".commanding",
-    ".consuming", ".intelligence", ".release", ".smoke", ".canonization", ".dist"
+    ".consuming", ".intelligence", ".canonization", ".dist"
   ),
 
   # Optional: skip files by extension
@@ -28,7 +28,10 @@ $ErrorActionPreference = "Stop"
 
 function Normalize-Root([string]$p) {
   $full = (Resolve-Path -LiteralPath $p).Path
-  return $full.TrimEnd('\','/')
+  while ($full.EndsWith('\') -or $full.EndsWith('/')) {
+    $full = $full.Substring(0, $full.Length - 1)
+  }
+  return $full
 }
 
 $rootPath = Normalize-Root $Root
@@ -50,7 +53,10 @@ function Is-ExcludedFile([string]$path) {
 
 function Get-Relative([string]$fullPath) {
   if ($fullPath.StartsWith($rootPath, [StringComparison]::OrdinalIgnoreCase)) {
-    $rel = $fullPath.Substring($rootPath.Length).TrimStart('\','/')
+    $rel = $fullPath.Substring($rootPath.Length)
+    while ($rel.StartsWith('\') -or $rel.StartsWith('/')) {
+      $rel = $rel.Substring(1)
+    }
     if ([string]::IsNullOrEmpty($rel)) { return "." }
     return $rel -replace '\\','/'
   }

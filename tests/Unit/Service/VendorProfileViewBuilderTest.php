@@ -6,9 +6,9 @@ namespace App\Vendoring\Tests\Unit\Service;
 
 use App\Vendoring\Entity\Vendor;
 use App\Vendoring\Entity\VendorProfile;
-use App\Vendoring\RepositoryInterface\VendorProfileRepositoryInterface;
-use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
-use App\Vendoring\Service\VendorProfileViewBuilder;
+use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\Vendoring\Service\Profile\VendorProfileViewBuilderService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -86,9 +86,9 @@ final class VendorProfileViewBuilderTest extends TestCase
         self::assertSame([], $payload['sections']['search']['missing']);
     }
 
-    private function buildService(): VendorProfileViewBuilder
+    private function buildService(): VendorProfileViewBuilderService
     {
-        return new VendorProfileViewBuilder($this->vendorRepository, $this->profileRepository);
+        return new VendorProfileViewBuilderService($this->vendorRepository, $this->profileRepository);
     }
 
     private function forceId(Vendor $vendor, int $id): void

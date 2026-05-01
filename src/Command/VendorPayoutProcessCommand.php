@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
-use App\Vendoring\Command\Support\CommandJsonEncoder;
-use App\Vendoring\Command\Support\CommandOutputFormat;
-use App\Vendoring\Command\Support\CommandResultEmitter;
-use App\Vendoring\Command\Support\CommandResultEmitterInterface;
+use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
+use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -22,14 +22,14 @@ use Throwable;
 final class VendorPayoutProcessCommand extends Command
 {
     private readonly VendorPayoutServiceInterface $payouts;
-    private readonly CommandResultEmitterInterface $commandResultEmitter;
+    private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter;
 
     public function __construct(
         VendorPayoutServiceInterface $payouts,
-        ?CommandResultEmitterInterface $commandResultEmitter = null,
+        ?VendorCommandResultEmitterServiceInterface $commandResultEmitter = null,
     ) {
         $this->payouts = $payouts;
-        $this->commandResultEmitter = $commandResultEmitter ?? self::defaultCommandResultEmitter();
+        $this->commandResultEmitter = $commandResultEmitter ?? self::defaultVendorCommandResultEmitterService();
         parent::__construct();
     }
 
@@ -48,8 +48,8 @@ final class VendorPayoutProcessCommand extends Command
         $argument = $input->getArgument('payoutId');
         $payoutId = is_scalar($argument) ? trim((string) $argument) : '';
         $format = true === $input->getOption('json')
-            ? CommandOutputFormat::JSON
-            : CommandOutputFormat::normalize($input->getOption('format'));
+            ? VendorCommandOutputFormatEnum::JSON
+            : VendorCommandOutputFormatEnum::normalize($input->getOption('format'));
 
         if ('' === $payoutId) {
             $this->commandResultEmitter->emitError($output, $format, 'invalid', 'Invalid payoutId', [
@@ -69,7 +69,7 @@ final class VendorPayoutProcessCommand extends Command
             return Command::FAILURE;
         }
 
-        if (CommandOutputFormat::isJson($format)) {
+        if (VendorCommandOutputFormatEnum::isJson($format)) {
             return $this->commandResultEmitter->emitJson($output, [
                 'payoutId' => $payoutId,
                 'processed' => $processed,
@@ -85,13 +85,13 @@ final class VendorPayoutProcessCommand extends Command
             return Command::SUCCESS;
         }
 
-        $io->warning(sprintf('Payout %s was not processed.', $payoutId));
+        $io->warning(sprintf('VendorPayoutEntity %s was not processed.', $payoutId));
 
         return Command::SUCCESS;
     }
 
-    private static function defaultCommandResultEmitter(): CommandResultEmitterInterface
+    private static function defaultVendorCommandResultEmitterService(): VendorCommandResultEmitterServiceInterface
     {
-        return new CommandResultEmitter(new CommandJsonEncoder());
+        return new VendorCommandResultEmitterService(new VendorCommandJsonEncoderService());
     }
 }

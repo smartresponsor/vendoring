@@ -7,7 +7,7 @@
         "."
       ],
       "note": "root-contract violations need reasoning",
-      "prompt": "Root-contract violation detected (canonization repo).\nAllow only dot-folders in root (ignore .git); root files allowed: .gitignore, MANIFEST.json, README.md (optional .gitattributes).\nDo NOT delete/move blindly.\nOutput: PR-ready patch + updated MANIFEST if needed."
+      "prompt": "Root-contract violation detected (Vendoring repo).\nRequired root files are .gitignore, README.md and composer.json. Allowed application/tooling directories are bin, build, config, delivery, deploy, docs, drivers, migrations, ops, public and src. Allowed dot-folders are .canonization, .commanding, .consuming, .gate, .github, .ide and .intelligence.\nDo NOT recreate MANIFEST.json at root and do not delete/move blindly.\nOutput: PR-ready patch + updated gate contract/docs if needed."
     }
   ]
 }

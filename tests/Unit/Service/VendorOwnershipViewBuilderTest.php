@@ -6,10 +6,10 @@ namespace App\Vendoring\Tests\Unit\Service;
 
 use App\Vendoring\Entity\Vendor;
 use App\Vendoring\Entity\VendorUserAssignment;
-use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
-use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
-use App\Vendoring\Service\VendorOwnershipViewBuilder;
-use App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Service\Ownership\VendorOwnershipViewBuilderService;
+use App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -17,13 +17,13 @@ final class VendorOwnershipViewBuilderTest extends TestCase
 {
     private VendorRepositoryInterface&MockObject $vendors;
     private VendorUserAssignmentRepositoryInterface&MockObject $assignments;
-    private VendorAuthorizationMatrixInterface&MockObject $authorizationMatrix;
+    private VendorAuthorizationMatrixServiceInterface&MockObject $authorizationMatrix;
 
     protected function setUp(): void
     {
         $this->vendors = $this->createMock(VendorRepositoryInterface::class);
         $this->assignments = $this->createMock(VendorUserAssignmentRepositoryInterface::class);
-        $this->authorizationMatrix = $this->createMock(VendorAuthorizationMatrixInterface::class);
+        $this->authorizationMatrix = $this->createMock(VendorAuthorizationMatrixServiceInterface::class);
     }
 
     public function testBuildForVendorIdReturnsNullWhenVendorDoesNotExist(): void
@@ -32,7 +32,7 @@ final class VendorOwnershipViewBuilderTest extends TestCase
         $this->assignments->expects(self::never())->method('findActiveByVendorId');
         $this->authorizationMatrix->expects(self::never())->method('capabilitiesForRole');
 
-        $view = (new VendorOwnershipViewBuilder($this->vendors, $this->assignments, $this->authorizationMatrix))->buildForVendorId(404);
+        $view = (new VendorOwnershipViewBuilderService($this->vendors, $this->assignments, $this->authorizationMatrix))->buildForVendorId(404);
 
         self::assertNull($view);
     }
@@ -69,7 +69,7 @@ final class VendorOwnershipViewBuilderTest extends TestCase
                 ['viewer', ['billing.read']],
             ]);
 
-        $view = (new VendorOwnershipViewBuilder($this->vendors, $this->assignments, $this->authorizationMatrix))->buildForVendorId(101);
+        $view = (new VendorOwnershipViewBuilderService($this->vendors, $this->assignments, $this->authorizationMatrix))->buildForVendorId(101);
         self::assertNotNull($view);
 
         $payload = $view->toArray();

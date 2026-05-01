@@ -2,32 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Vendoring\Tests\Support\Payout;
+namespace App\Vendoring\Tests\Support\VendorPayoutEntity;
 
-use App\Vendoring\Entity\Payout\Payout;
-use App\Vendoring\Entity\Payout\PayoutItem;
-use App\Vendoring\RepositoryInterface\Payout\PayoutRepositoryInterface;
+use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
+use App\Vendoring\Entity\Vendor\VendorPayoutItemEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
 
-final class InMemoryPayoutRepository implements PayoutRepositoryInterface
+final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
 {
-    /** @var array<string,Payout> */
+    /** @var array<string,VendorPayoutEntity> */
     private array $payouts = [];
 
-    /** @var array<string,list<PayoutItem>> */
+    /** @var array<string,list<VendorPayoutItemEntity>> */
     private array $items = [];
 
-    public function insert(Payout $payout): void
+    public function insert(VendorPayoutEntity $payout): void
     {
         $this->payouts[$payout->id] = $payout;
     }
 
-    public function insertItem(PayoutItem $item): void
+    public function insertItem(VendorPayoutItemEntity $item): void
     {
         $this->items[$item->payoutId] ??= [];
         $this->items[$item->payoutId][] = $item;
     }
 
-    public function byId(string $id): ?Payout
+    public function byId(string $id): ?VendorPayoutEntity
     {
         return $this->payouts[$id] ?? null;
     }
@@ -59,7 +59,7 @@ final class InMemoryPayoutRepository implements PayoutRepositoryInterface
         $this->payouts[$id]->meta = [...$this->payouts[$id]->meta, ...$meta];
     }
 
-    /** @return list<Payout> */
+    /** @return list<VendorPayoutEntity> */
     public function all(): array
     {
         return array_values($this->payouts);

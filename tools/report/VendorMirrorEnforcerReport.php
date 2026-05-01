@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 require __DIR__ . '/_vendor_report_bootstrap.php';
 
-vendorReportHeader('Vendor mirror enforcer report');
+vendorReportHeader('VendorEntity mirror enforcer report');
 $root = vendorReportProjectRoot();
 
 $checks = [
-    ['src/Repository/VendorRepository.php', 'src/RepositoryInterface/VendorRepositoryInterface.php'],
-    ['src/Repository/VendorApiKeyRepository.php', 'src/RepositoryInterface/VendorApiKeyRepositoryInterface.php'],
-    ['src/Repository/VendorDocumentRepository.php', 'src/RepositoryInterface/VendorDocumentRepositoryInterface.php'],
-    ['src/Repository/VendorMediaRepository.php', 'src/RepositoryInterface/VendorMediaRepositoryInterface.php'],
-    ['src/Repository/VendorPassportRepository.php', 'src/RepositoryInterface/VendorPassportRepositoryInterface.php'],
-    ['src/Repository/VendorProfileRepository.php', 'src/RepositoryInterface/VendorProfileRepositoryInterface.php'],
-    ['src/Repository/VendorSecurityRepository.php', 'src/RepositoryInterface/VendorSecurityRepositoryInterface.php'],
+    ['src/Repository/Vendor/VendorRepository.php', 'src/RepositoryInterface/Vendor/VendorRepositoryInterface.php'],
+    ['src/Repository/Vendor/VendorApiKeyRepository.php', 'src/RepositoryInterface/Vendor/VendorApiKeyRepositoryInterface.php'],
+    ['src/Repository/Vendor/VendorDocumentRepository.php', 'src/RepositoryInterface/Vendor/VendorDocumentRepositoryInterface.php'],
+    ['src/Repository/Vendor/VendorMediaRepository.php', 'src/RepositoryInterface/Vendor/VendorMediaRepositoryInterface.php'],
+    ['src/Repository/Vendor/VendorPassportRepository.php', 'src/RepositoryInterface/Vendor/VendorPassportRepositoryInterface.php'],
+    ['src/Repository/Vendor/VendorProfileRepository.php', 'src/RepositoryInterface/Vendor/VendorProfileRepositoryInterface.php'],
+    ['src/Repository/Vendor/VendorSecurityRepository.php', 'src/RepositoryInterface/Vendor/VendorSecurityRepositoryInterface.php'],
     ['src/Service/VendorService.php', 'src/ServiceInterface/VendorServiceInterface.php'],
     ['src/Service/VendorDocumentService.php', 'src/ServiceInterface/VendorDocumentServiceInterface.php'],
     ['src/Service/VendorMediaService.php', 'src/ServiceInterface/VendorMediaServiceInterface.php'],

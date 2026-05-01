@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Reliability;
 
-use App\Vendoring\Service\Reliability\FileOutboundCircuitBreaker;
+use App\Vendoring\Service\Reliability\VendorFileOutboundCircuitBreakerService;
 use PHPUnit\Framework\TestCase;
 
 final class FileOutboundCircuitBreakerTest extends TestCase
@@ -12,7 +12,7 @@ final class FileOutboundCircuitBreakerTest extends TestCase
     public function testBreakerOpensAfterThresholdAndShortCircuitsUntilCooldownExpires(): void
     {
         $dir = sys_get_temp_dir() . '/vendoring-breaker-' . bin2hex(random_bytes(4));
-        $breaker = new FileOutboundCircuitBreaker($dir);
+        $breaker = new VendorFileOutboundCircuitBreakerService($dir);
 
         $initial = $breaker->currentState('statement_mail_send', 'tenant-1:vendor-1', 2, 60);
         self::assertSame('closed', $initial['state']);
@@ -35,7 +35,7 @@ final class FileOutboundCircuitBreakerTest extends TestCase
     public function testBreakerResetsAfterSuccess(): void
     {
         $dir = sys_get_temp_dir() . '/vendoring-breaker-' . bin2hex(random_bytes(4));
-        $breaker = new FileOutboundCircuitBreaker($dir);
+        $breaker = new VendorFileOutboundCircuitBreakerService($dir);
 
         $breaker->recordFailure('statement_mail_send', 'tenant-1:vendor-1', 1, 60);
         $open = $breaker->currentState('statement_mail_send', 'tenant-1:vendor-1', 1, 60);

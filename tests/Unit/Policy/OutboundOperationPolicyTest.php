@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Policy;
 
-use App\Vendoring\Service\Policy\OutboundOperationPolicy;
+use App\Vendoring\Service\Policy\VendorOutboundOperationPolicyService;
 use PHPUnit\Framework\TestCase;
 
 final class OutboundOperationPolicyTest extends TestCase
 {
     public function testStatementMailSendPolicyIsFailFastAndNonRetryable(): void
     {
-        $policy = (new OutboundOperationPolicy())->forOperation('statement_mail_send');
+        $policy = (new VendorOutboundOperationPolicyService())->forOperation('statement_mail_send');
 
         self::assertSame('statement_mail_send', $policy['operation']);
         self::assertFalse($policy['retryable']);
@@ -22,7 +22,7 @@ final class OutboundOperationPolicyTest extends TestCase
 
     public function testPayoutTransferPolicyAllowsRetry(): void
     {
-        $policy = (new OutboundOperationPolicy())->forOperation('payout_transfer');
+        $policy = (new VendorOutboundOperationPolicyService())->forOperation('payout_transfer');
 
         self::assertTrue($policy['retryable']);
         self::assertSame(2, $policy['maxAttempts']);

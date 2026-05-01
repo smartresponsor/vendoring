@@ -3,13 +3,13 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Vendoring\Tests\Unit\Controller\Payout;
+namespace App\Vendoring\Tests\Unit\Controller\VendorPayoutEntity;
 
-use App\Vendoring\Controller\Payout\VendorStatementController;
-use App\Vendoring\DTO\Api\StatementWindowQueryRequestDTO;
-use App\Vendoring\Exception\ApiQueryValidationException;
-use App\Vendoring\Service\Statement\VendorStatementRequestResolver;
-use App\Vendoring\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
+use App\Vendoring\Controller\Vendor\VendorStatementController;
+use App\Vendoring\DTO\Api\VendorStatementWindowQueryRequestDTO;
+use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
+use App\Vendoring\Service\Statement\VendorStatementRequestResolverService;
+use App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface;
 use App\Vendoring\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,11 +18,11 @@ final class VendorStatementControllerTest extends TestCase
 {
     public function testBuildReturnsValidationErrorWhenParamsMissing(): void
     {
-        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver = $this->createMock(VendorStatementWindowQueryRequestResolverServiceInterface::class);
         $windowResolver->expects(self::once())
             ->method('resolve')
-            ->willThrowException(ApiQueryValidationException::fromConstraintMessage('statement_from_required'));
-        $controller = new VendorStatementController(new FakeVendorStatementService(['items' => []]), new VendorStatementRequestResolver(), $windowResolver);
+            ->willThrowException(VendorApiQueryValidationException::fromConstraintMessage('statement_from_required'));
+        $controller = new VendorStatementController(new FakeVendorStatementService(['items' => []]), new VendorStatementRequestResolverService(), $windowResolver);
 
         $response = $controller->build('vendor-1', new Request());
         $payload = self::decodePayload($response);
@@ -46,11 +46,11 @@ final class VendorStatementControllerTest extends TestCase
             ],
         ]);
 
-        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver = $this->createMock(VendorStatementWindowQueryRequestResolverServiceInterface::class);
         $windowResolver->expects(self::once())
             ->method('resolve')
-            ->willReturn(new StatementWindowQueryRequestDTO('tenant-1', '2026-03-01', '2026-03-31', 'USD'));
-        $controller = new VendorStatementController($service, new VendorStatementRequestResolver(), $windowResolver);
+            ->willReturn(new VendorStatementWindowQueryRequestDTO('tenant-1', '2026-03-01', '2026-03-31', 'USD'));
+        $controller = new VendorStatementController($service, new VendorStatementRequestResolverService(), $windowResolver);
         $request = new Request([
             'tenantId' => 'tenant-1',
             'from' => '2026-03-01',

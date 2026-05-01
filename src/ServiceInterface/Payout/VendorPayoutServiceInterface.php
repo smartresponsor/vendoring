@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\ServiceInterface\Payout;
 
-use App\Vendoring\DTO\Payout\CreatePayoutDTO;
+use App\Vendoring\DTO\Payout\VendorCreatePayoutDTO;
 use Doctrine\DBAL\Exception;
 use JsonException;
 use Random\RandomException;
@@ -16,7 +16,7 @@ interface VendorPayoutServiceInterface
      * @throws JsonException
      * @throws RandomException
      */
-    public function create(CreatePayoutDTO $dto): ?string;
+    public function create(VendorCreatePayoutDTO $dto): ?string;
 
     /**
      * @throws Exception

@@ -5,12 +5,12 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Controller\Integration;
 
-use App\Vendoring\Controller\Integration\VendorExternalIntegrationRuntimeController;
-use App\Vendoring\Exception\ApiQueryValidationException;
-use App\Vendoring\DTO\Api\TenantQueryRequestDTO;
-use App\Vendoring\Projection\VendorExternalIntegrationRuntimeView;
-use App\Vendoring\ServiceInterface\Api\TenantQueryRequestResolverInterface;
-use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
+use App\Vendoring\Controller\Vendor\VendorExternalIntegrationRuntimeController;
+use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
+use App\Vendoring\DTO\Api\VendorTenantQueryRequestDTO;
+use App\Vendoring\Projection\Vendor\VendorExternalIntegrationRuntimeView;
+use App\Vendoring\ServiceInterface\Api\VendorTenantQueryRequestResolverServiceInterface;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderServiceInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,12 +18,12 @@ final class VendorExternalIntegrationRuntimeControllerTest extends TestCase
 {
     public function testShowReturnsValidationErrorWhenTenantIdIsMissing(): void
     {
-        $builder = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderInterface::class);
+        $builder = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderServiceInterface::class);
         $builder->expects(self::never())->method('build');
-        $resolver = $this->createMock(TenantQueryRequestResolverInterface::class);
+        $resolver = $this->createMock(VendorTenantQueryRequestResolverServiceInterface::class);
         $resolver->expects(self::once())
             ->method('resolve')
-            ->willThrowException(ApiQueryValidationException::fromConstraintMessage('tenant_id_required'));
+            ->willThrowException(VendorApiQueryValidationException::fromConstraintMessage('tenant_id_required'));
 
         $controller = new VendorExternalIntegrationRuntimeController($builder, $resolver);
         $response = $controller->show('vendor-1', new Request());
@@ -36,11 +36,11 @@ final class VendorExternalIntegrationRuntimeControllerTest extends TestCase
 
     public function testShowReturnsRuntimeProjectionWhenTenantIdIsProvided(): void
     {
-        $builder = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderInterface::class);
-        $resolver = $this->createMock(TenantQueryRequestResolverInterface::class);
+        $builder = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderServiceInterface::class);
+        $resolver = $this->createMock(VendorTenantQueryRequestResolverServiceInterface::class);
         $resolver->expects(self::once())
             ->method('resolve')
-            ->willReturn(new TenantQueryRequestDTO('tenant-1'));
+            ->willReturn(new VendorTenantQueryRequestDTO('tenant-1'));
         $builder->expects(self::once())
             ->method('build')
             ->with('tenant-1', 'vendor-1')

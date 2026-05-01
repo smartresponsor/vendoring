@@ -5,12 +5,12 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Controller\Finance;
 
-use App\Vendoring\Controller\Finance\VendorFinanceRuntimeController;
-use App\Vendoring\Exception\ApiQueryValidationException;
-use App\Vendoring\DTO\Api\TenantQueryRequestDTO;
-use App\Vendoring\Projection\VendorFinanceRuntimeView;
-use App\Vendoring\ServiceInterface\Api\TenantQueryRequestResolverInterface;
-use App\Vendoring\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
+use App\Vendoring\Controller\Vendor\VendorFinanceRuntimeController;
+use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
+use App\Vendoring\DTO\Api\VendorTenantQueryRequestDTO;
+use App\Vendoring\Projection\Vendor\VendorFinanceRuntimeView;
+use App\Vendoring\ServiceInterface\Api\VendorTenantQueryRequestResolverServiceInterface;
+use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeViewBuilderServiceInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,12 +18,12 @@ final class VendorFinanceRuntimeControllerTest extends TestCase
 {
     public function testFinanceReturnsValidationErrorWhenTenantIdIsMissing(): void
     {
-        $builder = $this->createMock(VendorFinanceRuntimeViewBuilderInterface::class);
+        $builder = $this->createMock(VendorFinanceRuntimeViewBuilderServiceInterface::class);
         $builder->expects(self::never())->method('build');
-        $resolver = $this->createMock(TenantQueryRequestResolverInterface::class);
+        $resolver = $this->createMock(VendorTenantQueryRequestResolverServiceInterface::class);
         $resolver->expects(self::once())
             ->method('resolve')
-            ->willThrowException(ApiQueryValidationException::fromConstraintMessage('tenant_id_required'));
+            ->willThrowException(VendorApiQueryValidationException::fromConstraintMessage('tenant_id_required'));
 
         $controller = new VendorFinanceRuntimeController($builder, $resolver);
         $response = $controller->finance('vendor-1', new Request());
@@ -36,11 +36,11 @@ final class VendorFinanceRuntimeControllerTest extends TestCase
 
     public function testFinanceReturnsDataPayloadWhenTenantIdIsProvided(): void
     {
-        $builder = $this->createMock(VendorFinanceRuntimeViewBuilderInterface::class);
-        $resolver = $this->createMock(TenantQueryRequestResolverInterface::class);
+        $builder = $this->createMock(VendorFinanceRuntimeViewBuilderServiceInterface::class);
+        $resolver = $this->createMock(VendorTenantQueryRequestResolverServiceInterface::class);
         $resolver->expects(self::once())
             ->method('resolve')
-            ->willReturn(new TenantQueryRequestDTO('tenant-1'));
+            ->willReturn(new VendorTenantQueryRequestDTO('tenant-1'));
         $builder->expects(self::once())
             ->method('build')
             ->with('tenant-1', 'vendor-1', null, null, 'USD')

@@ -7,8 +7,8 @@ namespace App\Vendoring\Tests\Unit\Security;
 
 use App\Vendoring\Entity\Vendor;
 use App\Vendoring\Entity\VendorApiKey;
-use App\Vendoring\Service\VendorSecurityService;
-use App\Vendoring\ServiceInterface\VendorApiKeyServiceInterface;
+use App\Vendoring\Service\Security\VendorSecurityService;
+use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

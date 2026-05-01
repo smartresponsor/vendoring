@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Vendoring\Observability\Service\AlertRuleEvaluator;
-use App\Vendoring\Observability\Service\MonitoringSnapshotBuilder;
-use App\Vendoring\Service\Ops\ReleaseManifestBuilder;
-use App\Vendoring\Service\Ops\RollbackDecisionEvaluator;
+use App\Vendoring\Service\Observability\VendorAlertRuleEvaluatorService;
+use App\Vendoring\Service\Observability\VendorMonitoringSnapshotBuilderService;
+use App\Vendoring\Service\Ops\VendorReleaseManifestBuilderService;
+use App\Vendoring\Service\Ops\VendorRollbackDecisionEvaluatorService;
 
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
@@ -51,13 +51,13 @@ file_put_contents($projectDir . '/build/release/rc-evidence.json', '{}');
 file_put_contents($projectDir . '/build/release/rc-evidence.md', '# ok');
 file_put_contents($projectDir . '/build/docs/phpdocumentor/index.html', '<html></html>');
 
-$builder = new ReleaseManifestBuilder(
-    new MonitoringSnapshotBuilder($observabilityDir, $faultToleranceDir, $projectDir),
-    new AlertRuleEvaluator(),
+$builder = new VendorReleaseManifestBuilderService(
+    new VendorMonitoringSnapshotBuilderService($observabilityDir, $faultToleranceDir, $projectDir),
+    new VendorAlertRuleEvaluatorService(),
     $projectDir,
 );
 $manifest = $builder->build(900);
-$rollback = (new RollbackDecisionEvaluator())->evaluate($manifest);
+$rollback = (new VendorRollbackDecisionEvaluatorService())->evaluate($manifest);
 
 if ('rollback' !== $rollback['decision']) {
     throw new RuntimeException('Expected rollback decision for open breaker manifest.');

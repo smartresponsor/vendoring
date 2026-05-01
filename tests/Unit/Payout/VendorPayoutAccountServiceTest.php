@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Vendoring\Tests\Unit\Payout;
+namespace App\Vendoring\Tests\Unit\VendorPayoutEntity;
 
-use App\Vendoring\Entity\Payout\PayoutAccount;
-use App\Vendoring\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
+use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface;
 use App\Vendoring\Service\Payout\VendorPayoutAccountService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorPayoutAccountServiceTest extends TestCase
 {
-    private PayoutAccountRepositoryInterface&MockObject $accounts;
+    private VendorPayoutAccountRepositoryInterface&MockObject $accounts;
 
     protected function setUp(): void
     {
-        $this->accounts = $this->createMock(PayoutAccountRepositoryInterface::class);
+        $this->accounts = $this->createMock(VendorPayoutAccountRepositoryInterface::class);
     }
 
     public function testUpsertFromPayloadNormalizesTrimmedStringsAndUppercasesCurrency(): void
@@ -24,7 +24,7 @@ final class VendorPayoutAccountServiceTest extends TestCase
         $this->accounts
             ->expects(self::once())
             ->method('upsert')
-            ->with(self::callback(function (PayoutAccount $account): bool {
+            ->with(self::callback(function (VendorPayoutAccountEntity $account): bool {
                 self::assertSame('tenant-1', $account->tenantId);
                 self::assertSame('vendor-1', $account->vendorId);
                 self::assertSame('bank', $account->provider);

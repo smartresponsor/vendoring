@@ -413,3 +413,63 @@ hygiene_policy:
     allowed_only_if:
       - referenced_in_rwe_envelope
   violation: canon_violation
+
+layer3_structure_naming_canon:
+  vendoring_literal_contract:
+    locked_parent_folders:
+      Controller:
+        only_child_folder: Vendor
+        file_pattern: "Vendor*Controller.php"
+        namespace: "App\\Vendoring\\Controller\\Vendor"
+      ControllerInterface:
+        only_child_folder: Vendor
+        file_pattern: "Vendor*ControllerInterface.php"
+        namespace: "App\\Vendoring\\ControllerInterface\\Vendor"
+      Event:
+        only_child_folder: Vendor
+        file_pattern: "Vendor*Event.php"
+        namespace: "App\\Vendoring\\Event\\Vendor"
+      EventInterface:
+        only_child_folder: Vendor
+        file_pattern: "Vendor*EventInterface.php"
+        namespace: "App\\Vendoring\\EventInterface\\Vendor"
+      Policy:
+        only_child_folder: Vendor
+        file_pattern: "Vendor*Policy.php"
+        namespace: "App\\Vendoring\\Policy\\Vendor"
+      PolicyInterface:
+        only_child_folder: Vendor
+        file_pattern: "Vendor*PolicyInterface.php"
+        namespace: "App\\Vendoring\\PolicyInterface\\Vendor"
+      Repository:
+        only_child_folder: Vendor
+        file_pattern: "Vendor*Repository.php"
+        namespace: "App\\Vendoring\\Repository\\Vendor"
+      RepositoryInterface:
+        only_child_folder: Vendor
+        file_pattern: "Vendor*RepositoryInterface.php"
+        namespace: "App\\Vendoring\\RepositoryInterface\\Vendor"
+    forbidden_child_folders:
+      - Payout
+      - Ledger
+      - Ops
+      - Finance
+      - Statement
+      - Integration
+      - Metric
+      - Dev
+      - VendorPayoutEntity
+    security_contract:
+      src_security_folder: forbidden
+      autowired_security_services: "src/Service/Security"
+      mirrored_security_interfaces: "src/ServiceInterface/Security"
+      service_interface_vendor_bucket_exception: "not applied here; Service and ServiceInterface use direction-based canon"
+
+# Vendoring EntityInterface canon: only src/EntityInterface/Vendor/Vendor*EntityInterface.php; forbid root src/EntityInterface/*.php and shorter Vendor*Interface.php entity contracts.
+
+# Vendoring Policy canon: only src/Policy/Vendor/Vendor*Policy.php and src/PolicyInterface/Vendor/Vendor*PolicyInterface.php; forbid root policy files and missing Vendor prefix.
+
+  Projection:
+    required_child: Vendor
+    file_pattern: "Vendor*Projection.php"
+    namespace: "App\\Vendoring\\Projection\\Vendor"

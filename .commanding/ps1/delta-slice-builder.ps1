@@ -52,7 +52,11 @@ function Merge-Unique([string[]]$base, [object]$extra) {
 }
 
 function Normalize-RelPath([string]$p) {
-  return ($p -replace '\\','/').TrimStart('/')
+  $normalized = $p -replace '\\','/'
+  while ($normalized.StartsWith('/')) {
+    $normalized = $normalized.Substring(1)
+  }
+  return $normalized
 }
 
 function Should-ExcludeRelPath([string]$rel) {

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Support\Statement;
 
 use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderServiceInterface;
 
-final class FakeVendorStatementRecipientProvider implements VendorStatementRecipientProviderInterface
+final class FakeVendorStatementRecipientProvider implements VendorStatementRecipientProviderServiceInterface
 {
     /** @param list<VendorStatementRecipientDTO> $recipients */
     public function __construct(private readonly array $recipients) {}

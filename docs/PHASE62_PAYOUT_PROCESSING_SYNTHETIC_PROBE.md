@@ -1,4 +1,4 @@
-# Phase 62 — Payout processing synthetic probe
+# Phase 62 — VendorPayoutEntity processing synthetic probe
 
 ## Purpose
 

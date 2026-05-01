@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Ops;
 
-use App\Vendoring\Projection\VendorRuntimeStatusView;
-use App\Vendoring\Service\Ops\VendorReleaseBaselineReader;
-use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
+use App\Vendoring\Projection\Vendor\VendorRuntimeStatusView;
+use App\Vendoring\Service\Ops\VendorReleaseBaselineReaderService;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorReleaseBaselineReaderTest extends TestCase
 {
-    private VendorRuntimeStatusViewBuilderInterface&MockObject $runtimeStatusViewBuilder;
+    private VendorRuntimeStatusViewBuilderServiceInterface&MockObject $runtimeStatusViewBuilder;
 
     protected function setUp(): void
     {
-        $this->runtimeStatusViewBuilder = $this->createMock(VendorRuntimeStatusViewBuilderInterface::class);
+        $this->runtimeStatusViewBuilder = $this->createMock(VendorRuntimeStatusViewBuilderServiceInterface::class);
     }
 
     public function testBuildAddsProfileSummaryAndProfileIssueWhenIncomplete(): void
@@ -78,8 +78,8 @@ final class VendorReleaseBaselineReaderTest extends TestCase
         self::assertContains('surface.finance.missing', $payload['issues']);
     }
 
-    private function buildReader(): VendorReleaseBaselineReader
+    private function buildReader(): VendorReleaseBaselineReaderService
     {
-        return new VendorReleaseBaselineReader($this->runtimeStatusViewBuilder);
+        return new VendorReleaseBaselineReaderService($this->runtimeStatusViewBuilder);
     }
 }

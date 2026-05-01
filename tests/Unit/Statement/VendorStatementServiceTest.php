@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Statement;
 
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
-use App\Vendoring\Entity\Ledger\LedgerEntry;
+use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
 use App\Vendoring\Service\Statement\VendorStatementService;
 use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
@@ -15,9 +15,9 @@ final class VendorStatementServiceTest extends TestCase
     public function testBuildAggregatesEarningsRefundsAndClosingBalance(): void
     {
         $repository = new InMemoryLedgerEntryRepository();
-        $repository->insert(new LedgerEntry('1', 'tenant-1', 'REVENUE', 'CASH', 200.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
-        $repository->insert(new LedgerEntry('2', 'tenant-1', 'REFUNDS_PAYABLE', 'CASH', 35.0, 'USD', 'refund', 'ref-1', 'vendor-1', '2026-03-12 10:00:00'));
-        $repository->insert(new LedgerEntry('3', 'tenant-1', 'REVENUE', 'CASH', 999.0, 'EUR', 'invoice', 'inv-2', 'vendor-1', '2026-03-13 10:00:00'));
+        $repository->insert(new VendorLedgerEntryEntity('1', 'tenant-1', 'REVENUE', 'CASH', 200.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
+        $repository->insert(new VendorLedgerEntryEntity('2', 'tenant-1', 'REFUNDS_PAYABLE', 'CASH', 35.0, 'USD', 'refund', 'ref-1', 'vendor-1', '2026-03-12 10:00:00'));
+        $repository->insert(new VendorLedgerEntryEntity('3', 'tenant-1', 'REVENUE', 'CASH', 999.0, 'EUR', 'invoice', 'inv-2', 'vendor-1', '2026-03-13 10:00:00'));
 
         $service = new VendorStatementService($repository);
         $dto = new VendorStatementRequestDTO('tenant-1', 'vendor-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD');
@@ -35,7 +35,7 @@ final class VendorStatementServiceTest extends TestCase
     public function testExportCsvWritesStatementRows(): void
     {
         $repository = new InMemoryLedgerEntryRepository();
-        $repository->insert(new LedgerEntry('1', 'tenant-1', 'REVENUE', 'CASH', 120.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
+        $repository->insert(new VendorLedgerEntryEntity('1', 'tenant-1', 'REVENUE', 'CASH', 120.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
 
         $service = new VendorStatementService($repository);
         $dto = new VendorStatementRequestDTO('tenant-1', 'vendor-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD');

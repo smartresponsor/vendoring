@@ -6,28 +6,28 @@ namespace App\Vendoring\Tests\Unit\Service;
 
 use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
-use App\Vendoring\Entity\Payout\PayoutAccount;
-use App\Vendoring\Projection\VendorOwnershipView;
-use App\Vendoring\Service\VendorFinanceRuntimeViewBuilder;
-use App\Vendoring\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
+use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
+use App\Vendoring\Projection\Vendor\VendorOwnershipView;
+use App\Vendoring\Service\Finance\VendorFinanceRuntimeViewBuilderService;
+use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface;
 use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
-use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipViewBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorFinanceRuntimeViewBuilderTest extends TestCase
 {
-    private VendorOwnershipViewBuilderInterface&MockObject $ownership;
+    private VendorOwnershipViewBuilderServiceInterface&MockObject $ownership;
     private VendorMetricServiceInterface&MockObject $metrics;
-    private PayoutAccountRepositoryInterface&MockObject $accounts;
+    private VendorPayoutAccountRepositoryInterface&MockObject $accounts;
     private VendorStatementServiceInterface&MockObject $statements;
 
     protected function setUp(): void
     {
-        $this->ownership = $this->createMock(VendorOwnershipViewBuilderInterface::class);
+        $this->ownership = $this->createMock(VendorOwnershipViewBuilderServiceInterface::class);
         $this->metrics = $this->createMock(VendorMetricServiceInterface::class);
-        $this->accounts = $this->createMock(PayoutAccountRepositoryInterface::class);
+        $this->accounts = $this->createMock(VendorPayoutAccountRepositoryInterface::class);
         $this->statements = $this->createMock(VendorStatementServiceInterface::class);
     }
 
@@ -71,7 +71,7 @@ final class VendorFinanceRuntimeViewBuilderTest extends TestCase
         }))
             ->willReturn($metricOverview);
         $this->accounts->expects(self::once())->method('get')->with('tenant-1', '101')
-            ->willReturn(new PayoutAccount('acc-1', 'tenant-1', '101', 'bank', 'iban-123', 'USD', true, '2026-03-01 10:00:00'));
+            ->willReturn(new VendorPayoutAccountEntity('acc-1', 'tenant-1', '101', 'bank', 'iban-123', 'USD', true, '2026-03-01 10:00:00'));
         $this->statements->expects(self::once())->method('build')->with(self::callback(function (VendorStatementRequestDTO $dto): bool {
             self::assertSame('tenant-1', $dto->tenantId);
             self::assertSame('101', $dto->vendorId);
@@ -82,7 +82,7 @@ final class VendorFinanceRuntimeViewBuilderTest extends TestCase
             return true;
         }))->willReturn($statement);
 
-        $view = (new VendorFinanceRuntimeViewBuilder(
+        $view = (new VendorFinanceRuntimeViewBuilderService(
             $this->ownership,
             $this->metrics,
             $this->accounts,
@@ -129,7 +129,7 @@ final class VendorFinanceRuntimeViewBuilderTest extends TestCase
         $this->accounts->expects(self::once())->method('get')->with('tenant-1', 'vendor-alpha')->willReturn(null);
         $this->statements->expects(self::never())->method('build');
 
-        $view = (new VendorFinanceRuntimeViewBuilder(
+        $view = (new VendorFinanceRuntimeViewBuilderService(
             $this->ownership,
             $this->metrics,
             $this->accounts,

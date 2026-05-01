@@ -41,7 +41,7 @@ VENDOR_SQLITE_DSN=sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite
 == 4) Minimal Symfony integration flow
 
 * Upsert vendor profile (`PATCH /api/vendor-profile/vendor/{vendorId}`)
-* Read vendor runtime view (`GET /api/vendor/runtime/{vendorId}/finance`)
+* Read vendor runtime projection (`GET /api/vendor/runtime/{vendorId}/finance`)
 * Create payout when ready (`POST /api/payout/create`)
 
 == 5) Enable only needed parts

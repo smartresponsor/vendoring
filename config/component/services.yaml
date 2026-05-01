@@ -41,144 +41,152 @@ services:
     resource: '../../src/Controller/'
     tags: [ 'controller.service_arguments' ]
 
-  App\Vendoring\RepositoryInterface\VendorAnalyticsRepositoryInterface: '@App\Vendoring\Repository\VendorAnalyticsRepository'
-  App\Vendoring\RepositoryInterface\VendorAttachmentRepositoryInterface: '@App\Vendoring\Repository\VendorAttachmentRepository'
-  App\Vendoring\RepositoryInterface\VendorDocumentRepositoryInterface: '@App\Vendoring\Repository\VendorDocumentRepository'
-  App\Vendoring\RepositoryInterface\VendorLedgerBindingRepositoryInterface: '@App\Vendoring\Repository\VendorLedgerBindingRepository'
-  App\Vendoring\RepositoryInterface\VendorSecurityRepositoryInterface: '@App\Vendoring\Repository\VendorSecurityRepository'
-  App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface: '@App\Vendoring\Repository\VendorUserAssignmentRepository'
-  App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface: '@App\Vendoring\Repository\VendorTransactionRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorAnalyticsRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorAnalyticsRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorAttachmentRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorAttachmentRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorDocumentRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorDocumentRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorLedgerBindingRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLedgerBindingRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorSecurityRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorSecurityRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorUserAssignmentRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorTransactionRepository'
 
-  App\Vendoring\ServiceInterface\VendorCrmServiceInterface: '@App\Vendoring\Service\VendorCrmService'
-  App\Vendoring\ServiceInterface\Policy\OutboundOperationPolicyInterface: '@App\Vendoring\Service\Policy\OutboundOperationPolicy'
-  App\Vendoring\ServiceInterface\Reliability\OutboundCircuitBreakerInterface: '@App\Vendoring\Service\Reliability\FileOutboundCircuitBreaker'
-  App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixInterface: '@App\Vendoring\Service\Security\VendorAuthorizationMatrix'
-  App\Vendoring\ServiceInterface\Security\VendorAccessResolverInterface: '@App\Vendoring\Service\Security\VendorAccessResolver'
-  App\Vendoring\ServiceInterface\VendorBillingServiceInterface: '@App\Vendoring\Service\VendorBillingService'
-  App\Vendoring\ServiceInterface\Observability\CorrelationContextInterface: '@App\Vendoring\Observability\Service\CorrelationContext'
-  App\Vendoring\ServiceInterface\Observability\ObservabilityRecordExporterInterface: '@App\Vendoring\Observability\Service\FileObservabilityRecordExporter'
-  App\Vendoring\ServiceInterface\Observability\MetricCollectorInterface: '@App\Vendoring\Observability\Service\ChainMetricCollector'
-  App\Vendoring\ServiceInterface\Observability\RuntimeLoggerInterface: '@App\Vendoring\Observability\Service\RuntimeLogger'
-  App\Vendoring\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface: '@App\Vendoring\Observability\Service\MonitoringSnapshotBuilder'
-  App\Vendoring\ServiceInterface\Observability\AlertRuleEvaluatorInterface: '@App\Vendoring\Observability\Service\AlertRuleEvaluator'
-  App\Vendoring\ServiceInterface\Traffic\WriteRateLimiterInterface: '@App\Vendoring\Service\Traffic\FileWriteRateLimiter'
-  App\Vendoring\ServiceInterface\Rollout\TrafficCohortResolverInterface: '@App\Vendoring\Service\Rollout\TrafficCohortResolver'
-  App\Vendoring\ServiceInterface\Rollout\FeatureFlagServiceInterface: '@App\Vendoring\Service\Rollout\FeatureFlagService'
-  App\Vendoring\ServiceInterface\Rollout\CanaryRolloutCoordinatorInterface: '@App\Vendoring\Service\Rollout\CanaryRolloutCoordinator'
-  App\Vendoring\ServiceInterface\CatalogMerchServiceInterface: '@App\Vendoring\Service\CatalogMerchService'
-  App\Vendoring\ServiceInterface\CatalogSyndicationMappingServiceInterface: '@App\Vendoring\Service\CatalogSyndicationMappingService'
-  App\Vendoring\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface: '@App\Vendoring\Service\CatalogSyndicationFallbackAwarePackageGateService'
-  App\Vendoring\ServiceInterface\CatalogSyndicationPolicyAwarePackageGateServiceInterface: '@App\Vendoring\Service\CatalogSyndicationPolicyAwarePackageGateService'
-  App\Vendoring\ServiceInterface\CatalogSyndicationGovernanceTrailServiceInterface: '@App\Vendoring\Service\CatalogSyndicationGovernanceTrailService'
-  App\Vendoring\ServiceInterface\CatalogDestinationMediaReadinessServiceInterface: '@App\Vendoring\Service\CatalogDestinationMediaReadinessService'
-  App\Vendoring\ServiceInterface\CatalogDestinationMediaFallbackServiceInterface: '@App\Vendoring\Service\CatalogDestinationMediaFallbackService'
-  App\Vendoring\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface: '@App\Vendoring\Service\CatalogDestinationMediaPolicyPreferenceService'
-  App\Vendoring\ServiceInterface\VendorDocumentServiceInterface: '@App\Vendoring\Service\VendorDocumentService'
-  App\Vendoring\ServiceInterface\VendorMediaServiceInterface: '@App\Vendoring\Service\VendorMediaService'
-  App\Vendoring\ServiceInterface\VendorPassportServiceInterface: '@App\Vendoring\Service\VendorPassportService'
-  App\Vendoring\ServiceInterface\VendorProfileServiceInterface: '@App\Vendoring\Service\VendorProfileService'
-  App\Vendoring\ServiceInterface\VendorServiceInterface: '@App\Vendoring\Service\VendorService'
-  App\Vendoring\ServiceInterface\VendorUserAssignmentServiceInterface: '@App\Vendoring\Service\VendorUserAssignmentService'
+  App\Vendoring\ServiceInterface\Integration\VendorCrmServiceInterface: '@App\Vendoring\Service\Integration\VendorCrmService'
+  App\Vendoring\ServiceInterface\Policy\VendorOutboundOperationPolicyServiceInterface: '@App\Vendoring\Service\Policy\VendorOutboundOperationPolicyService'
+  App\Vendoring\ServiceInterface\Reliability\VendorOutboundCircuitBreakerServiceInterface: '@App\Vendoring\Service\Reliability\VendorOutboundCircuitBreakerService'
+  App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixServiceInterface: '@App\Vendoring\Service\Security\VendorAuthorizationMatrixService'
+  App\Vendoring\ServiceInterface\Security\VendorAccessResolverServiceInterface: '@App\Vendoring\Service\Security\VendorAccessResolverService'
+  App\Vendoring\ServiceInterface\Billing\VendorBillingServiceInterface: '@App\Vendoring\Service\Billing\VendorBillingService'
+  App\Vendoring\ServiceInterface\Observability\VendorCorrelationContextServiceInterface: '@App\Vendoring\Service\Observability\VendorCorrelationContextService'
+  App\Vendoring\ServiceInterface\Observability\VendorObservabilityRecordExporterServiceInterface: '@App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService'
+  App\Vendoring\ServiceInterface\Observability\VendorMetricCollectorServiceInterface: '@App\Vendoring\Service\Observability\VendorMetricCollectorService'
+  App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface: '@App\Vendoring\Service\Observability\VendorRuntimeLoggerService'
+  App\Vendoring\ServiceInterface\Observability\VendorMonitoringSnapshotBuilderServiceInterface: '@App\Vendoring\Service\Observability\VendorMonitoringSnapshotBuilderService'
+  App\Vendoring\ServiceInterface\Observability\VendorAlertRuleEvaluatorServiceInterface: '@App\Vendoring\Service\Observability\VendorAlertRuleEvaluatorService'
+  App\Vendoring\ServiceInterface\Traffic\VendorWriteRateLimiterServiceInterface: '@App\Vendoring\Service\Traffic\VendorWriteRateLimiterService'
+  App\Vendoring\ServiceInterface\Rollout\VendorTrafficCohortResolverServiceInterface: '@App\Vendoring\Service\Rollout\VendorTrafficCohortResolverService'
+  App\Vendoring\ServiceInterface\Rollout\VendorFeatureFlagServiceInterface: '@App\Vendoring\Service\Rollout\VendorFeatureFlagService'
+  App\Vendoring\ServiceInterface\Rollout\VendorCanaryRolloutCoordinatorServiceInterface: '@App\Vendoring\Service\Rollout\VendorCanaryRolloutCoordinatorService'
+  App\Vendoring\ServiceInterface\Catalog\VendorCatalogMerchServiceInterface: '@App\Vendoring\Service\Catalog\VendorCatalogMerchService'
+  App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationMappingServiceInterface: '@App\Vendoring\Service\Syndication\VendorCatalogSyndicationMappingService'
+  App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationFallbackAwarePackageGateServiceInterface: '@App\Vendoring\Service\Syndication\VendorCatalogSyndicationFallbackAwarePackageGateService'
+  App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationPolicyAwarePackageGateServiceInterface: '@App\Vendoring\Service\Syndication\VendorCatalogSyndicationPolicyAwarePackageGateService'
+  App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationGovernanceTrailServiceInterface: '@App\Vendoring\Service\Syndication\VendorCatalogSyndicationGovernanceTrailService'
+  App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaReadinessServiceInterface: '@App\Vendoring\Service\Media\VendorCatalogDestinationMediaReadinessService'
+  App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaFallbackServiceInterface: '@App\Vendoring\Service\Media\VendorCatalogDestinationMediaFallbackService'
+  App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaPolicyPreferenceServiceInterface: '@App\Vendoring\Service\Media\VendorCatalogDestinationMediaPolicyPreferenceService'
+  App\Vendoring\ServiceInterface\Document\VendorDocumentServiceInterface: '@App\Vendoring\Service\Document\VendorDocumentService'
+  App\Vendoring\ServiceInterface\Media\VendorMediaServiceInterface: '@App\Vendoring\Service\Media\VendorMediaService'
+  App\Vendoring\ServiceInterface\Identity\VendorPassportServiceInterface: '@App\Vendoring\Service\Identity\VendorPassportService'
+  App\Vendoring\ServiceInterface\Profile\VendorProfileServiceInterface: '@App\Vendoring\Service\Profile\VendorProfileService'
+  App\Vendoring\ServiceInterface\Core\VendorCoreServiceInterface: '@App\Vendoring\Service\Core\VendorCoreService'
+  App\Vendoring\ServiceInterface\Assignment\VendorUserAssignmentServiceInterface: '@App\Vendoring\Service\Assignment\VendorUserAssignmentService'
   App\Vendoring\ServiceInterface\Ledger\VendorDoubleEntryServiceInterface: '@App\Vendoring\Service\Ledger\VendorDoubleEntryService'
   App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface: '@App\Vendoring\Service\Ledger\VendorLedgerService'
-  App\Vendoring\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderInterface: '@App\Vendoring\Service\Ops\VendorTransactionOperatorPageBuilder'
-  App\Vendoring\ServiceInterface\Category\CategoryApproxTotalServiceInterface: '@App\Vendoring\Service\Category\CategoryApproxTotalService'
-  App\Vendoring\ServiceInterface\Category\CategoryCollectionServiceInterface: '@App\Vendoring\Service\Category\CategoryCollectionService'
-  App\Vendoring\ServiceInterface\Category\CategoryRuleEngineInterface: '@App\Vendoring\Service\Category\Rule\CategoryRuleEngine'
-  App\Vendoring\ServiceInterface\Category\CategoryRuleSuggestServiceInterface: '@App\Vendoring\Service\Category\Suggest\CategoryRuleSuggestService'
-  App\Vendoring\ServiceInterface\Search\TfidfSearchInterface: '@App\Vendoring\Service\Search\TfidfSearch'
-  App\Vendoring\ServiceInterface\Sec\HmacInterface: '@App\Vendoring\Service\Sec\Hmac'
+  App\Vendoring\ServiceInterface\Ops\VendorTransactionOperatorPageBuilderServiceInterface: '@App\Vendoring\Service\Ops\VendorTransactionOperatorPageBuilderService'
+  App\Vendoring\ServiceInterface\Category\VendorCategoryApproxTotalServiceInterface: '@App\Vendoring\Service\Category\VendorCategoryApproxTotalService'
+  App\Vendoring\ServiceInterface\Category\VendorCategoryCollectionServiceInterface: '@App\Vendoring\Service\Category\VendorCategoryCollectionService'
+  App\Vendoring\ServiceInterface\Category\Rule\VendorCategoryRuleEngineServiceInterface: '@App\Vendoring\Service\Category\Rule\VendorCategoryRuleEngineService'
+  App\Vendoring\ServiceInterface\Category\Suggest\VendorCategoryRuleSuggestServiceInterface: '@App\Vendoring\Service\Category\Suggest\VendorCategoryRuleSuggestService'
+  App\Vendoring\ServiceInterface\Search\VendorTfIdfSearchServiceInterface: '@App\Vendoring\Service\Search\VendorTfIdfSearchService'
+  App\Vendoring\ServiceInterface\Security\VendorHmacServiceInterface: '@App\Vendoring\Service\Security\VendorHmacService'
   App\Vendoring\ServiceInterface\Payout\VendorPayoutProviderServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutProviderService'
   App\Vendoring\ServiceInterface\Payout\VendorSettlementCalculatorServiceInterface: '@App\Vendoring\Service\Payout\VendorSettlementCalculatorService'
-  App\Vendoring\RepositoryInterface\VendorApiKeyRepositoryInterface: '@App\Vendoring\Repository\VendorApiKeyRepository'
-  App\Vendoring\RepositoryInterface\VendorRepositoryInterface: '@App\Vendoring\Repository\VendorRepository'
-  App\Vendoring\RepositoryInterface\VendorProfileRepositoryInterface: '@App\Vendoring\Repository\VendorProfileRepository'
-  App\Vendoring\RepositoryInterface\VendorBillingRepositoryInterface: '@App\Vendoring\Repository\VendorBillingRepository'
-  App\Vendoring\RepositoryInterface\VendorMediaRepositoryInterface: '@App\Vendoring\Repository\VendorMediaRepository'
-  App\Vendoring\RepositoryInterface\VendorPassportRepositoryInterface: '@App\Vendoring\Repository\VendorPassportRepository'
-  App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface: '@App\Vendoring\Repository\Ledger\LedgerEntryRepository'
-  App\Vendoring\RepositoryInterface\Payout\PayoutRepositoryInterface: '@App\Vendoring\Repository\Payout\PayoutRepository'
-  App\Vendoring\RepositoryInterface\Payout\PayoutAccountRepositoryInterface: '@App\Vendoring\Repository\Payout\PayoutAccountRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorApiKeyRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorProfileRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorBillingRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorBillingRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorMediaRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorMediaRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorPassportRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorPassportRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLedgerEntryRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorPayoutRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorPayoutAccountRepository'
 
-  App\Vendoring\ServiceInterface\VendorApiKeyServiceInterface: '@App\Vendoring\Service\VendorApiKeyService'
-  App\Vendoring\ServiceInterface\Api\TenantQueryRequestResolverInterface: '@App\Vendoring\Service\Api\TenantQueryRequestResolver'
-  App\Vendoring\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface: '@App\Vendoring\Service\Api\StatementWindowQueryRequestResolver'
-  App\Vendoring\ServiceInterface\VendorSecurityServiceInterface: '@App\Vendoring\Service\VendorSecurityService'
-  App\Vendoring\ServiceInterface\VendorSecurityStateViewBuilderInterface: '@App\Vendoring\Service\VendorSecurityStateViewBuilder'
-  App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface: '@App\Vendoring\Service\VendorOwnershipViewBuilder'
-  App\Vendoring\ServiceInterface\VendorProfileViewBuilderInterface: '@App\Vendoring\Service\VendorProfileViewBuilder'
-  App\Vendoring\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface: '@App\Vendoring\Service\VendorFinanceRuntimeViewBuilder'
-  App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface: '@App\Vendoring\Service\Integration\VendorExternalIntegrationRuntimeViewBuilder'
-  App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface: '@App\Vendoring\Service\Ops\VendorRuntimeStatusViewBuilder'
-  App\Vendoring\ServiceInterface\Ops\VendorReleaseBaselineReaderInterface: '@App\Vendoring\Service\Ops\VendorReleaseBaselineReader'
-  App\Vendoring\ServiceInterface\Ops\ReleaseManifestBuilderInterface: '@App\Vendoring\Service\Ops\ReleaseManifestBuilder'
-  App\Vendoring\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface: '@App\Vendoring\Service\Ops\RollbackDecisionEvaluator'
-  App\Vendoring\ServiceInterface\VendorTransactionManagerInterface: '@App\Vendoring\Service\VendorTransactionManager'
-  App\Vendoring\ServiceInterface\VendorTransactionInputResolverServiceInterface: '@App\Vendoring\Service\VendorTransactionInputResolverService'
-  App\Vendoring\ServiceInterface\Policy\VendorTransactionStatusPolicyInterface: '@App\Vendoring\Service\Policy\VendorTransactionStatusPolicy'
-  App\Vendoring\ServiceInterface\Policy\VendorTransactionAmountPolicyInterface: '@App\Vendoring\Service\Policy\VendorTransactionAmountPolicy'
+  App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface: '@App\Vendoring\Service\Security\VendorApiKeyService'
+  App\Vendoring\ServiceInterface\Api\VendorTenantQueryRequestResolverServiceInterface: '@App\Vendoring\Service\Api\VendorTenantQueryRequestResolverService'
+  App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface: '@App\Vendoring\Service\Api\VendorStatementWindowQueryRequestResolverService'
+  App\Vendoring\ServiceInterface\Security\VendorSecurityStateProjectionBuilderServiceInterface: '@App\Vendoring\Service\Security\VendorSecurityStateProjectionBuilderService'
+  App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface: '@App\Vendoring\Service\Ownership\VendorOwnershipProjectionBuilderService'
+  App\Vendoring\ServiceInterface\Profile\VendorProfileProjectionBuilderServiceInterface: '@App\Vendoring\Service\Profile\VendorProfileProjectionBuilderService'
+  App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeProjectionBuilderServiceInterface: '@App\Vendoring\Service\Finance\VendorFinanceRuntimeProjectionBuilderService'
+  App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface: '@App\Vendoring\Service\Integration\VendorExternalIntegrationRuntimeProjectionBuilderService'
+  App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServiceInterface: '@App\Vendoring\Service\Ops\VendorRuntimeStatusProjectionBuilderService'
+  App\Vendoring\ServiceInterface\Ops\VendorReleaseBaselineReaderServiceInterface: '@App\Vendoring\Service\Ops\VendorReleaseBaselineReaderService'
+  App\Vendoring\ServiceInterface\Ops\VendorReleaseManifestBuilderServiceInterface: '@App\Vendoring\Service\Ops\VendorReleaseManifestBuilderService'
+  App\Vendoring\ServiceInterface\Ops\VendorRollbackDecisionEvaluatorServiceInterface: '@App\Vendoring\Service\Ops\VendorRollbackDecisionEvaluatorService'
+  App\Vendoring\ServiceInterface\Transaction\VendorTransactionLifecycleServiceInterface: '@App\Vendoring\Service\Transaction\VendorTransactionLifecycleService'
+  App\Vendoring\ServiceInterface\Transaction\VendorTransactionInputResolverServiceInterface: '@App\Vendoring\Service\Transaction\VendorTransactionInputResolverService'
+  App\Vendoring\ServiceInterface\Policy\VendorTransactionStatusPolicyServiceInterface: '@App\Vendoring\Service\Policy\VendorTransactionStatusPolicyService'
+  App\Vendoring\ServiceInterface\Policy\VendorTransactionAmountPolicyServiceInterface: '@App\Vendoring\Service\Policy\VendorTransactionAmountPolicyService'
   App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface: '@App\Vendoring\Service\Metric\VendorMetricService'
   App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutService'
   App\Vendoring\ServiceInterface\Payout\VendorPayoutRequestServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutRequestService'
   App\Vendoring\ServiceInterface\Payout\VendorPayoutAccountServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutAccountService'
   App\Vendoring\ServiceInterface\Ledger\VendorSummaryServiceInterface: '@App\Vendoring\Service\Ledger\VendorSummaryService'
   App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementService'
-  App\Vendoring\ServiceInterface\Statement\StatementExporterPDFInterface: '@App\Vendoring\Service\Statement\StatementExporterPDF'
+  App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPdfServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementExporterPdfService'
   App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementMailerService'
-  App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderInterface: '@App\Vendoring\Service\Statement\VendorStatementRecipientProvider'
-  App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface: '@App\Vendoring\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder'
-  App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverInterface: '@App\Vendoring\Service\Statement\VendorStatementRequestResolver'
+  App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementRecipientProviderService'
+  App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementDeliveryRuntimeProjectionBuilderService'
+  App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementRequestResolverService'
   App\Vendoring\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface: '@App\Vendoring\Service\WebhooksConsumer\VendorWebhooksConsumerService'
-  App\Vendoring\PolicyInterface\CategorySyndicationMappingPolicyInterface: '@App\Vendoring\Policy\CategorySyndicationMappingPolicy'
-  App\Vendoring\PolicyInterface\CategorySyndicationFallbackAwarePackageGatePolicyInterface: '@App\Vendoring\Policy\CategorySyndicationFallbackAwarePackageGatePolicy'
-  App\Vendoring\PolicyInterface\CategorySyndicationPolicyAwarePackageGatePolicyInterface: '@App\Vendoring\Policy\CategorySyndicationPolicyAwarePackageGatePolicy'
-  App\Vendoring\PolicyInterface\CategorySyndicationGovernanceTrailPolicyInterface: '@App\Vendoring\Policy\CategorySyndicationGovernanceTrailPolicy'
+  App\Vendoring\PolicyInterface\Vendor\VendorCategorySyndicationMappingPolicyInterface: '@App\Vendoring\Policy\Vendor\VendorCategorySyndicationMappingPolicy'
+  App\Vendoring\PolicyInterface\Vendor\VendorCategorySyndicationFallbackAwarePackageGatePolicyInterface: '@App\Vendoring\Policy\Vendor\VendorCategorySyndicationFallbackAwarePackageGatePolicy'
+  App\Vendoring\PolicyInterface\Vendor\VendorCategorySyndicationPolicyAwarePackageGatePolicyInterface: '@App\Vendoring\Policy\Vendor\VendorCategorySyndicationPolicyAwarePackageGatePolicy'
+  App\Vendoring\PolicyInterface\Vendor\VendorCategorySyndicationGovernanceTrailPolicyInterface: '@App\Vendoring\Policy\Vendor\VendorCategorySyndicationGovernanceTrailPolicy'
 
-  App\Vendoring\Observability\Service\FileObservabilityRecordExporter:
+  App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService:
     arguments:
       $observabilityDir: '%vendoring_observability_dir%'
 
-  App\Vendoring\Observability\Service\MonitoringSnapshotBuilder:
+  App\Vendoring\Service\Observability\VendorMonitoringSnapshotBuilderService:
     arguments:
       $observabilityDir: '%vendoring_observability_dir%'
       $faultToleranceDir: '%vendoring_fault_tolerance_dir%'
       $projectDir: '%kernel.project_dir%'
 
-  App\Vendoring\Observability\Service\AlertRuleEvaluator:
+  App\Vendoring\Service\Observability\VendorAlertRuleEvaluatorService:
     arguments:
       $thresholds: '%vendoring_alert_thresholds%'
 
-  App\Vendoring\Service\Reliability\FileOutboundCircuitBreaker:
+  App\Vendoring\Service\Reliability\VendorOutboundCircuitBreakerService:
     arguments:
       $stateDir: '%vendoring_fault_tolerance_dir%/circuit-breakers'
 
-  App\Vendoring\Observability\Service\MetricEmitter:
+  App\Vendoring\Service\Observability\VendorMetricEmitterService:
     public: false
 
-  App\Vendoring\Observability\Service\RuntimeMetricCollector:
+  App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService:
     public: false
 
-  App\Vendoring\Observability\Service\ChainMetricCollector:
+  App\Vendoring\Service\Observability\VendorMetricCollectorService:
     arguments:
       $collectors:
-        - '@App\Vendoring\Observability\Service\MetricEmitter'
-        - '@App\Vendoring\Observability\Service\RuntimeMetricCollector'
+        - '@App\Vendoring\Service\Observability\VendorMetricEmitterService'
+        - '@App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService'
 
-  App\Vendoring\Service\Rollout\FeatureFlagService:
+  App\Vendoring\Service\Rollout\VendorFeatureFlagService:
     arguments:
       $flags: '%vendoring_feature_flags%'
 
-  App\Vendoring\Service\Ops\ReleaseManifestBuilder:
+  App\Vendoring\Service\Ops\VendorReleaseManifestBuilderService:
     arguments:
       $projectDir: '%kernel.project_dir%'
 
-  App\Vendoring\Service\Ops\RollbackDecisionEvaluator:
+  App\Vendoring\Service\Ops\VendorRollbackDecisionEvaluatorService:
     arguments:
       $thresholds: '%vendoring_rollback_thresholds%'
 
-  App\Vendoring\Service\VendorProfileRequestResolver:
+  App\Vendoring\Service\Profile\VendorProfileRequestResolverService:
     arguments: []
 
-  App\Vendoring\ServiceInterface\VendorProfileRequestResolverInterface: '@App\Vendoring\Service\VendorProfileRequestResolver'
-  App\Vendoring\ServiceInterface\Ownership\VendorOwnershipWriteServiceInterface: '@App\Vendoring\Service\VendorOwnershipWriteService'
-  App\Vendoring\ServiceInterface\Ownership\VendorOwnershipWriteRequestResolverInterface: '@App\Vendoring\Service\VendorOwnershipWriteRequestResolver'
+  App\Vendoring\ServiceInterface\Profile\VendorProfileRequestResolverServiceInterface: '@App\Vendoring\Service\Profile\VendorProfileRequestResolverService'
+  App\Vendoring\ServiceInterface\Ownership\VendorOwnershipWriteServiceInterface: '@App\Vendoring\Service\Ownership\VendorOwnershipWriteService'
+  App\Vendoring\ServiceInterface\Ownership\VendorOwnershipWriteRequestResolverServiceInterface: '@App\Vendoring\Service\Ownership\VendorOwnershipWriteRequestResolverService'
+
+  App\Vendoring\ServiceInterface\Catalog\VendorCatalogReviewAssignmentServiceInterface: '@App\Vendoring\Service\Catalog\VendorCatalogReviewAssignmentService'
+  App\Vendoring\ServiceInterface\Command\VendorCommandJsonEncoderServiceInterface: '@App\Vendoring\Service\Command\VendorCommandJsonEncoderService'
+  App\Vendoring\ServiceInterface\Command\VendorCommandJsonFileWriterServiceInterface: '@App\Vendoring\Service\Command\VendorCommandJsonFileWriterService'
+  App\Vendoring\ServiceInterface\Observability\VendorMetricEmitterServiceInterface: '@App\Vendoring\Service\Observability\VendorMetricEmitterService'
+  App\Vendoring\ServiceInterface\Observability\VendorRuntimeMetricCollectorServiceInterface: '@App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService'
+  App\Vendoring\ServiceInterface\Runtime\VendorAppEnvResolverServiceInterface: '@App\Vendoring\Service\Runtime\VendorAppEnvResolverService'
+  App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface: '@App\Vendoring\Service\Command\VendorCommandResultEmitterService'
+  App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface: '@App\Vendoring\Service\Command\VendorCommandJsonArtifactWriterService'

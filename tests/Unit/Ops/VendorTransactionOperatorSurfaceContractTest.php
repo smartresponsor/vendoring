@@ -19,7 +19,7 @@ final class VendorTransactionOperatorSurfaceContractTest extends TestCase
 
     public function testFallbackOperatorSurfaceDoesNotSubmitVendorIdInCreateForm(): void
     {
-        $builder = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Service/Ops/VendorTransactionOperatorPageBuilder.php');
+        $builder = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Service/Ops/VendorTransactionOperatorPageBuilderService.php');
 
         self::assertStringContainsString('id="vendorIdDisplay"', $builder);
         self::assertStringNotContainsString('name="vendorId"', $builder);
@@ -28,10 +28,10 @@ final class VendorTransactionOperatorSurfaceContractTest extends TestCase
 
     public function testControllerCreatesTransactionsUsingRouteScopedVendorId(): void
     {
-        $controller = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Controller/Ops/VendorTransactionOperatorController.php');
+        $controller = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Controller/Vendor/VendorTransactionOperatorController.php');
 
         self::assertStringContainsString('vendorId: $vendorId,', $controller);
         self::assertStringNotContainsString('vendorId: trim($input->vendorId)', $controller);
-        self::assertStringContainsString("'statusLabels' => VendorTransactionStatus::labels()", $controller);
+        self::assertStringContainsString("'statusLabels' => VendorTransactionStatusValueObject::labels()", $controller);
     }
 }

@@ -5,14 +5,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Exception;
 
-use App\Vendoring\Exception\ApiQueryValidationException;
+use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
 use PHPUnit\Framework\TestCase;
 
-final class ApiQueryValidationExceptionTest extends TestCase
+final class VendorApiQueryValidationExceptionTest extends TestCase
 {
     public function testFromConstraintMessageMapsKnownTenantCodeToHint(): void
     {
-        $exception = ApiQueryValidationException::fromConstraintMessage('tenant_id_required');
+        $exception = VendorApiQueryValidationException::fromConstraintMessage('tenant_id_required');
 
         self::assertSame('tenant_id_required', $exception->errorCode());
         self::assertSame('Provide the tenantId query parameter.', $exception->hint());
@@ -21,7 +21,7 @@ final class ApiQueryValidationExceptionTest extends TestCase
 
     public function testFromConstraintMessageMapsUnknownCodeToFallback(): void
     {
-        $exception = ApiQueryValidationException::fromConstraintMessage('unexpected_validator_message');
+        $exception = VendorApiQueryValidationException::fromConstraintMessage('unexpected_validator_message');
 
         self::assertSame('query_validation_error', $exception->errorCode());
         self::assertSame('Check required query parameters and try again.', $exception->hint());

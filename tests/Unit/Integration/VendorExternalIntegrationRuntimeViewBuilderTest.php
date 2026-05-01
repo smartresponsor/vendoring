@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Integration;
 
-use App\Vendoring\Projection\VendorOwnershipView;
-use App\Vendoring\Service\Integration\VendorExternalIntegrationRuntimeViewBuilder;
-use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
+use App\Vendoring\Projection\Vendor\VendorOwnershipView;
+use App\Vendoring\Service\Integration\VendorExternalIntegrationRuntimeViewBuilderService;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderServiceInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutProviderServiceInterface;
-use App\Vendoring\ServiceInterface\VendorCrmServiceInterface;
-use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\ServiceInterface\Integration\VendorCrmServiceInterface;
+use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipViewBuilderServiceInterface;
 use App\Vendoring\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorExternalIntegrationRuntimeViewBuilderTest extends TestCase
 {
-    private VendorOwnershipViewBuilderInterface&MockObject $ownership;
+    private VendorOwnershipViewBuilderServiceInterface&MockObject $ownership;
     private VendorCrmServiceInterface&MockObject $crm;
     private VendorWebhooksConsumerServiceInterface&MockObject $webhooks;
     private VendorPayoutProviderServiceInterface&MockObject $payoutBridge;
 
     protected function setUp(): void
     {
-        $this->ownership = $this->createMock(VendorOwnershipViewBuilderInterface::class);
+        $this->ownership = $this->createMock(VendorOwnershipViewBuilderServiceInterface::class);
         $this->crm = $this->createMock(VendorCrmServiceInterface::class);
         $this->webhooks = $this->createMock(VendorWebhooksConsumerServiceInterface::class);
         $this->payoutBridge = $this->createMock(VendorPayoutProviderServiceInterface::class);
@@ -46,7 +46,7 @@ final class VendorExternalIntegrationRuntimeViewBuilderTest extends TestCase
             ]]));
         $this->webhooks->expects(self::once())->method('ok')->willReturn(true);
 
-        $payload = (new VendorExternalIntegrationRuntimeViewBuilder(
+        $payload = (new VendorExternalIntegrationRuntimeViewBuilderService(
             $this->ownership,
             $this->crm,
             $this->webhooks,
@@ -75,7 +75,7 @@ final class VendorExternalIntegrationRuntimeViewBuilderTest extends TestCase
         $this->ownership->expects(self::never())->method('buildForVendorId');
         $this->webhooks->expects(self::once())->method('ok')->willReturn(false);
 
-        $payload = (new VendorExternalIntegrationRuntimeViewBuilder(
+        $payload = (new VendorExternalIntegrationRuntimeViewBuilderService(
             $this->ownership,
             $this->crm,
             $this->webhooks,

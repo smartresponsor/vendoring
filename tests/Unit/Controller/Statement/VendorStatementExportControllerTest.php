@@ -5,11 +5,11 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Controller\Statement;
 
-use App\Vendoring\Controller\Statement\VendorStatementExportController;
-use App\Vendoring\DTO\Api\StatementWindowQueryRequestDTO;
-use App\Vendoring\Exception\ApiQueryValidationException;
-use App\Vendoring\Service\Statement\VendorStatementRequestResolver;
-use App\Vendoring\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
+use App\Vendoring\Controller\Vendor\VendorStatementExportController;
+use App\Vendoring\DTO\Api\VendorStatementWindowQueryRequestDTO;
+use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
+use App\Vendoring\Service\Statement\VendorStatementRequestResolverService;
+use App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface;
 use App\Vendoring\Tests\Support\Statement\FakeStatementExporterPDF;
 use App\Vendoring\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
@@ -21,15 +21,15 @@ final class VendorStatementExportControllerTest extends TestCase
     public function testExportReturnsValidationErrorWhenTenantIdIsMissing(): void
     {
         $statementService = new FakeVendorStatementService(['items' => []]);
-        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver = $this->createMock(VendorStatementWindowQueryRequestResolverServiceInterface::class);
         $windowResolver->expects(self::once())
             ->method('resolve')
-            ->willThrowException(ApiQueryValidationException::fromConstraintMessage('tenant_id_required'));
+            ->willThrowException(VendorApiQueryValidationException::fromConstraintMessage('tenant_id_required'));
 
         $controller = new VendorStatementExportController(
             $statementService,
             new FakeStatementExporterPDF(sys_get_temp_dir() . '/unused-vendoring-export.pdf'),
-            new VendorStatementRequestResolver(),
+            new VendorStatementRequestResolverService(),
             $windowResolver,
         );
 
@@ -57,14 +57,14 @@ final class VendorStatementExportControllerTest extends TestCase
             'closing' => 10.0,
             'items' => [],
         ]);
-        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver = $this->createMock(VendorStatementWindowQueryRequestResolverServiceInterface::class);
         $windowResolver->expects(self::once())
             ->method('resolve')
-            ->willReturn(new StatementWindowQueryRequestDTO('tenant-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD'));
+            ->willReturn(new VendorStatementWindowQueryRequestDTO('tenant-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD'));
         $controller = new VendorStatementExportController(
             $statementService,
             new FakeStatementExporterPDF($pdfPath),
-            new VendorStatementRequestResolver(),
+            new VendorStatementRequestResolverService(),
             $windowResolver,
         );
 
@@ -101,14 +101,14 @@ final class VendorStatementExportControllerTest extends TestCase
             'closing' => 10.0,
             'items' => [],
         ]);
-        $windowResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $windowResolver = $this->createMock(VendorStatementWindowQueryRequestResolverServiceInterface::class);
         $windowResolver->expects(self::once())
             ->method('resolve')
-            ->willReturn(new StatementWindowQueryRequestDTO('tenant-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD'));
+            ->willReturn(new VendorStatementWindowQueryRequestDTO('tenant-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD'));
         $controller = new VendorStatementExportController(
             $statementService,
             new FakeStatementExporterPDF(sys_get_temp_dir() . '/missing-vendoring-export.pdf'),
-            new VendorStatementRequestResolver(),
+            new VendorStatementRequestResolverService(),
             $windowResolver,
         );
 

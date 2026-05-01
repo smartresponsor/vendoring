@@ -5,37 +5,30 @@ declare(strict_types=1);
 
 namespace App\Vendoring\DataFixtures;
 
-use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 final class VendorTransactionDemoFixture extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('en_US');
         $vendorIds = ['demo-vendor-a', 'demo-vendor-b', 'demo-vendor-c'];
         $statuses = ['pending', 'authorized', 'captured', 'refunded'];
 
         for ($index = 1; $index <= 30; ++$index) {
-            $vendorId = self::stringValue($faker->randomElement($vendorIds));
-            $transaction = new VendorTransaction(
+            $vendorId = $vendorIds[$index % \count($vendorIds)];
+            $transaction = new VendorTransactionEntity(
                 vendorId: $vendorId,
-                orderId: sprintf('order-%s', $faker->unique()->numerify('#####')),
-                projectId: $faker->boolean(75) ? sprintf('project-%02d', $faker->numberBetween(1, 8)) : null,
-                amount: (string) $faker->randomFloat(2, 10, 1500),
+                orderId: sprintf('order-%05d', 10000 + $index),
+                projectId: 0 !== $index % 4 ? sprintf('project-%02d', ($index % 8) + 1) : null,
+                amount: number_format(10 + ($index * 47.35), 2, '.', ''),
             );
 
-            $transaction->setStatus(self::stringValue($faker->randomElement($statuses)));
+            $transaction->setStatus($statuses[$index % \count($statuses)]);
             $manager->persist($transaction);
         }
 
         $manager->flush();
-    }
-
-    private static function stringValue(mixed $value): string
-    {
-        return is_scalar($value) ? (string) $value : '';
     }
 }

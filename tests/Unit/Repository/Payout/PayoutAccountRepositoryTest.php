@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Vendoring\Tests\Unit\Repository\Payout;
+namespace App\Vendoring\Tests\Unit\Repository\VendorPayoutEntity;
 
-use App\Vendoring\Entity\Payout\PayoutAccount;
-use App\Vendoring\Repository\Payout\PayoutAccountRepository;
+use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
+use App\Vendoring\Repository\Vendor\VendorPayoutAccountRepository;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -36,7 +36,7 @@ final class PayoutAccountRepositoryTest extends TestCase
                 'created_at' => '2026-03-30 10:00:00',
             ]);
 
-        $repository = new PayoutAccountRepository($this->connection);
+        $repository = new VendorPayoutAccountRepository($this->connection);
         $account = $repository->get('tenant-1', 'vendor-1');
 
         self::assertNotNull($account);
@@ -51,7 +51,7 @@ final class PayoutAccountRepositoryTest extends TestCase
 
     public function testUpsertUpdatesExistingTenantVendorAccount(): void
     {
-        $account = new PayoutAccount('acc-1', 'tenant-1', 'vendor-1', 'bank', 'iban-123', 'USD', false, '2026-03-30 10:00:00');
+        $account = new VendorPayoutAccountEntity('acc-1', 'tenant-1', 'vendor-1', 'bank', 'iban-123', 'USD', false, '2026-03-30 10:00:00');
 
         $this->connection
             ->expects(self::once())
@@ -77,12 +77,12 @@ final class PayoutAccountRepositoryTest extends TestCase
             );
         $this->connection->expects(self::never())->method('insert');
 
-        (new PayoutAccountRepository($this->connection))->upsert($account);
+        (new VendorPayoutAccountRepository($this->connection))->upsert($account);
     }
 
     public function testUpsertInsertsNewTenantVendorAccountWhenItDoesNotExist(): void
     {
-        $account = new PayoutAccount('acc-1', 'tenant-1', 'vendor-1', 'bank', 'iban-123', 'USD', true, '2026-03-30 10:00:00');
+        $account = new VendorPayoutAccountEntity('acc-1', 'tenant-1', 'vendor-1', 'bank', 'iban-123', 'USD', true, '2026-03-30 10:00:00');
 
         $this->connection
             ->expects(self::once())
@@ -108,6 +108,6 @@ final class PayoutAccountRepositoryTest extends TestCase
                 ],
             );
 
-        (new PayoutAccountRepository($this->connection))->upsert($account);
+        (new VendorPayoutAccountRepository($this->connection))->upsert($account);
     }
 }

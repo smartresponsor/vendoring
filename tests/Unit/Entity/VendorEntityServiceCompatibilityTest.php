@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Entity;
 
-use App\Vendoring\Entity\VendorBilling;
-use App\Vendoring\Entity\VendorDocument;
-use App\Vendoring\Entity\VendorMedia;
-use App\Vendoring\Entity\VendorProfile;
+use App\Vendoring\Entity\Vendor\VendorBillingEntity;
+use App\Vendoring\Entity\Vendor\VendorDocumentEntity;
+use App\Vendoring\Entity\Vendor\VendorMediaEntity;
+use App\Vendoring\Entity\Vendor\VendorProfileEntity;
 use PHPUnit\Framework\TestCase;
 
 final class VendorEntityServiceCompatibilityTest extends TestCase
@@ -32,7 +32,7 @@ final class VendorEntityServiceCompatibilityTest extends TestCase
 
     public function testProfileEntityDefinesReflectionBackedProperties(): void
     {
-        $this->assertEntityDefinesProperties(VendorProfile::class, [
+        $this->assertEntityDefinesProperties(VendorProfileEntity::class, [
             'displayName',
             'about',
             'website',
@@ -44,7 +44,7 @@ final class VendorEntityServiceCompatibilityTest extends TestCase
 
     public function testBillingEntityDefinesReflectionBackedProperties(): void
     {
-        $this->assertEntityDefinesProperties(VendorBilling::class, [
+        $this->assertEntityDefinesProperties(VendorBillingEntity::class, [
             'iban',
             'swift',
             'payoutMethod',
@@ -54,7 +54,7 @@ final class VendorEntityServiceCompatibilityTest extends TestCase
 
     public function testMediaEntityDefinesReflectionBackedProperties(): void
     {
-        $this->assertEntityDefinesProperties(VendorMedia::class, [
+        $this->assertEntityDefinesProperties(VendorMediaEntity::class, [
             'logoPath',
             'bannerPath',
             'gallery',
@@ -63,7 +63,7 @@ final class VendorEntityServiceCompatibilityTest extends TestCase
 
     public function testDocumentEntityDefinesReflectionBackedProperties(): void
     {
-        $this->assertEntityDefinesProperties(VendorDocument::class, [
+        $this->assertEntityDefinesProperties(VendorDocumentEntity::class, [
             'expiresAt',
             'uploaderId',
         ]);

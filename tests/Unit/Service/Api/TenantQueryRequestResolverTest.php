@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service\Api;
 
-use App\Vendoring\Service\Api\TenantQueryRequestResolver;
-use App\Vendoring\Exception\ApiQueryValidationException;
+use App\Vendoring\Service\Api\VendorTenantQueryRequestResolverService;
+use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validation;
@@ -15,7 +15,7 @@ final class TenantQueryRequestResolverTest extends TestCase
 {
     public function testResolveReturnsDtoForValidTenantQuery(): void
     {
-        $resolver = new TenantQueryRequestResolver(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
+        $resolver = new VendorTenantQueryRequestResolverService(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
 
         $dto = $resolver->resolve(new Request(['tenantId' => 'tenant-1']));
 
@@ -24,9 +24,9 @@ final class TenantQueryRequestResolverTest extends TestCase
 
     public function testResolveThrowsWhenTenantQueryIsMissing(): void
     {
-        $resolver = new TenantQueryRequestResolver(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
+        $resolver = new VendorTenantQueryRequestResolverService(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
 
-        $this->expectException(ApiQueryValidationException::class);
+        $this->expectException(VendorApiQueryValidationException::class);
         $this->expectExceptionMessage('tenant_id_required');
 
         $resolver->resolve(new Request());

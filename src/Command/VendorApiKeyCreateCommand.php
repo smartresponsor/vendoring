@@ -6,10 +6,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
-use App\Vendoring\Command\Support\CommandOutputFormat;
-use App\Vendoring\Command\Support\CommandResultEmitterInterface;
-use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
-use App\Vendoring\ServiceInterface\VendorApiKeyServiceInterface;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +26,7 @@ final class VendorApiKeyCreateCommand extends Command
     public function __construct(
         private readonly VendorRepositoryInterface $vendorRepo,
         private readonly VendorApiKeyServiceInterface $apiKeyService,
-        private readonly CommandResultEmitterInterface $commandResultEmitter,
+        private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter,
     ) {
         parent::__construct();
     }
@@ -49,7 +49,7 @@ final class VendorApiKeyCreateCommand extends Command
 
         $vendorId = is_scalar($vendorIdOption) ? (int) (string) $vendorIdOption : 0;
         $permissions = is_scalar($permissionsOption) ? (string) $permissionsOption : 'read';
-        $format = CommandOutputFormat::normalize($formatOption);
+        $format = VendorCommandOutputFormatEnum::normalize($formatOption);
 
         if ($vendorId <= 0) {
             $this->commandResultEmitter->emitError($output, $format, 'invalid', 'Invalid vendorId', [
@@ -88,7 +88,7 @@ final class VendorApiKeyCreateCommand extends Command
             return Command::FAILURE;
         }
 
-        if (CommandOutputFormat::isJson($format)) {
+        if (VendorCommandOutputFormatEnum::isJson($format)) {
             if (!$this->commandResultEmitter->emitJson($output, [
                 'vendorId' => $vendorId,
                 'permissions' => $permissions,

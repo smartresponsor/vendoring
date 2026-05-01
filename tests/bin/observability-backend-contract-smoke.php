@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-use App\Vendoring\Observability\Service\CorrelationContext;
-use App\Vendoring\Observability\Service\FileObservabilityRecordExporter;
-use App\Vendoring\Observability\Service\RuntimeLogger;
-use App\Vendoring\Observability\Service\RuntimeMetricCollector;
+use App\Vendoring\Service\Observability\VendorCorrelationContextService;
+use App\Vendoring\Service\Observability\VendorFileObservabilityRecordExporterService;
+use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 $dir = sys_get_temp_dir() . '/vendoring-observability-smoke-' . bin2hex(random_bytes(4));
-$exporter = new FileObservabilityRecordExporter($dir);
-$correlationContext = new CorrelationContext();
+$exporter = new VendorFileObservabilityRecordExporterService($dir);
+$correlationContext = new VendorCorrelationContextService();
 $correlationContext->beginRequest('smoke-correlation-id');
 
 $requestStack = new RequestStack();
@@ -21,8 +21,8 @@ $request = Request::create('/api/vendor-transactions');
 $request->attributes->set('_route', 'app_vendor_transaction_create');
 $requestStack->push($request);
 
-$logger = new RuntimeLogger($correlationContext, $requestStack, $exporter);
-$metrics = new RuntimeMetricCollector($correlationContext, $exporter);
+$logger = new VendorRuntimeLoggerService($correlationContext, $requestStack, $exporter);
+$metrics = new VendorRuntimeMetricCollectorService($correlationContext, $exporter);
 
 $logger->info('observability_backend_smoke', ['vendor_id' => 'vendor-1']);
 $metrics->increment('observability_backend_smoke_total', ['scope' => 'synthetic']);

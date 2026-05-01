@@ -5,12 +5,12 @@ declare(strict_types=1);
 
 namespace App\Vendoring\ServiceInterface\Payout;
 
-use App\Vendoring\Entity\Payout\PayoutAccount;
+use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
 
 interface VendorPayoutAccountServiceInterface
 {
     /**
      * @param array<string, mixed> $payload
      */
-    public function upsertFromPayload(array $payload): PayoutAccount;
+    public function upsertFromPayload(array $payload): VendorPayoutAccountEntity;
 }

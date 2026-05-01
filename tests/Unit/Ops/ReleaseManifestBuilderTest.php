@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Ops;
 
-use App\Vendoring\Service\Ops\ReleaseManifestBuilder;
-use App\Vendoring\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
-use App\Vendoring\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface;
+use App\Vendoring\Service\Ops\VendorReleaseManifestBuilderService;
+use App\Vendoring\ServiceInterface\Observability\VendorAlertRuleEvaluatorServiceInterface;
+use App\Vendoring\ServiceInterface\Observability\VendorMonitoringSnapshotBuilderServiceInterface;
 use PHPUnit\Framework\TestCase;
 
 final class ReleaseManifestBuilderTest extends TestCase
@@ -26,7 +26,7 @@ final class ReleaseManifestBuilderTest extends TestCase
         }
         file_put_contents($projectDir . '/build/docs/phpdocumentor/index.html', '<html></html>');
 
-        $snapshotBuilder = new class implements MonitoringSnapshotBuilderInterface {
+        $snapshotBuilder = new class implements VendorMonitoringSnapshotBuilderServiceInterface {
             public function build(int $windowSeconds = 900): array
             {
                 return [
@@ -40,14 +40,14 @@ final class ReleaseManifestBuilderTest extends TestCase
                 ];
             }
         };
-        $alertEvaluator = new class implements AlertRuleEvaluatorInterface {
+        $alertEvaluator = new class implements VendorAlertRuleEvaluatorServiceInterface {
             public function evaluate(array $snapshot): array
             {
                 return [['code' => 'outbound_circuit_open', 'severity' => 'critical', 'message' => 'Open breaker detected.', 'context' => []]];
             }
         };
 
-        $builder = new ReleaseManifestBuilder($snapshotBuilder, $alertEvaluator, $projectDir);
+        $builder = new VendorReleaseManifestBuilderService($snapshotBuilder, $alertEvaluator, $projectDir);
         $manifest = $builder->build(600);
 
         self::assertSame('warn', $manifest['status']);

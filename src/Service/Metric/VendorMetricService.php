@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Metric;
 
-use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
 use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
-use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
 use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
 
 final readonly class VendorMetricService implements VendorMetricServiceInterface
 {
     public function __construct(
-        private LedgerEntryRepositoryInterface $ledger,
+        private VendorLedgerEntryRepositoryInterface $ledger,
     ) {}
 
     public function overview(VendorMetricOverviewRequestDTO $request): array
     {
-        $revenue = max(0.0, $this->ledger->sumByAccount(new LedgerAccountSumCriteriaDTO(
+        $revenue = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
             tenantId: $request->tenantId,
             accountCode: 'REVENUE',
             from: $request->from,
@@ -26,7 +26,7 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
             vendorId: $request->vendorId,
             currency: $request->currency,
         )));
-        $refunds = max(0.0, $this->ledger->sumByAccount(new LedgerAccountSumCriteriaDTO(
+        $refunds = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
             tenantId: $request->tenantId,
             accountCode: 'REFUNDS_PAYABLE',
             from: $request->from,
@@ -34,7 +34,7 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
             vendorId: $request->vendorId,
             currency: $request->currency,
         )));
-        $payouts = max(0.0, $this->ledger->sumByAccount(new LedgerAccountSumCriteriaDTO(
+        $payouts = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
             tenantId: $request->tenantId,
             accountCode: 'VENDOR_PAYABLE',
             from: $request->from,

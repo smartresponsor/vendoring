@@ -37,7 +37,7 @@ function Replace-In-File([string] $path, [string] $pattern, [string] $replacemen
 }
 
 $oldFile = Join-Path $root 'src/Entity/CategoryBanner.php'
-$newFile = Join-Path $root 'src/Entity/VendorCatalogCategoryBanner.php'
+$newFile = Join-Path $root 'src/Entity/VendorCatalogCategoryBannerEntity.php'
 
 if (Test-Path $oldFile) {
     Backup-File $oldFile
@@ -45,7 +45,7 @@ if (Test-Path $oldFile) {
     New-Item -ItemType Directory -Force -Path (Split-Path $newFile -Parent) | Out-Null
     $content = Get-Content $oldFile -Raw
 
-    $content = $content -replace '\bclass\s+CategoryBanner\b', 'class VendorCatalogCategoryBanner'
+    $content = $content -replace '\bclass\s+CategoryBanner\b', 'class VendorCatalogCategoryBannerEntity'
 
     # Scope explicit generic Doctrine table names when present.
     $content = $content -replace "name:\s*'category_banner'", "name: 'vendor_catalog_category_banner'"
@@ -64,14 +64,14 @@ if (Test-Path $src) {
     foreach ($file in $phpFiles) {
         $path = $file.FullName
 
-        Replace-In-File $path 'App\Vendoring\\Entity\\CategoryBanner' 'App\Vendoring\Entity\VendorCatalogCategoryBanner'
-        Replace-In-File $path 'use\s+App\Vendoring\\Entity\\CategoryBanner;' 'use App\Vendoring\Entity\VendorCatalogCategoryBanner;'
-        Replace-In-File $path '\bCategoryBanner::class\b' 'VendorCatalogCategoryBanner::class'
-        Replace-In-File $path '\bnew\s+CategoryBanner\s*\(' 'new VendorCatalogCategoryBanner('
-        Replace-In-File $path '\bCategoryBanner\s+\$categoryBanner\b' 'VendorCatalogCategoryBanner $categoryBanner'
-        Replace-In-File $path '\?CategoryBanner\s+\$categoryBanner\b' '?VendorCatalogCategoryBanner $categoryBanner'
-        Replace-In-File $path '\biterable<CategoryBanner>' 'iterable<VendorCatalogCategoryBanner>'
-        Replace-In-File $path '\barray<CategoryBanner>' 'array<VendorCatalogCategoryBanner>'
+        Replace-In-File $path 'App\Vendoring\\Entity\\CategoryBanner' 'App\Vendoring\Entity\Vendor\VendorCatalogCategoryBannerEntity'
+        Replace-In-File $path 'use\s+App\Vendoring\\Entity\\CategoryBanner;' 'use App\Vendoring\Entity\Vendor\VendorCatalogCategoryBannerEntity;'
+        Replace-In-File $path '\bCategoryBanner::class\b' 'VendorCatalogCategoryBannerEntity::class'
+        Replace-In-File $path '\bnew\s+CategoryBanner\s*\(' 'new VendorCatalogCategoryBannerEntity('
+        Replace-In-File $path '\bCategoryBanner\s+\$categoryBanner\b' 'VendorCatalogCategoryBannerEntity $categoryBanner'
+        Replace-In-File $path '\?CategoryBanner\s+\$categoryBanner\b' '?VendorCatalogCategoryBannerEntity $categoryBanner'
+        Replace-In-File $path '\biterable<CategoryBanner>' 'iterable<VendorCatalogCategoryBannerEntity>'
+        Replace-In-File $path '\barray<CategoryBanner>' 'array<VendorCatalogCategoryBannerEntity>'
     }
 }
 
@@ -81,5 +81,5 @@ if (Test-Path $newFile) {
 
 Write-Host 'Vendoring CategoryBanner entity rename completed.'
 Write-Host 'Old: src/Entity/CategoryBanner.php'
-Write-Host 'New: src/Entity/VendorCatalogCategoryBanner.php'
+Write-Host 'New: src/Entity/VendorCatalogCategoryBannerEntity.php'
 Write-Host "Backup: $backupRoot"

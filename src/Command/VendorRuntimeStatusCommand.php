@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
-use App\Vendoring\Command\Support\CommandIoException;
-use App\Vendoring\Command\Support\CommandJsonArtifactWriter;
-use App\Vendoring\Command\Support\CommandJsonArtifactWriterInterface;
-use App\Vendoring\Command\Support\CommandJsonEncoder;
-use App\Vendoring\Command\Support\CommandJsonFileWriter;
-use App\Vendoring\Command\Support\CommandOutputFormat;
-use App\Vendoring\Command\Support\CommandResultEmitter;
-use App\Vendoring\Command\Support\CommandResultEmitterInterface;
-use App\Vendoring\Command\Support\VendorRuntimeWindowInput;
-use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
+use App\Vendoring\Service\Command\VendorCommandJsonArtifactWriterService;
+use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
+use App\Vendoring\Service\Command\VendorCommandJsonFileWriterService;
+use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
+use App\Vendoring\Exception\Command\VendorCommandIoException;
+use App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
+use App\Vendoring\DTO\Command\VendorRuntimeWindowInputDTO;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,18 +30,18 @@ use Throwable;
  */
 final class VendorRuntimeStatusCommand extends Command
 {
-    private readonly VendorRuntimeStatusViewBuilderInterface $runtimeStatusViewBuilder;
-    private readonly CommandJsonArtifactWriterInterface $commandJsonArtifactWriter;
-    private readonly CommandResultEmitterInterface $commandResultEmitter;
+    private readonly VendorRuntimeStatusProjectionBuilderServiceInterface $runtimeStatusProjectionBuilder;
+    private readonly VendorCommandJsonArtifactWriterServiceInterface $commandJsonArtifactWriter;
+    private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter;
 
     public function __construct(
-        VendorRuntimeStatusViewBuilderInterface $runtimeStatusViewBuilder,
-        ?CommandJsonArtifactWriterInterface $commandJsonArtifactWriter = null,
-        ?CommandResultEmitterInterface $commandResultEmitter = null,
+        VendorRuntimeStatusProjectionBuilderServiceInterface $runtimeStatusProjectionBuilder,
+        ?VendorCommandJsonArtifactWriterServiceInterface $commandJsonArtifactWriter = null,
+        ?VendorCommandResultEmitterServiceInterface $commandResultEmitter = null,
     ) {
-        $this->runtimeStatusViewBuilder = $runtimeStatusViewBuilder;
-        $this->commandJsonArtifactWriter = $commandJsonArtifactWriter ?? self::defaultCommandJsonArtifactWriter();
-        $this->commandResultEmitter = $commandResultEmitter ?? self::defaultCommandResultEmitter();
+        $this->runtimeStatusProjectionBuilder = $runtimeStatusProjectionBuilder;
+        $this->commandJsonArtifactWriter = $commandJsonArtifactWriter ?? self::defaultVendorCommandJsonArtifactWriterService();
+        $this->commandResultEmitter = $commandResultEmitter ?? self::defaultVendorCommandResultEmitterService();
         parent::__construct();
     }
 
@@ -62,7 +62,7 @@ final class VendorRuntimeStatusCommand extends Command
     /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $runtimeInput = VendorRuntimeWindowInput::fromInput($input);
+        $runtimeInput = VendorRuntimeWindowInputDTO::fromInput($input);
 
         if (!$runtimeInput->hasRequiredScope()) {
             $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'invalid', 'Both --tenantId and --vendorId are required.', [
@@ -74,7 +74,7 @@ final class VendorRuntimeStatusCommand extends Command
         }
 
         try {
-            $view = $this->runtimeStatusViewBuilder->build(
+            $projection = $this->runtimeStatusProjectionBuilder->build(
                 tenantId: $runtimeInput->tenantId,
                 vendorId: $runtimeInput->vendorId,
                 from: $runtimeInput->from,
@@ -105,9 +105,9 @@ final class VendorRuntimeStatusCommand extends Command
                 (bool) $input->getOption('write'),
                 $input->getOption('output'),
                 dirname(__DIR__, 2) . '/build/release/runtime-status.json',
-                $view,
+                $projection,
             );
-        } catch (CommandIoException $exception) {
+        } catch (VendorCommandIoException $exception) {
             $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'failed', $exception->getMessage(), [
                 'tenantId' => $runtimeInput->tenantId,
                 'vendorId' => $runtimeInput->vendorId,
@@ -119,13 +119,13 @@ final class VendorRuntimeStatusCommand extends Command
             return Command::FAILURE;
         }
 
-        if (CommandOutputFormat::isJson($runtimeInput->format)) {
-            return $this->commandResultEmitter->emitJson($output, $view)
+        if (VendorCommandOutputFormatEnum::isJson($runtimeInput->format)) {
+            return $this->commandResultEmitter->emitJson($output, $projection)
                 ? Command::SUCCESS
                 : Command::FAILURE;
         }
 
-        $surfaceStatus = $view['surfaceStatus'];
+        $surfaceStatus = $projection['surfaceStatus'];
         $output->writeln(sprintf('tenantId=%s vendorId=%s currency=%s', $runtimeInput->tenantId, $runtimeInput->vendorId, $runtimeInput->currency));
         $output->writeln(sprintf(
             'ownership=%s finance=%s statementDelivery=%s externalIntegration=%s',
@@ -142,15 +142,15 @@ final class VendorRuntimeStatusCommand extends Command
         return Command::SUCCESS;
     }
 
-    private static function defaultCommandJsonArtifactWriter(): CommandJsonArtifactWriterInterface
+    private static function defaultVendorCommandJsonArtifactWriterService(): VendorCommandJsonArtifactWriterServiceInterface
     {
-        $encoder = new CommandJsonEncoder();
+        $encoder = new VendorCommandJsonEncoderService();
 
-        return new CommandJsonArtifactWriter(new CommandJsonFileWriter($encoder));
+        return new VendorCommandJsonArtifactWriterService(new VendorCommandJsonFileWriterService($encoder));
     }
 
-    private static function defaultCommandResultEmitter(): CommandResultEmitterInterface
+    private static function defaultVendorCommandResultEmitterService(): VendorCommandResultEmitterServiceInterface
     {
-        return new CommandResultEmitter(new CommandJsonEncoder());
+        return new VendorCommandResultEmitterService(new VendorCommandJsonEncoderService());
     }
 }

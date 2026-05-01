@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Statement;
 
-use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
-use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Doctrine\DBAL\Exception;
 use RuntimeException;
 
 final readonly class VendorStatementService implements VendorStatementServiceInterface
 {
-    public function __construct(private LedgerEntryRepositoryInterface $ledger) {}
+    public function __construct(private VendorLedgerEntryRepositoryInterface $ledger) {}
 
     /**
      * @return array{tenantId:string, vendorId:string, from:string, to:string, currency:string, opening:float, earnings:float, refunds:float, fees:float, closing:float, items:list<array{type:string, amount:float, currency:string}>}
@@ -22,7 +22,7 @@ final readonly class VendorStatementService implements VendorStatementServiceInt
     public function build(VendorStatementRequestDTO $dto): array
     {
         $opening = 0.0;
-        $earnings = max(0.0, $this->ledger->sumByAccount(new LedgerAccountSumCriteriaDTO(
+        $earnings = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
             tenantId: $dto->tenantId,
             accountCode: 'REVENUE',
             from: $dto->from,
@@ -30,7 +30,7 @@ final readonly class VendorStatementService implements VendorStatementServiceInt
             vendorId: $dto->vendorId,
             currency: $dto->currency,
         )));
-        $refunds = max(0.0, $this->ledger->sumByAccount(new LedgerAccountSumCriteriaDTO(
+        $refunds = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
             tenantId: $dto->tenantId,
             accountCode: 'REFUNDS_PAYABLE',
             from: $dto->from,

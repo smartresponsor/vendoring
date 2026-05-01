@@ -5,15 +5,15 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Payout;
 
-use App\Vendoring\DTO\Payout\CreatePayoutDTO;
-use App\Vendoring\Entity\Payout\Payout;
+use App\Vendoring\DTO\Payout\VendorCreatePayoutDTO;
+use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use InvalidArgumentException;
 
 final class VendorPayoutRequestService implements VendorPayoutRequestServiceInterface
 {
     /** @param array<string, mixed> $payload */
-    public function toCreateDto(array $payload): CreatePayoutDTO
+    public function toCreateDto(array $payload): VendorCreatePayoutDTO
     {
         foreach (['tenantId', 'vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
             if (!isset($payload[$field])) {
@@ -21,7 +21,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             }
         }
 
-        return new CreatePayoutDTO(
+        return new VendorCreatePayoutDTO(
             vendorId: $this->requiredString($payload, 'vendorId'),
             currency: $this->requiredString($payload, 'currency'),
             thresholdCents: $this->requiredThresholdCents($payload),
@@ -30,7 +30,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
         );
     }
 
-    public function normalizePayout(Payout $payout): array
+    public function normalizePayout(VendorPayoutEntity $payout): array
     {
         return [
             'id' => $payout->id,

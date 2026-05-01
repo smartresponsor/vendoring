@@ -6,8 +6,8 @@ namespace App\Vendoring\Tests\Unit\Service;
 
 use App\Vendoring\Entity\Vendor;
 use App\Vendoring\Entity\VendorApiKey;
-use App\Vendoring\RepositoryInterface\VendorApiKeyRepositoryInterface;
-use App\Vendoring\Service\VendorApiKeyService;
+use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
+use App\Vendoring\Service\Security\VendorApiKeyService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Service\Ops;
 
 use App\Vendoring\Entity\VendorTransaction;
-use App\Vendoring\Service\Ops\VendorTransactionOperatorPageBuilder;
-use App\Vendoring\ValueObject\VendorTransactionStatus;
+use App\Vendoring\Service\Ops\VendorTransactionOperatorPageBuilderService;
+use App\Vendoring\ValueObject\VendorTransactionStatusValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionOperatorPageBuilderTest extends TestCase
@@ -15,9 +15,9 @@ final class VendorTransactionOperatorPageBuilderTest extends TestCase
     {
         $transaction = new VendorTransaction('vendor-1', 'order-1', 'project-1', '10.00');
         $this->forceId($transaction, 42);
-        $transaction->setStatus(VendorTransactionStatus::SETTLED);
+        $transaction->setStatus(VendorTransactionStatusValueObject::SETTLED);
 
-        $html = (new VendorTransactionOperatorPageBuilder())->renderIndex('vendor-1', [$transaction]);
+        $html = (new VendorTransactionOperatorPageBuilderService())->renderIndex('vendor-1', [$transaction]);
 
         self::assertStringContainsString('>Settled</td>', $html);
         self::assertStringContainsString('<option value="settled" selected>Settled</option>', $html);

@@ -42,7 +42,7 @@ final class VendorPayoutProcessCommandTest extends TestCase
         ]);
 
         self::assertSame(0, $exitCode);
-        self::assertStringContainsString('Payout payout-1 was not processed.', $tester->getDisplay());
+        self::assertStringContainsString('VendorPayoutEntity payout-1 was not processed.', $tester->getDisplay());
     }
 
     public function testExecuteCanEmitJsonOutput(): void

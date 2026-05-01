@@ -5,14 +5,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Controller;
 
-use App\Vendoring\Controller\VendorTransactionController;
-use App\Vendoring\Entity\Vendor;
-use App\Vendoring\Entity\VendorTransaction;
-use App\Vendoring\Observability\Service\CorrelationContext;
-use App\Vendoring\Observability\Service\RuntimeLogger;
-use App\Vendoring\Service\Traffic\FileWriteRateLimiter;
-use App\Vendoring\Service\VendorTransactionInputResolverService;
-use App\Vendoring\ServiceInterface\VendorApiKeyServiceInterface;
+use App\Vendoring\Controller\Vendor\VendorTransactionController;
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
+use App\Vendoring\Service\Observability\VendorCorrelationContextService;
+use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Traffic\VendorFileWriteRateLimiterService;
+use App\Vendoring\Service\Transaction\VendorTransactionInputResolverService;
+use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
 use App\Vendoring\Tests\Support\Transaction\FakeVendorTransactionManager;
 use App\Vendoring\Tests\Support\Transaction\InMemoryVendorTransactionRepository;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -25,7 +25,7 @@ final class VendorTransactionControllerTest extends TestCase
 {
     public function testCreateRejectsMissingAuthenticationHeader(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $controller = $this->controller($transaction, apiKeyService: $this->createMock(VendorApiKeyServiceInterface::class));
@@ -45,7 +45,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testCreateRejectsInvalidAuthenticationHeader(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $controller = $this->controller($transaction, apiKeyService: $this->invalidApiKeyService());
@@ -64,7 +64,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testCreateRejectsUnderScopedToken(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $controller = $this->controller($transaction, apiKeyService: $this->underScopedApiKeyService());
@@ -83,7 +83,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testCreateNormalizesBlankProjectIdBeforePassingToManager(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $manager = new FakeVendorTransactionManager($transaction);
@@ -107,7 +107,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testCreateReturnsConflictForDuplicateTransaction(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $manager = new FakeVendorTransactionManager($transaction);
@@ -127,7 +127,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testCreateReturnsValidationErrorForInvalidAmount(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $controller = $this->controller($transaction);
@@ -145,7 +145,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testCreateReturnsValidationErrorForBlankVendorIdAfterTrim(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $controller = $this->controller($transaction);
@@ -163,7 +163,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testCreateReturnsValidationErrorForBlankOrderIdAfterTrim(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $controller = $this->controller($transaction);
@@ -181,7 +181,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testCreateReturnsBadRequestForMalformedJson(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $controller = $this->controller($transaction);
@@ -195,7 +195,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testUpdateStatusUsesRepositoryLookupByVendorAndId(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $manager = new FakeVendorTransactionManager($transaction);
@@ -214,7 +214,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testUpdateStatusRejectsUnderScopedToken(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $controller = $this->controller($transaction, apiKeyService: $this->underScopedApiKeyService());
@@ -230,7 +230,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testUpdateStatusReturnsNotFoundWhenVendorDoesNotOwnTransaction(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $controller = $this->controller($transaction);
@@ -246,7 +246,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testUpdateStatusReturnsBadRequestForMalformedJson(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $controller = $this->controller($transaction);
@@ -260,7 +260,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testUpdateStatusReturnsValidationErrorWhenStatusMissing(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $controller = $this->controller($transaction);
@@ -274,7 +274,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testUpdateStatusReturnsValidationErrorForInvalidTransition(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $manager = new FakeVendorTransactionManager($transaction);
@@ -292,7 +292,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testCreateMapsUnknownValidationMessageToStableErrorCode(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
         $manager = new FakeVendorTransactionManager($transaction);
@@ -312,7 +312,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     public function testCreateReturnsTooManyRequestsWhenWriteRateLimitIsExceeded(): void
     {
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
         $rateLimitKey = 'controller-rate-limit-test-' . bin2hex(random_bytes(6));
 
@@ -349,21 +349,21 @@ final class VendorTransactionControllerTest extends TestCase
         return $payload;
     }
 
-    private function forceId(VendorTransaction $transaction, int $id): void
+    private function forceId(VendorTransactionEntity $transaction, int $id): void
     {
         $reflection = new \ReflectionObject($transaction);
         $property = $reflection->getProperty('id');
         $property->setValue($transaction, $id);
     }
 
-    private function runtimeLogger(): RuntimeLogger
+    private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new RuntimeLogger(new CorrelationContext(), new RequestStack());
+        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack());
     }
 
-    private function controller(?VendorTransaction $transaction = null, ?FakeVendorTransactionManager $manager = null, ?VendorApiKeyServiceInterface $apiKeyService = null): VendorTransactionController
+    private function controller(?VendorTransactionEntity $transaction = null, ?FakeVendorTransactionManager $manager = null, ?VendorApiKeyServiceInterface $apiKeyService = null): VendorTransactionController
     {
-        $transaction ??= new VendorTransaction('vendor-1', 'order-1', null, '10.00');
+        $transaction ??= new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $manager ??= new FakeVendorTransactionManager($transaction);
 
         return new VendorTransactionController(
@@ -371,7 +371,7 @@ final class VendorTransactionControllerTest extends TestCase
             $manager,
             new VendorTransactionInputResolverService(),
             $this->runtimeLogger(),
-            new FileWriteRateLimiter(),
+            new VendorFileWriteRateLimiterService(),
             $apiKeyService ?? $this->authorizedApiKeyService(),
         );
     }
@@ -379,7 +379,7 @@ final class VendorTransactionControllerTest extends TestCase
     /** @return VendorApiKeyServiceInterface&MockObject */
     private function authorizedApiKeyService(): VendorApiKeyServiceInterface
     {
-        $vendor = new Vendor('Vendor A');
+        $vendor = new VendorEntity('VendorEntity A');
         $service = $this->createMock(VendorApiKeyServiceInterface::class);
         $service->method('resolveVendorFromAuthHeader')->willReturn($vendor);
         $service->method('validateAuthorizationHeader')->with('Bearer valid-token', 'write:transactions')->willReturn($vendor);
@@ -400,7 +400,7 @@ final class VendorTransactionControllerTest extends TestCase
     /** @return VendorApiKeyServiceInterface&MockObject */
     private function underScopedApiKeyService(): VendorApiKeyServiceInterface
     {
-        $vendor = new Vendor('Vendor A');
+        $vendor = new VendorEntity('VendorEntity A');
         $service = $this->createMock(VendorApiKeyServiceInterface::class);
         $service->method('resolveVendorFromAuthHeader')->with('Bearer valid-token')->willReturn($vendor);
         $service->method('validateAuthorizationHeader')->with('Bearer valid-token', 'write:transactions')->willReturn(null);

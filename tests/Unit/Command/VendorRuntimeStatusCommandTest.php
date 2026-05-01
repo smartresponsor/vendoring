@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Command;
 
 use App\Vendoring\Command\VendorRuntimeStatusCommand;
-use App\Vendoring\Projection\VendorRuntimeStatusView;
-use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
+use App\Vendoring\Projection\Vendor\VendorRuntimeStatusView;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
@@ -14,11 +14,11 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 final class VendorRuntimeStatusCommandTest extends TestCase
 {
-    private VendorRuntimeStatusViewBuilderInterface&MockObject $runtimeStatusViewBuilder;
+    private VendorRuntimeStatusViewBuilderServiceInterface&MockObject $runtimeStatusViewBuilder;
 
     protected function setUp(): void
     {
-        $this->runtimeStatusViewBuilder = $this->createMock(VendorRuntimeStatusViewBuilderInterface::class);
+        $this->runtimeStatusViewBuilder = $this->createMock(VendorRuntimeStatusViewBuilderServiceInterface::class);
     }
 
     public function testExecutePrintsProfileReadinessSummaryInTextMode(): void

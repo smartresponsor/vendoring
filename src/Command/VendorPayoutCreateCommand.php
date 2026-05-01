@@ -5,11 +5,11 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
-use App\Vendoring\Command\Support\CommandJsonEncoder;
-use App\Vendoring\Command\Support\CommandOutputFormat;
-use App\Vendoring\Command\Support\CommandResultEmitter;
-use App\Vendoring\Command\Support\CommandResultEmitterInterface;
-use App\Vendoring\RepositoryInterface\Payout\PayoutRepositoryInterface;
+use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
+use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use InvalidArgumentException;
@@ -28,19 +28,19 @@ final class VendorPayoutCreateCommand extends Command
 {
     private readonly VendorPayoutRequestServiceInterface $requestService;
     private readonly VendorPayoutServiceInterface $payoutService;
-    private readonly PayoutRepositoryInterface $payoutRepository;
-    private readonly CommandResultEmitterInterface $commandResultEmitter;
+    private readonly VendorPayoutRepositoryInterface $payoutRepository;
+    private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter;
 
     public function __construct(
         VendorPayoutRequestServiceInterface $requestService,
         VendorPayoutServiceInterface $payoutService,
-        PayoutRepositoryInterface $payoutRepository,
-        ?CommandResultEmitterInterface $commandResultEmitter = null,
+        VendorPayoutRepositoryInterface $payoutRepository,
+        ?VendorCommandResultEmitterServiceInterface $commandResultEmitter = null,
     ) {
         $this->requestService = $requestService;
         $this->payoutService = $payoutService;
         $this->payoutRepository = $payoutRepository;
-        $this->commandResultEmitter = $commandResultEmitter ?? self::defaultCommandResultEmitter();
+        $this->commandResultEmitter = $commandResultEmitter ?? self::defaultVendorCommandResultEmitterService();
         parent::__construct();
     }
 
@@ -67,7 +67,7 @@ final class VendorPayoutCreateCommand extends Command
             'retentionFeePercent' => $input->getOption('retentionFeePercent'),
         ];
 
-        $format = CommandOutputFormat::normalize($input->getOption('format'));
+        $format = VendorCommandOutputFormatEnum::normalize($input->getOption('format'));
 
         try {
             $dto = $this->requestService->toCreateDto($payload);
@@ -87,7 +87,7 @@ final class VendorPayoutCreateCommand extends Command
         }
 
         if (null === $payoutId) {
-            if (CommandOutputFormat::isJson($format)) {
+            if (VendorCommandOutputFormatEnum::isJson($format)) {
                 return $this->commandResultEmitter->emitJson($output, [
                     'status' => 'skipped',
                     'reason' => 'balance_below_threshold',
@@ -112,7 +112,7 @@ final class VendorPayoutCreateCommand extends Command
         }
 
         if (null === $payout) {
-            $this->commandResultEmitter->emitError($output, $format, 'failed', 'Payout was created but cannot be loaded from repository.', [
+            $this->commandResultEmitter->emitError($output, $format, 'failed', 'VendorPayoutEntity was created but cannot be loaded from repository.', [
                 'payoutId' => $payoutId,
                 'payload' => $payload,
             ]);
@@ -122,7 +122,7 @@ final class VendorPayoutCreateCommand extends Command
 
         $normalized = $this->requestService->normalizePayout($payout);
 
-        if (CommandOutputFormat::isJson($format)) {
+        if (VendorCommandOutputFormatEnum::isJson($format)) {
             return $this->commandResultEmitter->emitJson($output, $normalized)
                 ? Command::SUCCESS
                 : Command::FAILURE;
@@ -152,8 +152,8 @@ final class VendorPayoutCreateCommand extends Command
         return is_numeric($value) ? (int) $value : 0;
     }
 
-    private static function defaultCommandResultEmitter(): CommandResultEmitterInterface
+    private static function defaultVendorCommandResultEmitterService(): VendorCommandResultEmitterServiceInterface
     {
-        return new CommandResultEmitter(new CommandJsonEncoder());
+        return new VendorCommandResultEmitterService(new VendorCommandJsonEncoderService());
     }
 }

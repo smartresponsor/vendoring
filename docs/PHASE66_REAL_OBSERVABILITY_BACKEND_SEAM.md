@@ -7,7 +7,7 @@ metrics are no longer limited to in-memory inspection or PHP error-log output.
 
 ## What was added
 
-- `ObservabilityRecordExporterInterface`
+- `VendorObservabilityRecordExporterServiceInterface`
 - `FileObservabilityRecordExporter`
 - runtime log export stream: `runtime_logs.ndjson`
 - runtime metric export stream: `runtime_metrics.ndjson`

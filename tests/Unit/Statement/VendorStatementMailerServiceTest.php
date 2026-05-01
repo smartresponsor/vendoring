@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Statement;
 
-use App\Vendoring\Observability\Service\CorrelationContext;
-use App\Vendoring\Observability\Service\MetricEmitter;
-use App\Vendoring\Observability\Service\RuntimeLogger;
-use App\Vendoring\Service\Policy\OutboundOperationPolicy;
-use App\Vendoring\Service\Reliability\FileOutboundCircuitBreaker;
+use App\Vendoring\Service\Observability\VendorCorrelationContextService;
+use App\Vendoring\Service\Observability\VendorMetricEmitterService;
+use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Policy\VendorOutboundOperationPolicyService;
+use App\Vendoring\Service\Reliability\VendorFileOutboundCircuitBreakerService;
 use App\Vendoring\Service\Statement\VendorStatementMailerService;
 use App\Vendoring\Tests\Support\Statement\FakeMailer;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +22,7 @@ final class VendorStatementMailerServiceTest extends TestCase
     public function testSendReturnsSuccessAndEmitsMetricWhenAttachmentExists(): void
     {
         $mailer = new FakeMailer();
-        $metrics = new MetricEmitter();
+        $metrics = new VendorMetricEmitterService();
         $service = $this->service($mailer, $metrics);
         $pdf = tempnam(sys_get_temp_dir(), 'statement-mail-');
         self::assertNotFalse($pdf);
@@ -43,7 +43,7 @@ final class VendorStatementMailerServiceTest extends TestCase
     public function testSendRejectsInvalidEmailWithoutCallingMailer(): void
     {
         $mailer = new FakeMailer();
-        $metrics = new MetricEmitter();
+        $metrics = new VendorMetricEmitterService();
         $service = $this->service($mailer, $metrics);
 
         $result = $service->send('tenant-1', 'vendor-1', 'not-an-email', '/tmp/missing.pdf', 'March 2026');
@@ -57,7 +57,7 @@ final class VendorStatementMailerServiceTest extends TestCase
     public function testSendReturnsFailureAndEmitsMetricsWhenMailerThrows(): void
     {
         $mailer = new FakeMailer(true);
-        $metrics = new MetricEmitter();
+        $metrics = new VendorMetricEmitterService();
         $service = $this->service($mailer, $metrics);
 
         $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
@@ -77,7 +77,7 @@ final class VendorStatementMailerServiceTest extends TestCase
     public function testSendShortCircuitsWhenCircuitBreakerIsOpen(): void
     {
         $mailer = new FakeMailer();
-        $metrics = new MetricEmitter();
+        $metrics = new VendorMetricEmitterService();
         $breaker = $this->breaker();
         $breaker->recordFailure('statement_mail_send', 'tenant-1:vendor-1', 2, 60);
         $breaker->recordFailure('statement_mail_send', 'tenant-1:vendor-1', 2, 60);
@@ -101,7 +101,7 @@ final class VendorStatementMailerServiceTest extends TestCase
             }
         };
 
-        $metrics = new MetricEmitter();
+        $metrics = new VendorMetricEmitterService();
         $service = $this->service($mailer, $metrics);
 
         $this->expectException(\LogicException::class);
@@ -110,24 +110,24 @@ final class VendorStatementMailerServiceTest extends TestCase
         $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
     }
 
-    private function service(MailerInterface $mailer, MetricEmitter $metrics, ?FileOutboundCircuitBreaker $breaker = null): VendorStatementMailerService
+    private function service(MailerInterface $mailer, VendorMetricEmitterService $metrics, ?VendorFileOutboundCircuitBreakerService $breaker = null): VendorStatementMailerService
     {
         return new VendorStatementMailerService(
             $mailer,
             $metrics,
             $this->runtimeLogger(),
-            new OutboundOperationPolicy(),
+            new VendorOutboundOperationPolicyService(),
             $breaker ?? $this->breaker(),
         );
     }
 
-    private function runtimeLogger(): RuntimeLogger
+    private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new RuntimeLogger(new CorrelationContext(), new RequestStack());
+        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack());
     }
 
-    private function breaker(): FileOutboundCircuitBreaker
+    private function breaker(): VendorFileOutboundCircuitBreakerService
     {
-        return new FileOutboundCircuitBreaker(sys_get_temp_dir() . '/vendoring-breaker-mailer-' . bin2hex(random_bytes(4)));
+        return new VendorFileOutboundCircuitBreakerService(sys_get_temp_dir() . '/vendoring-breaker-mailer-' . bin2hex(random_bytes(4)));
     }
 }

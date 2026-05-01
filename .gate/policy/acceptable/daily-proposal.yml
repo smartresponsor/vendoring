@@ -30,14 +30,6 @@
       "note": "seed readme if missing"
     },
     {
-      "op": "file.write_text",
-      "level": "error",
-      "path": "MANIFEST.json",
-      "guard": "missing_only",
-      "text": "{\n\"name\": \"\",\n\"version\": \"0.0.0\",\n\"note\": \"Gate proposal: manifest created\"\n}\n",
-      "note": "seed manifest if missing"
-    },
-    {
       "op": "chmod.add_x",
       "level": "error",
       "path": ".gate/gate.sh",

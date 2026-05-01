@@ -16,7 +16,7 @@ foreach ($requiredScripts as $scriptName) {
     }
 }
 
-$controller = (string) file_get_contents($root . '/src/Controller/VendorTransactionController.php');
+$controller = (string) file_get_contents($root . '/src/Controller/Vendor/VendorTransactionController.php');
 if (!str_contains($controller, 'extends AbstractController')) {
     fwrite(STDERR, "VendorTransactionController must extend AbstractController.\n");
     exit(1);

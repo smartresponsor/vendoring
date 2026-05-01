@@ -9,18 +9,18 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Category;
 
-use App\Vendoring\DTO\CatalogSyndication\CatalogSyndicationGovernanceTrailRequestDTO;
-use App\Vendoring\Policy\CategorySyndicationGovernanceTrailPolicy;
-use App\Vendoring\Service\CatalogSyndicationGovernanceTrailService;
+use App\Vendoring\DTO\CatalogSyndication\VendorCatalogSyndicationGovernanceTrailRequestDTO;
+use App\Vendoring\Policy\Vendor\VendorCategorySyndicationGovernanceTrailPolicy;
+use App\Vendoring\Service\Syndication\VendorCatalogSyndicationGovernanceTrailService;
 use PHPUnit\Framework\TestCase;
 
 final class CatalogSyndicationGovernanceTrailServiceTest extends TestCase
 {
     public function testRecordTrailIncludesPolicyDeliveryAndHistorySignals(): void
     {
-        $service = new CatalogSyndicationGovernanceTrailService(new CategorySyndicationGovernanceTrailPolicy());
+        $service = new VendorCatalogSyndicationGovernanceTrailService(new VendorCategorySyndicationGovernanceTrailPolicy());
 
-        $event = $service->recordTrail(new CatalogSyndicationGovernanceTrailRequestDTO(
+        $event = $service->recordTrail(new VendorCatalogSyndicationGovernanceTrailRequestDTO(
             [
                 'destinationId' => 'dst-1',
                 'categoryId' => 'cat-1',

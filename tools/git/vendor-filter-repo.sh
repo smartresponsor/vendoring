@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Vendor: history cleanup (remove phase snapshots / fast-import baggage)
+# VendorEntity: history cleanup (remove phase snapshots / fast-import baggage)
 # Requires: git + git-filter-repo
 
 if ! command -v git >/dev/null 2>&1; then

@@ -309,7 +309,7 @@
       "php tests/bin/no-stub-source-smoke.php",
       "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalNoStubSourceContractTest"
     ],
-    "test:payout": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter Payout",
+    "test:payout": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorPayoutEntity",
     "test:post-deploy-verification": "php tests/bin/post-deploy-verification-pack.php",
     "test:rc-evidence": [
       "php tests/bin/rc-evidence-smoke.php",
@@ -351,7 +351,7 @@
       "php tests/bin/smoke.php",
       "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter ControllerInfrastructureContractTest"
     ],
-    "test:transaction": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter VendorTransaction",
+    "test:transaction": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter VendorTransactionEntity",
     "test:transaction-amount": "php tests/bin/transaction-amount-smoke.php",
     "test:transaction-doctrine": "php tests/bin/transaction-doctrine-smoke.php",
     "test:transaction-error-surface": "php tests/bin/transaction-error-surface-smoke.php",

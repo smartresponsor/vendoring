@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Policy;
 
-use App\Vendoring\Service\Policy\VendorTransactionAmountPolicy;
+use App\Vendoring\Service\Policy\VendorTransactionAmountPolicyService;
 use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionAmountPolicyTest extends TestCase
 {
     public function testNormalizeFormatsPositiveNumericAmount(): void
     {
-        $policy = new VendorTransactionAmountPolicy();
+        $policy = new VendorTransactionAmountPolicyService();
 
         self::assertSame('10.50', $policy->normalize(' 10.5 '));
         self::assertSame('12.35', $policy->normalize('12.345'));
@@ -19,7 +19,7 @@ final class VendorTransactionAmountPolicyTest extends TestCase
 
     public function testNormalizeRejectsNonNumericAmount(): void
     {
-        $policy = new VendorTransactionAmountPolicy();
+        $policy = new VendorTransactionAmountPolicyService();
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('amount_not_numeric');
@@ -29,7 +29,7 @@ final class VendorTransactionAmountPolicyTest extends TestCase
 
     public function testNormalizeRejectsZeroOrNegativeAmount(): void
     {
-        $policy = new VendorTransactionAmountPolicy();
+        $policy = new VendorTransactionAmountPolicyService();
 
         try {
             $policy->normalize('0');

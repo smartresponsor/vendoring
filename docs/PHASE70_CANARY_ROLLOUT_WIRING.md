@@ -14,7 +14,7 @@ The goal is to answer one practical question for a given feature flag and tenant
 
 ## New public contract
 
-### `CanaryRolloutCoordinatorInterface`
+### `VendorCanaryRolloutCoordinatorServiceInterface`
 
 Returns one stable report containing:
 - feature-flag decision

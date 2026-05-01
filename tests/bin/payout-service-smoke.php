@@ -5,8 +5,8 @@ declare(strict_types=1);
 $root = dirname(__DIR__, 2);
 
 $required = [
-    'src/Service/Payout/VendorPayoutService.php',
-    'tests/Unit/Payout/VendorPayoutServiceTest.php',
+    'src/Service/VendorPayoutEntity/VendorPayoutService.php',
+    'tests/Unit/VendorPayoutEntity/VendorPayoutServiceTest.php',
 ];
 
 foreach ($required as $relativePath) {

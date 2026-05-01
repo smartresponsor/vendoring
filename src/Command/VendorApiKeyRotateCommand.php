@@ -6,10 +6,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
-use App\Vendoring\Command\Support\CommandOutputFormat;
-use App\Vendoring\Command\Support\CommandResultEmitterInterface;
-use App\Vendoring\RepositoryInterface\VendorApiKeyRepositoryInterface;
-use App\Vendoring\ServiceInterface\VendorApiKeyServiceInterface;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
+use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +26,7 @@ final class VendorApiKeyRotateCommand extends Command
     public function __construct(
         private readonly VendorApiKeyRepositoryInterface $apiKeyRepo,
         private readonly VendorApiKeyServiceInterface $apiKeyService,
-        private readonly CommandResultEmitterInterface $commandResultEmitter,
+        private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter,
     ) {
         parent::__construct();
     }
@@ -46,7 +46,7 @@ final class VendorApiKeyRotateCommand extends Command
         $keyIdOption = $input->getOption('keyId');
         $formatOption = $input->getOption('format');
         $keyId = is_scalar($keyIdOption) ? (int) (string) $keyIdOption : 0;
-        $format = CommandOutputFormat::normalize($formatOption);
+        $format = VendorCommandOutputFormatEnum::normalize($formatOption);
 
         if ($keyId <= 0) {
             $this->commandResultEmitter->emitError($output, $format, 'invalid', 'Invalid keyId', [
@@ -84,7 +84,7 @@ final class VendorApiKeyRotateCommand extends Command
             return Command::FAILURE;
         }
 
-        if (CommandOutputFormat::isJson($format)) {
+        if (VendorCommandOutputFormatEnum::isJson($format)) {
             if (!$this->commandResultEmitter->emitJson($output, [
                 'keyId' => $keyId,
                 'status' => $key->getStatus(),

@@ -6,28 +6,28 @@ namespace App\Vendoring\Tests\Integration\Statement;
 
 use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
-use App\Vendoring\Projection\VendorOwnershipView;
-use App\Vendoring\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder;
-use App\Vendoring\ServiceInterface\Statement\StatementExporterPDFInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
+use App\Vendoring\Projection\Vendor\VendorOwnershipView;
+use App\Vendoring\Service\Statement\VendorStatementDeliveryRuntimeViewBuilderService;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPDFServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
-use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipViewBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
 {
-    private VendorOwnershipViewBuilderInterface&MockObject $ownership;
+    private VendorOwnershipViewBuilderServiceInterface&MockObject $ownership;
     private VendorStatementServiceInterface&MockObject $statements;
-    private StatementExporterPDFInterface&MockObject $exporter;
-    private VendorStatementRecipientProviderInterface&MockObject $recipients;
+    private VendorStatementExporterPDFServiceInterface&MockObject $exporter;
+    private VendorStatementRecipientProviderServiceInterface&MockObject $recipients;
 
     protected function setUp(): void
     {
-        $this->ownership = $this->createMock(VendorOwnershipViewBuilderInterface::class);
+        $this->ownership = $this->createMock(VendorOwnershipViewBuilderServiceInterface::class);
         $this->statements = $this->createMock(VendorStatementServiceInterface::class);
-        $this->exporter = $this->createMock(StatementExporterPDFInterface::class);
-        $this->recipients = $this->createMock(VendorStatementRecipientProviderInterface::class);
+        $this->exporter = $this->createMock(VendorStatementExporterPDFServiceInterface::class);
+        $this->recipients = $this->createMock(VendorStatementRecipientProviderServiceInterface::class);
     }
 
     public function testBuildReturnsEmptyRecipientsWhenProviderYieldsNoMatches(): void
@@ -56,7 +56,7 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
                 new VendorStatementRecipientDTO('tenant-1', '999', 'skip-vendor@example.com', 'USD'),
             ]);
 
-        $payload = (new VendorStatementDeliveryRuntimeViewBuilder(
+        $payload = (new VendorStatementDeliveryRuntimeViewBuilderService(
             $this->ownership,
             $this->statements,
             $this->exporter,
@@ -98,7 +98,7 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
                 new VendorStatementRecipientDTO('tenant-1', '999', 'skip@example.com', 'USD'),
             ]);
 
-        $payload = (new VendorStatementDeliveryRuntimeViewBuilder(
+        $payload = (new VendorStatementDeliveryRuntimeViewBuilderService(
             $this->ownership,
             $this->statements,
             $this->exporter,

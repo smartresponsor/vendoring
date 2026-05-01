@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Security;
 
 use App\Vendoring\Entity\VendorUserAssignment;
-use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
-use App\Vendoring\Service\Security\VendorAccessResolver;
-use App\Vendoring\Service\Security\VendorAuthorizationMatrix;
+use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Service\Security\VendorAccessResolverService;
+use App\Vendoring\Service\Security\VendorAuthorizationMatrixService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -30,7 +30,7 @@ final class VendorAccessResolverTest extends TestCase
                 new VendorUserAssignment(42, 7, 'finance'),
             ]);
 
-        $resolver = new VendorAccessResolver($this->repository, new VendorAuthorizationMatrix());
+        $resolver = new VendorAccessResolverService($this->repository, new VendorAuthorizationMatrixService());
 
         self::assertTrue($resolver->canUserAccessVendorCapability(42, 7, 'payouts.write'));
         self::assertSame('role_grants_capability', $resolver->explainUserAccessVendorCapability(42, 7, 'payouts.write')['reason']);
@@ -40,7 +40,7 @@ final class VendorAccessResolverTest extends TestCase
     {
         $this->repository->method('findActiveByVendorId')->with(42)->willReturn([]);
 
-        $resolver = new VendorAccessResolver($this->repository, new VendorAuthorizationMatrix());
+        $resolver = new VendorAccessResolverService($this->repository, new VendorAuthorizationMatrixService());
         $explanation = $resolver->explainUserAccessVendorCapability(42, 7, 'ownership.read');
 
         self::assertFalse($explanation['granted']);
@@ -57,7 +57,7 @@ final class VendorAccessResolverTest extends TestCase
                 new VendorUserAssignment(42, 7, 'viewer'),
             ]);
 
-        $resolver = new VendorAccessResolver($this->repository, new VendorAuthorizationMatrix());
+        $resolver = new VendorAccessResolverService($this->repository, new VendorAuthorizationMatrixService());
         $explanation = $resolver->explainUserAccessVendorCapability(42, 7, 'ownership.write');
 
         self::assertFalse($explanation['granted']);

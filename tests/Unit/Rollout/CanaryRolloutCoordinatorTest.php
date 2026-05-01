@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Rollout;
 
-use App\Vendoring\Service\Rollout\CanaryRolloutCoordinator;
-use App\Vendoring\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
-use App\Vendoring\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
-use App\Vendoring\ServiceInterface\Rollout\FeatureFlagServiceInterface;
-use App\Vendoring\ServiceInterface\Rollout\TrafficCohortResolverInterface;
+use App\Vendoring\Service\Rollout\VendorCanaryRolloutCoordinatorService;
+use App\Vendoring\ServiceInterface\Ops\VendorReleaseManifestBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Ops\VendorRollbackDecisionEvaluatorServiceInterface;
+use App\Vendoring\ServiceInterface\Rollout\VendorFeatureFlagServiceInterface;
+use App\Vendoring\ServiceInterface\Rollout\VendorTrafficCohortResolverServiceInterface;
 use PHPUnit\Framework\TestCase;
 
 final class CanaryRolloutCoordinatorTest extends TestCase
 {
     public function testDisabledFlagReturnsDisabledDecision(): void
     {
-        $coordinator = new CanaryRolloutCoordinator(
+        $coordinator = new VendorCanaryRolloutCoordinatorService(
             $this->featureFlagService(['flag' => 'test_flag', 'enabled' => false, 'cohort' => 'vendor:42', 'reason' => 'cohort_disabled', 'decision' => 'hold', 'severity' => 'warning', 'reasons' => [], 'actions' => []]),
             $this->cohortResolver('vendor:42'),
             $this->manifestBuilder([]),
@@ -30,7 +30,7 @@ final class CanaryRolloutCoordinatorTest extends TestCase
 
     public function testProceedingVendorCanarySuggestsTenantExpansion(): void
     {
-        $coordinator = new CanaryRolloutCoordinator(
+        $coordinator = new VendorCanaryRolloutCoordinatorService(
             $this->featureFlagService(['flag' => 'test_flag', 'enabled' => true, 'cohort' => 'vendor:42', 'reason' => 'cohort_enabled', 'decision' => 'proceed', 'severity' => 'info', 'reasons' => [], 'actions' => []]),
             $this->cohortResolver('vendor:42'),
             $this->manifestBuilder([]),
@@ -46,7 +46,7 @@ final class CanaryRolloutCoordinatorTest extends TestCase
 
     public function testRollbackDecisionWinsOverEnabledFlag(): void
     {
-        $coordinator = new CanaryRolloutCoordinator(
+        $coordinator = new VendorCanaryRolloutCoordinatorService(
             $this->featureFlagService(['flag' => 'test_flag', 'enabled' => true, 'cohort' => 'tenant:tenant-1', 'reason' => 'cohort_enabled', 'decision' => 'rollback', 'severity' => 'warning', 'reasons' => [], 'actions' => []]),
             $this->cohortResolver('tenant:tenant-1'),
             $this->manifestBuilder([]),
@@ -61,7 +61,7 @@ final class CanaryRolloutCoordinatorTest extends TestCase
 
     public function testMissingProbeForcesHold(): void
     {
-        $coordinator = new CanaryRolloutCoordinator(
+        $coordinator = new VendorCanaryRolloutCoordinatorService(
             $this->featureFlagService(['flag' => 'test_flag', 'enabled' => true, 'cohort' => 'tenant:tenant-1', 'reason' => 'cohort_enabled', 'decision' => 'hold', 'severity' => 'warning', 'reasons' => [], 'actions' => []]),
             $this->cohortResolver('tenant:tenant-1'),
             $this->manifestBuilder(['transaction']),
@@ -78,9 +78,9 @@ final class CanaryRolloutCoordinatorTest extends TestCase
     /**
      * @param array{flag:string, enabled:bool, cohort:string, reason:string, decision?:string, severity?:string, reasons?:list<string>, actions?:list<string>} $decision
      */
-    private function featureFlagService(array $decision): FeatureFlagServiceInterface
+    private function featureFlagService(array $decision): VendorFeatureFlagServiceInterface
     {
-        return new class ($decision) implements FeatureFlagServiceInterface {
+        return new class ($decision) implements VendorFeatureFlagServiceInterface {
             /** @param array{flag:string, enabled:bool, cohort:string, reason:string, decision?:string, severity?:string, reasons?:list<string>, actions?:list<string>} $decision */
             public function __construct(private readonly array $decision) {}
             public function isEnabled(string $flagName, ?string $tenantId = null, ?string $vendorId = null): bool
@@ -99,9 +99,9 @@ final class CanaryRolloutCoordinatorTest extends TestCase
         };
     }
 
-    private function cohortResolver(string $cohort): TrafficCohortResolverInterface
+    private function cohortResolver(string $cohort): VendorTrafficCohortResolverServiceInterface
     {
-        return new class ($cohort) implements TrafficCohortResolverInterface {
+        return new class ($cohort) implements VendorTrafficCohortResolverServiceInterface {
             public function __construct(private readonly string $cohort) {}
             public function resolve(?string $tenantId = null, ?string $vendorId = null): string
             {
@@ -113,9 +113,9 @@ final class CanaryRolloutCoordinatorTest extends TestCase
     /**
      * @param list<string> $missingProbes
      */
-    private function manifestBuilder(array $missingProbes): ReleaseManifestBuilderInterface
+    private function manifestBuilder(array $missingProbes): VendorReleaseManifestBuilderServiceInterface
     {
-        return new class ($missingProbes) implements ReleaseManifestBuilderInterface {
+        return new class ($missingProbes) implements VendorReleaseManifestBuilderServiceInterface {
             /** @param list<string> $missingProbes */
             public function __construct(private readonly array $missingProbes) {}
             public function build(int $windowSeconds = 900): array
@@ -141,9 +141,9 @@ final class CanaryRolloutCoordinatorTest extends TestCase
     /**
      * @param array<string,mixed> $decision
      */
-    private function rollbackEvaluator(array $decision): RollbackDecisionEvaluatorInterface
+    private function rollbackEvaluator(array $decision): VendorRollbackDecisionEvaluatorServiceInterface
     {
-        return new class ($decision) implements RollbackDecisionEvaluatorInterface {
+        return new class ($decision) implements VendorRollbackDecisionEvaluatorServiceInterface {
             /** @param array<string,mixed> $decision */
             public function __construct(private readonly array $decision) {}
             public function evaluate(array $manifest): array

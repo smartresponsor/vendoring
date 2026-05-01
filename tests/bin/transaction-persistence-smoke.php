@@ -18,7 +18,7 @@ if (!is_file($migrationPath)) {
     exit(1);
 }
 
-$repositoryPath = $root . '/src/Repository/VendorTransactionRepository.php';
+$repositoryPath = $root . '/src/Repository/Vendor/VendorTransactionRepository.php';
 if (!is_file($repositoryPath)) {
     fwrite(STDERR, "Missing VendorTransactionRepository.php\n");
     exit(1);

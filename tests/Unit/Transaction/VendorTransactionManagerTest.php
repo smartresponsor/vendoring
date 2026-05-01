@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Transaction;
 
 use App\Vendoring\Entity\VendorTransaction;
-use App\Vendoring\Event\VendorTransactionEvent;
-use App\Vendoring\Observability\Service\CorrelationContext;
-use App\Vendoring\Observability\Service\RuntimeLogger;
-use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
-use App\Vendoring\Service\Policy\VendorTransactionAmountPolicy;
-use App\Vendoring\Service\Policy\VendorTransactionStatusPolicy;
-use App\Vendoring\Service\VendorTransactionManager;
-use App\Vendoring\ValueObject\VendorTransactionData;
+use App\Vendoring\Event\Vendor\VendorTransactionEvent;
+use App\Vendoring\Service\Observability\VendorCorrelationContextService;
+use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
+use App\Vendoring\Service\Policy\VendorTransactionAmountPolicyService;
+use App\Vendoring\Service\Policy\VendorTransactionStatusPolicyService;
+use App\Vendoring\Service\Transaction\VendorTransactionManagerService;
+use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -36,16 +36,16 @@ final class VendorTransactionManagerTest extends TestCase
 
     public function testCreateTransactionPersistsFlushesAndDispatchesEvent(): void
     {
-        $manager = new VendorTransactionManager(
+        $manager = new VendorTransactionManagerService(
             $this->entityManager,
             $this->dispatcher,
-            new VendorTransactionStatusPolicy(),
-            new VendorTransactionAmountPolicy(),
+            new VendorTransactionStatusPolicyService(),
+            new VendorTransactionAmountPolicyService(),
             $this->transactions,
             $this->runtimeLogger(),
         );
 
-        $data = new VendorTransactionData('vendor-1', 'order-1', 'project-1', '10.50');
+        $data = new VendorTransactionDataValueObject('vendor-1', 'order-1', 'project-1', '10.50');
 
         $this->transactions
             ->expects(self::once())
@@ -90,16 +90,16 @@ final class VendorTransactionManagerTest extends TestCase
 
     public function testCreateTransactionNormalizesBlankProjectIdToNullBeforeDuplicateCheck(): void
     {
-        $manager = new VendorTransactionManager(
+        $manager = new VendorTransactionManagerService(
             $this->entityManager,
             $this->dispatcher,
-            new VendorTransactionStatusPolicy(),
-            new VendorTransactionAmountPolicy(),
+            new VendorTransactionStatusPolicyService(),
+            new VendorTransactionAmountPolicyService(),
             $this->transactions,
             $this->runtimeLogger(),
         );
 
-        $data = new VendorTransactionData('vendor-1', 'order-1', '   ', '10.50');
+        $data = new VendorTransactionDataValueObject('vendor-1', 'order-1', '   ', '10.50');
 
         $this->transactions
             ->expects(self::once())
@@ -130,16 +130,16 @@ final class VendorTransactionManagerTest extends TestCase
 
     public function testCreateTransactionRejectsDuplicateWithoutPersisting(): void
     {
-        $manager = new VendorTransactionManager(
+        $manager = new VendorTransactionManagerService(
             $this->entityManager,
             $this->dispatcher,
-            new VendorTransactionStatusPolicy(),
-            new VendorTransactionAmountPolicy(),
+            new VendorTransactionStatusPolicyService(),
+            new VendorTransactionAmountPolicyService(),
             $this->transactions,
             $this->runtimeLogger(),
         );
 
-        $data = new VendorTransactionData('vendor-1', 'order-1', null, '10.50');
+        $data = new VendorTransactionDataValueObject('vendor-1', 'order-1', null, '10.50');
 
         $this->transactions
             ->expects(self::once())
@@ -167,16 +167,16 @@ final class VendorTransactionManagerTest extends TestCase
 
     public function testCreateTransactionNormalizesVendorAndOrderBeforeDuplicateCheck(): void
     {
-        $manager = new VendorTransactionManager(
+        $manager = new VendorTransactionManagerService(
             $this->entityManager,
             $this->dispatcher,
-            new VendorTransactionStatusPolicy(),
-            new VendorTransactionAmountPolicy(),
+            new VendorTransactionStatusPolicyService(),
+            new VendorTransactionAmountPolicyService(),
             $this->transactions,
             $this->runtimeLogger(),
         );
 
-        $data = new VendorTransactionData('  vendor-1  ', '  order-1  ', 'project-1', '10.50');
+        $data = new VendorTransactionDataValueObject('  vendor-1  ', '  order-1  ', 'project-1', '10.50');
 
         $this->transactions
             ->expects(self::once())
@@ -209,16 +209,16 @@ final class VendorTransactionManagerTest extends TestCase
 
     public function testCreateTransactionRejectsBlankVendorIdAfterTrimWithoutPersisting(): void
     {
-        $manager = new VendorTransactionManager(
+        $manager = new VendorTransactionManagerService(
             $this->entityManager,
             $this->dispatcher,
-            new VendorTransactionStatusPolicy(),
-            new VendorTransactionAmountPolicy(),
+            new VendorTransactionStatusPolicyService(),
+            new VendorTransactionAmountPolicyService(),
             $this->transactions,
             $this->runtimeLogger(),
         );
 
-        $data = new VendorTransactionData('   ', 'order-1', null, '10.50');
+        $data = new VendorTransactionDataValueObject('   ', 'order-1', null, '10.50');
 
         $this->transactions
             ->expects(self::never())
@@ -244,16 +244,16 @@ final class VendorTransactionManagerTest extends TestCase
 
     public function testCreateTransactionRejectsInvalidAmountWithoutPersisting(): void
     {
-        $manager = new VendorTransactionManager(
+        $manager = new VendorTransactionManagerService(
             $this->entityManager,
             $this->dispatcher,
-            new VendorTransactionStatusPolicy(),
-            new VendorTransactionAmountPolicy(),
+            new VendorTransactionStatusPolicyService(),
+            new VendorTransactionAmountPolicyService(),
             $this->transactions,
             $this->runtimeLogger(),
         );
 
-        $data = new VendorTransactionData('vendor-1', 'order-1', 'project-1', '0');
+        $data = new VendorTransactionDataValueObject('vendor-1', 'order-1', 'project-1', '0');
 
         $this->transactions
             ->expects(self::once())
@@ -281,11 +281,11 @@ final class VendorTransactionManagerTest extends TestCase
 
     public function testUpdateStatusFlushesAndDispatchesWhenTransitionIsAllowed(): void
     {
-        $manager = new VendorTransactionManager(
+        $manager = new VendorTransactionManagerService(
             $this->entityManager,
             $this->dispatcher,
-            new VendorTransactionStatusPolicy(),
-            new VendorTransactionAmountPolicy(),
+            new VendorTransactionStatusPolicyService(),
+            new VendorTransactionAmountPolicyService(),
             $this->transactions,
             $this->runtimeLogger(),
         );
@@ -301,7 +301,7 @@ final class VendorTransactionManagerTest extends TestCase
             ->method('dispatch')
             ->with(
                 self::callback(static function (object $event) use ($transaction): bool {
-                    return $event instanceof \App\Vendoring\Event\VendorTransactionEvent
+                    return $event instanceof \App\Vendoring\Event\Vendor\VendorTransactionEvent
                         && $event->transaction === $transaction
                         && 'authorized' === $event->transaction->getStatus();
                 }),
@@ -317,11 +317,11 @@ final class VendorTransactionManagerTest extends TestCase
 
     public function testUpdateStatusRejectsInvalidTransitionWithoutFlushing(): void
     {
-        $manager = new VendorTransactionManager(
+        $manager = new VendorTransactionManagerService(
             $this->entityManager,
             $this->dispatcher,
-            new VendorTransactionStatusPolicy(),
-            new VendorTransactionAmountPolicy(),
+            new VendorTransactionStatusPolicyService(),
+            new VendorTransactionAmountPolicyService(),
             $this->transactions,
             $this->runtimeLogger(),
         );
@@ -342,8 +342,8 @@ final class VendorTransactionManagerTest extends TestCase
         $manager->updateStatus($transaction, ' refunded ');
     }
 
-    private function runtimeLogger(): RuntimeLogger
+    private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new RuntimeLogger(new CorrelationContext(), new RequestStack());
+        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack());
     }
 }

@@ -4,32 +4,32 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Ops;
 
-use App\Vendoring\Projection\VendorExternalIntegrationRuntimeView;
-use App\Vendoring\Projection\VendorFinanceRuntimeView;
-use App\Vendoring\Projection\VendorOwnershipView;
+use App\Vendoring\Projection\Vendor\VendorExternalIntegrationRuntimeView;
+use App\Vendoring\Projection\Vendor\VendorFinanceRuntimeView;
+use App\Vendoring\Projection\Vendor\VendorOwnershipView;
 use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\Vendoring\Projection\VendorStatementDeliveryRuntimeView;
-use App\Vendoring\Service\Ops\VendorRuntimeStatusViewBuilder;
-use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
-use App\Vendoring\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
-use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\Projection\Vendor\VendorStatementDeliveryRuntimeView;
+use App\Vendoring\Service\Ops\VendorRuntimeStatusViewBuilderService;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeViewBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipViewBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorRuntimeStatusViewBuilderTest extends TestCase
 {
-    private VendorOwnershipViewBuilderInterface&MockObject $ownershipViewBuilder;
-    private VendorFinanceRuntimeViewBuilderInterface&MockObject $financeRuntimeViewBuilder;
-    private VendorStatementDeliveryRuntimeViewBuilderInterface&MockObject $statementDeliveryRuntimeViewBuilder;
-    private VendorExternalIntegrationRuntimeViewBuilderInterface&MockObject $externalIntegrationRuntimeViewBuilder;
+    private VendorOwnershipViewBuilderServiceInterface&MockObject $ownershipViewBuilder;
+    private VendorFinanceRuntimeViewBuilderServiceInterface&MockObject $financeRuntimeViewBuilder;
+    private VendorStatementDeliveryRuntimeViewBuilderServiceInterface&MockObject $statementDeliveryRuntimeViewBuilder;
+    private VendorExternalIntegrationRuntimeViewBuilderServiceInterface&MockObject $externalIntegrationRuntimeViewBuilder;
 
     protected function setUp(): void
     {
-        $this->ownershipViewBuilder = $this->createMock(VendorOwnershipViewBuilderInterface::class);
-        $this->financeRuntimeViewBuilder = $this->createMock(VendorFinanceRuntimeViewBuilderInterface::class);
-        $this->statementDeliveryRuntimeViewBuilder = $this->createMock(VendorStatementDeliveryRuntimeViewBuilderInterface::class);
-        $this->externalIntegrationRuntimeViewBuilder = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderInterface::class);
+        $this->ownershipViewBuilder = $this->createMock(VendorOwnershipViewBuilderServiceInterface::class);
+        $this->financeRuntimeViewBuilder = $this->createMock(VendorFinanceRuntimeViewBuilderServiceInterface::class);
+        $this->statementDeliveryRuntimeViewBuilder = $this->createMock(VendorStatementDeliveryRuntimeViewBuilderServiceInterface::class);
+        $this->externalIntegrationRuntimeViewBuilder = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderServiceInterface::class);
     }
 
     public function testBuildIncludesOwnershipSurfaceForNumericVendorId(): void
@@ -117,9 +117,9 @@ final class VendorRuntimeStatusViewBuilderTest extends TestCase
         self::assertTrue($payload['surfaceStatus']['externalIntegration']);
     }
 
-    private function buildService(): VendorRuntimeStatusViewBuilder
+    private function buildService(): VendorRuntimeStatusViewBuilderService
     {
-        return new VendorRuntimeStatusViewBuilder(
+        return new VendorRuntimeStatusViewBuilderService(
             $this->ownershipViewBuilder,
             $this->financeRuntimeViewBuilder,
             $this->statementDeliveryRuntimeViewBuilder,

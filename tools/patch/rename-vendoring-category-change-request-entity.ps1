@@ -37,7 +37,7 @@ function Replace-In-File([string] $path, [string] $pattern, [string] $replacemen
 }
 
 $oldFile = Join-Path $root 'src/Entity/CategoryChangeRequest.php'
-$newFile = Join-Path $root 'src/Entity/VendorCatalogCategoryChangeRequest.php'
+$newFile = Join-Path $root 'src/Entity/VendorCatalogCategoryChangeRequestEntity.php'
 
 if (Test-Path $oldFile) {
     Backup-File $oldFile
@@ -45,7 +45,7 @@ if (Test-Path $oldFile) {
     New-Item -ItemType Directory -Force -Path (Split-Path $newFile -Parent) | Out-Null
     $content = Get-Content $oldFile -Raw
 
-    $content = $content -replace '\bclass\s+CategoryChangeRequest\b', 'class VendorCatalogCategoryChangeRequest'
+    $content = $content -replace '\bclass\s+CategoryChangeRequest\b', 'class VendorCatalogCategoryChangeRequestEntity'
 
     # Scope explicit generic Doctrine table names when present.
     $content = $content -replace "name:\s*'category_change_request'", "name: 'vendor_catalog_category_change_request'"
@@ -64,14 +64,14 @@ if (Test-Path $src) {
     foreach ($file in $phpFiles) {
         $path = $file.FullName
 
-        Replace-In-File $path 'App\Vendoring\\Entity\\CategoryChangeRequest' 'App\Vendoring\Entity\VendorCatalogCategoryChangeRequest'
-        Replace-In-File $path 'use\s+App\Vendoring\\Entity\\CategoryChangeRequest;' 'use App\Vendoring\Entity\VendorCatalogCategoryChangeRequest;'
-        Replace-In-File $path '\bCategoryChangeRequest::class\b' 'VendorCatalogCategoryChangeRequest::class'
-        Replace-In-File $path '\bnew\s+CategoryChangeRequest\s*\(' 'new VendorCatalogCategoryChangeRequest('
-        Replace-In-File $path '\bCategoryChangeRequest\s+\$categoryChangeRequest\b' 'VendorCatalogCategoryChangeRequest $categoryChangeRequest'
-        Replace-In-File $path '\?CategoryChangeRequest\s+\$categoryChangeRequest\b' '?VendorCatalogCategoryChangeRequest $categoryChangeRequest'
-        Replace-In-File $path '\biterable<CategoryChangeRequest>' 'iterable<VendorCatalogCategoryChangeRequest>'
-        Replace-In-File $path '\barray<CategoryChangeRequest>' 'array<VendorCatalogCategoryChangeRequest>'
+        Replace-In-File $path 'App\Vendoring\\Entity\\CategoryChangeRequest' 'App\Vendoring\Entity\Vendor\VendorCatalogCategoryChangeRequestEntity'
+        Replace-In-File $path 'use\s+App\Vendoring\\Entity\\CategoryChangeRequest;' 'use App\Vendoring\Entity\Vendor\VendorCatalogCategoryChangeRequestEntity;'
+        Replace-In-File $path '\bCategoryChangeRequest::class\b' 'VendorCatalogCategoryChangeRequestEntity::class'
+        Replace-In-File $path '\bnew\s+CategoryChangeRequest\s*\(' 'new VendorCatalogCategoryChangeRequestEntity('
+        Replace-In-File $path '\bCategoryChangeRequest\s+\$categoryChangeRequest\b' 'VendorCatalogCategoryChangeRequestEntity $categoryChangeRequest'
+        Replace-In-File $path '\?CategoryChangeRequest\s+\$categoryChangeRequest\b' '?VendorCatalogCategoryChangeRequestEntity $categoryChangeRequest'
+        Replace-In-File $path '\biterable<CategoryChangeRequest>' 'iterable<VendorCatalogCategoryChangeRequestEntity>'
+        Replace-In-File $path '\barray<CategoryChangeRequest>' 'array<VendorCatalogCategoryChangeRequestEntity>'
     }
 }
 
@@ -81,5 +81,5 @@ if (Test-Path $newFile) {
 
 Write-Host 'Vendoring CategoryChangeRequest entity rename completed.'
 Write-Host 'Old: src/Entity/CategoryChangeRequest.php'
-Write-Host 'New: src/Entity/VendorCatalogCategoryChangeRequest.php'
+Write-Host 'New: src/Entity/VendorCatalogCategoryChangeRequestEntity.php'
 Write-Host "Backup: $backupRoot"

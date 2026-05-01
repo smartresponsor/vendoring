@@ -23,7 +23,7 @@ function Resolve-Domain {
   param([string]$RepoRoot, [string]$DomainArg)
   if ($DomainArg -and $DomainArg.Trim().Length -gt 0) { return $DomainArg.Trim() }
 
-  $cfgPath = Join-Path $RepoRoot ".Intelligence\intelligence.json"
+  $cfgPath = Join-Path $RepoRoot ".intelligence\intelligence.json"
   if (Test-Path -LiteralPath $cfgPath) {
     try {
       $cfg = Get-Content -LiteralPath $cfgPath -Raw | ConvertFrom-Json

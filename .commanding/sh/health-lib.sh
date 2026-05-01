@@ -6,9 +6,7 @@ COMMANDING_DIR="${COMMANDING_DIR:-"$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/..
 source "$COMMANDING_DIR/lib/ui.sh"
 
 health_root_dir() {
-  local root
-  root="$(resolve_subject_root)"
-  printf '%s\n' "$root/logs/health"
+  printf '%s\n' "$COMMANDING_DIR/logs/health"
 }
 
 health_run_dir() {

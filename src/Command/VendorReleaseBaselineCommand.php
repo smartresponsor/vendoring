@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
-use App\Vendoring\Command\Support\CommandIoException;
-use App\Vendoring\Command\Support\CommandJsonArtifactWriter;
-use App\Vendoring\Command\Support\CommandOutputFormat;
-use App\Vendoring\Command\Support\CommandResultEmitter;
-use App\Vendoring\Command\Support\VendorRuntimeWindowInput;
-use App\Vendoring\ServiceInterface\Ops\VendorReleaseBaselineReaderInterface;
+use App\Vendoring\Exception\Command\VendorCommandIoException;
+use App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
+use App\Vendoring\DTO\Command\VendorRuntimeWindowInputDTO;
+use App\Vendoring\ServiceInterface\Ops\VendorReleaseBaselineReaderServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,9 +24,9 @@ use Throwable;
 final class VendorReleaseBaselineCommand extends Command
 {
     public function __construct(
-        private readonly VendorReleaseBaselineReaderInterface $releaseBaselineReader,
-        private readonly CommandJsonArtifactWriter $commandJsonArtifactWriter,
-        private readonly CommandResultEmitter $commandResultEmitter,
+        private readonly VendorReleaseBaselineReaderServiceInterface $releaseBaselineReader,
+        private readonly VendorCommandJsonArtifactWriterServiceInterface $commandJsonArtifactWriter,
+        private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter,
     ) {
         parent::__construct();
     }
@@ -48,7 +48,7 @@ final class VendorReleaseBaselineCommand extends Command
     /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $runtimeInput = VendorRuntimeWindowInput::fromInput($input);
+        $runtimeInput = VendorRuntimeWindowInputDTO::fromInput($input);
 
         if (!$runtimeInput->hasRequiredScope()) {
             $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'invalid', 'Both --tenantId and --vendorId are required.', [
@@ -60,7 +60,7 @@ final class VendorReleaseBaselineCommand extends Command
         }
 
         try {
-            $view = $this->releaseBaselineReader->build(
+            $projection = $this->releaseBaselineReader->build(
                 tenantId: $runtimeInput->tenantId,
                 vendorId: $runtimeInput->vendorId,
                 from: $runtimeInput->from,
@@ -91,9 +91,9 @@ final class VendorReleaseBaselineCommand extends Command
                 (bool) $input->getOption('write'),
                 $input->getOption('output'),
                 dirname(__DIR__, 2) . '/build/release/vendor-release-baseline.json',
-                $view,
+                $projection,
             );
-        } catch (CommandIoException $exception) {
+        } catch (VendorCommandIoException $exception) {
             $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'failed', $exception->getMessage(), [
                 'tenantId' => $runtimeInput->tenantId,
                 'vendorId' => $runtimeInput->vendorId,
@@ -105,8 +105,8 @@ final class VendorReleaseBaselineCommand extends Command
             return Command::FAILURE;
         }
 
-        if (CommandOutputFormat::isJson($runtimeInput->format)) {
-            return $this->commandResultEmitter->emitJson($output, $view)
+        if (VendorCommandOutputFormatEnum::isJson($runtimeInput->format)) {
+            return $this->commandResultEmitter->emitJson($output, $projection)
                 ? Command::SUCCESS
                 : Command::FAILURE;
         }
@@ -115,9 +115,9 @@ final class VendorReleaseBaselineCommand extends Command
             'tenantId=%s vendorId=%s status=%s',
             $runtimeInput->tenantId,
             $runtimeInput->vendorId,
-            $view['status'],
+            $projection['status'],
         ));
-        $output->writeln(sprintf('issues=%d', count($view['issues'])));
+        $output->writeln(sprintf('issues=%d', count($projection['issues'])));
 
         if (null !== $writtenPath) {
             $output->writeln(sprintf('written=%s', $writtenPath));

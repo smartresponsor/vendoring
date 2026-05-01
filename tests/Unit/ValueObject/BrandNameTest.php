@@ -6,14 +6,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\ValueObject;
 
-use App\Vendoring\ValueObject\BrandName;
+use App\Vendoring\ValueObject\VendorBrandNameValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class BrandNameTest extends TestCase
 {
     public function testFromRawTrimsWhitespace(): void
     {
-        $value = BrandName::fromRaw('  Smartresponsor  ');
+        $value = VendorBrandNameValueObject::fromRaw('  Smartresponsor  ');
 
         self::assertSame('Smartresponsor', $value->value());
     }
@@ -23,7 +23,7 @@ final class BrandNameTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('brand_name_required');
 
-        BrandName::fromRaw('   ');
+        VendorBrandNameValueObject::fromRaw('   ');
     }
 
     public function testFromRawRejectsTooLongValue(): void
@@ -31,6 +31,6 @@ final class BrandNameTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('brand_name_too_long');
 
-        BrandName::fromRaw(str_repeat('a', 256));
+        VendorBrandNameValueObject::fromRaw(str_repeat('a', 256));
     }
 }

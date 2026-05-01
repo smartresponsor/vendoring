@@ -110,21 +110,15 @@ resolve_target_root() {
 }
 
 ensure_runtime_dirs() {
-  local root
-  root="$(resolve_subject_root)"
-  mkdir -p "$root/logs"
+  mkdir -p "$COMMANDING_DIR/logs/runtime"
 }
 
 runtime_log_file() {
-  local root
-  root="$(resolve_subject_root)"
-  printf '%s\n' "$root/logs/actions.log"
+  printf '%s\n' "$COMMANDING_DIR/logs/runtime/actions.log"
 }
 
 runtime_error_file() {
-  local root
-  root="$(resolve_subject_root)"
-  printf '%s\n' "$root/logs/error.log"
+  printf '%s\n' "$COMMANDING_DIR/logs/runtime/error.log"
 }
 
 action_log_file() {

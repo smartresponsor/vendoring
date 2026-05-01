@@ -9,21 +9,21 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Category;
 
-use App\Vendoring\DTO\CatalogSyndication\CatalogSyndicationPublishPackageRequestDTO;
-use App\Vendoring\Policy\CategorySyndicationPolicyAwarePackageGatePolicy;
-use App\Vendoring\Service\CatalogSyndicationPolicyAwarePackageGateService;
-use App\Vendoring\ServiceInterface\CatalogDestinationMediaPolicyPreferenceServiceInterface;
-use App\Vendoring\ServiceInterface\CatalogSyndicationFallbackAwarePackageGateServiceInterface;
+use App\Vendoring\DTO\CatalogSyndication\VendorCatalogSyndicationPublishPackageRequestDTO;
+use App\Vendoring\Policy\Vendor\VendorCategorySyndicationPolicyAwarePackageGatePolicy;
+use App\Vendoring\Service\Syndication\VendorCatalogSyndicationPolicyAwarePackageGateService;
+use App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaPolicyPreferenceServiceInterface;
+use App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationFallbackAwarePackageGateServiceInterface;
 use PHPUnit\Framework\TestCase;
 
 final class CatalogSyndicationPolicyAwarePackageGateServiceTest extends TestCase
 {
     public function testBuildGatedPublishPackageResolvesPublishabilityViaPolicy(): void
     {
-        $fallbackAwareGateService = new class implements CatalogSyndicationFallbackAwarePackageGateServiceInterface {
-            public function buildGatedPublishPackage(CatalogSyndicationPublishPackageRequestDTO $request): \App\Vendoring\EventInterface\CategorySyndicationFallbackAwarePackageGatedInterface
+        $fallbackAwareGateService = new class implements VendorCatalogSyndicationFallbackAwarePackageGateServiceInterface {
+            public function buildGatedPublishPackage(VendorCatalogSyndicationPublishPackageRequestDTO $request): \App\Vendoring\EventInterface\Vendor\VendorCategorySyndicationFallbackAwarePackageGatedEventInterface
             {
-                return new \App\Vendoring\Event\CategorySyndicationFallbackAwarePackageGated([
+                return new \App\Vendoring\Event\Vendor\VendorCategorySyndicationFallbackAwarePackageGatedEvent([
                     'packageId' => $request->packageId,
                     'destinationId' => $request->destinationId,
                     'categoryId' => $request->categoryId,
@@ -41,10 +41,10 @@ final class CatalogSyndicationPolicyAwarePackageGateServiceTest extends TestCase
             }
         };
 
-        $preferenceService = new class implements CatalogDestinationMediaPolicyPreferenceServiceInterface {
-            public function evaluate(string $destinationId, string $categoryId, string $actorId, string $reason): \App\Vendoring\EventInterface\CategoryDestinationMediaPolicyPreferenceEvaluatedInterface
+        $preferenceService = new class implements VendorCatalogDestinationMediaPolicyPreferenceServiceInterface {
+            public function evaluate(string $destinationId, string $categoryId, string $actorId, string $reason): \App\Vendoring\EventInterface\Vendor\VendorCategoryDestinationMediaPolicyPreferenceEvaluatedEventInterface
             {
-                return new \App\Vendoring\Event\CategoryDestinationMediaPolicyPreferenceEvaluated([
+                return new \App\Vendoring\Event\Vendor\VendorCategoryDestinationMediaPolicyPreferenceEvaluatedEvent([
                     'destinationId' => $destinationId,
                     'categoryId' => $categoryId,
                     'mediaPolicyMode' => 'allow_fallback',
@@ -61,13 +61,13 @@ final class CatalogSyndicationPolicyAwarePackageGateServiceTest extends TestCase
             }
         };
 
-        $service = new CatalogSyndicationPolicyAwarePackageGateService(
+        $service = new VendorCatalogSyndicationPolicyAwarePackageGateService(
             $fallbackAwareGateService,
             $preferenceService,
-            new CategorySyndicationPolicyAwarePackageGatePolicy(),
+            new VendorCategorySyndicationPolicyAwarePackageGatePolicy(),
         );
 
-        $event = $service->buildGatedPublishPackage(new CatalogSyndicationPublishPackageRequestDTO('pkg-1', 'dst-1', 'cat-1', 'v1', 'per_locale', ['slug' => 'chairs'], ['slug' => 'slug'], ['slug'], 'actor-1', 'test'));
+        $event = $service->buildGatedPublishPackage(new VendorCatalogSyndicationPublishPackageRequestDTO('pkg-1', 'dst-1', 'cat-1', 'v1', 'per_locale', ['slug' => 'chairs'], ['slug' => 'slug'], ['slug'], 'actor-1', 'test'));
         $payload = $event->payload();
 
         self::assertSame('allow_fallback', $payload['mediaPolicyMode'] ?? null);

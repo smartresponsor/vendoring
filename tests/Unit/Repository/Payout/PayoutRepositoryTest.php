@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Vendoring\Tests\Unit\Repository\Payout;
+namespace App\Vendoring\Tests\Unit\Repository\VendorPayoutEntity;
 
-use App\Vendoring\Repository\Payout\PayoutRepository;
+use App\Vendoring\Repository\Vendor\VendorPayoutRepository;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +37,7 @@ final class PayoutRepositoryTest extends TestCase
                 'meta' => '{"tenantId":"tenant-1","providerRef":"bank_ref_123"}',
             ]);
 
-        $repository = new PayoutRepository($this->connection);
+        $repository = new VendorPayoutRepository($this->connection);
         $payout = $repository->byId('payout-1');
 
         self::assertNotNull($payout);
@@ -95,7 +95,7 @@ final class PayoutRepositoryTest extends TestCase
                 ['id' => 'payout-1'],
             );
 
-        $repository = new PayoutRepository($this->connection);
+        $repository = new VendorPayoutRepository($this->connection);
         $repository->markProcessed('payout-1', '2026-03-30 11:00:00', ['providerRef' => 'bank_ref_123']);
     }
 
@@ -129,7 +129,7 @@ final class PayoutRepositoryTest extends TestCase
                 ['id' => 'missing-payout'],
             );
 
-        $repository = new PayoutRepository($this->connection);
+        $repository = new VendorPayoutRepository($this->connection);
         $repository->markFailed('missing-payout', '2026-03-30 11:30:00', [
             'tenantId' => 'tenant-1',
             'error' => 'provider_declined',

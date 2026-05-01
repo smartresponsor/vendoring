@@ -5,31 +5,31 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Integration\Runtime;
 
 use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\Vendoring\Projection\VendorExternalIntegrationRuntimeView;
-use App\Vendoring\Projection\VendorFinanceRuntimeView;
-use App\Vendoring\Projection\VendorOwnershipView;
-use App\Vendoring\Projection\VendorStatementDeliveryRuntimeView;
-use App\Vendoring\Service\Ops\VendorRuntimeStatusViewBuilder;
-use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
-use App\Vendoring\ServiceInterface\VendorFinanceRuntimeViewBuilderInterface;
-use App\Vendoring\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\Projection\Vendor\VendorExternalIntegrationRuntimeView;
+use App\Vendoring\Projection\Vendor\VendorFinanceRuntimeView;
+use App\Vendoring\Projection\Vendor\VendorOwnershipView;
+use App\Vendoring\Projection\Vendor\VendorStatementDeliveryRuntimeView;
+use App\Vendoring\Service\Ops\VendorRuntimeStatusViewBuilderService;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeViewBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipViewBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
 {
-    private VendorOwnershipViewBuilderInterface&MockObject $ownership;
-    private VendorFinanceRuntimeViewBuilderInterface&MockObject $finance;
-    private VendorStatementDeliveryRuntimeViewBuilderInterface&MockObject $statementDelivery;
-    private VendorExternalIntegrationRuntimeViewBuilderInterface&MockObject $externalIntegration;
+    private VendorOwnershipViewBuilderServiceInterface&MockObject $ownership;
+    private VendorFinanceRuntimeViewBuilderServiceInterface&MockObject $finance;
+    private VendorStatementDeliveryRuntimeViewBuilderServiceInterface&MockObject $statementDelivery;
+    private VendorExternalIntegrationRuntimeViewBuilderServiceInterface&MockObject $externalIntegration;
 
     protected function setUp(): void
     {
-        $this->ownership = $this->createMock(VendorOwnershipViewBuilderInterface::class);
-        $this->finance = $this->createMock(VendorFinanceRuntimeViewBuilderInterface::class);
-        $this->statementDelivery = $this->createMock(VendorStatementDeliveryRuntimeViewBuilderInterface::class);
-        $this->externalIntegration = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderInterface::class);
+        $this->ownership = $this->createMock(VendorOwnershipViewBuilderServiceInterface::class);
+        $this->finance = $this->createMock(VendorFinanceRuntimeViewBuilderServiceInterface::class);
+        $this->statementDelivery = $this->createMock(VendorStatementDeliveryRuntimeViewBuilderServiceInterface::class);
+        $this->externalIntegration = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderServiceInterface::class);
     }
 
     public function testBuildKeepsIncompleteProfileNotReadyForPublishing(): void
@@ -115,9 +115,9 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
         self::assertTrue($payload['surfaceStatus']['ownership']);
     }
 
-    private function buildRuntimeStatus(): VendorRuntimeStatusViewBuilder
+    private function buildRuntimeStatus(): VendorRuntimeStatusViewBuilderService
     {
-        return new VendorRuntimeStatusViewBuilder(
+        return new VendorRuntimeStatusViewBuilderService(
             $this->ownership,
             $this->finance,
             $this->statementDelivery,

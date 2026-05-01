@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
-$entity = (string) file_get_contents($root . '/src/Entity/VendorTransaction.php');
+$entity = (string) file_get_contents($root . '/src/Entity/VendorTransactionEntity.php');
 $migration = (string) file_get_contents($root . '/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
 $composer = vendoring_load_composer_json($root);
 
@@ -15,7 +15,7 @@ foreach (['vendor_id', 'order_id', 'project_id', 'amount', 'status', 'created_at
         exit(1);
     }
 }
-if (!str_contains($entity, 'VendorTransaction')) {
+if (!str_contains($entity, 'VendorTransactionEntity')) {
     fwrite(STDERR, "Entity mapping parity smoke failed\n");
     exit(1);
 }

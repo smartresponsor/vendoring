@@ -6,9 +6,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Ledger;
 
-use App\Vendoring\DTO\Ledger\LedgerEntryDTO;
-use App\Vendoring\Entity\Ledger\LedgerEntry;
-use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\DTO\Ledger\VendorLedgerEntryDTO;
+use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface;
 use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
@@ -17,12 +17,12 @@ use Symfony\Component\Uid\Uuid;
 
 final readonly class VendorLedgerService implements VendorLedgerServiceInterface
 {
-    public function __construct(private LedgerEntryRepositoryInterface $repo) {}
+    public function __construct(private VendorLedgerEntryRepositoryInterface $repo) {}
 
     /**
      * @throws Exception
      */
-    public function record(LedgerEntryDTO $dto): LedgerEntry
+    public function record(VendorLedgerEntryDTO $dto): VendorLedgerEntryEntity
     {
         $createdAt = $dto->occurredAt;
         if (null === $createdAt) {
@@ -37,7 +37,7 @@ final readonly class VendorLedgerService implements VendorLedgerServiceInterface
             default => throw new InvalidArgumentException(sprintf('Unsupported ledger direction "%s".', $dto->direction)),
         };
 
-        $entry = new LedgerEntry(
+        $entry = new VendorLedgerEntryEntity(
             Uuid::v4()->toRfc4122(),
             $dto->tenantId,
             $debitAccount,

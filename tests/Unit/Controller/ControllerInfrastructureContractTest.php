@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Controller;
 
-use App\Vendoring\Controller\Ledger\VendorSummaryController;
-use App\Vendoring\Controller\Metric\VendorMetricController;
-use App\Vendoring\Controller\Payout\PayoutAccountController;
-use App\Vendoring\Controller\Payout\PayoutController;
-use App\Vendoring\Controller\Payout\VendorStatementController;
-use App\Vendoring\Controller\Statement\VendorStatementExportController;
-use App\Vendoring\Controller\VendorTransactionController;
+use App\Vendoring\Controller\Vendor\VendorSummaryController;
+use App\Vendoring\Controller\Vendor\VendorMetricController;
+use App\Vendoring\Controller\Vendor\VendorPayoutAccountController;
+use App\Vendoring\Controller\Vendor\VendorPayoutController;
+use App\Vendoring\Controller\Vendor\VendorStatementController;
+use App\Vendoring\Controller\Vendor\VendorStatementExportController;
+use App\Vendoring\Controller\Vendor\VendorTransactionController;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,8 +27,8 @@ final class ControllerInfrastructureContractTest extends TestCase
         yield 'vendor_transaction' => [VendorTransactionController::class, ['create', 'listByVendor', 'updateStatus']];
         yield 'vendor_summary' => [VendorSummaryController::class, ['summary']];
         yield 'vendor_metric' => [VendorMetricController::class, ['overview', 'trends']];
-        yield 'payout_account' => [PayoutAccountController::class, ['upsert']];
-        yield 'payout' => [PayoutController::class, ['create', 'process', 'getOne']];
+        yield 'payout_account' => [VendorPayoutAccountController::class, ['upsert']];
+        yield 'payout' => [VendorPayoutController::class, ['create', 'process', 'getOne']];
         yield 'vendor_statement' => [VendorStatementController::class, ['build']];
         yield 'vendor_statement_export' => [VendorStatementExportController::class, ['export']];
     }

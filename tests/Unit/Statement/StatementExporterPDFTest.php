@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Statement;
 
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
-use App\Vendoring\Service\Statement\StatementExporterPDF;
+use App\Vendoring\Service\Statement\VendorStatementExporterPDFService;
 use PHPUnit\Framework\TestCase;
 
 final class StatementExporterPDFTest extends TestCase
@@ -29,7 +29,7 @@ final class StatementExporterPDFTest extends TestCase
             ],
         ];
 
-        $path = (new StatementExporterPDF())->export($dto, $data, null);
+        $path = (new VendorStatementExporterPDFService())->export($dto, $data, null);
 
         self::assertStringEndsWith('var/statements/2026/03/vendor-42/statement_20260301_20260331.pdf', $path);
         self::assertFileExists($path);
@@ -60,7 +60,7 @@ final class StatementExporterPDFTest extends TestCase
             ],
         ];
 
-        $path = (new StatementExporterPDF())->export($dto, $data, null);
+        $path = (new VendorStatementExporterPDFService())->export($dto, $data, null);
         $content = file_get_contents($path);
         self::assertNotFalse($content);
 

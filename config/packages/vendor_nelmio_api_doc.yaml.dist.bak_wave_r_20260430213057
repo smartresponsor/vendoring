@@ -1,0 +1,16 @@
+nelmio_api_doc:
+  documentation:
+    info:
+      title: Vendoring API
+      description: Symfony/Nelmio browsing surface for the release-candidate HTTP contract.
+      version: 0.5.0-rc-docs
+    tags:
+      - name: VendorEntity Transactions
+        description: Transaction write/read surfaces.
+      - name: Operator Surface
+        description: Minimal HTML operator seam.
+  areas:
+    default:
+      path_patterns:
+        - ^/api(?!/doc$)
+        - ^/ops/vendor-transactions

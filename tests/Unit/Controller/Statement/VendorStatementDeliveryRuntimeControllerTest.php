@@ -5,37 +5,37 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Controller\Statement;
 
-use App\Vendoring\Controller\Statement\VendorStatementDeliveryRuntimeController;
-use App\Vendoring\DTO\Api\StatementWindowQueryRequestDTO;
+use App\Vendoring\Controller\Vendor\VendorStatementDeliveryRuntimeController;
+use App\Vendoring\DTO\Api\VendorStatementWindowQueryRequestDTO;
 use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\Vendoring\Exception\ApiQueryValidationException;
-use App\Vendoring\Projection\VendorStatementDeliveryRuntimeView;
-use App\Vendoring\Service\Statement\VendorStatementRequestResolver;
-use App\Vendoring\ServiceInterface\Api\StatementWindowQueryRequestResolverInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderInterface;
+use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
+use App\Vendoring\Projection\Vendor\VendorStatementDeliveryRuntimeView;
+use App\Vendoring\Service\Statement\VendorStatementRequestResolverService;
+use App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 final class VendorStatementDeliveryRuntimeControllerTest extends TestCase
 {
-    private VendorStatementDeliveryRuntimeViewBuilderInterface&MockObject $builder;
-    private StatementWindowQueryRequestResolverInterface&MockObject $statementWindowQueryRequestResolver;
+    private VendorStatementDeliveryRuntimeViewBuilderServiceInterface&MockObject $builder;
+    private VendorStatementWindowQueryRequestResolverServiceInterface&MockObject $statementWindowQueryRequestResolver;
 
     protected function setUp(): void
     {
-        $this->builder = $this->createMock(VendorStatementDeliveryRuntimeViewBuilderInterface::class);
-        $this->statementWindowQueryRequestResolver = $this->createMock(StatementWindowQueryRequestResolverInterface::class);
+        $this->builder = $this->createMock(VendorStatementDeliveryRuntimeViewBuilderServiceInterface::class);
+        $this->statementWindowQueryRequestResolver = $this->createMock(VendorStatementWindowQueryRequestResolverServiceInterface::class);
     }
 
     public function testShowReturnsValidationErrorWhenParamsMissing(): void
     {
         $this->statementWindowQueryRequestResolver->expects(self::once())
             ->method('resolve')
-            ->willThrowException(ApiQueryValidationException::fromConstraintMessage('statement_to_required'));
+            ->willThrowException(VendorApiQueryValidationException::fromConstraintMessage('statement_to_required'));
         $controller = new VendorStatementDeliveryRuntimeController(
             $this->builder,
-            new VendorStatementRequestResolver(),
+            new VendorStatementRequestResolverService(),
             $this->statementWindowQueryRequestResolver,
         );
 
@@ -51,7 +51,7 @@ final class VendorStatementDeliveryRuntimeControllerTest extends TestCase
     {
         $this->statementWindowQueryRequestResolver->expects(self::once())
             ->method('resolve')
-            ->willReturn(new StatementWindowQueryRequestDTO('tenant-1', '2026-03-01', '2026-03-31', 'USD'));
+            ->willReturn(new VendorStatementWindowQueryRequestDTO('tenant-1', '2026-03-01', '2026-03-31', 'USD'));
         $this->builder->expects(self::once())
             ->method('build')
             ->with(self::callback(function (VendorStatementDeliveryRuntimeRequestDTO $request): bool {
@@ -74,7 +74,7 @@ final class VendorStatementDeliveryRuntimeControllerTest extends TestCase
 
         $controller = new VendorStatementDeliveryRuntimeController(
             $this->builder,
-            new VendorStatementRequestResolver(),
+            new VendorStatementRequestResolverService(),
             $this->statementWindowQueryRequestResolver,
         );
         $response = $controller->show('vendor-1', new Request([

@@ -10,9 +10,9 @@ $required = [
     'config/services_runtime.php',
     'config/routes/vendor_nelmio_api_doc.yaml',
     'templates/ops/vendor_transactions/index.html.twig',
-    'src/Form/Ops/VendorTransactionCreateInput.php',
+    'src/Form/Ops/VendorTransactionCreateInputDTO.php',
     'src/Form/Ops/VendorTransactionCreateType.php',
-    'src/Form/Ops/VendorTransactionStatusUpdateInput.php',
+    'src/Form/Ops/VendorTransactionStatusUpdateInputDTO.php',
     'src/Form/Ops/VendorTransactionStatusUpdateType.php',
     'docs/release/RC_RUNTIME_ACTIVATION.md',
 ];

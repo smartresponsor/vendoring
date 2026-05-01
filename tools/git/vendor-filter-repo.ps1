@@ -3,7 +3,7 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# Vendor: history cleanup (remove phase snapshots / fast-import baggage)
+# VendorEntity: history cleanup (remove phase snapshots / fast-import baggage)
 # Requires: git + git-filter-repo
 
 function Assert-Cmd([string]$Name) {

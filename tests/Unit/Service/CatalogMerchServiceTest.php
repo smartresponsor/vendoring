@@ -7,7 +7,7 @@ namespace App\Vendoring\Tests\Unit\Service;
 use App\Vendoring\Entity\VendorCatalogCategoryBanner;
 use App\Vendoring\Entity\VendorCatalogCategoryHtmlBlock;
 use App\Vendoring\Entity\VendorCatalogCategoryPin;
-use App\Vendoring\Service\CatalogMerchService;
+use App\Vendoring\Service\Catalog\VendorCatalogMerchService;
 use App\Vendoring\Tests\Support\CatalogMerchEntityManagerFactory;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\TestCase;
@@ -23,7 +23,7 @@ final class CatalogMerchServiceTest extends TestCase
             CatalogMerchEntityManagerFactory::catalogMerchClasses(),
         ));
 
-        $service = new CatalogMerchService($entityManager);
+        $service = new VendorCatalogMerchService($entityManager);
         $service->pinCreate('cat-1', 'record-a', 10);
         $service->pinCreate('cat-1', 'record-b', 20);
         $service->orderSet('cat-1', ['record-b', 'record-a']);
@@ -62,7 +62,7 @@ final class CatalogMerchServiceTest extends TestCase
             CatalogMerchEntityManagerFactory::catalogMerchClasses(),
         ));
 
-        $service = new CatalogMerchService($entityManager);
+        $service = new VendorCatalogMerchService($entityManager);
         $bannerId = $service->bannerPublish('cat-2', 'Top banner', 'Banner content');
         $htmlId = $service->htmlPublish('cat-2', '<p>Hello</p>');
 

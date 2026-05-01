@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Infrastructure;
 
-use App\Vendoring\Command\SendVendorStatementsCommand;
+use App\Vendoring\Command\VendorSendVendorStatementsCommand;
 use App\Vendoring\Command\VendorApiKeyCreateCommand;
 use App\Vendoring\Command\VendorApiKeyListCommand;
 use App\Vendoring\Command\VendorApiKeyRotateCommand;
-use App\Vendoring\Controller\Ledger\VendorSummaryController;
-use App\Vendoring\Controller\Metric\VendorMetricController;
-use App\Vendoring\Controller\Payout\PayoutAccountController;
-use App\Vendoring\Controller\Payout\PayoutController;
-use App\Vendoring\Controller\Payout\VendorStatementController;
-use App\Vendoring\Controller\Statement\VendorStatementExportController;
-use App\Vendoring\Controller\VendorTransactionController;
+use App\Vendoring\Controller\Vendor\VendorSummaryController;
+use App\Vendoring\Controller\Vendor\VendorMetricController;
+use App\Vendoring\Controller\Vendor\VendorPayoutAccountController;
+use App\Vendoring\Controller\Vendor\VendorPayoutController;
+use App\Vendoring\Controller\Vendor\VendorStatementController;
+use App\Vendoring\Controller\Vendor\VendorStatementExportController;
+use App\Vendoring\Controller\Vendor\VendorTransactionController;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -25,14 +25,14 @@ final class EntryPointConstructorContractTest extends TestCase
      */
     public static function entryPointProvider(): iterable
     {
-        yield 'send_vendor_statements' => [SendVendorStatementsCommand::class];
+        yield 'send_vendor_statements' => [VendorSendVendorStatementsCommand::class];
         yield 'vendor_api_key_create' => [VendorApiKeyCreateCommand::class];
         yield 'vendor_api_key_list' => [VendorApiKeyListCommand::class];
         yield 'vendor_api_key_rotate' => [VendorApiKeyRotateCommand::class];
         yield 'vendor_summary_controller' => [VendorSummaryController::class];
         yield 'vendor_metric_controller' => [VendorMetricController::class];
-        yield 'payout_account_controller' => [PayoutAccountController::class];
-        yield 'payout_controller' => [PayoutController::class];
+        yield 'payout_account_controller' => [VendorPayoutAccountController::class];
+        yield 'payout_controller' => [VendorPayoutController::class];
         yield 'vendor_statement_controller' => [VendorStatementController::class];
         yield 'vendor_statement_export_controller' => [VendorStatementExportController::class];
         yield 'vendor_transaction_controller' => [VendorTransactionController::class];

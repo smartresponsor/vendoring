@@ -9,28 +9,28 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Command;
 
-use App\Vendoring\Command\CategoryReviewAssignCommand;
-use App\Vendoring\Policy\CategoryReviewAssignmentPolicy;
-use App\Vendoring\Repository\VendorCatalogCategoryChangeRequestRepository;
-use App\Vendoring\Repository\VendorCatalogReviewAssignmentRepository;
-use App\Vendoring\Service\CatalogReviewAssignmentService;
+use App\Vendoring\Command\VendorCategoryReviewAssignCommand;
+use App\Vendoring\Policy\Vendor\VendorCategoryReviewAssignmentPolicy;
+use App\Vendoring\Repository\Vendor\VendorCatalogCategoryChangeRequestRepository;
+use App\Vendoring\Repository\Vendor\VendorCatalogReviewAssignmentRepository;
+use App\Vendoring\Service\Catalog\VendorCatalogReviewAssignmentService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-final class CategoryReviewAssignCommandTest extends TestCase
+final class VendorCategoryReviewAssignCommandTest extends TestCase
 {
     public function testExecutePrintsAssignmentPayload(): void
     {
         $requestRepository = new VendorCatalogCategoryChangeRequestRepository();
-        $requestRepository->save(\App\Vendoring\Entity\VendorCatalogCategoryChangeRequest::open('req-100', 'cat-100', 'submitter-1', 'Promote category', ['title' => 'Garden']));
+        $requestRepository->save(\App\Vendoring\Entity\Vendor\VendorCatalogCategoryChangeRequestEntity::open('req-100', 'cat-100', 'submitter-1', 'Promote category', ['title' => 'Garden']));
 
-        $service = new CatalogReviewAssignmentService(
+        $service = new VendorCatalogReviewAssignmentService(
             $requestRepository,
             new VendorCatalogReviewAssignmentRepository(),
-            new CategoryReviewAssignmentPolicy(),
+            new VendorCategoryReviewAssignmentPolicy(),
         );
 
-        $command = new CategoryReviewAssignCommand($service);
+        $command = new VendorCategoryReviewAssignCommand($service);
         $tester = new CommandTester($command);
         $exitCode = $tester->execute([
             'requestId' => 'req-100',

@@ -34,7 +34,7 @@ Current enforcement applies to:
 ## Implementation notes
 
 - `VendorApiKeyService` now validates authorization headers directly
-- runtime harness provisions mapped `Vendor` and `VendorApiKey` entities for semantic auth tests
+- runtime harness provisions mapped `VendorEntity` and `VendorApiKeyEntity` Doctrine entities for semantic auth tests
 - the current enforcement is permission-based and does not yet bind external `vendorId` strings to vendor entity ownership
 
 ## Non-goals

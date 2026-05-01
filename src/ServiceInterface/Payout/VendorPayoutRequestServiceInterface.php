@@ -5,18 +5,18 @@ declare(strict_types=1);
 
 namespace App\Vendoring\ServiceInterface\Payout;
 
-use App\Vendoring\DTO\Payout\CreatePayoutDTO;
-use App\Vendoring\Entity\Payout\Payout;
+use App\Vendoring\DTO\Payout\VendorCreatePayoutDTO;
+use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
 
 interface VendorPayoutRequestServiceInterface
 {
     /**
      * @param array<string, mixed> $payload
      */
-    public function toCreateDto(array $payload): CreatePayoutDTO;
+    public function toCreateDto(array $payload): VendorCreatePayoutDTO;
 
     /**
      * @return array<string, mixed>
      */
-    public function normalizePayout(Payout $payout): array;
+    public function normalizePayout(VendorPayoutEntity $payout): array;
 }

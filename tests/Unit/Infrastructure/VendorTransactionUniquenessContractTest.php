@@ -10,7 +10,7 @@ final class VendorTransactionUniquenessContractTest extends TestCase
 {
     public function testEntityDoesNotPretendFullThreeColumnUniqueConstraint(): void
     {
-        $source = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Entity/VendorTransaction.php');
+        $source = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Entity/VendorTransactionEntity.php');
 
         self::assertStringNotContainsString('uniqueConstraints', $source);
         self::assertStringNotContainsString('uniq_vendor_transaction_vendor_order_project', $source);

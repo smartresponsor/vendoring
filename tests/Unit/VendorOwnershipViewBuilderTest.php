@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit;
 
-use App\Vendoring\Entity\Vendor;
-use App\Vendoring\Entity\VendorUserAssignment;
-use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
-use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
-use App\Vendoring\Service\Security\VendorAuthorizationMatrix;
-use App\Vendoring\Service\VendorOwnershipViewBuilder;
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Service\Security\VendorAuthorizationMatrixService;
+use App\Vendoring\Service\Ownership\VendorOwnershipViewBuilderService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -26,18 +26,18 @@ final class VendorOwnershipViewBuilderTest extends TestCase
 
     public function testBuildForVendorIdIncludesCapabilitiesPerAssignment(): void
     {
-        $vendor = new Vendor(brandName: 'Acme', ownerUserId: 7);
+        $vendor = new VendorEntity(brandName: 'Acme', ownerUserId: 7);
 
         $this->vendorRepository->method('find')->with(42)->willReturn($vendor);
         $this->assignmentRepository->method('findActiveByVendorId')->with(42)->willReturn([
-            new VendorUserAssignment(42, 7, 'owner', isPrimary: true),
-            new VendorUserAssignment(42, 9, 'viewer'),
+            new VendorUserAssignmentEntity(42, 7, 'owner', isPrimary: true),
+            new VendorUserAssignmentEntity(42, 9, 'viewer'),
         ]);
 
-        $builder = new VendorOwnershipViewBuilder(
+        $builder = new VendorOwnershipViewBuilderService(
             $this->vendorRepository,
             $this->assignmentRepository,
-            new VendorAuthorizationMatrix(),
+            new VendorAuthorizationMatrixService(),
         );
 
         $payload = $builder->buildForVendorId(42)?->toArray();

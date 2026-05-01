@@ -22,7 +22,7 @@ final class VendoringExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $configuration = new Configuration();
+        $configuration = new VendorConfiguration();
         $config = $this->processConfiguration($configuration, $configs);
 
         /** @var string $observabilityDir */
@@ -55,6 +55,6 @@ final class VendoringExtension extends Extension
      */
     public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
     {
-        return new Configuration();
+        return new VendorConfiguration();
     }
 }

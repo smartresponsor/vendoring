@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Entity;
 
-use App\Vendoring\Entity\VendorTransaction;
-use App\Vendoring\EntityInterface\VendorTransactionInterface;
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
+use App\Vendoring\EntityInterface\Vendor\VendorTransactionEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 use PHPUnit\Framework\TestCase;
 
@@ -13,9 +13,9 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
 {
     public function testEntityDeclaresDoctrineMappingAndCanonicalContract(): void
     {
-        $reflection = new \ReflectionClass(VendorTransaction::class);
+        $reflection = new \ReflectionClass(VendorTransactionEntity::class);
 
-        self::assertTrue($reflection->implementsInterface(VendorTransactionInterface::class));
+        self::assertTrue($reflection->implementsInterface(VendorTransactionEntityInterface::class));
 
         $entityAttributes = $reflection->getAttributes(ORM\Entity::class);
         self::assertCount(1, $entityAttributes);
@@ -31,7 +31,7 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
 
     public function testPersistentFieldsExposeExpectedDoctrineColumns(): void
     {
-        $reflection = new \ReflectionClass(VendorTransaction::class);
+        $reflection = new \ReflectionClass(VendorTransactionEntity::class);
 
         $id = $reflection->getProperty('id');
         self::assertNotEmpty($id->getAttributes(ORM\Id::class));
@@ -53,7 +53,7 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
 
     public function testRepositoryOrdersVendorTransactionsByNewestFirst(): void
     {
-        $repositorySource = file_get_contents(__DIR__ . '/../../../src/Repository/VendorTransactionRepository.php');
+        $repositorySource = file_get_contents(__DIR__ . '/../../../src/Repository/Vendor/VendorTransactionRepository.php');
         self::assertIsString($repositorySource);
         self::assertStringContainsString("['createdAt' => 'DESC', 'id' => 'DESC']", $repositorySource);
     }

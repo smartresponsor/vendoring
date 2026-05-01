@@ -16,7 +16,7 @@ and repository-backed access decision rules were not enforced through one canoni
 
 ### Canonical roles
 
-`App\Vendoring\ValueObject\VendorRole` defines the allowed vendor-local roles:
+`App\Vendoring\ValueObject\VendorRoleValueObject` defines the allowed vendor-local roles:
 - `owner`
 - `operator`
 - `finance`
@@ -26,8 +26,8 @@ Unknown roles are rejected by assignment services.
 
 ### Canonical capability matrix
 
-`App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixInterface`
-`App\Vendoring\Service\Security\VendorAuthorizationMatrix`
+`App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixServiceInterface`
+`App\Vendoring\Service\Security\VendorAuthorizationMatrixService`
 
 Canonical capabilities currently covered:
 - `transactions.read`
@@ -41,8 +41,8 @@ Canonical capabilities currently covered:
 
 ### Repository-backed access resolver
 
-`App\Vendoring\ServiceInterface\Security\VendorAccessResolverInterface`
-`App\Vendoring\Service\Security\VendorAccessResolver`
+`App\Vendoring\ServiceInterface\Security\VendorAccessResolverServiceInterface`
+`App\Vendoring\Service\Security\VendorAccessResolverService`
 
 The resolver explains and answers questions of the form:
 - does user X have capability Y for vendor Z?

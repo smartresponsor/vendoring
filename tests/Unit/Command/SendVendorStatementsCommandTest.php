@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Command;
 
-use App\Vendoring\Command\SendVendorStatementsCommand;
+use App\Vendoring\Command\VendorSendVendorStatementsCommand;
 use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
 use App\Vendoring\Tests\Support\Statement\FakeStatementExporterPDF;
 use App\Vendoring\Tests\Support\Statement\FakeVendorStatementMailerService;
@@ -13,7 +13,7 @@ use App\Vendoring\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-final class SendVendorStatementsCommandTest extends TestCase
+final class VendorSendVendorStatementsCommandTest extends TestCase
 {
     public function testExecuteWritesSentLineFromProviderRecipient(): void
     {
@@ -21,7 +21,7 @@ final class SendVendorStatementsCommandTest extends TestCase
         self::assertNotFalse($pdf);
         file_put_contents($pdf, 'pdf');
 
-        $command = new SendVendorStatementsCommand(
+        $command = new VendorSendVendorStatementsCommand(
             new FakeVendorStatementService(['balance' => 100.0]),
             new FakeStatementExporterPDF($pdf),
             new FakeVendorStatementMailerService(true, 'sent'),
@@ -46,7 +46,7 @@ final class SendVendorStatementsCommandTest extends TestCase
         self::assertNotFalse($pdf);
         file_put_contents($pdf, 'pdf');
 
-        $command = new SendVendorStatementsCommand(
+        $command = new VendorSendVendorStatementsCommand(
             new FakeVendorStatementService(['balance' => 100.0]),
             new FakeStatementExporterPDF($pdf),
             new FakeVendorStatementMailerService(true, 'sent'),
@@ -74,7 +74,7 @@ final class SendVendorStatementsCommandTest extends TestCase
 
     public function testExecuteWritesNoRecipientsLineWhenNothingResolved(): void
     {
-        $command = new SendVendorStatementsCommand(
+        $command = new VendorSendVendorStatementsCommand(
             new FakeVendorStatementService(['balance' => 0.0]),
             new FakeStatementExporterPDF(sys_get_temp_dir() . '/missing-statement.pdf'),
             new FakeVendorStatementMailerService(true, 'sent'),

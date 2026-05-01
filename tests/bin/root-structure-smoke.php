@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
 
-$canonical = $root . '/src/Controller/VendorTransactionController.php';
+$canonical = $root . '/src/Controller/Vendor/VendorTransactionController.php';
 $forbidden = $root . '/VendorTransactionController.php';
 
 if (!is_file($canonical)) {
-    fwrite(STDERR, "Missing canonical src/Controller/VendorTransactionController.php\n");
+    fwrite(STDERR, "Missing canonical src/Controller/Vendor/VendorTransactionController.php\n");
     exit(1);
 }
 

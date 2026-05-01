@@ -2,40 +2,40 @@
 
 declare(strict_types=1);
 
-use App\Vendoring\Service\Security\VendorAuthorizationMatrix;
-use App\Vendoring\Service\Security\VendorAccessResolver;
-use App\Vendoring\ValueObject\VendorRole;
-use App\Vendoring\Entity\VendorUserAssignment;
-use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Service\Security\VendorAuthorizationMatrixService;
+use App\Vendoring\Service\Security\VendorAccessResolverService;
+use App\Vendoring\ValueObject\VendorRoleValueObject;
+use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
 
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
-$matrix = new VendorAuthorizationMatrix();
+$matrix = new VendorAuthorizationMatrixService();
 
-if (!$matrix->can(VendorRole::OWNER, 'ownership.write')) {
+if (!$matrix->can(VendorRoleValueObject::OWNER, 'ownership.write')) {
     throw new RuntimeException('RBAC smoke expected owner to grant ownership.write.');
 }
 
-if ($matrix->can(VendorRole::VIEWER, 'payouts.write')) {
+if ($matrix->can(VendorRoleValueObject::VIEWER, 'payouts.write')) {
     throw new RuntimeException('RBAC smoke expected viewer to remain read-only.');
 }
 
 $repository = new class implements VendorUserAssignmentRepositoryInterface {
-    public function save(\App\Vendoring\EntityInterface\VendorUserAssignmentInterface $assignment, bool $flush = false): void {}
-    public function remove(\App\Vendoring\EntityInterface\VendorUserAssignmentInterface $assignment, bool $flush = false): void {}
-    public function findPrimaryForVendorId(int $vendorId): ?\App\Vendoring\EntityInterface\VendorUserAssignmentInterface
+    public function save(\App\Vendoring\EntityInterface\Vendor\VendorUserAssignmentEntityInterface $assignment, bool $flush = false): void {}
+    public function remove(\App\Vendoring\EntityInterface\Vendor\VendorUserAssignmentEntityInterface $assignment, bool $flush = false): void {}
+    public function findPrimaryForVendorId(int $vendorId): ?\App\Vendoring\EntityInterface\Vendor\VendorUserAssignmentEntityInterface
     {
         return null;
     }
     public function findActiveByVendorId(int $vendorId): array
     {
-        return [new VendorUserAssignment($vendorId, 7, 'finance')];
+        return [new VendorUserAssignmentEntity($vendorId, 7, 'finance')];
     }
     public function findActiveByUserId(int $userId): array
     {
         return [];
     }
-    public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?\App\Vendoring\EntityInterface\VendorUserAssignmentInterface
+    public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?\App\Vendoring\EntityInterface\Vendor\VendorUserAssignmentEntityInterface
     {
         return null;
     }
@@ -57,11 +57,11 @@ $repository = new class implements VendorUserAssignmentRepositoryInterface {
     }
     public function getClassName(): string
     {
-        return VendorUserAssignment::class;
+        return VendorUserAssignmentEntity::class;
     }
 };
 
-$resolver = new VendorAccessResolver($repository, $matrix);
+$resolver = new VendorAccessResolverService($repository, $matrix);
 $explanation = $resolver->explainUserAccessVendorCapability(42, 7, 'payouts.write');
 
 if (!$explanation['granted'] || 'role_grants_capability' !== $explanation['reason']) {

@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Support\Transaction;
 
 use App\Vendoring\Entity\VendorTransaction;
-use App\Vendoring\ServiceInterface\VendorTransactionManagerInterface;
-use App\Vendoring\ValueObject\VendorTransactionData;
+use App\Vendoring\ServiceInterface\Transaction\VendorTransactionManagerServiceInterface;
+use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
 
-final class FakeVendorTransactionManager implements VendorTransactionManagerInterface
+final class FakeVendorTransactionManager implements VendorTransactionManagerServiceInterface
 {
     public ?VendorTransaction $updatedTransaction = null;
     public ?string $updatedStatus = null;
-    public ?VendorTransactionData $createdData = null;
+    public ?VendorTransactionDataValueObject $createdData = null;
     public ?\InvalidArgumentException $exceptionToThrow = null;
 
     public function __construct(private readonly VendorTransaction $transaction) {}
 
-    public function createTransaction(VendorTransactionData $data): VendorTransaction
+    public function createTransaction(VendorTransactionDataValueObject $data): VendorTransaction
     {
         if ($this->exceptionToThrow instanceof \InvalidArgumentException) {
             throw $this->exceptionToThrow;

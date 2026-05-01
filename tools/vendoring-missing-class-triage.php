@@ -9,7 +9,7 @@ declare(strict_types=1);
  *
  * Reads missing-class-scan-v3 JSON and groups issues into actionable buckets:
  * - scanner-noise / namespace-only (should be near-zero with v3)
- * - missing Vendor entity references (candidate quarantine or entity restore)
+ * - missing VendorEntity entity references (candidate quarantine or entity restore)
  * - missing ServiceInterface refs (legacy path / stale dependency)
  * - cross-domain refs (Ledger / Observability)
  * - other

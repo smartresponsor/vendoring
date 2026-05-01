@@ -6,22 +6,22 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Ledger;
 
 use Doctrine\DBAL\Exception;
-use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
-use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorSummaryServiceInterface;
 
 final class VendorSummaryService implements VendorSummaryServiceInterface
 {
     private const array ACCOUNTS = ['REVENUE', 'REFUNDS_PAYABLE', 'VENDOR_PAYABLE', 'CASH', 'payout_fee'];
 
-    public function __construct(private readonly LedgerEntryRepositoryInterface $ledgerEntries) {}
+    public function __construct(private readonly VendorLedgerEntryRepositoryInterface $ledgerEntries) {}
 
     /** @throws Exception */
     public function build(string $tenantId, string $vendorId, string $from, string $to, string $currency): array
     {
         $balances = [];
         foreach (self::ACCOUNTS as $account) {
-            $balances[$account] = $this->ledgerEntries->sumByAccount(new LedgerAccountSumCriteriaDTO(
+            $balances[$account] = $this->ledgerEntries->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
                 tenantId: $tenantId,
                 accountCode: $account,
                 from: $this->normalizeBoundary($from, false),

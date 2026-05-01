@@ -12,15 +12,15 @@ if (!is_file($script)) {
 
 $content = (string) file_get_contents($script);
 $legacyMarkers = [
-    "'Vendor')",
-    "'Vendor',",
-    "keepSubdirs = @('Api','DTO','E2E','Form','Twig','Vendor')",
+    "'VendorEntity')",
+    "'VendorEntity',",
+    "keepSubdirs = @('Api','DTO','E2E','Form','Twig','VendorEntity')",
     '\\Vendor\\VendorEnTest.php',
 ];
 
 foreach ($legacyMarkers as $marker) {
     if (str_contains($content, $marker)) {
-        fwrite(STDERR, "Legacy Vendor keepSubdir marker still present\n");
+        fwrite(STDERR, "Legacy VendorEntity keepSubdir marker still present\n");
         exit(1);
     }
 }

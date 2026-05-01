@@ -37,7 +37,7 @@ function Replace-In-File([string] $path, [string] $pattern, [string] $replacemen
 }
 
 $oldFile = Join-Path $root 'src/Entity/CategoryHtmlBlock.php'
-$newFile = Join-Path $root 'src/Entity/VendorCatalogCategoryHtmlBlock.php'
+$newFile = Join-Path $root 'src/Entity/VendorCatalogCategoryHtmlBlockEntity.php'
 
 if (Test-Path $oldFile) {
     Backup-File $oldFile
@@ -45,7 +45,7 @@ if (Test-Path $oldFile) {
     New-Item -ItemType Directory -Force -Path (Split-Path $newFile -Parent) | Out-Null
     $content = Get-Content $oldFile -Raw
 
-    $content = $content -replace '\bclass\s+CategoryHtmlBlock\b', 'class VendorCatalogCategoryHtmlBlock'
+    $content = $content -replace '\bclass\s+CategoryHtmlBlock\b', 'class VendorCatalogCategoryHtmlBlockEntity'
 
     # Scope explicit generic Doctrine table names when present.
     $content = $content -replace "name:\s*'category_html_block'", "name: 'vendor_catalog_category_html_block'"
@@ -64,14 +64,14 @@ if (Test-Path $src) {
     foreach ($file in $phpFiles) {
         $path = $file.FullName
 
-        Replace-In-File $path 'App\Vendoring\\Entity\\CategoryHtmlBlock' 'App\Vendoring\Entity\VendorCatalogCategoryHtmlBlock'
-        Replace-In-File $path 'use\s+App\Vendoring\\Entity\\CategoryHtmlBlock;' 'use App\Vendoring\Entity\VendorCatalogCategoryHtmlBlock;'
-        Replace-In-File $path '\bCategoryHtmlBlock::class\b' 'VendorCatalogCategoryHtmlBlock::class'
-        Replace-In-File $path '\bnew\s+CategoryHtmlBlock\s*\(' 'new VendorCatalogCategoryHtmlBlock('
-        Replace-In-File $path '\bCategoryHtmlBlock\s+\$categoryHtmlBlock\b' 'VendorCatalogCategoryHtmlBlock $categoryHtmlBlock'
-        Replace-In-File $path '\?CategoryHtmlBlock\s+\$categoryHtmlBlock\b' '?VendorCatalogCategoryHtmlBlock $categoryHtmlBlock'
-        Replace-In-File $path '\biterable<CategoryHtmlBlock>' 'iterable<VendorCatalogCategoryHtmlBlock>'
-        Replace-In-File $path '\barray<CategoryHtmlBlock>' 'array<VendorCatalogCategoryHtmlBlock>'
+        Replace-In-File $path 'App\Vendoring\\Entity\\CategoryHtmlBlock' 'App\Vendoring\Entity\Vendor\VendorCatalogCategoryHtmlBlockEntity'
+        Replace-In-File $path 'use\s+App\Vendoring\\Entity\\CategoryHtmlBlock;' 'use App\Vendoring\Entity\Vendor\VendorCatalogCategoryHtmlBlockEntity;'
+        Replace-In-File $path '\bCategoryHtmlBlock::class\b' 'VendorCatalogCategoryHtmlBlockEntity::class'
+        Replace-In-File $path '\bnew\s+CategoryHtmlBlock\s*\(' 'new VendorCatalogCategoryHtmlBlockEntity('
+        Replace-In-File $path '\bCategoryHtmlBlock\s+\$categoryHtmlBlock\b' 'VendorCatalogCategoryHtmlBlockEntity $categoryHtmlBlock'
+        Replace-In-File $path '\?CategoryHtmlBlock\s+\$categoryHtmlBlock\b' '?VendorCatalogCategoryHtmlBlockEntity $categoryHtmlBlock'
+        Replace-In-File $path '\biterable<CategoryHtmlBlock>' 'iterable<VendorCatalogCategoryHtmlBlockEntity>'
+        Replace-In-File $path '\barray<CategoryHtmlBlock>' 'array<VendorCatalogCategoryHtmlBlockEntity>'
     }
 }
 
@@ -81,5 +81,5 @@ if (Test-Path $newFile) {
 
 Write-Host 'Vendoring CategoryHtmlBlock entity rename completed.'
 Write-Host 'Old: src/Entity/CategoryHtmlBlock.php'
-Write-Host 'New: src/Entity/VendorCatalogCategoryHtmlBlock.php'
+Write-Host 'New: src/Entity/VendorCatalogCategoryHtmlBlockEntity.php'
 Write-Host "Backup: $backupRoot"

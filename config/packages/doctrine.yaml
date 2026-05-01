@@ -10,6 +10,6 @@ doctrine:
         mappings:
             Vendoring:
                 type: attribute
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Vendoring\Entity'
+                dir: '%kernel.project_dir%/src/Entity/Vendor'
+                prefix: 'App\Vendoring\Entity\Vendor'
                 is_bundle: false

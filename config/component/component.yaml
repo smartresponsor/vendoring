@@ -26,5 +26,5 @@ component:
     class: App\Vendoring\VendoringBundle
     extension: App\Vendoring\DependencyInjection\VendoringExtension
     services_loaded_by_extension: config/component/services.yaml
-    configuration_class: App\Vendoring\DependencyInjection\Configuration
+    configuration_class: App\Vendoring\DependencyInjection\VendorConfiguration
     routes_import_required_by_host: config/component/routes.yaml

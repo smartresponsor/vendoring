@@ -5,11 +5,11 @@ declare(strict_types=1);
 $root = dirname(__DIR__, 2);
 
 $required = [
-    $root . '/src/Repository/VendorRepository.php',
-    $root . '/src/Repository/VendorApiKeyRepository.php',
-    $root . '/src/Repository/VendorTransactionRepository.php',
-    $root . '/src/Repository/Payout/PayoutRepository.php',
-    $root . '/src/Repository/Ledger/LedgerEntryRepository.php',
+    $root . '/src/Repository/Vendor/VendorRepository.php',
+    $root . '/src/Repository/Vendor/VendorApiKeyRepository.php',
+    $root . '/src/Repository/Vendor/VendorTransactionRepository.php',
+    $root . '/src/Repository/VendorPayoutEntity/VendorPayoutRepository.php',
+    $root . '/src/Repository/Vendor/VendorLedgerEntryRepository.php',
     $root . '/tests/Unit/Repository/DoctrineRepositoryContractTest.php',
 ];
 

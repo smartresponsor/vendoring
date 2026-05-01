@@ -9,17 +9,17 @@ function vendoring_load_file_or_empty(string $path): string
     return false === $contents ? '' : $contents;
 }
 
-$controller = vendoring_load_file_or_empty(__DIR__ . '/../../src/Controller/VendorTransactionController.php');
-$manager = vendoring_load_file_or_empty(__DIR__ . '/../../src/Service/VendorTransactionManager.php');
-$amountPolicy = vendoring_load_file_or_empty(__DIR__ . '/../../src/Service/Policy/VendorTransactionAmountPolicy.php');
-$errorCodes = vendoring_load_file_or_empty(__DIR__ . '/../../src/ValueObject/VendorTransactionErrorCode.php');
+$controller = vendoring_load_file_or_empty(__DIR__ . '/../../src/Controller/Vendor/VendorTransactionController.php');
+$manager = vendoring_load_file_or_empty(__DIR__ . '/../../src/Service/VendorTransactionManagerService.php');
+$amountPolicy = vendoring_load_file_or_empty(__DIR__ . '/../../src/Service/Policy/VendorTransactionAmountPolicyService.php');
+$errorCodes = vendoring_load_file_or_empty(__DIR__ . '/../../src/ValueObject/VendorTransactionErrorCodeValueObject.php');
 
 $checks = [
     'controller avoids raw exception message payload' => !str_contains($controller, "['error' => \$exception->getMessage()]"),
     'controller normalizes unknown validation messages' => str_contains($controller, 'transaction_validation_error'),
-    'manager uses stable invalid transition code' => str_contains($manager, 'VendorTransactionErrorCode::INVALID_STATUS_TRANSITION'),
-    'amount policy uses stable codes' => str_contains($amountPolicy, 'VendorTransactionErrorCode::AMOUNT_NOT_NUMERIC')
-        && str_contains($amountPolicy, 'VendorTransactionErrorCode::AMOUNT_NOT_POSITIVE'),
+    'manager uses stable invalid transition code' => str_contains($manager, 'VendorTransactionErrorCodeValueObject::INVALID_STATUS_TRANSITION'),
+    'amount policy uses stable codes' => str_contains($amountPolicy, 'VendorTransactionErrorCodeValueObject::AMOUNT_NOT_NUMERIC')
+        && str_contains($amountPolicy, 'VendorTransactionErrorCodeValueObject::AMOUNT_NOT_POSITIVE'),
     'error code catalog exists' => str_contains($errorCodes, "public const DUPLICATE_TRANSACTION = 'duplicate_transaction';")
         && str_contains($errorCodes, "public const STATUS_REQUIRED = 'status_required';"),
 ];

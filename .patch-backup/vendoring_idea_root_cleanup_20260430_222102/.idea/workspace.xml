@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4ea94b03-5c15-48d6-9f84-31294a164134" name="Changes" comment="#">
+      <change beforePath="$PROJECT_DIR$/bootstrap.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/doctrine.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/doctrine.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/reference.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/reference.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/phpunit.xml.dist" beforeDir="false" afterPath="$PROJECT_DIR$/phpunit.xml.dist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DependencyInjection/VendoringExtension.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DependencyInjection/VendoringExtension.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Smoke/SymfonyMiniStackSmokeTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Smoke/SymfonyMiniStackSmokeTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Support/Transaction/DoctrineEntityManagerFactory.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Support/Transaction/DoctrineEntityManagerFactory.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Unit/DependencyInjection/VendoringConfigurationTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Unit/DependencyInjection/VendoringConfigurationTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Unit/Documentation/NelmioApiDocContractTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Unit/Documentation/NelmioApiDocContractTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Unit/Infrastructure/KernelConfigurationContractTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Unit/Infrastructure/KernelConfigurationContractTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Unit/Infrastructure/ReleaseCandidateRuntimeActivationContractTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Unit/Infrastructure/ReleaseCandidateRuntimeActivationContractTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Unit/Infrastructure/ServiceWiringContractTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Unit/Infrastructure/ServiceWiringContractTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Unit/Infrastructure/VendorTransactionSchemaParityTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Unit/Infrastructure/VendorTransactionSchemaParityTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/var/observability/runtime_logs.ndjson" beforeDir="false" afterPath="$PROJECT_DIR$/var/observability/runtime_logs.ndjson" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/var/patch-backup/vendoring-category-banner-entity-rename-20260415-205459/src/Entity/CategoryBanner.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/var/patch-backup/vendoring-category-banner-entity-rename-20260415-205459/src/Service/CatalogMerchService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/var/patch-backup/vendoring-category-change-request-entity-rename-20260415-205940/src/Entity/CategoryChangeRequest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/var/patch-backup/vendoring-category-change-request-entity-rename-20260415-205940/src/Repository/CategoryChangeRequestRepository.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/var/patch-backup/vendoring-category-html-block-entity-rename-20260415-210956/src/Entity/CategoryHtmlBlock.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/var/patch-backup/vendoring-category-html-block-entity-rename-20260415-210956/src/Service/CatalogMerchService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/var/patch-backup/vendoring-category-pin-entity-rename-20260415-211241/src/Entity/CategoryPin.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/var/patch-backup/vendoring-category-pin-entity-rename-20260415-211241/src/Service/CatalogMerchService.php" beforeDir="false" />
+    </list>
+    <list id="c97f6956-c566-4439-b41f-e3cc5f18eded" name="chore: move policy yaml out of config" comment="chore: move policy yaml out of config">
+      <changelist_data name="bot" email="bot@example.com" />
+    </list>
+    <list id="524f8287-5a56-4af3-a03f-d8cd9881d043" name="chore: move ServiceInterface spec out of src" comment="chore: move ServiceInterface spec out of src">
+      <changelist_data name="bot" email="bot@example.com" />
+    </list>
+    <list id="dc289609-26f2-4f7a-b052-ca416efc992f" name="chore: quarantine unused port+adapters" comment="chore: quarantine unused port+adapters">
+      <changelist_data name="bot" email="bot@example.com" />
+    </list>
+    <list id="67e764ac-4ebf-43f8-afd9-af733ffd4ff1" name="chore: quarantine unused port+adapters (infra)" comment="chore: quarantine unused port+adapters (infra)">
+      <changelist_data name="bot" email="bot@example.com" />
+    </list>
+    <list id="b3ba24b8-5fc0-499a-bd69-017d57f0b8c3" name="clipboardPatchFile" comment="fix" />
+    <list id="4dd2c0ba-331e-42ae-94d4-372ef5f6c08b" name="vendoring-missing-scan-harden-21 git" comment="fix" />
+    <list id="fcaf5544-8af3-42fb-bcd2-7813cadfea89" name="vendoring-missing-scan-harden-21 git (1)" comment="fix" />
+    <list id="500096a0-2d18-4b43-8bca-e972d904500d" name="vendoring-psr-hotfix-20 git" comment="fix" />
+    <list id="2879d045-a3a4-4ef8-91f0-114e2e131acf" name="vendoring-psr-scan-normalize-22 fix git" comment="fix" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+    <execution>
+      <executable path="composer" />
+    </execution>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="composer.json" />
+      </list>
+    </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="codex/rename-config-files-to-vendor_-prefix" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;taa0662621456&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/smartresponsor/vendoring.git&quot;,
+    &quot;accountId&quot;: &quot;9ddf95b4-2718-442c-b065-c5a2307d74ec&quot;
+  }
+}</component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="PhpExternalFormatterCheckinHandler">
+    <option name="shouldReformat" value="true" />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:/PHP/php-8.4.13-nts-Win32-vs17-x64/php.exe">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/react/cache" />
+      <path value="$PROJECT_DIR$/vendor/react/child-process" />
+      <path value="$PROJECT_DIR$/vendor/clue/ndjson-react" />
+      <path value="$PROJECT_DIR$/vendor/react/dns" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/vendor/react/event-loop" />
+      <path value="$PROJECT_DIR$/vendor/react/promise" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/react/socket" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/react/stream" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php84" />
+      <path value="$PROJECT_DIR$/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/vendor/evenement/evenement" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/stopwatch" />
+      <path value="$PROJECT_DIR$/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/friendsofphp/php-cs-fixer" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/fidry/cpu-core-counter" />
+      <path value="$PROJECT_DIR$/Vendor/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/vendor/nelmio/api-doc-bundle" />
+      <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/vendor/staabm/side-effects-detector" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpstan" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpdoc-parser" />
+      <path value="$PROJECT_DIR$/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/vendor/symfony/var-exporter" />
+      <path value="$PROJECT_DIR$/vendor/symfony/form" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache-contracts" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/property-access" />
+      <path value="$PROJECT_DIR$/vendor/symfony/property-info" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-core" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache" />
+      <path value="$PROJECT_DIR$/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php85" />
+      <path value="$PROJECT_DIR$/vendor/symfony/password-hasher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-csrf" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/validator" />
+      <path value="$PROJECT_DIR$/vendor/symfony/framework-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dependency-injection" />
+      <path value="$PROJECT_DIR$/vendor/symfony/doctrine-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/routing" />
+      <path value="$PROJECT_DIR$/vendor/symfony/type-info" />
+      <path value="$PROJECT_DIR$/vendor/symfony/error-handler" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/config" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
+      <path value="$PROJECT_DIR$/vendor/symfony/uid" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
+      <path value="$PROJECT_DIR$/vendor/symfony/twig-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-uuid" />
+      <path value="$PROJECT_DIR$/vendor/symfony/twig-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-icu" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/deprecations" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/collections" />
+      <path value="$PROJECT_DIR$/vendor/zircote/swagger-php" />
+      <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/persistence" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-bundle" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/event-manager" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/orm" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/inflector" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/sql-formatter" />
+      <path value="$PROJECT_DIR$/vendor/fakerphp/faker" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/data-fixtures" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-fixtures-bundle" />
+      <path value="$PROJECT_DIR$/vendor/ergebnis/agent-detector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dom-crawler" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/browser-kit" />
+      <path value="$PROJECT_DIR$/vendor/symfony/panther" />
+      <path value="$PROJECT_DIR$/vendor/radebatz/type-info-extras" />
+      <path value="$PROJECT_DIR$/vendor/php-webdriver/webdriver" />
+    </include_path>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="38MSFa6nAv4ZQkEKPEGZV2JrmzL" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="compactDirectories" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\Admin\\AppData\\Roaming\\JetBrains\\PhpStorm2025.3\\plugins\\Shell Script\\shellcheck.exe&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/PhpstormProjects/www/Taxating&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.php.quality.tools&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-QDPHP-253.31837" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\Admin\AppData\Roaming\Subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4ea94b03-5c15-48d6-9f84-31294a164134" name="Changes" comment="" />
+      <changelist id="b3ba24b8-5fc0-499a-bd69-017d57f0b8c3" name="clipboardPatchFile" comment="fix" />
+      <changelist id="c97f6956-c566-4439-b41f-e3cc5f18eded" name="chore: move policy yaml out of config" comment="chore: move policy yaml out of config" />
+      <changelist id="dc289609-26f2-4f7a-b052-ca416efc992f" name="chore: quarantine unused port+adapters" comment="chore: quarantine unused port+adapters" />
+      <changelist id="67e764ac-4ebf-43f8-afd9-af733ffd4ff1" name="chore: quarantine unused port+adapters (infra)" comment="chore: quarantine unused port+adapters (infra)" />
+      <changelist id="524f8287-5a56-4af3-a03f-d8cd9881d043" name="chore: move ServiceInterface spec out of src" comment="chore: move ServiceInterface spec out of src" />
+      <changelist id="500096a0-2d18-4b43-8bca-e972d904500d" name="vendoring-psr-hotfix-20 git" comment="fix" />
+      <changelist id="4dd2c0ba-331e-42ae-94d4-372ef5f6c08b" name="vendoring-missing-scan-harden-21 git" comment="fix" />
+      <changelist id="fcaf5544-8af3-42fb-bcd2-7813cadfea89" name="vendoring-missing-scan-harden-21 git (1)" comment="fix" />
+      <changelist id="2879d045-a3a4-4ef8-91f0-114e2e131acf" name="vendoring-psr-scan-normalize-22 fix git" comment="fix" />
+      <created>1768607843816</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1768607843816</updated>
+      <workItem from="1768607844915" duration="1933000" />
+      <workItem from="1769380149855" duration="8600000" />
+      <workItem from="1770095391802" duration="583000" />
+      <workItem from="1770886116858" duration="2045000" />
+      <workItem from="1770888191236" duration="1103000" />
+      <workItem from="1771062241224" duration="19902000" />
+      <workItem from="1771460249442" duration="12967000" />
+      <workItem from="1773120402357" duration="75000" />
+      <workItem from="1773146553258" duration="574000" />
+      <workItem from="1774400081326" duration="1195000" />
+      <workItem from="1774567023048" duration="1269000" />
+      <workItem from="1774590592655" duration="619000" />
+      <workItem from="1774594070446" duration="62000" />
+      <workItem from="1776899204327" duration="635000" />
+    </task>
+    <task id="LOCAL-00001" summary="first init commit">
+      <option name="closed" value="true" />
+      <created>1769411966228</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1769411966228</updated>
+    </task>
+    <task id="LOCAL-00002" summary="first init commit">
+      <option name="closed" value="true" />
+      <created>1769423569908</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1769423569908</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.consuming/consuming.ps1">
+      <option name="closed" value="true" />
+      <created>1769423746216</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1769423746216</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Merge remote-tracking branch 'origin/master'">
+      <option name="closed" value="true" />
+      <created>1769423894577</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1769423894577</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add codex dispatch">
+      <option name="closed" value="true" />
+      <created>1769425490282</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1769425490282</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add codex dispatch">
+      <option name="closed" value="true" />
+      <created>1769425873390</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1769425873390</updated>
+    </task>
+    <task id="LOCAL-00007" summary="add codex dispatch">
+      <option name="closed" value="true" />
+      <created>1769426190182</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1769426190183</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.github/workflows/gate.yml">
+      <option name="closed" value="true" />
+      <created>1769426486917</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1769426486917</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Merge remote-tracking branch 'origin/master'">
+      <option name="closed" value="true" />
+      <created>1769426615952</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1769426615952</updated>
+    </task>
+    <task id="LOCAL-00010" summary="fix: root contract checker">
+      <option name="closed" value="true" />
+      <created>1769428007932</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1769428007932</updated>
+    </task>
+    <task id="LOCAL-00011" summary="fix: .gitignore checker policy">
+      <option name="closed" value="true" />
+      <created>1769428736680</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1769428736680</updated>
+    </task>
+    <task id="LOCAL-00012" summary="set .idea">
+      <option name="closed" value="true" />
+      <created>1770888256668</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1770888256669</updated>
+    </task>
+    <task id="LOCAL-00013" summary="fix">
+      <option name="closed" value="true" />
+      <created>1771460269242</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1771460269242</updated>
+    </task>
+    <task id="LOCAL-00014" summary="composer added">
+      <option name="closed" value="true" />
+      <created>1771653367818</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1771653367818</updated>
+    </task>
+    <task id="LOCAL-00015" summary="git ignore fix, and more">
+      <option name="closed" value="true" />
+      <created>1774567235016</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1774567235017</updated>
+    </task>
+    <task id="LOCAL-00016" summary="#">
+      <option name="closed" value="true" />
+      <created>1774567347612</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1774567347612</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CODE_SMELLS_PROFILE" value="sr_default_inspector" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="first init commit" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.consuming/consuming.ps1" />
+    <MESSAGE value="add codex dispatch" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.github/workflows/gate.yml" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/master'" />
+    <MESSAGE value="fix: root contract checker" />
+    <MESSAGE value="fix: .gitignore checker policy" />
+    <MESSAGE value="set .idea" />
+    <MESSAGE value="fix" />
+    <MESSAGE value="composer added" />
+    <MESSAGE value="git ignore fix, and more" />
+    <MESSAGE value="#" />
+    <option name="LAST_COMMIT_MESSAGE" value="#" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

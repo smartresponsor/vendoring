@@ -13,7 +13,7 @@ $checks = [
     'component/services.yaml aliases VendorStatementServiceInterface' => str_contains($services, 'App\Vendoring\\ServiceInterface\\Statement\\VendorStatementServiceInterface'),
     'component/services.yaml aliases VendorStatementMailerServiceInterface' => str_contains($services, 'App\Vendoring\\ServiceInterface\\Statement\\VendorStatementMailerServiceInterface'),
     'component/services.yaml aliases VendorWebhooksConsumerServiceInterface' => str_contains($services, 'App\Vendoring\\ServiceInterface\\WebhooksConsumer\\VendorWebhooksConsumerServiceInterface'),
-    'VendorApiKeyRepository exists' => is_file($root . '/src/Repository/VendorApiKeyRepository.php'),
+    'VendorApiKeyRepository exists' => is_file($root . '/src/Repository/Vendor/VendorApiKeyRepository.php'),
 ];
 
 foreach ($checks as $label => $result) {

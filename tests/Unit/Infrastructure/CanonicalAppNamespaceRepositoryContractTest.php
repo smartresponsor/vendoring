@@ -19,8 +19,8 @@ final class CanonicalAppNamespaceRepositoryContractTest extends TestCase
         self::assertStringContainsString('App\Vendoring\\:', $content);
         self::assertStringContainsString('App\Vendoring\\ServiceInterface\\Order\\OrderPaymentInterface:', $content);
         self::assertStringContainsString('alias: App\Vendoring\\Service\\Order\\OrderPaymentService', $content);
-        self::assertStringNotContainsString('Vendor\\:', $content);
-        self::assertStringNotContainsString('Vendor\\ServiceInterface\\Order\\OrderPaymentInterface:', $content);
-        self::assertStringNotContainsString('alias: Vendor\\Service\\Order\\OrderPaymentService', $content);
+        self::assertStringNotContainsString('VendorEntity\\:', $content);
+        self::assertStringNotContainsString('VendorEntity\\ServiceInterface\\Order\\OrderPaymentInterface:', $content);
+        self::assertStringNotContainsString('alias: VendorEntity\\Service\\Order\\OrderPaymentService', $content);
     }
 }

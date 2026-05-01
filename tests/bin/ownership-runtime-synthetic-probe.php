@@ -16,7 +16,7 @@ if (!extension_loaded('pdo_sqlite')) {
 $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot);
 
 try {
-    $vendor = KernelRuntimeHarness::seedActiveVendor($kernel, 'Ownership Probe Vendor');
+    $vendor = KernelRuntimeHarness::seedActiveVendor($kernel, 'Ownership Probe VendorEntity');
     $vendorId = $vendor->getId();
 
     if (!is_int($vendorId)) {

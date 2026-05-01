@@ -8,8 +8,8 @@ if (!is_string($root) || '' === $root) {
     exit(2);
 }
 
-$entityPath = $root . '/src/Entity/VendorTransaction.php';
-$interfacePath = $root . '/src/EntityInterface/VendorTransactionInterface.php';
+$entityPath = $root . '/src/Entity/VendorTransactionEntity.php';
+$interfacePath = $root . '/src/EntityInterface/VendorTransactionEntityInterface.php';
 
 foreach ([$entityPath, $interfacePath] as $path) {
     if (!is_file($path)) {
@@ -22,7 +22,7 @@ $entitySource = (string) file_get_contents($entityPath);
 $needles = [
     '#[ORM\\Entity',
     "name: 'vendor_transaction'",
-    'implements VendorTransactionInterface',
+    'implements VendorTransactionEntityInterface',
     "name: 'vendor_id'",
     "name: 'status'",
     "name: 'created_at'",
@@ -30,9 +30,9 @@ $needles = [
 
 foreach ($needles as $needle) {
     if (!str_contains($entitySource, $needle)) {
-        fwrite(STDERR, sprintf("VendorTransaction doctrine mapping missing: %s\n", $needle));
+        fwrite(STDERR, sprintf("VendorTransactionEntity doctrine mapping missing: %s\n", $needle));
         exit(1);
     }
 }
 
-fwrite(STDOUT, "Vendor doctrine mapping smoke passed\n");
+fwrite(STDOUT, "VendorEntity doctrine mapping smoke passed\n");

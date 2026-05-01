@@ -10,7 +10,7 @@ The seam is intentionally simple and modular-monolith friendly:
 
 ## Added public contracts
 
-### `TrafficCohortResolverInterface`
+### `VendorTrafficCohortResolverServiceInterface`
 Resolves a stable cohort identifier from tenant/vendor scope.
 
 Canonical order:
@@ -18,7 +18,7 @@ Canonical order:
 2. `tenant:<tenantId>`
 3. `global`
 
-### `FeatureFlagServiceInterface`
+### `VendorFeatureFlagServiceInterface`
 Evaluates whether a named feature flag is enabled for a resolved cohort.
 
 Stable explanation payload:

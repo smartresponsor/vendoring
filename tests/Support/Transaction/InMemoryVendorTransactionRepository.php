@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Support\Transaction;
 
 use App\Vendoring\Entity\VendorTransaction;
-use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
 
 final class InMemoryVendorTransactionRepository implements VendorTransactionRepositoryInterface
 {

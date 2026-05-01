@@ -37,7 +37,7 @@ function Replace-In-File([string] $path, [string] $pattern, [string] $replacemen
 }
 
 $oldFile = Join-Path $root 'src/Entity/CategoryPin.php'
-$newFile = Join-Path $root 'src/Entity/VendorCatalogCategoryPin.php'
+$newFile = Join-Path $root 'src/Entity/VendorCatalogCategoryPinEntity.php'
 
 if (Test-Path $oldFile) {
     Backup-File $oldFile
@@ -45,7 +45,7 @@ if (Test-Path $oldFile) {
     New-Item -ItemType Directory -Force -Path (Split-Path $newFile -Parent) | Out-Null
     $content = Get-Content $oldFile -Raw
 
-    $content = $content -replace '\bclass\s+CategoryPin\b', 'class VendorCatalogCategoryPin'
+    $content = $content -replace '\bclass\s+CategoryPin\b', 'class VendorCatalogCategoryPinEntity'
 
     # Scope explicit generic Doctrine table names when present.
     $content = $content -replace "name:\s*'category_pin'", "name: 'vendor_catalog_category_pin'"
@@ -64,14 +64,14 @@ if (Test-Path $src) {
     foreach ($file in $phpFiles) {
         $path = $file.FullName
 
-        Replace-In-File $path 'App\Vendoring\\Entity\\CategoryPin' 'App\Vendoring\Entity\VendorCatalogCategoryPin'
-        Replace-In-File $path 'use\s+App\Vendoring\\Entity\\CategoryPin;' 'use App\Vendoring\Entity\VendorCatalogCategoryPin;'
-        Replace-In-File $path '\bCategoryPin::class\b' 'VendorCatalogCategoryPin::class'
-        Replace-In-File $path '\bnew\s+CategoryPin\s*\(' 'new VendorCatalogCategoryPin('
-        Replace-In-File $path '\bCategoryPin\s+\$categoryPin\b' 'VendorCatalogCategoryPin $categoryPin'
-        Replace-In-File $path '\?CategoryPin\s+\$categoryPin\b' '?VendorCatalogCategoryPin $categoryPin'
-        Replace-In-File $path '\biterable<CategoryPin>' 'iterable<VendorCatalogCategoryPin>'
-        Replace-In-File $path '\barray<CategoryPin>' 'array<VendorCatalogCategoryPin>'
+        Replace-In-File $path 'App\Vendoring\\Entity\\CategoryPin' 'App\Vendoring\Entity\Vendor\VendorCatalogCategoryPinEntity'
+        Replace-In-File $path 'use\s+App\Vendoring\\Entity\\CategoryPin;' 'use App\Vendoring\Entity\Vendor\VendorCatalogCategoryPinEntity;'
+        Replace-In-File $path '\bCategoryPin::class\b' 'VendorCatalogCategoryPinEntity::class'
+        Replace-In-File $path '\bnew\s+CategoryPin\s*\(' 'new VendorCatalogCategoryPinEntity('
+        Replace-In-File $path '\bCategoryPin\s+\$categoryPin\b' 'VendorCatalogCategoryPinEntity $categoryPin'
+        Replace-In-File $path '\?CategoryPin\s+\$categoryPin\b' '?VendorCatalogCategoryPinEntity $categoryPin'
+        Replace-In-File $path '\biterable<CategoryPin>' 'iterable<VendorCatalogCategoryPinEntity>'
+        Replace-In-File $path '\barray<CategoryPin>' 'array<VendorCatalogCategoryPinEntity>'
     }
 }
 
@@ -81,5 +81,5 @@ if (Test-Path $newFile) {
 
 Write-Host 'Vendoring CategoryPin entity rename completed.'
 Write-Host 'Old: src/Entity/CategoryPin.php'
-Write-Host 'New: src/Entity/VendorCatalogCategoryPin.php'
+Write-Host 'New: src/Entity/VendorCatalogCategoryPinEntity.php'
 Write-Host "Backup: $backupRoot"

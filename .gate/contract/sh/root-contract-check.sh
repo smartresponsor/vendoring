@@ -2,16 +2,18 @@
 set -euo pipefail
 
 REPO_ROOT="${1:-.}"
-REPO_ROOT="${REPO_ROOT%/}"
+while [[ "$REPO_ROOT" == */ && "$REPO_ROOT" != "/" ]]; do
+  REPO_ROOT="${REPO_ROOT%/}"
+done
 
 fail=0
 issues=()
 
-required_files=(".gitignore" "MANIFEST.json" "README.md")
-allowed_files=(".gitignore" "MANIFEST.json" "README.md" ".gitattributes" ".php-cs-fixer.php" ".php-cs-fixer.dist.php" "phpstan.neon" "phpunit.xml" "phpunit.xml.dist" "phpunit.xsd" "composer.json" "composer.lock" "symfony.lock")
-
-allowed_non_dot_dir=("src" "config" "docs" "migrations" "public" "bin" "templates" "tests" "var" "assets" ".smartresponsor")
-forbidden_root_dir=("Vendor" "tools")
+required_files=(".gitignore" "README.md" "composer.json")
+allowed_files=(".gitignore" "README.md" "composer.json")
+allowed_dot_dir=(".canonization" ".commanding" ".consuming" ".gate" ".github" ".ide" ".intelligence")
+allowed_non_dot_dir=("bin" "build" "config" "delivery" "deploy" "docs" "drivers" "migrations" "ops" "public" "src")
+forbidden_root_dir=("Vendor" "tools" ".deploy" ".release" ".smoke" ".idea" "logs" "scripts")
 
 is_allowed_root_file() {
   local name="$1"
@@ -23,18 +25,32 @@ is_allowed_root_file() {
   return 1
 }
 
+is_forbidden_root_dir() {
+  local name="$1"
+  local lower_name="${name,,}"
+  for f in "${forbidden_root_dir[@]}"; do
+    if [[ "$lower_name" == "${f,,}" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 is_allowed_root_dir() {
   local name="$1"
   if [[ "$name" == ".git" ]]; then
     return 0
   fi
-  for f in "${forbidden_root_dir[@]}"; do
-    if [[ "$name" == "$f" ]]; then
-      return 1
-    fi
-  done
+  if is_forbidden_root_dir "$name"; then
+    return 1
+  fi
   if [[ "$name" == .* ]]; then
-    return 0
+    for a in "${allowed_dot_dir[@]}"; do
+      if [[ "$name" == "$a" ]]; then
+        return 0
+      fi
+    done
+    return 1
   fi
   for a in "${allowed_non_dot_dir[@]}"; do
     if [[ "$name" == "$a" ]]; then
@@ -44,17 +60,13 @@ is_allowed_root_dir() {
   return 1
 }
 
-
-# list root entries (names only)
 while IFS= read -r entry; do
   [[ -n "$entry" ]] || continue
 
-  # ignore current/parent
   if [[ "$entry" == "." || "$entry" == ".." ]]; then
     continue
   fi
 
-  # ignore .git technically, but do not validate contents
   if [[ "$entry" == ".git" ]]; then
     continue
   fi
@@ -63,7 +75,7 @@ while IFS= read -r entry; do
 
   if [[ -d "$full" ]]; then
     if ! is_allowed_root_dir "$entry"; then
-      issues+=(" - Non-dot folder in root: $entry")
+      issues+=(" - Unexpected root directory: $entry")
       fail=1
     fi
   else
@@ -74,7 +86,6 @@ while IFS= read -r entry; do
   fi
 done < <(cd "$REPO_ROOT" && ls -A)
 
-# required root files must exist as regular files
 for req in "${required_files[@]}"; do
   if [[ ! -f "$REPO_ROOT/$req" ]]; then
     issues+=(" - Missing required root file: $req")
@@ -90,8 +101,8 @@ if [[ "$fail" == "1" ]]; then
     echo "$i"
   done
 
-  mkdir -p "$REPO_ROOT/.report"
-  : > "$REPO_ROOT/.report/gate-flag-root-contract.fail"
+  mkdir -p "$REPO_ROOT/build/reports/gate"
+  : > "$REPO_ROOT/build/reports/gate/root-contract.fail"
 
   exit 2
 fi

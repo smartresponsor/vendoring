@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Ops;
 
-use App\Vendoring\Service\Ops\RollbackDecisionEvaluator;
+use App\Vendoring\Service\Ops\VendorRollbackDecisionEvaluatorService;
 use PHPUnit\Framework\TestCase;
 
 final class RollbackDecisionEvaluatorTest extends TestCase
 {
     public function testCriticalAlertForcesRollback(): void
     {
-        $evaluator = new RollbackDecisionEvaluator();
+        $evaluator = new VendorRollbackDecisionEvaluatorService();
         $decision = $evaluator->evaluate([
             'generatedAt' => date(DATE_ATOM),
             'windowSeconds' => 900,
@@ -33,7 +33,7 @@ final class RollbackDecisionEvaluatorTest extends TestCase
 
     public function testMissingArtifactsCauseHold(): void
     {
-        $evaluator = new RollbackDecisionEvaluator();
+        $evaluator = new VendorRollbackDecisionEvaluatorService();
         $decision = $evaluator->evaluate([
             'generatedAt' => date(DATE_ATOM),
             'windowSeconds' => 900,

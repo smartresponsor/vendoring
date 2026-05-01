@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/_vendor_report_bootstrap.php';
 
-vendorReportHeader('Vendor config guard report');
+vendorReportHeader('VendorEntity config guard report');
 $root = vendorReportProjectRoot();
 
 $requiredFiles = [

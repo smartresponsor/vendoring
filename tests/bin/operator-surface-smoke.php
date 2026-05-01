@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 $requiredFiles = [
-    dirname(__DIR__, 2) . '/src/Controller/Ops/VendorTransactionOperatorController.php',
-    dirname(__DIR__, 2) . '/src/Service/Ops/VendorTransactionOperatorPageBuilder.php',
+    dirname(__DIR__, 2) . '/src/Controller/Vendor/VendorTransactionOperatorController.php',
+    dirname(__DIR__, 2) . '/src/Service/Ops/VendorTransactionOperatorPageBuilderService.php',
     dirname(__DIR__, 2) . '/tests/Integration/Runtime/VendorTransactionOperatorSurfaceTest.php',
     dirname(__DIR__, 2) . '/docs/release/RC_OPERATOR_SURFACE.md',
 ];

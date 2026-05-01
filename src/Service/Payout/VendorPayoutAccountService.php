@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Payout;
 
-use App\Vendoring\Entity\Payout\PayoutAccount;
-use App\Vendoring\RepositoryInterface\Payout\PayoutAccountRepositoryInterface;
+use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
 use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
@@ -15,14 +15,14 @@ use Symfony\Component\Uid\Uuid;
 
 final readonly class VendorPayoutAccountService implements VendorPayoutAccountServiceInterface
 {
-    public function __construct(private PayoutAccountRepositoryInterface $accounts) {}
+    public function __construct(private VendorPayoutAccountRepositoryInterface $accounts) {}
 
     /**
      * @param array<string, mixed> $payload
-     * @return PayoutAccount
+     * @return VendorPayoutAccountEntity
      * @throws Exception
      */
-    public function upsertFromPayload(array $payload): PayoutAccount
+    public function upsertFromPayload(array $payload): VendorPayoutAccountEntity
     {
         foreach (['tenantId', 'vendorId', 'provider', 'accountRef', 'currency'] as $field) {
             if (!isset($payload[$field])) {
@@ -32,7 +32,7 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
 
         $createdAt = new DateTimeImmutable();
 
-        $account = new PayoutAccount(
+        $account = new VendorPayoutAccountEntity(
             Uuid::v4()->toRfc4122(),
             $this->requiredString($payload, 'tenantId'),
             $this->requiredString($payload, 'vendorId'),

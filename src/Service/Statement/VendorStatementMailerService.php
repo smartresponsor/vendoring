@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Statement;
 
-use App\Vendoring\ServiceInterface\Observability\MetricCollectorInterface;
-use App\Vendoring\ServiceInterface\Observability\RuntimeLoggerInterface;
-use App\Vendoring\ServiceInterface\Policy\OutboundOperationPolicyInterface;
-use App\Vendoring\ServiceInterface\Reliability\OutboundCircuitBreakerInterface;
+use App\Vendoring\ServiceInterface\Observability\VendorMetricCollectorServiceInterface;
+use App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface;
+use App\Vendoring\ServiceInterface\Policy\VendorOutboundOperationPolicyServiceInterface;
+use App\Vendoring\ServiceInterface\Reliability\VendorOutboundCircuitBreakerServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\VendorEmailValueObject;
 
 /**
  * Write-side outbound mail transport for vendor statements.
@@ -24,10 +24,10 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
 {
     public function __construct(
         private MailerInterface                  $mailer,
-        private MetricCollectorInterface         $metrics,
-        private RuntimeLoggerInterface           $runtimeLogger,
-        private OutboundOperationPolicyInterface $outboundPolicy,
-        private OutboundCircuitBreakerInterface  $circuitBreaker,
+        private VendorMetricCollectorServiceInterface         $metrics,
+        private VendorRuntimeLoggerServiceInterface           $runtimeLogger,
+        private VendorOutboundOperationPolicyServiceInterface $outboundPolicy,
+        private VendorOutboundCircuitBreakerServiceInterface  $circuitBreaker,
     ) {}
 
     /**
@@ -99,7 +99,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             return $result;
         }
 
-        $message = new Email();
+        $message = new VendorEmailValueObject();
         $message
             ->to($email)
             ->subject(sprintf('Monthly Vendor Statement for %s', $periodLabel))

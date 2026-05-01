@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Vendoring\Service\Rollout\CanaryRolloutCoordinator;
-use App\Vendoring\Service\Rollout\FeatureFlagService;
-use App\Vendoring\Service\Rollout\TrafficCohortResolver;
-use App\Vendoring\Service\Ops\ReleaseManifestBuilder;
-use App\Vendoring\Service\Ops\RollbackDecisionEvaluator;
-use App\Vendoring\Observability\Service\MonitoringSnapshotBuilder;
-use App\Vendoring\Observability\Service\AlertRuleEvaluator;
+use App\Vendoring\Service\Rollout\VendorCanaryRolloutCoordinatorService;
+use App\Vendoring\Service\Rollout\VendorFeatureFlagService;
+use App\Vendoring\Service\Rollout\VendorTrafficCohortResolverService;
+use App\Vendoring\Service\Ops\VendorReleaseManifestBuilderService;
+use App\Vendoring\Service\Ops\VendorRollbackDecisionEvaluatorService;
+use App\Vendoring\Service\Observability\VendorMonitoringSnapshotBuilderService;
+use App\Vendoring\Service\Observability\VendorAlertRuleEvaluatorService;
 
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
@@ -55,15 +55,15 @@ $featureFlags = [
     ],
 ];
 
-$coordinator = new CanaryRolloutCoordinator(
-    new FeatureFlagService(new TrafficCohortResolver(), $featureFlags),
-    new TrafficCohortResolver(),
-    new ReleaseManifestBuilder(
-        new MonitoringSnapshotBuilder($observabilityDir, $faultToleranceDir, $root),
-        new AlertRuleEvaluator(),
+$coordinator = new VendorCanaryRolloutCoordinatorService(
+    new VendorFeatureFlagService(new VendorTrafficCohortResolverService(), $featureFlags),
+    new VendorTrafficCohortResolverService(),
+    new VendorReleaseManifestBuilderService(
+        new VendorMonitoringSnapshotBuilderService($observabilityDir, $faultToleranceDir, $root),
+        new VendorAlertRuleEvaluatorService(),
         $root,
     ),
-    new RollbackDecisionEvaluator(),
+    new VendorRollbackDecisionEvaluatorService(),
 );
 
 $report = $coordinator->evaluate('transaction_canary', 'tenant-1', '42', 900);

@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Integration\Ops;
 
-use App\Vendoring\Projection\VendorRuntimeStatusView;
-use App\Vendoring\Service\Ops\VendorReleaseBaselineReader;
-use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
+use App\Vendoring\Projection\Vendor\VendorRuntimeStatusView;
+use App\Vendoring\Service\Ops\VendorReleaseBaselineReaderService;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
 {
-    private VendorRuntimeStatusViewBuilderInterface&MockObject $runtimeStatus;
+    private VendorRuntimeStatusViewBuilderServiceInterface&MockObject $runtimeStatus;
 
     protected function setUp(): void
     {
-        $this->runtimeStatus = $this->createMock(VendorRuntimeStatusViewBuilderInterface::class);
+        $this->runtimeStatus = $this->createMock(VendorRuntimeStatusViewBuilderServiceInterface::class);
     }
 
     public function testBuildMarksBaselineWarnWhenRuntimeSurfacesAreMissing(): void
@@ -42,7 +42,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
                 generatedAt: '2026-03-31T10:00:00+00:00',
             ));
 
-        $payload = (new VendorReleaseBaselineReader($this->runtimeStatus))
+        $payload = (new VendorReleaseBaselineReaderService($this->runtimeStatus))
             ->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')
             ->toArray();
 
@@ -76,7 +76,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
                 generatedAt: '2026-03-31T10:00:00+00:00',
             ));
 
-        $payload = (new VendorReleaseBaselineReader($this->runtimeStatus))
+        $payload = (new VendorReleaseBaselineReaderService($this->runtimeStatus))
             ->build('tenant-1', 'vendor-alpha', null, null, 'EUR')
             ->toArray();
 

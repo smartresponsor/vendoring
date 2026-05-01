@@ -21,8 +21,8 @@ $required = [
     'App\Vendoring\\ServiceInterface\\VendorProfileServiceInterface',
     'App\Vendoring\\ServiceInterface\\VendorServiceInterface',
     'App\Vendoring\\ServiceInterface\\Ledger\\VendorDoubleEntryServiceInterface',
-    'App\Vendoring\\ServiceInterface\\Payout\\VendorPayoutProviderServiceInterface',
-    'App\Vendoring\\ServiceInterface\\Payout\\VendorSettlementCalculatorServiceInterface',
+    'App\Vendoring\\ServiceInterface\\VendorPayoutEntity\\VendorPayoutProviderServiceInterface',
+    'App\Vendoring\\ServiceInterface\\VendorPayoutEntity\\VendorSettlementCalculatorServiceInterface',
 ];
 
 foreach ($required as $interfaceClass) {

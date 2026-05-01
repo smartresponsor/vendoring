@@ -2,7 +2,7 @@
 <#
 Intelligence Install (minimal)
 - Installs Intelligence workflows into .github/workflows/
-- Mirrors Intelligence files into .Intelligence/
+- Mirrors Intelligence files into .intelligence/
 #>
 
 param(
@@ -23,7 +23,7 @@ $srcRoot  = $PSScriptRoot
 $wfSrc    = Join-Path $srcRoot "workflow"
 
 $wfDst    = Join-Path $repoRoot ".github\workflows"
-$intDst   = Join-Path $repoRoot ".Intelligence"
+$intDst   = Join-Path $repoRoot ".intelligence"
 
 New-Item -ItemType Directory -Force -Path $wfDst | Out-Null
 New-Item -ItemType Directory -Force -Path $intDst | Out-Null

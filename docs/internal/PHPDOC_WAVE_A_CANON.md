@@ -13,11 +13,11 @@ The goal is to make the codebase readable in a deterministic way for:
 ## Scope
 
 Wave A covers runtime and release-facing read models:
-- `App\Vendoring\Service\Ops\VendorRuntimeStatusViewBuilder`
-- `App\Vendoring\Service\Ops\VendorReleaseBaselineReader`
-- `App\Vendoring\Service\VendorFinanceRuntimeViewBuilder`
-- `App\Vendoring\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder`
-- `App\Vendoring\Service\Integration\VendorExternalIntegrationRuntimeViewBuilder`
+- `App\Vendoring\Service\Ops\VendorRuntimeStatusProjectionBuilderService`
+- `App\Vendoring\Service\Ops\VendorReleaseBaselineReaderService`
+- `App\Vendoring\Service\Finance\VendorFinanceRuntimeProjectionBuilderService`
+- `App\Vendoring\Service\Statement\VendorStatementDeliveryRuntimeProjectionBuilderService`
+- `App\Vendoring\Service\Integration\VendorExternalIntegrationRuntimeProjectionBuilderService`
 - matching `ServiceInterface` contracts for the same surfaces
 
 ## Required class-level PHPDoc
@@ -35,7 +35,7 @@ Each public class in this wave must declare:
  * Read-side aggregator for vendor runtime surfaces.
  *
  * Builds a release-facing projection by combining ownership, profile,
- * finance, statement, and integration views without mutating domain state.
+ * finance, statement, and integration projections without mutating domain state.
  */
 ```
 
@@ -60,7 +60,7 @@ Each public method must document:
  * @param string|null $to       Optional inclusive period end.
  * @param string      $currency Canonical currency code for finance sections.
  *
- * @return VendorRuntimeStatusView Immutable runtime projection.
+ * @return VendorRuntimeStatusProjection Immutable runtime projection.
  */
 ```
 

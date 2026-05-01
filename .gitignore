@@ -1,170 +1,51 @@
-# ──────────────────────────────────────────────
-#  💻 OS & IDE junk
-# ──────────────────────────────────────────────
-.DS_Store
-Thumbs.db
-.idea/
-.vscode/
-*.swp
-*.swo
-*.iml
-
-# ──────────────────────────────────────────────
-#  🐘 PHP / Composer
-# ──────────────────────────────────────────────
+# Composer / PHP dependencies
 /vendor/
-/composer.lock
-/composer.phar
-/.phpunit.cache
-/phpunit.result.cache
+composer.phar
 
-# ──────────────────────────────────────────────
-#  🧩 Symfony cache, logs, temp
-# ──────────────────────────────────────────────
+# Symfony runtime state
+/var/
 /var/cache/
 /var/log/
+/var/logs/
 /var/sessions/
-/var/test/
-/var/tmp/
-/var/export/
-/var/data/
-/var/backups/
-/var/build/
-/var/storage/
-/var/metrics/
-/var/runtime/
-/report/
-/var/report/
-/var/.php-cs-fixer.cache
+/var/bootstrap.php.cache
+/.web-server-pid
 
-# ──────────────────────────────────────────────
-#  📦 Node / Frontend
-# ──────────────────────────────────────────────
-/node_modules/
-/package-lock.json
-/yarn.lock
-/pnpm-lock.yaml
-
-# ──────────────────────────────────────────────
-#  🧪 Tests / Coverage
-# ──────────────────────────────────────────────
-/coverage/
-/build/
-/reports/
-/test-output/
-.cachegrind.out.*
-
-# ──────────────────────────────────────────────
-#  🚀 CI/CD generated
-# ──────────────────────────────────────────────
-/dist/
-/downloads/
-/public/api/
-/public/dev/
-/public/coverage/
-/docs/export/
-/docs/releases/
-/tmp/
-/cache/
-/artifacts/
-
-# ──────────────────────────────────────────────
-#  🧰 Temporary & Backup files
-# ──────────────────────────────────────────────
-*.tmp
-*.bak
-*.old
-*.orig
-*.log
-*.swp
-*.swo
-*~
-# PHP-CS-Fixer cache
-.php-cs-fixer.cache
-
-# ──────────────────────────────────────────────
-#  🔐 Local environment (never commit)
-# ──────────────────────────────────────────────
-.env.local
-.env.test.local
-.env.*.local
-/.env.backup
-/.envrc
-/.env.secrets
-/.env.private
-/.env.cache
-
-# ──────────────────────────────────────────────
-#  📁 User / app storage
-# ──────────────────────────────────────────────
-/storage/
-/runtime/
-/uploads/
-/media/
-/cache_private/
-
-# ──────────────────────────────────────────────
-#  ⚙️ System / Misc
-# ──────────────────────────────────────────────
-*.pid
-*.seed
-*.sqlite*
-*.db
-*.sql
-*.log.*
-*.gz
-*.zip
-*.tar
-*.tar.gz
-*.7z
-
-# ──────────────────────────────────────────────
-#  📦 Build outputs from CI (keep CI scripts)
-# ──────────────────────────────────────────────
-!/.github/
-!/.github/workflows/
-!/.yamllint.yml
-!/.editorconfig
-!/.gitattributes
+# PHPUnit / QA runtime state
+/.phpunit.cache/
+.phpunit.result.cache
 /.php-cs-fixer.cache
-/var/metrics/
-/.tmp.drivedownload/
-/.tmp.driveupload/
+/phpstan-report*.txt
+/var/phpstan/
+/var/*-report.txt
 
-# ──────────────────────────────────────────────
-#  🚫 Forbidden root folders (canon guards)
-# ──────────────────────────────────────────────
-/Vendor/
+# Node / frontend runtime state
+/node_modules/
+/npm-debug.log*
+/yarn-debug.log*
+/yarn-error.log*
 
-# Legacy / local scratch
-/.commanding/legacy/vendo-fast-import-repo/
+# IDE and local workstation files
+/.idea/
+*.iws
+.vscode/
 
-# Vendor canon: git history + fast-import artifacts (local)
-/report/git-log/
-/.archive/
-/tools/git/fast-import/
+# Build / temporary output
+/build/
+/report/
+/mnt/
+/.automation/.tmp/
+/.automation/.cache/
+*.zip
 
-# Canon scan reports
-.report/vendor-canon-*
-.report/migration-dialect-guard.*
+# Local environment and secrets
+.env.local
+.env.*.local
+/app/config/parameters.yml
+/app/config/parameters.ini
 
-# ──────────────────────────────────────────────
-# ──────────────────────────────────────────────
-
-# ──────────────────────────────────────────────
-# ──────────────────────────────────────────────
-
-
-# Tools (tracked)
-tools/tmp/
-
-# ──────────────────────────────────────────────
-#  🧱 Vendoring canon rejects
-# ──────────────────────────────────────────────
-/.commanding/legacy/fast-import/
-/.commanding/legacy/**/fast-import/
-/src/src/
-/src/**/src/
-
-# Local protocol analysis artifacts
-/*_PROTOCOL_ANALYSIS.md
+# Keep active application directories trackable.
+!/public/
+!/tools/
+!/bin/
+!/bin/console

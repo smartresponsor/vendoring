@@ -26,14 +26,14 @@ foreach ($required as $needle) {
 }
 
 $forbidden = [
-    'Vendor\\:',
-    'Vendor\\ServiceInterface\\Order\\OrderPaymentInterface:',
-    'alias: Vendor\\Service\\Order\\OrderPaymentService',
+    'VendorEntity\\:',
+    'VendorEntity\\ServiceInterface\\Order\\OrderPaymentInterface:',
+    'alias: VendorEntity\\Service\\Order\\OrderPaymentService',
 ];
 
 foreach ($forbidden as $needle) {
     if (str_contains($content, $needle)) {
-        fwrite(STDERR, "Legacy Vendor namespace marker detected: {$needle}\n");
+        fwrite(STDERR, "Legacy VendorEntity namespace marker detected: {$needle}\n");
         exit(1);
     }
 }

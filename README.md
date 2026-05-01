@@ -56,6 +56,22 @@ This gives a production-relevant “vendor readiness + payout prep” path witho
 4. **Settlement prerequisites**: finance service verifies payout account and readiness status before requesting payout.
 5. **Contract/eligibility metadata**: compliance or operations tools read vendor ownership/finance projections to enforce eligibility rules.
 
+
+## Source Layer 3 canon
+
+Vendoring locks these source folders to one canonical child folder, `Vendor`:
+
+- `src/Controller/Vendor/Vendor*Controller.php`
+- `src/ControllerInterface/Vendor/Vendor*ControllerInterface.php` when controller interfaces exist
+- `src/Event/Vendor/Vendor*Event.php`
+- `src/EventInterface/Vendor/Vendor*EventInterface.php`
+- `src/Repository/Vendor/Vendor*Repository.php`
+- `src/RepositoryInterface/Vendor/Vendor*RepositoryInterface.php`
+
+Capability buckets such as `Payout`, `Ledger`, `Ops`, `Finance`, `Statement`, `Integration`, `Metric`, `Dev`, and `VendorPayoutEntity` are forbidden inside those folders.
+
+`src/Security/` is also forbidden as a mixed bucket. Security services live in `src/Service/Security/` and mirrored service contracts live in `src/ServiceInterface/Security/`. The short alias folders `src/Service/Sec/` and `src/ServiceInterface/Sec/` are forbidden.
+
 ## Consumer quick start
 
 ### 1) Install
@@ -103,11 +119,11 @@ If you only need transaction + payout surfaces, keep only required routes in con
 # config/routes/vendoring_minimal.yaml
 vendor_transactions:
   path: /api/vendor-transactions
-  controller: App\Vendoring\Controller\VendorTransactionController
+  controller: App\Vendoring\Controller\Vendor\VendorTransactionController
 
 payout:
   path: /api/payout
-  controller: App\Vendoring\Controller\Payout\PayoutController
+  controller: App\Vendoring\Controller\Vendor\VendorPayoutController
 ```
 
 In DI, you can alias only required interfaces in slim deployments and skip optional runtime/ops consumers.
@@ -120,7 +136,7 @@ In DI, you can alias only required interfaces in slim deployments and skip optio
   - `GET /api/vendor-profile/vendor/{vendorId}`
   - `PATCH /api/vendor-profile/vendor/{vendorId}`
   - `GET /api/vendor-ownership/vendor/{vendorId}`
-- **Vendor runtime views**
+- **Vendor runtime projections**
   - `GET /api/vendor/runtime/{vendorId}/finance`
   - `GET /api/vendor/runtime/{vendorId}/external-integrations`
   - `GET /api/vendor/runtime/{vendorId}/statement-delivery`
@@ -187,7 +203,7 @@ Authentication expectation: Bearer token in `Authorization` header for write ope
 1. **Create vendor** (profile upsert).
 2. **Review vendor state** (ownership/runtime projections).
 3. **Activate/qualify vendor** (status and prerequisite checks).
-4. **Read operational profile** (finance/external integration runtime views).
+4. **Read operational profile** (finance/external integration runtime projections).
 5. **Prepare commercial readiness** (transaction + payout readiness and processing).
 
 See also: `docs/integration.md`.
@@ -196,7 +212,8 @@ See also: `docs/integration.md`.
 
 Use these terms consistently in code/docs/API:
 
-- **Vendor**: canonical term for the managed party in this component.
+- **Vendor**: canonical business/API term for the managed party in this component.
+- **VendorEntity**: PHP/Doctrine entity class name only; do not expose it in consumer-facing labels, docs, or UI copy.
 - **Supplier / Merchant / Partner / Seller**: allowed only when mapping external upstream terms; normalize back to `vendor` in API and internal contracts.
 
 ## Runtime confidence lanes
@@ -225,3 +242,35 @@ Generated artifacts:
 - `build/docs/openapi.yaml`
 - `build/docs/phpdocumentor/`
 - `build/release/`
+
+
+Policy canon: `src/Policy/Vendor/Vendor*Policy.php` and `src/PolicyInterface/Vendor/Vendor*PolicyInterface.php` are the only allowed policy surfaces. Root policy files and non-Vendor policy filenames are forbidden.
+
+
+### Projection layer canon
+
+- `src/Projection/` may contain only `Vendor/`.
+- Projection classes must live in `src/Projection/Vendor/` and match `Vendor*Projection.php`.
+- Projection namespace remains `App\Vendoring\Projection\Vendor`.
+
+### Vendoring observability source-tree canon
+
+`src/Observability/` is not a valid source layer. Observability services live under `src/Service/Observability/`, contracts under `src/ServiceInterface/Observability/`, and Symfony subscribers under `src/Subscriber/Observability/`. All remain under the `App\Vendoring\...` namespace.
+
+
+### DTO / Form / ValueObject literal naming canon
+
+- `src/DTO/**` contains DTO classes only. File/class names must match `Vendor*DTO.php` / `Vendor*DTO`.
+- `src/Form/**` contains Symfony form classes only. File/class names must match `Vendor*Form.php` / `Vendor*Form`. Symfony form builder semantics remain unchanged; the filename/class suffix is repository-canonicalized as `Form` to keep the layer type-identifiable.
+- Form input/data carriers are DTOs and belong under `src/DTO/...`, not under `src/Form/...`.
+- `src/ValueObject/**` contains value object classes only. File/class names must match `Vendor*ValueObject.php` / `Vendor*ValueObject`.
+- The component namespace remains `App\\Vendoring\\...`; never flatten to the old `App\\...` namespace.
+
+### Service / ServiceInterface direction folders
+
+- `src/Service/` must not contain PHP files directly.
+- `src/ServiceInterface/` must not contain PHP files directly.
+- Service implementations must live as `src/Service/<Direction>/Vendor*Service.php`.
+- Service contracts must live as `src/ServiceInterface/<Direction>/Vendor*ServiceInterface.php`.
+- Keep `App\Vendoring\...`; do not flatten to `App\...`.
+

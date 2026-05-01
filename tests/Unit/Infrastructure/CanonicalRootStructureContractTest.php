@@ -12,7 +12,7 @@ final class CanonicalRootStructureContractTest extends TestCase
     {
         $root = dirname(__DIR__, 3);
 
-        self::assertFileExists($root . '/src/Controller/VendorTransactionController.php');
+        self::assertFileExists($root . '/src/Controller/Vendor/VendorTransactionController.php');
         self::assertFileDoesNotExist($root . '/VendorTransactionController.php');
     }
 

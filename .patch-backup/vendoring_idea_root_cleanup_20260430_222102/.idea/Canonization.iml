@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/Vendor/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/Vendor/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" packagePrefix="App\" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="App\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/Integration" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/Smoke" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/Unit" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/stubs/Doctrine/Bundle/FixturesBundle" isTestSource="true" packagePrefix="Doctrine\Bundle\FixturesBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/stubs/Faker" isTestSource="true" packagePrefix="Faker\" />
+      <sourceFolder url="file://$MODULE_DIR$/stubs/Symfony/Component/Panther" isTestSource="true" packagePrefix="Symfony\Component\Panther\" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/Functional" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/log" />
+      <excludeFolder url="file://$MODULE_DIR$/public" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

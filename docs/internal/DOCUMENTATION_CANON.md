@@ -42,6 +42,40 @@ Vendoring uses four distinct documentation layers:
 
 These layers are complementary and must not be collapsed into one generic style.
 
+
+## Layer 3 structure and naming canon for machine agents
+
+Vendoring uses a literal Layer 3 structure contract for the class-type folders that are frequently edited by agents.
+
+The following folders must contain exactly one direct child folder named `Vendor`:
+
+- `src/Controller/`
+- `src/ControllerInterface/` when controller interfaces exist
+- `src/Event/`
+- `src/EventInterface/`
+- `src/Policy/`
+- `src/PolicyInterface/`
+- `src/Repository/`
+- `src/RepositoryInterface/`
+
+The only valid PHP file patterns inside those `Vendor` folders are:
+
+- `src/Controller/Vendor/Vendor*Controller.php`
+- `src/ControllerInterface/Vendor/Vendor*ControllerInterface.php`
+- `src/Event/Vendor/Vendor*Event.php`
+- `src/EventInterface/Vendor/Vendor*EventInterface.php`
+- `src/Policy/Vendor/Vendor*Policy.php`
+- `src/PolicyInterface/Vendor/Vendor*PolicyInterface.php`
+- `src/Repository/Vendor/Vendor*Repository.php`
+- `src/RepositoryInterface/Vendor/Vendor*RepositoryInterface.php`
+- `src/Projection/Vendor/Vendor*Projection.php`
+
+Do not create `Ledger`, `Payout`, `Ops`, `Finance`, `Statement`, `Integration`, `Metric`, `Dev`, `VendorPayoutEntity`, or any other capability bucket inside these Layer 3 folders.
+
+`src/Security/` is forbidden as a mixed security bucket. Security classes must be sorted by type. Autowired security services belong in `src/Service/Security/` and their contracts belong in `src/ServiceInterface/Security/`. The short alias folders `src/Service/Sec/` and `src/ServiceInterface/Sec/` are forbidden. Security DTOs remain DTOs. Voters, authenticators, subscribers, listeners, and middleware must use their own type-identifiable source folders.
+
+See `docs/internal/LAYER3_STRUCTURE_NAMING_CANON.md` for the complete literal contract.
+
 ## Required documentation targets
 
 The following targets must be documented:
@@ -123,3 +157,7 @@ Documentation should be:
 - layer-aware
 - behavior-oriented
 - compatible with phpDocumentor and API tooling
+
+- Entity interface canon: `src/EntityInterface/Vendor/Vendor*EntityInterface.php`; no root files, no shorter `Vendor*Interface.php` aliases.
+
+- Policy canon: `src/Policy/Vendor/Vendor*Policy.php` and `src/PolicyInterface/Vendor/Vendor*PolicyInterface.php`; no root policy files, no capability folders, no missing `Vendor` prefix.

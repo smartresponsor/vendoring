@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Metric;
 
-use App\Vendoring\DTO\Ledger\LedgerAccountSumCriteriaDTO;
+use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
 use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
-use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
 use App\Vendoring\Service\Metric\VendorMetricService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorMetricServiceTest extends TestCase
 {
-    private LedgerEntryRepositoryInterface&MockObject $ledger;
+    private VendorLedgerEntryRepositoryInterface&MockObject $ledger;
 
     protected function setUp(): void
     {
-        $this->ledger = $this->createMock(LedgerEntryRepositoryInterface::class);
+        $this->ledger = $this->createMock(VendorLedgerEntryRepositoryInterface::class);
     }
 
     public function testOverviewBuildsRevenueRefundPayoutAndBalanceFromLedgerAccounts(): void
@@ -26,7 +26,7 @@ final class VendorMetricServiceTest extends TestCase
         $this->ledger
             ->expects(self::exactly(3))
             ->method('sumByAccount')
-            ->willReturnCallback(static function (LedgerAccountSumCriteriaDTO $criteria): float {
+            ->willReturnCallback(static function (VendorLedgerAccountSumCriteriaDTO $criteria): float {
                 return match ($criteria->accountCode) {
                     'REVENUE' => 120.0,
                     'REFUNDS_PAYABLE' => 15.0,
@@ -72,7 +72,7 @@ final class VendorMetricServiceTest extends TestCase
         $this->ledger
             ->expects(self::exactly(3))
             ->method('sumByAccount')
-            ->willReturnCallback(static function (LedgerAccountSumCriteriaDTO $criteria): float {
+            ->willReturnCallback(static function (VendorLedgerAccountSumCriteriaDTO $criteria): float {
                 return match ($criteria->accountCode) {
                     'REVENUE' => 200.0,
                     'REFUNDS_PAYABLE' => 50.0,

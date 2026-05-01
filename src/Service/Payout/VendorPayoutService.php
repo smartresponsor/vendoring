@@ -6,14 +6,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Payout;
 
-use App\Vendoring\DTO\Ledger\LedgerEntryDTO;
-use App\Vendoring\DTO\Payout\CreatePayoutDTO;
-use App\Vendoring\Entity\Payout\Payout;
-use App\Vendoring\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Payout\PayoutRepositoryInterface;
+use App\Vendoring\DTO\Ledger\VendorLedgerEntryDTO;
+use App\Vendoring\DTO\Payout\VendorCreatePayoutDTO;
+use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface;
-use App\Vendoring\ServiceInterface\Observability\MetricCollectorInterface;
-use App\Vendoring\ServiceInterface\Observability\RuntimeLoggerInterface;
+use App\Vendoring\ServiceInterface\Observability\VendorMetricCollectorServiceInterface;
+use App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
@@ -23,11 +23,11 @@ use Symfony\Component\Uid\Uuid;
 final readonly class VendorPayoutService implements VendorPayoutServiceInterface
 {
     public function __construct(
-        private PayoutRepositoryInterface      $repo,
-        private LedgerEntryRepositoryInterface $ledgerRepo,
+        private VendorPayoutRepositoryInterface      $repo,
+        private VendorLedgerEntryRepositoryInterface $ledgerRepo,
         private VendorLedgerServiceInterface   $ledger,
-        private MetricCollectorInterface       $metrics,
-        private RuntimeLoggerInterface         $runtimeLogger,
+        private VendorMetricCollectorServiceInterface       $metrics,
+        private VendorRuntimeLoggerServiceInterface         $runtimeLogger,
     ) {}
 
     /**
@@ -35,7 +35,7 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
      * @throws \JsonException
      * @throws RandomException
      */
-    public function create(CreatePayoutDTO $dto): ?string
+    public function create(VendorCreatePayoutDTO $dto): ?string
     {
         // 1) Получаем баланс в валюте
         $balances = $this->ledgerRepo->balancesForVendor($dto->vendorId);
@@ -67,7 +67,7 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
         $payoutId = Uuid::v4()->toRfc4122();
         $createdAt = new DateTimeImmutable();
 
-        $payout = new Payout(
+        $payout = new VendorPayoutEntity(
             id: $payoutId,
             vendorId: $dto->vendorId,
             currency: $dto->currency,
@@ -85,7 +85,7 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
         $this->repo->insert($payout);
 
         // 4) Записываем дебет в Ledger (резерв под выплату)
-        $this->ledger->record(new LedgerEntryDTO(
+        $this->ledger->record(new VendorLedgerEntryDTO(
             type: 'payout_reserve',
             entityId: $payoutId,
             sagaId: Uuid::v4()->toRfc4122(),
@@ -128,7 +128,7 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
 
         // Тут должен быть вызов внешнего платёжного адаптера для перевода средств вендору (bank/stripe connect)
         // Для демо считаем успешным и записываем ledger: payout_processed (debit fee), payout_fee
-        $this->ledger->record(new LedgerEntryDTO(
+        $this->ledger->record(new VendorLedgerEntryDTO(
             type: 'payout_processed',
             entityId: $payoutId,
             sagaId: Uuid::v4()->toRfc4122(),
@@ -139,7 +139,7 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
             meta: ['payoutId' => $payoutId],
         ));
         if ($payout->feeCents > 0) {
-            $this->ledger->record(new LedgerEntryDTO(
+            $this->ledger->record(new VendorLedgerEntryDTO(
                 type: 'payout_fee',
                 entityId: $payoutId,
                 sagaId: Uuid::v4()->toRfc4122(),

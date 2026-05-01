@@ -78,11 +78,11 @@ foreach ($rii as $file) {
         continue;
     }
 
-    if (str_starts_with($shortName, 'Vendor')) {
+    if (str_starts_with($shortName, 'VendorEntity')) {
         continue;
     }
 
-    $suggestedShortName = 'Vendor' . $shortName;
+    $suggestedShortName = 'VendorEntity' . $shortName;
     $relativePath = str_replace($root . '/', '', $path);
 
     $violations[] = [
@@ -100,7 +100,7 @@ usort(
 
 $result = [
     'generated_at_utc' => gmdate(DATE_ATOM),
-    'rule' => 'Component-scoped services should use Vendor*Service naming. Reusable services may keep neutral names.',
+    'rule' => 'Component-scoped services should use VendorEntity*Service naming. Reusable services may keep neutral names.',
     'violations' => $violations,
 ];
 

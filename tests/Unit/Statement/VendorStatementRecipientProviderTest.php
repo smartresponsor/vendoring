@@ -6,8 +6,8 @@ namespace App\Vendoring\Tests\Unit\Statement;
 
 use App\Vendoring\Entity\Vendor;
 use App\Vendoring\Entity\VendorBilling;
-use App\Vendoring\RepositoryInterface\VendorBillingRepositoryInterface;
-use App\Vendoring\Service\Statement\VendorStatementRecipientProvider;
+use App\Vendoring\RepositoryInterface\Vendor\VendorBillingRepositoryInterface;
+use App\Vendoring\Service\Statement\VendorStatementRecipientProviderService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -27,7 +27,7 @@ final class VendorStatementRecipientProviderTest extends TestCase
 
         $this->billings->expects(self::once())->method('findAll')->willReturn([$billingA, $billingB]);
 
-        $recipients = (new VendorStatementRecipientProvider($this->billings))->forPeriod('2026-03-01', '2026-03-31');
+        $recipients = (new VendorStatementRecipientProviderService($this->billings))->forPeriod('2026-03-01', '2026-03-31');
 
         self::assertCount(2, $recipients);
         self::assertSame('default', $recipients[0]->tenantId);
@@ -45,7 +45,7 @@ final class VendorStatementRecipientProviderTest extends TestCase
 
         $this->billings->expects(self::once())->method('findAll')->willReturn([$billingWithoutEmail, $billingWithoutVendorId]);
 
-        $recipients = (new VendorStatementRecipientProvider($this->billings))->forPeriod('2026-03-01', '2026-03-31');
+        $recipients = (new VendorStatementRecipientProviderService($this->billings))->forPeriod('2026-03-01', '2026-03-31');
 
         self::assertSame([], $recipients);
     }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
-use App\Vendoring\Command\Support\CommandIoException;
-use App\Vendoring\Command\Support\CommandJsonArtifactWriter;
-use App\Vendoring\Command\Support\CommandOutputFormat;
-use App\Vendoring\Command\Support\CommandResultEmitter;
-use App\Vendoring\ServiceInterface\Observability\AlertRuleEvaluatorInterface;
-use App\Vendoring\ServiceInterface\Observability\MonitoringSnapshotBuilderInterface;
+use App\Vendoring\Exception\Command\VendorCommandIoException;
+use App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
+use App\Vendoring\ServiceInterface\Observability\VendorAlertRuleEvaluatorServiceInterface;
+use App\Vendoring\ServiceInterface\Observability\VendorMonitoringSnapshotBuilderServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,10 +24,10 @@ use Throwable;
 final class VendorMonitoringSnapshotCommand extends Command
 {
     public function __construct(
-        private readonly MonitoringSnapshotBuilderInterface $snapshotBuilder,
-        private readonly AlertRuleEvaluatorInterface $alertRuleEvaluator,
-        private readonly CommandJsonArtifactWriter $commandJsonArtifactWriter,
-        private readonly CommandResultEmitter $commandResultEmitter,
+        private readonly VendorMonitoringSnapshotBuilderServiceInterface $snapshotBuilder,
+        private readonly VendorAlertRuleEvaluatorServiceInterface $alertRuleEvaluator,
+        private readonly VendorCommandJsonArtifactWriterServiceInterface $commandJsonArtifactWriter,
+        private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter,
     ) {
         parent::__construct();
     }
@@ -48,7 +48,7 @@ final class VendorMonitoringSnapshotCommand extends Command
         $windowOption = $input->getOption('windowSeconds');
         $formatOption = $input->getOption('format');
         $windowSeconds = is_scalar($windowOption) ? max(1, (int) $windowOption) : 900;
-        $format = CommandOutputFormat::normalize($formatOption);
+        $format = VendorCommandOutputFormatEnum::normalize($formatOption);
 
         try {
             $snapshot = $this->snapshotBuilder->build($windowSeconds);
@@ -78,7 +78,7 @@ final class VendorMonitoringSnapshotCommand extends Command
                 dirname(__DIR__, 2) . '/build/release/monitoring-snapshot.json',
                 $payload,
             );
-        } catch (CommandIoException $exception) {
+        } catch (VendorCommandIoException $exception) {
             $this->commandResultEmitter->emitError($output, $format, 'failed', $exception->getMessage(), [
                 'windowSeconds' => $windowSeconds,
             ]);
@@ -86,7 +86,7 @@ final class VendorMonitoringSnapshotCommand extends Command
             return Command::FAILURE;
         }
 
-        if (CommandOutputFormat::isJson($format)) {
+        if (VendorCommandOutputFormatEnum::isJson($format)) {
             return $this->commandResultEmitter->emitJson($output, $payload)
                 ? Command::SUCCESS
                 : Command::FAILURE;

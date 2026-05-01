@@ -8,9 +8,9 @@
 
 ## Vendor runtime projections
 
-- GET `/api/vendor/runtime/{vendorId}/finance` — Finance runtime readiness view
-- GET `/api/vendor/runtime/{vendorId}/external-integrations` — External integration runtime view
-- GET `/api/vendor/runtime/{vendorId}/statement-delivery` — Statement delivery runtime view
+- GET `/api/vendor/runtime/{vendorId}/finance` — Finance runtime readiness projection
+- GET `/api/vendor/runtime/{vendorId}/external-integrations` — External integration runtime projection
+- GET `/api/vendor/runtime/{vendorId}/statement-delivery` — Statement delivery runtime projection
 
 ## Transactions
 
