@@ -6,7 +6,7 @@ use App\Vendoring\Kernel;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
-require dirname(__DIR__) . '/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 if (($_SERVER['APP_DEBUG'] ?? '1') === '1') {
     Debug::enable();
