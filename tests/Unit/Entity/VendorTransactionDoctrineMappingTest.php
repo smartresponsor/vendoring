@@ -20,7 +20,7 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
         $entityAttributes = $reflection->getAttributes(ORM\Entity::class);
         self::assertCount(1, $entityAttributes);
         self::assertSame(
-            'App\Vendoring\\Repository\\VendorTransactionRepository',
+            'App\Vendoring\\Repository\\Vendor\\VendorTransactionRepository',
             $entityAttributes[0]->getArguments()['repositoryClass'] ?? null,
         );
 

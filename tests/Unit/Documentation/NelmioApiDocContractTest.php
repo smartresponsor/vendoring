@@ -17,7 +17,7 @@ final class NelmioApiDocContractTest extends TestCase
 
         self::assertStringContainsString("title: 'Vendoring API'", $contents);
         self::assertStringContainsString("description: 'Vendoring API surface'", $contents);
-        self::assertStringContainsString("version: 'native'", $contents);
-        self::assertStringContainsString("path_patterns: ['^/api']", $contents);
+        self::assertStringContainsString("version: '1.0.0-rc'", $contents);
+        self::assertStringContainsString("path_patterns: ['^/api(?!/doc$)']", $contents);
     }
 }

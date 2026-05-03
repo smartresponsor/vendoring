@@ -7,7 +7,7 @@ namespace App\Vendoring\Tests\Unit\Repository\Payout;
 use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
 use App\Vendoring\Repository\Vendor\VendorPayoutAccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -15,13 +15,13 @@ final class PayoutAccountRepositoryTest extends TestCase
 {
     private EntityManagerInterface&MockObject $entityManager;
 
-    /** @var ObjectRepository<VendorPayoutAccountEntity>&MockObject */
-    private ObjectRepository&MockObject $objectRepository;
+    /** @var EntityRepository<VendorPayoutAccountEntity>&MockObject */
+    private EntityRepository&MockObject $objectRepository;
 
     protected function setUp(): void
     {
         $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->objectRepository = $this->createMock(ObjectRepository::class);
+        $this->objectRepository = $this->createMock(EntityRepository::class);
         $this->entityManager->method('getRepository')->with(VendorPayoutAccountEntity::class)->willReturn($this->objectRepository);
     }
 

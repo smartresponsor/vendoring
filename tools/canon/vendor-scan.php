@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
 $src = $root . '/src';
+$srcNormalized = str_replace('\\', '/', $src);
 if (!is_dir($src)) {
     fwrite(STDERR, "src/ not found\n");
     exit(2);
@@ -172,7 +173,7 @@ foreach ($rii as $file) {
     }
 
     $path = str_replace('\\', '/', $file->getPathname());
-    $segments = explode('/', trim(str_replace($src, '', $path), '/'));
+    $segments = explode('/', trim(str_replace($srcNormalized, '', $path), '/'));
     for ($i = 1; $i < count($segments); $i++) {
         if ($segments[$i] !== '' && $segments[$i] === $segments[$i - 1]) {
             $issues[] = "repeat_segment\t{$path}\t{$segments[$i - 1]}/{$segments[$i]}";
@@ -199,7 +200,7 @@ foreach ($rii as $file) {
         continue;
     }
 
-    $rel = trim(str_replace($src . '/', '', $path), '/');
+    $rel = trim(str_replace($srcNormalized . '/', '', $path), '/');
     $relNoExt = preg_replace('/\.php$/', '', $rel);
     $expected = 'App\\Vendoring\\' . str_replace('/', '\\', $relNoExt);
     $base = basename($relNoExt);

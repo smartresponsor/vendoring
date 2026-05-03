@@ -52,6 +52,7 @@ final class CanonicalNoStubRepositoryContractTest extends TestCase
             '.consuming/',
             'tools/report/VendorConfigGuardReport.php',
             '.php-cs-fixer.cache',
+            '.patch-backup/',
             'var/.php-cs-fixer.cache',
             'composer.json',
             'composer.lock',

@@ -17,6 +17,7 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
             $root . '/.idea/',
             $root . '/deploy/_template/',
             $root . '/.phpunit.cache/',
+            $root . '/.patch-backup/',
             $root . '/build/docs/phpdocumentor/',
             $root . '/docs/',
             $root . '/docs/release/',
