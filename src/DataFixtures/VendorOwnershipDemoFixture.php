@@ -48,7 +48,7 @@ final class VendorOwnershipDemoFixture extends Fixture
             $profile->updateProfile(
                 displayName: sprintf('Vendor Demo %02d LLC', $index),
                 about: sprintf('Deterministic demo vendor profile %02d for host fixtures.', $index),
-                website: sprintf('https://vendor-demo-%02d.example.test', $index),
+                website: sprintf('https://vendor-demo-%02d.vendoring.test', $index),
                 socials: ['instagram' => sprintf('@vendor_demo_%02d', $index)],
                 seoTitle: sprintf('Vendor Demo %02d', $index),
                 seoDescription: sprintf('Deterministic SEO description for vendor %02d.', $index),
@@ -60,7 +60,7 @@ final class VendorOwnershipDemoFixture extends Fixture
                 iban: sprintf('DE893704004405320130%02d', $index),
                 swift: 'DEUTDEFF',
                 payoutMethod: 0 === $index % 2 ? 'bank' : 'wire',
-                billingEmail: sprintf('billing+%02d@example.test', $index),
+                billingEmail: sprintf('billing+%02d@vendoring.test', $index),
             );
             $manager->persist($billing);
             $manager->persist(new VendorIbanEntity($vendor, sprintf('DE893704004405320130%02d', $index), 'DEUTDEFF'));
@@ -152,7 +152,7 @@ final class VendorOwnershipDemoFixture extends Fixture
                 vendor: $vendor,
                 series: sprintf('series-%02d', $index),
                 tokenValue: sprintf('token-value-%02d', $index),
-                providerClass: 'App\\Security\\VendorRememberMeProvider',
+                providerClass: 'App\\Vendoring\\Security\\VendorRememberMeProvider',
                 username: sprintf('vendor-user-%02d', $index),
             ));
 

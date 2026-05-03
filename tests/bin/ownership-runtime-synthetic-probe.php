@@ -16,7 +16,7 @@ if (!extension_loaded('pdo_sqlite')) {
 $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot);
 
 try {
-    $vendor = KernelRuntimeHarness::seedActiveVendor($kernel, 'Ownership Probe VendorEntity');
+    $vendor = KernelRuntimeHarness::seedActiveVendor($kernel, 'Ownership Probe Vendor');
     $vendorId = $vendor->getId();
 
     if (!is_int($vendorId)) {
@@ -98,7 +98,7 @@ try {
         ['/api/vendor-ownership/vendor/' . $vendorId . '/remember-me-tokens', [
             'series' => 'series-probe-1',
             'tokenValue' => 'token-probe-1',
-            'providerClass' => 'App\\Security\\VendorRememberMeProvider',
+            'providerClass' => 'App\\Vendoring\\Security\\VendorRememberMeProvider',
             'username' => 'probe.vendor',
         ]],
         ['/api/vendor-ownership/vendor/' . $vendorId . '/customer-orders', [

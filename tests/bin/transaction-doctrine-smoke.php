@@ -13,8 +13,8 @@ if (!isset($scripts['test:transaction-doctrine'])) {
     exit(1);
 }
 
-$entityPath = $root . '/src/Entity/VendorTransactionEntity.php';
-$interfacePath = $root . '/src/EntityInterface/VendorTransactionEntityInterface.php';
+$entityPath = $root . '/src/Entity/Vendor/VendorTransactionEntity.php';
+$interfacePath = $root . '/src/EntityInterface/Vendor/VendorTransactionEntityInterface.php';
 
 foreach ([$entityPath, $interfacePath] as $path) {
     if (!is_file($path)) {

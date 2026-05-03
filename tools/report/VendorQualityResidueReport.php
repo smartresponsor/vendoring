@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/_vendor_report_bootstrap.php';
 
-vendorReportHeader('VendorEntity quality residue report');
+vendorReportHeader('Vendoring quality residue report');
 $root = vendorReportProjectRoot();
 $scanRoots = [$root . '/src', $root . '/tests', $root . '/config'];
 $literalNeedles = ['TODO', 'FIXME'];

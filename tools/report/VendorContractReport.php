@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/_vendor_report_bootstrap.php';
 
-vendorReportHeader('VendorEntity contract report');
+vendorReportHeader('Vendoring contract report');
 
 vendorReportSection('Repository contract smoke');
 $repositoryExitCode = vendorReportRunScript('tests/bin/repository-contract-smoke.php');

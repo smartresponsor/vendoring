@@ -1,9 +1,7 @@
-name: quality
+name: Vendoring Quality
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ "master" ]
   pull_request:
 
 jobs:
@@ -11,11 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.4"
-          extensions: pdo_sqlite
+          php-version: '8.4'
+          extensions: json, pdo, pdo_sqlite
       - run: composer install --no-interaction --prefer-dist
       - run: composer quality:static
       - run: composer quality:contracts

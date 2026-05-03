@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure;
+namespace App\Vendoring\Tests\Unit\Infrastructure;
 
 require_once dirname(__DIR__, 2) . '/bin/_composer_json.php';
 
@@ -15,11 +15,11 @@ final class CanonicalNoExampleRepositoryContractTest extends TestCase
         $root = dirname(__DIR__, 3);
         $paths = [
             '.commanding',
-            '.deploy',
+            'deploy',
             'ops',
             'config',
             'scripts',
-            '.smoke',
+            'ops/policy/smoke',
             'bin',
             'public',
             'tools',

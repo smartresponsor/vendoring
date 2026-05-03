@@ -1,0 +1,11 @@
+{
+    "generatedAt": "2026-04-03T07:12:56+00:00",
+    "decision": "proceed",
+    "severity": "info",
+    "reasons": [
+        "release_manifest_green"
+    ],
+    "actions": [
+        "continue_release_candidate_validation"
+    ]
+}

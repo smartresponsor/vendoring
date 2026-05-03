@@ -15,15 +15,14 @@ The runtime activation layer is guarded by `class_exists()` checks and becomes a
 
 ## Runtime seams
 
-- `config/packages_runtime.php` conditionally enables Twig, Forms, Validation, CSRF and Nelmio.
 - `config/routes_runtime.php` conditionally mounts `/api/doc`.
-- `config/services_runtime.php` conditionally registers form types.
+- Runtime package enablement stays in the native Symfony package files instead of retired `config/packages_runtime.php` and `config/services_runtime.php` activation shims.
 - `templates/ops/vendor_transactions/index.html.twig` provides the server-rendered operator surface.
-- `src/Form/Ops/*` provides Symfony form DTO and type definitions.
+- `src/DTO/Ops/*` provides form input DTOs, while `src/Form/Ops/*` provides Symfony form definitions.
 
 ## Current compatibility strategy
 
-Until the additional packages are installed, the operator surface continues to use the dependency-light HTML builder. Once the packages are installed, the controller can switch to the Twig/Form rendering branch without changing routes or public entry points.
+Until the additional packages are installed, the operator surface continues to use the dependency-light HTML builder. Once the packages are installed, the controller can switch to the Twig/Form rendering branch without reintroducing legacy activation shims.
 
 ## Lock/install follow-up
 

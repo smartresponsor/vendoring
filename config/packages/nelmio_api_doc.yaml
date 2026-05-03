@@ -3,7 +3,7 @@ nelmio_api_doc:
         info:
             title: 'Vendoring API'
             description: 'Vendoring API surface'
-            version: 'native'
+            version: '1.0.0-rc'
     areas:
         default:
-            path_patterns: ['^/api']
+            path_patterns: ['^/api(?!/doc$)']

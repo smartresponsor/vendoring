@@ -5,38 +5,38 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Integration\Runtime;
 
 use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\Vendoring\Projection\Vendor\VendorExternalIntegrationRuntimeView;
-use App\Vendoring\Projection\Vendor\VendorFinanceRuntimeView;
-use App\Vendoring\Projection\Vendor\VendorOwnershipView;
-use App\Vendoring\Projection\Vendor\VendorStatementDeliveryRuntimeView;
-use App\Vendoring\Service\Ops\VendorRuntimeStatusViewBuilderService;
-use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeViewBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipViewBuilderServiceInterface;
+use App\Vendoring\Projection\Vendor\VendorExternalIntegrationRuntimeProjection;
+use App\Vendoring\Projection\Vendor\VendorFinanceRuntimeProjection;
+use App\Vendoring\Projection\Vendor\VendorOwnershipProjection;
+use App\Vendoring\Projection\Vendor\VendorStatementDeliveryRuntimeProjection;
+use App\Vendoring\Service\Ops\VendorRuntimeStatusProjectionBuilderService;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeProjectionBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
 {
-    private VendorOwnershipViewBuilderServiceInterface&MockObject $ownership;
-    private VendorFinanceRuntimeViewBuilderServiceInterface&MockObject $finance;
-    private VendorStatementDeliveryRuntimeViewBuilderServiceInterface&MockObject $statementDelivery;
-    private VendorExternalIntegrationRuntimeViewBuilderServiceInterface&MockObject $externalIntegration;
+    private VendorOwnershipProjectionBuilderServiceInterface&MockObject $ownership;
+    private VendorFinanceRuntimeProjectionBuilderServiceInterface&MockObject $finance;
+    private VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface&MockObject $statementDelivery;
+    private VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface&MockObject $externalIntegration;
 
     protected function setUp(): void
     {
-        $this->ownership = $this->createMock(VendorOwnershipViewBuilderServiceInterface::class);
-        $this->finance = $this->createMock(VendorFinanceRuntimeViewBuilderServiceInterface::class);
-        $this->statementDelivery = $this->createMock(VendorStatementDeliveryRuntimeViewBuilderServiceInterface::class);
-        $this->externalIntegration = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderServiceInterface::class);
+        $this->ownership = $this->createMock(VendorOwnershipProjectionBuilderServiceInterface::class);
+        $this->finance = $this->createMock(VendorFinanceRuntimeProjectionBuilderServiceInterface::class);
+        $this->statementDelivery = $this->createMock(VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface::class);
+        $this->externalIntegration = $this->createMock(VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface::class);
     }
 
     public function testBuildKeepsIncompleteProfileNotReadyForPublishing(): void
     {
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(101)
-            ->willReturn(new VendorOwnershipView(101, 5001, []));
-        $this->finance->expects(self::once())->method('build')->willReturn(new VendorFinanceRuntimeView(
+            ->willReturn(new VendorOwnershipProjection(101, 5001, []));
+        $this->finance->expects(self::once())->method('build')->willReturn(new VendorFinanceRuntimeProjection(
             tenantId: 'tenant-1',
             vendorId: '101',
             currency: 'USD',
@@ -45,7 +45,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             payoutAccount: null,
             statement: null,
         ));
-        $this->statementDelivery->expects(self::once())->method('build')->willReturn(new VendorStatementDeliveryRuntimeView(
+        $this->statementDelivery->expects(self::once())->method('build')->willReturn(new VendorStatementDeliveryRuntimeProjection(
             tenantId: 'tenant-1',
             vendorId: '101',
             currency: 'USD',
@@ -54,7 +54,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             export: null,
             recipients: [],
         ));
-        $this->externalIntegration->expects(self::once())->method('build')->willReturn(new VendorExternalIntegrationRuntimeView(
+        $this->externalIntegration->expects(self::once())->method('build')->willReturn(new VendorExternalIntegrationRuntimeProjection(
             tenantId: 'tenant-1',
             vendorId: '101',
             ownership: ['ownerUserId' => 5001],
@@ -77,8 +77,8 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
     public function testBuildKeepsCompleteProfileReadyForPublishing(): void
     {
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(202)
-            ->willReturn(new VendorOwnershipView(202, 5001, []));
-        $this->finance->expects(self::once())->method('build')->willReturn(new VendorFinanceRuntimeView(
+            ->willReturn(new VendorOwnershipProjection(202, 5001, []));
+        $this->finance->expects(self::once())->method('build')->willReturn(new VendorFinanceRuntimeProjection(
             tenantId: 'tenant-1',
             vendorId: '202',
             currency: 'USD',
@@ -87,7 +87,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             payoutAccount: ['provider' => 'bank'],
             statement: ['closing' => 85.0],
         ));
-        $this->statementDelivery->expects(self::once())->method('build')->willReturn(new VendorStatementDeliveryRuntimeView(
+        $this->statementDelivery->expects(self::once())->method('build')->willReturn(new VendorStatementDeliveryRuntimeProjection(
             tenantId: 'tenant-1',
             vendorId: '202',
             currency: 'USD',
@@ -96,7 +96,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             export: ['path' => '/tmp/statement.pdf'],
             recipients: [['email' => 'billing@example.com']],
         ));
-        $this->externalIntegration->expects(self::once())->method('build')->willReturn(new VendorExternalIntegrationRuntimeView(
+        $this->externalIntegration->expects(self::once())->method('build')->willReturn(new VendorExternalIntegrationRuntimeProjection(
             tenantId: 'tenant-1',
             vendorId: '202',
             ownership: ['ownerUserId' => 5001],
@@ -115,9 +115,9 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
         self::assertTrue($payload['surfaceStatus']['ownership']);
     }
 
-    private function buildRuntimeStatus(): VendorRuntimeStatusViewBuilderService
+    private function buildRuntimeStatus(): VendorRuntimeStatusProjectionBuilderService
     {
-        return new VendorRuntimeStatusViewBuilderService(
+        return new VendorRuntimeStatusProjectionBuilderService(
             $this->ownership,
             $this->finance,
             $this->statementDelivery,

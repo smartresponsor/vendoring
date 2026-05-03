@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/_vendor_report_bootstrap.php';
 
-vendorReportHeader('VendorEntity config drift report');
+vendorReportHeader('Vendoring config drift report');
 
 $pairs = [
     ['config/packages/vendor_nelmio_api_doc.yaml.dist', 'config/routes/vendor_nelmio_api_doc.yaml.dist'],

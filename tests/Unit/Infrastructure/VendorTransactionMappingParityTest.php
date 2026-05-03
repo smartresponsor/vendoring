@@ -11,7 +11,7 @@ final class VendorTransactionMappingParityTest extends TestCase
 {
     public function testEntityUsesExplicitSqlAlignedColumnNames(): void
     {
-        $source = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Entity/VendorTransactionEntity.php');
+        $source = (string) file_get_contents(dirname(__DIR__, 3) . '/src/Entity/Vendor/VendorTransactionEntity.php');
 
         self::assertStringContainsString("name: 'vendor_id'", $source);
         self::assertStringContainsString("name: 'order_id'", $source);

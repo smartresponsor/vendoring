@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
-$entity = (string) file_get_contents($root . '/src/Entity/VendorTransactionEntity.php');
+$entity = (string) file_get_contents($root . '/src/Entity/Vendor/VendorTransactionEntity.php');
 $migration = (string) file_get_contents($root . '/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
 $composer = vendoring_load_composer_json($root);
 

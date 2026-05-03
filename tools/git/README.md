@@ -1,4 +1,4 @@
-# Git history + fast-import hygiene (VendorEntity)
+# Git history + fast-import hygiene (Vendoring)
 
 This repo has accumulated multiple "phase" snapshots and fast-import artifacts inside runtime paths (especially under `src/`).
 Those artifacts must not live under autoloaded or runtime directories.

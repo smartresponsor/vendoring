@@ -7,17 +7,17 @@ require $root . '/vendor/autoload.php';
 
 $requiredClasses = [
     App\Vendoring\Entity\Vendor\VendorEntity::class,
-    App\Vendoring\Entity\Vendor\VendorEntity\VendorApiKeyEntity::class,
-    App\Vendoring\Entity\Vendor\VendorEntity\VendorAnalyticsEntity::class,
-    App\Vendoring\Entity\Vendor\VendorEntity\VendorAttachmentEntity::class,
-    App\Vendoring\Entity\Vendor\VendorEntity\VendorBillingEntity::class,
-    App\Vendoring\Entity\Vendor\VendorEntity\VendorDocumentEntity::class,
-    App\Vendoring\Entity\Vendor\VendorEntity\VendorLedgerBindingEntity::class,
-    App\Vendoring\Entity\Vendor\VendorEntity\VendorMediaEntity::class,
-    App\Vendoring\Entity\Vendor\VendorEntity\VendorPassportEntity::class,
-    App\Vendoring\Entity\Vendor\VendorEntity\VendorProfileEntity::class,
-    App\Vendoring\Entity\Vendor\VendorEntity\VendorSecurityEntity::class,
-    App\Vendoring\Entity\Vendor\VendorEntity\VendorTransactionEntity::class,
+    App\Vendoring\Entity\Vendor\VendorApiKeyEntity::class,
+    App\Vendoring\Entity\Vendor\VendorAnalyticsEntity::class,
+    App\Vendoring\Entity\Vendor\VendorAttachmentEntity::class,
+    App\Vendoring\Entity\Vendor\VendorBillingEntity::class,
+    App\Vendoring\Entity\Vendor\VendorDocumentEntity::class,
+    App\Vendoring\Entity\Vendor\VendorLedgerBindingEntity::class,
+    App\Vendoring\Entity\Vendor\VendorMediaEntity::class,
+    App\Vendoring\Entity\Vendor\VendorPassportEntity::class,
+    App\Vendoring\Entity\Vendor\VendorProfileEntity::class,
+    App\Vendoring\Entity\Vendor\VendorSecurityEntity::class,
+    App\Vendoring\Entity\Vendor\VendorTransactionEntity::class,
 ];
 
 foreach ($requiredClasses as $className) {

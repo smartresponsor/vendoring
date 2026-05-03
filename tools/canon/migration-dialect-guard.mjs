@@ -5,7 +5,7 @@ import path from 'path';
 
 const repoRoot = process.cwd();
 const migRoot = path.join(repoRoot, 'migrations');
-const reportDir = path.join(repoRoot, '.report');
+const reportDir = path.join(repoRoot, 'build', 'reports', 'canon');
 
 const allowedTop = new Set([
   'MigrationPg',
@@ -81,7 +81,7 @@ function main() {
   fs.writeFileSync(outTxt, lines.join('\n'), 'utf8');
 
   if (issues.length > 0) {
-    console.error(`migration-dialect-guard failed: ${issues.length} issue(s). See .report/migration-dialect-guard.txt`);
+    console.error(`migration-dialect-guard failed: ${issues.length} issue(s). See build/reports/canon/migration-dialect-guard.txt`);
     process.exit(1);
   }
 

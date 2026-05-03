@@ -17,8 +17,8 @@ node tools/canon/vendor-canon-scan.mjs
 ```
 
 Reports:
-- `.report/vendor-canon-scan.txt`
-- `.report/vendor-canon-scan.json`
+- `build/reports/canon/vendor-canon-scan.txt`
+- `build/reports/canon/vendor-canon-scan.json`
 
 ## migration-dialect-guard
 
@@ -31,5 +31,5 @@ node tools/canon/migration-dialect-guard.mjs
 ```
 
 Reports:
-- `.report/migration-dialect-guard.txt`
-- `.report/migration-dialect-guard.json`
+- `build/reports/canon/migration-dialect-guard.txt`
+- `build/reports/canon/migration-dialect-guard.json`

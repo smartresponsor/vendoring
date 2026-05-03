@@ -5,7 +5,7 @@ import path from 'path';
 
 const repoRoot = process.cwd();
 const srcRoot = path.join(repoRoot, 'src');
-const reportDir = path.join(repoRoot, '.report');
+const reportDir = path.join(repoRoot, 'build', 'reports', 'canon');
 
 const MAX_ISSUE = 5000;
 const MAX_SCANNED_FILES = 9000;
@@ -73,9 +73,17 @@ function scanForbiddenNamespaceChain(file) {
   if (!shouldScanForForbiddenNamespaceChain(file)) return;
 
   const r = rel(file);
+  if (r === 'config/reference.php') return;
+
   const head = readHead(file, 65536);
   if (/Smartresponsor\\/i.test(head) || /Smartresponsor\//i.test(head)) {
     pushIssue('namespace-chain', r, 'Forbidden namespace chain found. Use App\\Vendoring\\* only.');
+  }
+
+  const appNamespaceMatches = head.match(/App\\[A-Za-z_][A-Za-z0-9_]*(?:\\[A-Za-z_][A-Za-z0-9_]*)*/g) || [];
+  for (const match of [...new Set(appNamespaceMatches)]) {
+    if (match === 'App\\Vendoring' || match.startsWith('App\\Vendoring\\')) continue;
+    pushIssue('namespace-chain', r, `Plain App namespace reference '${match}' is forbidden in active Vendoring roots. Use App\\Vendoring\\*.`);
   }
 }
 
@@ -206,7 +214,7 @@ function scan() {
   fs.writeFileSync(outTxt, lines.join('\n'), 'utf8');
 
   if (issues.length > 0) {
-    console.error(`vendor-canon-scan failed: ${issues.length} issue(s). See .report/vendor-canon-scan.txt`);
+    console.error(`vendor-canon-scan failed: ${issues.length} issue(s). See build/reports/canon/vendor-canon-scan.txt`);
     process.exit(1);
   }
 

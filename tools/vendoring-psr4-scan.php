@@ -210,8 +210,8 @@ foreach ($it as $node) {
     $dirRel = dirname($rel);
     $dirRel = str_replace('\\', '/', $dirRel);
 
-    // Expected namespace: App + path under src.
-    $expectedNs = 'App';
+    // Expected namespace: component-scoped App\Vendoring + path under src.
+    $expectedNs = 'App\\Vendoring';
     if (str_starts_with($dirRel . '/', 'src/')) {
         $suffix = substr($dirRel, strlen('src/'));
         // Legacy path alias: src/ServiceInterface/<Domain>/Service/<X> -> App\Vendoring\ServiceInterface\<Domain>\<X>

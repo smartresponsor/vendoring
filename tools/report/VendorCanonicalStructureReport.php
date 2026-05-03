@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/_vendor_report_bootstrap.php';
 
-vendorReportHeader('VendorEntity canonical structure report');
+vendorReportHeader('Vendoring canonical structure report');
 
 vendorReportSection('Structure scan');
 $structureExitCode = vendorReportRunScript('tools/vendoring-structure-scan.php');

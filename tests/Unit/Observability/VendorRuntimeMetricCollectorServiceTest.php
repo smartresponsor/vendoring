@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Observability;
 
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
-use App\Vendoring\Service\Observability\VendorFileObservabilityRecordExporterService;
+use App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService;
 use App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +16,7 @@ final class VendorRuntimeMetricCollectorServiceTest extends TestCase
         $dir = sys_get_temp_dir() . '/vendoring-metrics-' . bin2hex(random_bytes(4));
         $correlationContext = new VendorCorrelationContextService();
         $correlationContext->beginRequest('corr-metric-1');
-        $exporter = new VendorFileObservabilityRecordExporterService($dir);
+        $exporter = new VendorObservabilityRecordExporterService($dir);
 
         $collector = new VendorRuntimeMetricCollectorService($correlationContext, $exporter);
         $collector->increment('statement_mail_sent_total', ['tenant' => 'tenant-1', 'vendor' => 'vendor-1']);

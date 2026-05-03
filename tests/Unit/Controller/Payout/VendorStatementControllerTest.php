@@ -3,7 +3,7 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Vendoring\Tests\Unit\Controller\VendorPayoutEntity;
+namespace App\Vendoring\Tests\Unit\Controller\Payout;
 
 use App\Vendoring\Controller\Vendor\VendorStatementController;
 use App\Vendoring\DTO\Api\VendorStatementWindowQueryRequestDTO;

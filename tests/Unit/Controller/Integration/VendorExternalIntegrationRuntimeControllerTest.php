@@ -8,9 +8,9 @@ namespace App\Vendoring\Tests\Unit\Controller\Integration;
 use App\Vendoring\Controller\Vendor\VendorExternalIntegrationRuntimeController;
 use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
 use App\Vendoring\DTO\Api\VendorTenantQueryRequestDTO;
-use App\Vendoring\Projection\Vendor\VendorExternalIntegrationRuntimeView;
+use App\Vendoring\Projection\Vendor\VendorExternalIntegrationRuntimeProjection;
 use App\Vendoring\ServiceInterface\Api\VendorTenantQueryRequestResolverServiceInterface;
-use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeViewBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,7 +18,7 @@ final class VendorExternalIntegrationRuntimeControllerTest extends TestCase
 {
     public function testShowReturnsValidationErrorWhenTenantIdIsMissing(): void
     {
-        $builder = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderServiceInterface::class);
+        $builder = $this->createMock(VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface::class);
         $builder->expects(self::never())->method('build');
         $resolver = $this->createMock(VendorTenantQueryRequestResolverServiceInterface::class);
         $resolver->expects(self::once())
@@ -36,7 +36,7 @@ final class VendorExternalIntegrationRuntimeControllerTest extends TestCase
 
     public function testShowReturnsRuntimeProjectionWhenTenantIdIsProvided(): void
     {
-        $builder = $this->createMock(VendorExternalIntegrationRuntimeViewBuilderServiceInterface::class);
+        $builder = $this->createMock(VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface::class);
         $resolver = $this->createMock(VendorTenantQueryRequestResolverServiceInterface::class);
         $resolver->expects(self::once())
             ->method('resolve')
@@ -44,7 +44,7 @@ final class VendorExternalIntegrationRuntimeControllerTest extends TestCase
         $builder->expects(self::once())
             ->method('build')
             ->with('tenant-1', 'vendor-1')
-            ->willReturn(new VendorExternalIntegrationRuntimeView(
+            ->willReturn(new VendorExternalIntegrationRuntimeProjection(
                 tenantId: 'tenant-1',
                 vendorId: 'vendor-1',
                 ownership: null,

@@ -8,7 +8,7 @@ use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
 use App\Vendoring\Service\Policy\VendorOutboundOperationPolicyService;
-use App\Vendoring\Service\Reliability\VendorFileOutboundCircuitBreakerService;
+use App\Vendoring\Service\Reliability\VendorOutboundCircuitBreakerService;
 use App\Vendoring\Service\Statement\VendorStatementMailerService;
 use App\Vendoring\Tests\Support\Statement\FakeMailer;
 use PHPUnit\Framework\TestCase;
@@ -110,7 +110,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
     }
 
-    private function service(MailerInterface $mailer, VendorMetricEmitterService $metrics, ?VendorFileOutboundCircuitBreakerService $breaker = null): VendorStatementMailerService
+    private function service(MailerInterface $mailer, VendorMetricEmitterService $metrics, ?VendorOutboundCircuitBreakerService $breaker = null): VendorStatementMailerService
     {
         return new VendorStatementMailerService(
             $mailer,
@@ -126,8 +126,8 @@ final class VendorStatementMailerServiceTest extends TestCase
         return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack());
     }
 
-    private function breaker(): VendorFileOutboundCircuitBreakerService
+    private function breaker(): VendorOutboundCircuitBreakerService
     {
-        return new VendorFileOutboundCircuitBreakerService(sys_get_temp_dir() . '/vendoring-breaker-mailer-' . bin2hex(random_bytes(4)));
+        return new VendorOutboundCircuitBreakerService(sys_get_temp_dir() . '/vendoring-breaker-mailer-' . bin2hex(random_bytes(4)));
     }
 }

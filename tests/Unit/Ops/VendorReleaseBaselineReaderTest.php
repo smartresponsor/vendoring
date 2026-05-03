@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Ops;
 
-use App\Vendoring\Projection\Vendor\VendorRuntimeStatusView;
+use App\Vendoring\Projection\Vendor\VendorRuntimeStatusProjection;
 use App\Vendoring\Service\Ops\VendorReleaseBaselineReaderService;
-use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorReleaseBaselineReaderTest extends TestCase
 {
-    private VendorRuntimeStatusViewBuilderServiceInterface&MockObject $runtimeStatusViewBuilder;
+    private VendorRuntimeStatusProjectionBuilderServiceInterface&MockObject $runtimeStatusProjectionBuilder;
 
     protected function setUp(): void
     {
-        $this->runtimeStatusViewBuilder = $this->createMock(VendorRuntimeStatusViewBuilderServiceInterface::class);
+        $this->runtimeStatusProjectionBuilder = $this->createMock(VendorRuntimeStatusProjectionBuilderServiceInterface::class);
     }
 
     public function testBuildAddsProfileSummaryAndProfileIssueWhenIncomplete(): void
     {
-        $this->runtimeStatusViewBuilder
+        $this->runtimeStatusProjectionBuilder
             ->expects(self::once())
             ->method('build')
             ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')
-            ->willReturn(new VendorRuntimeStatusView(
+            ->willReturn(new VendorRuntimeStatusProjection(
                 tenantId: 'tenant-1',
                 vendorId: '42',
                 currency: 'USD',
@@ -51,10 +51,10 @@ final class VendorReleaseBaselineReaderTest extends TestCase
 
     public function testBuildMarksOwnershipSurfaceUnavailableWhenRuntimeStatusHasNoOwnership(): void
     {
-        $this->runtimeStatusViewBuilder
+        $this->runtimeStatusProjectionBuilder
             ->expects(self::once())
             ->method('build')
-            ->willReturn(new VendorRuntimeStatusView(
+            ->willReturn(new VendorRuntimeStatusProjection(
                 tenantId: 'tenant-1',
                 vendorId: 'vendor-abc',
                 currency: 'USD',
@@ -80,6 +80,6 @@ final class VendorReleaseBaselineReaderTest extends TestCase
 
     private function buildReader(): VendorReleaseBaselineReaderService
     {
-        return new VendorReleaseBaselineReaderService($this->runtimeStatusViewBuilder);
+        return new VendorReleaseBaselineReaderService($this->runtimeStatusProjectionBuilder);
     }
 }

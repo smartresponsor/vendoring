@@ -41,7 +41,7 @@ final class VendorEntitySliceTest extends TestCase
 
     public function testBillingPassportDocumentAndTransactionHaveMinimalBehavior(): void
     {
-        $vendor = new VendorEntity('VendorEntity X');
+        $vendor = new VendorEntity('Vendor X');
 
         $billing = new VendorBillingEntity($vendor);
         $billing->markPayoutRequested();

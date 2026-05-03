@@ -13,7 +13,7 @@ use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
 use App\Vendoring\Service\Ledger\VendorLedgerService;
 use App\Vendoring\Service\Payout\VendorPayoutRequestService;
 use App\Vendoring\Service\Payout\VendorPayoutService;
-use App\Vendoring\Tests\Support\VendorPayoutEntity\InMemoryPayoutRepository;
+use App\Vendoring\Tests\Support\Payout\InMemoryPayoutRepository;
 use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;

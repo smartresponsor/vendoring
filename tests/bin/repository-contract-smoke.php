@@ -8,7 +8,7 @@ $required = [
     $root . '/src/Repository/Vendor/VendorRepository.php',
     $root . '/src/Repository/Vendor/VendorApiKeyRepository.php',
     $root . '/src/Repository/Vendor/VendorTransactionRepository.php',
-    $root . '/src/Repository/VendorPayoutEntity/VendorPayoutRepository.php',
+    $root . '/src/Repository/Vendor/VendorPayoutRepository.php',
     $root . '/src/Repository/Vendor/VendorLedgerEntryRepository.php',
     $root . '/tests/Unit/Repository/DoctrineRepositoryContractTest.php',
 ];

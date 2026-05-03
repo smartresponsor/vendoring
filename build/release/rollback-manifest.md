@@ -1,0 +1,3 @@
+# Rollback manifest
+
+Generated successfully.

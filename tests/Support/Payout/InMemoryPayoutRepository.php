@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Vendoring\Tests\Support\VendorPayoutEntity;
+namespace App\Vendoring\Tests\Support\Payout;
 
 use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
 use App\Vendoring\Entity\Vendor\VendorPayoutItemEntity;

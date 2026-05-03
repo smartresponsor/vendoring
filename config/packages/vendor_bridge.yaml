@@ -1,0 +1,2 @@
+parameters:
+    vendor.sqlite_dsn: 'sqlite:%kernel.project_dir%/var/vendor-system.sqlite'

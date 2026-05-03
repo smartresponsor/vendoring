@@ -11,9 +11,10 @@ $skipPrefixes = [
     $root . '/.idea/',
     $root . '/.phpunit.cache/',
     $root . '/build/docs/phpdocumentor/',
+    $root . '/docs/',
     $root . '/docs/release/',
     $root . '/var/',
-    $root . '/.deploy/_template/',
+    $root . '/deploy/_template/',
 ];
 $skipFiles = [
     $root . '/composer.json',
@@ -36,7 +37,7 @@ foreach ($iterator as $file) {
     if (
         str_contains($path, '/.git/')
         || str_contains($path, '/vendor/')
-        || str_contains($path, '/.deploy/_template/')
+        || str_contains($path, '/deploy/_template/')
     ) {
         continue;
     }

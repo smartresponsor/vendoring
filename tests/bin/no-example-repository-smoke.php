@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
-$paths = ['.commanding', '.deploy', 'ops', 'config', 'scripts', '.smoke', 'bin', 'public', 'tools', 'src'];
+$paths = ['.commanding', 'deploy', 'ops', 'config', 'scripts', 'ops/policy/smoke', 'bin', 'public', 'tools', 'src'];
 $hits = [];
 foreach ($paths as $path) {
     $absolutePath = $root . DIRECTORY_SEPARATOR . $path;

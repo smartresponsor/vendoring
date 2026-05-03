@@ -9,22 +9,22 @@ use App\Vendoring\Controller\Vendor\VendorStatementDeliveryRuntimeController;
 use App\Vendoring\DTO\Api\VendorStatementWindowQueryRequestDTO;
 use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
-use App\Vendoring\Projection\Vendor\VendorStatementDeliveryRuntimeView;
+use App\Vendoring\Projection\Vendor\VendorStatementDeliveryRuntimeProjection;
 use App\Vendoring\Service\Statement\VendorStatementRequestResolverService;
 use App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeViewBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 final class VendorStatementDeliveryRuntimeControllerTest extends TestCase
 {
-    private VendorStatementDeliveryRuntimeViewBuilderServiceInterface&MockObject $builder;
+    private VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface&MockObject $builder;
     private VendorStatementWindowQueryRequestResolverServiceInterface&MockObject $statementWindowQueryRequestResolver;
 
     protected function setUp(): void
     {
-        $this->builder = $this->createMock(VendorStatementDeliveryRuntimeViewBuilderServiceInterface::class);
+        $this->builder = $this->createMock(VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface::class);
         $this->statementWindowQueryRequestResolver = $this->createMock(VendorStatementWindowQueryRequestResolverServiceInterface::class);
     }
 
@@ -62,7 +62,7 @@ final class VendorStatementDeliveryRuntimeControllerTest extends TestCase
                     && 'USD' === $request->currency
                     && false === $request->includeExport;
             }))
-            ->willReturn(new VendorStatementDeliveryRuntimeView(
+            ->willReturn(new VendorStatementDeliveryRuntimeProjection(
                 tenantId: 'tenant-1',
                 vendorId: 'vendor-1',
                 currency: 'USD',

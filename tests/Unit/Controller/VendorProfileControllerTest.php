@@ -7,23 +7,23 @@ namespace App\Vendoring\Tests\Unit\Controller;
 use App\Vendoring\Controller\Vendor\VendorProfileController;
 use App\Vendoring\DTO\VendorProfileDTO;
 use App\Vendoring\Entity\Vendor\VendorEntity;
-use App\Vendoring\Projection\Vendor\VendorProfileView;
+use App\Vendoring\Projection\Vendor\VendorProfileProjection;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use App\Vendoring\Service\Profile\VendorProfileRequestResolverService;
 use App\Vendoring\ServiceInterface\Profile\VendorProfileServiceInterface;
-use App\Vendoring\ServiceInterface\Profile\VendorProfileViewBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Profile\VendorProfileProjectionBuilderServiceInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 final class VendorProfileControllerTest extends TestCase
 {
-    public function testShowReturnsNotFoundWhenVendorProfileViewIsMissing(): void
+    public function testShowReturnsNotFoundWhenVendorProfileProjectionIsMissing(): void
     {
         $controller = new VendorProfileController(
             new FakeVendorRepository(null),
             new FakeVendorProfileService(),
-            new FakeVendorProfileViewBuilder(null),
+            new FakeVendorProfileProjectionBuilder(null),
             new VendorProfileRequestResolverService(),
         );
 
@@ -36,7 +36,7 @@ final class VendorProfileControllerTest extends TestCase
 
     public function testShowReturnsProfileReadinessPayload(): void
     {
-        $view = new VendorProfileView(
+        $view = new VendorProfileProjection(
             vendorId: 12,
             brandName: 'Brand',
             vendorStatus: 'active',
@@ -88,7 +88,7 @@ final class VendorProfileControllerTest extends TestCase
         $controller = new VendorProfileController(
             new FakeVendorRepository(new VendorEntity('Brand')),
             new FakeVendorProfileService(),
-            new FakeVendorProfileViewBuilder($view),
+            new FakeVendorProfileProjectionBuilder($view),
             new VendorProfileRequestResolverService(),
         );
         $response = $controller->show(12);
@@ -106,7 +106,7 @@ final class VendorProfileControllerTest extends TestCase
         $controller = new VendorProfileController(
             new FakeVendorRepository(null),
             new FakeVendorProfileService(),
-            new FakeVendorProfileViewBuilder(null),
+            new FakeVendorProfileProjectionBuilder(null),
             new VendorProfileRequestResolverService(),
         );
 
@@ -122,7 +122,7 @@ final class VendorProfileControllerTest extends TestCase
         $controller = new VendorProfileController(
             new FakeVendorRepository(new VendorEntity('Brand')),
             new FakeVendorProfileService(),
-            new FakeVendorProfileViewBuilder(null),
+            new FakeVendorProfileProjectionBuilder(null),
             new VendorProfileRequestResolverService(),
         );
 
@@ -138,7 +138,7 @@ final class VendorProfileControllerTest extends TestCase
         $controller = new VendorProfileController(
             new FakeVendorRepository(new VendorEntity('Brand')),
             new FakeVendorProfileService(),
-            new FakeVendorProfileViewBuilder(null),
+            new FakeVendorProfileProjectionBuilder(null),
             new VendorProfileRequestResolverService(),
         );
 
@@ -153,7 +153,7 @@ final class VendorProfileControllerTest extends TestCase
     {
         $vendor = new VendorEntity('Brand');
         $profileService = new FakeVendorProfileService();
-        $view = new VendorProfileView(
+        $view = new VendorProfileProjection(
             vendorId: 12,
             brandName: 'Brand',
             vendorStatus: 'active',
@@ -161,12 +161,12 @@ final class VendorProfileControllerTest extends TestCase
                 'brandName' => 'Brand',
                 'vendorStatus' => 'active',
                 'ownerUserId' => 7,
-                'displayName' => 'VendorEntity Profile',
-                'publicDisplayName' => 'VendorEntity Profile',
+                'displayName' => 'Vendor Profile',
+                'publicDisplayName' => 'Vendor Profile',
                 'about' => 'About vendor',
                 'website' => 'https://vendor.example',
                 'socials' => ['x' => 'https://x.example/vendor'],
-                'seoTitle' => 'VendorEntity Profile',
+                'seoTitle' => 'Vendor Profile',
                 'seoDescription' => 'About vendor',
             ],
             businessProfile: [
@@ -175,8 +175,8 @@ final class VendorProfileControllerTest extends TestCase
                 'ownerUserId' => 7,
             ],
             publicProfile: [
-                'displayName' => 'VendorEntity Profile',
-                'publicDisplayName' => 'VendorEntity Profile',
+                'displayName' => 'Vendor Profile',
+                'publicDisplayName' => 'Vendor Profile',
                 'about' => 'About vendor',
                 'website' => 'https://vendor.example',
                 'socials' => ['x' => 'https://x.example/vendor'],
@@ -184,7 +184,7 @@ final class VendorProfileControllerTest extends TestCase
                 'publishedAt' => '2025-01-31T00:00:00+00:00',
             ],
             searchProfile: [
-                'seoTitle' => 'VendorEntity Profile',
+                'seoTitle' => 'Vendor Profile',
                 'seoDescription' => 'About vendor',
             ],
             publication: [
@@ -205,17 +205,17 @@ final class VendorProfileControllerTest extends TestCase
         $controller = new VendorProfileController(
             new FakeVendorRepository($vendor),
             $profileService,
-            new FakeVendorProfileViewBuilder($view),
+            new FakeVendorProfileProjectionBuilder($view),
             new VendorProfileRequestResolverService(),
         );
 
         $response = $controller->update(12, Request::create('/', 'PATCH', content: json_encode([
             'vendorId' => 999,
-            'displayName' => 'VendorEntity Profile',
+            'displayName' => 'Vendor Profile',
             'about' => 'About vendor',
             'website' => 'https://vendor.example',
             'socials' => ['x' => 'https://x.example/vendor'],
-            'seoTitle' => 'VendorEntity Profile',
+            'seoTitle' => 'Vendor Profile',
             'seoDescription' => 'About vendor',
         ], JSON_THROW_ON_ERROR)));
         $payload = self::decodePayload($response);
@@ -224,7 +224,7 @@ final class VendorProfileControllerTest extends TestCase
         self::assertSame(200, $response->getStatusCode());
         self::assertNotNull($profileService->lastDto);
         self::assertSame(12, $profileService->lastDto->vendorId);
-        self::assertSame('VendorEntity Profile', $profileService->lastDto->displayName);
+        self::assertSame('Vendor Profile', $profileService->lastDto->displayName);
         self::assertSame(['x' => 'https://x.example/vendor'], $profileService->lastDto->socials);
         self::assertSame(100, $data['completionPercent']);
     }
@@ -233,7 +233,7 @@ final class VendorProfileControllerTest extends TestCase
     {
         $vendor = new VendorEntity('Brand');
         $profileService = new FakeVendorProfileService();
-        $view = new VendorProfileView(
+        $view = new VendorProfileProjection(
             vendorId: 12,
             brandName: 'Brand',
             vendorStatus: 'active',
@@ -243,12 +243,12 @@ final class VendorProfileControllerTest extends TestCase
                 'ownerUserId' => 7,
                 'publicProfileStatus' => 'published',
                 'publicProfilePublishedAt' => '2025-01-31T00:00:00+00:00',
-                'displayName' => 'VendorEntity Profile',
-                'publicDisplayName' => 'VendorEntity Profile',
+                'displayName' => 'Vendor Profile',
+                'publicDisplayName' => 'Vendor Profile',
                 'about' => 'About vendor',
                 'website' => 'https://vendor.example',
                 'socials' => ['x' => 'https://x.example/vendor'],
-                'seoTitle' => 'VendorEntity Profile',
+                'seoTitle' => 'Vendor Profile',
                 'seoDescription' => 'About vendor',
             ],
             businessProfile: [
@@ -257,8 +257,8 @@ final class VendorProfileControllerTest extends TestCase
                 'ownerUserId' => 7,
             ],
             publicProfile: [
-                'displayName' => 'VendorEntity Profile',
-                'publicDisplayName' => 'VendorEntity Profile',
+                'displayName' => 'Vendor Profile',
+                'publicDisplayName' => 'Vendor Profile',
                 'about' => 'About vendor',
                 'website' => 'https://vendor.example',
                 'socials' => ['x' => 'https://x.example/vendor'],
@@ -266,7 +266,7 @@ final class VendorProfileControllerTest extends TestCase
                 'publishedAt' => '2025-01-31T00:00:00+00:00',
             ],
             searchProfile: [
-                'seoTitle' => 'VendorEntity Profile',
+                'seoTitle' => 'Vendor Profile',
                 'seoDescription' => 'About vendor',
             ],
             publication: [
@@ -287,16 +287,16 @@ final class VendorProfileControllerTest extends TestCase
         $controller = new VendorProfileController(
             new FakeVendorRepository($vendor),
             $profileService,
-            new FakeVendorProfileViewBuilder($view),
+            new FakeVendorProfileProjectionBuilder($view),
             new VendorProfileRequestResolverService(),
         );
 
         $response = $controller->update(12, Request::create('/', 'PATCH', content: json_encode([
-            'displayName' => 'VendorEntity Profile',
+            'displayName' => 'Vendor Profile',
             'about' => 'About vendor',
             'website' => 'https://vendor.example',
             'socials' => ['x' => 'https://x.example/vendor'],
-            'seoTitle' => 'VendorEntity Profile',
+            'seoTitle' => 'Vendor Profile',
             'seoDescription' => 'About vendor',
             'publicationAction' => 'publish',
         ], JSON_THROW_ON_ERROR)));
@@ -373,11 +373,11 @@ final class FakeVendorProfileService implements VendorProfileServiceInterface
     }
 }
 
-final class FakeVendorProfileViewBuilder implements VendorProfileViewBuilderServiceInterface
+final class FakeVendorProfileProjectionBuilder implements VendorProfileProjectionBuilderServiceInterface
 {
-    public function __construct(private readonly ?VendorProfileView $view) {}
+    public function __construct(private readonly ?VendorProfileProjection $view) {}
 
-    public function buildForVendorId(int $vendorId): ?VendorProfileView
+    public function buildForVendorId(int $vendorId): ?VendorProfileProjection
     {
         return $this->view;
     }

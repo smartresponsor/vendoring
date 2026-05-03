@@ -1,0 +1,245 @@
+openapi: 3.1.0
+info:
+  title: "Vendoring API"
+  version: 0.5.0-rc-docs
+  description: "Release-candidate API surface for the Vendoring component. Generated from repository-owned metadata and DocBlock-aligned route contracts."
+servers:
+  -
+    url: "/"
+tags:
+  -
+    name: "Vendor Transactions"
+    description: "Transaction write and read surfaces for vendors."
+  -
+    name: "Operator Surface"
+    description: "Minimal server-rendered operator/admin seam used for RC evidence."
+paths:
+  /api/vendor-transactions:
+    post:
+      tags:
+        - "Vendor Transactions"
+      summary: "Create a vendor transaction"
+      operationId: createVendorTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VendorTransactionCreateRequest"
+      responses:
+        201:
+          description: "Transaction created."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendorTransactionCreateResponse"
+        400:
+          description: "Malformed JSON payload."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                malformed_json:
+                  value:
+                    error: malformed_json
+        409:
+          description: "Duplicate transaction."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        422:
+          description: "Validation failure."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/vendor-transactions/vendor/{vendorId}:
+    get:
+      tags:
+        - "Vendor Transactions"
+      summary: "List transactions by vendor"
+      operationId: listVendorTransactionsByVendor
+      parameters:
+        -
+          name: vendorId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Transaction collection."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendorTransactionCollectionResponse"
+  /api/vendor-transactions/vendor/{vendorId}/{id}/status:
+    post:
+      tags:
+        - "Vendor Transactions"
+      summary: "Update transaction status"
+      operationId: updateVendorTransactionStatus
+      parameters:
+        -
+          name: vendorId
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VendorTransactionStatusRequest"
+      responses:
+        200:
+          description: "Transaction status updated."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendorTransactionStatusResponse"
+        400:
+          description: "Malformed JSON payload."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        404:
+          description: "Transaction not found."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        422:
+          description: "Status validation failure."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /ops/vendor-transactions/{vendorId}:
+    get:
+      tags:
+        - "Operator Surface"
+      summary: "Render operator transaction page"
+      operationId: renderVendorTransactionOperatorPage
+      parameters:
+        -
+          name: vendorId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "HTML operator page."
+          content:
+            text/html:
+              schema:
+                type: string
+components:
+  schemas:
+    VendorTransactionCreateRequest:
+      type: object
+      required:
+        - vendorId
+        - orderId
+        - amount
+      properties:
+        vendorId:
+          type: string
+        orderId:
+          type: string
+        projectId:
+          type:
+            - string
+            - null
+        amount:
+          type: string
+          description: "Decimal amount represented as a string."
+    VendorTransactionResource:
+      type: object
+      required:
+        - id
+        - vendorId
+        - orderId
+        - amount
+        - status
+      properties:
+        id:
+          type: integer
+        vendorId:
+          type: string
+        orderId:
+          type: string
+        projectId:
+          type:
+            - string
+            - null
+        amount:
+          type: string
+        status:
+          type: string
+    VendorTransactionCreateResponse:
+      type: object
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+    VendorTransactionCollectionResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/VendorTransactionResource"
+    VendorTransactionStatusRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+    VendorTransactionStatusResponse:
+      type: object
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          enum:
+            - duplicate_transaction
+            - vendor_id_required
+            - order_id_required
+            - amount_required
+            - amount_not_numeric
+            - amount_not_positive
+            - status_required
+            - invalid_status_transition
+            - not_found
+            - malformed_json
+            - transaction_validation_error

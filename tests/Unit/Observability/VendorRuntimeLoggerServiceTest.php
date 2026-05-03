@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Observability;
 
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
-use App\Vendoring\Service\Observability\VendorFileObservabilityRecordExporterService;
+use App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,7 +55,7 @@ final class VendorRuntimeLoggerServiceTest extends TestCase
         $correlationContext->beginRequest('corr-log-1');
 
         $dir = sys_get_temp_dir() . '/vendoring-logs-' . bin2hex(random_bytes(4));
-        $exporter = new VendorFileObservabilityRecordExporterService($dir);
+        $exporter = new VendorObservabilityRecordExporterService($dir);
 
         $logger = new VendorRuntimeLoggerService($correlationContext, $requestStack, $exporter);
         $logger->info('vendor_transaction_created', ['vendor_id' => 'vendor-1']);

@@ -8,21 +8,21 @@ $servicesVendorTransactions = (string) file_get_contents($root . '/config/vendor
 $config = $services . "\n" . $servicesVendorTransactions;
 
 $required = [
-    'App\Vendoring\\RepositoryInterface\\VendorAnalyticsRepositoryInterface',
-    'App\Vendoring\\RepositoryInterface\\VendorAttachmentRepositoryInterface',
-    'App\Vendoring\\RepositoryInterface\\VendorDocumentRepositoryInterface',
-    'App\Vendoring\\RepositoryInterface\\VendorLedgerBindingRepositoryInterface',
-    'App\Vendoring\\RepositoryInterface\\VendorSecurityRepositoryInterface',
-    'App\Vendoring\\ServiceInterface\\VendorCrmServiceInterface',
-    'App\Vendoring\\ServiceInterface\\VendorBillingServiceInterface',
-    'App\Vendoring\\ServiceInterface\\VendorDocumentServiceInterface',
-    'App\Vendoring\\ServiceInterface\\VendorMediaServiceInterface',
-    'App\Vendoring\\ServiceInterface\\VendorPassportServiceInterface',
-    'App\Vendoring\\ServiceInterface\\VendorProfileServiceInterface',
-    'App\Vendoring\\ServiceInterface\\VendorServiceInterface',
+    'App\Vendoring\\RepositoryInterface\\Vendor\\VendorAnalyticsRepositoryInterface',
+    'App\Vendoring\\RepositoryInterface\\Vendor\\VendorAttachmentRepositoryInterface',
+    'App\Vendoring\\RepositoryInterface\\Vendor\\VendorDocumentRepositoryInterface',
+    'App\Vendoring\\RepositoryInterface\\Vendor\\VendorLedgerBindingRepositoryInterface',
+    'App\Vendoring\\RepositoryInterface\\Vendor\\VendorSecurityRepositoryInterface',
+    'App\Vendoring\\ServiceInterface\\Integration\\VendorCrmServiceInterface',
+    'App\Vendoring\\ServiceInterface\\Billing\\VendorBillingServiceInterface',
+    'App\Vendoring\\ServiceInterface\\Document\\VendorDocumentServiceInterface',
+    'App\Vendoring\\ServiceInterface\\Media\\VendorMediaServiceInterface',
+    'App\Vendoring\\ServiceInterface\\Identity\\VendorPassportServiceInterface',
+    'App\Vendoring\\ServiceInterface\\Profile\\VendorProfileServiceInterface',
+    'App\Vendoring\\ServiceInterface\\Core\\VendorCoreServiceInterface',
     'App\Vendoring\\ServiceInterface\\Ledger\\VendorDoubleEntryServiceInterface',
-    'App\Vendoring\\ServiceInterface\\VendorPayoutEntity\\VendorPayoutProviderServiceInterface',
-    'App\Vendoring\\ServiceInterface\\VendorPayoutEntity\\VendorSettlementCalculatorServiceInterface',
+    'App\Vendoring\\ServiceInterface\\Payout\\VendorPayoutProviderServiceInterface',
+    'App\Vendoring\\ServiceInterface\\Payout\\VendorSettlementCalculatorServiceInterface',
 ];
 
 foreach ($required as $interfaceClass) {

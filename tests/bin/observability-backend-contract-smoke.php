@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
-use App\Vendoring\Service\Observability\VendorFileObservabilityRecordExporterService;
+use App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
 use App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 $dir = sys_get_temp_dir() . '/vendoring-observability-smoke-' . bin2hex(random_bytes(4));
-$exporter = new VendorFileObservabilityRecordExporterService($dir);
+$exporter = new VendorObservabilityRecordExporterService($dir);
 $correlationContext = new VendorCorrelationContextService();
 $correlationContext->beginRequest('smoke-correlation-id');
 

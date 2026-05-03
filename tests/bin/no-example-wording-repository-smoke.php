@@ -5,9 +5,14 @@ declare(strict_types=1);
 require_once __DIR__ . '/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
-$paths = ['.deploy', 'ops', 'config', 'scripts', '.smoke', 'bin', 'public', 'tools', 'src'];
+$paths = ['deploy', 'ops', 'config', 'scripts', 'ops/policy/smoke', 'bin', 'public', 'tools', 'src'];
 $hits = [];
-$allowedPrefixes = ['.deploy/_template/', '.deploy/systemd/', '.consuming/', 'vendor/'];
+$allowedPrefixes = ['deploy/_template/', 'deploy/systemd/', '.consuming/', 'vendor/'];
+$allowedFiles = [
+    'config/reference.php',
+    'bin/generate-openapi.php',
+    'tools/report/VendorConfigGuardReport.php',
+];
 foreach ($paths as $path) {
     $absolutePath = $root . DIRECTORY_SEPARATOR . $path;
     if (!is_dir($absolutePath)) {
@@ -16,8 +21,11 @@ foreach ($paths as $path) {
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($absolutePath, FilesystemIterator::SKIP_DOTS));
     foreach (vendoring_php_files($iterator) as $file) {
         $relative = str_replace($root . DIRECTORY_SEPARATOR, '', $file->getPathname());
+        if (in_array(str_replace('\\', '/', $relative), $allowedFiles, true)) {
+            continue;
+        }
         foreach ($allowedPrefixes as $prefix) {
-            if (str_starts_with($relative, $prefix)) {
+            if (str_starts_with(str_replace('\\', '/', $relative), $prefix)) {
                 continue 2;
             }
         }

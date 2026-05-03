@@ -10,10 +10,10 @@ use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
-use App\Vendoring\Service\Traffic\VendorFileWriteRateLimiterService;
+use App\Vendoring\Service\Traffic\VendorWriteRateLimiterService;
 use App\Vendoring\Service\Transaction\VendorTransactionInputResolverService;
 use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
-use App\Vendoring\Tests\Support\Transaction\FakeVendorTransactionManager;
+use App\Vendoring\Tests\Support\Transaction\FakeVendorTransactionLifecycle;
 use App\Vendoring\Tests\Support\Transaction\InMemoryVendorTransactionRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -86,7 +86,7 @@ final class VendorTransactionControllerTest extends TestCase
         $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
-        $manager = new FakeVendorTransactionManager($transaction);
+        $manager = new FakeVendorTransactionLifecycle($transaction);
         $controller = $this->controller($transaction, $manager);
 
         $response = $controller->create($this->authorizedJsonRequest([
@@ -110,7 +110,7 @@ final class VendorTransactionControllerTest extends TestCase
         $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
-        $manager = new FakeVendorTransactionManager($transaction);
+        $manager = new FakeVendorTransactionLifecycle($transaction);
         $manager->exceptionToThrow = new \InvalidArgumentException('duplicate_transaction');
         $controller = $this->controller($transaction, $manager);
 
@@ -198,7 +198,7 @@ final class VendorTransactionControllerTest extends TestCase
         $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
-        $manager = new FakeVendorTransactionManager($transaction);
+        $manager = new FakeVendorTransactionLifecycle($transaction);
         $controller = $this->controller($transaction, $manager);
 
         $response = $controller->updateStatus('vendor-1', 42, $this->authorizedJsonRequest([
@@ -277,7 +277,7 @@ final class VendorTransactionControllerTest extends TestCase
         $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
-        $manager = new FakeVendorTransactionManager($transaction);
+        $manager = new FakeVendorTransactionLifecycle($transaction);
         $manager->exceptionToThrow = new \InvalidArgumentException('invalid_status_transition');
         $controller = $this->controller($transaction, $manager);
 
@@ -295,7 +295,7 @@ final class VendorTransactionControllerTest extends TestCase
         $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
         $this->forceId($transaction, 42);
 
-        $manager = new FakeVendorTransactionManager($transaction);
+        $manager = new FakeVendorTransactionLifecycle($transaction);
         $manager->exceptionToThrow = new \InvalidArgumentException('low_level_sql_error');
         $controller = $this->controller($transaction, $manager);
 
@@ -361,17 +361,17 @@ final class VendorTransactionControllerTest extends TestCase
         return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack());
     }
 
-    private function controller(?VendorTransactionEntity $transaction = null, ?FakeVendorTransactionManager $manager = null, ?VendorApiKeyServiceInterface $apiKeyService = null): VendorTransactionController
+    private function controller(?VendorTransactionEntity $transaction = null, ?FakeVendorTransactionLifecycle $manager = null, ?VendorApiKeyServiceInterface $apiKeyService = null): VendorTransactionController
     {
         $transaction ??= new VendorTransactionEntity('vendor-1', 'order-1', null, '10.00');
-        $manager ??= new FakeVendorTransactionManager($transaction);
+        $manager ??= new FakeVendorTransactionLifecycle($transaction);
 
         return new VendorTransactionController(
             new InMemoryVendorTransactionRepository([$transaction]),
             $manager,
             new VendorTransactionInputResolverService(),
             $this->runtimeLogger(),
-            new VendorFileWriteRateLimiterService(),
+            new VendorWriteRateLimiterService(),
             $apiKeyService ?? $this->authorizedApiKeyService(),
         );
     }
@@ -379,7 +379,7 @@ final class VendorTransactionControllerTest extends TestCase
     /** @return VendorApiKeyServiceInterface&MockObject */
     private function authorizedApiKeyService(): VendorApiKeyServiceInterface
     {
-        $vendor = new VendorEntity('VendorEntity A');
+        $vendor = new VendorEntity('Vendor A');
         $service = $this->createMock(VendorApiKeyServiceInterface::class);
         $service->method('resolveVendorFromAuthHeader')->willReturn($vendor);
         $service->method('validateAuthorizationHeader')->with('Bearer valid-token', 'write:transactions')->willReturn($vendor);
@@ -400,7 +400,7 @@ final class VendorTransactionControllerTest extends TestCase
     /** @return VendorApiKeyServiceInterface&MockObject */
     private function underScopedApiKeyService(): VendorApiKeyServiceInterface
     {
-        $vendor = new VendorEntity('VendorEntity A');
+        $vendor = new VendorEntity('Vendor A');
         $service = $this->createMock(VendorApiKeyServiceInterface::class);
         $service->method('resolveVendorFromAuthHeader')->with('Bearer valid-token')->willReturn($vendor);
         $service->method('validateAuthorizationHeader')->with('Bearer valid-token', 'write:transactions')->willReturn(null);

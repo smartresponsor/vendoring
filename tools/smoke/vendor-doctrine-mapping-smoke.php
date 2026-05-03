@@ -8,7 +8,7 @@ if (!is_string($root) || '' === $root) {
     exit(2);
 }
 
-$entityPath = $root . '/src/Entity/VendorTransactionEntity.php';
+$entityPath = $root . '/src/Entity/Vendor/VendorTransactionEntity.php';
 $interfacePath = $root . '/src/EntityInterface/VendorTransactionEntityInterface.php';
 
 foreach ([$entityPath, $interfacePath] as $path) {
@@ -35,4 +35,4 @@ foreach ($needles as $needle) {
     }
 }
 
-fwrite(STDOUT, "VendorEntity doctrine mapping smoke passed\n");
+fwrite(STDOUT, "Vendor doctrine mapping smoke passed\n");

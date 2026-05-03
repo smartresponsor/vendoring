@@ -224,4 +224,4 @@ if ($issues !== []) {
 
 echo "Vendoring canon scan: OK\n";
 
-// DTO / Form / ValueObject canon: DTO=Vendor*DTO.php, Form=Vendor*Type.php, ValueObject=Vendor*ValueObject.php.
+// DTO / Form / ValueObject canon: DTO=Vendor*DTO.php, Form=Vendor*Form.php, ValueObject=Vendor*ValueObject.php.

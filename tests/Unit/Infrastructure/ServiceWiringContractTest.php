@@ -25,7 +25,7 @@ final class ServiceWiringContractTest extends TestCase
         self::assertStringContainsString('services_loaded_by_extension: config/component/services.yaml', $contents);
     }
 
-    public function testLegacyVendorServicesBridgeIsNotRequiredByNativeSurface(): void
+    public function testLegacyVendorCoreServicesBridgeIsNotRequiredByNativeSurface(): void
     {
         $path = dirname(__DIR__, 3) . '/config/vendor_services.yaml';
         self::assertFileDoesNotExist($path);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Vendoring\Tests\Unit\VendorPayoutEntity;
+namespace App\Vendoring\Tests\Unit\Payout;
 
 use App\Vendoring\DTO\Payout\VendorPayoutTransferDTO;
 use App\Vendoring\Service\Payout\VendorPayoutProviderService;

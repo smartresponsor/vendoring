@@ -22,7 +22,7 @@ try {
         exit(1);
     }
 
-    $vendor = KernelRuntimeHarness::seedActiveVendor($kernel, 'Fresh Boot Ownership VendorEntity');
+    $vendor = KernelRuntimeHarness::seedActiveVendor($kernel, 'Fresh Boot Ownership Vendor');
     $ownershipResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor-ownership/vendor/' . (string) $vendor->getId());
     $ownershipPayload = KernelRuntimeHarness::decodeJson($ownershipResponse);
 

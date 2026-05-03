@@ -1,7 +1,8 @@
-name: runtime
+name: Vendoring Runtime
 
 on:
-  workflow_dispatch:
+  push:
+  pull_request:
 
 jobs:
   runtime:
@@ -10,15 +11,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.4"
-          extensions: pdo_sqlite
+          php-version: '8.4'
+          extensions: json, pdo, pdo_sqlite
       - run: composer install --no-interaction --prefer-dist
       - run: composer quality:runtime
       - run: composer quality:persistence
       - run: composer quality:api
-      - name: Upload RC evidence artifacts
+      - name: Upload runtime release artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: runtime-release-evidence
-          path: |
-            build/release/**
+          name: vendoring-runtime-release-artifacts
+          path: build/release/**

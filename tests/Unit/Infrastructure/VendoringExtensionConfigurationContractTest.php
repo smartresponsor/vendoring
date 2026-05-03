@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Infrastructure;
 
-use App\Vendoring\DependencyInjection\Configuration;
+use App\Vendoring\DependencyInjection\VendorConfiguration;
 use App\Vendoring\DependencyInjection\VendoringExtension;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ final class VendoringExtensionConfigurationContractTest extends TestCase
 
     public function testConfigurationRootIsVendoring(): void
     {
-        $configuration = new Configuration();
+        $configuration = new VendorConfiguration();
         $tree = $configuration->getConfigTreeBuilder();
 
         self::assertSame('vendoring', $tree->buildTree()->getName());

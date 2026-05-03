@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Support\Statement;
 
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPDFServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPdfServiceInterface;
 
-final class FakeStatementExporterPDF implements VendorStatementExporterPDFServiceInterface
+final class FakeStatementExporterPdf implements VendorStatementExporterPdfServiceInterface
 {
     public function __construct(private readonly string $path) {}
 

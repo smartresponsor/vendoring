@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Policy;
+namespace App\Vendoring\Tests\Unit\Policy;
 
 use App\Vendoring\Service\Policy\VendorTransactionStatusPolicyService;
 use PHPUnit\Framework\TestCase;

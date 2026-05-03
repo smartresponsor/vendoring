@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure;
+namespace App\Vendoring\Tests\Unit\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 
@@ -15,13 +15,13 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
             $root . '/report/',
             $root . '/tests/',
             $root . '/.idea/',
-            $root . '/.deploy/_template/',
+            $root . '/deploy/_template/',
             $root . '/.phpunit.cache/',
             $root . '/build/docs/phpdocumentor/',
             $root . '/docs/',
             $root . '/docs/release/',
             $root . '/var/',
-            $root . '/.deploy/systemd/',
+            $root . '/deploy/systemd/',
             $root . '/.consuming/',
         ];
         $allowedFiles = [
@@ -50,7 +50,7 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
                 str_contains($normalized, '/.git/')
                 || str_contains($normalized, '/vendor/')
                 || str_contains($normalized, '/node_modules/')
-                || str_contains($normalized, '/.deploy/_template/')
+                || str_contains($normalized, '/deploy/_template/')
                 || preg_match('/\.(zip|tar|gz|tgz)$/i', $normalized)
             ) {
                 continue;

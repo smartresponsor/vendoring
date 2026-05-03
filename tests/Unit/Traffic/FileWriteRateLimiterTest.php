@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Traffic;
 
-use App\Vendoring\Service\Traffic\VendorFileWriteRateLimiterService;
+use App\Vendoring\Service\Traffic\VendorWriteRateLimiterService;
 use PHPUnit\Framework\TestCase;
 
 final class FileWriteRateLimiterTest extends TestCase
 {
     public function testLimiterRejectsRequestAfterConfiguredLimit(): void
     {
-        $limiter = new VendorFileWriteRateLimiterService();
+        $limiter = new VendorWriteRateLimiterService();
         $scope = 'test_write_scope_' . bin2hex(random_bytes(6));
         $actor = 'actor-1';
 

@@ -10,7 +10,7 @@ use App\Vendoring\DTO\Api\VendorStatementWindowQueryRequestDTO;
 use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
 use App\Vendoring\Service\Statement\VendorStatementRequestResolverService;
 use App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface;
-use App\Vendoring\Tests\Support\Statement\FakeStatementExporterPDF;
+use App\Vendoring\Tests\Support\Statement\FakeStatementExporterPdf;
 use App\Vendoring\Tests\Support\Statement\FakeVendorStatementService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -28,7 +28,7 @@ final class VendorStatementExportControllerTest extends TestCase
 
         $controller = new VendorStatementExportController(
             $statementService,
-            new FakeStatementExporterPDF(sys_get_temp_dir() . '/unused-vendoring-export.pdf'),
+            new FakeStatementExporterPdf(sys_get_temp_dir() . '/unused-vendoring-export.pdf'),
             new VendorStatementRequestResolverService(),
             $windowResolver,
         );
@@ -63,7 +63,7 @@ final class VendorStatementExportControllerTest extends TestCase
             ->willReturn(new VendorStatementWindowQueryRequestDTO('tenant-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD'));
         $controller = new VendorStatementExportController(
             $statementService,
-            new FakeStatementExporterPDF($pdfPath),
+            new FakeStatementExporterPdf($pdfPath),
             new VendorStatementRequestResolverService(),
             $windowResolver,
         );
@@ -107,7 +107,7 @@ final class VendorStatementExportControllerTest extends TestCase
             ->willReturn(new VendorStatementWindowQueryRequestDTO('tenant-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD'));
         $controller = new VendorStatementExportController(
             $statementService,
-            new FakeStatementExporterPDF(sys_get_temp_dir() . '/missing-vendoring-export.pdf'),
+            new FakeStatementExporterPdf(sys_get_temp_dir() . '/missing-vendoring-export.pdf'),
             new VendorStatementRequestResolverService(),
             $windowResolver,
         );

@@ -8,9 +8,9 @@ namespace App\Vendoring\Tests\Unit\Controller\Finance;
 use App\Vendoring\Controller\Vendor\VendorFinanceRuntimeController;
 use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
 use App\Vendoring\DTO\Api\VendorTenantQueryRequestDTO;
-use App\Vendoring\Projection\Vendor\VendorFinanceRuntimeView;
+use App\Vendoring\Projection\Vendor\VendorFinanceRuntimeProjection;
 use App\Vendoring\ServiceInterface\Api\VendorTenantQueryRequestResolverServiceInterface;
-use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeViewBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeProjectionBuilderServiceInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,7 +18,7 @@ final class VendorFinanceRuntimeControllerTest extends TestCase
 {
     public function testFinanceReturnsValidationErrorWhenTenantIdIsMissing(): void
     {
-        $builder = $this->createMock(VendorFinanceRuntimeViewBuilderServiceInterface::class);
+        $builder = $this->createMock(VendorFinanceRuntimeProjectionBuilderServiceInterface::class);
         $builder->expects(self::never())->method('build');
         $resolver = $this->createMock(VendorTenantQueryRequestResolverServiceInterface::class);
         $resolver->expects(self::once())
@@ -36,7 +36,7 @@ final class VendorFinanceRuntimeControllerTest extends TestCase
 
     public function testFinanceReturnsDataPayloadWhenTenantIdIsProvided(): void
     {
-        $builder = $this->createMock(VendorFinanceRuntimeViewBuilderServiceInterface::class);
+        $builder = $this->createMock(VendorFinanceRuntimeProjectionBuilderServiceInterface::class);
         $resolver = $this->createMock(VendorTenantQueryRequestResolverServiceInterface::class);
         $resolver->expects(self::once())
             ->method('resolve')
@@ -44,7 +44,7 @@ final class VendorFinanceRuntimeControllerTest extends TestCase
         $builder->expects(self::once())
             ->method('build')
             ->with('tenant-1', 'vendor-1', null, null, 'USD')
-            ->willReturn(new VendorFinanceRuntimeView(
+            ->willReturn(new VendorFinanceRuntimeProjection(
                 tenantId: 'tenant-1',
                 vendorId: 'vendor-1',
                 currency: 'USD',

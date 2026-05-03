@@ -10,7 +10,7 @@ final class VendorTransactionSchemaParityTest extends TestCase
 {
     public function testEntityDoesNotPretendFullVendorOrderProjectUniqueConstraint(): void
     {
-        $entityPath = dirname(__DIR__, 3) . '/src/Entity/VendorTransactionEntity.php';
+        $entityPath = dirname(__DIR__, 3) . '/src/Entity/Vendor/VendorTransactionEntity.php';
 
         self::assertFileExists($entityPath);
         $contents = (string) file_get_contents($entityPath);

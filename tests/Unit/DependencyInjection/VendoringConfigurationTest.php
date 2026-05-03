@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\DependencyInjection;
 
-use App\Vendoring\DependencyInjection\Configuration;
+use App\Vendoring\DependencyInjection\VendorConfiguration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Processor;
 
@@ -13,7 +13,7 @@ final class VendoringConfigurationTest extends TestCase
     public function testConfigurationProvidesCanonicalReusableBundleDefaults(): void
     {
         $processor = new Processor();
-        $configuration = new Configuration();
+        $configuration = new VendorConfiguration();
 
         $config = $processor->processConfiguration($configuration, []);
         /** @var array<string, mixed> $config */
@@ -26,7 +26,7 @@ final class VendoringConfigurationTest extends TestCase
     public function testConfigurationAcceptsExternalHostOverrides(): void
     {
         $processor = new Processor();
-        $configuration = new Configuration();
+        $configuration = new VendorConfiguration();
 
         $config = $processor->processConfiguration($configuration, [[
             'observability_dir' => '/tmp/vendoring-observability',

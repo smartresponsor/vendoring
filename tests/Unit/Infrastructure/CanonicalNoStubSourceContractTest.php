@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure;
+namespace App\Vendoring\Tests\Unit\Infrastructure;
 
 require_once dirname(__DIR__, 2) . '/bin/_composer_json.php';
 
