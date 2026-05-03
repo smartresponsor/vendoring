@@ -91,7 +91,7 @@ final class VendorProfileProjectionBuilderTest extends TestCase
         return new VendorProfileProjectionBuilderService($this->vendorRepository, $this->profileRepository);
     }
 
-    private function forceId(Vendor $vendor, int $id): void
+    private function forceId(VendorEntity $vendor, int $id): void
     {
         $reflection = new \ReflectionProperty($vendor, 'id');
         $reflection->setAccessible(true);
