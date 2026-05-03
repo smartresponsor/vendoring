@@ -7,6 +7,7 @@ namespace App\Vendoring\Tests\Unit\Observability;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService;
 use App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use PHPUnit\Framework\TestCase;
 
 final class VendorRuntimeMetricCollectorServiceTest extends TestCase
@@ -18,7 +19,7 @@ final class VendorRuntimeMetricCollectorServiceTest extends TestCase
         $correlationContext->beginRequest('corr-metric-1');
         $exporter = new VendorObservabilityRecordExporterService($dir);
 
-        $collector = new VendorRuntimeMetricCollectorService($correlationContext, $exporter);
+        $collector = new VendorRuntimeMetricCollectorService($correlationContext, new VendorAppEnvResolverService(), $exporter);
         $collector->increment('statement_mail_sent_total', ['tenant' => 'tenant-1', 'vendor' => 'vendor-1']);
 
         $snapshot = $collector->snapshot();
@@ -33,7 +34,7 @@ final class VendorRuntimeMetricCollectorServiceTest extends TestCase
 
     public function testCollectorNormalizesEmptyTagsAndMissingCorrelationDeterministically(): void
     {
-        $collector = new VendorRuntimeMetricCollectorService(new VendorCorrelationContextService());
+        $collector = new VendorRuntimeMetricCollectorService(new VendorCorrelationContextService(), new VendorAppEnvResolverService());
         $collector->increment('payout_processed_total');
 
         $snapshot = $collector->snapshot();

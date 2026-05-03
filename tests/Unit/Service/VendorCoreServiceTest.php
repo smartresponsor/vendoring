@@ -8,7 +8,7 @@ namespace App\Vendoring\Tests\Unit\Service;
 
 use App\Vendoring\DTO\VendorCreateDTO;
 use App\Vendoring\DTO\VendorUpdateDTO;
-use App\Vendoring\Entity\Vendor;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Service\Core\VendorCoreService;
 use App\Vendoring\ServiceInterface\Assignment\VendorUserAssignmentServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -81,7 +81,7 @@ final class VendorCoreServiceTest extends TestCase
 
     public function testUpdateTrimsBrandNameWhenProvided(): void
     {
-        $vendor = new Vendor('Old');
+        $vendor = new VendorEntity('Old');
         $dto = new VendorUpdateDTO(brandName: '  New Name  ');
 
         $this->validator
@@ -103,7 +103,7 @@ final class VendorCoreServiceTest extends TestCase
 
     public function testUpdateRejectsWhitespaceOnlyBrandNameAfterNormalization(): void
     {
-        $vendor = new Vendor('Old');
+        $vendor = new VendorEntity('Old');
         $dto = new VendorUpdateDTO(brandName: '   ');
 
         $this->validator

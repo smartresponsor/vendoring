@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service;
 
-use App\Vendoring\Entity\Vendor;
-use App\Vendoring\Entity\VendorProfile;
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorProfileEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use App\Vendoring\Service\Profile\VendorProfileProjectionBuilderService;
@@ -33,7 +33,7 @@ final class VendorProfileProjectionBuilderTest extends TestCase
 
     public function testBuildForVendorIdReportsMissingProfileFieldsAsNextAction(): void
     {
-        $vendor = new Vendor('Brand Name');
+        $vendor = new VendorEntity('Brand Name');
 
         $this->forceId($vendor, 7);
         $this->vendorRepository->expects(self::once())->method('find')->with(7)->willReturn($vendor);
@@ -55,8 +55,8 @@ final class VendorProfileProjectionBuilderTest extends TestCase
 
     public function testBuildForVendorIdMarksCompleteProfileAsReadyForPublishing(): void
     {
-        $vendor = new Vendor('Brand Name', 42);
-        $profile = new VendorProfile($vendor);
+        $vendor = new VendorEntity('Brand Name', 42);
+        $profile = new VendorProfileEntity($vendor);
         $profile->updateProfile(
             displayName: 'Vendor Portal',
             about: 'High-quality home goods.',

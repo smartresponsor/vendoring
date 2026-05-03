@@ -101,7 +101,7 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
         }
     }
 
-    private function buildManager(): VendorTransactionLifecycleService
+    private function buildManager(): VendorTransactionEntityLifecycleService
     {
         return new VendorTransactionLifecycleService(
             $this->entityManager,

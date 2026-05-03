@@ -31,7 +31,14 @@ try {
         exit(1);
     }
 
-    $counts = $ownershipPayload['data']['relationCounts'] ?? null;
+    $data = $ownershipPayload['data'] ?? null;
+
+    if (!is_array($data)) {
+        fwrite(STDERR, "fresh db boot smoke did not expose ownership data\n");
+        exit(1);
+    }
+
+    $counts = $data['relationCounts'] ?? null;
 
     if (!is_array($counts)) {
         fwrite(STDERR, "fresh db boot smoke did not expose ownership relation counts\n");

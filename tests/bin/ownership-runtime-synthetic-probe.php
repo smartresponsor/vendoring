@@ -127,7 +127,13 @@ try {
     }
 
     $payload = KernelRuntimeHarness::decodeJson($viewResponse);
-    $counts = $payload['data']['relationCounts'] ?? null;
+    $data = $payload['data'] ?? null;
+
+    if (!is_array($data)) {
+        throw new RuntimeException('Ownership probe did not expose ownership data.');
+    }
+
+    $counts = $data['relationCounts'] ?? null;
 
     if (!is_array($counts)) {
         throw new RuntimeException('Ownership probe did not expose relation counts.');

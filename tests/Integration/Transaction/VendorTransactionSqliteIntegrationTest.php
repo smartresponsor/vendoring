@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Integration\Transaction;
 
-use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Service\Policy\VendorTransactionAmountPolicyService;
 use App\Vendoring\Service\Policy\VendorTransactionStatusPolicyService;
 use App\Vendoring\Service\Transaction\VendorTransactionLifecycleService;
@@ -30,7 +31,7 @@ final class VendorTransactionSqliteIntegrationTest extends TestCase
         $entityManager = DoctrineEntityManagerFactory::createSqliteMemoryEntityManager($projectRoot);
 
         $schemaTool = new SchemaTool($entityManager);
-        $metadata = [$entityManager->getClassMetadata(VendorTransaction::class)];
+        $metadata = [$entityManager->getClassMetadata(VendorTransactionEntity::class)];
         $schemaTool->createSchema($metadata);
 
         $events = new class implements EventDispatcherInterface {
@@ -51,7 +52,7 @@ final class VendorTransactionSqliteIntegrationTest extends TestCase
             new VendorTransactionStatusPolicyService(),
             new VendorTransactionAmountPolicyService(),
             $repository,
-            new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack()),
+            new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService()),
         );
 
         $created = $manager->createTransaction(new VendorTransactionDataValueObject('vendor-1', 'order-1', null, '10.50'));
@@ -60,7 +61,7 @@ final class VendorTransactionSqliteIntegrationTest extends TestCase
         self::assertSame(1, $events->dispatchCount);
 
         $fetched = $repository->findOneByIdAndVendorId((int) $created->getId(), 'vendor-1');
-        self::assertInstanceOf(VendorTransaction::class, $fetched);
+        self::assertInstanceOf(VendorTransactionEntity::class, $fetched);
         self::assertSame('10.50', $fetched->getAmount());
         self::assertTrue($repository->existsForVendorOrderProject('vendor-1', 'order-1', null));
 
@@ -69,7 +70,7 @@ final class VendorTransactionSqliteIntegrationTest extends TestCase
         self::assertSame(2, $events->dispatchCount);
 
         $reloaded = $repository->findOneByIdAndVendorId((int) $created->getId(), 'vendor-1');
-        self::assertInstanceOf(VendorTransaction::class, $reloaded);
+        self::assertInstanceOf(VendorTransactionEntity::class, $reloaded);
         self::assertSame('authorized', $reloaded->getStatus());
 
         $this->expectException(\InvalidArgumentException::class);

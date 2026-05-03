@@ -10,6 +10,7 @@ use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Service\Ledger\VendorLedgerService;
 use App\Vendoring\Service\Payout\VendorPayoutRequestService;
 use App\Vendoring\Service\Payout\VendorPayoutService;
@@ -137,6 +138,6 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
     private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack());
+        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService());
     }
 }

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Support\Transaction;
 
-use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
 
 final class InMemoryVendorTransactionRepository implements VendorTransactionRepositoryInterface
 {
-    /** @var list<VendorTransaction> */
+    /** @var list<VendorTransactionEntity> */
     private array $items;
 
-    /** @param list<VendorTransaction> $items */
+    /** @param list<VendorTransactionEntity> $items */
     public function __construct(array $items = [])
     {
         $this->items = $items;
@@ -22,11 +22,11 @@ final class InMemoryVendorTransactionRepository implements VendorTransactionRepo
     {
         return array_values(array_filter(
             $this->items,
-            static fn(VendorTransaction $transaction): bool => $transaction->getVendorId() === $vendorId,
+            static fn(VendorTransactionEntity $transaction): bool => $transaction->getVendorId() === $vendorId,
         ));
     }
 
-    public function findOneByIdAndVendorId(int $id, string $vendorId): ?VendorTransaction
+    public function findOneByIdAndVendorId(int $id, string $vendorId): ?VendorTransactionEntity
     {
         foreach ($this->items as $transaction) {
             if ($transaction->getId() === $id && $transaction->getVendorId() === $vendorId) {

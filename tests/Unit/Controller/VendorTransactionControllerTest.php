@@ -10,6 +10,7 @@ use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Service\Traffic\VendorWriteRateLimiterService;
 use App\Vendoring\Service\Transaction\VendorTransactionInputResolverService;
 use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
@@ -358,7 +359,7 @@ final class VendorTransactionControllerTest extends TestCase
 
     private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack());
+        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService());
     }
 
     private function controller(?VendorTransactionEntity $transaction = null, ?FakeVendorTransactionLifecycle $manager = null, ?VendorApiKeyServiceInterface $apiKeyService = null): VendorTransactionController

@@ -6,108 +6,59 @@ namespace App\Vendoring\Tests\Unit\Repository\Payout;
 
 use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
 use App\Vendoring\Repository\Vendor\VendorPayoutAccountRepository;
-use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class PayoutAccountRepositoryTest extends TestCase
 {
-    private Connection&MockObject $connection;
+    private EntityManagerInterface&MockObject $entityManager;
+
+    /** @var ObjectRepository<VendorPayoutAccountEntity>&MockObject */
+    private ObjectRepository&MockObject $objectRepository;
 
     protected function setUp(): void
     {
-        $this->connection = $this->createMock(Connection::class);
+        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->objectRepository = $this->createMock(ObjectRepository::class);
+        $this->entityManager->method('getRepository')->with(VendorPayoutAccountEntity::class)->willReturn($this->objectRepository);
     }
 
-    public function testGetHydratesPayoutAccountAndNormalizesActiveFlag(): void
+    public function testGetReturnsDoctrineEntityWhenFound(): void
     {
-        $this->connection
-            ->expects(self::once())
-            ->method('fetchAssociative')
-            ->with('SELECT * FROM payout_accounts WHERE tenant_id=:t AND vendor_id=:v', ['t' => 'tenant-1', 'v' => 'vendor-1'])
-            ->willReturn([
-                'id' => 'acc-1',
-                'tenant_id' => 'tenant-1',
-                'vendor_id' => 'vendor-1',
-                'provider' => 'bank',
-                'account_ref' => 'iban-123',
-                'currency' => 'USD',
-                'active' => '1',
-                'created_at' => '2026-03-30 10:00:00',
-            ]);
+        $account = $this->account(active: true);
+        $this->objectRepository->expects(self::once())->method('findOneBy')->with(['tenantId' => 'tenant-1', 'vendorId' => 'vendor-1'])->willReturn($account);
 
-        $repository = new VendorPayoutAccountRepository($this->connection);
-        $account = $repository->get('tenant-1', 'vendor-1');
-
-        self::assertNotNull($account);
-        self::assertSame('acc-1', $account->id);
-        self::assertSame('tenant-1', $account->tenantId);
-        self::assertSame('vendor-1', $account->vendorId);
-        self::assertSame('bank', $account->provider);
-        self::assertSame('iban-123', $account->accountRef);
-        self::assertSame('USD', $account->currency);
-        self::assertTrue($account->active);
+        self::assertSame($account, (new VendorPayoutAccountRepository($this->entityManager))->get('tenant-1', 'vendor-1'));
     }
 
     public function testUpsertUpdatesExistingTenantVendorAccount(): void
     {
-        $account = new VendorPayoutAccountEntity('acc-1', 'tenant-1', 'vendor-1', 'bank', 'iban-123', 'USD', false, '2026-03-30 10:00:00');
+        $existing = $this->account(provider: 'old', active: true);
+        $incoming = $this->account(provider: 'bank', active: false);
+        $this->objectRepository->method('findOneBy')->willReturn($existing);
+        $this->entityManager->expects(self::never())->method('persist');
+        $this->entityManager->expects(self::once())->method('flush');
 
-        $this->connection
-            ->expects(self::once())
-            ->method('fetchOne')
-            ->with('SELECT COUNT(*) FROM payout_accounts WHERE tenant_id=:t AND vendor_id=:v', ['t' => 'tenant-1', 'v' => 'vendor-1'])
-            ->willReturn('1');
+        (new VendorPayoutAccountRepository($this->entityManager))->upsert($incoming);
 
-        $this->connection
-            ->expects(self::once())
-            ->method('update')
-            ->with(
-                'payout_accounts',
-                [
-                    'provider' => 'bank',
-                    'account_ref' => 'iban-123',
-                    'currency' => 'USD',
-                    'active' => 0,
-                ],
-                [
-                    'tenant_id' => 'tenant-1',
-                    'vendor_id' => 'vendor-1',
-                ],
-            );
-        $this->connection->expects(self::never())->method('insert');
-
-        (new VendorPayoutAccountRepository($this->connection))->upsert($account);
+        self::assertSame('bank', $existing->provider);
+        self::assertFalse($existing->active);
     }
 
-    public function testUpsertInsertsNewTenantVendorAccountWhenItDoesNotExist(): void
+    public function testUpsertPersistsNewTenantVendorAccountWhenItDoesNotExist(): void
     {
-        $account = new VendorPayoutAccountEntity('acc-1', 'tenant-1', 'vendor-1', 'bank', 'iban-123', 'USD', true, '2026-03-30 10:00:00');
+        $account = $this->account(active: true);
+        $this->objectRepository->method('findOneBy')->willReturn(null);
+        $this->entityManager->expects(self::once())->method('persist')->with($account);
+        $this->entityManager->expects(self::once())->method('flush');
 
-        $this->connection
-            ->expects(self::once())
-            ->method('fetchOne')
-            ->with('SELECT COUNT(*) FROM payout_accounts WHERE tenant_id=:t AND vendor_id=:v', ['t' => 'tenant-1', 'v' => 'vendor-1'])
-            ->willReturn('0');
+        (new VendorPayoutAccountRepository($this->entityManager))->upsert($account);
+    }
 
-        $this->connection->expects(self::never())->method('update');
-        $this->connection
-            ->expects(self::once())
-            ->method('insert')
-            ->with(
-                'payout_accounts',
-                [
-                    'id' => 'acc-1',
-                    'tenant_id' => 'tenant-1',
-                    'vendor_id' => 'vendor-1',
-                    'provider' => 'bank',
-                    'account_ref' => 'iban-123',
-                    'currency' => 'USD',
-                    'active' => 1,
-                    'created_at' => '2026-03-30 10:00:00',
-                ],
-            );
-
-        (new VendorPayoutAccountRepository($this->connection))->upsert($account);
+    private function account(string $provider = 'bank', bool $active = true): VendorPayoutAccountEntity
+    {
+        return new VendorPayoutAccountEntity('acc-1', 'tenant-1', 'vendor-1', $provider, 'iban-123', 'USD', $active, '2026-03-30 10:00:00');
     }
 }

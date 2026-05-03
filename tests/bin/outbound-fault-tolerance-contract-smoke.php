@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Service\Policy\VendorOutboundOperationPolicyService;
 use App\Vendoring\Service\Reliability\VendorOutboundCircuitBreakerService;
 use App\Vendoring\Service\Statement\VendorStatementMailerService;
@@ -25,7 +26,7 @@ $mailer = new FakeMailer();
 $service = new VendorStatementMailerService(
     $mailer,
     new VendorMetricEmitterService(),
-    new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack()),
+    new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService()),
     $policy,
     $breaker,
 );

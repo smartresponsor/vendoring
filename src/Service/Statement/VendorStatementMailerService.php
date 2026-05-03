@@ -11,7 +11,7 @@ use App\Vendoring\ServiceInterface\Reliability\VendorOutboundCircuitBreakerServi
 use App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\VendorEmailValueObject;
+use Symfony\Component\Mime\Email;
 
 /**
  * Write-side outbound mail transport for vendor statements.
@@ -99,7 +99,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             return $result;
         }
 
-        $message = new VendorEmailValueObject();
+        $message = new Email();
         $message
             ->to($email)
             ->subject(sprintf('Monthly Vendor Statement for %s', $periodLabel))

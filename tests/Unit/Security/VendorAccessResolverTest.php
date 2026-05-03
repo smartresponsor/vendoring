@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Security;
 
-use App\Vendoring\Entity\VendorUserAssignment;
+use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
 use App\Vendoring\Service\Security\VendorAccessResolverService;
 use App\Vendoring\Service\Security\VendorAuthorizationMatrixService;
@@ -26,8 +26,8 @@ final class VendorAccessResolverTest extends TestCase
             ->method('findActiveByVendorId')
             ->with(42)
             ->willReturn([
-                new VendorUserAssignment(42, 7, 'viewer'),
-                new VendorUserAssignment(42, 7, 'finance'),
+                new VendorUserAssignmentEntity(42, 7, 'viewer'),
+                new VendorUserAssignmentEntity(42, 7, 'finance'),
             ]);
 
         $resolver = new VendorAccessResolverService($this->repository, new VendorAuthorizationMatrixService());
@@ -54,7 +54,7 @@ final class VendorAccessResolverTest extends TestCase
             ->method('findActiveByVendorId')
             ->with(42)
             ->willReturn([
-                new VendorUserAssignment(42, 7, 'viewer'),
+                new VendorUserAssignmentEntity(42, 7, 'viewer'),
             ]);
 
         $resolver = new VendorAccessResolverService($this->repository, new VendorAuthorizationMatrixService());

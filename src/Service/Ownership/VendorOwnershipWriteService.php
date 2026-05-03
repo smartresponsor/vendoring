@@ -55,9 +55,7 @@ final readonly class VendorOwnershipWriteService implements VendorOwnershipWrite
 
         if (true === $dto->isDefault) {
             foreach ($repository->findBy(['vendor' => $vendor]) as $existingPayment) {
-                if ($existingPayment instanceof VendorPaymentEntity) {
-                    $existingPayment->update(isDefault: false);
-                }
+                $existingPayment->update(isDefault: false);
             }
         }
 
@@ -82,6 +80,7 @@ final readonly class VendorOwnershipWriteService implements VendorOwnershipWrite
 
     public function upsertCommission(VendorEntity $vendor, VendorCommissionUpsertDTO $dto): VendorCommissionEntity
     {
+        $status = $dto->status ?? 'draft';
         $repository = $this->entityManager->getRepository(VendorCommissionEntity::class);
         $commission = $repository->findOneBy([
             'vendor' => $vendor,
@@ -90,12 +89,12 @@ final readonly class VendorOwnershipWriteService implements VendorOwnershipWrite
 
         if (!$commission instanceof VendorCommissionEntity) {
             $commission = new VendorCommissionEntity($vendor, $dto->code, $dto->direction, $dto->ratePercent, $dto->meta);
-            $commission->updateConfiguration($dto->direction, $dto->ratePercent, $dto->status, $dto->meta);
+            $commission->updateConfiguration($dto->direction, $dto->ratePercent, $status, $dto->meta);
             $this->entityManager->persist($commission);
             $this->entityManager->persist(new VendorCommissionHistoryEntity($vendor, $commission, null, $dto->ratePercent, $dto->changedByUserId, $dto->reason));
         } else {
             $previousRate = $commission->getRatePercent();
-            $commission->updateConfiguration($dto->direction, $dto->ratePercent, $dto->status, $dto->meta);
+            $commission->updateConfiguration($dto->direction, $dto->ratePercent, $status, $dto->meta);
 
             if ($previousRate !== $dto->ratePercent) {
                 $this->entityManager->persist(new VendorCommissionHistoryEntity($vendor, $commission, $previousRate, $dto->ratePercent, $dto->changedByUserId, $dto->reason));
@@ -106,7 +105,7 @@ final readonly class VendorOwnershipWriteService implements VendorOwnershipWrite
             'code' => $dto->code,
             'direction' => $dto->direction,
             'ratePercent' => $dto->ratePercent,
-            'status' => $dto->status,
+            'status' => $status,
         ]);
         $this->entityManager->flush();
 
@@ -217,9 +216,7 @@ final readonly class VendorOwnershipWriteService implements VendorOwnershipWrite
 
         if (true === $dto->isPrimary) {
             foreach ($repository->findBy(['vendor' => $vendor]) as $existingCategory) {
-                if ($existingCategory instanceof VendorCategoryEntity) {
-                    $existingCategory->update(isPrimary: false);
-                }
+                $existingCategory->update(isPrimary: false);
             }
         }
 

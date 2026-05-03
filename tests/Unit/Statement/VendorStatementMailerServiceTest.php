@@ -7,6 +7,7 @@ namespace App\Vendoring\Tests\Unit\Statement;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Service\Policy\VendorOutboundOperationPolicyService;
 use App\Vendoring\Service\Reliability\VendorOutboundCircuitBreakerService;
 use App\Vendoring\Service\Statement\VendorStatementMailerService;
@@ -123,7 +124,7 @@ final class VendorStatementMailerServiceTest extends TestCase
 
     private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack());
+        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService());
     }
 
     private function breaker(): VendorOutboundCircuitBreakerService

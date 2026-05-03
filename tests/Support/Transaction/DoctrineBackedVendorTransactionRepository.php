@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Support\Transaction;
 
-use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -15,7 +15,7 @@ final class DoctrineBackedVendorTransactionRepository implements VendorTransacti
 
     public function findByVendorId(string $vendorId): array
     {
-        /** @var list<VendorTransaction> $transactions */
+        /** @var list<VendorTransactionEntity> $transactions */
         $transactions = $this->baseQueryBuilder()
             ->andWhere('transaction.vendorId = :vendorId')
             ->setParameter('vendorId', $vendorId)
@@ -25,7 +25,7 @@ final class DoctrineBackedVendorTransactionRepository implements VendorTransacti
         return $transactions;
     }
 
-    public function findOneByIdAndVendorId(int $id, string $vendorId): ?VendorTransaction
+    public function findOneByIdAndVendorId(int $id, string $vendorId): ?VendorTransactionEntity
     {
         $transaction = $this->baseQueryBuilder()
             ->andWhere('transaction.id = :id')
@@ -36,7 +36,7 @@ final class DoctrineBackedVendorTransactionRepository implements VendorTransacti
             ->getQuery()
             ->getOneOrNullResult();
 
-        return $transaction instanceof VendorTransaction ? $transaction : null;
+        return $transaction instanceof VendorTransactionEntity ? $transaction : null;
     }
 
     public function existsForVendorOrderProject(string $vendorId, string $orderId, ?string $projectId): bool
@@ -44,7 +44,7 @@ final class DoctrineBackedVendorTransactionRepository implements VendorTransacti
         $queryBuilder = $this->entityManager
             ->createQueryBuilder()
             ->select('COUNT(transaction.id)')
-            ->from(VendorTransaction::class, 'transaction')
+            ->from(VendorTransactionEntity::class, 'transaction')
             ->andWhere('transaction.vendorId = :vendorId')
             ->andWhere('transaction.orderId = :orderId')
             ->setParameter('vendorId', $vendorId)
@@ -67,7 +67,7 @@ final class DoctrineBackedVendorTransactionRepository implements VendorTransacti
         return $this->entityManager
             ->createQueryBuilder()
             ->select('transaction')
-            ->from(VendorTransaction::class, 'transaction')
+            ->from(VendorTransactionEntity::class, 'transaction')
             ->orderBy('transaction.createdAt', 'DESC')
             ->addOrderBy('transaction.id', 'DESC');
     }

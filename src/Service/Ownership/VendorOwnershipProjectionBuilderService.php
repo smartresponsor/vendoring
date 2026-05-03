@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Ownership;
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorCategoryEntity;
 use App\Vendoring\Entity\Vendor\VendorCodeStorageEntity;
 use App\Vendoring\Entity\Vendor\VendorCommissionEntity;
@@ -68,7 +69,7 @@ final readonly class VendorOwnershipProjectionBuilderService implements VendorOw
     }
 
     /** @return array<string, int> */
-    private function buildRelationCounts(object $vendor): array
+    private function buildRelationCounts(VendorEntity $vendor): array
     {
         $criteria = ['vendor' => $vendor];
 
@@ -91,7 +92,10 @@ final readonly class VendorOwnershipProjectionBuilderService implements VendorOw
         ];
     }
 
-    /** @param array<string, int> $criteria */
+    /**
+     * @param class-string<object> $entityClass
+     * @param array<string, object> $criteria
+     */
     private function countByVendor(string $entityClass, array $criteria): int
     {
         return $this->entityManager->getRepository($entityClass)->count($criteria);

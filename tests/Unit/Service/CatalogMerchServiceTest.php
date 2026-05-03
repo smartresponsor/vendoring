@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service;
 
-use App\Vendoring\Entity\VendorCatalogCategoryBanner;
-use App\Vendoring\Entity\VendorCatalogCategoryHtmlBlock;
-use App\Vendoring\Entity\VendorCatalogCategoryPin;
+use App\Vendoring\Entity\Vendor\VendorCatalogCategoryBannerEntity;
+use App\Vendoring\Entity\Vendor\VendorCatalogCategoryHtmlBlockEntity;
+use App\Vendoring\Entity\Vendor\VendorCatalogCategoryPinEntity;
 use App\Vendoring\Service\Catalog\VendorCatalogMerchService;
 use App\Vendoring\Tests\Support\CatalogMerchEntityManagerFactory;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -28,13 +28,13 @@ final class CatalogMerchServiceTest extends TestCase
         $service->pinCreate('cat-1', 'record-b', 20);
         $service->orderSet('cat-1', ['record-b', 'record-a']);
 
-        /** @var VendorCatalogCategoryPin|null $first */
-        $first = $entityManager->getRepository(VendorCatalogCategoryPin::class)->findOneBy([
+        /** @var VendorCatalogCategoryPinEntity|null $first */
+        $first = $entityManager->getRepository(VendorCatalogCategoryPinEntity::class)->findOneBy([
             'categoryId' => 'cat-1',
             'recordId' => 'record-a',
         ]);
-        /** @var VendorCatalogCategoryPin|null $second */
-        $second = $entityManager->getRepository(VendorCatalogCategoryPin::class)->findOneBy([
+        /** @var VendorCatalogCategoryPinEntity|null $second */
+        $second = $entityManager->getRepository(VendorCatalogCategoryPinEntity::class)->findOneBy([
             'categoryId' => 'cat-1',
             'recordId' => 'record-b',
         ]);
@@ -45,7 +45,7 @@ final class CatalogMerchServiceTest extends TestCase
         self::assertSame(0, $second->position());
 
         $service->pinDelete('cat-1', 'record-a');
-        $deleted = $entityManager->getRepository(VendorCatalogCategoryPin::class)->findOneBy([
+        $deleted = $entityManager->getRepository(VendorCatalogCategoryPinEntity::class)->findOneBy([
             'categoryId' => 'cat-1',
             'recordId' => 'record-a',
         ]);
@@ -66,10 +66,10 @@ final class CatalogMerchServiceTest extends TestCase
         $bannerId = $service->bannerPublish('cat-2', 'Top banner', 'Banner content');
         $htmlId = $service->htmlPublish('cat-2', '<p>Hello</p>');
 
-        /** @var VendorCatalogCategoryBanner|null $banner */
-        $banner = $entityManager->find(VendorCatalogCategoryBanner::class, $bannerId);
-        /** @var VendorCatalogCategoryHtmlBlock|null $htmlBlock */
-        $htmlBlock = $entityManager->find(VendorCatalogCategoryHtmlBlock::class, $htmlId);
+        /** @var VendorCatalogCategoryBannerEntity|null $banner */
+        $banner = $entityManager->find(VendorCatalogCategoryBannerEntity::class, $bannerId);
+        /** @var VendorCatalogCategoryHtmlBlockEntity|null $htmlBlock */
+        $htmlBlock = $entityManager->find(VendorCatalogCategoryHtmlBlockEntity::class, $htmlId);
 
         self::assertNotNull($banner);
         self::assertNotNull($htmlBlock);

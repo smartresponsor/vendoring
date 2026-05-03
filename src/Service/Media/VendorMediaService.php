@@ -95,9 +95,7 @@ final readonly class VendorMediaService implements VendorMediaServiceInterface
     private function replaceGalleryAttachments(VendorMediaEntity $media, ?array $gallery): void
     {
         foreach ($this->em->getRepository(VendorMediaAttachmentEntity::class)->findBy(['media' => $media, 'kind' => 'gallery']) as $attachment) {
-            if ($attachment instanceof VendorMediaAttachmentEntity) {
-                $this->em->remove($attachment);
-            }
+            $this->em->remove($attachment);
         }
 
         foreach ($gallery ?? [] as $position => $filePath) {

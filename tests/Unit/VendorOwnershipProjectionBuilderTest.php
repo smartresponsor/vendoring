@@ -10,6 +10,8 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
 use App\Vendoring\Service\Security\VendorAuthorizationMatrixService;
 use App\Vendoring\Service\Ownership\VendorOwnershipProjectionBuilderService;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -38,6 +40,7 @@ final class VendorOwnershipProjectionBuilderTest extends TestCase
             $this->vendorRepository,
             $this->assignmentRepository,
             new VendorAuthorizationMatrixService(),
+            $this->entityManagerWithZeroCounts(),
         );
 
         $payload = $builder->buildForVendorId(42)?->toArray();
@@ -45,5 +48,15 @@ final class VendorOwnershipProjectionBuilderTest extends TestCase
         self::assertNotNull($payload);
         self::assertSame(['transactions.read', 'transactions.write', 'payouts.read', 'payouts.write', 'statements.read', 'statements.send', 'ownership.read', 'ownership.write'], $payload['assignments'][0]['capabilities']);
         self::assertSame(['transactions.read', 'payouts.read', 'statements.read', 'ownership.read'], $payload['assignments'][1]['capabilities']);
+    }
+    private function entityManagerWithZeroCounts(): EntityManagerInterface
+    {
+        $repository = $this->createMock(EntityRepository::class);
+        $repository->method('count')->willReturn(0);
+
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->method('getRepository')->willReturn($repository);
+
+        return $entityManager;
     }
 }

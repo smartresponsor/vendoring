@@ -29,7 +29,7 @@ final class InterfaceAliasCoverageTest extends TestCase
     }
 
     /**
-     * @return array<class-string, class-string>
+     * @return array<string, string>
      */
     private function extractAliasMap(string $config): array
     {

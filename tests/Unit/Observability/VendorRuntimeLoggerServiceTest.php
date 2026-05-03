@@ -7,6 +7,7 @@ namespace App\Vendoring\Tests\Unit\Observability;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -23,7 +24,7 @@ final class VendorRuntimeLoggerServiceTest extends TestCase
         $correlationContext = new VendorCorrelationContextService();
         $correlationContext->beginRequest('corr-123');
 
-        $logger = new VendorRuntimeLoggerService($correlationContext, $requestStack);
+        $logger = new VendorRuntimeLoggerService($correlationContext, $requestStack, new VendorAppEnvResolverService());
         $logger->warning('vendor_transaction_create_rejected', [
             'vendor_id' => 'vendor-1',
             'error_code' => 'duplicate_transaction',
@@ -57,7 +58,7 @@ final class VendorRuntimeLoggerServiceTest extends TestCase
         $dir = sys_get_temp_dir() . '/vendoring-logs-' . bin2hex(random_bytes(4));
         $exporter = new VendorObservabilityRecordExporterService($dir);
 
-        $logger = new VendorRuntimeLoggerService($correlationContext, $requestStack, $exporter);
+        $logger = new VendorRuntimeLoggerService($correlationContext, $requestStack, new VendorAppEnvResolverService(), $exporter);
         $logger->info('vendor_transaction_created', ['vendor_id' => 'vendor-1']);
 
         $path = $dir . '/runtime_logs.ndjson';

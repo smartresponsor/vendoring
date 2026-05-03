@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Transaction;
 
-use App\Vendoring\Entity\VendorTransaction;
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\Event\Vendor\VendorTransactionEvent;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
 use App\Vendoring\Service\Policy\VendorTransactionAmountPolicyService;
 use App\Vendoring\Service\Policy\VendorTransactionStatusPolicyService;
@@ -56,7 +57,7 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
         $this->entityManager
             ->expects(self::once())
             ->method('persist')
-            ->with(self::callback(static function (VendorTransaction $transaction): bool {
+            ->with(self::callback(static function (VendorTransactionEntity $transaction): bool {
                 return 'vendor-1' === $transaction->getVendorId()
                     && 'order-1' === $transaction->getOrderId()
                     && 'project-1' === $transaction->getProjectId()
@@ -110,7 +111,7 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
         $this->entityManager
             ->expects(self::once())
             ->method('persist')
-            ->with(self::callback(static function (VendorTransaction $transaction): bool {
+            ->with(self::callback(static function (VendorTransactionEntity $transaction): bool {
                 return null === $transaction->getProjectId();
             }));
 
@@ -187,7 +188,7 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
         $this->entityManager
             ->expects(self::once())
             ->method('persist')
-            ->with(self::callback(static function (VendorTransaction $transaction): bool {
+            ->with(self::callback(static function (VendorTransactionEntity $transaction): bool {
                 return 'vendor-1' === $transaction->getVendorId()
                     && 'order-1' === $transaction->getOrderId();
             }));
@@ -290,7 +291,7 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
             $this->runtimeLogger(),
         );
 
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.50');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.50');
 
         $this->entityManager
             ->expects(self::once())
@@ -326,7 +327,7 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
             $this->runtimeLogger(),
         );
 
-        $transaction = new VendorTransaction('vendor-1', 'order-1', null, '10.50');
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.50');
 
         $this->entityManager
             ->expects(self::never())
@@ -344,6 +345,6 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
 
     private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack());
+        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService());
     }
 }

@@ -62,6 +62,11 @@ final class VendorCatalogCategoryHtmlBlockEntity
         $this->publishedAt = new DateTimeImmutable();
     }
 
+    public function published(): bool
+    {
+        return 'published' === $this->status;
+    }
+
     public function publishedAt(): ?DateTimeImmutable
     {
         return $this->publishedAt;

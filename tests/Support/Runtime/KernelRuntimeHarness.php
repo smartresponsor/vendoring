@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Support\Runtime;
 
-use App\Vendoring\Entity\Vendor;
-use App\Vendoring\Entity\VendorApiKey;
+use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Kernel;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -169,18 +169,18 @@ final class KernelRuntimeHarness
         $vendor = self::seedActiveVendor($kernel);
 
         $plainToken = bin2hex(random_bytes(16));
-        $apiKey = new VendorApiKey($vendor, hash('sha256', $plainToken), $permissions);
+        $apiKey = new VendorApiKeyEntity($vendor, hash('sha256', $plainToken), $permissions);
         $entityManager->persist($apiKey);
         $entityManager->flush();
 
         return $plainToken;
     }
 
-    public static function seedActiveVendor(KernelInterface $kernel, ?string $name = null): Vendor
+    public static function seedActiveVendor(KernelInterface $kernel, ?string $name = null): VendorEntity
     {
         $entityManager = self::entityManager($kernel);
 
-        $vendor = new Vendor($name ?? ('Runtime Harness Vendor ' . bin2hex(random_bytes(4))));
+        $vendor = new VendorEntity($name ?? ('Runtime Harness Vendor ' . bin2hex(random_bytes(4))));
         $vendor->activate();
         $entityManager->persist($vendor);
         $entityManager->flush();
