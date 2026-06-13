@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Vendoring\ServiceInterface\Category;
+
+interface VendorCategoryCollectionServiceInterface
+{
+    /**
+     * @param list<array<string, mixed>> $products
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function filter(array $products, string $rule): array;
+}

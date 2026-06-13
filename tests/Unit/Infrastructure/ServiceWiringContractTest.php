@@ -2,104 +2,42 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Infrastructure;
+namespace App\Vendoring\Tests\Unit\Infrastructure;
 
-use App\Repository\Ledger\LedgerEntryRepository;
-use App\Repository\Payout\PayoutAccountRepository;
-use App\Repository\Payout\PayoutRepository;
-use App\Repository\VendorApiKeyRepository;
-use App\Repository\VendorBillingRepository;
-use App\Repository\VendorMediaRepository;
-use App\Repository\VendorPassportRepository;
-use App\Repository\VendorProfileRepository;
-use App\Repository\VendorRepository;
-use App\Observability\Service\FileObservabilityRecordExporter;
-use App\Service\Metric\VendorMetricService;
-use App\Service\Ops\ReleaseManifestBuilder;
-use App\Service\Ops\RollbackDecisionEvaluator;
-use App\Service\Security\VendorAccessResolver;
-use App\Service\Security\VendorAuthorizationMatrix;
-use App\Service\Rollout\CanaryRolloutCoordinator;
-use App\Service\Rollout\FeatureFlagService;
-use App\Service\Policy\OutboundOperationPolicy;
-use App\Service\Reliability\FileOutboundCircuitBreaker;
-use App\Service\Rollout\TrafficCohortResolver;
-use App\Service\Payout\VendorPayoutService;
-use App\Service\Statement\StatementExporterPDF;
-use App\Service\Statement\VendorStatementMailerService;
-use App\Service\Statement\VendorStatementRecipientProvider;
-use App\Service\Statement\VendorStatementService;
-use App\Service\VendorSecurityService;
-use App\Service\VendorTransactionManager;
-use App\Service\WebhooksConsumer\VendorWebhooksConsumerService;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class ServiceWiringContractTest extends TestCase
 {
-    /**
-     * @return iterable<string, array{string, string}>
-     */
-    public static function serviceAliasMapProvider(): iterable
+    public function testCanonicalComponentServicesFileExists(): void
     {
-        yield 'vendor_api_key_repository' => ['App\\RepositoryInterface\\VendorApiKeyRepositoryInterface', VendorApiKeyRepository::class];
-        yield 'vendor_repository' => ['App\\RepositoryInterface\\VendorRepositoryInterface', VendorRepository::class];
-        yield 'vendor_profile_repository' => ['App\\RepositoryInterface\\VendorProfileRepositoryInterface', VendorProfileRepository::class];
-        yield 'vendor_billing_repository' => ['App\\RepositoryInterface\\VendorBillingRepositoryInterface', VendorBillingRepository::class];
-        yield 'vendor_media_repository' => ['App\\RepositoryInterface\\VendorMediaRepositoryInterface', VendorMediaRepository::class];
-        yield 'vendor_passport_repository' => ['App\\RepositoryInterface\\VendorPassportRepositoryInterface', VendorPassportRepository::class];
-        yield 'ledger_entry_repository' => ['App\\RepositoryInterface\\Ledger\\LedgerEntryRepositoryInterface', LedgerEntryRepository::class];
-        yield 'payout_repository' => ['App\\RepositoryInterface\\Payout\\PayoutRepositoryInterface', PayoutRepository::class];
-        yield 'payout_account_repository' => ['App\\RepositoryInterface\\Payout\\PayoutAccountRepositoryInterface', PayoutAccountRepository::class];
-        yield 'vendor_security_service' => ['App\\ServiceInterface\\VendorSecurityServiceInterface', VendorSecurityService::class];
-        yield 'outbound_operation_policy' => ['App\ServiceInterface\Policy\OutboundOperationPolicyInterface', OutboundOperationPolicy::class];
-        yield 'outbound_circuit_breaker' => ['App\ServiceInterface\Reliability\OutboundCircuitBreakerInterface', FileOutboundCircuitBreaker::class];
-        yield 'observability_record_exporter' => ['App\ServiceInterface\Observability\ObservabilityRecordExporterInterface', FileObservabilityRecordExporter::class];
-        yield 'release_manifest_builder' => ['App\ServiceInterface\Ops\ReleaseManifestBuilderInterface', ReleaseManifestBuilder::class];
-        yield 'rollback_decision_evaluator' => ['App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface', RollbackDecisionEvaluator::class];
-        yield 'canary_rollout_coordinator' => ['App\ServiceInterface\Rollout\CanaryRolloutCoordinatorInterface', CanaryRolloutCoordinator::class];
-        yield 'vendor_transaction_manager' => ['App\\ServiceInterface\\VendorTransactionManagerInterface', VendorTransactionManager::class];
-        yield 'vendor_metric_service' => ['App\\ServiceInterface\\Metric\\VendorMetricServiceInterface', VendorMetricService::class];
-        yield 'payout_service' => ['App\\ServiceInterface\\Payout\\VendorPayoutServiceInterface', VendorPayoutService::class];
-        yield 'statement_service' => ['App\\ServiceInterface\\Statement\\VendorStatementServiceInterface', VendorStatementService::class];
-        yield 'statement_exporter' => ['App\\ServiceInterface\\Statement\\StatementExporterPDFInterface', StatementExporterPDF::class];
-        yield 'statement_mailer' => ['App\\ServiceInterface\\Statement\\VendorStatementMailerServiceInterface', VendorStatementMailerService::class];
-        yield 'statement_recipient_provider' => ['App\\ServiceInterface\\Statement\\VendorStatementRecipientProviderInterface', VendorStatementRecipientProvider::class];
-        yield 'webhooks_consumer' => ['App\\ServiceInterface\\WebhooksConsumer\\VendorWebhooksConsumerServiceInterface', VendorWebhooksConsumerService::class];
+        $path = dirname(__DIR__, 3) . '/config/component/services.yaml';
+        self::assertFileExists($path);
     }
 
-    #[DataProvider('serviceAliasMapProvider')]
-    public function testServicesYamlDefinesCanonicalAliases(string $interfaceClass, string $implementationClass): void
+    public function testCanonicalComponentMetadataPointsAtServicesFile(): void
     {
-        $services = (string) file_get_contents(dirname(__DIR__, 3) . '/config/vendor_services.yaml');
+        $path = dirname(__DIR__, 3) . '/config/component/component.yaml';
+        self::assertFileExists($path);
 
-        self::assertStringContainsString($interfaceClass . ':', $services);
-        self::assertStringContainsString("'@" . $implementationClass . "'", $services);
+        $contents = (string) file_get_contents($path);
+
+        self::assertStringContainsString('services: config/component/services.yaml', $contents);
+        self::assertStringContainsString('services_loaded_by_extension: config/component/services.yaml', $contents);
     }
 
-    public function testServicesYamlExcludesNonServiceTreesFromAppResource(): void
+    public function testLegacyVendorCoreServicesBridgeIsNotRequiredByNativeSurface(): void
     {
-        $services = (string) file_get_contents(dirname(__DIR__, 3) . '/config/vendor_services.yaml');
-
-        foreach ([
-            '../src/DTO/',
-            '../src/EntityInterface/',
-            '../src/Event/',
-            '../src/RepositoryInterface/',
-            '../src/ServiceInterface/',
-            '../src/ValueObject/',
-        ] as $excludedPath) {
-            self::assertStringContainsString($excludedPath, $services);
-        }
+        $path = dirname(__DIR__, 3) . '/config/vendor_services.yaml';
+        self::assertFileDoesNotExist($path);
     }
 
-    public function testVendorApiKeyRepositoryClassExistsAsConcreteDoctrineRepository(): void
+    public function testServiceSurfaceRemainsBundleOwned(): void
     {
-        $repositoryPath = dirname(__DIR__, 3) . '/src/Repository/VendorApiKeyRepository.php';
-        self::assertFileExists($repositoryPath);
+        $extensionPath = dirname(__DIR__, 3) . '/src/DependencyInjection/VendoringExtension.php';
+        self::assertFileExists($extensionPath);
 
-        $contents = (string) file_get_contents($repositoryPath);
-        self::assertStringContainsString('final class VendorApiKeyRepository', $contents);
-        self::assertStringContainsString('implements VendorApiKeyRepositoryInterface', $contents);
+        $contents = (string) file_get_contents($extensionPath);
+
+        self::assertStringContainsString('component/services', $contents);
     }
 }

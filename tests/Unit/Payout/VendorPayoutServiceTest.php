@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Payout;
+namespace App\Vendoring\Tests\Unit\Payout;
 
-use App\DTO\Payout\CreatePayoutDTO;
-use App\Entity\Ledger\LedgerEntry;
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\MetricEmitter;
-use App\Observability\Service\RuntimeLogger;
-use App\Service\Ledger\VendorLedgerService;
-use App\Service\Payout\VendorPayoutService;
-use App\Tests\Support\Payout\InMemoryPayoutRepository;
-use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
+use App\Vendoring\DTO\Payout\VendorCreatePayoutDTO;
+use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
+use App\Vendoring\Service\Ledger\VendorLedgerService;
+use App\Vendoring\Service\Observability\VendorCorrelationContextService;
+use App\Vendoring\Service\Observability\VendorMetricEmitterService;
+use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Payout\VendorPayoutService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
+use App\Vendoring\Tests\Support\Payout\InMemoryPayoutRepository;
+use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -23,11 +24,11 @@ final class VendorPayoutServiceTest extends TestCase
         $payoutRepository = new InMemoryPayoutRepository();
         $ledgerRepository = new InMemoryLedgerEntryRepository();
         $ledgerService = new VendorLedgerService($ledgerRepository);
-        $metrics = new MetricEmitter();
+        $metrics = new VendorMetricEmitterService();
         $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger());
-        $ledgerRepository->insert(new LedgerEntry('1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 5.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntryEntity('1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 5.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
 
-        $result = $service->create(new CreatePayoutDTO('vendor-1', 'USD', 1000, 0.05));
+        $result = $service->create(new VendorCreatePayoutDTO('vendor-1', 'USD', 1000, 0.05));
 
         self::assertNull($result);
         self::assertSame([], $payoutRepository->all());
@@ -39,11 +40,11 @@ final class VendorPayoutServiceTest extends TestCase
         $payoutRepository = new InMemoryPayoutRepository();
         $ledgerRepository = new InMemoryLedgerEntryRepository();
         $ledgerService = new VendorLedgerService($ledgerRepository);
-        $metrics = new MetricEmitter();
+        $metrics = new VendorMetricEmitterService();
         $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger());
-        $ledgerRepository->insert(new LedgerEntry('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 15.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntryEntity('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 15.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
 
-        $payoutId = $service->create(new CreatePayoutDTO('vendor-1', 'USD', 1000, 0.10));
+        $payoutId = $service->create(new VendorCreatePayoutDTO('vendor-1', 'USD', 1000, 0.10));
 
         self::assertNotNull($payoutId);
         $payout = $payoutRepository->byId($payoutId);
@@ -75,15 +76,15 @@ final class VendorPayoutServiceTest extends TestCase
 
         self::assertSame(
             [
-                ['name' => 'payout_created_total', 'tags' => ['currency' => 'USD']],
-                ['name' => 'payout_processed_total', 'tags' => ['currency' => 'USD']],
+                ['nameEntity' => 'payout_created_total', 'tags' => ['currency' => 'USD']],
+                ['nameEntity' => 'payout_processed_total', 'tags' => ['currency' => 'USD']],
             ],
             $metrics->snapshot(),
         );
     }
 
-    private function runtimeLogger(): RuntimeLogger
+    private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new RuntimeLogger(new CorrelationContext(), new RequestStack());
+        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService());
     }
 }

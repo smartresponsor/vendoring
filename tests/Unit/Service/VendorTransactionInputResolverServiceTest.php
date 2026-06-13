@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\Service\VendorTransactionInputResolverService;
-use App\ValueObject\VendorTransactionErrorCode;
+use App\Vendoring\Service\Transaction\VendorTransactionInputResolverService;
+use App\Vendoring\ValueObject\VendorTransactionErrorCodeValueObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,7 +14,7 @@ final class VendorTransactionInputResolverServiceTest extends TestCase
     public function testResolveCreateDataTrimsRequiredFieldsAndNormalizesBlankProjectIdToNull(): void
     {
         $request = Request::create(
-            '/api/vendor-transactions',
+            '/api/vendor/transaction',
             'POST',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode([
@@ -36,7 +36,7 @@ final class VendorTransactionInputResolverServiceTest extends TestCase
     public function testResolveCreateDataRejectsBlankRequiredFieldAfterTrim(): void
     {
         $request = Request::create(
-            '/api/vendor-transactions',
+            '/api/vendor/transaction',
             'POST',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode([
@@ -47,7 +47,7 @@ final class VendorTransactionInputResolverServiceTest extends TestCase
         );
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(VendorTransactionErrorCode::ORDER_ID_REQUIRED);
+        $this->expectExceptionMessage(VendorTransactionErrorCodeValueObject::ORDER_ID_REQUIRED);
 
         (new VendorTransactionInputResolverService())->resolveCreateData($request);
     }
@@ -55,7 +55,7 @@ final class VendorTransactionInputResolverServiceTest extends TestCase
     public function testResolveStatusTrimsIncomingStatus(): void
     {
         $request = Request::create(
-            '/api/vendor-transactions/vendor/vendor-1/1/status',
+            '/api/vendor/transaction/status/1',
             'POST',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode(['status' => ' settled '], JSON_THROW_ON_ERROR),
@@ -71,7 +71,7 @@ final class VendorTransactionInputResolverServiceTest extends TestCase
         $service = new VendorTransactionInputResolverService();
 
         self::assertSame(
-            VendorTransactionErrorCode::INVALID_STATUS_TRANSITION,
+            VendorTransactionErrorCodeValueObject::INVALID_STATUS_TRANSITION,
             $service->normalizeErrorCode('invalid_status_transition:pending->refunded'),
         );
         self::assertSame('transaction_validation_error', $service->normalizeErrorCode('unexpected_failure'));

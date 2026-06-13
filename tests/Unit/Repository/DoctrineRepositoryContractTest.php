@@ -2,32 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Repository;
+namespace App\Vendoring\Tests\Unit\Repository;
 
-use App\Entity\Vendor;
-use App\Entity\VendorAnalytics;
-use App\Entity\VendorApiKey;
-use App\Entity\VendorAttachment;
-use App\Entity\VendorBilling;
-use App\Entity\VendorDocument;
-use App\Entity\VendorLedgerBinding;
-use App\Entity\VendorMedia;
-use App\Entity\VendorPassport;
-use App\Entity\VendorProfile;
-use App\Entity\VendorSecurity;
-use App\Entity\VendorTransaction;
-use App\Repository\VendorAnalyticsRepository;
-use App\Repository\VendorApiKeyRepository;
-use App\Repository\VendorAttachmentRepository;
-use App\Repository\VendorBillingRepository;
-use App\Repository\VendorDocumentRepository;
-use App\Repository\VendorLedgerBindingRepository;
-use App\Repository\VendorMediaRepository;
-use App\Repository\VendorPassportRepository;
-use App\Repository\VendorProfileRepository;
-use App\Repository\VendorRepository;
-use App\Repository\VendorSecurityRepository;
-use App\Repository\VendorTransactionRepository;
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorAnalyticsEntity;
+use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
+use App\Vendoring\Entity\Vendor\VendorAttachmentEntity;
+use App\Vendoring\Entity\Vendor\VendorBillingEntity;
+use App\Vendoring\Entity\Vendor\VendorDocumentEntity;
+use App\Vendoring\Entity\Vendor\VendorLedgerBindingEntity;
+use App\Vendoring\Entity\Vendor\VendorMediaEntity;
+use App\Vendoring\Entity\Vendor\VendorPassportEntity;
+use App\Vendoring\Entity\Vendor\VendorProfileEntity;
+use App\Vendoring\Entity\Vendor\VendorSecurityEntity;
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
+use App\Vendoring\Repository\Vendor\VendorAnalyticsRepository;
+use App\Vendoring\Repository\Vendor\VendorApiKeyRepository;
+use App\Vendoring\Repository\Vendor\VendorAttachmentRepository;
+use App\Vendoring\Repository\Vendor\VendorBillingRepository;
+use App\Vendoring\Repository\Vendor\VendorDocumentRepository;
+use App\Vendoring\Repository\Vendor\VendorLedgerBindingRepository;
+use App\Vendoring\Repository\Vendor\VendorMediaRepository;
+use App\Vendoring\Repository\Vendor\VendorPassportRepository;
+use App\Vendoring\Repository\Vendor\VendorProfileRepository;
+use App\Vendoring\Repository\Vendor\VendorRepository;
+use App\Vendoring\Repository\Vendor\VendorSecurityRepository;
+use App\Vendoring\Repository\Vendor\VendorTransactionRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -40,18 +40,18 @@ final class DoctrineRepositoryContractTest extends TestCase
      */
     public static function repositoryMapProvider(): iterable
     {
-        yield 'vendor' => [VendorRepository::class, Vendor::class];
-        yield 'vendor_analytics' => [VendorAnalyticsRepository::class, VendorAnalytics::class];
-        yield 'vendor_api_key' => [VendorApiKeyRepository::class, VendorApiKey::class];
-        yield 'vendor_attachment' => [VendorAttachmentRepository::class, VendorAttachment::class];
-        yield 'vendor_billing' => [VendorBillingRepository::class, VendorBilling::class];
-        yield 'vendor_document' => [VendorDocumentRepository::class, VendorDocument::class];
-        yield 'vendor_ledger_binding' => [VendorLedgerBindingRepository::class, VendorLedgerBinding::class];
-        yield 'vendor_media' => [VendorMediaRepository::class, VendorMedia::class];
-        yield 'vendor_passport' => [VendorPassportRepository::class, VendorPassport::class];
-        yield 'vendor_profile' => [VendorProfileRepository::class, VendorProfile::class];
-        yield 'vendor_security' => [VendorSecurityRepository::class, VendorSecurity::class];
-        yield 'vendor_transaction' => [VendorTransactionRepository::class, VendorTransaction::class];
+        yield 'vendor' => [VendorRepository::class, VendorEntity::class];
+        yield 'vendor_analytics' => [VendorAnalyticsRepository::class, VendorAnalyticsEntity::class];
+        yield 'vendor_api_key' => [VendorApiKeyRepository::class, VendorApiKeyEntity::class];
+        yield 'vendor_attachment' => [VendorAttachmentRepository::class, VendorAttachmentEntity::class];
+        yield 'vendor_billing' => [VendorBillingRepository::class, VendorBillingEntity::class];
+        yield 'vendor_document' => [VendorDocumentRepository::class, VendorDocumentEntity::class];
+        yield 'vendor_ledger_binding' => [VendorLedgerBindingRepository::class, VendorLedgerBindingEntity::class];
+        yield 'vendor_media' => [VendorMediaRepository::class, VendorMediaEntity::class];
+        yield 'vendor_passport' => [VendorPassportRepository::class, VendorPassportEntity::class];
+        yield 'vendor_profile' => [VendorProfileRepository::class, VendorProfileEntity::class];
+        yield 'vendor_security' => [VendorSecurityRepository::class, VendorSecurityEntity::class];
+        yield 'vendor_transaction' => [VendorTransactionRepository::class, VendorTransactionEntity::class];
     }
 
     #[DataProvider('repositoryMapProvider')]

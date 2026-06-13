@@ -20,8 +20,8 @@ const sqlitePath = path.join(tempDir, 'playwright.sqlite');
 const server = await bootServer(sqlitePath);
 
 try {
-  await waitForHttp(`${baseUrl}/ops/vendor-transactions/vendor-playwright`);
-  await runBrowserScenario(playwrightModule.chromium, `${baseUrl}/ops/vendor-transactions/vendor-playwright`);
+  await waitForHttp(`${baseUrl}/ops/vendor/transaction/vendor-playwright`);
+  await runBrowserScenario(playwrightModule.chromium, `${baseUrl}/ops/vendor/transaction/vendor-playwright`);
   console.log('playwright chromium operator smoke passed');
 } finally {
   server.kill('SIGTERM');

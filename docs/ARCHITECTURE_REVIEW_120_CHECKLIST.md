@@ -187,7 +187,7 @@ It is **not yet a production-grade distributed operating platform**.
 - Implemented: ownership and assignment model.
 - Partial: role/capability model needs centralized runtime enforcement.
 - Missing: one canonical authorization matrix used everywhere.
-- Improvement: enforce matrix in controllers/services and cover with decision tests.
+- Improvement: enforce matrix in surface builders/services and cover with decision tests.
 
 ### 21. Rate Limiting
 - Relevance: High.
@@ -730,7 +730,7 @@ It is **not yet a production-grade distributed operating platform**.
 - Relevance: High.
 - Maturity: solid.
 - Implemented: release docs, phase docs, PHPDoc wave, public-surface documentation.
-- Partial: rich phpDocumentor site remains placeholder-based.
+- Partial: rich phpDocumentor site remains temporary-generator-based.
 
 ### 118. Operational clarity
 - Relevance: High.
@@ -775,5 +775,5 @@ It is **not yet a production-grade distributed operating platform**.
 15. Create rollback manifest and rollback procedure.
 16. Introduce production secrets management.
 17. Define encryption posture.
-18. Replace placeholder phpDocumentor path with rich upstream generator.
+18. Replace temporary phpDocumentor path with rich upstream generator.
 19. Record modular-monolith-first ADR and out-of-scope list.

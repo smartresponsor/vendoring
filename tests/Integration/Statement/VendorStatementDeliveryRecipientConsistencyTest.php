@@ -2,32 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Statement;
+namespace App\Vendoring\Tests\Integration\Statement;
 
-use App\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\DTO\Statement\VendorStatementRecipientDTO;
-use App\Projection\VendorOwnershipView;
-use App\Service\Statement\VendorStatementDeliveryRuntimeViewBuilder;
-use App\ServiceInterface\Statement\StatementExporterPDFInterface;
-use App\ServiceInterface\Statement\VendorStatementRecipientProviderInterface;
-use App\ServiceInterface\Statement\VendorStatementServiceInterface;
-use App\ServiceInterface\VendorOwnershipViewBuilderInterface;
+use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
+use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
+use App\Vendoring\Projection\Vendor\VendorOwnershipProjection;
+use App\Vendoring\Service\Statement\VendorStatementDeliveryRuntimeProjectionBuilderService;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPdfServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
+use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
 {
-    private VendorOwnershipViewBuilderInterface&MockObject $ownership;
+    private VendorOwnershipProjectionBuilderServiceInterface&MockObject $ownership;
     private VendorStatementServiceInterface&MockObject $statements;
-    private StatementExporterPDFInterface&MockObject $exporter;
-    private VendorStatementRecipientProviderInterface&MockObject $recipients;
+    private VendorStatementExporterPdfServiceInterface&MockObject $exporter;
+    private VendorStatementRecipientProviderServiceInterface&MockObject $recipients;
 
     protected function setUp(): void
     {
-        $this->ownership = $this->createMock(VendorOwnershipViewBuilderInterface::class);
+        $this->ownership = $this->createMock(VendorOwnershipProjectionBuilderServiceInterface::class);
         $this->statements = $this->createMock(VendorStatementServiceInterface::class);
-        $this->exporter = $this->createMock(StatementExporterPDFInterface::class);
-        $this->recipients = $this->createMock(VendorStatementRecipientProviderInterface::class);
+        $this->exporter = $this->createMock(VendorStatementExporterPdfServiceInterface::class);
+        $this->recipients = $this->createMock(VendorStatementRecipientProviderServiceInterface::class);
     }
 
     public function testBuildReturnsEmptyRecipientsWhenProviderYieldsNoMatches(): void
@@ -47,7 +47,7 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
         ];
 
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(101)
-            ->willReturn(new VendorOwnershipView(101, 5001, []));
+            ->willReturn(new VendorOwnershipProjection(101, 5001, []));
         $this->statements->expects(self::once())->method('build')->willReturn($statement);
         $this->exporter->expects(self::never())->method('export');
         $this->recipients->expects(self::once())->method('forPeriod')->with('2026-03-01', '2026-03-31')
@@ -56,7 +56,7 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
                 new VendorStatementRecipientDTO('tenant-1', '999', 'skip-vendor@example.com', 'USD'),
             ]);
 
-        $payload = (new VendorStatementDeliveryRuntimeViewBuilder(
+        $payload = (new VendorStatementDeliveryRuntimeProjectionBuilderService(
             $this->ownership,
             $this->statements,
             $this->exporter,
@@ -89,7 +89,7 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
         ];
 
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(101)
-            ->willReturn(new VendorOwnershipView(101, 5001, []));
+            ->willReturn(new VendorOwnershipProjection(101, 5001, []));
         $this->statements->expects(self::once())->method('build')->willReturn($statement);
         $this->exporter->expects(self::once())->method('export')->willReturn($pdf);
         $this->recipients->expects(self::once())->method('forPeriod')->with('2026-03-01', '2026-03-31')
@@ -98,7 +98,7 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
                 new VendorStatementRecipientDTO('tenant-1', '999', 'skip@example.com', 'USD'),
             ]);
 
-        $payload = (new VendorStatementDeliveryRuntimeViewBuilder(
+        $payload = (new VendorStatementDeliveryRuntimeProjectionBuilderService(
             $this->ownership,
             $this->statements,
             $this->exporter,

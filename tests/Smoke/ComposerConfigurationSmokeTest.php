@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Smoke;
+namespace App\Vendoring\Tests\Smoke;
 
 use PHPUnit\Framework\TestCase;
 
@@ -13,10 +13,10 @@ final class ComposerConfigurationSmokeTest extends TestCase
 
     protected function setUp(): void
     {
-        $composerFile = dirname(__DIR__, 2) . '/composer.json';
+        $composerFile = dirname(__DIR__, 2).'/composer.json';
         $decoded = json_decode((string) file_get_contents($composerFile), true, 512, JSON_THROW_ON_ERROR);
         self::assertIsArray($decoded);
-        /** @var array<string, mixed> $decoded */
+        /* @var array<string, mixed> $decoded */
         $this->composer = $decoded;
     }
 
@@ -74,15 +74,15 @@ final class ComposerConfigurationSmokeTest extends TestCase
     /**
      * @return array<string, mixed>
      */
-    private function composerSection(string $name): array
+    private function composerSection(string $nameEntity): array
     {
-        $value = $this->composer[$name] ?? null;
+        $value = $this->composer[$nameEntity] ?? null;
 
         if (!is_array($value)) {
             return [];
         }
 
-        /** @var array<string, mixed> $value */
+        /* @var array<string, mixed> $value */
         return $value;
     }
 }

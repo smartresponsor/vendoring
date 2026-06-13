@@ -1,0 +1,246 @@
+[
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorAnalyticsRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorAnalyticsRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorAttachmentRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorAttachmentRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorDocumentRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorDocumentRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorLedgerBindingRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorLedgerBindingRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorSecurityRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorSecurityRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorUserAssignmentRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorUserAssignmentRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorTransactionRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorTransactionRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Integration\\VendorCrmServiceInterface",
+    "target": "App\\Vendoring\\Service\\Integration\\VendorCrmService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Security\\VendorAccessResolverServiceInterface",
+    "target": "App\\Vendoring\\Service\\Security\\VendorAccessResolverService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Billing\\VendorBillingServiceInterface",
+    "target": "App\\Vendoring\\Service\\Billing\\VendorBillingService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Catalog\\VendorCatalogMerchServiceInterface",
+    "target": "App\\Vendoring\\Service\\Catalog\\VendorCatalogMerchService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Syndication\\VendorCatalogSyndicationMappingServiceInterface",
+    "target": "App\\Vendoring\\Service\\Syndication\\VendorCatalogSyndicationMappingService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Syndication\\VendorCatalogSyndicationFallbackAwarePackageGateServiceInterface",
+    "target": "App\\Vendoring\\Service\\Syndication\\VendorCatalogSyndicationFallbackAwarePackageGateService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Syndication\\VendorCatalogSyndicationPolicyAwarePackageGateServiceInterface",
+    "target": "App\\Vendoring\\Service\\Syndication\\VendorCatalogSyndicationPolicyAwarePackageGateService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Syndication\\VendorCatalogSyndicationGovernanceTrailServiceInterface",
+    "target": "App\\Vendoring\\Service\\Syndication\\VendorCatalogSyndicationGovernanceTrailService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Media\\VendorCatalogDestinationMediaReadinessServiceInterface",
+    "target": "App\\Vendoring\\Service\\Media\\VendorCatalogDestinationMediaReadinessService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Media\\VendorCatalogDestinationMediaFallbackServiceInterface",
+    "target": "App\\Vendoring\\Service\\Media\\VendorCatalogDestinationMediaFallbackService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Media\\VendorCatalogDestinationMediaPolicyPreferenceServiceInterface",
+    "target": "App\\Vendoring\\Service\\Media\\VendorCatalogDestinationMediaPolicyPreferenceService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Document\\VendorDocumentServiceInterface",
+    "target": "App\\Vendoring\\Service\\Document\\VendorDocumentService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Media\\VendorMediaServiceInterface",
+    "target": "App\\Vendoring\\Service\\Media\\VendorMediaService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Media\\VendorLegacyMediaAttachmentCandidateProviderServiceInterface",
+    "target": "App\\Vendoring\\Service\\Media\\VendorLegacyMediaAttachmentCandidateProviderService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Identity\\VendorPassportServiceInterface",
+    "target": "App\\Vendoring\\Service\\Identity\\VendorPassportService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Profile\\VendorProfileServiceInterface",
+    "target": "App\\Vendoring\\Service\\Profile\\VendorProfileService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Core\\VendorCoreServiceInterface",
+    "target": "App\\Vendoring\\Service\\Core\\VendorCoreService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Assignment\\VendorUserAssignmentServiceInterface",
+    "target": "App\\Vendoring\\Service\\Assignment\\VendorUserAssignmentService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Ledger\\VendorDoubleEntryServiceInterface",
+    "target": "App\\Vendoring\\Service\\Ledger\\VendorDoubleEntryService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Ledger\\VendorLedgerServiceInterface",
+    "target": "App\\Vendoring\\Service\\Ledger\\VendorLedgerService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Payout\\VendorSettlementCalculatorServiceInterface",
+    "target": "App\\Vendoring\\Service\\Payout\\VendorSettlementCalculatorService"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorApiKeyRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorApiKeyRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorProfileRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorProfileRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorBillingRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorBillingRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorMediaRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorMediaRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorPassportRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorPassportRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorLedgerEntryRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorLedgerEntryRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorPayoutRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorPayoutRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorPayoutAccountRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorPayoutAccountRepository"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Security\\VendorApiKeyServiceInterface",
+    "target": "App\\Vendoring\\Service\\Security\\VendorApiKeyService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Security\\VendorSecurityStateProjectionBuilderServiceInterface",
+    "target": "App\\Vendoring\\Service\\Security\\VendorSecurityStateProjectionBuilderService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Ownership\\VendorOwnershipProjectionBuilderServiceInterface",
+    "target": "App\\Vendoring\\Service\\Ownership\\VendorOwnershipProjectionBuilderService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Profile\\VendorProfileProjectionBuilderServiceInterface",
+    "target": "App\\Vendoring\\Service\\Profile\\VendorProfileProjectionBuilderService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Profile\\VendorPublicProfileSummaryProviderServiceInterface",
+    "target": "App\\Vendoring\\Service\\Profile\\VendorPublicProfileSummaryProviderService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Profile\\VendorProfileAttachmentResolverServiceInterface",
+    "target": "App\\Vendoring\\Service\\Profile\\VendorLegacyProfileAttachmentResolverService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Finance\\VendorFinanceRuntimeProjectionBuilderServiceInterface",
+    "target": "App\\Vendoring\\Service\\Finance\\VendorFinanceRuntimeProjectionBuilderService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Integration\\VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface",
+    "target": "App\\Vendoring\\Service\\Integration\\VendorExternalIntegrationRuntimeProjectionBuilderService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Ops\\VendorRuntimeStatusProjectionBuilderServiceInterface",
+    "target": "App\\Vendoring\\Service\\Ops\\VendorRuntimeStatusProjectionBuilderService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Ops\\VendorReleaseBaselineReaderServiceInterface",
+    "target": "App\\Vendoring\\Service\\Ops\\VendorReleaseBaselineReaderService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Transaction\\VendorTransactionLifecycleServiceInterface",
+    "target": "App\\Vendoring\\Service\\Transaction\\VendorTransactionLifecycleService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Metric\\VendorMetricServiceInterface",
+    "target": "App\\Vendoring\\Service\\Metric\\VendorMetricService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Payout\\VendorPayoutServiceInterface",
+    "target": "App\\Vendoring\\Service\\Payout\\VendorPayoutService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Payout\\VendorPayoutRequestServiceInterface",
+    "target": "App\\Vendoring\\Service\\Payout\\VendorPayoutRequestService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Payout\\VendorPayoutAccountServiceInterface",
+    "target": "App\\Vendoring\\Service\\Payout\\VendorPayoutAccountService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Ledger\\VendorSummaryServiceInterface",
+    "target": "App\\Vendoring\\Service\\Ledger\\VendorSummaryService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Statement\\VendorStatementServiceInterface",
+    "target": "App\\Vendoring\\Service\\Statement\\VendorStatementService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Statement\\VendorStatementRecipientProviderServiceInterface",
+    "target": "App\\Vendoring\\Service\\Statement\\VendorStatementRecipientProviderService"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Statement\\VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface",
+    "target": "App\\Vendoring\\Service\\Statement\\VendorStatementDeliveryRuntimeProjectionBuilderService"
+  },
+  {
+    "alias": "App\\Vendoring\\PolicyInterface\\Vendor\\VendorCategorySyndicationMappingPolicyInterface",
+    "target": "App\\Vendoring\\Policy\\Vendor\\VendorCategorySyndicationMappingPolicy"
+  },
+  {
+    "alias": "App\\Vendoring\\PolicyInterface\\Vendor\\VendorCategorySyndicationFallbackAwarePackageGatePolicyInterface",
+    "target": "App\\Vendoring\\Policy\\Vendor\\VendorCategorySyndicationFallbackAwarePackageGatePolicy"
+  },
+  {
+    "alias": "App\\Vendoring\\PolicyInterface\\Vendor\\VendorCategorySyndicationPolicyAwarePackageGatePolicyInterface",
+    "target": "App\\Vendoring\\Policy\\Vendor\\VendorCategorySyndicationPolicyAwarePackageGatePolicy"
+  },
+  {
+    "alias": "App\\Vendoring\\PolicyInterface\\Vendor\\VendorCategorySyndicationGovernanceTrailPolicyInterface",
+    "target": "App\\Vendoring\\Policy\\Vendor\\VendorCategorySyndicationGovernanceTrailPolicy"
+  },
+  {
+    "alias": "App\\Vendoring\\ServiceInterface\\Catalog\\VendorCatalogReviewAssignmentServiceInterface",
+    "target": "App\\Vendoring\\Service\\Catalog\\VendorCatalogReviewAssignmentService"
+  }
+]

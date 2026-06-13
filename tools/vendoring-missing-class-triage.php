@@ -9,7 +9,7 @@ declare(strict_types=1);
  *
  * Reads missing-class-scan-v3 JSON and groups issues into actionable buckets:
  * - scanner-noise / namespace-only (should be near-zero with v3)
- * - missing Vendor entity references (candidate quarantine or entity restore)
+ * - missing Vendor entity class references (candidate quarantine or entity restore)
  * - missing ServiceInterface refs (legacy path / stale dependency)
  * - cross-domain refs (Ledger / Observability)
  * - other
@@ -80,7 +80,7 @@ if (!is_array($issueList)) {
 }
 
 $bucketMap = [
-    'vendor-entity-missing' => [],
+    'vendor-entity-reference-missing' => [],
     'serviceinterface-missing' => [],
     'cross-domain-ledger-observability' => [],
     'namespace-noise' => [],
@@ -102,13 +102,13 @@ foreach ($issueList as $row) {
     }
 
     $bucket = 'other';
-    if (preg_match('/^App\\\\Entity\\\\Vendor\\\\/', $fqn)) {
-        $bucket = 'vendor-entity-missing';
-    } elseif (preg_match('/^App\\\\ServiceInterface\\\\/', $fqn)) {
+    if (preg_match('/^App\Vendoring\\\\Entity\\\\Vendor\\\\/', $fqn)) {
+        $bucket = 'vendor-entity-reference-missing';
+    } elseif (preg_match('/^App\Vendoring\\\\ServiceInterface\\\\/', $fqn)) {
         $bucket = 'serviceinterface-missing';
-    } elseif (preg_match('/^App\\\\(Service|DTO)\\\\(Ledger|Observability)\\\\/', $fqn)) {
+    } elseif (preg_match('/^App\Vendoring\\\\(Service|DTO)\\\\(Ledger|Observability)\\\\/', $fqn)) {
         $bucket = 'cross-domain-ledger-observability';
-    } elseif ('reference' === $type && preg_match('/^App\\\\[A-Z][A-Za-z0-9_]*$/', $fqn)) {
+    } elseif ('reference' === $type && preg_match('/^App\Vendoring\\\\[A-Z][A-Za-z0-9_]*$/', $fqn)) {
         $bucket = 'namespace-noise';
     }
 
@@ -123,8 +123,8 @@ echo '- File count: ' . (int) ($payload['fileCount'] ?? 0) . "\n";
 echo '- Issue count (payload): ' . (int) ($payload['issueCount'] ?? count($issueList)) . "\n";
 echo '- Issue count (loaded): ' . count($issueList) . "\n";
 
-foreach ($bucketMap as $name => $rows) {
-    echo "\n[{$name}] count=" . count($rows) . "\n";
+foreach ($bucketMap as $nameEntity => $rows) {
+    echo "\n[{$nameEntity}] count=" . count($rows) . "\n";
     $show = array_slice($rows, 0, 12);
     foreach ($show as $r) {
         $f = (string) ($r['file'] ?? '');
@@ -149,7 +149,7 @@ foreach ($fileHitMap as $file => $count) {
 
 echo "\nSuggested next structural action\n";
 echo "- First: run v3 scanner + triage (this tool) to remove scanner noise from decision making.\n";
-echo "- Then: quarantine or relocate entity-dependent legacy slices that reference missing App\\Entity\\Vendor\\* types.\n";
+echo "- Then: if new missing entity references appear, fix imports or quarantine stale slices before adding runtime work.\n";
 echo "- Then: normalize remaining imports file-by-file (PSR naming + path correctness) without formatter churn.\n";
 
 exit(0);

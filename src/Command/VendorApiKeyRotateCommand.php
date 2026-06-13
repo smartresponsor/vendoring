@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Command;
+namespace App\Vendoring\Command;
 
-use App\Command\Support\CommandOutputFormat;
-use App\Command\Support\CommandResultEmitterInterface;
-use App\RepositoryInterface\VendorApiKeyRepositoryInterface;
-use App\ServiceInterface\VendorApiKeyServiceInterface;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
+use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 #[AsCommand(
     name: 'app:vendor:api-key:rotate',
@@ -26,7 +25,7 @@ final class VendorApiKeyRotateCommand extends Command
     public function __construct(
         private readonly VendorApiKeyRepositoryInterface $apiKeyRepo,
         private readonly VendorApiKeyServiceInterface $apiKeyService,
-        private readonly CommandResultEmitterInterface $commandResultEmitter,
+        private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter,
     ) {
         parent::__construct();
     }
@@ -46,7 +45,7 @@ final class VendorApiKeyRotateCommand extends Command
         $keyIdOption = $input->getOption('keyId');
         $formatOption = $input->getOption('format');
         $keyId = is_scalar($keyIdOption) ? (int) (string) $keyIdOption : 0;
-        $format = CommandOutputFormat::normalize($formatOption);
+        $format = VendorCommandOutputFormatEnum::normalize($formatOption);
 
         if ($keyId <= 0) {
             $this->commandResultEmitter->emitError($output, $format, 'invalid', 'Invalid keyId', [
@@ -58,7 +57,7 @@ final class VendorApiKeyRotateCommand extends Command
 
         try {
             $key = $this->apiKeyRepo->find($keyId);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to load API key', $throwable, [
                 'keyId' => $keyId,
             ]);
@@ -76,7 +75,7 @@ final class VendorApiKeyRotateCommand extends Command
 
         try {
             $newToken = $this->apiKeyService->rotateKey($key);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to rotate API key', $throwable, [
                 'keyId' => $keyId,
             ]);
@@ -84,7 +83,7 @@ final class VendorApiKeyRotateCommand extends Command
             return Command::FAILURE;
         }
 
-        if (CommandOutputFormat::isJson($format)) {
+        if (VendorCommandOutputFormatEnum::isJson($format)) {
             if (!$this->commandResultEmitter->emitJson($output, [
                 'keyId' => $keyId,
                 'status' => $key->getStatus(),

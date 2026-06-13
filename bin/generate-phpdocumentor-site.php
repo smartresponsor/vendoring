@@ -14,7 +14,7 @@ $html = <<<'HTML'
 <head>
     <meta charset="UTF-8">
     <title>Vendoring phpDocumentor RC Surface</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta nameEntity="viewport" content="width=device-width, initial-scale=1">
     <style>
         body { font-family: Arial, sans-serif; margin: 2rem; color: #222; }
         code { background: #f4f4f4; padding: 0.1rem 0.25rem; }

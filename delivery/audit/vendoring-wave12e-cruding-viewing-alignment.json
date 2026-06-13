@@ -1,0 +1,38 @@
+{
+  "wave": "12E",
+  "component": "Vendoring",
+  "name": "Cruding/View Alignment",
+  "zeroControllerDriven": true,
+  "controllersAdded": 0,
+  "persistenceRestored": false,
+  "interfacingDirectDependency": false,
+  "changedFiles": [
+    "src/Service/Http/Vendor/VendorHttpRouteResponseService.php",
+    "tools/qa/VendoringCrudingViewingAlignmentAudit.php",
+    "docs/internal/VENDORING_CRUDING_VIEWING_ALIGNMENT.md",
+    "delivery/audit/vendoring-wave12e-cruding-viewing-alignment.json"
+  ],
+  "responseContract": {
+    "readRoutes": [
+      "cruding",
+      "viewing",
+      "meta"
+    ],
+    "blockedRoutes": [
+      "cruding",
+      "viewing",
+      "meta"
+    ],
+    "mutationAllowed": false,
+    "entrypointPattern": "Vendor*Service",
+    "formPattern": "Vendor*Type"
+  },
+  "checks": [
+    "php -l src/Service/Http/Vendor/VendorHttpRouteResponseService.php",
+    "php -l tools/qa/VendoringCrudingViewingAlignmentAudit.php",
+    "php tools/qa/VendoringCrudingViewingAlignmentAudit.php",
+    "php tools/qa/VendoringZeroControllerSurfaceAudit.php",
+    "php tools/qa/VendoringHttpReadRouteImplementationAudit.php"
+  ],
+  "deleteList": []
+}

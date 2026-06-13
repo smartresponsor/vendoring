@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Vendoring\Command;
 
-use App\Command\Support\CommandIoException;
-use App\Command\Support\CommandJsonArtifactWriter;
-use App\Command\Support\CommandOutputFormat;
-use App\Command\Support\CommandResultEmitter;
-use App\ServiceInterface\Rollout\CanaryRolloutCoordinatorInterface;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\Exception\Command\VendorCommandIoException;
+use App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
+use App\Vendoring\ServiceInterface\Rollout\VendorCanaryRolloutCoordinatorServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 /**
  * CLI entrypoint for rendering canary rollout readiness and recommended next action.
@@ -23,9 +22,9 @@ use Throwable;
 final class VendorCanaryRolloutCommand extends Command
 {
     public function __construct(
-        private readonly CanaryRolloutCoordinatorInterface $canaryRolloutCoordinator,
-        private readonly CommandJsonArtifactWriter $commandJsonArtifactWriter,
-        private readonly CommandResultEmitter $commandResultEmitter,
+        private readonly VendorCanaryRolloutCoordinatorServiceInterface $canaryRolloutCoordinator,
+        private readonly VendorCommandJsonArtifactWriterServiceInterface $commandJsonArtifactWriter,
+        private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter,
     ) {
         parent::__construct();
     }
@@ -48,7 +47,7 @@ final class VendorCanaryRolloutCommand extends Command
     {
         $flagOption = $input->getOption('flag');
         $flagName = is_scalar($flagOption) ? trim((string) $flagOption) : '';
-        $format = CommandOutputFormat::normalize($input->getOption('format'));
+        $format = VendorCommandOutputFormatEnum::normalize($input->getOption('format'));
 
         if ('' === $flagName) {
             $this->commandResultEmitter->emitError($output, $format, 'invalid', 'flag option is required');
@@ -66,7 +65,7 @@ final class VendorCanaryRolloutCommand extends Command
 
         try {
             $report = $this->canaryRolloutCoordinator->evaluate($flagName, $tenantId, $vendorId, $windowSeconds);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError(
                 $output,
                 $format,
@@ -88,10 +87,10 @@ final class VendorCanaryRolloutCommand extends Command
             $writtenPath = $this->commandJsonArtifactWriter->writeIfRequested(
                 (bool) $input->getOption('write'),
                 $input->getOption('output'),
-                dirname(__DIR__, 2) . '/build/release/canary-rollout.json',
+                dirname(__DIR__, 2).'/build/release/canary-rollout.json',
                 $report,
             );
-        } catch (CommandIoException $exception) {
+        } catch (VendorCommandIoException $exception) {
             $this->commandResultEmitter->emitError($output, $format, 'failed', $exception->getMessage(), [
                 'flag' => $flagName,
                 'tenantId' => $tenantId,
@@ -102,7 +101,7 @@ final class VendorCanaryRolloutCommand extends Command
             return Command::FAILURE;
         }
 
-        if (CommandOutputFormat::isJson($format)) {
+        if (VendorCommandOutputFormatEnum::isJson($format)) {
             return $this->commandResultEmitter->emitJson($output, $report)
                 ? Command::SUCCESS
                 : Command::FAILURE;

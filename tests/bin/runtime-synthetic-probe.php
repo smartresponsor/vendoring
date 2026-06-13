@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Tests\Support\Runtime\KernelRuntimeHarness;
+use App\Vendoring\Tests\Support\Runtime\KernelRuntimeHarness;
 
-require dirname(__DIR__, 2) . '/vendor/autoload.php';
+require dirname(__DIR__, 2).'/vendor/autoload.php';
 
 $projectRoot = dirname(__DIR__, 2);
 
@@ -17,15 +17,15 @@ $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot
 
 try {
     $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
-    $authHeaders = ['Authorization' => 'Bearer ' . $token];
+    $authHeaders = ['Authorization' => 'Bearer '.$token];
     $suffix = bin2hex(random_bytes(4));
-    $vendorId = 'probe-vendor-' . $suffix;
-    $orderId = 'probe-order-' . $suffix;
+    $vendorId = 'probe-vendor-'.$suffix;
+    $orderId = 'probe-order-'.$suffix;
 
     $createResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'POST',
-        '/api/vendor-transactions',
+        '/api/vendor/transaction',
         [
             'vendorId' => $vendorId,
             'orderId' => $orderId,
@@ -54,7 +54,7 @@ try {
     $listResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'GET',
-        '/api/vendor-transactions/vendor/' . $vendorId,
+        '/api/vendor/transaction/'.$vendorId,
         null,
         ['X-Correlation-ID' => 'synthetic-runtime-probe'] + $authHeaders,
     );
@@ -87,7 +87,7 @@ try {
     $updateResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'POST',
-        '/api/vendor-transactions/vendor/' . $vendorId . '/' . (string) $transactionId . '/status',
+        '/api/vendor/transaction/status/'.(string) $transactionId,
         ['status' => 'authorized'],
         ['X-Correlation-ID' => 'synthetic-runtime-probe'] + $authHeaders,
     );

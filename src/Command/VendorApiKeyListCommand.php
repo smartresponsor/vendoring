@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-namespace App\Command;
+namespace App\Vendoring\Command;
 
-use App\Command\Support\CommandOutputFormat;
-use App\Command\Support\CommandResultEmitterInterface;
-use App\RepositoryInterface\VendorApiKeyRepositoryInterface;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 #[AsCommand(
     name: 'app:vendor:api-key:list',
@@ -24,7 +23,7 @@ final class VendorApiKeyListCommand extends Command
 {
     public function __construct(
         private readonly VendorApiKeyRepositoryInterface $apiKeyRepo,
-        private readonly CommandResultEmitterInterface $commandResultEmitter,
+        private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter,
     ) {
         parent::__construct();
     }
@@ -44,7 +43,7 @@ final class VendorApiKeyListCommand extends Command
         $vendorIdOption = $input->getOption('vendorId');
         $formatOption = $input->getOption('format');
         $vendorId = is_scalar($vendorIdOption) ? (int) (string) $vendorIdOption : 0;
-        $format = CommandOutputFormat::normalize($formatOption);
+        $format = VendorCommandOutputFormatEnum::normalize($formatOption);
 
         if ($vendorId <= 0) {
             $this->commandResultEmitter->emitError($output, $format, 'invalid', 'Invalid vendorId', [
@@ -56,7 +55,7 @@ final class VendorApiKeyListCommand extends Command
 
         try {
             $keys = $this->apiKeyRepo->findBy(['vendor' => $vendorId], ['createdAt' => 'DESC']);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to load API keys', $throwable, [
                 'vendorId' => $vendorId,
             ]);
@@ -64,12 +63,12 @@ final class VendorApiKeyListCommand extends Command
             return Command::FAILURE;
         }
 
-        if (CommandOutputFormat::isJson($format)) {
+        if (VendorCommandOutputFormatEnum::isJson($format)) {
             if (!$this->commandResultEmitter->emitJson($output, [
                 'vendorId' => $vendorId,
                 'total' => count($keys),
                 'keys' => array_map(
-                    static fn($key): array => [
+                    static fn ($key): array => [
                         'keyId' => $key->getId(),
                         'status' => $key->getStatus(),
                         'permissions' => $key->getPermissions(),

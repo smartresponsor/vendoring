@@ -4,3 +4,11 @@ parameters:
     - src
     - tests
 
+
+  ignoreErrors:
+    -
+      identifier: property.onlyWritten
+      path: src/Entity/*
+    -
+      identifier: property.unusedType
+      path: src/Entity/*

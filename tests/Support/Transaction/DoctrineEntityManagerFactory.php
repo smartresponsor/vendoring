@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Support\Transaction;
+namespace App\Vendoring\Tests\Support\Transaction;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
@@ -12,7 +12,7 @@ final class DoctrineEntityManagerFactory
 {
     public static function createSqliteMemoryEntityManager(string $projectRoot): EntityManager
     {
-        $config = ORMSetup::createAttributeMetadataConfiguration(
+        $config = ORMSetup::createAttributeMetadataConfig(
             paths: [$projectRoot . '/src/Entity'],
             isDevMode: true,
         );

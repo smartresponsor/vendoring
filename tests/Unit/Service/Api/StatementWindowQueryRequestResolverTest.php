@@ -3,10 +3,10 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\Api;
+namespace App\Vendoring\Tests\Unit\Service\Api;
 
-use App\Service\Api\StatementWindowQueryRequestResolver;
-use App\Exception\ApiQueryValidationException;
+use App\Vendoring\Service\Api\VendorStatementWindowQueryRequestResolverService;
+use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validation;
@@ -15,7 +15,7 @@ final class StatementWindowQueryRequestResolverTest extends TestCase
 {
     public function testResolveReturnsDtoForValidStatementWindowQuery(): void
     {
-        $resolver = new StatementWindowQueryRequestResolver(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
+        $resolver = new VendorStatementWindowQueryRequestResolverService(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
 
         $dto = $resolver->resolve(new Request([
             'tenantId' => 'tenant-1',
@@ -32,9 +32,9 @@ final class StatementWindowQueryRequestResolverTest extends TestCase
 
     public function testResolveThrowsWhenStatementWindowQueryIsMissing(): void
     {
-        $resolver = new StatementWindowQueryRequestResolver(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
+        $resolver = new VendorStatementWindowQueryRequestResolverService(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
 
-        $this->expectException(ApiQueryValidationException::class);
+        $this->expectException(VendorApiQueryValidationException::class);
         $this->expectExceptionMessage('tenant_id_required');
 
         $resolver->resolve(new Request());

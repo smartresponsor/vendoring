@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Transaction;
+namespace App\Vendoring\Tests\Integration\Transaction;
 
-use App\Entity\VendorTransaction;
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\RuntimeLogger;
-use App\Service\Policy\VendorTransactionAmountPolicy;
-use App\Service\Policy\VendorTransactionStatusPolicy;
-use App\Service\VendorTransactionManager;
-use App\Tests\Support\Transaction\DoctrineBackedVendorTransactionRepository;
-use App\Tests\Support\Transaction\DoctrineEntityManagerFactory;
-use App\ValueObject\VendorTransactionData;
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
+use App\Vendoring\Service\Observability\VendorCorrelationContextService;
+use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
+use App\Vendoring\Service\Policy\VendorTransactionAmountPolicyService;
+use App\Vendoring\Service\Policy\VendorTransactionStatusPolicyService;
+use App\Vendoring\Service\Transaction\VendorTransactionLifecycleService;
+use App\Vendoring\Tests\Support\Transaction\DoctrineBackedVendorTransactionRepository;
+use App\Vendoring\Tests\Support\Transaction\DoctrineEntityManagerFactory;
+use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -30,7 +31,7 @@ final class VendorTransactionSqliteIntegrationTest extends TestCase
         $entityManager = DoctrineEntityManagerFactory::createSqliteMemoryEntityManager($projectRoot);
 
         $schemaTool = new SchemaTool($entityManager);
-        $metadata = [$entityManager->getClassMetadata(VendorTransaction::class)];
+        $metadata = [$entityManager->getClassMetadata(VendorTransactionEntity::class)];
         $schemaTool->createSchema($metadata);
 
         $events = new class implements EventDispatcherInterface {
@@ -45,22 +46,22 @@ final class VendorTransactionSqliteIntegrationTest extends TestCase
         };
 
         $repository = new DoctrineBackedVendorTransactionRepository($entityManager);
-        $manager = new VendorTransactionManager(
+        $manager = new VendorTransactionLifecycleService(
             $entityManager,
             $events,
-            new VendorTransactionStatusPolicy(),
-            new VendorTransactionAmountPolicy(),
+            new VendorTransactionStatusPolicyService(),
+            new VendorTransactionAmountPolicyService(),
             $repository,
-            new RuntimeLogger(new CorrelationContext(), new RequestStack()),
+            new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService()),
         );
 
-        $created = $manager->createTransaction(new VendorTransactionData('vendor-1', 'order-1', null, '10.50'));
+        $created = $manager->createTransaction(new VendorTransactionDataValueObject('vendor-1', 'order-1', null, '10.50'));
         self::assertNotNull($created->getId());
         self::assertSame('pending', $created->getStatus());
         self::assertSame(1, $events->dispatchCount);
 
         $fetched = $repository->findOneByIdAndVendorId((int) $created->getId(), 'vendor-1');
-        self::assertInstanceOf(VendorTransaction::class, $fetched);
+        self::assertInstanceOf(VendorTransactionEntity::class, $fetched);
         self::assertSame('10.50', $fetched->getAmount());
         self::assertTrue($repository->existsForVendorOrderProject('vendor-1', 'order-1', null));
 
@@ -69,11 +70,11 @@ final class VendorTransactionSqliteIntegrationTest extends TestCase
         self::assertSame(2, $events->dispatchCount);
 
         $reloaded = $repository->findOneByIdAndVendorId((int) $created->getId(), 'vendor-1');
-        self::assertInstanceOf(VendorTransaction::class, $reloaded);
+        self::assertInstanceOf(VendorTransactionEntity::class, $reloaded);
         self::assertSame('authorized', $reloaded->getStatus());
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('duplicate_transaction');
-        $manager->createTransaction(new VendorTransactionData('vendor-1', 'order-1', null, '10.50'));
+        $manager->createTransaction(new VendorTransactionDataValueObject('vendor-1', 'order-1', null, '10.50'));
     }
 }

@@ -1,0 +1,34 @@
+{
+  "wave": "Vendoring Wave 12C",
+  "scope": "HTTP read route implementation for Wave 12B real_read_candidate entries",
+  "policy": {
+    "delete_files": false,
+    "restore_persistence": false,
+    "add_controllers": false,
+    "enable_write_side": false
+  },
+  "implemented_services": [
+    "src/Service/Http/Vendor/VendorIndexService.php",
+    "src/Service/Http/Vendor/VendorShowService.php",
+    "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php",
+    "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentShowService.php",
+    "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaIndexService.php",
+    "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaShowService.php",
+    "src/Service/Http/Vendor/VendorReadRouteResponseFactory.php"
+  ],
+  "implemented_route_keys": [
+    "vendor.index",
+    "vendor.show_id",
+    "vendor.show_slug",
+    "vendor.attachment.document.index",
+    "vendor.attachment.document.show_id",
+    "vendor.attachment.document.show_slug",
+    "vendor.attachment.media.index",
+    "vendor.attachment.media.show_id",
+    "vendor.attachment.media.show_slug"
+  ],
+  "runtime_status": "read_route_ready",
+  "persistence_status": "quarantined",
+  "mutation_allowed": false,
+  "next_recommendation": "Wave 12D should make the remaining non-read HTTP skeletons explicitly inert/blocked or split protocol-only route-map entries from runtime-enabled routes."
+}

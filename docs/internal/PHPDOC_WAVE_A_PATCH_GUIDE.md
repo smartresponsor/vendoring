@@ -6,16 +6,16 @@ This guide contains the exact PHPDoc intent that should be applied to the first 
 
 The goal is to keep the edits architecture-first and avoid low-value format churn.
 
-## 1. `src/ServiceInterface/Ops/VendorRuntimeStatusViewBuilderInterface.php`
+## 1. `src/ServiceInterface/Ops/VendorRuntimeStatusProjectionBuilderServiceInterface.php`
 
 ### Class intent
 
 ```php
 /**
- * Read-side contract for aggregating vendor runtime surfaces into one ops-facing view.
+ * Read-side contract for aggregating vendor runtime surfaces into one ops-facing projection.
  *
  * Implementations may read profile, ownership, finance, statement, and integration projections,
- * but they must not mutate domain state while building the view.
+ * but they must not mutate domain state while building the projection.
  */
 ```
 
@@ -31,12 +31,12 @@ The goal is to keep the edits architecture-first and avoid low-value format chur
  * @param string|null $to       Optional inclusive period end for finance and statement sections.
  * @param string      $currency Canonical currency code for finance-facing sections.
  *
- * @return VendorRuntimeStatusView Immutable projection combining ownership, profile, finance,
+ * @return VendorRuntimeStatusProjection Immutable projection combining ownership, profile, finance,
  *                                 statement delivery, external integration, and surface readiness.
  */
 ```
 
-## 2. `src/Service/Ops/VendorRuntimeStatusViewBuilder.php`
+## 2. `src/Service/Ops/VendorRuntimeStatusProjectionBuilderService.php`
 
 ### Class intent
 
@@ -45,7 +45,7 @@ The goal is to keep the edits architecture-first and avoid low-value format chur
  * Read-side aggregator that assembles a release-facing vendor runtime projection.
  *
  * The builder combines ownership, profile, finance, statement-delivery, and integration
- * surfaces into a single ops/admin-friendly view without mutating domain state.
+ * surfaces into a single ops/admin-friendly projection without mutating domain state.
  */
 ```
 
@@ -61,11 +61,11 @@ The goal is to keep the edits architecture-first and avoid low-value format chur
  *
  * @param string      $tenantId Canonical tenant scope.
  * @param string      $vendorId Vendor identifier exposed by API and runtime surfaces.
- * @param string|null $from     Optional inclusive period start for finance and statement views.
- * @param string|null $to       Optional inclusive period end for finance and statement views.
+ * @param string|null $from     Optional inclusive period start for finance and statement projections.
+ * @param string|null $to       Optional inclusive period end for finance and statement projections.
  * @param string      $currency Canonical currency code for finance-facing sections.
  *
- * @return VendorRuntimeStatusView Immutable runtime projection with readiness flags per surface.
+ * @return VendorRuntimeStatusProjection Immutable runtime projection with readiness flags per surface.
  */
 ```
 
@@ -77,7 +77,7 @@ Use this runtime shape in a local PHPDoc when needed:
 /** @var array{ownership:bool, profile:bool, finance:bool, statementDelivery:bool, externalIntegration:bool} $surfaceStatus */
 ```
 
-## 3. `src/Service/Ops/VendorReleaseBaselineReader.php`
+## 3. `src/Service/Ops/VendorReleaseBaselineReaderService.php`
 
 ### Method intent
 
@@ -94,7 +94,7 @@ Use this runtime shape in a local PHPDoc when needed:
  * @param string|null $to       Optional inclusive period end for nested finance and statement reads.
  * @param string      $currency Canonical currency code for finance-facing sections.
  *
- * @return VendorReleaseBaselineView Immutable baseline containing runtime payload, profile summary,
+ * @return VendorReleaseBaselineProjection Immutable baseline containing runtime payload, profile summary,
  *                                   artifact presence, issue list, and overall release status.
  */
 ```
@@ -123,7 +123,7 @@ Use this runtime shape in a local PHPDoc when needed:
 /** @var list<string> $issues */
 ```
 
-## 4. `src/Service/VendorFinanceRuntimeViewBuilder.php`
+## 4. `src/Service/VendorFinanceRuntimeProjectionBuilderService.php`
 
 ### Class intent
 
@@ -151,7 +151,7 @@ Use this runtime shape in a local PHPDoc when needed:
  * @param string|null $to       Optional inclusive period end.
  * @param string      $currency Canonical currency code for metric and statement sections.
  *
- * @return VendorFinanceRuntimeView Immutable runtime projection for finance inspection.
+ * @return VendorFinanceRuntimeProjection Immutable runtime projection for finance inspection.
  */
 ```
 
@@ -169,7 +169,7 @@ Use this runtime shape in a local PHPDoc when needed:
  */
 ```
 
-## 5. `src/Service/Statement/VendorStatementDeliveryRuntimeViewBuilder.php`
+## 5. `src/Service/Statement/VendorStatementDeliveryRuntimeProjectionBuilderService.php`
 
 ### Class intent
 
@@ -198,7 +198,7 @@ Use this runtime shape in a local PHPDoc when needed:
  * @param string $currency       Canonical statement currency code.
  * @param bool   $includeExport  When true, generate and inspect a PDF export path.
  *
- * @return VendorStatementDeliveryRuntimeView Immutable runtime projection for statement delivery.
+ * @return VendorStatementDeliveryRuntimeProjection Immutable runtime projection for statement delivery.
  */
 ```
 
@@ -209,7 +209,7 @@ Use this runtime shape in a local PHPDoc when needed:
 /** @var list<array{tenantId:string, vendorId:string, email:string, currency:string}> $recipients */
 ```
 
-## 6. `src/Service/Integration/VendorExternalIntegrationRuntimeViewBuilder.php`
+## 6. `src/Service/Integration/VendorExternalIntegrationRuntimeProjectionBuilderService.php`
 
 ### Method intent
 
@@ -217,13 +217,13 @@ Use this runtime shape in a local PHPDoc when needed:
 /**
  * Build a runtime projection for neighboring external integration seams.
  *
- * The returned view reports local readiness and exposed surfaces for CRM registration,
+ * The returned projection reports local readiness and exposed surfaces for CRM registration,
  * webhook consumption, and payout-transfer bridges without issuing live external requests.
  *
  * @param string $tenantId Canonical tenant scope.
  * @param string $vendorId Vendor identifier exposed by runtime and API surfaces.
  *
- * @return VendorExternalIntegrationRuntimeView Immutable projection describing local integration readiness.
+ * @return VendorExternalIntegrationRuntimeProjection Immutable projection describing local integration readiness.
  */
 ```
 

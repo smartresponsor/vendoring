@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Command;
+namespace App\Vendoring\Tests\Unit\Command;
 
-use App\Command\VendorRuntimeStatusCommand;
-use App\Projection\VendorRuntimeStatusView;
-use App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
+use App\Vendoring\Command\VendorRuntimeStatusCommand;
+use App\Vendoring\Projection\Vendor\VendorRuntimeStatusProjection;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
@@ -14,20 +14,20 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 final class VendorRuntimeStatusCommandTest extends TestCase
 {
-    private VendorRuntimeStatusViewBuilderInterface&MockObject $runtimeStatusViewBuilder;
+    private VendorRuntimeStatusProjectionBuilderServiceInterface&MockObject $runtimeStatusProjectionBuilder;
 
     protected function setUp(): void
     {
-        $this->runtimeStatusViewBuilder = $this->createMock(VendorRuntimeStatusViewBuilderInterface::class);
+        $this->runtimeStatusProjectionBuilder = $this->createMock(VendorRuntimeStatusProjectionBuilderServiceInterface::class);
     }
 
     public function testExecutePrintsProfileReadinessSummaryInTextMode(): void
     {
-        $this->runtimeStatusViewBuilder
+        $this->runtimeStatusProjectionBuilder
             ->expects(self::once())
             ->method('build')
             ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')
-            ->willReturn(new VendorRuntimeStatusView(
+            ->willReturn(new VendorRuntimeStatusProjection(
                 tenantId: 'tenant-1',
                 vendorId: '42',
                 currency: 'USD',
@@ -44,7 +44,7 @@ final class VendorRuntimeStatusCommandTest extends TestCase
                 generatedAt: '2025-01-31T00:00:00+00:00',
             ));
 
-        $tester = new CommandTester(new VendorRuntimeStatusCommand($this->runtimeStatusViewBuilder));
+        $tester = new CommandTester(new VendorRuntimeStatusCommand($this->runtimeStatusProjectionBuilder));
         $statusCode = $tester->execute([
             '--tenantId' => 'tenant-1',
             '--vendorId' => '42',

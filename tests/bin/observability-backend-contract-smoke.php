@@ -2,33 +2,34 @@
 
 declare(strict_types=1);
 
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\FileObservabilityRecordExporter;
-use App\Observability\Service\RuntimeLogger;
-use App\Observability\Service\RuntimeMetricCollector;
+use App\Vendoring\Service\Observability\VendorCorrelationContextService;
+use App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService;
+use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-require dirname(__DIR__, 2) . '/vendor/autoload.php';
+require dirname(__DIR__, 2).'/vendor/autoload.php';
 
-$dir = sys_get_temp_dir() . '/vendoring-observability-smoke-' . bin2hex(random_bytes(4));
-$exporter = new FileObservabilityRecordExporter($dir);
-$correlationContext = new CorrelationContext();
+$dir = sys_get_temp_dir().'/vendoring-observability-smoke-'.bin2hex(random_bytes(4));
+$exporter = new VendorObservabilityRecordExporterService($dir);
+$correlationContext = new VendorCorrelationContextService();
 $correlationContext->beginRequest('smoke-correlation-id');
 
 $requestStack = new RequestStack();
-$request = Request::create('/api/vendor-transactions');
+$request = Request::create('/api/vendor/transaction');
 $request->attributes->set('_route', 'app_vendor_transaction_create');
 $requestStack->push($request);
 
-$logger = new RuntimeLogger($correlationContext, $requestStack, $exporter);
-$metrics = new RuntimeMetricCollector($correlationContext, $exporter);
+$logger = new VendorRuntimeLoggerService($correlationContext, $requestStack, new VendorAppEnvResolverService(), $exporter);
+$metrics = new VendorRuntimeMetricCollectorService($correlationContext, new VendorAppEnvResolverService(), $exporter);
 
 $logger->info('observability_backend_smoke', ['vendor_id' => 'vendor-1']);
 $metrics->increment('observability_backend_smoke_total', ['scope' => 'synthetic']);
 
-$logPath = $dir . '/runtime_logs.ndjson';
-$metricPath = $dir . '/runtime_metrics.ndjson';
+$logPath = $dir.'/runtime_logs.ndjson';
+$metricPath = $dir.'/runtime_metrics.ndjson';
 
 if (!is_file($logPath) || !is_file($metricPath)) {
     fwrite(STDERR, "observability backend smoke failed: export files were not created\n");
@@ -56,8 +57,8 @@ if (($logPayload['correlation_id'] ?? null) !== 'smoke-correlation-id') {
     exit(1);
 }
 
-if (($metricPayload['name'] ?? null) !== 'observability_backend_smoke_total') {
-    fwrite(STDERR, "observability backend smoke failed: metric name mismatch\n");
+if (($metricPayload['nameEntity'] ?? null) !== 'observability_backend_smoke_total') {
+    fwrite(STDERR, "observability backend smoke failed: metric nameEntity mismatch\n");
 
     exit(1);
 }

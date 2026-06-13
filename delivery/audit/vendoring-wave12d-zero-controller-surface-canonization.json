@@ -1,0 +1,26 @@
+{
+  "wave": "12D",
+  "component": "Vendoring",
+  "purpose": "zero-controller Vendor surface canonization",
+  "controllerFiles": 0,
+  "routeServiceTargets": 54,
+  "formTypeTargets": 42,
+  "blockedRouteEntrypoints": 1,
+  "implementedReadEntrypoints": 6,
+  "deletedFiles": [
+    "src/Service/Http/Vendor/VendorReadRouteResponseFactory.php"
+  ],
+  "addedFiles": [
+    "src/Service/Http/Vendor/VendorHttpRouteResponseService.php",
+    "tools/qa/VendoringZeroControllerSurfaceAudit.php",
+    "docs/internal/VENDORING_ZERO_CONTROLLER_SURFACE_CANONIZATION.md"
+  ],
+  "readEntrypoints": [
+    "src/Service/Http/Vendor/VendorIndexService.php",
+    "src/Service/Http/Vendor/VendorShowService.php",
+    "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php",
+    "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentShowService.php",
+    "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaIndexService.php",
+    "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaShowService.php"
+  ]
+}

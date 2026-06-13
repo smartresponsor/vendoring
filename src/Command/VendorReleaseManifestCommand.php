@@ -2,20 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Vendoring\Command;
 
-use App\Command\Support\CommandIoException;
-use App\Command\Support\CommandJsonArtifactWriter;
-use App\Command\Support\CommandOutputFormat;
-use App\Command\Support\CommandResultEmitter;
-use App\ServiceInterface\Ops\ReleaseManifestBuilderInterface;
-use App\ServiceInterface\Ops\RollbackDecisionEvaluatorInterface;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\Exception\Command\VendorCommandIoException;
+use App\Vendoring\Service\Command\VendorCommandJsonArtifactWriterService;
+use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
+use App\Vendoring\ServiceInterface\Ops\VendorReleaseManifestBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Ops\VendorRollbackDecisionEvaluatorServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 /**
  * CLI entrypoint for rendering and optionally writing release/rollback manifests.
@@ -24,10 +23,10 @@ use Throwable;
 final class VendorReleaseManifestCommand extends Command
 {
     public function __construct(
-        private readonly ReleaseManifestBuilderInterface $releaseManifestBuilder,
-        private readonly RollbackDecisionEvaluatorInterface $rollbackDecisionEvaluator,
-        private readonly CommandJsonArtifactWriter $commandJsonArtifactWriter,
-        private readonly CommandResultEmitter $commandResultEmitter,
+        private readonly VendorReleaseManifestBuilderServiceInterface $releaseManifestBuilder,
+        private readonly VendorRollbackDecisionEvaluatorServiceInterface $rollbackDecisionEvaluator,
+        private readonly VendorCommandJsonArtifactWriterService $commandJsonArtifactWriter,
+        private readonly VendorCommandResultEmitterService $commandResultEmitter,
     ) {
         parent::__construct();
     }
@@ -49,12 +48,12 @@ final class VendorReleaseManifestCommand extends Command
         $windowOption = $input->getOption('windowSeconds');
         $formatOption = $input->getOption('format');
         $windowSeconds = is_scalar($windowOption) ? max(1, (int) $windowOption) : 900;
-        $format = CommandOutputFormat::normalize($formatOption);
+        $format = VendorCommandOutputFormatEnum::normalize($formatOption);
 
         try {
             $manifest = $this->releaseManifestBuilder->build($windowSeconds);
             $rollback = $this->rollbackDecisionEvaluator->evaluate($manifest);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError(
                 $output,
                 $format,
@@ -71,16 +70,16 @@ final class VendorReleaseManifestCommand extends Command
             $manifestPath = $this->commandJsonArtifactWriter->writeIfRequested(
                 (bool) $input->getOption('write'),
                 $input->getOption('manifest-output'),
-                dirname(__DIR__, 2) . '/build/release/release-manifest.json',
+                dirname(__DIR__, 2).'/build/release/release-manifest.json',
                 $manifest,
             );
             $rollbackPath = $this->commandJsonArtifactWriter->writeIfRequested(
                 (bool) $input->getOption('write'),
                 $input->getOption('rollback-output'),
-                dirname(__DIR__, 2) . '/build/release/rollback-manifest.json',
+                dirname(__DIR__, 2).'/build/release/rollback-manifest.json',
                 $rollback,
             );
-        } catch (CommandIoException $exception) {
+        } catch (VendorCommandIoException $exception) {
             $this->commandResultEmitter->emitError($output, $format, 'failed', $exception->getMessage(), [
                 'windowSeconds' => $windowSeconds,
             ]);
@@ -88,7 +87,7 @@ final class VendorReleaseManifestCommand extends Command
             return Command::FAILURE;
         }
 
-        if (CommandOutputFormat::isJson($format)) {
+        if (VendorCommandOutputFormatEnum::isJson($format)) {
             return $this->commandResultEmitter->emitJson($output, [
                 'manifest' => $manifest,
                 'rollback' => $rollback,

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Traffic;
+namespace App\Vendoring\Tests\Unit\Traffic;
 
-use App\Service\Traffic\FileWriteRateLimiter;
+use App\Vendoring\Service\Traffic\VendorWriteRateLimiterService;
 use PHPUnit\Framework\TestCase;
 
 final class FileWriteRateLimiterTest extends TestCase
 {
     public function testLimiterRejectsRequestAfterConfiguredLimit(): void
     {
-        $limiter = new FileWriteRateLimiter();
+        $limiter = new VendorWriteRateLimiterService();
         $scope = 'test_write_scope_' . bin2hex(random_bytes(6));
         $actor = 'actor-1';
 

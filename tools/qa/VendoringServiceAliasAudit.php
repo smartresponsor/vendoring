@@ -52,8 +52,8 @@ $collectPairs = static function (string $interfaceRoot, string $implementationRo
 };
 
 $pairs = array_merge(
-    $collectPairs('src/ServiceInterface', 'src/Service', 'App\\ServiceInterface', 'App\\Service'),
-    $collectPairs('src/RepositoryInterface', 'src/Repository', 'App\\RepositoryInterface', 'App\\Repository'),
+    $collectPairs('src/ServiceInterface', 'src/Service', 'App\Vendoring\\ServiceInterface', 'App\Vendoring\\Service'),
+    $collectPairs('src/RepositoryInterface', 'src/Repository', 'App\Vendoring\\RepositoryInterface', 'App\Vendoring\\Repository'),
 );
 
 foreach ($pairs as [$interfaceClass, $implementationClass]) {

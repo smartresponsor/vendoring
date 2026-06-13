@@ -1,0 +1,46 @@
+{
+  "wave": "Vendoring Wave 13",
+  "source_slice": "www-clean-20260611-151149.zip",
+  "stack_read": {
+    "cruding": [
+      "CrudEntrypointClassNameResolver uses App\\\\Service\\\\Http URI-derived candidates",
+      "AbstractCrudEntrypointService exposes get/post/put/patch/delete hooks",
+      "CrudSurfaceContract is a neutral surface object with toTemplateContext and toFallbackData"
+    ],
+    "viewing": [
+      "ViewPayloadNormalizer accepts arrays with _view and surface-renderable objects",
+      "Viewing owns render decision and template fallback"
+    ],
+    "interfacing": [
+      "Interfacing owns passive templates/shell/layout",
+      "Vendoring must not bind directly to App\\\\Interfacing interfaces"
+    ]
+  },
+  "vendoring": {
+    "route_entries": 81,
+    "unique_http_services": 54,
+    "unique_form_types": 42,
+    "read_route_keys": [
+      "vendor.attachment.document.index",
+      "vendor.attachment.document.show_id",
+      "vendor.attachment.document.show_slug",
+      "vendor.attachment.media.index",
+      "vendor.attachment.media.show_id",
+      "vendor.attachment.media.show_slug",
+      "vendor.index",
+      "vendor.show_id",
+      "vendor.show_slug"
+    ],
+    "read_services": [
+      "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentIndexService",
+      "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentShowService",
+      "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaIndexService",
+      "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaShowService",
+      "App\\Vendoring\\Service\\Http\\Vendor\\VendorIndexService",
+      "App\\Vendoring\\Service\\Http\\Vendor\\VendorShowService"
+    ],
+    "controller_files_added": 0,
+    "persistence_restored": false,
+    "mutation_allowed": false
+  }
+}

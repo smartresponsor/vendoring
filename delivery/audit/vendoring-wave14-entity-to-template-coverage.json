@@ -1,0 +1,1767 @@
+{
+  "summary": {
+    "sourceCurrentSlice": "www-clean-20260611-151149.zip",
+    "entityGraphSource": "Pasted text(753).txt",
+    "entityCount": 46,
+    "routeEntryCount": 81,
+    "routeStemCount": 10,
+    "entityPhysicalCount": 0,
+    "repositoryPhysicalCount": 0,
+    "entitiesWithRoutes": 9,
+    "entitiesWithoutRoutes": 36,
+    "entitiesWithDirectTemplate": 1,
+    "orphanRouteStems": [
+      "VendorOnboarding",
+      "VendorProduct",
+      "VendorRating"
+    ],
+    "orphanRouteStemCount": 3
+  },
+  "matrix": [
+    {
+      "entity": "VendorAbstractEntity",
+      "candidateStems": [
+        "VendorAbstract"
+      ],
+      "status": "abstract_not_routable",
+      "risk": "not_business_endpoint",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorAddressEntity",
+      "candidateStems": [
+        "VendorAddress"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorAnalyticsEntity",
+      "candidateStems": [
+        "VendorAnalytics"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorApiKeyEntity",
+      "candidateStems": [
+        "VendorApiKey"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorAttachmentEntity",
+      "candidateStems": [
+        "VendorAttachmentDocument",
+        "VendorAttachmentMedia"
+      ],
+      "status": "entity_missing",
+      "risk": "route_exists_but_template_not_declared",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [
+        "vendor.attachment.document.archive_id",
+        "vendor.attachment.document.archive_slug",
+        "vendor.attachment.document.bulk",
+        "vendor.attachment.document.create",
+        "vendor.attachment.document.delete_id",
+        "vendor.attachment.document.delete_slug",
+        "vendor.attachment.document.duplicate_id",
+        "vendor.attachment.document.duplicate_slug",
+        "vendor.attachment.document.edit_id",
+        "vendor.attachment.document.edit_slug",
+        "vendor.attachment.document.export",
+        "vendor.attachment.document.import",
+        "vendor.attachment.document.index",
+        "vendor.attachment.document.new",
+        "vendor.attachment.document.restore_id",
+        "vendor.attachment.document.restore_slug",
+        "vendor.attachment.document.show_id",
+        "vendor.attachment.document.show_slug",
+        "vendor.attachment.document.update_id",
+        "vendor.attachment.document.update_slug",
+        "vendor.attachment.media.archive_id",
+        "vendor.attachment.media.archive_slug",
+        "vendor.attachment.media.bulk",
+        "vendor.attachment.media.create",
+        "vendor.attachment.media.delete_id",
+        "vendor.attachment.media.delete_slug",
+        "vendor.attachment.media.duplicate_id",
+        "vendor.attachment.media.duplicate_slug",
+        "vendor.attachment.media.edit_id",
+        "vendor.attachment.media.edit_slug",
+        "vendor.attachment.media.export",
+        "vendor.attachment.media.import",
+        "vendor.attachment.media.index",
+        "vendor.attachment.media.new",
+        "vendor.attachment.media.restore_id",
+        "vendor.attachment.media.restore_slug",
+        "vendor.attachment.media.show_id",
+        "vendor.attachment.media.show_slug",
+        "vendor.attachment.media.update_id",
+        "vendor.attachment.media.update_slug"
+      ],
+      "serviceFilesExist": true,
+      "serviceFiles": [
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentArchiveService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentBulkService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentCreateService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentDeleteService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentDuplicateService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentEditService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentExportService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentImportService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentNewService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentRestoreService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentShowService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentUpdateService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaArchiveService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaBulkService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaCreateService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaDeleteService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaDuplicateService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaEditService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaExportService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaImportService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaIndexService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaNewService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaRestoreService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaShowService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaUpdateService.php"
+      ],
+      "formTypeFilesExist": true,
+      "formTypeFiles": [
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentArchiveType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentBulkType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentCreateType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentDeleteType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentDuplicateType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentExportType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentImportType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentRestoreType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentUpdateType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaArchiveType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaBulkType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaCreateType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaDeleteType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaDuplicateType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaExportType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaImportType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaRestoreType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaUpdateType.php"
+      ],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorBillingEntity",
+      "candidateStems": [
+        "VendorBilling"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorCatalogCategoryBannerEntity",
+      "candidateStems": [
+        "VendorCatalogCategoryBanner"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorCatalogCategoryChangeRequestEntity",
+      "candidateStems": [
+        "VendorCatalogCategoryChangeRequest"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorCatalogCategoryHtmlBlockEntity",
+      "candidateStems": [
+        "VendorCatalogCategoryHtmlBlock"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorCatalogCategoryPinEntity",
+      "candidateStems": [
+        "VendorCatalogCategoryPin"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorCatalogReviewAssignmentEntity",
+      "candidateStems": [
+        "VendorCatalogReviewAssignment"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorCategoryEntity",
+      "candidateStems": [
+        "VendorCategory"
+      ],
+      "status": "entity_missing",
+      "risk": "route_exists_but_template_not_declared",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [
+        "vendor.category.assign",
+        "vendor.category.unassign"
+      ],
+      "serviceFilesExist": true,
+      "serviceFiles": [
+        "src/Service/Http/Vendor/Category/VendorCategoryAssignService.php",
+        "src/Service/Http/Vendor/Category/VendorCategoryUnassignService.php"
+      ],
+      "formTypeFilesExist": true,
+      "formTypeFiles": [
+        "src/Form/Vendor/Category/VendorCategoryAssignType.php",
+        "src/Form/Vendor/Category/VendorCategoryUnassignType.php"
+      ],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorChannelEntity",
+      "candidateStems": [
+        "VendorChannel"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorCodeStorageEntity",
+      "candidateStems": [
+        "VendorCodeStorage"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorCommissionEntity",
+      "candidateStems": [
+        "VendorCommission"
+      ],
+      "status": "entity_missing",
+      "risk": "route_exists_but_template_not_declared",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [
+        "vendor.commission.adjust",
+        "vendor.commission.calculate_id",
+        "vendor.commission.calculate_slug"
+      ],
+      "serviceFilesExist": true,
+      "serviceFiles": [
+        "src/Service/Http/Vendor/Commission/VendorCommissionAdjustService.php",
+        "src/Service/Http/Vendor/Commission/VendorCommissionCalculateService.php"
+      ],
+      "formTypeFilesExist": true,
+      "formTypeFiles": [
+        "src/Form/Vendor/Commission/VendorCommissionAdjustType.php",
+        "src/Form/Vendor/Commission/VendorCommissionCalculateType.php"
+      ],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorCommissionHistoryEntity",
+      "candidateStems": [
+        "VendorCommission"
+      ],
+      "status": "entity_missing",
+      "risk": "route_exists_but_template_not_declared",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [
+        "vendor.commission.adjust",
+        "vendor.commission.calculate_id",
+        "vendor.commission.calculate_slug"
+      ],
+      "serviceFilesExist": true,
+      "serviceFiles": [
+        "src/Service/Http/Vendor/Commission/VendorCommissionAdjustService.php",
+        "src/Service/Http/Vendor/Commission/VendorCommissionCalculateService.php"
+      ],
+      "formTypeFilesExist": true,
+      "formTypeFiles": [
+        "src/Form/Vendor/Commission/VendorCommissionAdjustType.php",
+        "src/Form/Vendor/Commission/VendorCommissionCalculateType.php"
+      ],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorConversationEntity",
+      "candidateStems": [
+        "VendorConversation"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorConversationMessageEntity",
+      "candidateStems": [
+        "VendorConversationMessage"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorCustomerOrderEntity",
+      "candidateStems": [
+        "VendorCustomerOrder"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorDocumentAttachmentEntity",
+      "candidateStems": [
+        "VendorAttachmentDocument"
+      ],
+      "status": "entity_missing",
+      "risk": "route_exists_but_template_not_declared",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [
+        "vendor.attachment.document.archive_id",
+        "vendor.attachment.document.archive_slug",
+        "vendor.attachment.document.bulk",
+        "vendor.attachment.document.create",
+        "vendor.attachment.document.delete_id",
+        "vendor.attachment.document.delete_slug",
+        "vendor.attachment.document.duplicate_id",
+        "vendor.attachment.document.duplicate_slug",
+        "vendor.attachment.document.edit_id",
+        "vendor.attachment.document.edit_slug",
+        "vendor.attachment.document.export",
+        "vendor.attachment.document.import",
+        "vendor.attachment.document.index",
+        "vendor.attachment.document.new",
+        "vendor.attachment.document.restore_id",
+        "vendor.attachment.document.restore_slug",
+        "vendor.attachment.document.show_id",
+        "vendor.attachment.document.show_slug",
+        "vendor.attachment.document.update_id",
+        "vendor.attachment.document.update_slug"
+      ],
+      "serviceFilesExist": true,
+      "serviceFiles": [
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentArchiveService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentBulkService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentCreateService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentDeleteService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentDuplicateService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentEditService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentExportService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentImportService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentNewService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentRestoreService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentShowService.php",
+        "src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentUpdateService.php"
+      ],
+      "formTypeFilesExist": true,
+      "formTypeFiles": [
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentArchiveType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentBulkType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentCreateType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentDeleteType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentDuplicateType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentExportType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentImportType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentRestoreType.php",
+        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentUpdateType.php"
+      ],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorDocumentEntity",
+      "candidateStems": [
+        "VendorDocument"
+      ],
+      "status": "entity_missing",
+      "risk": "route_exists_but_template_not_declared",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [
+        "vendor.document.reject",
+        "vendor.document.verify"
+      ],
+      "serviceFilesExist": true,
+      "serviceFiles": [
+        "src/Service/Http/Vendor/Document/VendorDocumentRejectService.php",
+        "src/Service/Http/Vendor/Document/VendorDocumentVerifyService.php"
+      ],
+      "formTypeFilesExist": true,
+      "formTypeFiles": [
+        "src/Form/Vendor/Document/VendorDocumentRejectType.php",
+        "src/Form/Vendor/Document/VendorDocumentVerifyType.php"
+      ],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorFavouriteEntity",
+      "candidateStems": [
+        "VendorFavourite"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorGroupEntity",
+      "candidateStems": [
+        "VendorGroup"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorIbanEntity",
+      "candidateStems": [
+        "VendorIban"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorLedgerBindingEntity",
+      "candidateStems": [
+        "VendorLedgerBinding"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorLedgerEntryEntity",
+      "candidateStems": [
+        "VendorLedgerEntry"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorLogEntity",
+      "candidateStems": [
+        "VendorLog"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorMediaAttachmentEntity",
+      "candidateStems": [
+        "VendorAttachmentMedia"
+      ],
+      "status": "entity_missing",
+      "risk": "route_exists_but_template_not_declared",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [
+        "vendor.attachment.media.archive_id",
+        "vendor.attachment.media.archive_slug",
+        "vendor.attachment.media.bulk",
+        "vendor.attachment.media.create",
+        "vendor.attachment.media.delete_id",
+        "vendor.attachment.media.delete_slug",
+        "vendor.attachment.media.duplicate_id",
+        "vendor.attachment.media.duplicate_slug",
+        "vendor.attachment.media.edit_id",
+        "vendor.attachment.media.edit_slug",
+        "vendor.attachment.media.export",
+        "vendor.attachment.media.import",
+        "vendor.attachment.media.index",
+        "vendor.attachment.media.new",
+        "vendor.attachment.media.restore_id",
+        "vendor.attachment.media.restore_slug",
+        "vendor.attachment.media.show_id",
+        "vendor.attachment.media.show_slug",
+        "vendor.attachment.media.update_id",
+        "vendor.attachment.media.update_slug"
+      ],
+      "serviceFilesExist": true,
+      "serviceFiles": [
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaArchiveService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaBulkService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaCreateService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaDeleteService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaDuplicateService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaEditService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaExportService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaImportService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaIndexService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaNewService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaRestoreService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaShowService.php",
+        "src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaUpdateService.php"
+      ],
+      "formTypeFilesExist": true,
+      "formTypeFiles": [
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaArchiveType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaBulkType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaCreateType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaDeleteType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaDuplicateType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaExportType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaImportType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaRestoreType.php",
+        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaUpdateType.php"
+      ],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorMediaEntity",
+      "candidateStems": [
+        "VendorMedia"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorPassportEntity",
+      "candidateStems": [
+        "VendorPassport"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorPaymentEntity",
+      "candidateStems": [
+        "VendorPayment"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorPayoutAccountEntity",
+      "candidateStems": [
+        "VendorPayoutAccount"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorPayoutEntity",
+      "candidateStems": [
+        "VendorPayout"
+      ],
+      "status": "entity_missing",
+      "risk": "route_exists_but_template_not_declared",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [
+        "vendor.payout.approve",
+        "vendor.payout.calculate_id",
+        "vendor.payout.calculate_slug",
+        "vendor.payout.pay"
+      ],
+      "serviceFilesExist": true,
+      "serviceFiles": [
+        "src/Service/Http/Vendor/Payout/VendorPayoutApproveService.php",
+        "src/Service/Http/Vendor/Payout/VendorPayoutCalculateService.php",
+        "src/Service/Http/Vendor/Payout/VendorPayoutPayService.php"
+      ],
+      "formTypeFilesExist": true,
+      "formTypeFiles": [
+        "src/Form/Vendor/Payout/VendorPayoutApproveType.php",
+        "src/Form/Vendor/Payout/VendorPayoutCalculateType.php",
+        "src/Form/Vendor/Payout/VendorPayoutPayType.php"
+      ],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorPayoutItemEntity",
+      "candidateStems": [
+        "VendorPayout"
+      ],
+      "status": "entity_missing",
+      "risk": "route_exists_but_template_not_declared",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [
+        "vendor.payout.approve",
+        "vendor.payout.calculate_id",
+        "vendor.payout.calculate_slug",
+        "vendor.payout.pay"
+      ],
+      "serviceFilesExist": true,
+      "serviceFiles": [
+        "src/Service/Http/Vendor/Payout/VendorPayoutApproveService.php",
+        "src/Service/Http/Vendor/Payout/VendorPayoutCalculateService.php",
+        "src/Service/Http/Vendor/Payout/VendorPayoutPayService.php"
+      ],
+      "formTypeFilesExist": true,
+      "formTypeFiles": [
+        "src/Form/Vendor/Payout/VendorPayoutApproveType.php",
+        "src/Form/Vendor/Payout/VendorPayoutCalculateType.php",
+        "src/Form/Vendor/Payout/VendorPayoutPayType.php"
+      ],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorProfileAvatarEntity",
+      "candidateStems": [
+        "VendorProfileAvatar"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorProfileCoverEntity",
+      "candidateStems": [
+        "VendorProfileCover"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorProfileEntity",
+      "candidateStems": [
+        "VendorProfile"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorRememberMeTokenEntity",
+      "candidateStems": [
+        "VendorRememberMeToken"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorSecurityEntity",
+      "candidateStems": [
+        "VendorSecurity"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorServiceEntity",
+      "candidateStems": [
+        "VendorService"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorShipmentEntity",
+      "candidateStems": [
+        "VendorShipment"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorTransactionEntity",
+      "candidateStems": [
+        "VendorTransaction"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [
+        "templates/ops/vendor_transactions/index.html.twig"
+      ],
+      "directTemplateExists": true
+    },
+    {
+      "entity": "VendorTranslationEntity",
+      "candidateStems": [
+        "VendorTranslation"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorUserAssignmentEntity",
+      "candidateStems": [
+        "VendorUserAssignment"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorWishlistEntity",
+      "candidateStems": [
+        "VendorWishlist"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    },
+    {
+      "entity": "VendorWishlistItemEntity",
+      "candidateStems": [
+        "VendorWishlistItem"
+      ],
+      "status": "entity_missing",
+      "risk": "business_entity_without_cruding_surface",
+      "entityClassExists": false,
+      "repositoryExists": false,
+      "repositoryInterfaceExists": false,
+      "routeKeys": [],
+      "serviceFilesExist": false,
+      "serviceFiles": [],
+      "formTypeFilesExist": false,
+      "formTypeFiles": [],
+      "directTemplates": [],
+      "directTemplateExists": false
+    }
+  ],
+  "orphanRoutes": {
+    "VendorOnboarding": [
+      "vendor.onboarding.approve_id",
+      "vendor.onboarding.approve_slug",
+      "vendor.onboarding.reject_id",
+      "vendor.onboarding.reject_slug",
+      "vendor.onboarding.start_id",
+      "vendor.onboarding.start_slug"
+    ],
+    "VendorProduct": [
+      "vendor.product.assign",
+      "vendor.product.unassign"
+    ],
+    "VendorRating": [
+      "vendor.rating.recalculate_id",
+      "vendor.rating.recalculate_slug"
+    ]
+  },
+  "routeEntries": [
+    {
+      "key": "vendor.category.assign",
+      "path": "/vendor/category/assign/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Category\\VendorCategoryAssignService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Category\\VendorCategoryAssignType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.category.unassign",
+      "path": "/vendor/category/unassign/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Category\\VendorCategoryUnassignService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Category\\VendorCategoryUnassignType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.commission.adjust",
+      "path": "/vendor/commission/adjust/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Commission\\VendorCommissionAdjustService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Commission\\VendorCommissionAdjustType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.commission.calculate_id",
+      "path": "/vendor/commission/calculate/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Commission\\VendorCommissionCalculateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Commission\\VendorCommissionCalculateType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.commission.calculate_slug",
+      "path": "/vendor/commission/calculate/{vendorSlug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Commission\\VendorCommissionCalculateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Commission\\VendorCommissionCalculateType",
+      "resolver": "slug",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.document.reject",
+      "path": "/vendor/document/reject/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Document\\VendorDocumentRejectService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Document\\VendorDocumentRejectType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.document.verify",
+      "path": "/vendor/document/verify/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Document\\VendorDocumentVerifyService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Document\\VendorDocumentVerifyType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.onboarding.approve_id",
+      "path": "/vendor/onboarding/approve/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingApproveService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingApproveType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.onboarding.approve_slug",
+      "path": "/vendor/onboarding/approve/{vendorSlug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingApproveService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingApproveType",
+      "resolver": "slug",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.onboarding.reject_id",
+      "path": "/vendor/onboarding/reject/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingRejectService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingRejectType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.onboarding.reject_slug",
+      "path": "/vendor/onboarding/reject/{vendorSlug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingRejectService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingRejectType",
+      "resolver": "slug",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.onboarding.start_id",
+      "path": "/vendor/onboarding/start/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingStartService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingStartType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.onboarding.start_slug",
+      "path": "/vendor/onboarding/start/{vendorSlug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingStartService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingStartType",
+      "resolver": "slug",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.payout.approve",
+      "path": "/vendor/payout/approve/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Payout\\VendorPayoutApproveService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutApproveType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.payout.calculate_id",
+      "path": "/vendor/payout/calculate/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Payout\\VendorPayoutCalculateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutCalculateType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.payout.calculate_slug",
+      "path": "/vendor/payout/calculate/{vendorSlug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Payout\\VendorPayoutCalculateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutCalculateType",
+      "resolver": "slug",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.payout.pay",
+      "path": "/vendor/payout/pay/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Payout\\VendorPayoutPayService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutPayType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.product.assign",
+      "path": "/vendor/product/assign/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Product\\VendorProductAssignService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Product\\VendorProductAssignType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.product.unassign",
+      "path": "/vendor/product/unassign/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Product\\VendorProductUnassignService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Product\\VendorProductUnassignType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.rating.recalculate_id",
+      "path": "/vendor/rating/recalculate/{vendorId",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Rating\\VendorRatingRecalculateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Rating\\VendorRatingRecalculateType",
+      "resolver": "id",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.rating.recalculate_slug",
+      "path": "/vendor/rating/recalculate/{vendorSlug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Rating\\VendorRatingRecalculateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Rating\\VendorRatingRecalculateType",
+      "resolver": "slug",
+      "file": "config/platform/routes/business/vendor.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.index",
+      "path": "/vendor/attachment/document/index",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentIndexService",
+      "type": null,
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.show_id",
+      "path": "/vendor/attachment/document/show/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentShowService",
+      "type": null,
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.show_slug",
+      "path": "/vendor/attachment/document/show/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentShowService",
+      "type": null,
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.new",
+      "path": "/vendor/attachment/document/new",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentNewService",
+      "type": null,
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.create",
+      "path": "/vendor/attachment/document/create",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentCreateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentCreateType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.edit_id",
+      "path": "/vendor/attachment/document/edit/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentEditService",
+      "type": null,
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.edit_slug",
+      "path": "/vendor/attachment/document/edit/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentEditService",
+      "type": null,
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.update_id",
+      "path": "/vendor/attachment/document/update/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.update_slug",
+      "path": "/vendor/attachment/document/update/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.delete_id",
+      "path": "/vendor/attachment/document/delete/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.delete_slug",
+      "path": "/vendor/attachment/document/delete/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.bulk",
+      "path": "/vendor/attachment/document/bulk",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentBulkService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentBulkType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.import",
+      "path": "/vendor/attachment/document/import",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentImportService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentImportType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.export",
+      "path": "/vendor/attachment/document/export",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentExportService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentExportType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.archive_id",
+      "path": "/vendor/attachment/document/archive/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.archive_slug",
+      "path": "/vendor/attachment/document/archive/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.restore_id",
+      "path": "/vendor/attachment/document/restore/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.restore_slug",
+      "path": "/vendor/attachment/document/restore/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.duplicate_id",
+      "path": "/vendor/attachment/document/duplicate/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.document.duplicate_slug",
+      "path": "/vendor/attachment/document/duplicate/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.index",
+      "path": "/vendor/attachment/media/index",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaIndexService",
+      "type": null,
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.show_id",
+      "path": "/vendor/attachment/media/show/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaShowService",
+      "type": null,
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.show_slug",
+      "path": "/vendor/attachment/media/show/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaShowService",
+      "type": null,
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.new",
+      "path": "/vendor/attachment/media/new",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaNewService",
+      "type": null,
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.create",
+      "path": "/vendor/attachment/media/create",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaCreateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaCreateType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.edit_id",
+      "path": "/vendor/attachment/media/edit/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaEditService",
+      "type": null,
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.edit_slug",
+      "path": "/vendor/attachment/media/edit/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaEditService",
+      "type": null,
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.update_id",
+      "path": "/vendor/attachment/media/update/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.update_slug",
+      "path": "/vendor/attachment/media/update/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.delete_id",
+      "path": "/vendor/attachment/media/delete/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.delete_slug",
+      "path": "/vendor/attachment/media/delete/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.bulk",
+      "path": "/vendor/attachment/media/bulk",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaBulkService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaBulkType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.import",
+      "path": "/vendor/attachment/media/import",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaImportService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaImportType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.export",
+      "path": "/vendor/attachment/media/export",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaExportService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaExportType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.archive_id",
+      "path": "/vendor/attachment/media/archive/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.archive_slug",
+      "path": "/vendor/attachment/media/archive/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.restore_id",
+      "path": "/vendor/attachment/media/restore/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.restore_slug",
+      "path": "/vendor/attachment/media/restore/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.duplicate_id",
+      "path": "/vendor/attachment/media/duplicate/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.attachment.media.duplicate_slug",
+      "path": "/vendor/attachment/media/duplicate/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+    },
+    {
+      "key": "vendor.index",
+      "path": "/vendor/index",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorIndexService",
+      "type": null,
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.show_id",
+      "path": "/vendor/show/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorShowService",
+      "type": null,
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.show_slug",
+      "path": "/vendor/show/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorShowService",
+      "type": null,
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.new",
+      "path": "/vendor/new",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorNewService",
+      "type": null,
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.create",
+      "path": "/vendor/create",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorCreateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorCreateType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.edit_id",
+      "path": "/vendor/edit/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorEditService",
+      "type": null,
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.edit_slug",
+      "path": "/vendor/edit/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorEditService",
+      "type": null,
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.update_id",
+      "path": "/vendor/update/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorUpdateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorUpdateType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.update_slug",
+      "path": "/vendor/update/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorUpdateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorUpdateType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.delete_id",
+      "path": "/vendor/delete/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorDeleteService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorDeleteType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.delete_slug",
+      "path": "/vendor/delete/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorDeleteService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorDeleteType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.bulk",
+      "path": "/vendor/bulk",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorBulkService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorBulkType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.import",
+      "path": "/vendor/import",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorImportService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorImportType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.export",
+      "path": "/vendor/export",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorExportService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorExportType",
+      "resolver": null,
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.archive_id",
+      "path": "/vendor/archive/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorArchiveService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorArchiveType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.archive_slug",
+      "path": "/vendor/archive/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorArchiveService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorArchiveType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.restore_id",
+      "path": "/vendor/restore/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorRestoreService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorRestoreType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.restore_slug",
+      "path": "/vendor/restore/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorRestoreService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorRestoreType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.duplicate_id",
+      "path": "/vendor/duplicate/{id",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorDuplicateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorDuplicateType",
+      "resolver": "id",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    },
+    {
+      "key": "vendor.duplicate_slug",
+      "path": "/vendor/duplicate/{slug",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorDuplicateService",
+      "type": "App\\Vendoring\\Form\\Vendor\\VendorDuplicateType",
+      "resolver": "slug",
+      "file": "config/platform/routes/crud/vendor.yaml"
+    }
+  ],
+  "templates": [
+    "templates/_macros/crud.html.twig",
+    "templates/base.html.twig",
+    "templates/ops/vendor_transactions/index.html.twig"
+  ]
+}

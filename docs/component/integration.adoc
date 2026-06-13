@@ -10,8 +10,8 @@ The host application should only enable the bundle and import route configuratio
 
 == Runtime entry points
 
-* Bundle class: `App\VendoringBundle`
-* Extension class: `App\DependencyInjection\VendoringExtension`
+* Bundle class: `App\Vendoring\VendoringBundle`
+* Extension class: `App\Vendoring\DependencyInjection\VendoringExtension`
 * Service export: `config/component/services.yaml`
 * Route export: `config/component/routes.yaml`
 
@@ -20,7 +20,7 @@ The host application should only enable the bundle and import route configuratio
 [source,php]
 ----
 // config/bundles.php
-App\VendoringBundle::class => ['all' => true],
+App\Vendoring\VendoringBundle::class => ['all' => true],
 ----
 
 If the component exports HTTP routes, the host imports the route file using the bundle resource path or the package path agreed for the installation mode.
@@ -31,6 +31,37 @@ If the component exports HTTP routes, the host imports the route file using the 
 vendoring_component:
   resource: '@VendoringBundle/config/component/routes.yaml'
 ----
+
+
+== External bundle configuration
+
+The bundle now exposes a canonical `vendoring:` configuration tree for reusable-host consumption.
+Hosts should prefer semantic bundle configuration over ad hoc application parameters.
+
+[source,yaml]
+----
+# config/packages/vendoring.yaml
+vendoring:
+  secret: '%kernel.secret%'
+  observability_dir: '%kernel.project_dir%/var/observability'
+  fault_tolerance_dir: '%kernel.project_dir%/var/fault-tolerance'
+  feature_flags:
+    vendor_portal:
+      enabled: true
+      cohorts: ['beta']
+  alert_thresholds:
+    errorLogThreshold: 1
+    openBreakerThreshold: 1
+    missingProbeThreshold: 1
+  rollback_thresholds:
+    criticalAlertCodes: ['outbound_circuit_open']
+    warningAlertCodes: ['runtime_error_spike', 'probe_artifacts_missing', 'observability_metrics_empty']
+----
+
+== Canonical service export
+
+`config/component/services.yaml` is the canonical service graph for bundle consumption.
+`config/vendor_services.yaml` remains only as a thin legacy host bridge and must not diverge from the component export.
 
 == Boundary rule
 

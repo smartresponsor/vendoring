@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Payout;
+namespace App\Vendoring\Tests\Unit\Payout;
 
-use App\DTO\Payout\VendorPayoutTransferDTO;
-use App\Service\Payout\VendorPayoutProviderService;
+use App\Vendoring\DTO\Payout\VendorPayoutTransferDTO;
+use App\Vendoring\Service\Payout\VendorPayoutProviderService;
 use PHPUnit\Framework\TestCase;
 
 final class VendorPayoutProviderServiceTest extends TestCase

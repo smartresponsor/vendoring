@@ -44,7 +44,7 @@ Scenarios should clearly distinguish:
 
 Example:
 - mutation: payout record is created
-- projection: runtime finance view shows payout-related state
+- projection: runtime finance projection shows payout-related state
 
 ## Failure-mode rule
 

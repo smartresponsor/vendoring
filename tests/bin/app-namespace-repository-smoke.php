@@ -13,9 +13,9 @@ if (!is_file($file)) {
 $content = (string) file_get_contents($file);
 
 $required = [
-    'App\\:',
-    'App\\ServiceInterface\\Order\\OrderPaymentInterface:',
-    'alias: App\\Service\\Order\\OrderPaymentService',
+    'App\Vendoring\\:',
+    'App\Vendoring\\ServiceInterface\\Core\\VendorCoreServiceInterface:',
+    'alias: App\Vendoring\\Service\\Core\\VendorCoreService',
 ];
 
 foreach ($required as $needle) {
@@ -26,14 +26,14 @@ foreach ($required as $needle) {
 }
 
 $forbidden = [
-    'Vendor\\:',
-    'Vendor\\ServiceInterface\\Order\\OrderPaymentInterface:',
-    'alias: Vendor\\Service\\Order\\OrderPaymentService',
+    'VendorEntity\\:',
+    'VendorEntity\\ServiceInterface\\Core\\VendorCoreServiceInterface:',
+    'alias: VendorEntity\\Service\\Core\\VendorCoreService',
 ];
 
 foreach ($forbidden as $needle) {
     if (str_contains($content, $needle)) {
-        fwrite(STDERR, "Legacy Vendor namespace marker detected: {$needle}\n");
+        fwrite(STDERR, "Legacy VendorEntity namespace marker detected: {$needle}\n");
         exit(1);
     }
 }

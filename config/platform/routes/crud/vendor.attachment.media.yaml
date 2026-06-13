@@ -1,0 +1,74 @@
+# ---------------------------------------------------------------------------
+# Cruding token grammar
+# ---------------------------------------------------------------------------
+# This file is a route-map registry/protocol file for the current Cruding parser.
+#
+# Current Cruding catch-all grammar:
+#   API CRUD:
+#     /api/{resourcePath}
+#     /api/{resourcePath}/{slug}
+#
+#   Surface:
+#     /{resource}/{subject}/{surface}
+#     /{resource}/{subject}/{surface}/{action}
+#     /{resource}/{subject}/{surface}/{item}/{action}
+#     /{resource}/{subject}/{surface}/{token}/{item}
+#     /{resource}/{subject}/{surface}/{token}/{item}/{action}
+#
+#   Classic CRUD:
+#     /{resourcePath}/new/
+#     /{resourcePath}/edit/{id}
+#     /{resourcePath}/edit/{slug}
+#     /{resourcePath}/delete/{id}
+#     /{resourcePath}/delete/{slug}
+#     /{resourcePath}/{id}
+#     /{resourcePath}/{slug}
+#     /{resourcePath}
+#
+# Token meaning:
+#   resource      = first business/root token allowed by APP_RUNTIME_ENTITY
+#   subject       = second business token
+#   surface       = visual/object/surface token
+#   token         = operation/surface token when grammar has 5+ segments
+#   item          = item identifier value
+#   action        = final operation token
+#   resourcePath  = slash-aware classic CRUD resource path
+#   id            = internal/admin/system identifier
+#   slug          = public/outdoor/human identifier
+#
+# Runtime guard:
+#   first URI token must be allowed by APP_RUNTIME_ENTITY.
+#   reserved component roots must not be captured as business resources.
+#
+# Canon:
+#   routeKey keeps full business chain, for example:
+#     vendor.attachment.document.show
+#   template target may stay short, for example:
+#     document/show/index.html.twig
+#   no {ref}; use {id}/{slug}; use semantic {productId}/{mediaId} for relations.
+# ---------------------------------------------------------------------------
+
+# config/platform/routes/crud/vendor.attachment.media.yaml
+# Attachment media CRUD / CRUD-adjacent map for Vendoring.
+# Explicit id/slug variants; no {ref}.
+
+vendor.attachment.media.index: { path: /vendor/attachment/media/index, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaIndexService }
+vendor.attachment.media.show_id: { path: /vendor/attachment/media/show/{id}, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaShowService, resolver: id }
+vendor.attachment.media.show_slug: { path: /vendor/attachment/media/show/{slug}, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaShowService, resolver: slug }
+vendor.attachment.media.new: { path: /vendor/attachment/media/new, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaNewService }
+vendor.attachment.media.create: { path: /vendor/attachment/media/create, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaCreateType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaCreateService }
+vendor.attachment.media.edit_id: { path: /vendor/attachment/media/edit/{id}, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaEditService, resolver: id }
+vendor.attachment.media.edit_slug: { path: /vendor/attachment/media/edit/{slug}, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaEditService, resolver: slug }
+vendor.attachment.media.update_id: { path: /vendor/attachment/media/update/{id}, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaUpdateType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaUpdateService, resolver: id }
+vendor.attachment.media.update_slug: { path: /vendor/attachment/media/update/{slug}, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaUpdateType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaUpdateService, resolver: slug }
+vendor.attachment.media.delete_id: { path: /vendor/attachment/media/delete/{id}, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaDeleteType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaDeleteService, resolver: id }
+vendor.attachment.media.delete_slug: { path: /vendor/attachment/media/delete/{slug}, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaDeleteType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaDeleteService, resolver: slug }
+vendor.attachment.media.bulk: { path: /vendor/attachment/media/bulk, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaBulkType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaBulkService }
+vendor.attachment.media.import: { path: /vendor/attachment/media/import, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaImportType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaImportService }
+vendor.attachment.media.export: { path: /vendor/attachment/media/export, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaExportType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaExportService }
+vendor.attachment.media.archive_id: { path: /vendor/attachment/media/archive/{id}, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaArchiveType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaArchiveService, resolver: id }
+vendor.attachment.media.archive_slug: { path: /vendor/attachment/media/archive/{slug}, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaArchiveType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaArchiveService, resolver: slug }
+vendor.attachment.media.restore_id: { path: /vendor/attachment/media/restore/{id}, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaRestoreType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaRestoreService, resolver: id }
+vendor.attachment.media.restore_slug: { path: /vendor/attachment/media/restore/{slug}, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaRestoreType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaRestoreService, resolver: slug }
+vendor.attachment.media.duplicate_id: { path: /vendor/attachment/media/duplicate/{id}, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaDuplicateType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaDuplicateService, resolver: id }
+vendor.attachment.media.duplicate_slug: { path: /vendor/attachment/media/duplicate/{slug}, type: App\Vendoring\Form\Vendor\Attachment\Media\VendorAttachmentMediaDuplicateType, service: App\Vendoring\Service\Http\Vendor\Attachment\Media\VendorAttachmentMediaDuplicateService, resolver: slug }

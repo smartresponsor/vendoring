@@ -7,24 +7,24 @@ Apply deterministic PHPDoc coverage to the first runtime and release-read layer 
 ## Target files
 
 ### Ops
-- `src/ServiceInterface/Ops/VendorRuntimeStatusViewBuilderInterface.php`
-- `src/Service/Ops/VendorRuntimeStatusViewBuilder.php`
-- `src/ServiceInterface/Ops/VendorReleaseBaselineReaderInterface.php`
-- `src/Service/Ops/VendorReleaseBaselineReader.php`
+- `src/ServiceInterface/Ops/VendorRuntimeStatusProjectionBuilderServiceInterface.php`
+- `src/Service/Ops/VendorRuntimeStatusProjectionBuilderService.php`
+- `src/ServiceInterface/Ops/VendorReleaseBaselineReaderServiceInterface.php`
+- `src/Service/Ops/VendorReleaseBaselineReaderService.php`
 
 ### Finance
-- `src/ServiceInterface/VendorFinanceRuntimeViewBuilderInterface.php`
-- `src/Service/VendorFinanceRuntimeViewBuilder.php`
+- `src/ServiceInterface/VendorFinanceRuntimeProjectionBuilderServiceInterface.php`
+- `src/Service/VendorFinanceRuntimeProjectionBuilderService.php`
 
 ### Statement
-- `src/ServiceInterface/Statement/VendorStatementDeliveryRuntimeViewBuilderInterface.php`
-- `src/Service/Statement/VendorStatementDeliveryRuntimeViewBuilder.php`
-- `src/ServiceInterface/Statement/VendorStatementRecipientProviderInterface.php`
-- `src/Service/Statement/VendorStatementRecipientProvider.php`
+- `src/ServiceInterface/Statement/VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface.php`
+- `src/Service/Statement/VendorStatementDeliveryRuntimeProjectionBuilderService.php`
+- `src/ServiceInterface/Statement/VendorStatementRecipientProviderServiceInterface.php`
+- `src/Service/Statement/VendorStatementRecipientProviderService.php`
 
 ### Integration
-- `src/ServiceInterface/Integration/VendorExternalIntegrationRuntimeViewBuilderInterface.php`
-- `src/Service/Integration/VendorExternalIntegrationRuntimeViewBuilder.php`
+- `src/ServiceInterface/Integration/VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface.php`
+- `src/Service/Integration/VendorExternalIntegrationRuntimeProjectionBuilderService.php`
 
 ## Acceptance criteria
 
@@ -54,7 +54,7 @@ Each target file should satisfy all of the following:
 
 ## Required array-shape candidates
 
-### VendorRuntimeStatusViewBuilder
+### VendorRuntimeStatusProjectionBuilderService
 - `ownership: array|null`
 - `profile: array|null`
 - `finance: array<string,mixed>`
@@ -62,7 +62,7 @@ Each target file should satisfy all of the following:
 - `externalIntegration: array<string,mixed>`
 - `surfaceStatus: array<string,bool>`
 
-### VendorReleaseBaselineReader
+### VendorReleaseBaselineReaderService
 - `artifactStatus: array<string,bool>`
 - `issues: list<string>`
 - profile summary helper:
@@ -76,7 +76,7 @@ array{
 }
 ```
 
-### VendorStatementDeliveryRuntimeViewBuilder
+### VendorStatementDeliveryRuntimeProjectionBuilderService
 - `ownership: array|null`
 - `export: array{path:string, exists:bool, readable:bool}|null`
 - `recipients: list<array{tenantId:string, vendorId:string, email:string, currency:string}>`

@@ -1,0 +1,10 @@
+{
+  "wave": "15B",
+  "scope": "Vendoring namespace and route FQCN alignment",
+  "composer_psr4": "App\\\\Vendoring\\\\ => src/",
+  "http_classes_aligned": 78,
+  "form_classes_aligned": 46,
+  "changed_files": 161,
+  "deletes": [],
+  "legacy_prefixes_remaining": 0
+}

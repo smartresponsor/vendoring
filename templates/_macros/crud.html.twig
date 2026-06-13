@@ -1,0 +1,17 @@
+{% macro alert(type, title, message) %}
+    <div class="crud-app-alert {{ type }}">
+        {% if title is not empty %}
+            <strong>{{ title }}</strong>
+        {% endif %}
+        <div>{{ message }}</div>
+    </div>
+{% endmacro %}
+
+{% macro field(field, widgetClass, labelClass) %}
+    <div class="crud-app-field">
+        {{ form_label(field, null, {label_attr: {class: labelClass|default('crud-app-field-label')}}) }}
+        {{ form_widget(field, {attr: {class: widgetClass|default('crud-app-input')}}) }}
+        {{ form_errors(field) }}
+    </div>
+{% endmacro %}
+

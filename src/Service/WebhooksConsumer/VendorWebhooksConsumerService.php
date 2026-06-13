@@ -4,9 +4,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\WebhooksConsumer;
+namespace App\Vendoring\Service\WebhooksConsumer;
 
-use App\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface;
+use App\Vendoring\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface;
 
 final class VendorWebhooksConsumerService implements VendorWebhooksConsumerServiceInterface
 {

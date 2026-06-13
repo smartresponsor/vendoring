@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/_vendor_report_bootstrap.php';
 
-vendorReportHeader('Vendor config guard report');
+vendorReportHeader('Vendoring config guard report');
 $root = vendorReportProjectRoot();
 
 $requiredFiles = [
@@ -12,7 +12,7 @@ $requiredFiles = [
     'config/packages/framework.yaml',
     'config/packages/doctrine.yaml',
     'config/vendor_services.yaml',
-    'config/vendor_routes.yaml',
+    'config/platform/routes/crud/vendor.yaml',
     'config/services_runtime.php',
     'config/routes_runtime.php',
 ];

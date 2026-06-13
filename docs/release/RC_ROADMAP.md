@@ -19,7 +19,7 @@ Deliverables:
 
 Focus:
 - strengthen the `VendorTransaction` contour as the canonical vertical slice
-- prove request → controller → manager → policy → repository → Doctrine → database → response
+- prove request → surface builder → manager → policy → repository → Doctrine → database → response
 
 Deliverables:
 - richer kernel/runtime tests

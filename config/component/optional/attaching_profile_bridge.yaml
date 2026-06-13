@@ -1,0 +1,13 @@
+# Optional host-level bridge. Import this file only in applications where Attaching is installed
+# and exposes App\Attaching\ServiceInterface\Attachment\AttachmentPrimaryLinkResolverServiceInterface.
+services:
+  App\Vendoring\Service\Profile\Bridge\VendorAttachingProfileAttachmentResolverService:
+    arguments:
+      $attachmentPrimaryLinkResolver: '@App\Attaching\ServiceInterface\Attachment\AttachmentPrimaryLinkResolverServiceInterface'
+
+  App\Vendoring\Service\Profile\VendorChainedProfileAttachmentResolverService:
+    arguments:
+      $primaryResolver: '@App\Vendoring\Service\Profile\Bridge\VendorAttachingProfileAttachmentResolverService'
+      $fallbackResolver: '@App\Vendoring\Service\Profile\VendorLegacyProfileAttachmentResolverService'
+
+  App\Vendoring\ServiceInterface\Profile\VendorProfileAttachmentResolverServiceInterface: '@App\Vendoring\Service\Profile\VendorChainedProfileAttachmentResolverService'

@@ -3,9 +3,9 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Runtime;
+namespace App\Vendoring\Tests\Integration\Runtime;
 
-use App\Tests\Support\Runtime\KernelRuntimeHarness;
+use App\Vendoring\Tests\Support\Runtime\KernelRuntimeHarness;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -37,17 +37,17 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
     public static function validationSurfaceProvider(): iterable
     {
         yield 'finance runtime requires tenantId' => [
-            'uri' => '/api/vendor/runtime/vendor-1/finance',
+            'uri' => '/api/vendor/runtime/finance/vendor-1',
             'expectedError' => 'tenant_id_required',
         ];
 
         yield 'statement runtime requires from' => [
-            'uri' => '/api/payouts/statements/vendor-1?tenantId=tenant-1&to=2026-01-31&currency=USD',
+            'uri' => '/api/vendor/payout/statement/vendor-1?tenantId=tenant-1&to=2026-01-31&currency=USD',
             'expectedError' => 'statement_from_required',
         ];
 
         yield 'statement runtime requires to' => [
-            'uri' => '/api/payouts/statements/vendor-1?tenantId=tenant-1&from=2026-01-01&currency=USD',
+            'uri' => '/api/vendor/payout/statement/vendor-1?tenantId=tenant-1&from=2026-01-01&currency=USD',
             'expectedError' => 'statement_to_required',
         ];
     }
@@ -61,7 +61,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
 
         try {
-            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/payout/create', [
+            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
                 'tenantId' => 'tenant-1',
                 'vendorId' => 'vendor-1',
                 'currency' => 'USD',
@@ -86,7 +86,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
 
         try {
-            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/payout/create', [
+            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
                 'tenantId' => 'tenant-1',
                 'vendorId' => 'vendor-1',
                 'currency' => 'USD',
@@ -98,7 +98,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
 
             self::assertSame(200, $response->getStatusCode());
             self::assertIsArray($data);
-            self::assertSame(false, $data['created'] ?? null);
+            self::assertFalse($data['created'] ?? null);
             self::assertSame('threshold_not_met', $data['reason'] ?? null);
         } finally {
             KernelRuntimeHarness::cleanupRuntimeState($kernel);
@@ -114,7 +114,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
 
         try {
-            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/payout/create', [
+            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
                 'tenantId' => 'tenant-1',
                 'vendorId' => 'vendor-1',
                 'currency' => 'USD',
@@ -139,7 +139,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
 
         try {
-            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/payout/create', [
+            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
                 'tenantId' => 'tenant-1',
                 'vendorId' => 'vendor-1',
                 'currency' => 'USD',
@@ -164,7 +164,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
 
         try {
-            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/payout/create', [
+            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
                 'tenantId' => 'tenant-1',
                 'vendorId' => 'vendor-1',
                 'currency' => 'USD',

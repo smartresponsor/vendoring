@@ -4,7 +4,7 @@ component:
   title: Vendoring
   package: vendoring/vendor
   status: rc
-  namespace: App
+  namespace: App\Vendoring
   responsibility: "vendor, supplier, and partner registry surfaces"
   export_contract:
     services: config/component/services.yaml
@@ -15,6 +15,7 @@ component:
     security: config/component/security.yaml
     env: config/component/env.yaml
     smoke: config/component/smoke.yaml
+    optional_attaching_profile_bridge: config/component/optional/attaching_profile_bridge.yaml
   host_policy:
     business_logic_owner: component
     composition_owner: host_application
@@ -23,7 +24,13 @@ component:
     entities_as_transport_contracts: false
 
   symfony_bundle:
-    class: App\VendoringBundle
-    extension: App\DependencyInjection\VendoringExtension
+    class: App\Vendoring\VendoringBundle
+    extension: App\Vendoring\DependencyInjection\VendoringExtension
     services_loaded_by_extension: config/component/services.yaml
-    routes_import_required_by_host: config/component/routes.yaml
+    configuration_class: App\Vendoring\DependencyInjection\VendorConfiguration
+    routes_import_required_by_host: null
+
+  zero_controller_runtime:
+    enabled: true
+    owner: cruding
+    service_convention: App\Vendoring\Service\Http\*

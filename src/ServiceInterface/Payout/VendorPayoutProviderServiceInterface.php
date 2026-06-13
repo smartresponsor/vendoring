@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Payout;
+namespace App\Vendoring\ServiceInterface\Payout;
 
-use App\DTO\Payout\VendorPayoutTransferDTO;
+use App\Vendoring\DTO\Payout\VendorPayoutTransferDTO;
 use Random\RandomException;
 
 interface VendorPayoutProviderServiceInterface

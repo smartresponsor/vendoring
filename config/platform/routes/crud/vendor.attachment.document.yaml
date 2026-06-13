@@ -1,0 +1,74 @@
+# ---------------------------------------------------------------------------
+# Cruding token grammar
+# ---------------------------------------------------------------------------
+# This file is a route-map registry/protocol file for the current Cruding parser.
+#
+# Current Cruding catch-all grammar:
+#   API CRUD:
+#     /api/{resourcePath}
+#     /api/{resourcePath}/{slug}
+#
+#   Surface:
+#     /{resource}/{subject}/{surface}
+#     /{resource}/{subject}/{surface}/{action}
+#     /{resource}/{subject}/{surface}/{item}/{action}
+#     /{resource}/{subject}/{surface}/{token}/{item}
+#     /{resource}/{subject}/{surface}/{token}/{item}/{action}
+#
+#   Classic CRUD:
+#     /{resourcePath}/new/
+#     /{resourcePath}/edit/{id}
+#     /{resourcePath}/edit/{slug}
+#     /{resourcePath}/delete/{id}
+#     /{resourcePath}/delete/{slug}
+#     /{resourcePath}/{id}
+#     /{resourcePath}/{slug}
+#     /{resourcePath}
+#
+# Token meaning:
+#   resource      = first business/root token allowed by APP_RUNTIME_ENTITY
+#   subject       = second business token
+#   surface       = visual/object/surface token
+#   token         = operation/surface token when grammar has 5+ segments
+#   item          = item identifier value
+#   action        = final operation token
+#   resourcePath  = slash-aware classic CRUD resource path
+#   id            = internal/admin/system identifier
+#   slug          = public/outdoor/human identifier
+#
+# Runtime guard:
+#   first URI token must be allowed by APP_RUNTIME_ENTITY.
+#   reserved component roots must not be captured as business resources.
+#
+# Canon:
+#   routeKey keeps full business chain, for example:
+#     vendor.attachment.document.show
+#   template target may stay short, for example:
+#     document/show/index.html.twig
+#   no {ref}; use {id}/{slug}; use semantic {productId}/{mediaId} for relations.
+# ---------------------------------------------------------------------------
+
+# config/platform/routes/crud/vendor.attachment.document.yaml
+# Attachment document CRUD / CRUD-adjacent map for Vendoring.
+# Explicit id/slug variants; no {ref}.
+
+vendor.attachment.document.index: { path: /vendor/attachment/document/index, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentIndexService }
+vendor.attachment.document.show_id: { path: /vendor/attachment/document/show/{id}, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentShowService, resolver: id }
+vendor.attachment.document.show_slug: { path: /vendor/attachment/document/show/{slug}, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentShowService, resolver: slug }
+vendor.attachment.document.new: { path: /vendor/attachment/document/new, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentNewService }
+vendor.attachment.document.create: { path: /vendor/attachment/document/create, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentCreateType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentCreateService }
+vendor.attachment.document.edit_id: { path: /vendor/attachment/document/edit/{id}, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentEditService, resolver: id }
+vendor.attachment.document.edit_slug: { path: /vendor/attachment/document/edit/{slug}, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentEditService, resolver: slug }
+vendor.attachment.document.update_id: { path: /vendor/attachment/document/update/{id}, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentUpdateType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentUpdateService, resolver: id }
+vendor.attachment.document.update_slug: { path: /vendor/attachment/document/update/{slug}, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentUpdateType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentUpdateService, resolver: slug }
+vendor.attachment.document.delete_id: { path: /vendor/attachment/document/delete/{id}, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentDeleteType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentDeleteService, resolver: id }
+vendor.attachment.document.delete_slug: { path: /vendor/attachment/document/delete/{slug}, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentDeleteType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentDeleteService, resolver: slug }
+vendor.attachment.document.bulk: { path: /vendor/attachment/document/bulk, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentBulkType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentBulkService }
+vendor.attachment.document.import: { path: /vendor/attachment/document/import, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentImportType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentImportService }
+vendor.attachment.document.export: { path: /vendor/attachment/document/export, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentExportType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentExportService }
+vendor.attachment.document.archive_id: { path: /vendor/attachment/document/archive/{id}, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentArchiveType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentArchiveService, resolver: id }
+vendor.attachment.document.archive_slug: { path: /vendor/attachment/document/archive/{slug}, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentArchiveType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentArchiveService, resolver: slug }
+vendor.attachment.document.restore_id: { path: /vendor/attachment/document/restore/{id}, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentRestoreType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentRestoreService, resolver: id }
+vendor.attachment.document.restore_slug: { path: /vendor/attachment/document/restore/{slug}, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentRestoreType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentRestoreService, resolver: slug }
+vendor.attachment.document.duplicate_id: { path: /vendor/attachment/document/duplicate/{id}, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentDuplicateType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentDuplicateService, resolver: id }
+vendor.attachment.document.duplicate_slug: { path: /vendor/attachment/document/duplicate/{slug}, type: App\Vendoring\Form\Vendor\Attachment\Document\VendorAttachmentDocumentDuplicateType, service: App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentDuplicateService, resolver: slug }

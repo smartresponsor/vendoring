@@ -3,18 +3,19 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Command;
+namespace App\Vendoring\Tests\Unit\Command;
 
-use App\Command\VendorPayoutCreateCommand;
-use App\Entity\Ledger\LedgerEntry;
-use App\Observability\Service\CorrelationContext;
-use App\Observability\Service\MetricEmitter;
-use App\Observability\Service\RuntimeLogger;
-use App\Service\Ledger\VendorLedgerService;
-use App\Service\Payout\VendorPayoutRequestService;
-use App\Service\Payout\VendorPayoutService;
-use App\Tests\Support\Payout\InMemoryPayoutRepository;
-use App\Tests\Support\Repository\InMemoryLedgerEntryRepository;
+use App\Vendoring\Command\VendorPayoutCreateCommand;
+use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
+use App\Vendoring\Service\Observability\VendorCorrelationContextService;
+use App\Vendoring\Service\Observability\VendorMetricEmitterService;
+use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
+use App\Vendoring\Service\Ledger\VendorLedgerService;
+use App\Vendoring\Service\Payout\VendorPayoutRequestService;
+use App\Vendoring\Service\Payout\VendorPayoutService;
+use App\Vendoring\Tests\Support\Payout\InMemoryPayoutRepository;
+use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,9 +27,9 @@ final class VendorPayoutCreateCommandTest extends TestCase
         $payoutRepository = new InMemoryPayoutRepository();
         $ledgerRepository = new InMemoryLedgerEntryRepository();
         $ledgerService = new VendorLedgerService($ledgerRepository);
-        $metrics = new MetricEmitter();
+        $metrics = new VendorMetricEmitterService();
 
-        $ledgerRepository->insert(new LedgerEntry('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 25.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-20 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntryEntity('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 25.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-20 10:00:00'));
 
         $command = new VendorPayoutCreateCommand(
             new VendorPayoutRequestService(),
@@ -56,9 +57,9 @@ final class VendorPayoutCreateCommandTest extends TestCase
         $payoutRepository = new InMemoryPayoutRepository();
         $ledgerRepository = new InMemoryLedgerEntryRepository();
         $ledgerService = new VendorLedgerService($ledgerRepository);
-        $metrics = new MetricEmitter();
+        $metrics = new VendorMetricEmitterService();
 
-        $ledgerRepository->insert(new LedgerEntry('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 2.5, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-20 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntryEntity('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 2.5, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-20 10:00:00'));
 
         $command = new VendorPayoutCreateCommand(
             new VendorPayoutRequestService(),
@@ -84,7 +85,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
         $payoutRepository = new InMemoryPayoutRepository();
         $ledgerRepository = new InMemoryLedgerEntryRepository();
         $ledgerService = new VendorLedgerService($ledgerRepository);
-        $metrics = new MetricEmitter();
+        $metrics = new VendorMetricEmitterService();
 
         $command = new VendorPayoutCreateCommand(
             new VendorPayoutRequestService(),
@@ -109,9 +110,9 @@ final class VendorPayoutCreateCommandTest extends TestCase
         $payoutRepository = new InMemoryPayoutRepository();
         $ledgerRepository = new InMemoryLedgerEntryRepository();
         $ledgerService = new VendorLedgerService($ledgerRepository);
-        $metrics = new MetricEmitter();
+        $metrics = new VendorMetricEmitterService();
 
-        $ledgerRepository->insert(new LedgerEntry('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 20.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-20 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntryEntity('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 20.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-20 10:00:00'));
 
         $command = new VendorPayoutCreateCommand(
             new VendorPayoutRequestService(),
@@ -135,8 +136,8 @@ final class VendorPayoutCreateCommandTest extends TestCase
         self::assertStringContainsString('"status": "pending"', $tester->getDisplay());
     }
 
-    private function runtimeLogger(): RuntimeLogger
+    private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new RuntimeLogger(new CorrelationContext(), new RequestStack());
+        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService());
     }
 }

@@ -9,10 +9,10 @@ The repository now ships a generated OpenAPI artifact for the strongest public H
 
 ## Covered surfaces
 
-- `POST /api/vendor-transactions`
-- `GET /api/vendor-transactions/vendor/{vendorId}`
-- `POST /api/vendor-transactions/vendor/{vendorId}/{id}/status`
-- `GET /ops/vendor-transactions/{vendorId}`
+- `POST /api/vendor/transaction`
+- `GET /api/vendor/transaction/{vendorId}`
+- `POST /api/vendor/transaction/status/{vendorId}/{id}`
+- `GET /ops/vendor/transaction/{vendorId}`
 
 ## Why this matters for RC
 

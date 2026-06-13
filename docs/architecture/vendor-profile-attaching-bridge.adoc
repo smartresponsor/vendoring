@@ -1,0 +1,59 @@
+= Vendoring public profile media bridge
+
+Vendoring owns the business meaning of the public/vendor profile. Attaching owns stored files, attachment metadata, and owner links.
+
+== Canonical profile media slots
+
+[source,text]
+----
+ownerType = vendor
+ownerId = <vendor id>
+context = profile
+slot = avatar | cover
+isPrimary = true
+----
+
+The `avatar` and `cover` assets must not be stored as canonical `file_path` fields inside Vendoring. Legacy `logoPath`, `bannerPath`, avatar, cover, and gallery path fields may remain temporarily as migration/fallback sources, but the active public-profile contract resolves media through Attaching.
+
+== Standalone mode
+
+Vendoring defaults `VendorProfileAttachmentResolverServiceInterface` to `NullVendorProfileAttachmentResolverService`. This keeps the component usable without Attaching installed.
+
+== Host bridge mode
+
+When a host application installs both Vendoring and Attaching, import:
+
+[source,yaml]
+----
+imports:
+  - { resource: 'vendor/vendoring/vendor/config/component/optional/attaching_profile_bridge.yaml' }
+----
+
+The optional bridge wires `VendorProfileAttachmentResolverServiceInterface` to `VendorAttachingProfileAttachmentResolverService`, which delegates primary slot lookup to Attaching.
+
+== UI summary contract
+
+`VendorPublicProfileSummaryProviderService` returns:
+
+[source,text]
+----
+publicName
+brandName
+vendorStatus
+profileStatus
+avatar.attachmentId
+avatar.url
+avatar.altText
+cover.attachmentId
+cover.url
+cover.altText
+profileUrl
+----
+
+Navigation and Interfacing should render this summary. They should not read Vendor entities or Attaching entities directly.
+
+== Legacy fallback chain
+
+Wave 3 adds a compatibility chain around the Attaching resolver. The host-wired Attaching bridge remains canonical, but Vendoring can still read older `logoPath`, `bannerPath`, profile avatar, and profile cover rows as fallback values.
+
+The fallback exists only to keep existing surfaces usable during migration. It must not become a new storage model.

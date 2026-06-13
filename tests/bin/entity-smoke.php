@@ -6,18 +6,18 @@ $root = dirname(__DIR__, 2);
 require $root . '/vendor/autoload.php';
 
 $requiredClasses = [
-    App\Entity\Vendor::class,
-    App\Entity\VendorApiKey::class,
-    App\Entity\VendorAnalytics::class,
-    App\Entity\VendorAttachment::class,
-    App\Entity\VendorBilling::class,
-    App\Entity\VendorDocument::class,
-    App\Entity\VendorLedgerBinding::class,
-    App\Entity\VendorMedia::class,
-    App\Entity\VendorPassport::class,
-    App\Entity\VendorProfile::class,
-    App\Entity\VendorSecurity::class,
-    App\Entity\VendorTransaction::class,
+    App\Vendoring\Entity\Vendor\VendorEntity::class,
+    App\Vendoring\Entity\Vendor\VendorApiKeyEntity::class,
+    App\Vendoring\Entity\Vendor\VendorAnalyticsEntity::class,
+    App\Vendoring\Entity\Vendor\VendorAttachmentEntity::class,
+    App\Vendoring\Entity\Vendor\VendorBillingEntity::class,
+    App\Vendoring\Entity\Vendor\VendorDocumentEntity::class,
+    App\Vendoring\Entity\Vendor\VendorLedgerBindingEntity::class,
+    App\Vendoring\Entity\Vendor\VendorMediaEntity::class,
+    App\Vendoring\Entity\Vendor\VendorPassportEntity::class,
+    App\Vendoring\Entity\Vendor\VendorProfileEntity::class,
+    App\Vendoring\Entity\Vendor\VendorSecurityEntity::class,
+    App\Vendoring\Entity\Vendor\VendorTransactionEntity::class,
 ];
 
 foreach ($requiredClasses as $className) {

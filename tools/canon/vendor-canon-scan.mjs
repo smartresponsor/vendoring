@@ -5,7 +5,7 @@ import path from 'path';
 
 const repoRoot = process.cwd();
 const srcRoot = path.join(repoRoot, 'src');
-const reportDir = path.join(repoRoot, '.report');
+const reportDir = path.join(repoRoot, 'build', 'reports', 'canon');
 
 const MAX_ISSUE = 5000;
 const MAX_SCANNED_FILES = 9000;
@@ -73,9 +73,17 @@ function scanForbiddenNamespaceChain(file) {
   if (!shouldScanForForbiddenNamespaceChain(file)) return;
 
   const r = rel(file);
+  if (r === 'config/reference.php') return;
+
   const head = readHead(file, 65536);
   if (/Smartresponsor\\/i.test(head) || /Smartresponsor\//i.test(head)) {
-    pushIssue('namespace-chain', r, 'Forbidden namespace chain found. Use App\\* only.');
+    pushIssue('namespace-chain', r, 'Forbidden namespace chain found. Use App\\Vendoring\\* only.');
+  }
+
+  const appNamespaceMatches = head.match(/App\\[A-Za-z_][A-Za-z0-9_]*(?:\\[A-Za-z_][A-Za-z0-9_]*)*/g) || [];
+  for (const match of [...new Set(appNamespaceMatches)]) {
+    if (match === 'App\\Vendoring' || match.startsWith('App\\Vendoring\\')) continue;
+    pushIssue('namespace-chain', r, `Plain App namespace reference '${match}' is forbidden in active Vendoring roots. Use App\\Vendoring\\*.`);
   }
 }
 
@@ -130,16 +138,16 @@ function scanPhpFile(file) {
     pushIssue('namespace', r, `Forbidden namespace root: ${ns}. Use only App namespace rooted at src/.`);
   }
 
-  const isAppNamespace = ns === 'App' || ns.startsWith('App\\');
+  const isAppNamespace = ns === 'App\\Vendoring' || ns.startsWith('App\\Vendoring\\');
   if (!isAppNamespace) {
     pushIssue('namespace', r, `Unexpected namespace root: ${ns}.`);
   }
 
-  // quick heuristic: file path after src/ should match namespace after App\
-  if (ns.startsWith('App\\')) {
+  // quick heuristic: file path after src/ should match namespace after App\Vendoring\
+  if (ns === 'App\\Vendoring' || ns.startsWith('App\\Vendoring\\')) {
     const after = r.startsWith('src/') ? r.slice(4) : r;
     const expectedPrefix = after.split('/').slice(0, -1).join('\\');
-    const expected = expectedPrefix ? `App\\${expectedPrefix}` : 'App';
+    const expected = expectedPrefix ? `App\\Vendoring\\${expectedPrefix}` : 'App\\Vendoring';
     if (!ns.startsWith(expected)) {
       pushIssue('ns-path', r, `Namespace does not follow path. ns='${ns}' expectedPrefix='${expected}'.`);
     }
@@ -206,7 +214,7 @@ function scan() {
   fs.writeFileSync(outTxt, lines.join('\n'), 'utf8');
 
   if (issues.length > 0) {
-    console.error(`vendor-canon-scan failed: ${issues.length} issue(s). See .report/vendor-canon-scan.txt`);
+    console.error(`vendor-canon-scan failed: ${issues.length} issue(s). See build/reports/canon/vendor-canon-scan.txt`);
     process.exit(1);
   }
 

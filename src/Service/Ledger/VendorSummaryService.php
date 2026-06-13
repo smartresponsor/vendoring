@@ -3,25 +3,25 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Ledger;
+namespace App\Vendoring\Service\Ledger;
 
 use Doctrine\DBAL\Exception;
-use App\DTO\Ledger\LedgerAccountSumCriteriaDTO;
-use App\RepositoryInterface\Ledger\LedgerEntryRepositoryInterface;
-use App\ServiceInterface\Ledger\VendorSummaryServiceInterface;
+use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
+use App\Vendoring\ServiceInterface\Ledger\VendorSummaryServiceInterface;
 
 final class VendorSummaryService implements VendorSummaryServiceInterface
 {
     private const array ACCOUNTS = ['REVENUE', 'REFUNDS_PAYABLE', 'VENDOR_PAYABLE', 'CASH', 'payout_fee'];
 
-    public function __construct(private readonly LedgerEntryRepositoryInterface $ledgerEntries) {}
+    public function __construct(private readonly VendorLedgerEntryRepositoryInterface $ledgerEntries) {}
 
     /** @throws Exception */
     public function build(string $tenantId, string $vendorId, string $from, string $to, string $currency): array
     {
         $balances = [];
         foreach (self::ACCOUNTS as $account) {
-            $balances[$account] = $this->ledgerEntries->sumByAccount(new LedgerAccountSumCriteriaDTO(
+            $balances[$account] = $this->ledgerEntries->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
                 tenantId: $tenantId,
                 accountCode: $account,
                 from: $this->normalizeBoundary($from, false),

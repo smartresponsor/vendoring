@@ -13,7 +13,7 @@ test.describe('Vendoring RC Playwright surfaces', () => {
   });
 
   test('runtime status endpoint', async ({ request }) => {
-    const res = await request.get('/api/vendor-runtime-status/tenant/tenant-1/vendor/42?currency=USD');
+    const res = await request.get('/api/vendor/runtime/status/42?tenantId=tenant-1&currency=USD');
     expect(res.status()).toBe(200);
     const json = await res.json();
     expect(json.data).toBeDefined();
@@ -21,7 +21,7 @@ test.describe('Vendoring RC Playwright surfaces', () => {
   });
 
   test('release baseline endpoint', async ({ request }) => {
-    const res = await request.get('/api/vendor-release-baseline/tenant/tenant-1/vendor/42?currency=USD');
+    const res = await request.get('/api/vendor/release/baseline/42?tenantId=tenant-1&currency=USD');
     expect(res.status()).toBe(200);
     const json = await res.json();
     expect(json.data).toBeDefined();
@@ -33,7 +33,7 @@ test.describe('Vendoring RC Playwright surfaces', () => {
     const vendorId = `pw-vendor-${idSuffix}`;
     const orderId = `pw-order-${idSuffix}`;
 
-    const create = await request.post('/api/vendor-transactions', {
+    const create = await request.post('/api/vendor/transaction', {
       data: {
         vendorId,
         orderId,
@@ -46,14 +46,14 @@ test.describe('Vendoring RC Playwright surfaces', () => {
     const created = await create.json();
     expect(created.status).toBe('pending');
 
-    const list = await request.get(`/api/vendor-transactions/vendor/${vendorId}`);
+    const list = await request.get(`/api/vendor/transaction/${vendorId}`);
     expect(list.status()).toBe(200);
     const listJson = await list.json();
 
     const found = listJson.data.find((r: any) => r.orderId === orderId);
     expect(found).toBeTruthy();
 
-    const update = await request.post(`/api/vendor-transactions/vendor/${vendorId}/${created.id}/status`, {
+    const update = await request.post(`/api/vendor/transaction/status/${created.id}`, {
       data: { status: 'authorized' },
     });
 
@@ -71,20 +71,20 @@ test.describe('Vendoring RC Playwright surfaces', () => {
       amount: '33.00',
     };
 
-    const first = await request.post('/api/vendor-transactions', { data: payload });
+    const first = await request.post('/api/vendor/transaction', { data: payload });
     expect(first.status()).toBe(201);
 
-    const second = await request.post('/api/vendor-transactions', { data: payload });
+    const second = await request.post('/api/vendor/transaction', { data: payload });
     expect(second.status()).toBe(409);
     const json = await second.json();
     expect(json.error).toBe('duplicate_transaction');
   });
 
   test('error surfaces', async ({ request }) => {
-    const malformed = await request.post('/api/vendor-transactions', { data: undefined });
+    const malformed = await request.post('/api/vendor/transaction', { data: undefined });
     expect(malformed.status()).toBe(400);
 
-    const missing = await request.post('/api/vendor-transactions/vendor/x/999/status', {
+    const missing = await request.post('/api/vendor/transaction/status/999', {
       data: {},
     });
     expect(missing.status()).toBe(404);

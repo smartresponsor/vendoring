@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\DTO\VendorBillingDTO;
-use App\Entity\Vendor;
-use App\Entity\VendorBilling;
-use App\Event\VendorPayoutCompletedEvent;
-use App\Event\VendorPayoutRequestedEvent;
-use App\RepositoryInterface\VendorBillingRepositoryInterface;
-use App\Service\VendorBillingService;
+use App\Vendoring\DTO\VendorBillingDTO;
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorBillingEntity;
+use App\Vendoring\Event\Vendor\VendorPayoutCompletedEvent;
+use App\Vendoring\Event\Vendor\VendorPayoutRequestedEvent;
+use App\Vendoring\RepositoryInterface\Vendor\VendorBillingRepositoryInterface;
+use App\Vendoring\Service\Billing\VendorBillingService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -31,8 +31,8 @@ final class VendorBillingServiceTest extends TestCase
 
     public function testUpsertAllowsNullableBillingFieldsToBeClearedAndNormalizesStrings(): void
     {
-        $vendor = new Vendor('Vendor Example', 10);
-        $billing = new VendorBilling($vendor);
+        $vendor = new VendorEntity('Vendor Example', 10);
+        $billing = new VendorBillingEntity($vendor);
         $this->primeBilling($billing, 'DE123', 'ABCDEF', 'bank', 'old@example.com');
 
         $this->repository
@@ -62,7 +62,7 @@ final class VendorBillingServiceTest extends TestCase
 
     public function testRequestPayoutFlushesAndDispatchesRequestedEvent(): void
     {
-        $billing = new VendorBilling(new Vendor('Vendor Example', 10));
+        $billing = new VendorBillingEntity(new VendorEntity('Vendor Example', 10));
 
         $this->entityManager->expects(self::once())->method('flush');
         $this->dispatcher
@@ -82,7 +82,7 @@ final class VendorBillingServiceTest extends TestCase
 
     public function testCompletePayoutFlushesAndDispatchesCompletedEvent(): void
     {
-        $billing = new VendorBilling(new Vendor('Vendor Example', 10));
+        $billing = new VendorBillingEntity(new VendorEntity('Vendor Example', 10));
 
         $this->entityManager->expects(self::once())->method('flush');
         $this->dispatcher
@@ -109,7 +109,7 @@ final class VendorBillingServiceTest extends TestCase
         );
     }
 
-    private function primeBilling(VendorBilling $billing, ?string $iban, ?string $swift, string $payoutMethod, ?string $billingEmail): void
+    private function primeBilling(VendorBillingEntity $billing, ?string $iban, ?string $swift, string $payoutMethod, ?string $billingEmail): void
     {
         $reflection = new \ReflectionObject($billing);
 

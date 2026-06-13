@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure;
+namespace App\Vendoring\Tests\Unit\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 
@@ -32,7 +32,7 @@ final class CanonicalNoStubRepositoryContractTest extends TestCase
             }
         }
 
-        self::assertSame([], $violations, 'Repository contains forbidden stub markers: ' . implode(', ', $violations));
+        self::assertSame([], $violations, 'Repository contains forbidden stub markers: '.implode(', ', $violations));
     }
 
     private function isIgnoredPath(string $path): bool
@@ -43,15 +43,16 @@ final class CanonicalNoStubRepositoryContractTest extends TestCase
             'docs/',
             '.idea/',
             '.git',
-            '.release/',
+            'build/release/',
             'vendor/',
-            '.deploy/_template/',
-            '.deploy/systemd/',
-            '.deploy/',
+            'deploy/_templates/',
+            'deploy/systemd/',
+            'deploy/',
             '.github/workflows/consuming.yml',
             '.consuming/',
             'tools/report/VendorConfigGuardReport.php',
             '.php-cs-fixer.cache',
+            '.patch-backup/',
             'var/.php-cs-fixer.cache',
             'composer.json',
             'composer.lock',

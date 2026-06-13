@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Ops;
+namespace App\Vendoring\Tests\Integration\Ops;
 
-use App\Projection\VendorRuntimeStatusView;
-use App\Service\Ops\VendorReleaseBaselineReader;
-use App\ServiceInterface\Ops\VendorRuntimeStatusViewBuilderInterface;
+use App\Vendoring\Projection\Vendor\VendorRuntimeStatusProjection;
+use App\Vendoring\Service\Ops\VendorReleaseBaselineReaderService;
+use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
 {
-    private VendorRuntimeStatusViewBuilderInterface&MockObject $runtimeStatus;
+    private VendorRuntimeStatusProjectionBuilderServiceInterface&MockObject $runtimeStatus;
 
     protected function setUp(): void
     {
-        $this->runtimeStatus = $this->createMock(VendorRuntimeStatusViewBuilderInterface::class);
+        $this->runtimeStatus = $this->createMock(VendorRuntimeStatusProjectionBuilderServiceInterface::class);
     }
 
     public function testBuildMarksBaselineWarnWhenRuntimeSurfacesAreMissing(): void
@@ -25,7 +25,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
             ->expects(self::once())
             ->method('build')
             ->with('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')
-            ->willReturn(new VendorRuntimeStatusView(
+            ->willReturn(new VendorRuntimeStatusProjection(
                 tenantId: 'tenant-1',
                 vendorId: '101',
                 currency: 'USD',
@@ -42,7 +42,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
                 generatedAt: '2026-03-31T10:00:00+00:00',
             ));
 
-        $payload = (new VendorReleaseBaselineReader($this->runtimeStatus))
+        $payload = (new VendorReleaseBaselineReaderService($this->runtimeStatus))
             ->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')
             ->toArray();
 
@@ -59,7 +59,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
             ->expects(self::once())
             ->method('build')
             ->with('tenant-1', 'vendor-alpha', null, null, 'EUR')
-            ->willReturn(new VendorRuntimeStatusView(
+            ->willReturn(new VendorRuntimeStatusProjection(
                 tenantId: 'tenant-1',
                 vendorId: 'vendor-alpha',
                 currency: 'EUR',
@@ -76,7 +76,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
                 generatedAt: '2026-03-31T10:00:00+00:00',
             ));
 
-        $payload = (new VendorReleaseBaselineReader($this->runtimeStatus))
+        $payload = (new VendorReleaseBaselineReaderService($this->runtimeStatus))
             ->build('tenant-1', 'vendor-alpha', null, null, 'EUR')
             ->toArray();
 

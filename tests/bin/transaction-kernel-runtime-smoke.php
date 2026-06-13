@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Tests\Support\Runtime\KernelRuntimeHarness;
+use App\Vendoring\Tests\Support\Runtime\KernelRuntimeHarness;
 
-require dirname(__DIR__, 2) . '/vendor/autoload.php';
+require dirname(__DIR__, 2).'/vendor/autoload.php';
 
 if (!extension_loaded('pdo_sqlite')) {
     fwrite(STDOUT, "transaction kernel runtime smoke skipped: pdo_sqlite is required\n");
@@ -14,9 +14,9 @@ if (!extension_loaded('pdo_sqlite')) {
 $projectRoot = dirname(__DIR__, 2);
 $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot);
 $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
-$authHeaders = ['Authorization' => 'Bearer ' . $token];
+$authHeaders = ['Authorization' => 'Bearer '.$token];
 
-$createResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', [
+$createResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', [
     'vendorId' => 'vendor-smoke',
     'orderId' => 'order-smoke',
     'projectId' => null,
@@ -29,7 +29,7 @@ if (201 !== $createResponse->getStatusCode() || ($createPayload['status'] ?? nul
     exit(1);
 }
 
-$listResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor-transactions/vendor/vendor-smoke');
+$listResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor/transaction/vendor-smoke');
 $listPayload = KernelRuntimeHarness::decodeJson($listResponse);
 
 $listData = $listPayload['data'] ?? null;
@@ -45,7 +45,7 @@ if (!is_scalar($createId) || '' === (string) $createId) {
     exit(1);
 }
 
-$updateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions/vendor/vendor-smoke/' . (string) $createId . '/status', [
+$updateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction/status/'.(string) $createId, [
     'status' => 'authorized',
 ], $authHeaders);
 $updatePayload = KernelRuntimeHarness::decodeJson($updateResponse);

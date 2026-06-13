@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/_composer_json.php';
+require_once __DIR__.'/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
 $composer = vendoring_load_composer_json($root);
@@ -13,8 +13,8 @@ if (!isset($scripts['test:transaction-doctrine'])) {
     exit(1);
 }
 
-$entityPath = $root . '/src/Entity/VendorTransaction.php';
-$interfacePath = $root . '/src/EntityInterface/VendorTransactionInterface.php';
+$entityPath = $root.'/src/Entity/Vendor/VendorTransactionEntity.php';
+$interfacePath = $root.'/src/EntityInterface/Vendor/VendorTransactionEntityInterface.php';
 
 foreach ([$entityPath, $interfacePath] as $path) {
     if (!is_file($path)) {
@@ -28,12 +28,12 @@ $entitySource = (string) file_get_contents($entityPath);
 foreach ([
     '#[ORM\\Entity',
     'name: \'vendor_transaction\'',
-    'implements VendorTransactionInterface',
+    'implements VendorTransactionEntityInterface',
     "#[ORM\\Column(type: 'decimal', precision: 12, scale: 2)]",
     "type: 'datetime_immutable'",
 ] as $needle) {
     if (!str_contains($entitySource, $needle)) {
-        fwrite(STDERR, sprintf("VendorTransaction doctrine contract missing: %s\n", $needle));
+        fwrite(STDERR, sprintf("VendorTransactionEntity doctrine contract missing: %s\n", $needle));
         exit(1);
     }
 }

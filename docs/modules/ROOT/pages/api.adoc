@@ -6,24 +6,24 @@ Vendoring API is grouped by consumer jobs, not by internal module names.
 
 === Vendor profile and identity
 
-* `GET /api/vendor-profile/vendor/{vendorId}`
-* `PATCH /api/vendor-profile/vendor/{vendorId}`
-* `GET /api/vendor-ownership/vendor/{vendorId}`
+* `GET /api/vendor/profile/{vendorId}`
+* `PATCH /api/vendor/profile/{vendorId}`
+* `GET /api/vendor/ownership/{vendorId}`
 
 === Vendor operational runtime
 
-* `GET /api/vendor/runtime/{vendorId}/finance`
-* `GET /api/vendor/runtime/{vendorId}/external-integrations`
-* `GET /api/vendor/runtime/{vendorId}/statement-delivery`
+* `GET /api/vendor/runtime/finance/{vendorId}`
+* `GET /api/vendor/runtime/external/integration/{vendorId}`
+* `GET /api/vendor/runtime/statement/delivery/{vendorId}`
 
 === Transactions and payout readiness
 
-* `POST /api/vendor-transactions`
-* `GET /api/vendor-transactions/vendor/{vendorId}`
-* `POST /api/vendor-transactions/vendor/{vendorId}/{id}/status`
-* `POST /api/payout/create`
-* `POST /api/payout/process/{payoutId}`
-* `GET /api/payout/{payoutId}`
+* `POST /api/vendor/transaction`
+* `GET /api/vendor/transaction/{vendorId}`
+* `POST /api/vendor/transaction/status/{vendorId}/{id}`
+* `POST /api/vendor/payout`
+* `POST /api/vendor/payout/process/{payoutId}`
+* `GET /api/vendor/payout/{payoutId}`
 
 == Auth expectation
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Runtime;
+namespace App\Vendoring\Tests\Integration\Runtime;
 
-use App\Tests\Support\Runtime\KernelRuntimeHarness;
+use App\Vendoring\Tests\Support\Runtime\KernelRuntimeHarness;
 use PHPUnit\Framework\TestCase;
 
 final class VendorTransactionKernelRuntimeTest extends TestCase
@@ -19,9 +19,9 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
 
         try {
             $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
-            $headers = ['Authorization' => 'Bearer ' . $token];
+            $headers = ['Authorization' => 'Bearer '.$token];
 
-            $createResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', [
+            $createResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', [
                 'vendorId' => 'vendor-1',
                 'orderId' => 'order-1',
                 'projectId' => 'project-1',
@@ -33,7 +33,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
             self::assertSame('pending', $createPayload['status']);
             self::assertIsInt($createPayload['id']);
 
-            $listResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor-transactions/vendor/vendor-1');
+            $listResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor/transaction/vendor-1');
             $listPayload = KernelRuntimeHarness::decodeJson($listResponse);
 
             self::assertSame(200, $listResponse->getStatusCode());
@@ -48,7 +48,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
             self::assertSame('10.50', $firstRow['amount'] ?? null);
             self::assertSame('pending', $firstRow['status'] ?? null);
 
-            $updateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions/vendor/vendor-1/' . $createPayload['id'] . '/status', [
+            $updateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction/status/'.$createPayload['id'], [
                 'status' => 'authorized',
             ], $headers);
             $updatePayload = KernelRuntimeHarness::decodeJson($updateResponse);
@@ -57,7 +57,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
             self::assertSame($createPayload['id'], $updatePayload['id']);
             self::assertSame('authorized', $updatePayload['status']);
 
-            $reloadedListResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor-transactions/vendor/vendor-1');
+            $reloadedListResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor/transaction/vendor-1');
             $reloadedListPayload = KernelRuntimeHarness::decodeJson($reloadedListResponse);
 
             self::assertIsArray($reloadedListPayload['data'] ?? null);
@@ -65,7 +65,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
             self::assertIsArray($reloadedData[0] ?? null);
             self::assertSame('authorized', $reloadedData[0]['status'] ?? null);
 
-            $duplicateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', [
+            $duplicateResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', [
                 'vendorId' => 'vendor-1',
                 'orderId' => 'order-1',
                 'projectId' => 'project-1',
@@ -89,7 +89,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
 
         try {
-            $createResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', [
+            $createResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', [
                 'vendorId' => 'vendor-1',
                 'orderId' => 'order-1',
                 'amount' => '10.50',
@@ -114,15 +114,15 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
 
         try {
             $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
-            $headers = ['Authorization' => 'Bearer ' . $token];
+            $headers = ['Authorization' => 'Bearer '.$token];
 
-            $malformedResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', null, $headers);
+            $malformedResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', null, $headers);
             $malformedPayload = KernelRuntimeHarness::decodeJson($malformedResponse);
 
             self::assertSame(400, $malformedResponse->getStatusCode());
             self::assertSame('malformed_json', $malformedPayload['error']);
 
-            $missingStatusResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions/vendor/vendor-1/404/status', [], $headers);
+            $missingStatusResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction/status/404', [], $headers);
             $missingStatusPayload = KernelRuntimeHarness::decodeJson($missingStatusResponse);
 
             self::assertSame(404, $missingStatusResponse->getStatusCode());
@@ -145,7 +145,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
             $response = KernelRuntimeHarness::requestJson(
                 $kernel,
                 'POST',
-                '/api/vendor-transactions',
+                '/api/vendor/transaction',
                 [
                     'vendorId' => 'vendor-2',
                     'orderId' => 'order-2',
@@ -154,7 +154,7 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
                 ],
                 [
                     'X-Correlation-ID' => 'corr-runtime-001',
-                    'Authorization' => 'Bearer ' . $token,
+                    'Authorization' => 'Bearer '.$token,
                 ],
             );
 

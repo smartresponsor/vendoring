@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure;
+namespace App\Vendoring\Tests\Unit\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 
@@ -12,25 +12,26 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
     {
         $root = dirname(__DIR__, 3);
         $allowedPrefixes = [
-            $root . '/report/',
-            $root . '/tests/',
-            $root . '/.idea/',
-            $root . '/.deploy/_template/',
-            $root . '/.phpunit.cache/',
-            $root . '/build/docs/phpdocumentor/',
-            $root . '/docs/',
-            $root . '/docs/release/',
-            $root . '/var/',
-            $root . '/.deploy/systemd/',
-            $root . '/.consuming/',
+            $root.'/report/',
+            $root.'/tests/',
+            $root.'/.idea/',
+            $root.'/deploy/_templates/',
+            $root.'/.phpunit.cache/',
+            $root.'/.patch-backup/',
+            $root.'/build/docs/phpdocumentor/',
+            $root.'/docs/',
+            $root.'/docs/release/',
+            $root.'/var/',
+            $root.'/deploy/systemd/',
+            $root.'/.consuming/',
         ];
         $allowedFiles = [
-            $root . '/composer.json',
-            $root . '/package-lock.json',
-            $root . '/bin/generate-phpdocumentor-site.php',
-            $root . '/bin/generate-rc-evidence.php',
-            $root . '/config/reference.php',
-            $root . '/.php-cs-fixer.cache',
+            $root.'/composer.json',
+            $root.'/package-lock.json',
+            $root.'/bin/generate-phpdocumentor-site.php',
+            $root.'/bin/generate-rc-evidence.php',
+            $root.'/config/reference.php',
+            $root.'/.php-cs-fixer.cache',
         ];
 
         $iterator = new \RecursiveIteratorIterator(
@@ -50,13 +51,13 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
                 str_contains($normalized, '/.git/')
                 || str_contains($normalized, '/vendor/')
                 || str_contains($normalized, '/node_modules/')
-                || str_contains($normalized, '/.deploy/_template/')
+                || str_contains($normalized, '/deploy/_templates/')
                 || preg_match('/\.(zip|tar|gz|tgz)$/i', $normalized)
             ) {
                 continue;
             }
 
-            if (in_array($normalized, array_map(static fn(string $item): string => str_replace('\\', '/', $item), $allowedFiles), true)) {
+            if (in_array($normalized, array_map(static fn (string $item): string => str_replace('\\', '/', $item), $allowedFiles), true)) {
                 continue;
             }
 

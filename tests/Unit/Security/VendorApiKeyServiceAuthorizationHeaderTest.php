@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Security;
+namespace App\Vendoring\Tests\Unit\Security;
 
-use App\Entity\Vendor;
-use App\Entity\VendorApiKey;
-use App\RepositoryInterface\VendorApiKeyRepositoryInterface;
-use App\Service\VendorApiKeyService;
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
+use App\Vendoring\Service\Security\VendorApiKeyService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,8 +35,8 @@ final class VendorApiKeyServiceAuthorizationHeaderTest extends TestCase
 
     public function testValidateAuthorizationHeaderValidatesBearerTokenWithPermission(): void
     {
-        $vendor = new Vendor('Vendor A');
-        $apiKey = new VendorApiKey($vendor, hash('sha256', 'plain-token'), 'write:transactions');
+        $vendor = new VendorEntity('Vendor A');
+        $apiKey = new VendorApiKeyEntity($vendor, hash('sha256', 'plain-token'), 'write:transactions');
         $service = new VendorApiKeyService($this->entityManager, $this->repository);
 
         $this->repository
@@ -52,8 +52,8 @@ final class VendorApiKeyServiceAuthorizationHeaderTest extends TestCase
 
     public function testValidateAuthorizationHeaderRejectsUnderScopedToken(): void
     {
-        $vendor = new Vendor('Vendor A');
-        $apiKey = new VendorApiKey($vendor, hash('sha256', 'plain-token'), 'read:transactions');
+        $vendor = new VendorEntity('Vendor A');
+        $apiKey = new VendorApiKeyEntity($vendor, hash('sha256', 'plain-token'), 'read:transactions');
         $service = new VendorApiKeyService($this->entityManager, $this->repository);
 
         $this->repository

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Vendoring\Tests\Unit\Service;
 
-use App\DTO\VendorProfileDTO;
-use App\Entity\Vendor;
-use App\Entity\VendorProfile;
-use App\RepositoryInterface\VendorProfileRepositoryInterface;
-use App\Service\VendorProfileService;
+use App\Vendoring\DTO\VendorProfileDTO;
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorProfileEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
+use App\Vendoring\Service\Profile\VendorProfileService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +29,7 @@ final class VendorProfileServiceTest extends TestCase
 
     public function testUpsertNormalizesWhitespaceOnlyFieldsAndSocials(): void
     {
-        $vendor = new Vendor('Smartresponsor');
+        $vendor = new VendorEntity('Smartresponsor');
         $dto = new VendorProfileDTO(
             vendorId: 1,
             displayName: '  Vendor Portal  ',
@@ -46,7 +46,7 @@ final class VendorProfileServiceTest extends TestCase
             ->with(['vendor' => $vendor])
             ->willReturn(null);
 
-        $this->entityManager->expects(self::once())->method('persist')->with(self::isInstanceOf(VendorProfile::class));
+        $this->entityManager->expects(self::once())->method('persist')->with(self::isInstanceOf(VendorProfileEntity::class));
         $this->entityManager->expects(self::once())->method('flush');
         $this->dispatcher->expects(self::once())->method('dispatch');
 
@@ -64,8 +64,8 @@ final class VendorProfileServiceTest extends TestCase
 
     public function testUpsertUpdatesExistingProfileWithoutReflectionFlow(): void
     {
-        $vendor = new Vendor('Brand');
-        $existing = new VendorProfile($vendor);
+        $vendor = new VendorEntity('Brand');
+        $existing = new VendorProfileEntity($vendor);
         $existing->updateProfile('Old', 'Old about', null, null, null, null);
 
         $dto = new VendorProfileDTO(vendorId: 1, displayName: ' New ', about: ' Better ');
@@ -89,7 +89,7 @@ final class VendorProfileServiceTest extends TestCase
 
     public function testUpsertPublishesCompleteProfileWhenRequested(): void
     {
-        $vendor = new Vendor('Brand');
+        $vendor = new VendorEntity('Brand');
         $dto = new VendorProfileDTO(
             vendorId: 1,
             displayName: 'Vendor Profile',
@@ -102,7 +102,7 @@ final class VendorProfileServiceTest extends TestCase
         );
 
         $this->repository->expects(self::once())->method('findOneBy')->with(['vendor' => $vendor])->willReturn(null);
-        $this->entityManager->expects(self::once())->method('persist')->with(self::isInstanceOf(VendorProfile::class));
+        $this->entityManager->expects(self::once())->method('persist')->with(self::isInstanceOf(VendorProfileEntity::class));
         $this->entityManager->expects(self::once())->method('flush');
         $this->dispatcher->expects(self::once())->method('dispatch');
 
@@ -114,7 +114,7 @@ final class VendorProfileServiceTest extends TestCase
 
     public function testUpsertRejectsPublishWhenPublicProfileIncomplete(): void
     {
-        $vendor = new Vendor('Brand');
+        $vendor = new VendorEntity('Brand');
         $dto = new VendorProfileDTO(vendorId: 1, displayName: 'Vendor Profile', publicationAction: 'publish');
 
         $this->repository->expects(self::once())->method('findOneBy')->with(['vendor' => $vendor])->willReturn(null);

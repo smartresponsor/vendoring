@@ -76,7 +76,7 @@ If an endpoint is public or intentionally unauthenticated, that should also be e
 
 ## Docblock to API description rule
 
-Controller docblocks should supply:
+Surface builder docblocks should supply:
 - endpoint intent
 - business meaning
 - important caveats

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Payout;
+namespace App\Vendoring\Service\Payout;
 
-use App\DTO\Payout\VendorPayoutTransferDTO;
-use App\ServiceInterface\Payout\VendorPayoutProviderServiceInterface;
+use App\Vendoring\DTO\Payout\VendorPayoutTransferDTO;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutProviderServiceInterface;
 use Random\RandomException;
 
 final class VendorPayoutProviderService implements VendorPayoutProviderServiceInterface

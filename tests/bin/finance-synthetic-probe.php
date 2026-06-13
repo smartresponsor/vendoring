@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Tests\Support\Runtime\KernelRuntimeHarness;
+use App\Vendoring\Tests\Support\Runtime\KernelRuntimeHarness;
 
-require dirname(__DIR__, 2) . '/vendor/autoload.php';
+require dirname(__DIR__, 2).'/vendor/autoload.php';
 
 $projectRoot = dirname(__DIR__, 2);
 
@@ -17,19 +17,19 @@ $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot
 
 try {
     $suffix = bin2hex(random_bytes(4));
-    $tenantId = 'probe-tenant-' . $suffix;
-    $vendorId = 'probe-vendor-' . $suffix;
+    $tenantId = 'probe-tenant-'.$suffix;
+    $vendorId = 'probe-vendor-'.$suffix;
     $correlationId = 'finance-synthetic-probe';
 
     $accountResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'POST',
-        '/api/payouts/account',
+        '/api/vendor/payout/account',
         [
             'tenantId' => $tenantId,
             'vendorId' => $vendorId,
             'provider' => 'bank',
-            'accountRef' => 'acct-' . $suffix,
+            'accountRef' => 'acct-'.$suffix,
             'currency' => 'USD',
             'active' => true,
         ],
@@ -46,7 +46,7 @@ try {
         throw new RuntimeException('Finance synthetic probe payout account provider mismatch.');
     }
 
-    $statementPath = '/api/payouts/statements/' . $vendorId . '?tenantId=' . $tenantId . '&from=2026-01-01&to=2026-01-31&currency=USD';
+    $statementPath = '/api/vendor/payout/statement/'.$vendorId.'?tenantId='.$tenantId.'&from=2026-01-01&to=2026-01-31&currency=USD';
     $statementResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'GET',
@@ -64,7 +64,7 @@ try {
         throw new RuntimeException('Finance synthetic probe statement build did not return data payload.');
     }
 
-    $exportPath = '/api/payouts/statements/' . $vendorId . '/export?tenantId=' . $tenantId . '&from=2026-01-01&to=2026-01-31&currency=USD';
+    $exportPath = '/api/vendor/payout/statement/export/'.$vendorId.'?tenantId='.$tenantId.'&from=2026-01-01&to=2026-01-31&currency=USD';
     $exportResponse = KernelRuntimeHarness::requestJson(
         $kernel,
         'GET',

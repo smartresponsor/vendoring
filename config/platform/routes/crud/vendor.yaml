@@ -1,0 +1,29 @@
+# ---------------------------------------------------------------------------
+# Vendor core entrypoint grammar
+# ---------------------------------------------------------------------------
+# Zero-controller Vendor surface aligned with Cruding + Viewing.
+#
+# Active routes are limited to responsibilities proven by current business code:
+#   - VendorCoreService::create()
+#   - VendorCoreService::update()
+#   - VendorRepository::byId()
+#
+# VendorEntity currently has no slug field, therefore slug variants are not active.
+# Delete, bulk, import, export, archive, restore and duplicate are not registered
+# until a corresponding business capability exists outside the HTTP entrypoint.
+#
+# Page/template grammar:
+#   vendor.index      -> vendor/index.html.twig
+#   vendor.show_id    -> vendor/show.html.twig
+#   vendor.new        -> vendor/form.html.twig
+#   vendor.create     -> submit through VendorCreateType; no standalone template
+#   vendor.edit_id    -> vendor/form.html.twig
+#   vendor.update_id  -> submit through VendorUpdateType; no standalone template
+# ---------------------------------------------------------------------------
+
+vendor.index:      { path: /vendor/index,       service: App\Vendoring\Service\Http\Vendor\VendorIndexService }
+vendor.show_id:    { path: /vendor/show/{id},   service: App\Vendoring\Service\Http\Vendor\VendorShowService, resolver: id }
+vendor.new:        { path: /vendor/new,         service: App\Vendoring\Service\Http\Vendor\VendorNewService }
+vendor.create:     { path: /vendor/create,      type: App\Vendoring\Form\Vendor\VendorCreateType, service: App\Vendoring\Service\Http\Vendor\VendorCreateService }
+vendor.edit_id:    { path: /vendor/edit/{id},   service: App\Vendoring\Service\Http\Vendor\VendorEditService, resolver: id }
+vendor.update_id:  { path: /vendor/update/{id}, type: App\Vendoring\Form\Vendor\VendorUpdateType, service: App\Vendoring\Service\Http\Vendor\VendorUpdateService, resolver: id }

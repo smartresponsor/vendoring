@@ -4,10 +4,10 @@
 
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Ledger;
+namespace App\Vendoring\ServiceInterface\Ledger;
 
-use App\DTO\Ledger\LedgerEntryDTO;
-use App\Entity\Ledger\LedgerEntry;
+use App\Vendoring\DTO\Ledger\VendorLedgerEntryDTO;
+use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
 use Doctrine\DBAL\Exception;
 use Random\RandomException;
 
@@ -17,5 +17,5 @@ interface VendorLedgerServiceInterface
      * @throws Exception
      * @throws RandomException
      */
-    public function record(LedgerEntryDTO $dto): LedgerEntry;
+    public function record(VendorLedgerEntryDTO $dto): VendorLedgerEntryEntity;
 }

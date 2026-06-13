@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Command;
+namespace App\Vendoring\Tests\Unit\Command;
 
-use App\Command\VendorPayoutProcessCommand;
-use App\ServiceInterface\Payout\VendorPayoutServiceInterface;
+use App\Vendoring\Command\VendorPayoutProcessCommand;
+use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -42,7 +42,7 @@ final class VendorPayoutProcessCommandTest extends TestCase
         ]);
 
         self::assertSame(0, $exitCode);
-        self::assertStringContainsString('Payout payout-1 was not processed.', $tester->getDisplay());
+        self::assertStringContainsString('VendorPayoutEntity payout-1 was not processed.', $tester->getDisplay());
     }
 
     public function testExecuteCanEmitJsonOutput(): void

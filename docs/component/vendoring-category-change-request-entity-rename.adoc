@@ -1,6 +1,6 @@
 = Vendoring CategoryChangeRequest Entity Rename
 
-This patch removes the generic `App\Entity\CategoryChangeRequest` runtime class from `Vendoring`.
+This patch removes the generic `App\Vendoring\Entity\CategoryChangeRequest` runtime class from `Vendoring`.
 
 == Refactor
 
@@ -21,7 +21,7 @@ and the class is renamed from `CategoryChangeRequest` to `VendorCatalogCategoryC
 The combined App Kernel cannot load multiple components that declare the same FQCN:
 
 ----
-App\Entity\CategoryChangeRequest
+App\Vendoring\Entity\CategoryChangeRequest
 ----
 
 Both Cataloging and Vendoring now use component-scoped class names.

@@ -8,7 +8,7 @@ Runs path + namespace heuristics to detect:
 - nested `src/src` trees
 - repeated layer segments (`Entity/Entity`, `Controller/Controller`, ...)
 - archive directories inside `src/` (e.g. `vendor-current`, `vendor-sketch-*`, `123_vendor-*`)
-- namespace roots other than `App\\*` and forbidden non-App namespace chains in runtime/config/test surfaces
+- namespace roots other than `App\Vendoring\\*` and forbidden non-App namespace chains in runtime/config/test surfaces
 
 Run:
 
@@ -17,8 +17,8 @@ node tools/canon/vendor-canon-scan.mjs
 ```
 
 Reports:
-- `.report/vendor-canon-scan.txt`
-- `.report/vendor-canon-scan.json`
+- `build/reports/canon/vendor-canon-scan.txt`
+- `build/reports/canon/vendor-canon-scan.json`
 
 ## migration-dialect-guard
 
@@ -31,5 +31,5 @@ node tools/canon/migration-dialect-guard.mjs
 ```
 
 Reports:
-- `.report/migration-dialect-guard.txt`
-- `.report/migration-dialect-guard.json`
+- `build/reports/canon/migration-dialect-guard.txt`
+- `build/reports/canon/migration-dialect-guard.json`

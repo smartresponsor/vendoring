@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure;
+namespace App\Vendoring\Tests\Unit\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 
@@ -18,9 +18,9 @@ final class CanonicalNoLegacyVendorScriptContractTest extends TestCase
         }
 
         $content = (string) file_get_contents($path);
-        self::assertStringNotContainsString("'Vendor')", $content);
-        self::assertStringNotContainsString("'Vendor',", $content);
-        self::assertStringNotContainsString("keepSubdirs = @('Api','DTO','E2E','Form','Twig','Vendor')", $content);
+        self::assertStringNotContainsString("'VendorEntity')", $content);
+        self::assertStringNotContainsString("'VendorEntity',", $content);
+        self::assertStringNotContainsString("keepSubdirs = @('Api','DTO','E2E','Form','Twig','VendorEntity')", $content);
         self::assertStringNotContainsString('\\Vendor\\VendorEnTest.php', $content);
     }
 }

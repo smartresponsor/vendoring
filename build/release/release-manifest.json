@@ -1,0 +1,17 @@
+{
+    "generatedAt": "2026-04-03T07:12:56+00:00",
+    "releaseDocs": {
+        "rcBaseline": true,
+        "rcRuntimeSurfaces": true,
+        "rcOperatorSurface": true,
+        "rcEvidencePack": true,
+        "rcRollbackManifest": true,
+        "rcReleaseManifest": true
+    },
+    "buildArtifacts": {
+        "rcEvidenceJson": true,
+        "rcEvidenceMd": true,
+        "phpdocumentorIndex": true
+    },
+    "status": "ok"
+}

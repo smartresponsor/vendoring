@@ -7,20 +7,20 @@ declare(strict_types=1);
  * Owner: Marketing America Corp
  */
 
-namespace App\Tests\Category;
+namespace App\Vendoring\Tests\CategoryEntity;
 
-use App\DTO\CatalogSyndication\CatalogSyndicationGovernanceTrailRequestDTO;
-use App\Policy\CategorySyndicationGovernanceTrailPolicy;
-use App\Service\CatalogSyndicationGovernanceTrailService;
+use App\Vendoring\DTO\CatalogSyndication\VendorCatalogSyndicationGovernanceTrailRequestDTO;
+use App\Vendoring\Policy\Vendor\VendorCategorySyndicationGovernanceTrailPolicy;
+use App\Vendoring\Service\Syndication\VendorCatalogSyndicationGovernanceTrailService;
 use PHPUnit\Framework\TestCase;
 
 final class CatalogSyndicationGovernanceTrailServiceTest extends TestCase
 {
     public function testRecordTrailIncludesPolicyDeliveryAndHistorySignals(): void
     {
-        $service = new CatalogSyndicationGovernanceTrailService(new CategorySyndicationGovernanceTrailPolicy());
+        $service = new VendorCatalogSyndicationGovernanceTrailService(new VendorCategorySyndicationGovernanceTrailPolicy());
 
-        $event = $service->recordTrail(new CatalogSyndicationGovernanceTrailRequestDTO(
+        $event = $service->recordTrail(new VendorCatalogSyndicationGovernanceTrailRequestDTO(
             [
                 'destinationId' => 'dst-1',
                 'categoryId' => 'cat-1',

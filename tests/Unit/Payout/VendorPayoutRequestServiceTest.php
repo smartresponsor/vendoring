@@ -3,10 +3,10 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Payout;
+namespace App\Vendoring\Tests\Unit\Payout;
 
-use App\Entity\Payout\Payout;
-use App\Service\Payout\VendorPayoutRequestService;
+use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
+use App\Vendoring\Service\Payout\VendorPayoutRequestService;
 use PHPUnit\Framework\TestCase;
 
 final class VendorPayoutRequestServiceTest extends TestCase
@@ -47,7 +47,7 @@ final class VendorPayoutRequestServiceTest extends TestCase
     public function testNormalizePayoutIncludesMetaForOperationalReadback(): void
     {
         $service = new VendorPayoutRequestService();
-        $payout = new Payout(
+        $payout = new VendorPayoutEntity(
             id: 'payout-1',
             vendorId: 'vendor-1',
             currency: 'USD',

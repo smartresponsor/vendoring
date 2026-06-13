@@ -1,0 +1,17 @@
+config_tools:
+  - application_code: Vendoring
+    tool_code: vendoring.feature_flags
+    label: Vendoring Feature Flags
+    description: Safe runtime feature flags stored in vendoring runtime manifest.
+    required_permission: administration.config.update
+    editable_fields:
+      - featureFlagsJson
+    sensitive_fields: []
+    readable_files:
+      - config/component/runtime.yaml
+    writable_files:
+      - config/component/runtime.yaml
+    apply_strategy: component_runtime_yaml
+    metadata:
+      section: Configuration
+      kind: feature_flags

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure;
+namespace App\Vendoring\Tests\Unit\Infrastructure;
 
-require_once dirname(__DIR__, 2) . '/bin/_composer_json.php';
+require_once dirname(__DIR__, 2).'/bin/_composer_json.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -34,7 +34,7 @@ final class ComposerQualityScriptParityTest extends TestCase
             '@test:payout',
             '@test:repository',
             '@test:unit',
-            '@test:controller',
+            '@test:http-service-coverage',
             '@test:entity',
             '@test:transaction-persistence',
             '@test:transaction-amount',
@@ -75,7 +75,7 @@ final class ComposerQualityScriptParityTest extends TestCase
         ];
 
         foreach ($expected as $scriptName) {
-            self::assertContains($scriptName, $quality, 'Missing canonical quality entry: ' . $scriptName);
+            self::assertContains($scriptName, $quality, 'Missing canonical quality entry: '.$scriptName);
         }
     }
 }

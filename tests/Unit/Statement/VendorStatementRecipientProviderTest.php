@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Statement;
+namespace App\Vendoring\Tests\Unit\Statement;
 
-use App\Entity\Vendor;
-use App\Entity\VendorBilling;
-use App\RepositoryInterface\VendorBillingRepositoryInterface;
-use App\Service\Statement\VendorStatementRecipientProvider;
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorBillingEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorBillingRepositoryInterface;
+use App\Vendoring\Service\Statement\VendorStatementRecipientProviderService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -27,7 +27,7 @@ final class VendorStatementRecipientProviderTest extends TestCase
 
         $this->billings->expects(self::once())->method('findAll')->willReturn([$billingA, $billingB]);
 
-        $recipients = (new VendorStatementRecipientProvider($this->billings))->forPeriod('2026-03-01', '2026-03-31');
+        $recipients = (new VendorStatementRecipientProviderService($this->billings))->forPeriod('2026-03-01', '2026-03-31');
 
         self::assertCount(2, $recipients);
         self::assertSame('default', $recipients[0]->tenantId);
@@ -45,19 +45,19 @@ final class VendorStatementRecipientProviderTest extends TestCase
 
         $this->billings->expects(self::once())->method('findAll')->willReturn([$billingWithoutEmail, $billingWithoutVendorId]);
 
-        $recipients = (new VendorStatementRecipientProvider($this->billings))->forPeriod('2026-03-01', '2026-03-31');
+        $recipients = (new VendorStatementRecipientProviderService($this->billings))->forPeriod('2026-03-01', '2026-03-31');
 
         self::assertSame([], $recipients);
     }
 
-    private function billingWithVendorAndEmail(?int $vendorId, string $email): VendorBilling
+    private function billingWithVendorAndEmail(?int $vendorId, string $email): VendorBillingEntity
     {
-        $vendor = new Vendor('Vendor Example', 10);
+        $vendor = new VendorEntity('Vendor Example', 10);
         $vendorReflection = new \ReflectionObject($vendor);
         $vendorIdProperty = $vendorReflection->getProperty('id');
         $vendorIdProperty->setValue($vendor, $vendorId);
 
-        $billing = new VendorBilling($vendor);
+        $billing = new VendorBillingEntity($vendor);
         $billingReflection = new \ReflectionObject($billing);
         $billingEmailProperty = $billingReflection->getProperty('billingEmail');
         $billingEmailProperty->setValue($billing, $email);
