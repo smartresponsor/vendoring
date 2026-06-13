@@ -63,7 +63,7 @@ class VendorPaymentEntity extends VendorAbstractEntity
         return $this->label;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }

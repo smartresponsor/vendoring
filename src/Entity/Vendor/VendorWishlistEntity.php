@@ -46,7 +46,7 @@ class VendorWishlistEntity extends VendorAbstractEntity
         return $this->nameEntity;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }

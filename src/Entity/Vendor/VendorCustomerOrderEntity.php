@@ -58,7 +58,7 @@ class VendorCustomerOrderEntity extends VendorAbstractEntity
         return $this->orderNumber;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }

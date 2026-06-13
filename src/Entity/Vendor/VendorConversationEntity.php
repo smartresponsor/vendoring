@@ -71,7 +71,7 @@ class VendorConversationEntity extends VendorAbstractEntity
         return $this->counterpartyName;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }

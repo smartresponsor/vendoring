@@ -63,7 +63,7 @@ class VendorShipmentEntity extends VendorAbstractEntity
         return $this->trackingNumber;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }

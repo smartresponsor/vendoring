@@ -61,7 +61,7 @@ class VendorCommissionEntity extends VendorAbstractEntity
         return $this->ratePercent;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
