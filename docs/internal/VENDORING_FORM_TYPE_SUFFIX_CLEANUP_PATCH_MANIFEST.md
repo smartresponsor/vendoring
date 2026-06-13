@@ -4,7 +4,7 @@
 
 - `src/Form/Ops/VendorTransactionCreateForm.php`
 - `src/Form/Ops/VendorTransactionStatusUpdateForm.php`
-- `src/Controller/Vendor/VendorTransactionOperatorController.php`
+- `src/Controller/Vendor/VendorTransactionOperatorSurfaceBuilder.php`
 - `docs/internal/VENDORING_FORM_TYPE_SUFFIX_CLEANUP_AUDIT.md`
 - `docs/internal/VENDORING_FORM_TYPE_SUFFIX_CLEANUP_PATCH_MANIFEST.md`
 

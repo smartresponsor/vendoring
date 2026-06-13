@@ -4,27 +4,15 @@ declare(strict_types=1);
 
 namespace App\Vendoring\RepositoryInterface\Vendor;
 
-use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
-use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
-use Doctrine\DBAL\Exception;
-
 interface VendorLedgerEntryRepositoryInterface
 {
-    /** @throws Exception */
-    public function insert(VendorLedgerEntryEntity $entry): void;
+    public function find(mixed $id): ?object;
 
-    /**
-     * @return list<VendorLedgerEntryEntity>
-     * @throws Exception
-     */
-    public function listByRef(string $tenantId, string $referenceType, string $referenceId, ?string $vendorId = null): array;
+    /** @param array<string,mixed> $criteria */
+    public function findOneBy(array $criteria): ?object;
 
-    /** @throws Exception */
-    public function sumByAccount(VendorLedgerAccountSumCriteriaDTO $criteria): float;
+    /** @return list<object> */
+    public function findBy(array $criteria): array;
 
-    /**
-     * @return list<object{currency:string,balanceCents:int}>
-     * @throws Exception
-     */
-    public function balancesForVendor(string $vendorId): array;
+    public function save(object $entity, bool $flush = false): void;
 }

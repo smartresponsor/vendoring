@@ -8,8 +8,8 @@ Wave T: vendor/entity wording boundary cleanup.
 
 - `README.md`
 - `docs/PHASE64_WRITE_API_AUTH_ENFORCEMENT.md`
-- `src/Controller/Vendor/VendorLocalDevController.php`
-- `src/Controller/Vendor/VendorStatementExportController.php`
+- `src/Controller/Vendor/VendorLocalDevSurfaceBuilder.php`
+- `src/Controller/Vendor/VendorStatementExportSurfaceBuilder.php`
 - `src/Projection/Vendor/VendorExternalIntegrationRuntimeProjection.php`
 - `src/Projection/Vendor/VendorFinanceRuntimeProjection.php`
 - `src/Projection/Vendor/VendorProfileProjection.php`

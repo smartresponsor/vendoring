@@ -7,15 +7,14 @@ declare(strict_types=1);
 namespace App\Vendoring\Command;
 
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
-use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 #[AsCommand(
     name: 'app:vendor:api-key:rotate',
@@ -58,7 +57,7 @@ final class VendorApiKeyRotateCommand extends Command
 
         try {
             $key = $this->apiKeyRepo->find($keyId);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to load API key', $throwable, [
                 'keyId' => $keyId,
             ]);
@@ -76,7 +75,7 @@ final class VendorApiKeyRotateCommand extends Command
 
         try {
             $newToken = $this->apiKeyService->rotateKey($key);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to rotate API key', $throwable, [
                 'keyId' => $keyId,
             ]);

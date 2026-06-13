@@ -8,7 +8,7 @@ This pass removes the remaining generic `Manager` service naming from the active
 
 - `VendorTransactionManagerService` was renamed to `VendorTransactionLifecycleService`.
 - `VendorTransactionManagerServiceInterface` was renamed to `VendorTransactionLifecycleServiceInterface`.
-- Transaction controllers now inject the lifecycle interface and use the `$transactionLifecycle` property name.
+- Transaction surface builders now inject the lifecycle interface and use the `$transactionLifecycle` property name.
 - Symfony service aliases were updated in both `config/component/services.yaml` and `config/vendor_services_transactions.yaml`.
 - Layer-3 naming examples now point to the lifecycle service pair.
 

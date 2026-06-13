@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Observability;
 
-use App\Vendoring\ServiceInterface\Runtime\VendorAppEnvResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorCorrelationContextServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorMetricCollectorServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorObservabilityRecordExporterServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorRuntimeMetricCollectorServiceInterface;
-use DateTimeImmutable;
+use App\Vendoring\ServiceInterface\Runtime\VendorAppEnvResolverServiceInterface;
 
 /**
  * Structured metric collector for runtime observability events.
@@ -24,7 +23,7 @@ final class VendorRuntimeMetricCollectorService implements VendorMetricCollector
      * @var list<array{
      *   'timestamp': string,
      *   'type': string,
-     *   'name': string,
+     *   'nameEntity': string,
      *   'tags': array<string, string>,
      *   'request_id': ?string,
      *   'correlation_id': ?string
@@ -36,22 +35,20 @@ final class VendorRuntimeMetricCollectorService implements VendorMetricCollector
         private readonly VendorCorrelationContextServiceInterface $correlationContext,
         private readonly VendorAppEnvResolverServiceInterface $appEnvResolver,
         private readonly ?VendorObservabilityRecordExporterServiceInterface $exporter = null,
-    ) {}
+    ) {
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function increment(string $name, array $tags = []): void
+    public function increment(string $nameEntity, array $tags = []): void
     {
         $correlationId = $this->correlationContext->currentCorrelationId();
 
-        $timestamp = new DateTimeImmutable();
+        $timestamp = new \DateTimeImmutable();
 
-        /** @var array{'timestamp': string,'type': string,'name': string,'tags': array<string, string>,'request_id': ?string,'correlation_id': ?string} $record */
+        /** @var array{'timestamp': string,'type': string,'nameEntity': string,'tags': array<string, string>,'request_id': ?string,'correlation_id': ?string} $record */
         $record = [
             'timestamp' => $timestamp->format(DATE_ATOM),
             'type' => 'metric',
-            'name' => $name,
+            'nameEntity' => $nameEntity,
             'tags' => $this->normalizeTags($tags),
             'request_id' => $correlationId,
             'correlation_id' => $correlationId,
@@ -78,7 +75,7 @@ final class VendorRuntimeMetricCollectorService implements VendorMetricCollector
      * @return list<array{
      *   'timestamp': string,
      *   'type': string,
-     *   'name': string,
+     *   'nameEntity': string,
      *   'tags': array<string, string>,
      *   'request_id': ?string,
      *   'correlation_id': ?string
@@ -91,11 +88,11 @@ final class VendorRuntimeMetricCollectorService implements VendorMetricCollector
 
     /**
      * @param array<string, string> $tags
+     *
      * @return array<string, string>
      */
     private function normalizeTags(array $tags): array
     {
-        return array_map(static fn(mixed $value): string => (string) $value, $tags);
+        return array_map(static fn (mixed $value): string => (string) $value, $tags);
     }
-
 }

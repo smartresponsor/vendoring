@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
 use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
-use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -16,7 +16,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Throwable;
 
 #[AsCommand(name: 'app:vendor:payout:process', description: 'Process an existing vendor payout.')]
 final class VendorPayoutProcessCommand extends Command
@@ -61,7 +60,7 @@ final class VendorPayoutProcessCommand extends Command
 
         try {
             $processed = $this->payouts->process($payoutId);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to process payout', $throwable, [
                 'payoutId' => $payoutId,
             ]);

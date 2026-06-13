@@ -9,14 +9,14 @@ function vendoring_load_file_or_empty(string $path): string
     return false === $contents ? '' : $contents;
 }
 
-$controller = vendoring_load_file_or_empty(__DIR__ . '/../../src/Controller/Vendor/VendorTransactionController.php');
-$manager = vendoring_load_file_or_empty(__DIR__ . '/../../src/Service/Transaction/VendorTransactionLifecycleService.php');
-$amountPolicy = vendoring_load_file_or_empty(__DIR__ . '/../../src/Service/Policy/VendorTransactionAmountPolicyService.php');
-$errorCodes = vendoring_load_file_or_empty(__DIR__ . '/../../src/ValueObject/VendorTransactionErrorCodeValueObject.php');
+$transactionHttpService = vendoring_load_file_or_empty(__DIR__.'/../../src/Service/Http/Vendor/Transaction/VendorTransactionHttpService.php');
+$manager = vendoring_load_file_or_empty(__DIR__.'/../../src/Service/Transaction/VendorTransactionLifecycleService.php');
+$amountPolicy = vendoring_load_file_or_empty(__DIR__.'/../../src/Service/Policy/VendorTransactionAmountPolicyService.php');
+$errorCodes = vendoring_load_file_or_empty(__DIR__.'/../../src/ValueObject/VendorTransactionErrorCodeValueObject.php');
 
 $checks = [
-    'controller avoids raw exception message payload' => !str_contains($controller, "['error' => \$exception->getMessage()]"),
-    'controller normalizes validation messages through resolver' => str_contains($controller, 'normalizeErrorCode'),
+    'transaction HTTP service avoids raw exception message payload' => !str_contains($transactionHttpService, "['error' => \$exception->getMessage()]"),
+    'transaction HTTP service normalizes validation messages through resolver' => str_contains($transactionHttpService, 'normalizeErrorCode'),
     'manager uses stable invalid transition code' => str_contains($manager, 'VendorTransactionErrorCodeValueObject::INVALID_STATUS_TRANSITION'),
     'amount policy uses stable codes' => str_contains($amountPolicy, 'VendorTransactionErrorCodeValueObject::AMOUNT_NOT_NUMERIC')
         && str_contains($amountPolicy, 'VendorTransactionErrorCodeValueObject::AMOUNT_NOT_POSITIVE'),
@@ -32,12 +32,8 @@ foreach ($checks as $label => $ok) {
 }
 
 if ([] !== $failed) {
-    fwrite(STDERR, 'Transaction error surface smoke failed:
- - ' . implode('
- - ', $failed) . '
-');
+    fwrite(STDERR, 'Transaction error surface smoke failed:'.PHP_EOL.' - '.implode(PHP_EOL.' - ', $failed).PHP_EOL);
     exit(1);
 }
 
-echo 'Transaction error surface smoke OK
-';
+echo 'Transaction error surface smoke OK'.PHP_EOL;

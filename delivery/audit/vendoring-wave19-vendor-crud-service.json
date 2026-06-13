@@ -1,0 +1,26 @@
+{
+  "wave": "19",
+  "rename": {
+    "from": "VendorCoreService",
+    "to": "VendorCrudService"
+  },
+  "business_operations": [
+    "index",
+    "find",
+    "create",
+    "update"
+  ],
+  "active_entrypoints": [
+    "VendorIndexService",
+    "VendorShowService",
+    "VendorNewService",
+    "VendorCreateService",
+    "VendorEditService",
+    "VendorUpdateService"
+  ],
+  "deleted_old_files": [
+    "src/Service/Core/VendorCoreService.php",
+    "src/ServiceInterface/Core/VendorCoreServiceInterface.php",
+    "tests/Unit/Service/VendorCoreServiceTest.php"
+  ]
+}

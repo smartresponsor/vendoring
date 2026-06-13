@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\Exception\Command\VendorCommandIoException;
 use App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface;
-use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorAlertRuleEvaluatorServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorMonitoringSnapshotBuilderServiceInterface;
@@ -15,7 +15,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 /**
  * CLI entrypoint for rendering the current monitoring snapshot and alerts.
@@ -53,7 +52,7 @@ final class VendorMonitoringSnapshotCommand extends Command
         try {
             $snapshot = $this->snapshotBuilder->build($windowSeconds);
             $alerts = $this->alertRuleEvaluator->evaluate($snapshot);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError(
                 $output,
                 $format,
@@ -75,7 +74,7 @@ final class VendorMonitoringSnapshotCommand extends Command
             $writtenPath = $this->commandJsonArtifactWriter->writeIfRequested(
                 (bool) $input->getOption('write'),
                 $input->getOption('output'),
-                dirname(__DIR__, 2) . '/build/release/monitoring-snapshot.json',
+                dirname(__DIR__, 2).'/build/release/monitoring-snapshot.json',
                 $payload,
             );
         } catch (VendorCommandIoException $exception) {

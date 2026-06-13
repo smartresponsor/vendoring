@@ -4,56 +4,50 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorWishlistRepository::class)]
 #[ORM\Table(name: 'vendor_wishlist')]
-#[ORM\Index(name: 'idx_vendor_wishlist_vendor_status', columns: ['vendor_id', 'status'])]
-final class VendorWishlistEntity
+class VendorWishlistEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\ManyToOne(targetEntity: VendorEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private VendorEntity $vendor;
-
-    #[ORM\Column(name: 'customer_reference', type: 'string', length: 128)]
-    private string $customerReference;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $name;
-
-    #[ORM\Column(type: 'string', length: 32)]
-    private string $status = 'active';
-
-    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $updatedAt;
-
-    public function __construct(VendorEntity $vendor, string $customerReference, string $name)
+    #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'wishlists')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $customerReference = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $nameEntity = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    public function __construct(VendorEntity $vendor, string $customerReference, string $nameEntity)
     {
+        parent::__construct('active');
         $this->vendor = $vendor;
         $this->customerReference = $customerReference;
-        $this->name = $name;
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = $this->createdAt;
+        $this->nameEntity = $nameEntity;
+        $this->status = 'active';
     }
 
-    public function getId(): ?int
+    public function update(string $nameEntity, string $status): self
     {
-        return $this->id;
-    }
-
-    public function update(string $name, string $status = 'active'): void
-    {
-        $this->name = $name;
+        $this->nameEntity = $nameEntity;
         $this->status = $status;
-        $this->updatedAt = new DateTimeImmutable();
+
+        return $this->setStatus($status);
+    }
+
+    public function getVendor(): ?VendorEntity
+    {
+        return $this->vendor ?? null;
+    }
+
+    public function getCustomerReference()
+    {
+        return $this->customerReference;
+    }
+
+    public function getName()
+    {
+        return $this->nameEntity;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

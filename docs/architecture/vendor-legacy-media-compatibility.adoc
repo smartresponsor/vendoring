@@ -1,0 +1,49 @@
+= Vendor Legacy Media Compatibility
+:toc:
+
+== Purpose
+
+Vendoring previously stored profile media through local path fields such as `logoPath`, `bannerPath`, `VendorProfileAvatarEntity.filePath`, and `VendorProfileCoverEntity.filePath`.
+Those fields are now treated as compatibility sources only.
+
+The canonical public-profile media model is:
+
+[source,text]
+----
+ownerType = vendor
+ownerId   = <vendor id>
+context   = profile
+slot      = avatar | cover
+isPrimary = true
+----
+
+The stored file, metadata, and owner link lifecycle remain owned by Attaching.
+Vendoring owns only the business meaning of the public profile surface.
+
+== Runtime fallback
+
+`VendorLegacyProfileAttachmentResolverService` reads legacy Vendoring fields when no canonical Attaching primary link is available.
+It is the default standalone resolver so older local/demo/profile flows still show avatar and cover URLs without requiring Attaching.
+
+When the host application imports `config/component/optional/attaching_profile_bridge.yaml`, Vendoring uses `VendorChainedProfileAttachmentResolverService`:
+
+. resolve from Attaching first;
+. fall back to legacy Vendoring media paths only when Attaching has no primary link.
+
+== Migration candidates
+
+`VendorLegacyMediaAttachmentCandidateProviderService` exposes a non-destructive migration plan from old media fields:
+
+[source,text]
+----
+logoPath   -> context=profile, slot=avatar, primary=true
+bannerPath -> context=profile, slot=cover,  primary=true
+gallery[]  -> context=media,   slot=gallery, primary=false, position=<index>
+----
+
+The service does not create Attaching rows by itself. A host-level migration can consume the candidates and create `Attachment` + `AttachmentLink` records through Attaching.
+
+== Canonical direction
+
+Do not add new public-profile file path fields to Vendoring.
+New UI, menu, and profile surfaces should consume `VendorPublicProfileSummary` and treat legacy URLs as temporary fallback values.

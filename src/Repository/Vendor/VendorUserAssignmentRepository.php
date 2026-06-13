@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace App\Vendoring\Repository\Vendor;
 
 use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
-use App\Vendoring\EntityInterface\Vendor\VendorUserAssignmentEntityInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<VendorUserAssignmentEntity>
- */
 final class VendorUserAssignmentRepository extends ServiceEntityRepository implements VendorUserAssignmentRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -20,77 +16,42 @@ final class VendorUserAssignmentRepository extends ServiceEntityRepository imple
         parent::__construct($registry, VendorUserAssignmentEntity::class);
     }
 
-    public function save(VendorUserAssignmentEntityInterface $assignment, bool $flush = false): void
+    public function save(object $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($assignment);
-
+        $this->getEntityManager()->persist($entity);
         if ($flush) {
             $this->getEntityManager()->flush();
         }
     }
 
-    public function remove(VendorUserAssignmentEntityInterface $assignment, bool $flush = false): void
+    public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?object
     {
-        $this->getEntityManager()->remove($assignment);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function findPrimaryForVendorId(int $vendorId): ?VendorUserAssignmentEntityInterface
-    {
-        return $this->typedOne(
-            $this->findOneBy([
-                'vendorId' => $vendorId,
-                'status' => 'active',
-                'isPrimary' => true,
-            ]),
-        );
+        return $this->createQueryBuilder('assignment')
+            ->innerJoin('assignment.vendor', 'vendor')
+            ->andWhere('vendor.id = :vendorId')
+            ->andWhere('assignment.userId = :userId')
+            ->setParameter('vendorId', $vendorId)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function findActiveByVendorId(int $vendorId): array
     {
-        return $this->typedList(
-            $this->findBy([
-                'vendorId' => $vendorId,
-                'status' => 'active',
-            ]),
-        );
+        return $this->createQueryBuilder('assignment')
+            ->innerJoin('assignment.vendor', 'vendor')
+            ->andWhere('vendor.id = :vendorId')
+            ->andWhere('assignment.status = :status')
+            ->setParameter('vendorId', $vendorId)
+            ->setParameter('status', 'active')
+            ->orderBy('assignment.primaryAssignment', 'DESC')
+            ->addOrderBy('assignment.grantedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
-    public function findActiveByUserId(int $userId): array
+    public function byId(mixed $id): ?object
     {
-        return $this->typedList(
-            $this->findBy([
-                'userId' => $userId,
-                'status' => 'active',
-            ]),
-        );
-    }
-
-    public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?VendorUserAssignmentEntityInterface
-    {
-        return $this->typedOne(
-            $this->findOneBy([
-                'vendorId' => $vendorId,
-                'userId' => $userId,
-            ]),
-        );
-    }
-
-    /**
-     * @param list<VendorUserAssignmentEntity> $entities
-     *
-     * @return list<VendorUserAssignmentEntityInterface>
-     */
-    private function typedList(array $entities): array
-    {
-        return $entities;
-    }
-
-    private function typedOne(?VendorUserAssignmentEntity $entity): ?VendorUserAssignmentEntityInterface
-    {
-        return $entity;
+        return $this->find($id);
     }
 }

@@ -1,0 +1,75 @@
+# ---------------------------------------------------------------------------
+# Cruding token grammar
+# ---------------------------------------------------------------------------
+# This file is a route-map registry/protocol file for the current Cruding parser.
+#
+# Current Cruding catch-all grammar:
+#   API CRUD:
+#     /api/{resourcePath}
+#     /api/{resourcePath}/{slug}
+#
+#   Surface:
+#     /{resource}/{subject}/{surface}
+#     /{resource}/{subject}/{surface}/{action}
+#     /{resource}/{subject}/{surface}/{item}/{action}
+#     /{resource}/{subject}/{surface}/{token}/{item}
+#     /{resource}/{subject}/{surface}/{token}/{item}/{action}
+#
+#   Classic CRUD:
+#     /{resourcePath}/new/
+#     /{resourcePath}/edit/{id}
+#     /{resourcePath}/edit/{slug}
+#     /{resourcePath}/delete/{id}
+#     /{resourcePath}/delete/{slug}
+#     /{resourcePath}/{id}
+#     /{resourcePath}/{slug}
+#     /{resourcePath}
+#
+# Token meaning:
+#   resource      = first business/root token allowed by APP_RUNTIME_ENTITY
+#   subject       = second business token
+#   surface       = visual/object/surface token
+#   token         = operation/surface token when grammar has 5+ segments
+#   item          = item identifier value
+#   action        = final operation token
+#   resourcePath  = slash-aware classic CRUD resource path
+#   id            = internal/admin/system identifier
+#   slug          = public/outdoor/human identifier
+#
+# Runtime guard:
+#   first URI token must be allowed by APP_RUNTIME_ENTITY.
+#   reserved component roots must not be captured as business resources.
+#
+# Canon:
+#   routeKey keeps full business chain, for example:
+#     vendor.attachment.document.show
+#   template target may stay short, for example:
+#     document/show/index.html.twig
+#   no {ref}; use {id}/{slug}; use semantic {productId}/{mediaId} for relations.
+# ---------------------------------------------------------------------------
+
+# config/platform/routes/ecommerce/vendor.yaml
+# E-commerce business protocol map.
+# No {ref}.
+
+vendor.category.assign:           { path: /vendor/category/assign/{vendorId}/{categoryId},                  type: App\Vendoring\Form\Vendor\Category\VendorCategoryAssignType,                   service: App\Vendoring\Service\Http\Vendor\Category\VendorCategoryAssignService, resolver: id }
+vendor.category.unassign:         { path: /vendor/category/unassign/{vendorId}/{categoryId},                type: App\Vendoring\Form\Vendor\Category\VendorCategoryUnassignType,                 service: App\Vendoring\Service\Http\Vendor\Category\VendorCategoryUnassignService, resolver: id }
+vendor.commission.adjust:         { path: /vendor/commission/adjust/{vendorId}/{commissionId},              type: App\Vendoring\Form\Vendor\Commission\VendorCommissionAdjustType,               service: App\Vendoring\Service\Http\Vendor\Commission\VendorCommissionAdjustService, resolver: id }
+vendor.commission.calculate_id:      { path: /vendor/commission/calculate/{vendorId},                           type: App\Vendoring\Form\Vendor\Commission\VendorCommissionCalculateType,            service: App\Vendoring\Service\Http\Vendor\Commission\VendorCommissionCalculateService, resolver: id }
+vendor.commission.calculate_slug:      { path: /vendor/commission/calculate/{vendorSlug},                           type: App\Vendoring\Form\Vendor\Commission\VendorCommissionCalculateType,            service: App\Vendoring\Service\Http\Vendor\Commission\VendorCommissionCalculateService, resolver: slug }
+vendor.document.reject:           { path: /vendor/document/reject/{vendorId}/{documentId},                  type: App\Vendoring\Form\Vendor\Document\VendorDocumentRejectType,                   service: App\Vendoring\Service\Http\Vendor\Document\VendorDocumentRejectService, resolver: id }
+vendor.document.verify:           { path: /vendor/document/verify/{vendorId}/{documentId},                  type: App\Vendoring\Form\Vendor\Document\VendorDocumentVerifyType,                   service: App\Vendoring\Service\Http\Vendor\Document\VendorDocumentVerifyService, resolver: id }
+vendor.onboarding.approve_id:        { path: /vendor/onboarding/approve/{vendorId},                             type: App\Vendoring\Form\Vendor\Onboarding\VendorOnboardingApproveType,              service: App\Vendoring\Service\Http\Vendor\Onboarding\VendorOnboardingApproveService, resolver: id }
+vendor.onboarding.approve_slug:        { path: /vendor/onboarding/approve/{vendorSlug},                             type: App\Vendoring\Form\Vendor\Onboarding\VendorOnboardingApproveType,              service: App\Vendoring\Service\Http\Vendor\Onboarding\VendorOnboardingApproveService, resolver: slug }
+vendor.onboarding.reject_id:         { path: /vendor/onboarding/reject/{vendorId},                              type: App\Vendoring\Form\Vendor\Onboarding\VendorOnboardingRejectType,               service: App\Vendoring\Service\Http\Vendor\Onboarding\VendorOnboardingRejectService, resolver: id }
+vendor.onboarding.reject_slug:         { path: /vendor/onboarding/reject/{vendorSlug},                              type: App\Vendoring\Form\Vendor\Onboarding\VendorOnboardingRejectType,               service: App\Vendoring\Service\Http\Vendor\Onboarding\VendorOnboardingRejectService, resolver: slug }
+vendor.onboarding.start_id:          { path: /vendor/onboarding/start/{vendorId},                               type: App\Vendoring\Form\Vendor\Onboarding\VendorOnboardingStartType,                service: App\Vendoring\Service\Http\Vendor\Onboarding\VendorOnboardingStartService, resolver: id }
+vendor.onboarding.start_slug:          { path: /vendor/onboarding/start/{vendorSlug},                               type: App\Vendoring\Form\Vendor\Onboarding\VendorOnboardingStartType,                service: App\Vendoring\Service\Http\Vendor\Onboarding\VendorOnboardingStartService, resolver: slug }
+vendor.payout.approve:            { path: /vendor/payout/approve/{vendorId}/{payoutId},                     type: App\Vendoring\Form\Vendor\Payout\VendorPayoutApproveType,                      service: App\Vendoring\Service\Http\Vendor\Payout\VendorPayoutApproveService, resolver: id }
+vendor.payout.calculate_id:          { path: /vendor/payout/calculate/{vendorId},                               type: App\Vendoring\Form\Vendor\Payout\VendorPayoutCalculateType,                    service: App\Vendoring\Service\Http\Vendor\Payout\VendorPayoutCalculateService, resolver: id }
+vendor.payout.calculate_slug:          { path: /vendor/payout/calculate/{vendorSlug},                               type: App\Vendoring\Form\Vendor\Payout\VendorPayoutCalculateType,                    service: App\Vendoring\Service\Http\Vendor\Payout\VendorPayoutCalculateService, resolver: slug }
+vendor.payout.pay:                { path: /vendor/payout/pay/{vendorId}/{payoutId},                         type: App\Vendoring\Form\Vendor\Payout\VendorPayoutPayType,                          service: App\Vendoring\Service\Http\Vendor\Payout\VendorPayoutPayService, resolver: id }
+vendor.product.assign:            { path: /vendor/product/assign/{vendorId}/{productId},                    type: App\Vendoring\Form\Vendor\Product\VendorProductAssignType,                     service: App\Vendoring\Service\Http\Vendor\Product\VendorProductAssignService, resolver: id }
+vendor.product.unassign:          { path: /vendor/product/unassign/{vendorId}/{productId},                  type: App\Vendoring\Form\Vendor\Product\VendorProductUnassignType,                   service: App\Vendoring\Service\Http\Vendor\Product\VendorProductUnassignService, resolver: id }
+vendor.rating.recalculate_id:        { path: /vendor/rating/recalculate/{vendorId},                             type: App\Vendoring\Form\Vendor\Rating\VendorRatingRecalculateType,                  service: App\Vendoring\Service\Http\Vendor\Rating\VendorRatingRecalculateService, resolver: id }
+vendor.rating.recalculate_slug:        { path: /vendor/rating/recalculate/{vendorSlug},                             type: App\Vendoring\Form\Vendor\Rating\VendorRatingRecalculateType,                  service: App\Vendoring\Service\Http\Vendor\Rating\VendorRatingRecalculateService, resolver: slug }

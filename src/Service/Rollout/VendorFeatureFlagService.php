@@ -10,7 +10,7 @@ use App\Vendoring\ServiceInterface\Rollout\VendorTrafficCohortResolverServiceInt
 /**
  * In-memory feature-flag evaluator for controlled rollout decisions.
  *
- * Flags are supplied as configuration arrays keyed by flag name. Each flag may expose:
+ * Flags are supplied as configuration arrays keyed by flag nameEntity. Each flag may expose:
  * - `enabled` as the global default
  * - `cohorts` as a list of canonical cohort identifiers allowed to receive the flag
  *
@@ -24,8 +24,9 @@ final readonly class VendorFeatureFlagService implements VendorFeatureFlagServic
      */
     public function __construct(
         private VendorTrafficCohortResolverServiceInterface $trafficCohortResolver,
-        private array                          $flags = [],
-    ) {}
+        private array $flags = [],
+    ) {
+    }
 
     public function isEnabled(string $flagName, ?string $tenantId = null, ?string $vendorId = null): bool
     {

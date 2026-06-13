@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Vendoring\Tests\Support\Runtime\KernelRuntimeHarness;
 
-require dirname(__DIR__, 2) . '/vendor/autoload.php';
+require dirname(__DIR__, 2).'/vendor/autoload.php';
 
 if (!extension_loaded('pdo_sqlite')) {
     fwrite(STDOUT, "fresh db boot smoke skipped: pdo_sqlite is required\n");
@@ -14,7 +14,7 @@ if (!extension_loaded('pdo_sqlite')) {
 $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 2), environment: 'prod', debug: false);
 
 try {
-    $transactionResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor-transactions/vendor/vendor-fresh');
+    $transactionResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor/transaction/vendor-fresh');
     $transactionPayload = KernelRuntimeHarness::decodeJson($transactionResponse);
 
     if (200 !== $transactionResponse->getStatusCode() || ($transactionPayload['data'] ?? null) !== []) {
@@ -23,7 +23,7 @@ try {
     }
 
     $vendor = KernelRuntimeHarness::seedActiveVendor($kernel, 'Fresh Boot Ownership Vendor');
-    $ownershipResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor-ownership/vendor/' . (string) $vendor->getId());
+    $ownershipResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor/ownership/'.(string) $vendor->getId());
     $ownershipPayload = KernelRuntimeHarness::decodeJson($ownershipResponse);
 
     if (200 !== $ownershipResponse->getStatusCode()) {

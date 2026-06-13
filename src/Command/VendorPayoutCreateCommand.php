@@ -5,20 +5,18 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
 use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
 use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
-use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
-use InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 #[AsCommand(
     name: 'app:vendor:payout:create',
@@ -72,13 +70,13 @@ final class VendorPayoutCreateCommand extends Command
         try {
             $dto = $this->requestService->toCreateDto($payload);
             $payoutId = $this->payoutService->create($dto);
-        } catch (InvalidArgumentException $exception) {
+        } catch (\InvalidArgumentException $exception) {
             $this->commandResultEmitter->emitError($output, $format, 'invalid', $exception->getMessage(), [
                 'payload' => $payload,
             ]);
 
             return Command::FAILURE;
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to create payout', $throwable, [
                 'payload' => $payload,
             ]);
@@ -102,7 +100,7 @@ final class VendorPayoutCreateCommand extends Command
 
         try {
             $payout = $this->payoutRepository->byId($payoutId);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to load payout', $throwable, [
                 'payoutId' => $payoutId,
                 'payload' => $payload,

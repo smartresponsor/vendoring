@@ -6,12 +6,12 @@ namespace App\Vendoring\Tests\Unit\Payout;
 
 use App\Vendoring\DTO\Payout\VendorCreatePayoutDTO;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
+use App\Vendoring\Service\Ledger\VendorLedgerService;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
-use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
-use App\Vendoring\Service\Ledger\VendorLedgerService;
 use App\Vendoring\Service\Payout\VendorPayoutService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Tests\Support\Payout\InMemoryPayoutRepository;
 use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
@@ -76,8 +76,8 @@ final class VendorPayoutServiceTest extends TestCase
 
         self::assertSame(
             [
-                ['name' => 'payout_created_total', 'tags' => ['currency' => 'USD']],
-                ['name' => 'payout_processed_total', 'tags' => ['currency' => 'USD']],
+                ['nameEntity' => 'payout_created_total', 'tags' => ['currency' => 'USD']],
+                ['nameEntity' => 'payout_processed_total', 'tags' => ['currency' => 'USD']],
             ],
             $metrics->snapshot(),
         );

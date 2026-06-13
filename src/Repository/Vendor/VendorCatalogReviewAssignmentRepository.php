@@ -5,20 +5,27 @@ declare(strict_types=1);
 namespace App\Vendoring\Repository\Vendor;
 
 use App\Vendoring\Entity\Vendor\VendorCatalogReviewAssignmentEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogReviewAssignmentRepositoryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
-final class VendorCatalogReviewAssignmentRepository
+final class VendorCatalogReviewAssignmentRepository extends ServiceEntityRepository implements VendorCatalogReviewAssignmentRepositoryInterface
 {
-    /** @var list<VendorCatalogReviewAssignmentEntity> */
-    private array $items = [];
-
-    public function save(VendorCatalogReviewAssignmentEntity $assignment): void
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->items[] = $assignment;
+        parent::__construct($registry, VendorCatalogReviewAssignmentEntity::class);
     }
 
-    /** @return list<VendorCatalogReviewAssignmentEntity> */
-    public function all(): array
+    public function save(object $entity, bool $flush = false): void
     {
-        return $this->items;
+        $this->getEntityManager()->persist($entity);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function byId(mixed $id): ?object
+    {
+        return $this->find($id);
     }
 }

@@ -15,17 +15,17 @@ interface VendorAuthorizationMatrixServiceInterface
     /**
      * Determine whether one canonical role grants a capability.
      *
-     * @param string $role       Canonical vendor-local role, such as `owner` or `finance`.
-     * @param string $capability Canonical capability name, such as `transactions.write`.
+     * @param string $role       canonical vendor-local role, such as `owner` or `finance`
+     * @param string $capability Canonical capability nameEntity, such as `transactions.write`.
      */
     public function can(string $role, string $capability): bool;
 
     /**
      * List the canonical capabilities granted by one canonical role.
      *
-     * @param string $role Canonical vendor-local role.
+     * @param string $role canonical vendor-local role
      *
-     * @return list<string> Deterministic capability list for documentation, UI, and tests.
+     * @return list<string> deterministic capability list for documentation, UI, and tests
      */
     public function capabilitiesForRole(string $role): array;
 }

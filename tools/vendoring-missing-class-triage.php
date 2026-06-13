@@ -123,8 +123,8 @@ echo '- File count: ' . (int) ($payload['fileCount'] ?? 0) . "\n";
 echo '- Issue count (payload): ' . (int) ($payload['issueCount'] ?? count($issueList)) . "\n";
 echo '- Issue count (loaded): ' . count($issueList) . "\n";
 
-foreach ($bucketMap as $name => $rows) {
-    echo "\n[{$name}] count=" . count($rows) . "\n";
+foreach ($bucketMap as $nameEntity => $rows) {
+    echo "\n[{$nameEntity}] count=" . count($rows) . "\n";
     $show = array_slice($rows, 0, 12);
     foreach ($show as $r) {
         $f = (string) ($r['file'] ?? '');

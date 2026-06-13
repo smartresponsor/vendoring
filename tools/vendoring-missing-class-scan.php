@@ -140,11 +140,11 @@ function parsePhp(string $code): array
                     default => 'enum',
                 };
 
-                $name = null;
+                $nameEntity = null;
                 for ($j = $i + 1; $j < $n; $j++) {
                     $tj = $tokens[$j];
                     if (is_array($tj) && T_STRING === $tj[0]) {
-                        $name = $tj[1];
+                        $nameEntity = $tj[1];
                         break;
                     }
                     if (is_string($tj) && '{' === $tj) {
@@ -152,8 +152,8 @@ function parsePhp(string $code): array
                     }
                 }
 
-                if (is_string($name) && '' !== $name) {
-                    $typeList[] = ['kind' => $kind, 'name' => $name];
+                if (is_string($nameEntity) && '' !== $nameEntity) {
+                    $typeList[] = ['kind' => $kind, 'nameEntity' => $nameEntity];
                     $firstTypeSeen = true;
                 }
             }
@@ -197,7 +197,7 @@ foreach ($fileList as $abs) {
     }
 
     foreach ($meta['typeList'] as $t) {
-        $fqn = $ns . '\\' . $t['name'];
+        $fqn = $ns . '\\' . $t['nameEntity'];
         $knownTypeSet[$fqn] = true;
     }
 }
@@ -275,3 +275,4 @@ foreach ($issueList as $it) {
 }
 
 exit(($strict && count($issueList) > 0) ? 1 : 0);
+

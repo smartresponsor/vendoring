@@ -5,19 +5,27 @@ declare(strict_types=1);
 namespace App\Vendoring\Repository\Vendor;
 
 use App\Vendoring\Entity\Vendor\VendorCatalogCategoryChangeRequestEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogCategoryChangeRequestRepositoryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
-final class VendorCatalogCategoryChangeRequestRepository
+final class VendorCatalogCategoryChangeRequestRepository extends ServiceEntityRepository implements VendorCatalogCategoryChangeRequestRepositoryInterface
 {
-    /** @var array<string, VendorCatalogCategoryChangeRequestEntity> */
-    private array $items = [];
-
-    public function save(VendorCatalogCategoryChangeRequestEntity $request): void
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->items[$request->id()] = $request;
+        parent::__construct($registry, VendorCatalogCategoryChangeRequestEntity::class);
     }
 
-    public function byId(string $id): ?VendorCatalogCategoryChangeRequestEntity
+    public function save(object $entity, bool $flush = false): void
     {
-        return $this->items[$id] ?? null;
+        $this->getEntityManager()->persist($entity);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function byId(mixed $id): ?object
+    {
+        return $this->find($id);
     }
 }

@@ -15,7 +15,7 @@ Wave L closes a remaining type-folder naming drift in `src/Form/Ops`. Symfony fo
 - Renamed `VendorTransactionCreateType` to `VendorTransactionCreateForm`.
 - Renamed `VendorTransactionStatusUpdateType` to `VendorTransactionStatusUpdateForm`.
 - Added explicit DTO imports to both form classes.
-- Updated `VendorTransactionOperatorController` to use the renamed form classes.
+- Updated `VendorTransactionOperatorSurfaceBuilder` to use the renamed form classes.
 
 ## Deletions
 

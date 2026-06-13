@@ -149,11 +149,11 @@ function parsePhpMeta(string $code): array
                     default => 'enum',
                 };
 
-                $name = null;
+                $nameEntity = null;
                 for ($j = $i + 1; $j < $n; $j++) {
                     $tj = $tokens[$j];
                     if (is_array($tj) && T_STRING === $tj[0]) {
-                        $name = $tj[1];
+                        $nameEntity = $tj[1];
                         break;
                     }
                     if (is_string($tj) && '{' === $tj) {
@@ -161,8 +161,8 @@ function parsePhpMeta(string $code): array
                     }
                 }
 
-                if (is_string($name) && '' !== $name) {
-                    $typeList[] = ['kind' => $kind, 'name' => $name, 'offset' => $t[2] ?? 0];
+                if (is_string($nameEntity) && '' !== $nameEntity) {
+                    $typeList[] = ['kind' => $kind, 'nameEntity' => $nameEntity, 'offset' => $t[2] ?? 0];
                     $firstTypeSeen = true;
                 }
             }
@@ -238,9 +238,9 @@ foreach ($it as $node) {
             $issueList[] = ['type' => 'type', 'file' => $rel, 'message' => 'multiple types found', 'types' => $typeList];
         }
 
-        $primary = $typeList[0]['name'];
+        $primary = $typeList[0]['nameEntity'];
         if ($primary !== $base) {
-            $issueList[] = ['type' => 'name', 'file' => $rel, 'message' => 'filename mismatch', 'expected' => $primary . '.php', 'actual' => $base . '.php'];
+            $issueList[] = ['type' => 'nameEntity', 'file' => $rel, 'message' => 'filename mismatch', 'expected' => $primary . '.php', 'actual' => $base . '.php'];
         }
     }
 
@@ -287,7 +287,7 @@ if ($asJson) {
             echo "  * [NS] {$file} expected={$iss['expected']} actual={$iss['actual']}\n";
         } elseif ('namespace' === $type && isset($iss['expected'])) {
             echo "  * [NS] {$file} expected={$iss['expected']} ({$msg})\n";
-        } elseif ('name' === $type) {
+        } elseif ('nameEntity' === $type) {
             echo "  * [NAME] {$file} expected={$iss['expected']} actual={$iss['actual']}\n";
         } elseif ('type' === $type && isset($iss['types'])) {
             echo "  * [TYPE] {$file} {$msg} (" . count((array) $iss['types']) . ")\n";
@@ -312,3 +312,4 @@ if ($strict && count($issueList) > 0) {
 }
 
 exit(0);
+

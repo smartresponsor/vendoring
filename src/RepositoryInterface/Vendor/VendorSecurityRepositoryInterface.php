@@ -2,20 +2,17 @@
 
 declare(strict_types=1);
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 namespace App\Vendoring\RepositoryInterface\Vendor;
 
-use App\Vendoring\Entity\Vendor\VendorSecurityEntity;
-use App\Vendoring\EntityInterface\Vendor\VendorSecurityEntityInterface;
-use Doctrine\Persistence\ObjectRepository;
-
-/**
- * @extends ObjectRepository<VendorSecurityEntity>
- */
-interface VendorSecurityRepositoryInterface extends ObjectRepository
+interface VendorSecurityRepositoryInterface
 {
-    public function findOneActiveForVendorId(int $vendorId): ?VendorSecurityEntityInterface;
+    public function find(mixed $id): ?object;
 
-    public function save(VendorSecurityEntity $vendorSecurity, bool $flush = false): void;
+    /** @param array<string,mixed> $criteria */
+    public function findOneBy(array $criteria): ?object;
+
+    /** @return list<object> */
+    public function findBy(array $criteria): array;
+
+    public function save(object $entity, bool $flush = false): void;
 }

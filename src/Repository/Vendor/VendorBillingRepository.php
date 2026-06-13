@@ -9,9 +9,6 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorBillingRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<VendorBillingEntity>
- */
 final class VendorBillingRepository extends ServiceEntityRepository implements VendorBillingRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -19,34 +16,16 @@ final class VendorBillingRepository extends ServiceEntityRepository implements V
         parent::__construct($registry, VendorBillingEntity::class);
     }
 
-    public function save(VendorBillingEntity $vendorBilling, bool $flush = false): void
+    public function save(object $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($vendorBilling);
-
+        $this->getEntityManager()->persist($entity);
         if ($flush) {
             $this->getEntityManager()->flush();
         }
     }
 
-    public function remove(VendorBillingEntity $vendorBilling, bool $flush = false): void
+    public function byId(mixed $id): ?object
     {
-        $this->getEntityManager()->remove($vendorBilling);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function findOneByVendorId(string $vendorId): ?VendorBillingEntity
-    {
-        $entity = $this->createQueryBuilder('billing')
-            ->innerJoin('billing.vendor', 'vendor')
-            ->andWhere('vendor.id = :vendorId')
-            ->setParameter('vendorId', (int) $vendorId)
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
-
-        return $entity instanceof VendorBillingEntity ? $entity : null;
+        return $this->find($id);
     }
 }

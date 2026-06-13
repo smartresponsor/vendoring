@@ -32,7 +32,7 @@ final class CanonicalNoStubRepositoryContractTest extends TestCase
             }
         }
 
-        self::assertSame([], $violations, 'Repository contains forbidden stub markers: ' . implode(', ', $violations));
+        self::assertSame([], $violations, 'Repository contains forbidden stub markers: '.implode(', ', $violations));
     }
 
     private function isIgnoredPath(string $path): bool
@@ -45,7 +45,7 @@ final class CanonicalNoStubRepositoryContractTest extends TestCase
             '.git',
             'build/release/',
             'vendor/',
-            'deploy/_template/',
+            'deploy/_templates/',
             'deploy/systemd/',
             'deploy/',
             '.github/workflows/consuming.yml',

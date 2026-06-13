@@ -7,14 +7,13 @@ declare(strict_types=1);
 namespace App\Vendoring\Command;
 
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
-use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 #[AsCommand(
     name: 'app:vendor:api-key:list',
@@ -56,7 +55,7 @@ final class VendorApiKeyListCommand extends Command
 
         try {
             $keys = $this->apiKeyRepo->findBy(['vendor' => $vendorId], ['createdAt' => 'DESC']);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to load API keys', $throwable, [
                 'vendorId' => $vendorId,
             ]);
@@ -69,7 +68,7 @@ final class VendorApiKeyListCommand extends Command
                 'vendorId' => $vendorId,
                 'total' => count($keys),
                 'keys' => array_map(
-                    static fn($key): array => [
+                    static fn ($key): array => [
                         'keyId' => $key->getId(),
                         'status' => $key->getStatus(),
                         'permissions' => $key->getPermissions(),

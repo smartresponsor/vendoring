@@ -9,8 +9,8 @@
 - `docs/internal/PHPDOC_WAVE_A_CANON.md`
 - `docs/internal/PHPDOC_WAVE_A_PATCH_GUIDE.md`
 - `docs/internal/VENDORING_STRUCTURE_CLEANUP_AUDIT.md`
-- `src/Controller/Vendor/VendorOwnershipController.php`
-- `src/Controller/Vendor/VendorProfileController.php`
+- `src/Controller/Vendor/VendorOwnershipSurfaceBuilder.php`
+- `src/Controller/Vendor/VendorProfileSurfaceBuilder.php`
 
 ## Added files
 

@@ -22,7 +22,7 @@ final class VendorTransactionStatusUpdateForm extends AbstractType
             'label' => false,
             'choices' => VendorTransactionStatusValueObject::operatorChoices(),
             'constraints' => [new NotBlank(), new Choice(choices: VendorTransactionStatusValueObject::all())],
-            'attr' => ['class' => 'form-select form-select-sm'],
+            'attr' => ['class' => 'crud-app-select'],
         ]);
     }
 

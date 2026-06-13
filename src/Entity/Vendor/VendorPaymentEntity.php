@@ -4,71 +4,77 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorPaymentRepository::class)]
 #[ORM\Table(name: 'vendor_payment')]
-#[ORM\UniqueConstraint(name: 'uniq_vendor_payment_vendor_provider_method', columns: ['vendor_id', 'provider_code', 'method_code'])]
-#[ORM\Index(name: 'idx_vendor_payment_vendor_status', columns: ['vendor_id', 'status'])]
-final class VendorPaymentEntity
+class VendorPaymentEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\ManyToOne(targetEntity: VendorEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private VendorEntity $vendor;
-
-    #[ORM\Column(name: 'provider_code', type: 'string', length: 64)]
-    private string $providerCode;
-
-    #[ORM\Column(name: 'method_code', type: 'string', length: 64)]
-    private string $methodCode;
-
-    #[ORM\Column(name: 'external_payment_id', type: 'string', length: 128, nullable: true)]
-    private ?string $externalPaymentId = null;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $label = null;
-
-    #[ORM\Column(type: 'string', length: 32)]
-    private string $status = 'active';
-
-    #[ORM\Column(name: 'is_default', type: 'boolean')]
-    private bool $isDefault = false;
-
-    /** @var array<string, mixed> */
-    #[ORM\Column(type: 'json')]
-    private array $meta = [];
-
-    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $updatedAt;
-
-    /** @param array<string, mixed> $meta */
-    public function __construct(VendorEntity $vendor, string $providerCode, string $methodCode, array $meta = [])
+    #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'payments')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $providerCode = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $methodCode = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $externalPaymentId = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $label = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    #[ORM\Column(type: 'boolean')] private bool $isDefault = false;
+    #[ORM\Column(type: 'json')] private array $meta = [];
+    public function __construct(VendorEntity $vendor, array $meta = [])
     {
+        parent::__construct('active');
         $this->vendor = $vendor;
-        $this->providerCode = $providerCode;
-        $this->methodCode = $methodCode;
         $this->meta = $meta;
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = $this->createdAt;
     }
 
-    /** @param array<string, mixed> $meta */
-    public function update(?string $externalPaymentId = null, ?string $label = null, ?string $status = null, ?bool $isDefault = null, array $meta = []): void
+    public function update(string $providerCode, string $methodCode, ?string $externalPaymentId, ?string $label, string $status, bool $isDefault, array $meta): self
     {
+        $this->providerCode = $providerCode;
+        $this->methodCode = $methodCode;
         $this->externalPaymentId = $externalPaymentId;
         $this->label = $label;
-        $this->status = null === $status ? $this->status : $status;
-        $this->isDefault = null === $isDefault ? $this->isDefault : $isDefault;
-        $this->meta = [] === $meta ? $this->meta : $meta;
-        $this->updatedAt = new DateTimeImmutable();
+        $this->status = $status;
+        $this->isDefault = $isDefault;
+        $this->meta = $meta;
+
+        return $this->setStatus($status);
+    }
+
+    public function getVendor(): ?VendorEntity
+    {
+        return $this->vendor ?? null;
+    }
+
+    public function getProviderCode()
+    {
+        return $this->providerCode;
+    }
+
+    public function getMethodCode()
+    {
+        return $this->methodCode;
+    }
+
+    public function getExternalPaymentId()
+    {
+        return $this->externalPaymentId;
+    }
+
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function isIsDefault()
+    {
+        return $this->isDefault;
+    }
+
+    public function getMeta()
+    {
+        return $this->meta;
     }
 }

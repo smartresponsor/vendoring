@@ -4,20 +4,20 @@
 
 This document defines the documentation contract for the Vendoring component.
 
-The goal is not to maximize comment volume. The goal is to make the component
-readable, reviewable, explainable, and machine-consumable at release-candidate
-quality.
+Documentation must keep the current runtime architecture explicit:
 
-Documentation must serve both:
-- a human engineer reviewing behavior and architecture
-- a machine agent generating, validating, and evolving the component
+```text
+Vendoring = zero-controller / zero-route component
+Cruding   = URI grammar owner
+Vendoring = canonical App\Vendoring\Service\Http\Vendor\... service owner
+```
 
 ## Documentation layers
 
 Vendoring uses four distinct documentation layers:
 
-1. **API documentation**
-   - HTTP endpoints
+1. **Route-map / API documentation**
+   - Cruding grammar and route-map keys
    - request/response contracts
    - error contracts
    - auth/security expectations
@@ -36,128 +36,80 @@ Vendoring uses four distinct documentation layers:
    - failure modes
 
 4. **Operational/release documentation**
-   - runtime surfaces
+   - runtime services
+   - route-map registry coverage
    - release baseline expectations
    - RC readiness and gaps
 
 These layers are complementary and must not be collapsed into one generic style.
 
+## Runtime entrypoint canon
+
+Vendoring must not document component-owned Symfony controllers as active runtime entrypoints.
+
+Forbidden active documentation targets:
+
+- `src/Controller/`
+- `src/ControllerTrait/`
+- the retired component route file
+- retired controller namespace classes
+- Symfony `#[Route]` attributes inside Vendoring source
+
+Required active documentation targets:
+
+- `config/platform/routes.platform.yaml`
+- `config/platform/routes.crud.yaml`
+- `config/platform/routes.business.yaml`
+- `config/platform/routes/**/*.yaml`
+- `src/Service/Http/Vendor/.../*Service.php`
+- `src/Form/Vendor/.../*Type.php`
 
 ## Layer 3 structure and naming canon for machine agents
 
-Vendoring uses a literal Layer 3 structure contract for the class-type folders that are frequently edited by agents.
+Vendoring uses literal Layer 3 contracts for class-type folders frequently edited by agents.
 
-The following folders must contain exactly one direct child folder named `Vendor`:
+The following folders are locked to one direct child folder named `Vendor` when present:
 
-- `src/Controller/`
-- `src/ControllerInterface/` when controller interfaces exist
 - `src/Event/`
 - `src/EventInterface/`
 - `src/Policy/`
 - `src/PolicyInterface/`
 - `src/Repository/`
 - `src/RepositoryInterface/`
+- `src/Projection/`
 
-The only valid PHP file patterns inside those `Vendor` folders are:
+Canonical HTTP runtime services are an exception to the Vendoring namespace because Cruding FQCN convention expects the host-level Symfony namespace:
 
-- `src/Controller/Vendor/Vendor*Controller.php`
-- `src/ControllerInterface/Vendor/Vendor*ControllerInterface.php`
-- `src/Event/Vendor/Vendor*Event.php`
-- `src/EventInterface/Vendor/Vendor*EventInterface.php`
-- `src/Policy/Vendor/Vendor*Policy.php`
-- `src/PolicyInterface/Vendor/Vendor*PolicyInterface.php`
-- `src/Repository/Vendor/Vendor*Repository.php`
-- `src/RepositoryInterface/Vendor/Vendor*RepositoryInterface.php`
-- `src/Projection/Vendor/Vendor*Projection.php`
+```text
+src/Service/Http/Vendor/.../*Service.php
+namespace App\Vendoring\Service\Http\Vendor\...
+```
 
-Do not create `Ledger`, `Payout`, `Ops`, `Finance`, `Statement`, `Integration`, `Metric`, `Dev`, `VendorPayoutEntity`, or any other capability bucket inside these Layer 3 folders.
+Form Types used by the route-map follow:
 
-`src/Security/` is forbidden as a mixed security bucket. Security classes must be sorted by type. Autowired security services belong in `src/Service/Security/` and their contracts belong in `src/ServiceInterface/Security/`. The short alias folders `src/Service/Sec/` and `src/ServiceInterface/Sec/` are forbidden. Security DTOs remain DTOs. Voters, authenticators, subscribers, listeners, and middleware must use their own type-identifiable source folders.
+```text
+src/Form/Vendor/.../*Type.php
+namespace App\Vendoring\Form\Vendor\...
+```
+
+Do not create `Ledger`, `Payout`, `Ops`, `Finance`, `Statement`, `Integration`, `Metric`, `Dev`, `VendorPayoutEntity`, or any other capability bucket inside strict `Vendor`-only type folders.
+
+`src/Security/` is forbidden as a mixed security bucket. Security classes must be sorted by type. Autowired security services belong in `src/Service/Security/` and their contracts belong in `src/ServiceInterface/Security/`.
 
 See `docs/internal/LAYER3_STRUCTURE_NAMING_CANON.md` for the complete literal contract.
 
 ## Required documentation targets
 
-The following targets must be documented:
+- route-map registry files under `config/platform/`
+- canonical `App\Vendoring\Service\Http\Vendor\...` runtime services
+- canonical `App\Vendoring\Form\Vendor\...` form types
+- repository and policy contracts
+- release evidence and smoke commands
 
-- all public controllers
-- all public commands
-- all public services
-- all public builders/readers/resolvers
-- all policies
-- all repository interfaces
-- all public DTO/value objects where semantics are not obvious
+## Required smoke references
 
-The following targets may be documented selectively:
-
-- trivial entities with self-evident getters/setters
-- private methods with no behavioral ambiguity
-- purely mechanical test helpers
-
-## Documentation quality rule
-
-Documentation must explain:
-- what the class or method is for
-- what system boundary it belongs to
-- whether it mutates state or only reads/builds projections
-- what invariants it expects
-- what outputs or side effects it produces
-- what failures are expected and meaningful
-
-Documentation must not merely restate the code.
-
-## Mutation vs projection rule
-
-Every public class should be understandable as one of these:
-
-- **mutation service**
-- **projection/read-model builder**
-- **policy/validator**
-- **adapter/integration bridge**
-- **controller/command entrypoint**
-- **repository contract**
-- **DTO/value object**
-
-The class-level docblock should make this explicit.
-
-## Side effects rule
-
-Where relevant, documentation must explicitly state whether a method:
-- persists state
-- dispatches events
-- emits metrics
-- performs file I/O
-- performs external transport/integration work
-- is intentionally side-effect free
-
-## Release-candidate expectation
-
-For Vendoring to be considered RC-ready from a documentation perspective:
-
-- all public runtime and mutation seams must have meaningful docblocks
-- API endpoints must have API-level contract documentation
-- critical business scenarios must be documented
-- documentation must be stable enough to serve as a review baseline
-
-## Anti-patterns
-
-The following are forbidden:
-
-- empty docblocks
-- comments that only repeat parameter names
-- “getter returns X” style noise
-- misleading future-tense comments not grounded in current code
-- comments that describe desired behavior when code does something else
-
-## Preferred style
-
-Documentation should be:
-- direct
-- precise
-- layer-aware
-- behavior-oriented
-- compatible with phpDocumentor and API tooling
-
-- Entity interface canon: `src/EntityInterface/Vendor/Vendor*EntityInterface.php`; no root files, no shorter `Vendor*Interface.php` aliases.
-
-- Policy canon: `src/Policy/Vendor/Vendor*Policy.php` and `src/PolicyInterface/Vendor/Vendor*PolicyInterface.php`; no root policy files, no capability folders, no missing `Vendor` prefix.
+```bash
+php tools/smoke/vendoring-zero-controller-audit.php
+php tests/bin/vendoring-zero-controller-hardening-smoke.php
+php tests/bin/vendor-route-map-coverage-smoke.php
+```

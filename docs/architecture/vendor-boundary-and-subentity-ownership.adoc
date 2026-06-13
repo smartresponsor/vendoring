@@ -1,0 +1,71 @@
+= Vendoring Boundary and Subentity Ownership
+
+Vendoring owns vendor-facing business identity and vendor-scoped subentities. It does not own every system that can be associated with a vendor.
+
+== Canonical responsibility
+
+Vendoring owns:
+
+* vendor profile identity and public profile summary;
+* vendor-owned profile fields, publication status, and business-facing display names;
+* vendor-specific subentities that describe the vendor's relationship with the host application;
+* vendor references to external component capabilities when the vendor is the subject of those capabilities.
+
+Vendoring must not become the primary owner of security, attachment storage, payment processing, shipment lifecycle, messaging, catalog lifecycle, or search infrastructure.
+
+== Neighbor boundaries
+
+[cols="1,2,2",options="header"]
+|===
+|Neighbor
+|Owns
+|Vendoring may keep
+
+|Accessing
+|Credentials, login, authentication state, authorization identity, security account lifecycle.
+|Vendor-to-access-account linkage and vendor-facing access summaries only.
+
+|Attaching
+|Attachment storage, file metadata, attachment links, owner/context/slot resolution.
+|Vendor attachment slot conventions and vendor public-profile attachment projections.
+
+|Paying/Billing/Currencing
+|Payment execution, settlement infrastructure, money/currency primitives, billing flows.
+|Vendor payout account/profile metadata and vendor-facing payout summaries while the dedicated component is not the owner yet.
+
+|Shipping
+|Shipment lifecycle, carriers, labels, fulfilment states.
+|Vendor shipping preferences and vendor-facing participation metadata.
+
+|Cataloging/Search/Messaging
+|Catalog lifecycle, searchable indexes/results, conversations/messages.
+|Vendor participation surfaces and lightweight references only.
+|===
+
+== Public profile media
+
+Public avatar and profile cover are not stored as direct file paths in Vendoring. The canonical source is Attaching:
+
+[source,text]
+----
+ownerType = vendor
+ownerId = <vendor id>
+context = profile
+slot = avatar | cover
+isPrimary = true
+----
+
+Legacy vendor-local media fields may remain temporarily as compatibility or migration sources, but they are not canonical.
+
+== Payout table-prefix canon
+
+While payout entities remain inside Vendoring, their database tables must use the `vendor_` prefix:
+
+[source,text]
+----
+vendor_payout
+vendor_payout_item
+vendor_payout_account
+----
+
+Unprefixed tables such as `payouts`, `payout_items`, and `payout_accounts` are legacy names and must not be used by current ORM metadata.

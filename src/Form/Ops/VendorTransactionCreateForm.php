@@ -22,21 +22,21 @@ final class VendorTransactionCreateForm extends AbstractType
             ->add('orderId', TextType::class, [
                 'label' => 'Order ID',
                 'constraints' => [new NotBlank(), new Length(max: 120)],
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'crud-app-input'],
             ])
             ->add('projectId', TextType::class, [
                 'label' => 'Project ID',
                 'required' => false,
                 'empty_data' => '',
                 'constraints' => [new Length(max: 120)],
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'crud-app-input'],
             ])
             ->add('amount', MoneyType::class, [
                 'label' => 'Amount',
                 'currency' => 'USD',
                 'divisor' => 1,
                 'constraints' => [new NotBlank()],
-                'attr' => ['class' => 'form-control', 'inputmode' => 'decimal'],
+                'attr' => ['class' => 'crud-app-input', 'inputmode' => 'decimal'],
             ]);
     }
 

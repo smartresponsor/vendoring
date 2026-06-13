@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
-use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
-use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
-use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
-use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
+use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPdfServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderServiceInterface;
@@ -19,7 +19,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 #[AsCommand(name: 'finance:send-vendor-statements', description: 'Send monthly vendor statements')]
 final class VendorSendVendorStatementsCommand extends Command
@@ -69,7 +68,7 @@ final class VendorSendVendorStatementsCommand extends Command
 
         try {
             $recipients = $this->resolveRecipients($input, $from, $to);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to resolve statement recipients', $throwable, [
                 'period' => $period,
                 'from' => $from,
@@ -105,7 +104,7 @@ final class VendorSendVendorStatementsCommand extends Command
                 $data = $this->svc->build($dto);
                 $pdfPath = $this->pdf->export($dto, $data);
                 $result = $this->mailer->send($recipient->tenantId, $recipient->vendorId, $recipient->email, $pdfPath, $period);
-            } catch (Throwable $throwable) {
+            } catch (\Throwable $throwable) {
                 $result = [
                     'ok' => false,
                     'message' => 'statement_generation_failed',
@@ -205,9 +204,9 @@ final class VendorSendVendorStatementsCommand extends Command
         return sprintf('%s to %s', $from, $to);
     }
 
-    private function stringOption(InputInterface $input, string $name): string
+    private function stringOption(InputInterface $input, string $nameEntity): string
     {
-        $value = $input->getOption($name);
+        $value = $input->getOption($nameEntity);
 
         return is_scalar($value) ? (string) $value : '';
     }

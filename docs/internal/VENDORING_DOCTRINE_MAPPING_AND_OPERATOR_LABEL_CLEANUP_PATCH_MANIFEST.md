@@ -4,7 +4,7 @@
 
 - `config/packages/doctrine.yaml`
 - `config/packages/vendor_nelmio_api_doc.yaml.dist`
-- `src/Service/Ops/VendorTransactionOperatorPageBuilderService.php`
+- `src/Controller/Vendor/VendorTransactionOperatorSurfaceBuilder.php`
 - `docs/internal/VENDORING_DOCTRINE_MAPPING_AND_OPERATOR_LABEL_CLEANUP_AUDIT.md`
 - `docs/internal/VENDORING_DOCTRINE_MAPPING_AND_OPERATOR_LABEL_CLEANUP_PATCH_MANIFEST.md`
 

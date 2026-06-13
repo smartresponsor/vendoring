@@ -16,8 +16,8 @@ interface VendorOutboundOperationPolicyServiceInterface
     /**
      * Resolve the canonical runtime policy for one outbound operation.
      *
-     * @param string $operation Stable operation name such as `statement_mail_send`
-     *                          or `payout_transfer`.
+     * @param string $operation stable operation nameEntity such as `statement_mail_send`
+     *                          or `payout_transfer`
      *
      * @return array{
      *   operation:string,

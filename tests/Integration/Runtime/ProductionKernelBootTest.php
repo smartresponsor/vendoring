@@ -25,7 +25,7 @@ final class ProductionKernelBootTest extends TestCase
             self::assertTrue($kernel->getContainer()->has('router'));
             self::assertTrue($kernel->getContainer()->has('doctrine'));
 
-            $response = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor-transactions/vendor/vendor-boot');
+            $response = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor/transaction/vendor-boot');
             $payload = KernelRuntimeHarness::decodeJson($response);
 
             self::assertSame(200, $response->getStatusCode());

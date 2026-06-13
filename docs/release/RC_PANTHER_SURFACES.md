@@ -28,12 +28,12 @@ This allows:
 - verifies "Vendoring API" marker is present
 
 ### 2. Runtime status surface
-- GET `/api/vendor-runtime-status/tenant/{tenantId}/vendor/{vendorId}`
+- GET `/api/vendor/runtime/status/{vendorId}`
 - verifies JSON response
 - verifies `data` payload exists
 
 ### 3. Release baseline surface
-- GET `/api/vendor-release-baseline/tenant/{tenantId}/vendor/{vendorId}`
+- GET `/api/vendor/release/baseline/{vendorId}`
 - verifies JSON response
 - verifies baseline structure (`status`, `data`)
 

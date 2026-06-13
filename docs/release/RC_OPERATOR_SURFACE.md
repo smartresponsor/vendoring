@@ -6,16 +6,16 @@ Vendoring now includes a minimal server-rendered operator surface for the vendor
 
 The operator surface is intentionally narrow:
 
-- `GET /ops/vendor-transactions/{vendorId}` renders a Bootstrap-styled HTML page.
-- `POST /ops/vendor-transactions/{vendorId}/create` submits a minimal create form.
-- `POST /ops/vendor-transactions/{vendorId}/{id}/status` submits a minimal status-update form.
+- `GET /ops/vendor/transaction/{vendorId}` renders a Bootstrap-styled HTML page.
+- `POST /ops/vendor/transaction/create/{vendorId}` submits a minimal create form.
+- `POST /ops/vendor/transaction/status/{id}` submits a minimal status-update form.
 
 ## What this proves for release-candidate hardening
 
 This slice demonstrates a live server-rendered runtime chain that complements the JSON API runtime proofs:
 
 - route resolution
-- controller execution
+- surface builder execution
 - HTML response rendering
 - request form handling
 - service/policy execution

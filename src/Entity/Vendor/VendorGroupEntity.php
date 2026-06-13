@@ -4,59 +4,58 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorGroupRepository::class)]
 #[ORM\Table(name: 'vendor_group')]
-#[ORM\UniqueConstraint(name: 'uniq_vendor_group_vendor_code', columns: ['vendor_id', 'code'])]
-final class VendorGroupEntity
+class VendorGroupEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\ManyToOne(targetEntity: VendorEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private VendorEntity $vendor;
-
-    #[ORM\Column(type: 'string', length: 64)]
-    private string $code;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $name;
-
-    #[ORM\Column(type: 'string', length: 32)]
-    private string $status = 'active';
-
-    /** @var array<string, mixed> */
-    #[ORM\Column(type: 'json')]
-    private array $meta = [];
-
-    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $updatedAt;
-
-    /** @param array<string, mixed> $meta */
-    public function __construct(VendorEntity $vendor, string $code, string $name, array $meta = [])
+    #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'groups')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $code = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $nameEntity = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    #[ORM\Column(type: 'json')] private array $meta = [];
+    public function __construct(VendorEntity $vendor, string $code, string $nameEntity, array $meta = [])
     {
+        parent::__construct('active');
         $this->vendor = $vendor;
         $this->code = $code;
-        $this->name = $name;
+        $this->nameEntity = $nameEntity;
+        $this->status = 'active';
         $this->meta = $meta;
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = $this->createdAt;
     }
 
-    /** @param array<string, mixed> $meta */
-    public function update(string $name, string $status = 'active', array $meta = []): void
+    public function update(string $nameEntity, string $status, array $meta = []): self
     {
-        $this->name = $name;
+        $this->nameEntity = $nameEntity;
         $this->status = $status;
-        $this->meta = [] === $meta ? $this->meta : $meta;
-        $this->updatedAt = new DateTimeImmutable();
+        $this->meta = $meta;
+
+        return $this->setStatus($status);
+    }
+
+    public function getVendor(): ?VendorEntity
+    {
+        return $this->vendor ?? null;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    public function getName()
+    {
+        return $this->nameEntity;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function getMeta()
+    {
+        return $this->meta;
     }
 }

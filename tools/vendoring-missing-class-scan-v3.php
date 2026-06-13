@@ -245,8 +245,8 @@ function parsePhpMetaV3(string $code): array
             for ($j = $i + 1; $j < $n; $j++) {
                 $tt = $tokens[$j];
                 if (is_array($tt) && T_STRING === $tt[0]) {
-                    $name = $tt[1];
-                    $typeList[] = (null !== $namespace && '' !== $namespace) ? $namespace . '\\' . $name : $name;
+                    $nameEntity = $tt[1];
+                    $typeList[] = (null !== $namespace && '' !== $namespace) ? $namespace . '\\' . $nameEntity : $nameEntity;
                     break;
                 }
             }
@@ -258,8 +258,8 @@ function parsePhpMetaV3(string $code): array
             for ($j = $i + 1; $j < $n; $j++) {
                 $tt = $tokens[$j];
                 if (is_array($tt) && T_STRING === $tt[0]) {
-                    $name = $tt[1];
-                    $typeList[] = (null !== $namespace && '' !== $namespace) ? $namespace . '\\' . $name : $name;
+                    $nameEntity = $tt[1];
+                    $typeList[] = (null !== $namespace && '' !== $namespace) ? $namespace . '\\' . $nameEntity : $nameEntity;
                     break;
                 }
             }

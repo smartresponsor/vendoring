@@ -9,8 +9,8 @@
 
 - `config/component/services.yaml`
 - `config/vendor_services_transactions.yaml`
-- `src/Controller/Vendor/VendorTransactionController.php`
-- `src/Controller/Vendor/VendorTransactionOperatorController.php`
+- `src/Controller/Vendor/VendorTransactionSurfaceBuilder.php`
+- `src/Controller/Vendor/VendorTransactionOperatorSurfaceBuilder.php`
 - `docs/internal/LAYER3_STRUCTURE_NAMING_CANON.md`
 
 ## Removed by apply script

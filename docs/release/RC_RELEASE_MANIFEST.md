@@ -16,7 +16,7 @@ The release manifest combines:
 ### HTTP
 
 ```bash
-GET /api/vendor-monitoring/release-manifest?windowSeconds=900
+GET /api/vendor/monitoring/release/manifest?windowSeconds=900
 ```
 
 ### CLI

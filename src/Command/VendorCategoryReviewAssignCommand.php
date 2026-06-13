@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
 use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
-use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
-use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Catalog\VendorCatalogReviewAssignmentServiceInterface;
-use InvalidArgumentException;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 /**
  * CLI entrypoint for assigning category review requests to a reviewer.
@@ -57,11 +55,11 @@ final class VendorCategoryReviewAssignCommand extends Command
     /**
      * Assign the requested category review and render the resulting payload as JSON.
      *
-     * @param InputInterface $input Console input carrying request, reviewer, assigner, and priority.
-     * @param OutputInterface $output Console output that receives either JSON payload or a validation error.
+     * @param InputInterface  $input  console input carrying request, reviewer, assigner, and priority
+     * @param OutputInterface $output console output that receives either JSON payload or a validation error
      *
      * @return int `Command::SUCCESS` when the assignment is created, otherwise `Command::FAILURE` for
-     *             invalid input detected by the underlying assignment service.
+     *             invalid input detected by the underlying assignment service
      */
     /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -74,7 +72,7 @@ final class VendorCategoryReviewAssignCommand extends Command
 
         try {
             $payload = $this->service->assign($requestId, $reviewer, $assignedBy, $priority);
-        } catch (InvalidArgumentException $exception) {
+        } catch (\InvalidArgumentException $exception) {
             $this->commandResultEmitter->emitError($output, $format, 'invalid', $exception->getMessage(), [
                 'requestId' => $requestId,
                 'reviewer' => $reviewer,
@@ -83,7 +81,7 @@ final class VendorCategoryReviewAssignCommand extends Command
             ]);
 
             return Command::FAILURE;
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to assign category review', $throwable, [
                 'requestId' => $requestId,
                 'reviewer' => $reviewer,
@@ -115,9 +113,9 @@ final class VendorCategoryReviewAssignCommand extends Command
     /**
      * Normalize a console argument into a scalar string representation.
      *
-     * @param mixed $value Raw console argument value.
+     * @param mixed $value raw console argument value
      *
-     * @return string Scalar string value or an empty string when the raw value is not scalar.
+     * @return string scalar string value or an empty string when the raw value is not scalar
      */
     private static function stringArgument(mixed $value): string
     {

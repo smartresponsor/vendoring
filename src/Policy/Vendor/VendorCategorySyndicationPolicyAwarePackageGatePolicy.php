@@ -32,14 +32,14 @@ final class VendorCategorySyndicationPolicyAwarePackageGatePolicy implements Ven
         }
 
         $checks = self::boolMap($fallbackGatePayload['checks'] ?? []);
-        foreach (self::boolMap($policyPayload['checks'] ?? []) as $name => $value) {
-            $checks[$name] = $value;
+        foreach (self::boolMap($policyPayload['checks'] ?? []) as $nameEntity => $value) {
+            $checks[$nameEntity] = $value;
         }
         $checks['resolvedPublishable'] = $resolvedPublishable;
 
         return new VendorCategorySyndicationPolicyAwarePackageGateReportValueObject(
             $mediaPolicyMode,
-            ($packageMissingRequiredFields),
+            $packageMissingRequiredFields,
             $requiredMissing,
             self::stringList(array_unique($warnings)),
             $checks,

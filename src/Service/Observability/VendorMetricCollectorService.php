@@ -12,17 +12,16 @@ use App\Vendoring\ServiceInterface\Observability\VendorMetricCollectorServiceInt
 final readonly class VendorMetricCollectorService implements VendorMetricCollectorServiceInterface
 {
     /**
-     * @param iterable<VendorMetricCollectorServiceInterface> $collectors Downstream collectors that will all receive the increment.
+     * @param iterable<VendorMetricCollectorServiceInterface> $collectors downstream collectors that will all receive the increment
      */
-    public function __construct(private iterable $collectors) {}
+    public function __construct(private iterable $collectors)
+    {
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function increment(string $name, array $tags = []): void
+    public function increment(string $nameEntity, array $tags = []): void
     {
         foreach ($this->collectors as $collector) {
-            $collector->increment($name, $tags);
+            $collector->increment($nameEntity, $tags);
         }
     }
 }

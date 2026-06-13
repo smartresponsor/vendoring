@@ -5,50 +5,27 @@ declare(strict_types=1);
 namespace App\Vendoring\Entity\Vendor;
 
 use App\Vendoring\EntityInterface\Vendor\VendorTransactionEntityInterface;
-use App\Vendoring\ValueObject\VendorTransactionStatusValueObject;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: 'App\Vendoring\\Repository\\Vendor\\VendorTransactionRepository')]
-#[ORM\Table(
-    name: 'vendor_transaction',
-    indexes: [
-        new ORM\Index(name: 'idx_vendor_transaction_vendor_created', columns: ['vendor_id', 'created_at', 'id']),
-    ],
-)]
-/**
- * @noinspection PhpPropertyNamingConventionInspection
- */
-final class VendorTransactionEntity implements VendorTransactionEntityInterface
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorTransactionRepository::class)]
+#[ORM\Table(name: 'vendor_transaction')]
+class VendorTransactionEntity extends VendorAbstractEntity implements VendorTransactionEntityInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    // @phpstan-ignore-next-line
-    private ?int $id = null;
-
-    #[ORM\Column(name: 'status', type: 'string', length: 64)]
-    private string $status = VendorTransactionStatusValueObject::PENDING;
-
-    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
-
-    public function __construct(
-        #[ORM\Column(name: 'vendor_id', type: 'string', length: 64)]
-        private readonly string $vendorId,
-        #[ORM\Column(name: 'order_id', type: 'string', length: 64)]
-        private readonly string $orderId,
-        #[ORM\Column(name: 'project_id', type: 'string', length: 64, nullable: true)]
-        private readonly ?string $projectId,
-        #[ORM\Column(type: 'decimal', precision: 12, scale: 2)]
-        private readonly string $amount,
-    ) {
-        $this->createdAt = new DateTimeImmutable();
-    }
-
-    public function getId(): ?int
+    #[ORM\Column(type: 'string', length: 64)] private string $vendorId;
+    #[ORM\Column(type: 'string', length: 64)] private string $orderId;
+    #[ORM\Column(type: 'string', length: 64, nullable: true)] private ?string $projectId = null;
+    #[ORM\Column(type: 'decimal', precision: 12, scale: 2)] private string $amount;
+    #[ORM\Column(type: 'string', length: 64)] private string $status = 'pending';
+    #[ORM\Column(type: 'datetime_immutable')] private \DateTimeImmutable $createdAt;
+    public function __construct(string $vendorId, string $orderId, ?string $projectId, string $amount, string $status = 'pending')
     {
-        return is_int($this->id) ? $this->id : null;
+        parent::__construct($status);
+        $this->vendorId = $vendorId;
+        $this->orderId = $orderId;
+        $this->projectId = $projectId;
+        $this->amount = $amount;
+        $this->status = $status;
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getVendorId(): string
@@ -68,7 +45,7 @@ final class VendorTransactionEntity implements VendorTransactionEntityInterface
 
     public function getAmount(): string
     {
-        return number_format((float) $this->amount, 2, '.', '');
+        return $this->amount;
     }
 
     public function getStatus(): string
@@ -76,12 +53,15 @@ final class VendorTransactionEntity implements VendorTransactionEntityInterface
         return $this->status;
     }
 
-    public function setStatus(string $status): void
+    public function setStatus(string $status): self
     {
         $this->status = $status;
+        parent::setStatus($status);
+
+        return $this;
     }
 
-    public function getCreatedAt(): DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }

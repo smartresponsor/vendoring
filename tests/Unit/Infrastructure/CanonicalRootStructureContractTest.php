@@ -8,19 +8,21 @@ use PHPUnit\Framework\TestCase;
 
 final class CanonicalRootStructureContractTest extends TestCase
 {
-    public function testVendorTransactionControllerExistsOnlyInCanonicalSrcControllerLocation(): void
+    public function testVendorTransactionHttpServiceExistsAndLegacyRootBuilderIsAbsent(): void
     {
         $root = dirname(__DIR__, 3);
 
-        self::assertFileExists($root . '/src/Controller/Vendor/VendorTransactionController.php');
-        self::assertFileDoesNotExist($root . '/VendorTransactionController.php');
+        self::assertFileExists($root.'/src/Service/Http/Vendor/Transaction/VendorTransactionHttpService.php');
+        self::assertDirectoryDoesNotExist($root.'/src/Controller');
+        self::assertDirectoryDoesNotExist($root.'/src/ControllerTrait');
+        self::assertFileDoesNotExist($root.'/VendorTransactionSurfaceBuilder.php');
     }
 
     public function testRootLevelNonDotPhpArtifactsAreNotPresent(): void
     {
         $root = dirname(__DIR__, 3);
-        $phpFiles = glob($root . '/*.php') ?: [];
-        $nonDotPhpFiles = array_values(array_filter($phpFiles, static fn(string $path): bool => !str_starts_with(basename($path), '.')));
+        $phpFiles = glob($root.'/*.php') ?: [];
+        $nonDotPhpFiles = array_values(array_filter($phpFiles, static fn (string $path): bool => !str_starts_with(basename($path), '.')));
 
         self::assertSame([], $nonDotPhpFiles, 'Root-level non-dot PHP files are forbidden; move runtime/test files under canonical roots.');
     }
@@ -42,7 +44,7 @@ final class CanonicalRootStructureContractTest extends TestCase
     public function testRepositoryRootLocalProtocolAnalysisArtifactsAreIgnoredByGit(): void
     {
         $root = dirname(__DIR__, 3);
-        $gitignore = (string) file_get_contents($root . '/.gitignore');
+        $gitignore = (string) file_get_contents($root.'/.gitignore');
 
         self::assertStringContainsString('PROTOCOL_ANALYSIS.md', $gitignore, 'Local protocol analysis markdown artifacts must be ignored by git when present in a current slice.');
     }
@@ -50,7 +52,7 @@ final class CanonicalRootStructureContractTest extends TestCase
     public function testRepositoryRootLocalVendorDirectoryIsIgnoredByGit(): void
     {
         $root = dirname(__DIR__, 3);
-        $gitignore = (string) file_get_contents($root . '/.gitignore');
+        $gitignore = (string) file_get_contents($root.'/.gitignore');
 
         self::assertStringContainsString('/vendor/', $gitignore, 'Local vendor/ directory must be ignored by git when present in a current slice.');
     }

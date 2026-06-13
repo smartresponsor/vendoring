@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Observability;
 
 use App\Vendoring\ServiceInterface\Observability\VendorMonitoringSnapshotBuilderServiceInterface;
-use DateTimeImmutable;
 
 /**
  * File-backed monitoring snapshot builder for runtime operators.
@@ -19,7 +18,8 @@ final readonly class VendorMonitoringSnapshotBuilderService implements VendorMon
         private string $observabilityDir,
         private string $faultToleranceDir,
         private string $projectDir,
-    ) {}
+    ) {
+    }
 
     public function build(int $windowSeconds = 900): array
     {
@@ -36,7 +36,7 @@ final readonly class VendorMonitoringSnapshotBuilderService implements VendorMon
             $status = 'warn';
         }
 
-        $generatedAt = new DateTimeImmutable();
+        $generatedAt = new \DateTimeImmutable();
 
         return [
             'generatedAt' => $generatedAt->format(DATE_ATOM),
@@ -54,7 +54,7 @@ final readonly class VendorMonitoringSnapshotBuilderService implements VendorMon
      */
     private function readLogs(int $cutoff): array
     {
-        $path = rtrim($this->observabilityDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'runtime_logs.ndjson';
+        $path = rtrim($this->observabilityDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'runtime_logs.ndjson';
         $total = 0;
         $error = 0;
         $warning = 0;
@@ -98,7 +98,7 @@ final readonly class VendorMonitoringSnapshotBuilderService implements VendorMon
      */
     private function readMetrics(int $cutoff): array
     {
-        $path = rtrim($this->observabilityDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'runtime_metrics.ndjson';
+        $path = rtrim($this->observabilityDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'runtime_metrics.ndjson';
         $total = 0;
         $names = [];
 
@@ -107,9 +107,9 @@ final readonly class VendorMonitoringSnapshotBuilderService implements VendorMon
                 continue;
             }
             ++$total;
-            $name = $record['name'] ?? null;
-            if (is_string($name) && '' !== $name) {
-                $names[$name] = ($names[$name] ?? 0) + 1;
+            $nameEntity = $record['nameEntity'] ?? null;
+            if (is_string($nameEntity) && '' !== $nameEntity) {
+                $names[$nameEntity] = ($names[$nameEntity] ?? 0) + 1;
             }
         }
 
@@ -126,7 +126,7 @@ final readonly class VendorMonitoringSnapshotBuilderService implements VendorMon
      */
     private function readBreakers(): array
     {
-        $dir = rtrim($this->faultToleranceDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'circuit-breakers';
+        $dir = rtrim($this->faultToleranceDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'circuit-breakers';
         $open = 0;
         $halfOpen = 0;
         $closed = 0;
@@ -136,7 +136,7 @@ final readonly class VendorMonitoringSnapshotBuilderService implements VendorMon
             return ['open' => 0, 'halfOpen' => 0, 'closed' => 0, 'scopes' => []];
         }
 
-        foreach (glob($dir . DIRECTORY_SEPARATOR . '*.json') ?: [] as $path) {
+        foreach (glob($dir.DIRECTORY_SEPARATOR.'*.json') ?: [] as $path) {
             $rawPayload = file_get_contents($path);
             if (!is_string($rawPayload)) {
                 continue;
@@ -174,10 +174,10 @@ final readonly class VendorMonitoringSnapshotBuilderService implements VendorMon
     private function probeArtifacts(): array
     {
         return [
-            'transaction' => is_file($this->projectDir . '/docs/PHASE59_SYNTHETIC_RUNTIME_PROBES.md'),
-            'finance' => is_file($this->projectDir . '/docs/PHASE61_FINANCE_SYNTHETIC_PROBE.md'),
-            'payout' => is_file($this->projectDir . '/docs/PHASE62_PAYOUT_PROCESSING_SYNTHETIC_PROBE.md'),
-            'postDeploy' => is_file($this->projectDir . '/docs/PHASE60_DEPLOY_READINESS_POST_DEPLOY_PACK.md'),
+            'transaction' => is_file($this->projectDir.'/docs/PHASE59_SYNTHETIC_RUNTIME_PROBES.md'),
+            'finance' => is_file($this->projectDir.'/docs/PHASE61_FINANCE_SYNTHETIC_PROBE.md'),
+            'payout' => is_file($this->projectDir.'/docs/PHASE62_PAYOUT_PROCESSING_SYNTHETIC_PROBE.md'),
+            'postDeploy' => is_file($this->projectDir.'/docs/PHASE60_DEPLOY_READINESS_POST_DEPLOY_PACK.md'),
         ];
     }
 
@@ -198,7 +198,7 @@ final readonly class VendorMonitoringSnapshotBuilderService implements VendorMon
         foreach ($lines as $line) {
             $decoded = json_decode((string) $line, true);
             if (is_array($decoded)) {
-                /** @var array<string, mixed> $decoded */
+                /* @var array<string, mixed> $decoded */
                 $records[] = $decoded;
             }
         }

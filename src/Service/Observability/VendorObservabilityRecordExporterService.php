@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Observability;
 
 use App\Vendoring\ServiceInterface\Observability\VendorObservabilityRecordExporterServiceInterface;
-use RuntimeException;
 
 /**
  * File-backed observability exporter for runtime logs and metrics.
@@ -16,11 +15,10 @@ use RuntimeException;
  */
 final readonly class VendorObservabilityRecordExporterService implements VendorObservabilityRecordExporterServiceInterface
 {
-    public function __construct(private string $observabilityDir) {}
+    public function __construct(private string $observabilityDir)
+    {
+    }
 
-    /**
-     * {@inheritdoc}
-     */
     public function export(string $stream, array $payload): void
     {
         $normalizedStream = $this->normalizeStream($stream);
@@ -31,7 +29,7 @@ final readonly class VendorObservabilityRecordExporterService implements VendorO
             return;
         }
 
-        file_put_contents($this->streamPath($normalizedStream), $encoded . PHP_EOL, FILE_APPEND | LOCK_EX);
+        file_put_contents($this->streamPath($normalizedStream), $encoded.PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 
     /**
@@ -39,11 +37,11 @@ final readonly class VendorObservabilityRecordExporterService implements VendorO
      */
     public function streamPath(string $stream): string
     {
-        return rtrim($this->observabilityDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $stream . '.ndjson';
+        return rtrim($this->observabilityDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$stream.'.ndjson';
     }
 
     /**
-     * Normalize the logical stream name to a filesystem-safe token.
+     * Normalize the logical stream nameEntity to a filesystem-safe token.
      */
     private function normalizeStream(string $stream): string
     {
@@ -64,7 +62,7 @@ final readonly class VendorObservabilityRecordExporterService implements VendorO
 
         mkdir($concurrentDirectory = $this->observabilityDir, 0777, true);
         if (!is_dir($concurrentDirectory)) {
-            throw new RuntimeException(sprintf('Observability directory "%s" could not be created.', $this->observabilityDir));
+            throw new \RuntimeException(sprintf('Observability directory "%s" could not be created.', $this->observabilityDir));
         }
     }
 }

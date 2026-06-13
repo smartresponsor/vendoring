@@ -4,63 +4,69 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorCodeStorageRepository::class)]
 #[ORM\Table(name: 'vendor_code_storage')]
-#[ORM\UniqueConstraint(name: 'uniq_vendor_code_storage_code', columns: ['code'])]
-final class VendorCodeStorageEntity
+class VendorCodeStorageEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\ManyToOne(targetEntity: VendorEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private VendorEntity $vendor;
-
-    #[ORM\Column(type: 'string', length: 64)]
-    private string $code;
-
-    #[ORM\Column(type: 'string', length: 64, nullable: true)]
-    private ?string $phone = null;
-
-    #[ORM\Column(type: 'string', length: 32)]
-    private string $purpose;
-
-    #[ORM\Column(name: 'is_login', type: 'boolean')]
-    private bool $isLogin = false;
-
-    #[ORM\Column(name: 'expires_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $expiresAt;
-
-    #[ORM\Column(name: 'consumed_at', type: 'datetime_immutable', nullable: true)]
-    private ?DateTimeImmutable $consumedAt = null;
-
-    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
-
-    public function __construct(VendorEntity $vendor, string $code, string $purpose, DateTimeImmutable $expiresAt)
+    #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'codeStorage')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $code = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $phone = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $purpose = '';
+    #[ORM\Column(type: 'boolean')] private bool $isLogin = false;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $expiresAt = null;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $consumedAt = null;
+    public function __construct(VendorEntity $vendor, string $code, ?string $phone, string $purpose, bool $isLogin, \DateTimeImmutable $expiresAt)
     {
+        parent::__construct('active');
         $this->vendor = $vendor;
         $this->code = $code;
-        $this->purpose = $purpose;
-        $this->expiresAt = $expiresAt;
-        $this->createdAt = new DateTimeImmutable();
-    }
-
-    public function update(string $purpose, DateTimeImmutable $expiresAt, ?string $phone = null, ?bool $isLogin = null): void
-    {
-        $this->purpose = $purpose;
-        $this->expiresAt = $expiresAt;
-        $this->updateDelivery($phone, $isLogin);
-    }
-
-    public function updateDelivery(?string $phone = null, ?bool $isLogin = null): void
-    {
         $this->phone = $phone;
-        $this->isLogin = null === $isLogin ? $this->isLogin : $isLogin;
+        $this->purpose = $purpose;
+        $this->isLogin = $isLogin;
+        $this->expiresAt = $expiresAt;
+    }
+
+    public function consume(?\DateTimeImmutable $at = null): self
+    {
+        $this->consumedAt = $at ?? new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getVendor(): ?VendorEntity
+    {
+        return $this->vendor ?? null;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    public function getPurpose()
+    {
+        return $this->purpose;
+    }
+
+    public function isIsLogin()
+    {
+        return $this->isLogin;
+    }
+
+    public function getExpiresAt()
+    {
+        return $this->expiresAt;
+    }
+
+    public function getConsumedAt()
+    {
+        return $this->consumedAt;
     }
 }

@@ -4,46 +4,49 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorFavouriteRepository::class)]
 #[ORM\Table(name: 'vendor_favourite')]
-#[ORM\UniqueConstraint(name: 'uniq_vendor_favourite_vendor_target', columns: ['vendor_id', 'target_type', 'target_id'])]
-final class VendorFavouriteEntity
+class VendorFavouriteEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\ManyToOne(targetEntity: VendorEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private VendorEntity $vendor;
-
-    #[ORM\Column(name: 'target_type', type: 'string', length: 64)]
-    private string $targetType;
-
-    #[ORM\Column(name: 'target_id', type: 'string', length: 128)]
-    private string $targetId;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $note = null;
-
-    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
-
+    #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'favourites')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $targetType = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $targetId = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $note = null;
     public function __construct(VendorEntity $vendor, string $targetType, string $targetId, ?string $note = null)
     {
+        parent::__construct();
         $this->vendor = $vendor;
         $this->targetType = $targetType;
         $this->targetId = $targetId;
         $this->note = $note;
-        $this->createdAt = new DateTimeImmutable();
     }
 
-    public function update(?string $note = null): void
+    public function update(?string $note = null): self
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getVendor(): ?VendorEntity
+    {
+        return $this->vendor ?? null;
+    }
+
+    public function getTargetType()
+    {
+        return $this->targetType;
+    }
+
+    public function getTargetId()
+    {
+        return $this->targetId;
+    }
+
+    public function getNote()
+    {
+        return $this->note;
     }
 }

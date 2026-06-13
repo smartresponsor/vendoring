@@ -8,7 +8,7 @@ $finder = PhpCsFixer\Finder::create()
         __DIR__.'/tests',
         __DIR__.'/tools',
     ])
-    ->name('*.php');
+    ->nameEntity('*.php');
 
 return new PhpCsFixer\Config()
     ->setRiskyAllowed(true)

@@ -4,78 +4,80 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorCommissionRepository::class)]
 #[ORM\Table(name: 'vendor_commission')]
-#[ORM\Index(name: 'idx_vendor_commission_vendor_status', columns: ['vendor_id', 'status'])]
-final class VendorCommissionEntity
+class VendorCommissionEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\ManyToOne(targetEntity: VendorEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private VendorEntity $vendor;
-
-    #[ORM\Column(type: 'string', length: 64)]
-    private string $code;
-
-    #[ORM\Column(type: 'string', length: 32)]
-    private string $direction;
-
-    #[ORM\Column(name: 'rate_percent', type: 'decimal', precision: 6, scale: 2)]
-    private string $ratePercent;
-
-    #[ORM\Column(type: 'string', length: 32)]
-    private string $status = 'active';
-
-    #[ORM\Column(name: 'effective_from', type: 'datetime_immutable')]
-    private DateTimeImmutable $effectiveFrom;
-
-    #[ORM\Column(name: 'effective_to', type: 'datetime_immutable', nullable: true)]
-    private ?DateTimeImmutable $effectiveTo = null;
-
-    /** @var array<string, mixed> */
-    #[ORM\Column(type: 'json')]
-    private array $meta = [];
-
-    /** @param array<string, mixed> $meta */
+    #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'commissions')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $code = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $direction = '';
+    #[ORM\Column(type: 'decimal', precision: 6, scale: 2, nullable: false)] private string $ratePercent = '0.00';
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    #[ORM\Column(type: 'datetime_immutable', nullable: false)] private ?\DateTimeImmutable $effectiveFrom = null;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $effectiveTo = null;
+    #[ORM\Column(type: 'json')] private array $meta = [];
     public function __construct(VendorEntity $vendor, string $code, string $direction, string $ratePercent, array $meta = [])
     {
+        parent::__construct('active');
         $this->vendor = $vendor;
         $this->code = $code;
         $this->direction = $direction;
         $this->ratePercent = $ratePercent;
         $this->meta = $meta;
-        $this->effectiveFrom = new DateTimeImmutable();
+        $this->effectiveFrom = new \DateTimeImmutable();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getVendor(): VendorEntity
-    {
-        return $this->vendor;
-    }
-
-    public function getRatePercent(): string
-    {
-        return $this->ratePercent;
-    }
-
-    /** @param array<string, mixed> $meta */
-    public function updateConfiguration(string $direction, string $ratePercent, string $status = 'active', array $meta = [], ?DateTimeImmutable $effectiveTo = null): void
+    public function update(string $direction, string $ratePercent, string $status, ?\DateTimeImmutable $effectiveFrom = null, ?\DateTimeImmutable $effectiveTo = null, array $meta = []): self
     {
         $this->direction = $direction;
         $this->ratePercent = $ratePercent;
         $this->status = $status;
+        $this->effectiveFrom = $effectiveFrom ?? $this->effectiveFrom;
         $this->effectiveTo = $effectiveTo;
-        $this->meta = [] === $meta ? $this->meta : $meta;
+        $this->meta = $meta;
+
+        return $this->setStatus($status);
+    }
+
+    public function getVendor(): ?VendorEntity
+    {
+        return $this->vendor ?? null;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    public function getDirection()
+    {
+        return $this->direction;
+    }
+
+    public function getRatePercent()
+    {
+        return $this->ratePercent;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function getEffectiveFrom()
+    {
+        return $this->effectiveFrom;
+    }
+
+    public function getEffectiveTo()
+    {
+        return $this->effectiveTo;
+    }
+
+    public function getMeta()
+    {
+        return $this->meta;
     }
 }

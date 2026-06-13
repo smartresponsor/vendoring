@@ -4,72 +4,28 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use App\Vendoring\EntityInterface\Vendor\VendorUserAssignmentEntityInterface;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: 'App\Vendoring\\Repository\\Vendor\\VendorUserAssignmentRepository')]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorUserAssignmentRepository::class)]
 #[ORM\Table(name: 'vendor_user_assignment')]
-#[ORM\UniqueConstraint(name: 'uniq_vendor_user_assignment_vendor_user', columns: ['vendor_id', 'user_id'])]
-#[ORM\Index(name: 'idx_vendor_user_assignment_vendor_status', columns: ['vendor_id', 'status'])]
-#[ORM\Index(name: 'idx_vendor_user_assignment_user_status', columns: ['user_id', 'status'])]
-/**
- * @noinspection PhpPropertyNamingConventionInspection
- */
-final class VendorUserAssignmentEntity implements VendorUserAssignmentEntityInterface
+class VendorUserAssignmentEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\Column(name: 'vendor_id', type: 'integer')]
-    private readonly int $vendorId;
-
-    #[ORM\Column(name: 'user_id', type: 'integer')]
-    private readonly int $userId;
-
-    #[ORM\Column(type: 'string', length: 64)]
-    private string $role;
-
-    #[ORM\Column(type: 'string', length: 32)]
-    private string $status;
-
-    #[ORM\Column(name: 'is_primary', type: 'boolean')]
-    private bool $isPrimary;
-
-    #[ORM\Column(name: 'granted_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $grantedAt;
-
-    #[ORM\Column(name: 'revoked_at', type: 'datetime_immutable', nullable: true)]
-    private ?DateTimeImmutable $revokedAt;
-
-    public function __construct(
-        int $vendorId,
-        int $userId,
-        string $role = 'owner',
-        string $status = 'active',
-        bool $isPrimary = false,
-        ?DateTimeImmutable $grantedAt = null,
-        ?DateTimeImmutable $revokedAt = null,
-    ) {
-        $this->vendorId = $vendorId;
+    #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'userAssignments')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
+    #[ORM\Column(type: 'integer')] private int $userId;
+    #[ORM\Column(type: 'string', length: 64)] private string $role;
+    #[ORM\Column(type: 'string', length: 32)] private string $status;
+    #[ORM\Column(type: 'boolean')] private bool $primaryAssignment = false;
+    #[ORM\Column(type: 'datetime_immutable')] private \DateTimeImmutable $grantedAt;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $revokedAt = null;
+    public function __construct(VendorEntity|int $vendor, int $userId, string $role = 'owner', bool $isPrimary = false)
+    {
+        parent::__construct('active');
+        $this->vendor = $vendor instanceof VendorEntity ? $vendor : new VendorEntity('unresolved-vendor-'.$vendor);
         $this->userId = $userId;
-        $this->role = trim($role);
-        $this->status = trim($status);
-        $this->isPrimary = $isPrimary;
-        $this->grantedAt = $grantedAt ?? new DateTimeImmutable();
-        $this->revokedAt = $revokedAt;
-    }
-
-    public function getId(): ?int
-    {
-        return is_int($this->id) ? $this->id : null;
-    }
-
-    public function getVendorId(): int
-    {
-        return $this->vendorId;
+        $this->role = $role;
+        $this->status = 'active';
+        $this->primaryAssignment = $isPrimary;
+        $this->grantedAt = new \DateTimeImmutable();
     }
 
     public function getUserId(): int
@@ -89,44 +45,32 @@ final class VendorUserAssignmentEntity implements VendorUserAssignmentEntityInte
 
     public function isPrimary(): bool
     {
-        return $this->isPrimary;
+        return $this->primaryAssignment;
     }
 
-    public function getGrantedAt(): DateTimeImmutable
+    public function getGrantedAt(): \DateTimeImmutable
     {
         return $this->grantedAt;
     }
 
-    public function getRevokedAt(): ?DateTimeImmutable
+    public function getRevokedAt(): ?\DateTimeImmutable
     {
         return $this->revokedAt;
     }
 
-    public function markPrimary(): void
-    {
-        $this->isPrimary = true;
-    }
-
-    public function clearPrimary(): void
-    {
-        $this->isPrimary = false;
-    }
-
-    public function revoke(): void
+    public function revoke(): self
     {
         $this->status = 'revoked';
-        $this->isPrimary = false;
-        $this->revokedAt = new DateTimeImmutable();
+        $this->revokedAt = new \DateTimeImmutable();
+
+        return $this;
     }
 
-    public function activate(): void
+    public function activate(): self
     {
         $this->status = 'active';
         $this->revokedAt = null;
-    }
 
-    public function changeRole(string $role): void
-    {
-        $this->role = trim($role);
+        return $this;
     }
 }

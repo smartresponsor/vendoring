@@ -4,70 +4,87 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorCustomerOrderRepository::class)]
 #[ORM\Table(name: 'vendor_customer_order')]
-#[ORM\UniqueConstraint(name: 'uniq_vendor_customer_order_vendor_external', columns: ['vendor_id', 'external_order_id'])]
-#[ORM\Index(name: 'idx_vendor_customer_order_vendor_status', columns: ['vendor_id', 'status'])]
-final class VendorCustomerOrderEntity
+class VendorCustomerOrderEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\ManyToOne(targetEntity: VendorEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private VendorEntity $vendor;
-
-    #[ORM\Column(name: 'external_order_id', type: 'string', length: 128)]
-    private string $externalOrderId;
-
-    #[ORM\Column(name: 'order_number', type: 'string', length: 64, nullable: true)]
-    private ?string $orderNumber = null;
-
-    #[ORM\Column(type: 'string', length: 32)]
-    private string $status;
-
-    #[ORM\Column(type: 'string', length: 8)]
-    private string $currency;
-
-    #[ORM\Column(name: 'gross_cents', type: 'integer')]
-    private int $grossCents;
-
-    #[ORM\Column(name: 'net_cents', type: 'integer')]
-    private int $netCents;
-
-    /** @var array<string, mixed> */
-    #[ORM\Column(type: 'json')]
-    private array $meta = [];
-
-    #[ORM\Column(name: 'placed_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $placedAt;
-
-    /** @param array<string, mixed> $meta */
-    public function __construct(VendorEntity $vendor, string $externalOrderId, string $status, string $currency, int $grossCents, int $netCents, array $meta = [])
+    #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'customerOrders')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $externalOrderId = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $orderNumber = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $currency = '';
+    #[ORM\Column(type: 'integer')] private int $grossCents = 0;
+    #[ORM\Column(type: 'integer')] private int $netCents = 0;
+    #[ORM\Column(type: 'json')] private array $meta = [];
+    #[ORM\Column(type: 'datetime_immutable', nullable: false)] private ?\DateTimeImmutable $placedAt = null;
+    public function __construct(VendorEntity $vendor, string $externalOrderId, string $currency, int $grossCents, int $netCents, array $meta = [])
     {
+        parent::__construct('placed');
         $this->vendor = $vendor;
         $this->externalOrderId = $externalOrderId;
+        $this->currency = $currency;
+        $this->grossCents = $grossCents;
+        $this->netCents = $netCents;
+        $this->meta = $meta;
+        $this->placedAt = new \DateTimeImmutable();
+    }
+
+    public function update(?string $orderNumber, string $status, string $currency, int $grossCents, int $netCents, array $meta): self
+    {
+        $this->orderNumber = $orderNumber;
         $this->status = $status;
         $this->currency = $currency;
         $this->grossCents = $grossCents;
         $this->netCents = $netCents;
         $this->meta = $meta;
-        $this->placedAt = new DateTimeImmutable();
+
+        return $this->setStatus($status);
     }
 
-    /** @param array<string, mixed> $meta */
-    public function update(?string $orderNumber = null, ?string $status = null, ?string $currency = null, ?int $grossCents = null, ?int $netCents = null, array $meta = []): void
+    public function getVendor(): ?VendorEntity
     {
-        $this->orderNumber = $orderNumber;
-        $this->status = null === $status ? $this->status : $status;
-        $this->currency = null === $currency ? $this->currency : $currency;
-        $this->grossCents = null === $grossCents ? $this->grossCents : $grossCents;
-        $this->netCents = null === $netCents ? $this->netCents : $netCents;
-        $this->meta = [] === $meta ? $this->meta : $meta;
+        return $this->vendor ?? null;
+    }
+
+    public function getExternalOrderId()
+    {
+        return $this->externalOrderId;
+    }
+
+    public function getOrderNumber()
+    {
+        return $this->orderNumber;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    public function getGrossCents()
+    {
+        return $this->grossCents;
+    }
+
+    public function getNetCents()
+    {
+        return $this->netCents;
+    }
+
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    public function getPlacedAt()
+    {
+        return $this->placedAt;
     }
 }

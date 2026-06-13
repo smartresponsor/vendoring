@@ -1,0 +1,835 @@
+{
+  "wave": "Vendoring Wave 12B",
+  "scope": "HTTP/Form route surface decision matrix",
+  "source": "Vendoring Wave 12A cumulative snapshot",
+  "policy": {
+    "delete_files": false,
+    "restore_persistence": false,
+    "add_controllers": false,
+    "namespace": "App\\",
+    "component_root": "Symfony-oriented default App namespace"
+  },
+  "summary": {
+    "route_entries": 81,
+    "unique_http_services": 54,
+    "unique_form_types": 42,
+    "decision_counts": {
+      "business_operation_domain_blocked": 21,
+      "crud_protocol_persistence_blocked": 51,
+      "real_read_candidate": 9
+    }
+  },
+  "next_recommendation": "Wave 12C should implement only the real_read_candidate routes through a provider/response adapter or mark them inert until Vendoring read model exists.",
+  "routes": [
+    {
+      "route_key": "vendor.category.assign",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Category\\VendorCategoryAssignService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Category\\VendorCategoryAssignType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.category.unassign",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Category\\VendorCategoryUnassignService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Category\\VendorCategoryUnassignType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.commission.adjust",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Commission\\VendorCommissionAdjustService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Commission\\VendorCommissionAdjustType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.commission.calculate_id",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Commission\\VendorCommissionCalculateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Commission\\VendorCommissionCalculateType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.commission.calculate_slug",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Commission\\VendorCommissionCalculateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Commission\\VendorCommissionCalculateType",
+      "resolver": "slug",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.document.reject",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Document\\VendorDocumentRejectService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Document\\VendorDocumentRejectType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.document.verify",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Document\\VendorDocumentVerifyService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Document\\VendorDocumentVerifyType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.onboarding.approve_id",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingApproveService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingApproveType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.onboarding.approve_slug",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingApproveService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingApproveType",
+      "resolver": "slug",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.onboarding.reject_id",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingRejectService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingRejectType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.onboarding.reject_slug",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingRejectService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingRejectType",
+      "resolver": "slug",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.onboarding.start_id",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingStartService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingStartType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.onboarding.start_slug",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Onboarding\\VendorOnboardingStartService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingStartType",
+      "resolver": "slug",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.payout.approve",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Payout\\VendorPayoutApproveService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutApproveType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.payout.calculate_id",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Payout\\VendorPayoutCalculateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutCalculateType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.payout.calculate_slug",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Payout\\VendorPayoutCalculateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutCalculateType",
+      "resolver": "slug",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.payout.pay",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Payout\\VendorPayoutPayService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutPayType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.product.assign",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Product\\VendorProductAssignService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Product\\VendorProductAssignType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.product.unassign",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Product\\VendorProductUnassignService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Product\\VendorProductUnassignType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.rating.recalculate_id",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Rating\\VendorRatingRecalculateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Rating\\VendorRatingRecalculateType",
+      "resolver": "id",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.rating.recalculate_slug",
+      "path": null,
+      "source_file": "config/platform/routes/business/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Rating\\VendorRatingRecalculateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Rating\\VendorRatingRecalculateType",
+      "resolver": "slug",
+      "decision": "business_operation_domain_blocked",
+      "reason": "business operation route; requires domain service/policy/event model not present after quarantine"
+    },
+    {
+      "route_key": "vendor.attachment.document.index",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentIndexService",
+      "form_type": null,
+      "resolver": null,
+      "decision": "real_read_candidate",
+      "reason": "read-only route; can become real once read model/provider is restored"
+    },
+    {
+      "route_key": "vendor.attachment.document.show_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentShowService",
+      "form_type": null,
+      "resolver": "id",
+      "decision": "real_read_candidate",
+      "reason": "read-only route; can become real once read model/provider is restored"
+    },
+    {
+      "route_key": "vendor.attachment.document.show_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentShowService",
+      "form_type": null,
+      "resolver": "slug",
+      "decision": "real_read_candidate",
+      "reason": "read-only route; can become real once read model/provider is restored"
+    },
+    {
+      "route_key": "vendor.attachment.document.new",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentNewService",
+      "form_type": null,
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "form-view route; requires read provider + form binding model before becoming concrete"
+    },
+    {
+      "route_key": "vendor.attachment.document.create",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentCreateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentCreateType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.edit_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentEditService",
+      "form_type": null,
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "form-view route; requires read provider + form binding model before becoming concrete"
+    },
+    {
+      "route_key": "vendor.attachment.document.edit_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentEditService",
+      "form_type": null,
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "form-view route; requires read provider + form binding model before becoming concrete"
+    },
+    {
+      "route_key": "vendor.attachment.document.update_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.update_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.delete_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.delete_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.bulk",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentBulkService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentBulkType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.import",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentImportService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentImportType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.export",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentExportService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentExportType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "export route; requires read provider/serializer before becoming concrete"
+    },
+    {
+      "route_key": "vendor.attachment.document.archive_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.archive_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.restore_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.restore_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.duplicate_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.document.duplicate_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.document.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.index",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaIndexService",
+      "form_type": null,
+      "resolver": null,
+      "decision": "real_read_candidate",
+      "reason": "read-only route; can become real once read model/provider is restored"
+    },
+    {
+      "route_key": "vendor.attachment.media.show_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaShowService",
+      "form_type": null,
+      "resolver": "id",
+      "decision": "real_read_candidate",
+      "reason": "read-only route; can become real once read model/provider is restored"
+    },
+    {
+      "route_key": "vendor.attachment.media.show_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaShowService",
+      "form_type": null,
+      "resolver": "slug",
+      "decision": "real_read_candidate",
+      "reason": "read-only route; can become real once read model/provider is restored"
+    },
+    {
+      "route_key": "vendor.attachment.media.new",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaNewService",
+      "form_type": null,
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "form-view route; requires read provider + form binding model before becoming concrete"
+    },
+    {
+      "route_key": "vendor.attachment.media.create",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaCreateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaCreateType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.edit_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaEditService",
+      "form_type": null,
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "form-view route; requires read provider + form binding model before becoming concrete"
+    },
+    {
+      "route_key": "vendor.attachment.media.edit_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaEditService",
+      "form_type": null,
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "form-view route; requires read provider + form binding model before becoming concrete"
+    },
+    {
+      "route_key": "vendor.attachment.media.update_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.update_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.delete_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.delete_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.bulk",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaBulkService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaBulkType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.import",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaImportService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaImportType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.export",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaExportService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaExportType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "export route; requires read provider/serializer before becoming concrete"
+    },
+    {
+      "route_key": "vendor.attachment.media.archive_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.archive_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.restore_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.restore_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.duplicate_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.attachment.media.duplicate_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.attachment.media.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.index",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorIndexService",
+      "form_type": null,
+      "resolver": null,
+      "decision": "real_read_candidate",
+      "reason": "read-only route; can become real once read model/provider is restored"
+    },
+    {
+      "route_key": "vendor.show_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorShowService",
+      "form_type": null,
+      "resolver": "id",
+      "decision": "real_read_candidate",
+      "reason": "read-only route; can become real once read model/provider is restored"
+    },
+    {
+      "route_key": "vendor.show_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorShowService",
+      "form_type": null,
+      "resolver": "slug",
+      "decision": "real_read_candidate",
+      "reason": "read-only route; can become real once read model/provider is restored"
+    },
+    {
+      "route_key": "vendor.new",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorNewService",
+      "form_type": null,
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "form-view route; requires read provider + form binding model before becoming concrete"
+    },
+    {
+      "route_key": "vendor.create",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorCreateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorCreateType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.edit_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorEditService",
+      "form_type": null,
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "form-view route; requires read provider + form binding model before becoming concrete"
+    },
+    {
+      "route_key": "vendor.edit_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorEditService",
+      "form_type": null,
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "form-view route; requires read provider + form binding model before becoming concrete"
+    },
+    {
+      "route_key": "vendor.update_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorUpdateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorUpdateType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.update_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorUpdateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorUpdateType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.delete_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorDeleteService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorDeleteType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.delete_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorDeleteService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorDeleteType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.bulk",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorBulkService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorBulkType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.import",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorImportService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorImportType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.export",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorExportService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorExportType",
+      "resolver": null,
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "export route; requires read provider/serializer before becoming concrete"
+    },
+    {
+      "route_key": "vendor.archive_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorArchiveService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorArchiveType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.archive_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorArchiveService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorArchiveType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.restore_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorRestoreService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorRestoreType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.restore_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorRestoreService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorRestoreType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.duplicate_id",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorDuplicateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorDuplicateType",
+      "resolver": "id",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    },
+    {
+      "route_key": "vendor.duplicate_slug",
+      "path": null,
+      "source_file": "config/platform/routes/crud/vendor.yaml",
+      "service": "App\\Vendoring\\Service\\Http\\Vendor\\VendorDuplicateService",
+      "form_type": "App\\Vendoring\\Form\\Vendor\\VendorDuplicateType",
+      "resolver": "slug",
+      "decision": "crud_protocol_persistence_blocked",
+      "reason": "classic CRUD/write route; requires restored Vendor persistence/read-write model"
+    }
+  ]
+}

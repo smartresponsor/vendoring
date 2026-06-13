@@ -26,7 +26,7 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
 
         $tableAttributes = $reflection->getAttributes(ORM\Table::class);
         self::assertCount(1, $tableAttributes);
-        self::assertSame('vendor_transaction', $tableAttributes[0]->getArguments()['name'] ?? null);
+        self::assertSame('vendor_transaction', $tableAttributes[0]->getArguments()['nameEntity'] ?? null);
     }
 
     public function testPersistentFieldsExposeExpectedDoctrineColumns(): void
@@ -53,7 +53,7 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
 
     public function testRepositoryOrdersVendorTransactionsByNewestFirst(): void
     {
-        $repositorySource = file_get_contents(__DIR__ . '/../../../src/Repository/Vendor/VendorTransactionRepository.php');
+        $repositorySource = file_get_contents(__DIR__.'/../../../src/Repository/Vendor/VendorTransactionRepository.php');
         self::assertIsString($repositorySource);
         self::assertStringContainsString("['createdAt' => 'DESC', 'id' => 'DESC']", $repositorySource);
     }

@@ -4,7 +4,7 @@
 
 - `src/ServiceInterface/Runtime/VendorAppEnvResolverServiceInterface.php`
 - `src/Service/Runtime/VendorAppEnvResolverService.php`
-- `src/Controller/Vendor/VendorLocalDevController.php`
+- `src/Controller/Vendor/VendorLocalDevSurfaceBuilder.php`
 - `src/Service/Observability/VendorRuntimeLoggerService.php`
 - `src/Service/Observability/VendorRuntimeMetricCollectorService.php`
 

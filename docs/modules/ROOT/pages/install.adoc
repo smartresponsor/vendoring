@@ -1,6 +1,6 @@
 = Install
 
-Vendoring is designed to be consumed as a Symfony component, not only as an internal codebase.
+Vendoring is designed to be consumed as a Symfony component through Cruding-owned URI grammar and canonical HTTP services.
 
 == 1) Dependencies
 
@@ -11,20 +11,23 @@ Install core Symfony + Doctrine dependencies used by vendoring surfaces:
 composer require symfony/framework-bundle symfony/validator symfony/form doctrine/orm
 ----
 
-== 2) Wire routes and services
+== 2) Wire route-map registry and services
+
+Vendoring does not export component-owned Symfony controller routes.
+Import the route-map registry and let Cruding resolve runtime services through FQCN convention.
 
 [source,yaml]
 ----
-# config/routes/vendor.yaml
-vendoring:
-  resource: '../../vendor/.../config/vendor_routes.yaml'
+# config/platform/routes.vendoring.yaml
+imports:
+  - { resource: '../../vendor/.../config/platform/routes.platform.yaml' }
 ----
 
 [source,yaml]
 ----
 # config/services.yaml
 imports:
-  - { resource: '../../vendor/.../config/vendor_services.yaml' }
+  - { resource: '../../vendor/.../config/component/services.yaml' }
 ----
 
 == 3) Configure runtime storage split
@@ -38,15 +41,16 @@ VENDOR_SQLITE_DSN=sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite
 * PostgreSQL: user/business data
 * SQLite: runtime/application local state
 
-== 4) Minimal Symfony integration flow
+== 4) Minimal Cruding integration flow
 
-* Upsert vendor profile (`PATCH /api/vendor-profile/vendor/{vendorId}`)
-* Read vendor runtime projection (`GET /api/vendor/runtime/{vendorId}/finance`)
-* Create payout when ready (`POST /api/payout/create`)
+* Upsert vendor profile through the canonical `vendor.*` service map.
+* Read vendor runtime projection through `App\Vendoring\Service\Http\Vendor\Runtime\...` services.
+* Create payout when ready through the vendor business route-map.
 
 == 5) Enable only needed parts
 
-For a minimal integration, expose only required routes (for example `vendor-transactions` + `payout`) and keep optional ops/runtime endpoints disabled at gateway or routing level.
+For a minimal integration, import only required registry files, for example vendor core plus payout/business operations.
+Do not add component-owned controllers or direct route attributes.
 
 == Runtime/documentation generation seams
 

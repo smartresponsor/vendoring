@@ -22,7 +22,7 @@ The runtime activation layer is guarded by `class_exists()` checks and becomes a
 
 ## Current compatibility strategy
 
-Until the additional packages are installed, the operator surface continues to use the dependency-light HTML builder. Once the packages are installed, the controller can switch to the Twig/Form rendering branch without reintroducing legacy activation shims.
+Until the additional packages are installed, the operator surface continues to use the dependency-light HTML builder. Once the packages are installed, the surface builder can switch to the Twig/Form rendering branch without reintroducing legacy activation shims.
 
 ## Lock/install follow-up
 

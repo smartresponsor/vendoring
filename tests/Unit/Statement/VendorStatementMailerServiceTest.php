@@ -7,9 +7,9 @@ namespace App\Vendoring\Tests\Unit\Statement;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
-use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Service\Policy\VendorOutboundOperationPolicyService;
 use App\Vendoring\Service\Reliability\VendorOutboundCircuitBreakerService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Service\Statement\VendorStatementMailerService;
 use App\Vendoring\Tests\Support\Statement\FakeMailer;
 use PHPUnit\Framework\TestCase;
@@ -36,7 +36,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertTrue($result['attached']);
         self::assertSame('closed', $result['circuitState']);
         self::assertCount(1, $mailer->messages());
-        self::assertSame('statement_mail_sent_total', $metrics->snapshot()[0]['name']);
+        self::assertSame('statement_mail_sent_total', $metrics->snapshot()[0]['nameEntity']);
 
         unlink($pdf);
     }
@@ -52,7 +52,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertFalse($result['ok']);
         self::assertSame('statement_mail_invalid_email', $result['message']);
         self::assertCount(0, $mailer->messages());
-        self::assertSame('statement_mail_invalid_email_total', $metrics->snapshot()[0]['name']);
+        self::assertSame('statement_mail_invalid_email_total', $metrics->snapshot()[0]['nameEntity']);
     }
 
     public function testSendReturnsFailureAndEmitsMetricsWhenMailerThrows(): void
@@ -71,8 +71,8 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertIsString($errorMessage);
         self::assertSame('mailer transport failed', $errorMessage);
         self::assertSame('closed', $result['circuitState']);
-        self::assertSame('statement_mail_attachment_missing_total', $metrics->snapshot()[0]['name']);
-        self::assertSame('statement_mail_failed_total', $metrics->snapshot()[1]['name']);
+        self::assertSame('statement_mail_attachment_missing_total', $metrics->snapshot()[0]['nameEntity']);
+        self::assertSame('statement_mail_failed_total', $metrics->snapshot()[1]['nameEntity']);
     }
 
     public function testSendShortCircuitsWhenCircuitBreakerIsOpen(): void
@@ -90,7 +90,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertSame('statement_mail_circuit_open', $result['message']);
         self::assertSame('open', $result['circuitState']);
         self::assertCount(0, $mailer->messages());
-        self::assertSame('statement_mail_circuit_open_total', $metrics->snapshot()[0]['name']);
+        self::assertSame('statement_mail_circuit_open_total', $metrics->snapshot()[0]['nameEntity']);
     }
 
     public function testSendDoesNotSwallowNonTransportExceptions(): void
@@ -129,6 +129,6 @@ final class VendorStatementMailerServiceTest extends TestCase
 
     private function breaker(): VendorOutboundCircuitBreakerService
     {
-        return new VendorOutboundCircuitBreakerService(sys_get_temp_dir() . '/vendoring-breaker-mailer-' . bin2hex(random_bytes(4)));
+        return new VendorOutboundCircuitBreakerService(sys_get_temp_dir().'/vendoring-breaker-mailer-'.bin2hex(random_bytes(4)));
     }
 }

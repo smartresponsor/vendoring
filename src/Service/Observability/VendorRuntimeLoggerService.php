@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Observability;
 
-use App\Vendoring\ServiceInterface\Runtime\VendorAppEnvResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorCorrelationContextServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorObservabilityRecordExporterServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface;
-use DateTimeImmutable;
+use App\Vendoring\ServiceInterface\Runtime\VendorAppEnvResolverServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -31,35 +30,24 @@ final class VendorRuntimeLoggerService implements VendorRuntimeLoggerServiceInte
         private readonly RequestStack $requestStack,
         private readonly VendorAppEnvResolverServiceInterface $appEnvResolver,
         private readonly ?VendorObservabilityRecordExporterServiceInterface $exporter = null,
-    ) {}
+    ) {
+    }
 
-    /**
-     * {@inheritdoc}
-     */
     public function info(string $message, array $context = []): void
     {
         $this->write('info', $message, $context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function warning(string $message, array $context = []): void
     {
         $this->write('warning', $message, $context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function error(string $message, array $context = []): void
     {
         $this->write('error', $message, $context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function snapshot(): array
     {
         return $this->records;
@@ -68,14 +56,14 @@ final class VendorRuntimeLoggerService implements VendorRuntimeLoggerServiceInte
     /**
      * Write one structured runtime record.
      *
-     * @param array<string, scalar|null> $context Additional structured fields merged into the log envelope.
+     * @param array<string, scalar|null> $context additional structured fields merged into the log envelope
      */
     private function write(string $level, string $message, array $context): void
     {
         $request = $this->requestStack->getCurrentRequest();
         $correlationId = $this->correlationContext->currentCorrelationId();
 
-        $timestamp = new DateTimeImmutable();
+        $timestamp = new \DateTimeImmutable();
 
         /** @var array<string, scalar|null> $record */
         $record = [
@@ -113,7 +101,7 @@ final class VendorRuntimeLoggerService implements VendorRuntimeLoggerServiceInte
     }
 
     /**
-     * Resolve the current Symfony route name from the active request.
+     * Resolve the current Symfony route nameEntity from the active request.
      */
     private function routeName(?Request $request): ?string
     {
@@ -125,5 +113,4 @@ final class VendorRuntimeLoggerService implements VendorRuntimeLoggerServiceInte
 
         return is_string($route) && '' !== trim($route) ? $route : null;
     }
-
 }

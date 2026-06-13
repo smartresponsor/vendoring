@@ -6,47 +6,23 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: 'App\Vendoring\\Repository\\Vendor\\VendorAnalyticsRepository')]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorAnalyticsRepository::class)]
 #[ORM\Table(name: 'vendor_analytics')]
-#[ORM\UniqueConstraint(name: 'uniq_vendor_analytics_vendor', columns: ['vendor_id'])]
-/**
- * @noinspection PhpPropertyNamingConventionInspection
- */
-final class VendorAnalyticsEntity
+class VendorAnalyticsEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\OneToOne(targetEntity: VendorEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private readonly VendorEntity $vendor;
-
-    /** @var array<string,mixed> */
-    #[ORM\Column(type: 'json')]
-    private array $metrics = [];
-
-    /** @param array<string,mixed> $metrics */
+    #[ORM\OneToOne(targetEntity: VendorEntity::class)] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
+    #[ORM\Column(type: 'json')] private array $metrics = [];
     public function __construct(VendorEntity $vendor, array $metrics = [])
     {
+        parent::__construct();
         $this->vendor = $vendor;
         $this->metrics = $metrics;
     }
 
-    public function getId(): ?int
+    public function replaceMetrics(array $metrics): self
     {
-        return is_int($this->id) ? $this->id : null;
-    }
+        $this->metrics = $metrics;
 
-    public function getVendor(): VendorEntity
-    {
-        return $this->vendor;
-    }
-
-    /** @return array<string,mixed> */
-    public function getMetrics(): array
-    {
-        return $this->metrics;
+        return $this;
     }
 }

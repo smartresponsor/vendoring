@@ -4,51 +4,57 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorWishlistItemRepository::class)]
 #[ORM\Table(name: 'vendor_wishlist_item')]
-#[ORM\UniqueConstraint(name: 'uniq_vendor_wishlist_item_target', columns: ['vendor_wishlist_id', 'target_type', 'target_id'])]
-final class VendorWishlistItemEntity
+class VendorWishlistItemEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\ManyToOne(targetEntity: VendorWishlistEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_wishlist_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private VendorWishlistEntity $wishlist;
-
-    #[ORM\Column(name: 'target_type', type: 'string', length: 64)]
-    private string $targetType;
-
-    #[ORM\Column(name: 'target_id', type: 'string', length: 128)]
-    private string $targetId;
-
-    #[ORM\Column(type: 'integer')]
-    private int $quantity = 1;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $note = null;
-
-    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
-
-    public function __construct(VendorWishlistEntity $wishlist, string $targetType, string $targetId, int $quantity = 1, ?string $note = null)
+    #[ORM\ManyToOne(targetEntity: VendorWishlistEntity::class)] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorWishlistEntity $wishlist;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $targetType = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $targetId = '';
+    #[ORM\Column(type: 'integer')] private int $quantity = 0;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $note = null;
+    public function __construct(VendorWishlistEntity $wishlist, string $targetType, string $targetId, int $quantity, ?string $note = null)
     {
+        parent::__construct();
         $this->wishlist = $wishlist;
         $this->targetType = $targetType;
         $this->targetId = $targetId;
         $this->quantity = $quantity;
         $this->note = $note;
-        $this->createdAt = new DateTimeImmutable();
     }
 
-    public function update(int $quantity = 1, ?string $note = null): void
+    public function update(int $quantity, ?string $note = null): self
     {
         $this->quantity = $quantity;
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getVendor(): ?VendorEntity
+    {
+        return $this->vendor ?? null;
+    }
+
+    public function getTargetType()
+    {
+        return $this->targetType;
+    }
+
+    public function getTargetId()
+    {
+        return $this->targetId;
+    }
+
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    public function getNote()
+    {
+        return $this->note;
     }
 }

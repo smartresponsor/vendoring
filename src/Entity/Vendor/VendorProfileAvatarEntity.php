@@ -4,42 +4,36 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorProfileAvatarRepository::class)]
 #[ORM\Table(name: 'vendor_profile_avatar')]
-#[ORM\UniqueConstraint(name: 'uniq_vendor_profile_avatar_vendor', columns: ['vendor_id'])]
-/**
- * @noinspection PhpPropertyNamingConventionInspection
- */
-final class VendorProfileAvatarEntity
+class VendorProfileAvatarEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\OneToOne(targetEntity: VendorEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private VendorEntity $vendor;
-
-    #[ORM\Column(name: 'file_path', type: 'string', length: 1024)]
-    private string $filePath;
-
-    #[ORM\Column(name: 'updated_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $updatedAt;
-
+    #[ORM\OneToOne(targetEntity: VendorEntity::class)] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
+    #[ORM\Column(type: 'string', length: 1024)] private string $filePath;
     public function __construct(VendorEntity $vendor, string $filePath)
     {
+        parent::__construct();
         $this->vendor = $vendor;
         $this->filePath = $filePath;
-        $this->updatedAt = new DateTimeImmutable();
     }
 
-    public function update(string $filePath): void
+    public function update(string $filePath): self
     {
         $this->filePath = $filePath;
-        $this->updatedAt = new DateTimeImmutable();
+        $this->touchObject();
+
+        return $this;
+    }
+
+    public function getFilePath(): string
+    {
+        return $this->filePath;
+    }
+
+    public function getVendor(): VendorEntity
+    {
+        return $this->vendor;
     }
 }

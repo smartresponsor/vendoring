@@ -78,7 +78,7 @@ foreach ($rii as $file) {
             'type' => 'retired_name',
             'class' => $fqn,
             'file' => $relativePath,
-            'message' => 'retired service name is still present',
+            'message' => 'retired service nameEntity is still present',
             'replacement' => $retiredServiceNames[$shortName],
         ];
         continue;
@@ -89,7 +89,7 @@ foreach ($rii as $file) {
             'type' => 'prefix',
             'class' => $fqn,
             'file' => $relativePath,
-            'message' => 'service short name must start with Vendor',
+            'message' => 'service short nameEntity must start with Vendor',
         ];
     }
 
@@ -98,7 +98,7 @@ foreach ($rii as $file) {
             'type' => 'suffix',
             'class' => $fqn,
             'file' => $relativePath,
-            'message' => 'service short name must end with Service',
+            'message' => 'service short nameEntity must end with Service',
         ];
     }
 }

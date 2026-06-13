@@ -4,38 +4,35 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorLogRepository::class)]
 #[ORM\Table(name: 'vendor_log')]
-#[ORM\Index(name: 'idx_vendor_log_vendor_created_at', columns: ['vendor_id', 'created_at'])]
-final class VendorLogEntity
+class VendorLogEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\ManyToOne(targetEntity: VendorEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private VendorEntity $vendor;
-
-    #[ORM\Column(name: 'action_name', type: 'string', length: 128)]
-    private string $actionName;
-
-    #[ORM\Column(name: 'payload_json', type: 'text')]
-    private string $payloadJson;
-
-    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
-
-    /** @param array<string, mixed> $payload */
+    #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'logs')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $actionName = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $payloadJson = '';
     public function __construct(VendorEntity $vendor, string $actionName, array $payload)
     {
+        parent::__construct();
         $this->vendor = $vendor;
         $this->actionName = $actionName;
-        $this->payloadJson = (string) json_encode($payload, JSON_THROW_ON_ERROR);
-        $this->createdAt = new DateTimeImmutable();
+        $this->payloadJson = json_encode($payload, JSON_THROW_ON_ERROR);
+    }
+
+    public function getVendor(): ?VendorEntity
+    {
+        return $this->vendor ?? null;
+    }
+
+    public function getActionName()
+    {
+        return $this->actionName;
+    }
+
+    public function getPayloadJson()
+    {
+        return $this->payloadJson;
     }
 }

@@ -187,7 +187,7 @@ It is **not yet a production-grade distributed operating platform**.
 - Implemented: ownership and assignment model.
 - Partial: role/capability model needs centralized runtime enforcement.
 - Missing: one canonical authorization matrix used everywhere.
-- Improvement: enforce matrix in controllers/services and cover with decision tests.
+- Improvement: enforce matrix in surface builders/services and cover with decision tests.
 
 ### 21. Rate Limiting
 - Relevance: High.

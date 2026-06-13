@@ -17,7 +17,7 @@ Planned use:
 ### DocBlock discipline
 
 Planned use:
-- explain DTOs, controllers, and service entry points
+- explain DTOs, surface builders, and service entry points
 - provide developer-readable semantics beyond route metadata
 - support future generated documentation
 

@@ -97,7 +97,7 @@ final class LocalDevPantherTest extends PantherTestCase
     private static function configurePantherEnvironment(): void
     {
         self::setPantherEnv('PANTHER_NO_SANDBOX', '1');
-        self::prependPath(self::projectRoot() . '/drivers');
+        self::prependPath(self::projectRoot().'/drivers');
     }
 
     private static function allocatePort(): int
@@ -108,10 +108,10 @@ final class LocalDevPantherTest extends PantherTestCase
             throw new \RuntimeException(sprintf('Failed to allocate port: %s (%d)', $errorMessage, $errorCode));
         }
 
-        $name = stream_socket_get_name($socket, false);
+        $nameEntity = stream_socket_get_name($socket, false);
         fclose($socket);
 
-        if (!is_string($name) || !preg_match('/:(\d+)$/', $name, $matches)) {
+        if (!is_string($nameEntity) || !preg_match('/:(\d+)$/', $nameEntity, $matches)) {
             throw new \RuntimeException('Failed to resolve allocated port.');
         }
 
@@ -135,17 +135,17 @@ final class LocalDevPantherTest extends PantherTestCase
         }
     }
 
-    private static function setPantherEnv(string $name, string $value): void
+    private static function setPantherEnv(string $nameEntity, string $value): void
     {
-        putenv(sprintf('%s=%s', $name, $value));
-        $_ENV[$name] = $value;
-        $_SERVER[$name] = $value;
+        putenv(sprintf('%s=%s', $nameEntity, $value));
+        $_ENV[$nameEntity] = $value;
+        $_SERVER[$nameEntity] = $value;
     }
 
     private static function prependPath(string $directory): void
     {
         $path = getenv('PATH');
-        $normalizedPath = is_string($path) && '' !== $path ? $directory . PATH_SEPARATOR . $path : $directory;
+        $normalizedPath = is_string($path) && '' !== $path ? $directory.PATH_SEPARATOR.$path : $directory;
 
         self::setPantherEnv('PATH', $normalizedPath);
     }
@@ -190,7 +190,7 @@ final class LocalDevPantherTest extends PantherTestCase
 
     private static function projectPath(string $relativePath): string
     {
-        return self::projectRoot() . '/' . ltrim($relativePath, '/');
+        return self::projectRoot().'/'.ltrim($relativePath, '/');
     }
 
     private static function chromeDriverBinaryPath(): string

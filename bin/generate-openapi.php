@@ -19,11 +19,11 @@ $spec = [
         ['url' => '/'],
     ],
     'tags' => [
-        ['name' => 'Vendor Transactions', 'description' => 'Transaction write and read surfaces for vendors.'],
-        ['name' => 'Operator Surface', 'description' => 'Minimal server-rendered operator/admin seam used for RC evidence.'],
+        ['nameEntity' => 'Vendor Transactions', 'description' => 'Transaction write and read surfaces for vendors.'],
+        ['nameEntity' => 'Operator Surface', 'description' => 'Minimal server-rendered operator/admin seam used for RC evidence.'],
     ],
     'paths' => [
-        '/api/vendor-transactions' => [
+        '/api/vendor/transaction' => [
             'post' => [
                 'tags' => ['Vendor Transactions'],
                 'summary' => 'Create a vendor transaction',
@@ -75,13 +75,13 @@ $spec = [
                 ],
             ],
         ],
-        '/api/vendor-transactions/vendor/{vendorId}' => [
+        '/api/vendor/transaction/{vendorId}' => [
             'get' => [
                 'tags' => ['Vendor Transactions'],
                 'summary' => 'List transactions by vendor',
                 'operationId' => 'listVendorTransactionsByVendor',
                 'parameters' => [[
-                    'name' => 'vendorId',
+                    'nameEntity' => 'vendorId',
                     'in' => 'path',
                     'required' => true,
                     'schema' => ['type' => 'string'],
@@ -98,20 +98,20 @@ $spec = [
                 ],
             ],
         ],
-        '/api/vendor-transactions/vendor/{vendorId}/{id}/status' => [
+        '/api/vendor/transaction/status/{vendorId}/{id}' => [
             'post' => [
                 'tags' => ['Vendor Transactions'],
                 'summary' => 'Update transaction status',
                 'operationId' => 'updateVendorTransactionStatus',
                 'parameters' => [
                     [
-                        'name' => 'vendorId',
+                        'nameEntity' => 'vendorId',
                         'in' => 'path',
                         'required' => true,
                         'schema' => ['type' => 'string'],
                     ],
                     [
-                        'name' => 'id',
+                        'nameEntity' => 'id',
                         'in' => 'path',
                         'required' => true,
                         'schema' => ['type' => 'integer'],
@@ -149,13 +149,13 @@ $spec = [
                 ],
             ],
         ],
-        '/ops/vendor-transactions/{vendorId}' => [
+        '/ops/vendor/transaction/{vendorId}' => [
             'get' => [
                 'tags' => ['Operator Surface'],
                 'summary' => 'Render operator transaction page',
                 'operationId' => 'renderVendorTransactionOperatorPage',
                 'parameters' => [[
-                    'name' => 'vendorId',
+                    'nameEntity' => 'vendorId',
                     'in' => 'path',
                     'required' => true,
                     'schema' => ['type' => 'string'],

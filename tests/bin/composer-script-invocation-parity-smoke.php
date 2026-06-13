@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/_composer_json.php';
+require_once __DIR__.'/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
 $composer = vendoring_load_composer_json($root);
 $scripts = vendoring_composer_section($composer, 'scripts');
 
-foreach ($scripts as $name => $commands) {
+foreach ($scripts as $nameEntity => $commands) {
     if (!is_array($commands)) {
         continue;
     }
@@ -19,7 +19,7 @@ foreach ($scripts as $name => $commands) {
         }
 
         if (!str_starts_with($command, 'php vendor/bin/phpunit ')) {
-            fwrite(STDERR, 'Non-canonical phpunit invocation remains in script: ' . $name . PHP_EOL);
+            fwrite(STDERR, 'Non-canonical phpunit invocation remains in script: '.$nameEntity.PHP_EOL);
             exit(1);
         }
     }

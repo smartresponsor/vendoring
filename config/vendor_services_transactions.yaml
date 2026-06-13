@@ -1,8 +1,3 @@
+# Canonical transaction repository wiring restored by Wave 16.
 services:
-    App\Vendoring\Repository\Vendor\VendorTransactionRepository: ~
-
-    App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorTransactionRepository'
-
-    App\Vendoring\Service\Transaction\VendorTransactionLifecycleService: ~
-
-    App\Vendoring\ServiceInterface\Transaction\VendorTransactionLifecycleServiceInterface: '@App\Vendoring\Service\Transaction\VendorTransactionLifecycleService'
+  App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorTransactionRepository'

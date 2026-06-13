@@ -32,7 +32,7 @@ Ownership and assignment exist, but the role/capability model still risks drift 
 **Acceptance criteria**
 - canonical roles are documented
 - role-to-capability matrix is implemented as a runtime contract
-- controller/service enforcement uses the matrix consistently
+- route-map/service enforcement uses the matrix consistently
 - owner/operator/finance/viewer cases are test-covered
 
 **Labels**

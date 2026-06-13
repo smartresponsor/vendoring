@@ -24,7 +24,7 @@ The goal is not to turn Vendoring into a distributed platform prematurely. The g
 ### What is currently underdeveloped
 
 - Production observability beyond test-oriented metrics
-- Correlation across controller, service, persistence, and event paths
+- Correlation across surface builder, service, persistence, and event paths
 - Formal API authentication and authorization model
 - Rate limiting and explicit public idempotency contract
 - API versioning and schema evolution policy
@@ -296,7 +296,7 @@ Roles and ownership exist, but access control is not yet centrally governed.
 Acceptance criteria:
 
 - A role-to-permission matrix exists.
-- Controller and service authorization rules are explicit and test-covered.
+- Surface builder and service authorization rules are explicit and test-covered.
 - Operator flows and vendor-local flows are separated cleanly.
 
 ### Issue 6: Add rate limiting for public write endpoints

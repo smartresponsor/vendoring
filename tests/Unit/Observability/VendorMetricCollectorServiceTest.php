@@ -20,7 +20,7 @@ final class VendorMetricCollectorServiceTest extends TestCase
 
         self::assertCount(1, $first->snapshot());
         self::assertCount(1, $second->snapshot());
-        self::assertSame('payout_created_total', $first->snapshot()[0]['name']);
+        self::assertSame('payout_created_total', $first->snapshot()[0]['nameEntity']);
         self::assertSame('USD', $first->snapshot()[0]['tags']['currency']);
     }
 }

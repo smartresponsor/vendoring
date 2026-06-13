@@ -1,0 +1,46 @@
+= Vendor Public Profile Attachment Contract
+:toc:
+
+== Ownership
+
+Vendoring owns the public/business identity of a vendor profile. Attaching owns stored files,
+attachment metadata, and owner links.
+
+== Canonical profile media slots
+
+[source,text]
+----
+ownerType = vendor
+ownerId = <vendor id>
+context = profile
+slot = avatar | cover
+isPrimary = true
+----
+
+Gallery-style media must use a separate media context:
+
+[source,text]
+----
+ownerType = vendor
+ownerId = <vendor id>
+context = media
+slot = gallery
+position = 0..n
+----
+
+== Public identity payload
+
+The UI-facing profile summary exposes `publicName`, `avatar`, and `cover` without exposing the
+legacy vendor-local media persistence model.
+
+`publicName` fallback chain:
+
+[source,text]
+----
+VendorProfileEntity.displayName -> VendorEntity.brandName
+----
+
+== Legacy note
+
+Existing vendor-local avatar/cover/path entities are transitional compatibility sources. New
+profile media flows should resolve through Attaching links by owner/context/slot.

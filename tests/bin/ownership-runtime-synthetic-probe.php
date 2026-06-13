@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Vendoring\Tests\Support\Runtime\KernelRuntimeHarness;
 
-require dirname(__DIR__, 2) . '/vendor/autoload.php';
+require dirname(__DIR__, 2).'/vendor/autoload.php';
 
 $projectRoot = dirname(__DIR__, 2);
 
@@ -24,7 +24,7 @@ try {
     }
 
     $requests = [
-        ['/api/vendor-ownership/vendor/' . $vendorId . '/payments', [
+        ['/api/vendor/ownership/payment/'.$vendorId, [
             'providerCode' => 'stripe',
             'methodCode' => 'card',
             'externalPaymentId' => 'pm_probe_1',
@@ -33,7 +33,7 @@ try {
             'isDefault' => true,
             'meta' => ['source' => 'ownership_probe'],
         ]],
-        ['/api/vendor-ownership/vendor/' . $vendorId . '/commissions', [
+        ['/api/vendor/ownership/commission/'.$vendorId, [
             'code' => 'marketplace',
             'direction' => 'debit',
             'ratePercent' => '7.5',
@@ -42,7 +42,7 @@ try {
             'reason' => 'ownership_probe',
             'meta' => ['source' => 'ownership_probe'],
         ]],
-        ['/api/vendor-ownership/vendor/' . $vendorId . '/conversations', [
+        ['/api/vendor/ownership/conversation/'.$vendorId, [
             'subject' => 'Ownership probe conversation',
             'channel' => 'chat',
             'counterpartyType' => 'customer',
@@ -55,7 +55,7 @@ try {
             'externalMessageId' => 'ownership-probe-message-1',
             'messageMeta' => ['source' => 'ownership_probe'],
         ]],
-        ['/api/vendor-ownership/vendor/' . $vendorId . '/shipments', [
+        ['/api/vendor/ownership/shipment/'.$vendorId, [
             'externalShipmentId' => 'shp_probe_1',
             'carrierCode' => 'ups',
             'methodCode' => 'ground',
@@ -63,45 +63,45 @@ try {
             'status' => 'shipped',
             'meta' => ['source' => 'ownership_probe'],
         ]],
-        ['/api/vendor-ownership/vendor/' . $vendorId . '/groups', [
+        ['/api/vendor/ownership/group/'.$vendorId, [
             'code' => 'preferred',
-            'name' => 'Preferred Vendors',
+            'nameEntity' => 'Preferred Vendors',
             'status' => 'active',
             'meta' => ['source' => 'ownership_probe'],
         ]],
-        ['/api/vendor-ownership/vendor/' . $vendorId . '/categories', [
+        ['/api/vendor/ownership/category/'.$vendorId, [
             'categoryCode' => 'electronics',
             'categoryName' => 'Electronics',
             'isPrimary' => true,
         ]],
-        ['/api/vendor-ownership/vendor/' . $vendorId . '/favourites', [
+        ['/api/vendor/ownership/favourite/'.$vendorId, [
             'targetType' => 'product',
             'targetId' => 'product-probe-1',
             'note' => 'probe favourite',
         ]],
-        ['/api/vendor-ownership/vendor/' . $vendorId . '/wishlists', [
+        ['/api/vendor/ownership/wishlist/'.$vendorId, [
             'customerReference' => 'customer-probe-1',
-            'name' => 'Probe wishlist',
+            'nameEntity' => 'Probe wishlist',
             'status' => 'active',
             'targetType' => 'product',
             'targetId' => 'product-probe-1',
             'quantity' => 2,
             'note' => 'probe wishlist item',
         ]],
-        ['/api/vendor-ownership/vendor/' . $vendorId . '/codes', [
+        ['/api/vendor/ownership/code/'.$vendorId, [
             'code' => 'OTP-PROBE-1',
             'purpose' => 'login',
             'expiresAt' => '2030-01-01T00:00:00+00:00',
             'phone' => '+15550000001',
             'isLogin' => true,
         ]],
-        ['/api/vendor-ownership/vendor/' . $vendorId . '/remember-me-tokens', [
+        ['/api/vendor/ownership/remember/token/'.$vendorId, [
             'series' => 'series-probe-1',
             'tokenValue' => 'token-probe-1',
             'providerClass' => 'App\\Vendoring\\Security\\VendorRememberMeProvider',
             'username' => 'probe.vendor',
         ]],
-        ['/api/vendor-ownership/vendor/' . $vendorId . '/customer-orders', [
+        ['/api/vendor/ownership/customer/order/'.$vendorId, [
             'externalOrderId' => 'order-probe-1',
             'status' => 'placed',
             'currency' => 'USD',
@@ -116,11 +116,11 @@ try {
         $response = KernelRuntimeHarness::requestJson($kernel, 'POST', $uri, $payload);
 
         if (200 !== $response->getStatusCode()) {
-            throw new RuntimeException('Ownership probe mutation did not return 200 for ' . $uri);
+            throw new RuntimeException('Ownership probe mutation did not return 200 for '.$uri);
         }
     }
 
-    $viewResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor-ownership/vendor/' . $vendorId);
+    $viewResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor/ownership/'.$vendorId);
 
     if (200 !== $viewResponse->getStatusCode()) {
         throw new RuntimeException('Ownership probe view did not return 200.');

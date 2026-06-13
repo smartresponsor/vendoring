@@ -17,7 +17,7 @@ final class VendorRuntimeLoggerServiceTest extends TestCase
     public function testRuntimeLoggerCapturesStructuredPayloadWithRequestContext(): void
     {
         $requestStack = new RequestStack();
-        $request = Request::create('/api/vendor-transactions');
+        $request = Request::create('/api/vendor/transaction');
         $request->attributes->set('_route', 'app_vendor_transaction_create');
         $requestStack->push($request);
 
@@ -38,7 +38,7 @@ final class VendorRuntimeLoggerServiceTest extends TestCase
         self::assertSame('vendor_transaction_create_rejected', $records[0]['message']);
         self::assertSame('corr-123', $records[0]['correlation_id']);
         self::assertSame('app_vendor_transaction_create', $records[0]['route']);
-        self::assertSame('/api/vendor-transactions', $records[0]['path']);
+        self::assertSame('/api/vendor/transaction', $records[0]['path']);
         self::assertSame('vendor-1', $records[0]['vendor_id']);
         self::assertSame('duplicate_transaction', $records[0]['error_code']);
         self::assertSame('409', $records[0]['status_code']);
@@ -48,20 +48,20 @@ final class VendorRuntimeLoggerServiceTest extends TestCase
     public function testRuntimeLoggerExportsStructuredRecordIntoFileBackend(): void
     {
         $requestStack = new RequestStack();
-        $request = Request::create('/api/vendor-transactions');
+        $request = Request::create('/api/vendor/transaction');
         $request->attributes->set('_route', 'app_vendor_transaction_create');
         $requestStack->push($request);
 
         $correlationContext = new VendorCorrelationContextService();
         $correlationContext->beginRequest('corr-log-1');
 
-        $dir = sys_get_temp_dir() . '/vendoring-logs-' . bin2hex(random_bytes(4));
+        $dir = sys_get_temp_dir().'/vendoring-logs-'.bin2hex(random_bytes(4));
         $exporter = new VendorObservabilityRecordExporterService($dir);
 
         $logger = new VendorRuntimeLoggerService($correlationContext, $requestStack, new VendorAppEnvResolverService(), $exporter);
         $logger->info('vendor_transaction_created', ['vendor_id' => 'vendor-1']);
 
-        $path = $dir . '/runtime_logs.ndjson';
+        $path = $dir.'/runtime_logs.ndjson';
 
         self::assertFileExists($path);
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

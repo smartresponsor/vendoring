@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Owner: Marketing America Corp
  */
 
-namespace App\Vendoring\Tests\Category;
+namespace App\Vendoring\Tests\CategoryEntity;
 
 use App\Vendoring\DTO\CatalogSyndication\VendorCatalogSyndicationPublishPackageRequestDTO;
 use App\Vendoring\Policy\Vendor\VendorCategorySyndicationPolicyAwarePackageGatePolicy;

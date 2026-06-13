@@ -8,7 +8,7 @@
 ## Updated
 
 - `src/Command/VendorSendVendorStatementsCommand.php`
-- `src/Controller/Vendor/VendorStatementExportController.php`
+- `src/Controller/Vendor/VendorStatementExportSurfaceBuilder.php`
 - `src/Service/Statement/VendorStatementDeliveryRuntimeProjectionBuilderService.php`
 - `src/Service/Statement/VendorStatementMailerService.php`
 - `config/component/services.yaml`

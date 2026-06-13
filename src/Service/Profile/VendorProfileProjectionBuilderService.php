@@ -46,7 +46,8 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
     public function __construct(
         private readonly VendorRepositoryInterface $vendorRepository,
         private readonly VendorProfileRepositoryInterface $profileRepository,
-    ) {}
+    ) {
+    }
 
     public function buildForVendorId(int $vendorId): ?VendorProfileProjection
     {
@@ -106,6 +107,9 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
      *   'publicProfilePublishedAt': ?string,
      *   'displayName': ?string,
      *   'publicDisplayName': string,
+     *   'publicName': string,
+     *   'avatar': array<string, mixed>,
+     *   'cover': array<string, mixed>,
      *   'about': ?string,
      *   'website': ?string,
      *   'socials': array<string, string>,
@@ -120,6 +124,7 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
         string $vendorStatus = 'inactive',
     ): array {
         $displayName = $profile?->getDisplayName();
+        $publicName = null !== $displayName && '' !== trim($displayName) ? $displayName : $brandName;
 
         return [
             'brandName' => $brandName,
@@ -128,7 +133,10 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
             'publicProfileStatus' => $profile?->getPublicProfileStatus() ?? 'draft',
             'publicProfilePublishedAt' => $profile?->getPublicProfilePublishedAt()?->format(DATE_ATOM),
             'displayName' => $displayName,
-            'publicDisplayName' => $displayName ?? $brandName,
+            'publicDisplayName' => $publicName,
+            'publicName' => $publicName,
+            'avatar' => ['attachmentId' => null, 'url' => null],
+            'cover' => ['attachmentId' => null, 'url' => null],
             'about' => $profile?->getAbout(),
             'website' => $profile?->getWebsite(),
             'socials' => $profile?->getSocials() ?? [],
@@ -146,6 +154,9 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
      *   'publicProfilePublishedAt': ?string,
      *   'displayName': ?string,
      *   'publicDisplayName': string,
+     *   'publicName': string,
+     *   'avatar': array<string, mixed>,
+     *   'cover': array<string, mixed>,
      *   'about': ?string,
      *   'website': ?string,
      *   'socials': array<string, string>,
@@ -187,6 +198,9 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
      *   'publicProfilePublishedAt': ?string,
      *   'displayName': ?string,
      *   'publicDisplayName': string,
+     *   'publicName': string,
+     *   'avatar': array<string, mixed>,
+     *   'cover': array<string, mixed>,
      *   'about': ?string,
      *   'website': ?string,
      *   'socials': array<string, string>,
@@ -214,6 +228,9 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
      *   'publicProfilePublishedAt': ?string,
      *   'displayName': ?string,
      *   'publicDisplayName': string,
+     *   'publicName': string,
+     *   'avatar': array<string, mixed>,
+     *   'cover': array<string, mixed>,
      *   'about': ?string,
      *   'website': ?string,
      *   'socials': array<string, string>,
@@ -224,6 +241,9 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
      * @return array{
      *   'displayName': ?string,
      *   'publicDisplayName': string,
+     *   'publicName': string,
+     *   'avatar': array<string, mixed>,
+     *   'cover': array<string, mixed>,
      *   'about': ?string,
      *   'website': ?string,
      *   'socials': array<string, string>,
@@ -236,6 +256,9 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
         return [
             'displayName' => $profileData['displayName'],
             'publicDisplayName' => $profileData['publicDisplayName'],
+            'publicName' => $profileData['publicName'],
+            'avatar' => $profileData['avatar'],
+            'cover' => $profileData['cover'],
             'about' => $profileData['about'],
             'website' => $profileData['website'],
             'socials' => $profileData['socials'],
@@ -253,6 +276,9 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
      *   'publicProfilePublishedAt': ?string,
      *   'displayName': ?string,
      *   'publicDisplayName': string,
+     *   'publicName': string,
+     *   'avatar': array<string, mixed>,
+     *   'cover': array<string, mixed>,
      *   'about': ?string,
      *   'website': ?string,
      *   'socials': array<string, string>,
@@ -279,6 +305,9 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
      *   'publicProfilePublishedAt': ?string,
      *   'displayName': ?string,
      *   'publicDisplayName': string,
+     *   'publicName': string,
+     *   'avatar': array<string, mixed>,
+     *   'cover': array<string, mixed>,
      *   'about': ?string,
      *   'website': ?string,
      *   'socials': array<string, string>,

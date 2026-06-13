@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Vendoring\Tests\Support\Runtime\KernelRuntimeHarness;
 
-require dirname(__DIR__, 2) . '/vendor/autoload.php';
+require dirname(__DIR__, 2).'/vendor/autoload.php';
 
 $projectRoot = dirname(__DIR__, 2);
 
@@ -16,7 +16,7 @@ if (!extension_loaded('pdo_sqlite')) {
 $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot);
 
 try {
-    $missingAuthResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', [
+    $missingAuthResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', [
         'vendorId' => 'auth-vendor',
         'orderId' => 'auth-order-missing',
         'amount' => '10.00',
@@ -32,11 +32,11 @@ try {
     }
 
     $readOnlyToken = KernelRuntimeHarness::seedActiveApiKey($kernel, 'read:transactions');
-    $readOnlyResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', [
+    $readOnlyResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', [
         'vendorId' => 'auth-vendor',
         'orderId' => 'auth-order-read-only',
         'amount' => '10.00',
-    ], ['Authorization' => 'Bearer ' . $readOnlyToken]);
+    ], ['Authorization' => 'Bearer '.$readOnlyToken]);
     $readOnlyPayload = KernelRuntimeHarness::decodeJson($readOnlyResponse);
 
     if (403 !== $readOnlyResponse->getStatusCode() || ($readOnlyPayload['error'] ?? null) !== 'permission_denied') {
@@ -44,11 +44,11 @@ try {
     }
 
     $writeToken = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
-    $writeResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor-transactions', [
+    $writeResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', [
         'vendorId' => 'auth-vendor',
         'orderId' => 'auth-order-write',
         'amount' => '10.00',
-    ], ['Authorization' => 'Bearer ' . $writeToken]);
+    ], ['Authorization' => 'Bearer '.$writeToken]);
     $writePayload = KernelRuntimeHarness::decodeJson($writeResponse);
 
     if (201 !== $writeResponse->getStatusCode() || ($writePayload['status'] ?? null) !== 'pending') {

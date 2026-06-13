@@ -4,41 +4,28 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorDocumentAttachmentRepository::class)]
 #[ORM\Table(name: 'vendor_document_attachment')]
-#[ORM\UniqueConstraint(name: 'uniq_vendor_document_attachment_document', columns: ['vendor_document_id'])]
-/**
- * @noinspection PhpPropertyNamingConventionInspection
- */
-final class VendorDocumentAttachmentEntity
+class VendorDocumentAttachmentEntity extends VendorAbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\OneToOne(targetEntity: VendorDocumentEntity::class)]
-    #[ORM\JoinColumn(name: 'vendor_document_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private VendorDocumentEntity $document;
-
-    #[ORM\Column(name: 'file_path', type: 'string', length: 1024)]
-    private string $filePath;
-
-    #[ORM\Column(name: 'created_at', type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
-
+    #[ORM\OneToOne(targetEntity: VendorDocumentEntity::class)] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorDocumentEntity $document;
+    #[ORM\Column(type: 'string', length: 1024)] private string $filePath;
     public function __construct(VendorDocumentEntity $document, string $filePath)
     {
+        parent::__construct();
         $this->document = $document;
         $this->filePath = $filePath;
-        $this->createdAt = new DateTimeImmutable();
     }
 
-    public function update(string $filePath): void
+    public function getDocument(): VendorDocumentEntity
     {
-        $this->filePath = $filePath;
+        return $this->document;
+    }
+
+    public function getFilePath(): string
+    {
+        return $this->filePath;
     }
 }

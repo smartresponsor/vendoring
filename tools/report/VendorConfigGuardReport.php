@@ -12,7 +12,7 @@ $requiredFiles = [
     'config/packages/framework.yaml',
     'config/packages/doctrine.yaml',
     'config/vendor_services.yaml',
-    'config/vendor_routes.yaml',
+    'config/platform/routes/crud/vendor.yaml',
     'config/services_runtime.php',
     'config/routes_runtime.php',
 ];

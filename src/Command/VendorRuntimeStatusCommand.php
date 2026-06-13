@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\DTO\Command\VendorRuntimeWindowInputDTO;
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\Exception\Command\VendorCommandIoException;
 use App\Vendoring\Service\Command\VendorCommandJsonArtifactWriterService;
 use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
 use App\Vendoring\Service\Command\VendorCommandJsonFileWriterService;
 use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
-use App\Vendoring\Exception\Command\VendorCommandIoException;
 use App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface;
-use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
-use App\Vendoring\DTO\Command\VendorRuntimeWindowInputDTO;
 use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 #[AsCommand(
     name: 'app:vendor:runtime-status',
@@ -81,7 +80,7 @@ final class VendorRuntimeStatusCommand extends Command
                 to: $runtimeInput->to,
                 currency: $runtimeInput->currency,
             )->toArray();
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError(
                 $output,
                 $runtimeInput->format,
@@ -104,7 +103,7 @@ final class VendorRuntimeStatusCommand extends Command
             $writtenPath = $this->commandJsonArtifactWriter->writeIfRequested(
                 (bool) $input->getOption('write'),
                 $input->getOption('output'),
-                dirname(__DIR__, 2) . '/build/release/runtime-status.json',
+                dirname(__DIR__, 2).'/build/release/runtime-status.json',
                 $projection,
             );
         } catch (VendorCommandIoException $exception) {

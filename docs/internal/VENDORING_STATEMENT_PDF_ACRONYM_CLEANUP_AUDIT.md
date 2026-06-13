@@ -16,7 +16,7 @@ This wave finalizes the statement exporter class naming after the service/interf
 
 - Renamed `VendorStatementExporterPDFService` to `VendorStatementExporterPdfService`.
 - Renamed `VendorStatementExporterPDFServiceInterface` to `VendorStatementExporterPdfServiceInterface`.
-- Updated command, controller, runtime projection builder, and DI alias references.
+- Updated command, surface builder, runtime projection builder, and DI alias references.
 - Reworded statement output from `VendorEntity Statement` to `Vendor Statement`.
 - Reworded statement mail subject from `Monthly VendorEntity Statement` to `Monthly Vendor Statement`.
 

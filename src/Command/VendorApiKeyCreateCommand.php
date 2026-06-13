@@ -7,15 +7,14 @@ declare(strict_types=1);
 namespace App\Vendoring\Command;
 
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
-use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 #[AsCommand(
     name: 'app:vendor:api-key:create',
@@ -61,7 +60,7 @@ final class VendorApiKeyCreateCommand extends Command
 
         try {
             $vendor = $this->vendorRepo->find($vendorId);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to load vendor', $throwable, [
                 'vendorId' => $vendorId,
             ]);
@@ -79,7 +78,7 @@ final class VendorApiKeyCreateCommand extends Command
 
         try {
             $token = $this->apiKeyService->createKey($vendor, $permissions);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to create API key', $throwable, [
                 'vendorId' => $vendorId,
                 'permissions' => $permissions,

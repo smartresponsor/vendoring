@@ -31,8 +31,8 @@
 - `tests/bin/transaction-idempotency-smoke.php`
 - `tests/Unit/Command/SendVendorStatementsCommandTest.php`
 - `tests/Unit/Command/VendorRuntimeStatusCommandTest.php`
-- `tests/Unit/Controller/VendorProfileControllerTest.php`
-- `tests/Unit/Controller/VendorTransactionControllerTest.php`
+- `tests/Unit/Controller/VendorProfileSurfaceBuilderTest.php`
+- `tests/Unit/Controller/VendorTransactionSurfaceBuilderTest.php`
 - `tests/Unit/Infrastructure/InterfaceAliasCoverageTest.php`
 - `tests/Unit/Infrastructure/ServiceWiringContractTest.php`
 - `tests/Unit/Observability/VendorRuntimeLoggerServiceTest.php`
@@ -41,10 +41,10 @@
 - `tests/Unit/Reliability/FileOutboundCircuitBreakerTest.php`
 - `tests/Unit/Statement/VendorStatementMailerServiceTest.php`
 - `tests/Unit/Traffic/FileWriteRateLimiterTest.php`
-- `tests/Unit/Controller/Finance/VendorFinanceRuntimeControllerTest.php`
-- `tests/Unit/Controller/Integration/VendorExternalIntegrationRuntimeControllerTest.php`
-- `tests/Unit/Controller/Statement/VendorStatementDeliveryRuntimeControllerTest.php`
-- `tests/Unit/Controller/Statement/VendorStatementExportControllerTest.php`
+- `tests/Unit/Controller/Finance/VendorFinanceRuntimeSurfaceBuilderTest.php`
+- `tests/Unit/Controller/Integration/VendorExternalIntegrationRuntimeSurfaceBuilderTest.php`
+- `tests/Unit/Controller/Statement/VendorStatementDeliveryRuntimeSurfaceBuilderTest.php`
+- `tests/Unit/Controller/Statement/VendorStatementExportSurfaceBuilderTest.php`
 - `tests/Integration/Ops/VendorReleaseBaselineRuntimeConsistencyTest.php`
 - `tests/Integration/Runtime/VendorRuntimeFinanceConsistencyTest.php`
 - `tests/Integration/Runtime/VendorRuntimeProfileReadinessConsistencyTest.php`

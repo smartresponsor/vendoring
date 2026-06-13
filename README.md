@@ -57,20 +57,42 @@ This gives a production-relevant “vendor readiness + payout prep” path witho
 5. **Contract/eligibility metadata**: compliance or operations tools read vendor ownership/finance projections to enforce eligibility rules.
 
 
-## Source Layer 3 canon
+## Source and runtime canon
 
-Vendoring locks these source folders to one canonical child folder, `Vendor`:
+Vendoring is a **zero-controller / zero-route component**.
+Runtime entrypoints are owned by Cruding and resolved through route-map keys plus FQCN convention.
 
-- `src/Controller/Vendor/Vendor*Controller.php`
-- `src/ControllerInterface/Vendor/Vendor*ControllerInterface.php` when controller interfaces exist
-- `src/Event/Vendor/Vendor*Event.php`
-- `src/EventInterface/Vendor/Vendor*EventInterface.php`
-- `src/Repository/Vendor/Vendor*Repository.php`
-- `src/RepositoryInterface/Vendor/Vendor*RepositoryInterface.php`
+Forbidden component artifacts:
 
-Capability buckets such as `Payout`, `Ledger`, `Ops`, `Finance`, `Statement`, `Integration`, `Metric`, `Dev`, and `VendorPayoutEntity` are forbidden inside those folders.
+- `src/Controller/`
+- `src/ControllerTrait/`
+- the retired component route file
+- Symfony `#[Route]` attributes inside Vendoring source code
+- retired controller namespace classes runtime classes
 
-`src/Security/` is also forbidden as a mixed bucket. Security services live in `src/Service/Security/` and mirrored service contracts live in `src/ServiceInterface/Security/`. The short alias folders `src/Service/Sec/` and `src/ServiceInterface/Sec/` are forbidden.
+Canonical runtime artifacts:
+
+- `config/platform/routes.platform.yaml`
+- `config/platform/routes.crud.yaml`
+- `config/platform/routes.business.yaml`
+- `config/platform/routes/crud/vendor.yaml`
+- `config/platform/routes/crud/vendor.attachment.document.yaml`
+- `config/platform/routes/crud/vendor.attachment.media.yaml`
+- `config/platform/routes/business/vendor.yaml`
+- `src/Service/Http/Vendor/.../*Service.php`
+- `src/Form/Vendor/.../*Type.php` when an operation needs form/input validation
+
+The canonical dispatch contract is:
+
+```text
+URI
+→ Cruding grammar
+→ providerKey / routeKey
+→ App\Vendoring\Service\Http\Vendor\...\*Service
+→ optional App\Vendoring\Form\Vendor\...\*Type
+```
+
+`src/Security/` is forbidden as a mixed bucket. Security services live in `src/Service/Security/` and mirrored service contracts live in `src/ServiceInterface/Security/`. The short alias folders `src/Service/Sec/` and `src/ServiceInterface/Sec/` are forbidden.
 
 ## Consumer quick start
 
@@ -81,79 +103,51 @@ composer require symfony/framework-bundle symfony/validator symfony/form doctrin
 composer install
 ```
 
-### 2) Route + service wiring
+### 2) Route-map + service wiring
 
-Import vendoring routes/services in your Symfony app:
+Vendoring does not export native Symfony controller routes. Import the platform route-map registry into the host and let Cruding own runtime URI parsing.
 
 ```yaml
-# config/routes/vendor.yaml
-vendoring:
-  resource: '../../vendor/.../config/vendor_routes.yaml'
+# config/platform/routes.vendoring.yaml
+imports:
+  - { resource: '../../vendor/.../config/platform/routes.platform.yaml' }
 ```
 
 ```yaml
 # config/services.yaml
 imports:
-  - { resource: '../../vendor/.../config/vendor_services.yaml' }
+  - { resource: '../../vendor/.../config/component/services.yaml' }
 ```
 
-> In this repository itself, these files already exist under `config/vendor_routes.yaml` and `config/vendor_services.yaml`.
+In this repository, the registry lives under `config/platform/` and the canonical runtime services are registered from `src/Service/Http/` as `App\Vendoring\Service\Http\...`.
 
 ### 3) Runtime configuration
-
-```env
-VENDOR_DSN=pgsql://app:app@127.0.0.1:5432/vendoring
-VENDOR_SQLITE_DSN=sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite
-APP_ENV=dev
-APP_SECRET=change-me
-```
-
-- PostgreSQL: user/business data
-- SQLite: application/runtime local data and deterministic runtime slices
-
-### 4) Enable only required parts
-
-If you only need transaction + payout surfaces, keep only required routes in consumer routing config:
-
-```yaml
-# config/routes/vendoring_minimal.yaml
-vendor_transactions:
-  path: /api/vendor-transactions
-  controller: App\Vendoring\Controller\Vendor\VendorTransactionController
-
-payout:
-  path: /api/payout
-  controller: App\Vendoring\Controller\Vendor\VendorPayoutController
-```
-
-In DI, you can alias only required interfaces in slim deployments and skip optional runtime/ops consumers.
-
 ## API surface (consumer-oriented)
 
 ### Endpoint groups
 
 - **Vendor profile and ownership**
-  - `GET /api/vendor-profile/vendor/{vendorId}`
-  - `PATCH /api/vendor-profile/vendor/{vendorId}`
-  - `GET /api/vendor-ownership/vendor/{vendorId}`
+  - `GET /api/vendor/profile/{vendorId}`
+  - `PATCH /api/vendor/profile/{vendorId}`
+  - `GET /api/vendor/ownership/{vendorId}`
 - **Vendor runtime projections**
-  - `GET /api/vendor/runtime/{vendorId}/finance`
-  - `GET /api/vendor/runtime/{vendorId}/external-integrations`
-  - `GET /api/vendor/runtime/{vendorId}/statement-delivery`
+  - `GET /api/vendor/runtime/finance/{vendorId}`
+  - `GET /api/vendor/runtime/external/integration/{vendorId}`
+  - `GET /api/vendor/runtime/statement/delivery/{vendorId}`
 - **Transactions and payout prep**
-  - `POST /api/vendor-transactions`
-  - `GET /api/vendor-transactions/vendor/{vendorId}`
-  - `POST /api/vendor-transactions/vendor/{vendorId}/{id}/status`
-  - `POST /api/payout/create`
-  - `POST /api/payout/process/{payoutId}`
-  - `GET /api/payout/{payoutId}`
+  - `POST /api/vendor/transaction`
+  - `GET /api/vendor/transaction/{vendorId}`
+  - `POST /api/vendor/transaction/status/{vendorId}/{id}`
+  - `POST /api/vendor/payout`
+  - `POST /api/vendor/payout/process/{payoutId}`
+  - `GET /api/vendor/payout/{payoutId}`
 
 ### Request/response flow example
 
 **Create vendor transaction**
 
 ```http
-POST /api/vendor-transactions
+POST /api/vendor/transaction
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -274,3 +268,12 @@ Policy canon: `src/Policy/Vendor/Vendor*Policy.php` and `src/PolicyInterface/Ven
 - Service contracts must live as `src/ServiceInterface/<Direction>/Vendor*ServiceInterface.php`.
 - Keep `App\Vendoring\...`; do not flatten to `App\...`.
 
+## Vendor business route-map coverage
+
+The component now contains canonical `App\Vendoring\Service\Http\Vendor\...*Service` and `App\Vendoring\Form\Vendor\...*Type` artifacts for `config/platform/routes/business/vendor.yaml`.
+
+Smoke:
+
+```bash
+php tests/bin/vendor-business-route-map-smoke.php
+```

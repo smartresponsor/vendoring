@@ -6,37 +6,26 @@ namespace App\Vendoring\Repository\Vendor;
 
 use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
-final readonly class VendorPayoutAccountRepository implements VendorPayoutAccountRepositoryInterface
+final class VendorPayoutAccountRepository extends ServiceEntityRepository implements VendorPayoutAccountRepositoryInterface
 {
-    public function __construct(private EntityManagerInterface $entityManager) {}
-
-    public function get(string $tenantId, string $vendorId): ?VendorPayoutAccountEntity
+    public function __construct(ManagerRegistry $registry)
     {
-        $entity = $this->entityManager->getRepository(VendorPayoutAccountEntity::class)->findOneBy([
-            'tenantId' => $tenantId,
-            'vendorId' => $vendorId,
-        ]);
-
-        return $entity instanceof VendorPayoutAccountEntity ? $entity : null;
+        parent::__construct($registry, VendorPayoutAccountEntity::class);
     }
 
-    public function upsert(VendorPayoutAccountEntity $account): void
+    public function save(object $entity, bool $flush = false): void
     {
-        $existing = $this->get($account->tenantId, $account->vendorId);
-        if ($existing instanceof VendorPayoutAccountEntity) {
-            $existing->provider = $account->provider;
-            $existing->accountRef = $account->accountRef;
-            $existing->currency = $account->currency;
-            $existing->active = $account->active;
-
-            $this->entityManager->flush();
-
-            return;
+        $this->getEntityManager()->persist($entity);
+        if ($flush) {
+            $this->getEntityManager()->flush();
         }
+    }
 
-        $this->entityManager->persist($account);
-        $this->entityManager->flush();
+    public function byId(mixed $id): ?object
+    {
+        return $this->find($id);
     }
 }

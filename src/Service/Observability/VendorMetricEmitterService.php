@@ -17,13 +17,10 @@ final class VendorMetricEmitterService implements VendorMetricCollectorServiceIn
      */
     private array $increments = [];
 
-    /**
-     * {@inheritdoc}
-     */
-    public function increment(string $name, array $tags = []): void
+    public function increment(string $nameEntity, array $tags = []): void
     {
         $this->increments[] = [
-            'name' => $name,
+            'nameEntity' => $nameEntity,
             'tags' => $tags,
         ];
     }

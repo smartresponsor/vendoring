@@ -1,0 +1,22 @@
+{
+  "wave": "18",
+  "title": "Vendor core entrypoint responsibility normalization",
+  "active_routes": [
+    "vendor.index",
+    "vendor.show_id",
+    "vendor.new",
+    "vendor.create",
+    "vendor.edit_id",
+    "vendor.update_id"
+  ],
+  "disabled_reasons": {
+    "slug": "VendorEntity has no slug field or slug repository lookup",
+    "delete_bulk_import_export_archive_restore_duplicate": "No proven Vendor core business capability"
+  },
+  "template_candidates": [
+    "vendor/index.html.twig",
+    "vendor/show.html.twig",
+    "vendor/form.html.twig"
+  ],
+  "delete_files": []
+}

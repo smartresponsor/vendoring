@@ -8,7 +8,7 @@ Wave T narrows the remaining `VendorEntity` wording in consumer-facing or projec
 
 - README product positioning and API sections still used `VendorEntity` as a business-facing label.
 - Local development HTML linked to the transaction API as `VendorEntity transactions API`.
-- Statement export controller PHPDoc described request input as a `VendorEntity identifier`.
+- Statement export surface-builder PHPDoc described request input as a `VendorEntity identifier`.
 - Projection docblocks used `VendorEntity-local` wording even though projections are part of the read/API surface.
 
 ## Changes

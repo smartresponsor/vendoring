@@ -14,7 +14,7 @@ final class VendorTransactionInputResolverServiceTest extends TestCase
     public function testResolveCreateDataTrimsRequiredFieldsAndNormalizesBlankProjectIdToNull(): void
     {
         $request = Request::create(
-            '/api/vendor-transactions',
+            '/api/vendor/transaction',
             'POST',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode([
@@ -36,7 +36,7 @@ final class VendorTransactionInputResolverServiceTest extends TestCase
     public function testResolveCreateDataRejectsBlankRequiredFieldAfterTrim(): void
     {
         $request = Request::create(
-            '/api/vendor-transactions',
+            '/api/vendor/transaction',
             'POST',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode([
@@ -55,7 +55,7 @@ final class VendorTransactionInputResolverServiceTest extends TestCase
     public function testResolveStatusTrimsIncomingStatus(): void
     {
         $request = Request::create(
-            '/api/vendor-transactions/vendor/vendor-1/1/status',
+            '/api/vendor/transaction/status/1',
             'POST',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode(['status' => ' settled '], JSON_THROW_ON_ERROR),

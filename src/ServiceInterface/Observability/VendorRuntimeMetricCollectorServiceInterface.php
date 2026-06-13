@@ -18,7 +18,7 @@ interface VendorRuntimeMetricCollectorServiceInterface extends VendorMetricColle
      * @return list<array{
      *   'timestamp': string,
      *   'type': string,
-     *   'name': string,
+     *   'nameEntity': string,
      *   'tags': array<string, string>,
      *   'request_id': ?string,
      *   'correlation_id': ?string

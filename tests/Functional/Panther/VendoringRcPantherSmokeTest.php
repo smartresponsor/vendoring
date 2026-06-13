@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Functional\Panther;
 
-use Symfony\Component\Panther\Client;
-
 final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
 {
     public function testApiDocumentationSurfaceRendersVendoringApi(): void
@@ -22,7 +20,7 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
     {
         $client = self::createExternalBaseClient();
 
-        $client->request('GET', '/api/vendor-runtime-status/tenant/tenant-1/vendor/42?currency=USD');
+        $client->request('GET', '/api/vendor/runtime/status/42?tenantId=tenant-1&currency=USD');
 
         $payload = self::decodeJsonResponse($client);
 
@@ -35,7 +33,7 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
     {
         $client = self::createExternalBaseClient();
 
-        $client->request('GET', '/api/vendor-release-baseline/tenant/tenant-1/vendor/42?currency=USD');
+        $client->request('GET', '/api/vendor/release/baseline/42?tenantId=tenant-1&currency=USD');
 
         $payload = self::decodeJsonResponse($client);
 
@@ -49,13 +47,13 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         $client = self::createExternalBaseClient();
 
         $suffix = bin2hex(random_bytes(6));
-        $vendorId = 'panther-vendor-' . $suffix;
-        $orderId = 'panther-order-' . $suffix;
+        $vendorId = 'panther-vendor-'.$suffix;
+        $orderId = 'panther-order-'.$suffix;
 
         // create
         $client->request(
             'POST',
-            '/api/vendor-transactions',
+            '/api/vendor/transaction',
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
@@ -75,7 +73,7 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         $id = $createPayload['id'];
 
         // list
-        $client->request('GET', '/api/vendor-transactions/vendor/' . $vendorId);
+        $client->request('GET', '/api/vendor/transaction/'.$vendorId);
         $listPayload = self::decodeJsonResponse($client);
 
         self::assertIsArray($listPayload['data']);
@@ -100,7 +98,7 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
 
         $client->request(
             'POST',
-            '/api/vendor-transactions/vendor/' . $vendorId . '/' . $transactionId . '/status',
+            '/api/vendor/transaction/status/'.$transactionId,
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
@@ -118,8 +116,8 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         $client = self::createExternalBaseClient();
 
         $suffix = bin2hex(random_bytes(6));
-        $vendorId = 'panther-dup-' . $suffix;
-        $orderId = 'panther-dup-order-' . $suffix;
+        $vendorId = 'panther-dup-'.$suffix;
+        $orderId = 'panther-dup-order-'.$suffix;
 
         $payload = json_encode([
             'vendorId' => $vendorId,
@@ -129,11 +127,11 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         ], JSON_THROW_ON_ERROR);
 
         // first create
-        $client->request('POST', '/api/vendor-transactions', [], [], ['CONTENT_TYPE' => 'application/json'], $payload);
+        $client->request('POST', '/api/vendor/transaction', [], [], ['CONTENT_TYPE' => 'application/json'], $payload);
         self::decodeJsonResponse($client, 201);
 
         // duplicate
-        $client->request('POST', '/api/vendor-transactions', [], [], ['CONTENT_TYPE' => 'application/json'], $payload);
+        $client->request('POST', '/api/vendor/transaction', [], [], ['CONTENT_TYPE' => 'application/json'], $payload);
 
         $duplicatePayload = self::decodeJsonResponse($client, 409);
 

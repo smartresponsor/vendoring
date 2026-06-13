@@ -36,3 +36,4 @@ foreach ($needles as $needle) {
 }
 
 fwrite(STDOUT, "Vendor doctrine mapping smoke passed\n");
+

@@ -14,7 +14,7 @@ The active slice was structurally clean under `src/`, and the current scanners r
 - Three historical backup files remained inside tracked source/config paths:
   - `config/packages/doctrine.yaml.bak_wave_r_20260430213057`
   - `config/packages/vendor_nelmio_api_doc.yaml.dist.bak_wave_r_20260430213057`
-  - `src/Service/Ops/VendorTransactionOperatorPageBuilderService.php.bak_wave_r_20260430213057`
+  - `src/Controller/Vendor/VendorTransactionOperatorSurfaceBuilder.php.bak_wave_r_20260430213057`
 
 ## Changes
 

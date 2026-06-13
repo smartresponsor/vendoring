@@ -9,9 +9,6 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorAttachmentRepositoryInterface
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<VendorAttachmentEntity>
- */
 final class VendorAttachmentRepository extends ServiceEntityRepository implements VendorAttachmentRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -19,28 +16,16 @@ final class VendorAttachmentRepository extends ServiceEntityRepository implement
         parent::__construct($registry, VendorAttachmentEntity::class);
     }
 
-    public function save(VendorAttachmentEntity $vendorAttachment, bool $flush = false): void
+    public function save(object $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($vendorAttachment);
-
+        $this->getEntityManager()->persist($entity);
         if ($flush) {
             $this->getEntityManager()->flush();
         }
     }
 
-    public function remove(VendorAttachmentEntity $vendorAttachment, bool $flush = false): void
+    public function byId(mixed $id): ?object
     {
-        $this->getEntityManager()->remove($vendorAttachment);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function findOneByVendorId(string $vendorId): ?VendorAttachmentEntity
-    {
-        $entity = $this->findOneBy(['vendorId' => $vendorId]);
-
-        return $entity instanceof VendorAttachmentEntity ? $entity : null;
+        return $this->find($id);
     }
 }

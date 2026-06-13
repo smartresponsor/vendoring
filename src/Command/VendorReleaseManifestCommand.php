@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\Exception\Command\VendorCommandIoException;
 use App\Vendoring\Service\Command\VendorCommandJsonArtifactWriterService;
-use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
 use App\Vendoring\ServiceInterface\Ops\VendorReleaseManifestBuilderServiceInterface;
 use App\Vendoring\ServiceInterface\Ops\VendorRollbackDecisionEvaluatorServiceInterface;
@@ -15,7 +15,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 /**
  * CLI entrypoint for rendering and optionally writing release/rollback manifests.
@@ -54,7 +53,7 @@ final class VendorReleaseManifestCommand extends Command
         try {
             $manifest = $this->releaseManifestBuilder->build($windowSeconds);
             $rollback = $this->rollbackDecisionEvaluator->evaluate($manifest);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError(
                 $output,
                 $format,
@@ -71,13 +70,13 @@ final class VendorReleaseManifestCommand extends Command
             $manifestPath = $this->commandJsonArtifactWriter->writeIfRequested(
                 (bool) $input->getOption('write'),
                 $input->getOption('manifest-output'),
-                dirname(__DIR__, 2) . '/build/release/release-manifest.json',
+                dirname(__DIR__, 2).'/build/release/release-manifest.json',
                 $manifest,
             );
             $rollbackPath = $this->commandJsonArtifactWriter->writeIfRequested(
                 (bool) $input->getOption('write'),
                 $input->getOption('rollback-output'),
-                dirname(__DIR__, 2) . '/build/release/rollback-manifest.json',
+                dirname(__DIR__, 2).'/build/release/rollback-manifest.json',
                 $rollback,
             );
         } catch (VendorCommandIoException $exception) {

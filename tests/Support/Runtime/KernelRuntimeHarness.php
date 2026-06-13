@@ -31,7 +31,7 @@ final class KernelRuntimeHarness
             throw new \RuntimeException('Failed to allocate sqlite database file.');
         }
 
-        $databaseDsn = 'sqlite:///' . $databaseFile;
+        $databaseDsn = 'sqlite:///'.$databaseFile;
 
         $_ENV['APP_ENV'] = $environment;
         $_SERVER['APP_ENV'] = $environment;
@@ -98,8 +98,8 @@ final class KernelRuntimeHarness
     public static function requestJson(KernelInterface $kernel, string $method, string $uri, ?array $payload = null, array $headers = []): JsonResponse
     {
         $server = ['CONTENT_TYPE' => 'application/json'];
-        foreach ($headers as $name => $value) {
-            $normalized = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
+        foreach ($headers as $nameEntity => $value) {
+            $normalized = 'HTTP_'.strtoupper(str_replace('-', '_', $nameEntity));
             $server[$normalized] = $value;
         }
         $content = null === $payload ? null : json_encode($payload, JSON_THROW_ON_ERROR);
@@ -148,7 +148,7 @@ final class KernelRuntimeHarness
         }
 
         if ($response->headers->get('Location') !== $expectedLocation) {
-            throw new \RuntimeException('Unexpected redirect target: ' . (string) $response->headers->get('Location'));
+            throw new \RuntimeException('Unexpected redirect target: '.(string) $response->headers->get('Location'));
         }
     }
 
@@ -176,11 +176,11 @@ final class KernelRuntimeHarness
         return $plainToken;
     }
 
-    public static function seedActiveVendor(KernelInterface $kernel, ?string $name = null): VendorEntity
+    public static function seedActiveVendor(KernelInterface $kernel, ?string $nameEntity = null): VendorEntity
     {
         $entityManager = self::entityManager($kernel);
 
-        $vendor = new VendorEntity($name ?? ('Runtime Harness Vendor ' . bin2hex(random_bytes(4))));
+        $vendor = new VendorEntity($nameEntity ?? ('Runtime Harness Vendor '.bin2hex(random_bytes(4))));
         $vendor->activate();
         $entityManager->persist($vendor);
         $entityManager->flush();
@@ -193,7 +193,7 @@ final class KernelRuntimeHarness
         $schemaTool = new SchemaTool($entityManager);
         $metadata = array_values(array_filter(
             $entityManager->getMetadataFactory()->getAllMetadata(),
-            static fn(object $metadata): bool => str_starts_with($metadata->getName(), 'App\\Vendoring\\Entity\\'),
+            static fn (object $metadata): bool => str_starts_with($metadata->getName(), 'App\\Vendoring\\Entity\\'),
         ));
 
         if ([] === $metadata) {

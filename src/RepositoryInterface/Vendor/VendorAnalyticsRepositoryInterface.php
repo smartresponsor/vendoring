@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Vendoring\RepositoryInterface\Vendor;
 
-use App\Vendoring\Entity\Vendor\VendorAnalyticsEntity;
-use Doctrine\Persistence\ObjectRepository;
-
-/**
- * @extends ObjectRepository<VendorAnalyticsEntity>
- */
-interface VendorAnalyticsRepositoryInterface extends ObjectRepository
+interface VendorAnalyticsRepositoryInterface
 {
-    public function save(VendorAnalyticsEntity $vendorAnalytics, bool $flush = false): void;
+    public function find(mixed $id): ?object;
 
-    public function remove(VendorAnalyticsEntity $vendorAnalytics, bool $flush = false): void;
+    /** @param array<string,mixed> $criteria */
+    public function findOneBy(array $criteria): ?object;
 
-    public function findOneByVendorId(string $vendorId): ?VendorAnalyticsEntity;
+    /** @return list<object> */
+    public function findBy(array $criteria): array;
+
+    public function save(object $entity, bool $flush = false): void;
 }

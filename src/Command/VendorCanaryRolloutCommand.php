@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\Exception\Command\VendorCommandIoException;
 use App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface;
-use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Rollout\VendorCanaryRolloutCoordinatorServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -14,7 +14,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 /**
  * CLI entrypoint for rendering canary rollout readiness and recommended next action.
@@ -66,7 +65,7 @@ final class VendorCanaryRolloutCommand extends Command
 
         try {
             $report = $this->canaryRolloutCoordinator->evaluate($flagName, $tenantId, $vendorId, $windowSeconds);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError(
                 $output,
                 $format,
@@ -88,7 +87,7 @@ final class VendorCanaryRolloutCommand extends Command
             $writtenPath = $this->commandJsonArtifactWriter->writeIfRequested(
                 (bool) $input->getOption('write'),
                 $input->getOption('output'),
-                dirname(__DIR__, 2) . '/build/release/canary-rollout.json',
+                dirname(__DIR__, 2).'/build/release/canary-rollout.json',
                 $report,
             );
         } catch (VendorCommandIoException $exception) {

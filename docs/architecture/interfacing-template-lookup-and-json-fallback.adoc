@@ -1,0 +1,51 @@
+= Vendoring Interfacing Template Lookup and JSON Fallback
+
+Vendoring now follows the component-to-Interfacing rendering convention.
+
+== Ownership
+
+* Vendoring owns vendor public/business data preparation.
+* Interfacing owns Twig templates and layout surfaces.
+* Vendoring does not depend on a Bridging component for this flow.
+* The surface builder resolves templates by candidate order.
+
+== Canonical flow
+
+[source,text]
+----
+Vendoring surface builder
+  -> prepares vendor payload
+  -> builds noun-based template candidates
+  -> checks Interfacing templates
+  -> renders HTML when a template exists
+  -> returns raw structured JSON when no template exists
+----
+
+== Physical template folder
+
+The physical folder is the noun `vendor`, not the component name `vendoring`.
+
+[source,text]
+----
+@Interfacing/vendor/profile/show.html.twig
+@Interfacing/vendor/navigation/identity.html.twig
+----
+
+The `vendoring` folder is intentionally not a canonical Interfacing template surface.
+
+== JSON fallback
+
+When no candidate template exists, the response contains:
+
+[source,json]
+----
+{
+  "surface": "vendor.profile",
+  "renderMode": "json_fallback",
+  "fallbackReason": "interfacing_template_not_found",
+  "templateCandidates": [],
+  "data": {}
+}
+----
+
+This allows standalone component usage and host applications without Interfacing templates to keep working.

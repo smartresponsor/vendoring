@@ -16,7 +16,7 @@ The apply script removes these paths with backup when present:
 - `phpunit.log`
 - `config/packages/doctrine.yaml.bak_wave_r_20260430213057`
 - `config/packages/vendor_nelmio_api_doc.yaml.dist.bak_wave_r_20260430213057`
-- `src/Service/Ops/VendorTransactionOperatorPageBuilderService.php.bak_wave_r_20260430213057`
+- `src/Controller/Vendor/VendorTransactionOperatorSurfaceBuilder.php.bak_wave_r_20260430213057`
 
 ## Rationale
 

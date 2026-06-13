@@ -6,32 +6,37 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
-#[ORM\Table(name: 'payouts')]
-final class VendorPayoutEntity
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorPayoutRepository::class)]
+#[ORM\Table(name: 'vendor_payout')]
+class VendorPayoutEntity extends VendorAbstractEntity
 {
-    /** @param array<string, mixed> $meta */
-    public function __construct(
-        #[ORM\Id]
-        #[ORM\Column(type: 'string', length: 36)]
-        public string $id,
-        #[ORM\Column(name: 'vendor_id', type: 'string', length: 255)]
-        public string $vendorId,
-        #[ORM\Column(type: 'string', length: 8)]
-        public string $currency,
-        #[ORM\Column(name: 'gross_cents', type: 'integer')]
-        public int $grossCents,
-        #[ORM\Column(name: 'fee_cents', type: 'integer')]
-        public int $feeCents,
-        #[ORM\Column(name: 'net_cents', type: 'integer')]
-        public int $netCents,
-        #[ORM\Column(type: 'string', length: 32)]
-        public string $status,
-        #[ORM\Column(name: 'created_at', type: 'string', length: 19)]
-        public string $createdAt,
-        #[ORM\Column(name: 'processed_at', type: 'string', length: 19, nullable: true)]
-        public ?string $processedAt = null,
-        #[ORM\Column(type: 'json')]
-        public array $meta = [],
-    ) {}
+    #[ORM\Column(type: 'string', length: 64)] public string $payoutId;
+    #[ORM\Column(type: 'string', length: 64)] public string $vendorId;
+    #[ORM\Column(type: 'string', length: 8)] public string $currency;
+    #[ORM\Column(type: 'integer')] public int $grossCents;
+    #[ORM\Column(type: 'integer')] public int $feeCents;
+    #[ORM\Column(type: 'integer')] public int $netCents;
+    #[ORM\Column(type: 'string', length: 32)] public string $status;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)] public ?\DateTimeImmutable $processedAt = null;
+    #[ORM\Column(type: 'json')] public array $meta = [];
+    public function __construct(string $payoutId, string $vendorId, string $currency, int $grossCents, int $feeCents, int $netCents, string $status = 'pending', array $meta = [])
+    {
+        parent::__construct($status);
+        $this->payoutId = $payoutId;
+        $this->vendorId = $vendorId;
+        $this->currency = $currency;
+        $this->grossCents = $grossCents;
+        $this->feeCents = $feeCents;
+        $this->netCents = $netCents;
+        $this->status = $status;
+        $this->meta = $meta;
+    }
+
+    public function markProcessed(): self
+    {
+        $this->status = 'processed';
+        $this->processedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
 }

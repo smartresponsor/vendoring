@@ -4,21 +4,15 @@ declare(strict_types=1);
 
 namespace App\Vendoring\RepositoryInterface\Vendor;
 
-use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
-use Doctrine\Persistence\ObjectRepository;
-
-/**
- * @extends ObjectRepository<VendorApiKeyEntity>
- */
-interface VendorApiKeyRepositoryInterface extends ObjectRepository
+interface VendorApiKeyRepositoryInterface
 {
-    public function findOneByApiKey(string $apiKey): ?VendorApiKeyEntity;
+    public function find(mixed $id): ?object;
 
-    public function findOneByVendorId(string $vendorId): ?VendorApiKeyEntity;
+    /** @param array<string,mixed> $criteria */
+    public function findOneBy(array $criteria): ?object;
 
-    public function findActiveByToken(string $tokenHash): ?VendorApiKeyEntity;
+    /** @return list<object> */
+    public function findBy(array $criteria): array;
 
-    public function save(VendorApiKeyEntity $vendorApiKey, bool $flush = false): void;
-
-    public function remove(VendorApiKeyEntity $vendorApiKey, bool $flush = false): void;
+    public function save(object $entity, bool $flush = false): void;
 }
