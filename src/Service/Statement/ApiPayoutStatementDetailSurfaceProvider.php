@@ -12,7 +12,7 @@ use App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolver
 use App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 
-final readonly class ApiPayoutStatementDetailSurfaceProvider implements CrudSurfaceProviderInterface
+readonly class ApiPayoutStatementDetailSurfaceProvider implements CrudSurfaceProviderInterface
 {
     public function __construct(
         private VendorStatementServiceInterface $statementService,
