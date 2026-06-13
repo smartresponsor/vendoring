@@ -17,10 +17,10 @@ final class CanonicalAppNamespaceRepositoryContractTest extends TestCase
         $content = (string) file_get_contents($file);
 
         self::assertStringContainsString('App\Vendoring\\:', $content);
-        self::assertStringContainsString('App\Vendoring\\ServiceInterface\\Core\\VendorCoreServiceInterface:', $content);
-        self::assertStringContainsString('alias: App\Vendoring\\Service\\Core\\VendorCoreService', $content);
+        self::assertStringContainsString('App\Vendoring\\ServiceInterface\\Crud\\VendorCrudServiceInterface:', $content);
+        self::assertStringContainsString('alias: App\Vendoring\\Service\\Crud\\VendorCrudService', $content);
         self::assertStringNotContainsString('VendorEntity\\:', $content);
-        self::assertStringNotContainsString('VendorEntity\\ServiceInterface\\Core\\VendorCoreServiceInterface:', $content);
-        self::assertStringNotContainsString('alias: VendorEntity\\Service\\Core\\VendorCoreService', $content);
+        self::assertStringNotContainsString('VendorEntity\\ServiceInterface\\Crud\\VendorCrudServiceInterface:', $content);
+        self::assertStringNotContainsString('alias: VendorEntity\\Service\\Crud\\VendorCrudService', $content);
     }
 }

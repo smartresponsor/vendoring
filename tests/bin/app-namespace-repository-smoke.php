@@ -14,8 +14,8 @@ $content = (string) file_get_contents($file);
 
 $required = [
     'App\Vendoring\\:',
-    'App\Vendoring\\ServiceInterface\\Core\\VendorCoreServiceInterface:',
-    'alias: App\Vendoring\\Service\\Core\\VendorCoreService',
+    'App\Vendoring\\ServiceInterface\\Crud\\VendorCrudServiceInterface:',
+    'alias: App\Vendoring\\Service\\Crud\\VendorCrudService',
 ];
 
 foreach ($required as $needle) {
@@ -27,8 +27,8 @@ foreach ($required as $needle) {
 
 $forbidden = [
     'VendorEntity\\:',
-    'VendorEntity\\ServiceInterface\\Core\\VendorCoreServiceInterface:',
-    'alias: VendorEntity\\Service\\Core\\VendorCoreService',
+    'VendorEntity\\ServiceInterface\\Crud\\VendorCrudServiceInterface:',
+    'alias: VendorEntity\\Service\\Crud\\VendorCrudService',
 ];
 
 foreach ($forbidden as $needle) {

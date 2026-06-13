@@ -4,8 +4,8 @@
 # Zero-controller Vendor surface aligned with Cruding + Viewing.
 #
 # Active routes are limited to responsibilities proven by current business code:
-#   - VendorCoreService::create()
-#   - VendorCoreService::update()
+#   - VendorCrudService::create()
+#   - VendorCrudService::update()
 #   - VendorRepository::byId()
 #
 # VendorEntity currently has no slug field, therefore slug variants are not active.

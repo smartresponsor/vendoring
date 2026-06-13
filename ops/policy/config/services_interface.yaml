@@ -7,5 +7,5 @@ services:
         exclude: [ '../src/**/{Tests,Test}/' ]
 
     # Explicit service alias
-    App\Vendoring\ServiceInterface\Core\VendorCoreServiceInterface:
-        alias: App\Vendoring\Service\Core\VendorCoreService
+    App\Vendoring\ServiceInterface\Crud\VendorCrudServiceInterface:
+        alias: App\Vendoring\Service\Crud\VendorCrudService

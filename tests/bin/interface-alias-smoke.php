@@ -19,7 +19,7 @@ $required = [
     'App\Vendoring\\ServiceInterface\\Media\\VendorMediaServiceInterface',
     'App\Vendoring\\ServiceInterface\\Identity\\VendorPassportServiceInterface',
     'App\Vendoring\\ServiceInterface\\Profile\\VendorProfileServiceInterface',
-    'App\Vendoring\\ServiceInterface\\Core\\VendorCoreServiceInterface',
+    'App\Vendoring\\ServiceInterface\\Crud\\VendorCrudServiceInterface',
     'App\Vendoring\\ServiceInterface\\Ledger\\VendorDoubleEntryServiceInterface',
     'App\Vendoring\\ServiceInterface\\Payout\\VendorPayoutProviderServiceInterface',
     'App\Vendoring\\ServiceInterface\\Payout\\VendorSettlementCalculatorServiceInterface',
