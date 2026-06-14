@@ -26,6 +26,7 @@
         "symfony/security-csrf": "^8.1",
         "nelmio/api-doc-bundle": "^5.3",
         "ext-pdo": "*",
+        "cruding/crud": "*@dev",
         "objecting/object": "*@dev"
     },
     "require-dev": {
@@ -402,6 +403,13 @@
         {
             "type": "path",
             "url": "../Objecting",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../Cruding",
             "options": {
                 "symlink": true
             }
