@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 final class ApiQueryValidationKernelRuntimeTest extends TestCase
 {
-    #[DataProvider('validationSurfaceProvider')]
+    #[DataProvider('validationProvider')]
     public function testKernelRuntimeReturnsExpectedApiValidationErrorCodes(string $uri, string $expectedError): void
     {
         if (!extension_loaded('pdo_sqlite')) {
@@ -34,7 +34,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
     /**
      * @return iterable<string, array{uri: string, expectedError: string}>
      */
-    public static function validationSurfaceProvider(): iterable
+    public static function validationProvider(): iterable
     {
         yield 'finance runtime requires tenantId' => [
             'uri' => '/api/vendor/runtime/finance/vendor-1',

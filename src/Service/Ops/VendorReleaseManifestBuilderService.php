@@ -7,7 +7,6 @@ namespace App\Vendoring\Service\Ops;
 use App\Vendoring\ServiceInterface\Observability\VendorAlertRuleEvaluatorServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorMonitoringSnapshotBuilderServiceInterface;
 use App\Vendoring\ServiceInterface\Ops\VendorReleaseManifestBuilderServiceInterface;
-use DateTimeImmutable;
 
 /**
  * Read-side builder for release and rollback operators.
@@ -19,9 +18,10 @@ final readonly class VendorReleaseManifestBuilderService implements VendorReleas
 {
     public function __construct(
         private VendorMonitoringSnapshotBuilderServiceInterface $snapshotBuilder,
-        private VendorAlertRuleEvaluatorServiceInterface        $alertRuleEvaluator,
-        private string                             $projectDir,
-    ) {}
+        private VendorAlertRuleEvaluatorServiceInterface $alertRuleEvaluator,
+        private string $projectDir,
+    ) {
+    }
 
     public function build(int $windowSeconds = 900): array
     {
@@ -50,7 +50,7 @@ final readonly class VendorReleaseManifestBuilderService implements VendorReleas
             $status = 'warn';
         }
 
-        $generatedAt = new DateTimeImmutable();
+        $generatedAt = new \DateTimeImmutable();
 
         return [
             'generatedAt' => $generatedAt->format(DATE_ATOM),
@@ -74,12 +74,12 @@ final readonly class VendorReleaseManifestBuilderService implements VendorReleas
     private function releaseDocs(): array
     {
         return [
-            'rcBaseline' => is_file($this->projectDir . '/docs/release/RC_BASELINE.md'),
-            'rcRuntimeSurfaces' => is_file($this->projectDir . '/docs/release/RC_RUNTIME_SURFACES.md'),
-            'rcOperatorSurface' => is_file($this->projectDir . '/docs/release/RC_OPERATOR_SURFACE.md'),
-            'rcEvidencePack' => is_file($this->projectDir . '/docs/release/RC_EVIDENCE_PACK.md'),
-            'rcRollbackManifest' => is_file($this->projectDir . '/docs/release/RC_ROLLBACK_MANIFEST.md'),
-            'rcReleaseManifest' => is_file($this->projectDir . '/docs/release/RC_RELEASE_MANIFEST.md'),
+            'rcBaseline' => is_file($this->projectDir.'/docs/release/RC_BASELINE.md'),
+            'rcRuntimes' => is_file($this->projectDir.'/docs/release/RC_RUNTIME_SURFACES.md'),
+            'rcOperator' => is_file($this->projectDir.'/docs/release/RC_OPERATOR_SURFACE.md'),
+            'rcEvidencePack' => is_file($this->projectDir.'/docs/release/RC_EVIDENCE_PACK.md'),
+            'rcRollbackManifest' => is_file($this->projectDir.'/docs/release/RC_ROLLBACK_MANIFEST.md'),
+            'rcReleaseManifest' => is_file($this->projectDir.'/docs/release/RC_RELEASE_MANIFEST.md'),
         ];
     }
 
@@ -89,11 +89,11 @@ final readonly class VendorReleaseManifestBuilderService implements VendorReleas
     private function buildArtifacts(): array
     {
         return [
-            'rcEvidenceJson' => is_file($this->projectDir . '/build/release/rc-evidence.json'),
-            'rcEvidenceMd' => is_file($this->projectDir . '/build/release/rc-evidence.md'),
-            'phpdocumentorIndex' => is_file($this->projectDir . '/build/docs/phpdocumentor/index.html'),
-            'releaseManifestJson' => is_file($this->projectDir . '/build/release/release-manifest.json'),
-            'rollbackManifestJson' => is_file($this->projectDir . '/build/release/rollback-manifest.json'),
+            'rcEvidenceJson' => is_file($this->projectDir.'/build/release/rc-evidence.json'),
+            'rcEvidenceMd' => is_file($this->projectDir.'/build/release/rc-evidence.md'),
+            'phpdocumentorIndex' => is_file($this->projectDir.'/build/docs/phpdocumentor/index.html'),
+            'releaseManifestJson' => is_file($this->projectDir.'/build/release/release-manifest.json'),
+            'rollbackManifestJson' => is_file($this->projectDir.'/build/release/rollback-manifest.json'),
         ];
     }
 }

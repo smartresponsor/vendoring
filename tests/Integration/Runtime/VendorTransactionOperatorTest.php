@@ -7,9 +7,9 @@ namespace App\Vendoring\Tests\Integration\Runtime;
 use App\Vendoring\Tests\Support\Runtime\KernelRuntimeHarness;
 use PHPUnit\Framework\TestCase;
 
-final class VendorTransactionOperatorSurfaceTest extends TestCase
+final class VendorTransactionOperatorTest extends TestCase
 {
-    public function testOperatorSurfaceRendersCreateAndStatusFlows(): void
+    public function testOperatorRendersCreateAndStatusFlows(): void
     {
         if (!extension_loaded('pdo_sqlite')) {
             self::markTestSkipped('pdo_sqlite is required for operator surface integration test');
@@ -59,7 +59,7 @@ final class VendorTransactionOperatorSurfaceTest extends TestCase
         }
     }
 
-    public function testOperatorSurfaceRendersValidationErrorFeedback(): void
+    public function testOperatorRendersValidationErrorFeedback(): void
     {
         if (!extension_loaded('pdo_sqlite')) {
             self::markTestSkipped('pdo_sqlite is required for operator surface integration test');

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Http\Vendor\Interfacing;
 
-use App\Vendoring\ServiceInterface\Interfacing\VendorInterfacingSurfaceRendererServiceInterface;
+use App\Vendoring\ServiceInterface\Interfacing\VendorInterfacingRendererServiceInterface;
 use App\Vendoring\ServiceInterface\Interfacing\VendorInterfacingTemplateCandidateProviderServiceInterface;
 use App\Vendoring\ServiceInterface\Profile\VendorPublicProfileSummaryProviderServiceInterface;
-use App\Vendoring\ValueObject\Interfacing\VendorInterfacingSurfaceNameValueObject;
+use App\Vendoring\ValueObject\Interfacing\VendorInterfacingNameValueObject;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -21,14 +21,14 @@ final class VendorInterfacingService
     public function __construct(
         private readonly VendorPublicProfileSummaryProviderServiceInterface $publicProfileSummaryProvider,
         private readonly VendorInterfacingTemplateCandidateProviderServiceInterface $templateCandidateProvider,
-        private readonly VendorInterfacingSurfaceRendererServiceInterface $surfaceRenderer,
+        private readonly VendorInterfacingRendererServiceInterface $surfaceRenderer,
     ) {
     }
 
     public function index(): Response
     {
-        return $this->renderSurface(
-            VendorInterfacingSurfaceNameValueObject::INDEX,
+        return $this->render(
+            VendorInterfacingNameValueObject::INDEX,
             [
                 'title' => 'Vendor',
                 'publicName' => 'Vendor',
@@ -47,7 +47,7 @@ final class VendorInterfacingService
     /**
      * @param array<string, mixed> $payload
      */
-    private function renderSurface(string $surfaceName, array $payload): Response
+    private function render(string $surfaceName, array $payload): Response
     {
         $payload['slotMap'] = array_replace($payload['slotMap'] ?? [], $this->buildShellSlotMap($payload));
         $payload['slots'] = array_replace($payload['slots'] ?? [], $this->buildShellSlots($payload));
@@ -77,7 +77,7 @@ final class VendorInterfacingService
             'shell.head.main' => 'Vendor index',
             'shell.head.right.user' => 'Vendor',
             'shell.head.right.cart' => 'Landing media',
-            'shell.head.right.notification' => 'Surface status',
+            'shell.head.right.notification' => ' status',
             'shell.head.right.toggle' => 'Toggle',
             'shell.head.bottom' => 'Header bottom',
             'shell.left.top' => 'Left top',
@@ -118,10 +118,10 @@ final class VendorInterfacingService
         $avatarUrl = $this->resolveVendorAssetUrl($payload['avatar'] ?? null, $payload['avatarUrl'] ?? null);
         $coverUrl = $this->resolveVendorAssetUrl($payload['cover'] ?? null, $payload['coverUrl'] ?? null);
         $publishedLabel = null !== $publishedAt && '' !== (string) $publishedAt ? (string) $publishedAt : 'n/a';
-        $isDetailSurface = '' !== $vendorId;
-        $primaryLinkUrl = $isDetailSurface ? $profileUrl : $homeUrl;
-        $primaryLinkLabel = $isDetailSurface ? 'My profile' : 'Vendor index';
-        $primaryLinkDescription = $isDetailSurface ? $publicName : 'Vendor landing surface';
+        $isDetail = '' !== $vendorId;
+        $primaryLinkUrl = $isDetail ? $profileUrl : $homeUrl;
+        $primaryLinkLabel = $isDetail ? 'My profile' : 'Vendor index';
+        $primaryLinkDescription = $isDetail ? $publicName : 'Vendor landing surface';
 
         return [
             'shell.body.top' => [[
@@ -152,9 +152,9 @@ final class VendorInterfacingService
             ],
             'shell.head.main' => [[
                 'type' => 'link',
-                'label' => $isDetailSurface ? 'Open profile' : 'Open vendor index',
+                'label' => $isDetail ? 'Open profile' : 'Open vendor index',
                 'href' => $primaryLinkUrl,
-                'description' => $isDetailSurface ? 'Canonical vendor detail route' : 'Canonical vendor index route',
+                'description' => $isDetail ? 'Canonical vendor detail route' : 'Canonical vendor index route',
             ]],
             'shell.head.right.user' => [[
                 'type' => 'link',
@@ -175,7 +175,7 @@ final class VendorInterfacingService
                 'type' => 'link',
                 'label' => $primaryLinkLabel,
                 'href' => $primaryLinkUrl,
-                'description' => $isDetailSurface ? 'Open the current vendor profile' : 'Open the vendor index',
+                'description' => $isDetail ? 'Open the current vendor profile' : 'Open the vendor index',
                 'items' => [
                     [
                         'type' => 'link',
@@ -191,14 +191,14 @@ final class VendorInterfacingService
             ]],
             'shell.head.bottom' => [
                 ['type' => 'text', 'label' => 'Vendor ID', 'value' => $vendorId ?: 'n/a'],
-                ['type' => 'text', 'label' => 'Surface', 'value' => 'vendor'],
+                ['type' => 'text', 'label' => '', 'value' => 'vendor'],
             ],
             'shell.left.top' => [
                 ['type' => 'link', 'label' => 'Vendor home', 'href' => $homeUrl],
-                ['type' => 'link', 'label' => $isDetailSurface ? 'Profile' : 'Index', 'href' => $primaryLinkUrl],
+                ['type' => 'link', 'label' => $isDetail ? 'Profile' : 'Index', 'href' => $primaryLinkUrl],
             ],
             'shell.left.middle' => [
-                ['type' => 'link', 'label' => $isDetailSurface ? 'Open profile' : 'Open vendor index', 'href' => $primaryLinkUrl],
+                ['type' => 'link', 'label' => $isDetail ? 'Open profile' : 'Open vendor index', 'href' => $primaryLinkUrl],
             ],
             'shell.left.bottom' => [
                 ['type' => 'text', 'label' => 'Profile status', 'value' => $profileStatus],
@@ -223,7 +223,7 @@ final class VendorInterfacingService
             'shell.main.content' => [
                 ['type' => 'text', 'label' => 'Profile status', 'value' => $profileStatus],
                 ['type' => 'text', 'label' => 'Vendor status', 'value' => $vendorStatus],
-                ['type' => 'link', 'label' => $isDetailSurface ? 'Profile URL' : 'Index URL', 'href' => $primaryLinkUrl, 'value' => $primaryLinkUrl],
+                ['type' => 'link', 'label' => $isDetail ? 'Profile URL' : 'Index URL', 'href' => $primaryLinkUrl, 'value' => $primaryLinkUrl],
                 ['type' => 'text', 'label' => 'Avatar', 'value' => null !== $avatarUrl ? $avatarUrl : 'missing'],
                 ['type' => 'text', 'label' => 'Cover', 'value' => null !== $coverUrl ? $coverUrl : 'missing'],
             ],
@@ -243,7 +243,7 @@ final class VendorInterfacingService
                 ['type' => 'text', 'label' => 'Vendor', 'value' => $publicName],
             ],
             'shell.footer.left' => [
-                ['type' => 'link', 'label' => $isDetailSurface ? 'Profile' : 'Index', 'href' => $primaryLinkUrl],
+                ['type' => 'link', 'label' => $isDetail ? 'Profile' : 'Index', 'href' => $primaryLinkUrl],
             ],
             'shell.footer.context' => [
                 ['type' => 'text', 'label' => 'Profile status', 'value' => $profileStatus],

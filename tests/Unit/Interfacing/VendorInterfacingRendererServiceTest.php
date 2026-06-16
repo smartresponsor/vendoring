@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Interfacing;
 
-use App\Vendoring\Service\Interfacing\VendorInterfacingSurfaceRendererService;
+use App\Vendoring\Service\Interfacing\VendorInterfacingRendererService;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
-final class VendorInterfacingSurfaceRendererServiceTest extends TestCase
+final class VendorInterfacingRendererServiceTest extends TestCase
 {
     public function testItRendersExistingTemplate(): void
     {
         $twig = new Environment(new ArrayLoader([
             'vendor/profile/show.html.twig' => 'Vendor {{ data.publicName }}',
         ]));
-        $renderer = new VendorInterfacingSurfaceRendererService($twig);
+        $renderer = new VendorInterfacingRendererService($twig);
 
         $response = $renderer->renderOrJson('vendor.profile', ['publicName' => 'Acme'], ['vendor/profile/show.html.twig']);
 
@@ -29,7 +29,7 @@ final class VendorInterfacingSurfaceRendererServiceTest extends TestCase
         $twig = new Environment(new ArrayLoader([
             '@Interfacing/index/index.html.twig' => 'fallback {{ fallbackPayload.publicName }}',
         ]));
-        $renderer = new VendorInterfacingSurfaceRendererService($twig);
+        $renderer = new VendorInterfacingRendererService($twig);
 
         $response = $renderer->renderOrJson('vendor.profile', ['publicName' => 'Acme'], ['missing.html.twig']);
 

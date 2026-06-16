@@ -19,7 +19,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
         $this->runtimeStatus = $this->createMock(VendorRuntimeStatusProjectionBuilderServiceInterface::class);
     }
 
-    public function testBuildMarksBaselineWarnWhenRuntimeSurfacesAreMissing(): void
+    public function testBuildMarksBaselineWarnWhenRuntimesAreMissing(): void
     {
         $this->runtimeStatus
             ->expects(self::once())
@@ -53,7 +53,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
         self::assertArrayHasKey('runtimeStatus', $payload);
     }
 
-    public function testBuildMarksProfileSummaryUnavailableWhenProfileSurfaceIsNull(): void
+    public function testBuildMarksProfileSummaryUnavailableWhenProfileIsNull(): void
     {
         $this->runtimeStatus
             ->expects(self::once())

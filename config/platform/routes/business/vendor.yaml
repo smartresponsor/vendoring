@@ -8,7 +8,7 @@
 #     /api/{resourcePath}
 #     /api/{resourcePath}/{slug}
 #
-#   Surface:
+#   :
 #     /{resource}/{subject}/{surface}
 #     /{resource}/{subject}/{surface}/{action}
 #     /{resource}/{subject}/{surface}/{item}/{action}

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Missing templates are not an application error. The renderer must return the same prepared data
  * as structured JSON so the component remains standalone and host-safe.
  */
-interface VendorInterfacingSurfaceRendererServiceInterface
+interface VendorInterfacingRendererServiceInterface
 {
     /**
      * @param array<string, mixed> $payload

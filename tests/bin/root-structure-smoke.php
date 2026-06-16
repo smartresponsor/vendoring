@@ -15,7 +15,7 @@ if (is_dir($root.'/src/ControllerTrait')) {
 }
 
 $canonical = $root.'/src/Service/Http/Vendor/Transaction/VendorTransactionHttpService.php';
-$forbidden = $root.'/VendorTransactionSurfaceBuilder.php';
+$forbidden = $root.'/VendorTransactionBuilder.php';
 
 if (!is_file($canonical)) {
     fwrite(STDERR, "Missing canonical src/Service/Http/Vendor/Transaction/VendorTransactionHttpService.php\n");
@@ -23,7 +23,7 @@ if (!is_file($canonical)) {
 }
 
 if (is_file($forbidden)) {
-    fwrite(STDERR, "Forbidden root-level VendorTransactionSurfaceBuilder.php still exists\n");
+    fwrite(STDERR, "Forbidden root-level VendorTransactionBuilder.php still exists\n");
     exit(1);
 }
 

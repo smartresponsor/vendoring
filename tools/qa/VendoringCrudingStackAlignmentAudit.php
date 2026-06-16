@@ -89,7 +89,7 @@ if (!is_file($responseService)) {
 } else {
     $source = file_get_contents($responseService) ?: '';
     foreach ([
-        'CrudSurfaceContract',
+        'CrudContract',
         'crudingContract',
         'viewingContract',
         'interfacingDependency',

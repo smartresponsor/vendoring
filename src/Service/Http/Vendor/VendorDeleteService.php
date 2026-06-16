@@ -6,7 +6,7 @@ namespace App\Vendoring\Service\Http\Vendor;
 
 use App\Cruding\Dto\Crud\Entrypoint\CrudEntrypointContext;
 use App\Cruding\Service\Crud\Entrypoint\AbstractCrudEntrypointService;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Value\CrudContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,7 +21,7 @@ final class VendorDeleteService extends AbstractCrudEntrypointService
     ) {
     }
 
-    public function get(CrudEntrypointContext $context): CrudSurfaceContract
+    public function get(CrudEntrypointContext $context): CrudContract
     {
         return $this->responseService->read(
             $context,
@@ -32,17 +32,17 @@ final class VendorDeleteService extends AbstractCrudEntrypointService
         );
     }
 
-    public function post(CrudEntrypointContext $context): CrudSurfaceContract
+    public function post(CrudEntrypointContext $context): CrudContract
     {
         return $this->deleteVendor($context);
     }
 
-    public function delete(CrudEntrypointContext $context): CrudSurfaceContract
+    public function delete(CrudEntrypointContext $context): CrudContract
     {
         return $this->deleteVendor($context);
     }
 
-    private function deleteVendor(CrudEntrypointContext $context): CrudSurfaceContract
+    private function deleteVendor(CrudEntrypointContext $context): CrudContract
     {
         $vendor = $this->resolveVendor($context);
         $this->entityManager->remove($vendor);

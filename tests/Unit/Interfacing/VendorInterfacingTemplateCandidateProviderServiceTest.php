@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Interfacing;
 
 use App\Vendoring\Service\Interfacing\VendorInterfacingTemplateCandidateProviderService;
-use App\Vendoring\ValueObject\Interfacing\VendorInterfacingSurfaceNameValueObject;
+use App\Vendoring\ValueObject\Interfacing\VendorInterfacingNameValueObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorInterfacingTemplateCandidateProviderServiceTest extends TestCase
 {
-    public function testProfileCandidatesUseVendorNounSurface(): void
+    public function testProfileCandidatesUseVendorNoun(): void
     {
         $provider = new VendorInterfacingTemplateCandidateProviderService();
 
-        $candidates = $provider->candidatesFor(VendorInterfacingSurfaceNameValueObject::PROFILE);
+        $candidates = $provider->candidatesFor(VendorInterfacingNameValueObject::PROFILE);
 
         self::assertContains('@Interfacing/vendor/profile/show.html.twig', $candidates);
         self::assertContains('vendor/profile/show.html.twig', $candidates);
@@ -26,7 +26,7 @@ final class VendorInterfacingTemplateCandidateProviderServiceTest extends TestCa
     {
         $provider = new VendorInterfacingTemplateCandidateProviderService();
 
-        $candidates = $provider->candidatesFor(VendorInterfacingSurfaceNameValueObject::INDEX);
+        $candidates = $provider->candidatesFor(VendorInterfacingNameValueObject::INDEX);
 
         self::assertSame('@Interfacing/vendor/index.html.twig', $candidates[0]);
         self::assertContains('vendor/index.html.twig', $candidates);

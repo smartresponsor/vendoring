@@ -65,7 +65,7 @@ trait VendorBusinessOperationHttpTrait
     }
 
     /** @param array<string, mixed> $payload */
-    private function acceptedSurface(string $surface, object $request, array $payload = []): array
+    private function accepted(string $surface, object $request, array $payload = []): array
     {
         return [
             'ok' => true,

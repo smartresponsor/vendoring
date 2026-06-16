@@ -6,5 +6,4 @@
 # ---------------------------------------------------------------------------
 
 imports:
-    - { resource: 'routes.crud.yaml' }
     - { resource: 'routes.business.yaml' }

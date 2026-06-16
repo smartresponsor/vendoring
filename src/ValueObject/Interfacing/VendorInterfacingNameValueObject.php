@@ -10,7 +10,7 @@ namespace App\Vendoring\ValueObject\Interfacing;
  * Physical template folders must use the business/surface noun "vendor". The component nameEntity
  * "vendoring" is intentionally not part of the canonical template path.
  */
-final readonly class VendorInterfacingSurfaceNameValueObject
+final readonly class VendorInterfacingNameValueObject
 {
     public const INDEX = 'vendor.index';
     public const PROFILE = 'vendor.profile';

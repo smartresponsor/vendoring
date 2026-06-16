@@ -49,7 +49,7 @@ final class VendorReleaseBaselineReaderTest extends TestCase
         self::assertTrue($payload['artifactStatus']['runtimeStatusCommand']);
     }
 
-    public function testBuildMarksOwnershipSurfaceUnavailableWhenRuntimeStatusHasNoOwnership(): void
+    public function testBuildMarksOwnershipUnavailableWhenRuntimeStatusHasNoOwnership(): void
     {
         $this->runtimeStatusProjectionBuilder
             ->expects(self::once())

@@ -41,7 +41,7 @@ final class VendorTransactionOperatorService
         $flashMessage = $this->nullableTrimmedQueryValue($request, 'message');
         $errorMessage = $this->nullableTrimmedQueryValue($request, 'error');
 
-        return $this->renderTwigOperatorSurface($vendorId, $transactions, $flashMessage, $errorMessage);
+        return $this->renderTwigOperator($vendorId, $transactions, $flashMessage, $errorMessage);
     }
 
     /**
@@ -120,7 +120,7 @@ final class VendorTransactionOperatorService
     /**
      * @param list<VendorTransactionEntityInterface> $transactions
      */
-    private function renderTwigOperatorSurface(string $vendorId, array $transactions, ?string $flashMessage, ?string $errorMessage): Response
+    private function renderTwigOperator(string $vendorId, array $transactions, ?string $flashMessage, ?string $errorMessage): Response
     {
         $template = sprintf('%s.%s', 'ops/vendor_transactions/index', 'html.twig');
         $createForm = $this->formFactory->create(VendorTransactionCreateForm::class, new VendorTransactionCreateInputDTO(vendorId: $vendorId), [

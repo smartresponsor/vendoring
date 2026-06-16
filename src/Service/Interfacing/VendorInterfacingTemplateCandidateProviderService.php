@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Interfacing;
 
 use App\Vendoring\ServiceInterface\Interfacing\VendorInterfacingTemplateCandidateProviderServiceInterface;
-use App\Vendoring\ValueObject\Interfacing\VendorInterfacingSurfaceNameValueObject;
+use App\Vendoring\ValueObject\Interfacing\VendorInterfacingNameValueObject;
 
 /**
  * Builds canonical noun-surface template candidates for Vendoring.
@@ -23,11 +23,11 @@ final class VendorInterfacingTemplateCandidateProviderService implements VendorI
     public function candidatesFor(string $surfaceName): array
     {
         return match ($surfaceName) {
-            VendorInterfacingSurfaceNameValueObject::INDEX => [
+            VendorInterfacingNameValueObject::INDEX => [
                 '@Interfacing/vendor/index',
                 'vendor/index',
             ],
-            VendorInterfacingSurfaceNameValueObject::PROFILE => [
+            VendorInterfacingNameValueObject::PROFILE => [
                 '@Interfacing/vendor/profile/show',
                 '@Interfacing/vendor/profile/index',
                 '@Interfacing/vendor/profile',

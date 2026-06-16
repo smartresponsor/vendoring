@@ -6,7 +6,7 @@ namespace App\Vendoring\Tests\Functional\Panther;
 
 final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
 {
-    public function testApiDocumentationSurfaceRendersVendoringApi(): void
+    public function testApiDocumentationRendersVendoringApi(): void
     {
         $client = self::createExternalBaseClient();
 

@@ -6,7 +6,7 @@ namespace App\Vendoring\Service\Http\Vendor;
 
 use App\Cruding\Dto\Crud\Entrypoint\CrudEntrypointContext;
 use App\Cruding\Service\Crud\Entrypoint\AbstractCrudEntrypointService;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Value\CrudContract;
 use App\Vendoring\DTO\VendorUpdateDTO;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Event\Vendor\VendorActivatedEvent;
@@ -29,7 +29,7 @@ final class VendorUpdateService extends AbstractCrudEntrypointService
     ) {
     }
 
-    public function get(CrudEntrypointContext $context): CrudSurfaceContract
+    public function get(CrudEntrypointContext $context): CrudContract
     {
         return $this->responseService->read(
             $context,
@@ -40,22 +40,22 @@ final class VendorUpdateService extends AbstractCrudEntrypointService
         );
     }
 
-    public function post(CrudEntrypointContext $context): CrudSurfaceContract
+    public function post(CrudEntrypointContext $context): CrudContract
     {
         return $this->mutate($context);
     }
 
-    public function put(CrudEntrypointContext $context): CrudSurfaceContract
+    public function put(CrudEntrypointContext $context): CrudContract
     {
         return $this->mutate($context);
     }
 
-    public function patch(CrudEntrypointContext $context): CrudSurfaceContract
+    public function patch(CrudEntrypointContext $context): CrudContract
     {
         return $this->mutate($context);
     }
 
-    private function mutate(CrudEntrypointContext $context): CrudSurfaceContract
+    private function mutate(CrudEntrypointContext $context): CrudContract
     {
         $input = $context->request->request->all();
         $vendor = $this->resolveVendor($context);

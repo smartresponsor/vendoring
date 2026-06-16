@@ -10,13 +10,13 @@ final class ServiceWiringContractTest extends TestCase
 {
     public function testCanonicalComponentServicesFileExists(): void
     {
-        $path = dirname(__DIR__, 3) . '/config/component/services.yaml';
+        $path = dirname(__DIR__, 3).'/config/component/services.yaml';
         self::assertFileExists($path);
     }
 
     public function testCanonicalComponentMetadataPointsAtServicesFile(): void
     {
-        $path = dirname(__DIR__, 3) . '/config/component/component.yaml';
+        $path = dirname(__DIR__, 3).'/config/component/component.yaml';
         self::assertFileExists($path);
 
         $contents = (string) file_get_contents($path);
@@ -25,15 +25,15 @@ final class ServiceWiringContractTest extends TestCase
         self::assertStringContainsString('services_loaded_by_extension: config/component/services.yaml', $contents);
     }
 
-    public function testLegacyCoreServicesBridgeIsNotRequiredByNativeSurface(): void
+    public function testLegacyCoreServicesBridgeIsNotRequiredByNative(): void
     {
-        $path = dirname(__DIR__, 3) . '/config/vendor_services.yaml';
+        $path = dirname(__DIR__, 3).'/config/vendor_services.yaml';
         self::assertFileDoesNotExist($path);
     }
 
-    public function testServiceSurfaceRemainsBundleOwned(): void
+    public function testServiceRemainsBundleOwned(): void
     {
-        $extensionPath = dirname(__DIR__, 3) . '/src/DependencyInjection/VendoringExtension.php';
+        $extensionPath = dirname(__DIR__, 3).'/src/DependencyInjection/VendoringExtension.php';
         self::assertFileExists($extensionPath);
 
         $contents = (string) file_get_contents($extensionPath);

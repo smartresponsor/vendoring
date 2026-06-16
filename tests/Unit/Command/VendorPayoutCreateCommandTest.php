@@ -7,13 +7,13 @@ namespace App\Vendoring\Tests\Unit\Command;
 
 use App\Vendoring\Command\VendorPayoutCreateCommand;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
+use App\Vendoring\Service\Ledger\VendorLedgerService;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
-use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
-use App\Vendoring\Service\Ledger\VendorLedgerService;
 use App\Vendoring\Service\Payout\VendorPayoutRequestService;
 use App\Vendoring\Service\Payout\VendorPayoutService;
+use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Tests\Support\Payout\InMemoryPayoutRepository;
 use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class VendorPayoutCreateCommandTest extends TestCase
 {
-    public function testExecuteCreatesPayoutAndPrintsTextSurface(): void
+    public function testExecuteCreatesPayoutAndPrintsText(): void
     {
         $payoutRepository = new InMemoryPayoutRepository();
         $ledgerRepository = new InMemoryLedgerEntryRepository();
@@ -105,7 +105,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
         self::assertStringContainsString('vendorId required', $tester->getDisplay());
     }
 
-    public function testExecutePrintsJsonSurfaceWhenRequested(): void
+    public function testExecutePrintsJsonWhenRequested(): void
     {
         $payoutRepository = new InMemoryPayoutRepository();
         $ledgerRepository = new InMemoryLedgerEntryRepository();

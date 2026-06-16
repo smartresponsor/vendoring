@@ -5,7 +5,7 @@ declare(strict_types=1);
 $root = dirname(__DIR__, 2);
 $requiredFiles = [
     $root.'/src/Service/Http/Vendor/Transaction/Operator/VendorTransactionOperatorService.php',
-    $root.'/tests/Integration/Runtime/VendorTransactionOperatorSurfaceTest.php',
+    $root.'/tests/Integration/Runtime/VendorTransactionOperatorTest.php',
     $root.'/docs/release/RC_OPERATOR_SURFACE.md',
 ];
 

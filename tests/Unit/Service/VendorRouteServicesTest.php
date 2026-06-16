@@ -6,7 +6,7 @@ namespace App\Vendoring\Tests\Unit\Service;
 
 use App\Cruding\Dto\Crud\CrudContext;
 use App\Cruding\Dto\Crud\Entrypoint\CrudEntrypointContext;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Value\CrudContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use App\Vendoring\Service\Http\Vendor\VendorCreateService;
@@ -44,7 +44,7 @@ final class VendorRouteServicesTest extends TestCase
         $this->responseService = new VendorHttpRouteResponseService();
     }
 
-    public function testIndexReturnsSurfaceContract(): void
+    public function testIndexReturnsContract(): void
     {
         $this->vendorRepository
             ->expects(self::once())
@@ -54,16 +54,16 @@ final class VendorRouteServicesTest extends TestCase
 
         $service = new VendorIndexService($this->responseService, $this->vendorRepository);
 
-        self::assertInstanceOf(CrudSurfaceContract::class, $service->get($this->context('index')));
+        self::assertInstanceOf(CrudContract::class, $service->get($this->context('index')));
     }
 
-    public function testShowReturnsSurfaceContractForResolvedVendor(): void
+    public function testShowReturnsContractForResolvedVendor(): void
     {
         $vendor = new VendorEntity('Alpha');
 
         $service = new VendorShowService($this->responseService, $this->vendorRepository);
 
-        self::assertInstanceOf(CrudSurfaceContract::class, $service->get($this->context('show', object: $vendor, identifierValue: 1)));
+        self::assertInstanceOf(CrudContract::class, $service->get($this->context('show', object: $vendor, identifierValue: 1)));
     }
 
     public function testCreateTrimsBrandNameBeforeEntityConstruction(): void
@@ -94,7 +94,7 @@ final class VendorRouteServicesTest extends TestCase
             'ownerUserId' => null,
         ]));
 
-        self::assertInstanceOf(CrudSurfaceContract::class, $response);
+        self::assertInstanceOf(CrudContract::class, $response);
     }
 
     public function testCreateThrowsDomainValidationExceptionWhenDtoInvalid(): void
@@ -155,7 +155,7 @@ final class VendorRouteServicesTest extends TestCase
         ]));
 
         self::assertSame('New Name', $vendor->getBrandName());
-        self::assertInstanceOf(CrudSurfaceContract::class, $response);
+        self::assertInstanceOf(CrudContract::class, $response);
     }
 
     public function testDeleteRemovesVendorEntity(): void
@@ -169,7 +169,7 @@ final class VendorRouteServicesTest extends TestCase
 
         $response = $service->delete($this->context('delete', object: $vendor, identifierValue: 1));
 
-        self::assertInstanceOf(CrudSurfaceContract::class, $response);
+        self::assertInstanceOf(CrudContract::class, $response);
     }
 
     private function context(

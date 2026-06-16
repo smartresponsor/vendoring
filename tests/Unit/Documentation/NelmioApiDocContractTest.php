@@ -8,9 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 final class NelmioApiDocContractTest extends TestCase
 {
-    public function testNelmioApiDocPackageConfigDefinesNativeSurface(): void
+    public function testNelmioApiDocPackageConfigDefinesNative(): void
     {
-        $path = dirname(__DIR__, 3) . '/config/packages/nelmio_api_doc.yaml';
+        $path = dirname(__DIR__, 3).'/config/packages/nelmio_api_doc.yaml';
         self::assertFileExists($path);
 
         $contents = (string) file_get_contents($path);

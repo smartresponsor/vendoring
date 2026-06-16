@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 final class VendorWebhooksConsumerServiceTest extends TestCase
 {
-    public function testOkReturnsTrueForReadyConsumerSurface(): void
+    public function testOkReturnsTrueForReadyConsumer(): void
     {
         self::assertTrue((new VendorWebhooksConsumerService())->ok());
     }

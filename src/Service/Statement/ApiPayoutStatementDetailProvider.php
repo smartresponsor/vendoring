@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Statement;
 
-use App\Cruding\Dto\Surface\CrudSurfaceRequest;
-use App\Cruding\ServiceInterface\Surface\CrudSurfaceProviderInterface;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Dto\CrudRequest;
+use App\Cruding\ServiceInterface\CrudProviderInterface;
+use App\Cruding\Value\CrudContract;
 use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
 use App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 
-readonly class ApiPayoutStatementDetailSurfaceProvider implements CrudSurfaceProviderInterface
+readonly class ApiPayoutStatementDetailProvider implements CrudProviderInterface
 {
     public function __construct(
         private VendorStatementServiceInterface $statementService,
@@ -21,7 +21,7 @@ readonly class ApiPayoutStatementDetailSurfaceProvider implements CrudSurfacePro
     ) {
     }
 
-    public function provide(CrudSurfaceRequest $request): CrudSurfaceContract
+    public function provide(CrudRequest $request): CrudContract
     {
         $httpRequest = $request->httpRequest;
         if (null === $httpRequest) {
@@ -51,7 +51,7 @@ readonly class ApiPayoutStatementDetailSurfaceProvider implements CrudSurfacePro
 
         $statement = $this->statementService->build($dto);
 
-        return CrudSurfaceContract::forSurface(
+        return CrudContract::fromRouteContext(
             'detail',
             $request->routeContext->toArray(),
             [
@@ -86,9 +86,9 @@ readonly class ApiPayoutStatementDetailSurfaceProvider implements CrudSurfacePro
         );
     }
 
-    private function errorContract(CrudSurfaceRequest $request, string $errorCode, string $hint, int $statusCode = 422): CrudSurfaceContract
+    private function errorContract(CrudRequest $request, string $errorCode, string $hint, int $statusCode = 422): CrudContract
     {
-        return CrudSurfaceContract::forSurface(
+        return CrudContract::fromRouteContext(
             'detail',
             $request->routeContext->toArray(),
             [

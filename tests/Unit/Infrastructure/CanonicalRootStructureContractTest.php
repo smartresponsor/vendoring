@@ -15,7 +15,7 @@ final class CanonicalRootStructureContractTest extends TestCase
         self::assertFileExists($root.'/src/Service/Http/Vendor/Transaction/VendorTransactionHttpService.php');
         self::assertDirectoryDoesNotExist($root.'/src/Controller');
         self::assertDirectoryDoesNotExist($root.'/src/ControllerTrait');
-        self::assertFileDoesNotExist($root.'/VendorTransactionSurfaceBuilder.php');
+        self::assertFileDoesNotExist($root.'/VendorTransactionBuilder.php');
     }
 
     public function testRootLevelNonDotPhpArtifactsAreNotPresent(): void

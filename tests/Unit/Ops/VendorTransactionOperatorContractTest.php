@@ -6,7 +6,7 @@ namespace App\Vendoring\Tests\Unit\Ops;
 
 use PHPUnit\Framework\TestCase;
 
-final class VendorTransactionOperatorSurfaceContractTest extends TestCase
+final class VendorTransactionOperatorContractTest extends TestCase
 {
     public function testTwigOperatorTemplateShowsVendorIdentityAsReadonlyAndUsesStatusLabels(): void
     {

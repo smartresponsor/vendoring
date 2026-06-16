@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Interfacing;
 
-use App\Vendoring\ServiceInterface\Interfacing\VendorInterfacingSurfaceRendererServiceInterface;
+use App\Vendoring\ServiceInterface\Interfacing\VendorInterfacingRendererServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
@@ -15,7 +15,7 @@ use Twig\Environment;
  * If no candidate renders, Vendoring falls back to the Interfacing index mount and only then to
  * a standalone inline response.
  */
-final readonly class VendorInterfacingSurfaceRendererService implements VendorInterfacingSurfaceRendererServiceInterface
+final readonly class VendorInterfacingRendererService implements VendorInterfacingRendererServiceInterface
 {
     public function __construct(private Environment $twig)
     {

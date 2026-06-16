@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Ops;
 
+use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Vendoring\Projection\Vendor\VendorExternalIntegrationRuntimeProjection;
 use App\Vendoring\Projection\Vendor\VendorFinanceRuntimeProjection;
 use App\Vendoring\Projection\Vendor\VendorOwnershipProjection;
-use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Vendoring\Projection\Vendor\VendorStatementDeliveryRuntimeProjection;
 use App\Vendoring\Service\Ops\VendorRuntimeStatusProjectionBuilderService;
-use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface;
 use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeProjectionBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface;
 use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -32,7 +32,7 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
         $this->externalIntegrationRuntimeProjectionBuilder = $this->createMock(VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface::class);
     }
 
-    public function testBuildIncludesOwnershipSurfaceForNumericVendorId(): void
+    public function testBuildIncludesOwnershipForNumericVendorId(): void
     {
         $this->ownershipProjectionBuilder
             ->expects(self::once())
@@ -134,7 +134,7 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
             self::fail('Expected array payload.');
         }
 
-        /** @var array<string, mixed> $value */
+        /* @var array<string, mixed> $value */
         return $value;
     }
 }

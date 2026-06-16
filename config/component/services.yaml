@@ -163,7 +163,7 @@ services:
   App\Vendoring\ServiceInterface\Api\VendorTenantQueryRequestResolverServiceInterface: '@App\Vendoring\Service\Api\VendorTenantQueryRequestResolverService'
   App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface: '@App\Vendoring\Service\Api\VendorStatementWindowQueryRequestResolverService'
   App\Vendoring\ServiceInterface\Profile\VendorPublicProfileUrlGeneratorServiceInterface: '@App\Vendoring\Service\Profile\VendorPublicProfileUrlGeneratorService'
-  App\Vendoring\ServiceInterface\Interfacing\VendorInterfacingSurfaceRendererServiceInterface: '@App\Vendoring\Service\Interfacing\VendorInterfacingSurfaceRendererService'
+  App\Vendoring\ServiceInterface\Interfacing\VendorInterfacingRendererServiceInterface: '@App\Vendoring\Service\Interfacing\VendorInterfacingRendererService'
   App\Vendoring\ServiceInterface\Interfacing\VendorInterfacingTemplateCandidateProviderServiceInterface: '@App\Vendoring\Service\Interfacing\VendorInterfacingTemplateCandidateProviderService'
   App\Vendoring\ServiceInterface\Ops\VendorReleaseManifestBuilderServiceInterface: '@App\Vendoring\Service\Ops\VendorReleaseManifestBuilderService'
   App\Vendoring\ServiceInterface\Ops\VendorReleaseBaselineReaderServiceInterface: '@App\Vendoring\Service\Ops\VendorReleaseBaselineReaderService'

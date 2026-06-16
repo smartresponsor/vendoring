@@ -8,9 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 final class KernelConfigurationContractTest extends TestCase
 {
-    public function testKernelLoadsOnlyNativePackageSurface(): void
+    public function testKernelLoadsOnlyNativePackage(): void
     {
-        $kernelPath = dirname(__DIR__, 3) . '/src/Kernel.php';
+        $kernelPath = dirname(__DIR__, 3).'/src/Kernel.php';
         self::assertFileExists($kernelPath);
 
         $contents = (string) file_get_contents($kernelPath);
@@ -23,7 +23,7 @@ final class KernelConfigurationContractTest extends TestCase
 
     public function testVendoringExtensionLoadsCanonicalComponentServices(): void
     {
-        $extensionPath = dirname(__DIR__, 3) . '/src/DependencyInjection/VendoringExtension.php';
+        $extensionPath = dirname(__DIR__, 3).'/src/DependencyInjection/VendoringExtension.php';
         self::assertFileExists($extensionPath);
 
         $contents = (string) file_get_contents($extensionPath);

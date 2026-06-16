@@ -6,7 +6,7 @@ namespace App\Vendoring\Service\Http\Vendor;
 
 use App\Cruding\Dto\Crud\Entrypoint\CrudEntrypointContext;
 use App\Cruding\Service\Crud\Entrypoint\AbstractCrudEntrypointService;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Value\CrudContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -19,7 +19,7 @@ final class VendorEditService extends AbstractCrudEntrypointService
     ) {
     }
 
-    public function get(CrudEntrypointContext $context): CrudSurfaceContract
+    public function get(CrudEntrypointContext $context): CrudContract
     {
         return $this->responseService->read(
             $context,
