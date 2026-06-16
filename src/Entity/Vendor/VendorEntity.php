@@ -90,7 +90,7 @@ class VendorEntity extends VendorAbstractEntity
     public function rename(string $brandName): self
     {
         $this->brandName = trim($brandName);
-        $this->touchObject();
+        $this->touchModified();
 
         return $this;
     }
@@ -103,7 +103,7 @@ class VendorEntity extends VendorAbstractEntity
     public function changeOwnerUserId(?int $ownerUserId): self
     {
         $this->ownerUserId = $ownerUserId;
-        $this->touchObject();
+        $this->touchModified();
 
         return $this;
     }

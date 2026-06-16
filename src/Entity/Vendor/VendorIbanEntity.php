@@ -30,7 +30,7 @@ class VendorIbanEntity extends VendorAbstractEntity
     {
         $this->iban = $iban;
         $this->swift = $swift;
-        $this->touchObject();
+        $this->touchModified();
 
         return $this;
     }

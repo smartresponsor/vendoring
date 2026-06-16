@@ -34,7 +34,7 @@ class VendorBillingEntity extends VendorAbstractEntity
         $this->swift = $swift;
         $this->payoutMethod = $payoutMethod;
         $this->billingEmail = $billingEmail;
-        $this->touchObject();
+        $this->touchModified();
 
         return $this;
     }

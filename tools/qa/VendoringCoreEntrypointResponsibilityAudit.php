@@ -14,13 +14,13 @@ $requiredRoutes = [
     'vendor.create',
     'vendor.edit_id',
     'vendor.update_id',
+    'vendor.delete_id',
 ];
 
 $forbiddenRoutes = [
     'vendor.show_slug',
     'vendor.edit_slug',
     'vendor.update_slug',
-    'vendor.delete_id',
     'vendor.delete_slug',
     'vendor.bulk',
     'vendor.import',
@@ -52,6 +52,7 @@ foreach ([
     'App\\Vendoring\\Service\\Http\\Vendor\\VendorCreateService',
     'App\\Vendoring\\Service\\Http\\Vendor\\VendorEditService',
     'App\\Vendoring\\Service\\Http\\Vendor\\VendorUpdateService',
+    'App\\Vendoring\\Service\\Http\\Vendor\\VendorDeleteService',
     'App\\Vendoring\\Form\\Vendor\\VendorCreateType',
     'App\\Vendoring\\Form\\Vendor\\VendorUpdateType',
 ] as $fqcn) {

@@ -12,6 +12,7 @@ use App\Vendoring\Event\Vendor\VendorCreatedEvent;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use App\Vendoring\ServiceInterface\Assignment\VendorUserAssignmentServiceInterface;
 use App\Vendoring\ServiceInterface\Crud\VendorCrudServiceInterface;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -32,15 +33,27 @@ final readonly class VendorCrudService implements VendorCrudServiceInterface
      */
     public function index(): array
     {
-        return array_values(array_filter(
-            $this->vendorRepository->findBy([]),
-            static fn (object $entity): bool => $entity instanceof VendorEntity,
-        ));
+        try {
+            return array_values(array_filter(
+                $this->vendorRepository->findBy([]),
+                static fn (object $entity): bool => $entity instanceof VendorEntity,
+            ));
+        } catch (TableNotFoundException) {
+            return [];
+        } catch (\Throwable) {
+            return [];
+        }
     }
 
     public function find(int|string $id): ?VendorEntity
     {
-        $vendor = $this->vendorRepository->find($id);
+        try {
+            $vendor = $this->vendorRepository->find($id);
+        } catch (TableNotFoundException) {
+            return null;
+        } catch (\Throwable) {
+            return null;
+        }
 
         return $vendor instanceof VendorEntity ? $vendor : null;
     }

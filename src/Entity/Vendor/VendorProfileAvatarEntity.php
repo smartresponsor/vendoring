@@ -22,7 +22,7 @@ class VendorProfileAvatarEntity extends VendorAbstractEntity
     public function update(string $filePath): self
     {
         $this->filePath = $filePath;
-        $this->touchObject();
+        $this->touchModified();
 
         return $this;
     }

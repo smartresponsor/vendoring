@@ -31,7 +31,7 @@ class VendorMediaEntity extends VendorAbstractEntity
         $this->logoPath = $logoPath;
         $this->bannerPath = $bannerPath;
         $this->gallery = $gallery;
-        $this->touchObject();
+        $this->touchModified();
 
         return $this;
     }

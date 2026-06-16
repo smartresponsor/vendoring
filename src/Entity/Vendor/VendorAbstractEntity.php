@@ -41,7 +41,7 @@ abstract class VendorAbstractEntity
     public function setStatus(string $status): self
     {
         $this->setObjectStatus($status);
-        $this->touchObject();
+        $this->touchModified();
 
         return $this;
     }

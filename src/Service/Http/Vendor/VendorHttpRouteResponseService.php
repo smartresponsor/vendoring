@@ -145,7 +145,7 @@ final readonly class VendorHttpRouteResponseService
             'mutationAllowed' => $mutationAllowed,
             'controllerAllowed' => false,
             'entrypointPattern' => 'Vendor*Service',
-            'businessService' => 'VendorCrudService',
+            'businessService' => $this->businessServiceName($resourcePath, $operation),
             'result' => 'CrudSurfaceContract',
         ];
     }
@@ -183,5 +183,18 @@ final readonly class VendorHttpRouteResponseService
     private function label(string $resourcePath): string
     {
         return ucwords(str_replace('/', ' ', $resourcePath));
+    }
+
+    private function businessServiceName(string $resourcePath, string $operation): string
+    {
+        $normalizedPath = trim($resourcePath, '/');
+        $segments = array_filter(explode('/', $normalizedPath), static fn (string $segment): bool => '' !== $segment);
+        $studlyPath = implode('', array_map(static function (string $segment): string {
+            $segment = str_replace(['-', '_'], ' ', $segment);
+
+            return str_replace(' ', '', ucwords($segment));
+        }, $segments));
+
+        return $studlyPath.ucfirst($operation).'Service';
     }
 }

@@ -55,6 +55,23 @@ services:
       - '../../src/Service/Http/Vendor/VendorBusinessOperationHttpTrait.php'
       - '../../src/Service/Http/Vendor/VendorHttpRequestTrait.php'
       - '../../src/Service/Http/Vendor/VendorStatementRequestHttpResolutionTrait.php'
+      - '../../src/Service/Http/Vendor/Ownership/VendorOwnershipMutationService.php'
+  App\Vendoring\Service\Http\Vendor\VendorIndexService:
+    public: true
+  App\Vendoring\Service\Http\Vendor\VendorShowService:
+    public: true
+  App\Vendoring\Service\Http\Vendor\VendorNewService:
+    public: true
+  App\Vendoring\Service\Http\Vendor\VendorCreateService:
+    public: true
+  App\Vendoring\Service\Http\Vendor\VendorEditService:
+    public: true
+  App\Vendoring\Service\Http\Vendor\VendorUpdateService:
+    public: true
+  App\Vendoring\Service\Http\Vendor\VendorDeleteService:
+    public: true
+  App\Vendoring\ServiceInterface\Crud\VendorCrudServiceInterface:
+    alias: App\Vendoring\Service\Crud\VendorCrudService
   App\Vendoring\Form\:
     resource: '../../src/Form/'
 
@@ -111,11 +128,18 @@ services:
 
   # Safe default; optional Attaching integration overrides this alias with the chained resolver.
   App\Vendoring\ServiceInterface\Profile\VendorProfileAttachmentResolverServiceInterface: '@App\Vendoring\Service\Profile\NullVendorProfileAttachmentResolverService'
+  App\Vendoring\ServiceInterface\Profile\VendorPublicProfileSummaryProviderServiceInterface: '@App\Vendoring\Service\Profile\VendorPublicProfileSummaryProviderService'
+  App\Vendoring\ServiceInterface\Profile\VendorProfileServiceInterface: '@App\Vendoring\Service\Profile\VendorProfileService'
+  App\Vendoring\ServiceInterface\Profile\VendorProfileProjectionBuilderServiceInterface: '@App\Vendoring\Service\Profile\VendorProfileProjectionBuilderService'
+  App\Vendoring\ServiceInterface\Assignment\VendorUserAssignmentServiceInterface: '@App\Vendoring\Service\Assignment\VendorUserAssignmentService'
   App\Vendoring\ServiceInterface\Policy\VendorOutboundOperationPolicyServiceInterface: '@App\Vendoring\Service\Policy\VendorOutboundOperationPolicyService'
   App\Vendoring\ServiceInterface\Reliability\VendorOutboundCircuitBreakerServiceInterface: '@App\Vendoring\Service\Reliability\VendorOutboundCircuitBreakerService'
   App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixServiceInterface: '@App\Vendoring\Service\Security\VendorAuthorizationMatrixService'
   App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface: '@App\Vendoring\Service\Security\VendorApiKeyService'
+  App\Vendoring\ServiceInterface\Payout\VendorPayoutAccountServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutAccountService'
+  App\Vendoring\ServiceInterface\Ledger\VendorSummaryServiceInterface: '@App\Vendoring\Service\Ledger\VendorSummaryService'
   App\Vendoring\ServiceInterface\Observability\VendorCorrelationContextServiceInterface: '@App\Vendoring\Service\Observability\VendorCorrelationContextService'
+  App\Vendoring\ServiceInterface\Transaction\VendorTransactionLifecycleServiceInterface: '@App\Vendoring\Service\Transaction\VendorTransactionLifecycleService'
   App\Vendoring\ServiceInterface\Observability\VendorObservabilityRecordExporterServiceInterface: '@App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService'
   App\Vendoring\ServiceInterface\Observability\VendorMetricCollectorServiceInterface: '@App\Vendoring\Service\Observability\VendorMetricCollectorService'
   App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface: '@App\Vendoring\Service\Observability\VendorRuntimeLoggerService'
@@ -225,6 +249,3 @@ services:
   App\Vendoring\ServiceInterface\Runtime\VendorAppEnvResolverServiceInterface: '@App\Vendoring\Service\Runtime\VendorAppEnvResolverService'
   App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface: '@App\Vendoring\Service\Command\VendorCommandResultEmitterService'
   App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface: '@App\Vendoring\Service\Command\VendorCommandJsonArtifactWriterService'
-
-  App\Vendoring\ServiceInterface\Crud\VendorCrudServiceInterface:
-    alias: App\Vendoring\Service\Crud\VendorCrudService

@@ -37,7 +37,7 @@ class VendorProfileEntity extends VendorAbstractEntity
         $this->displayName = $displayName;
         $this->about = $about;
         $this->website = $website;
-        $this->touchObject();
+        $this->touchModified();
 
         return $this;
     }
@@ -45,7 +45,7 @@ class VendorProfileEntity extends VendorAbstractEntity
     public function replaceSocials(?array $socials): self
     {
         $this->socials = $socials;
-        $this->touchObject();
+        $this->touchModified();
 
         return $this;
     }
@@ -54,7 +54,7 @@ class VendorProfileEntity extends VendorAbstractEntity
     {
         $this->seoTitle = $seoTitle;
         $this->seoDescription = $seoDescription;
-        $this->touchObject();
+        $this->touchModified();
 
         return $this;
     }
