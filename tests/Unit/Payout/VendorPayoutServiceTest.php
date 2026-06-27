@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Payout;
 
 use App\Vendoring\DTO\Payout\VendorCreatePayoutDTO;
-use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
+use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
 use App\Vendoring\Service\Ledger\VendorLedgerService;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
@@ -26,7 +26,7 @@ final class VendorPayoutServiceTest extends TestCase
         $ledgerService = new VendorLedgerService($ledgerRepository);
         $metrics = new VendorMetricEmitterService();
         $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger());
-        $ledgerRepository->insert(new VendorLedgerEntryEntity('1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 5.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntity('1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 5.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
 
         $result = $service->create(new VendorCreatePayoutDTO('vendor-1', 'USD', 1000, 0.05));
 
@@ -42,7 +42,7 @@ final class VendorPayoutServiceTest extends TestCase
         $ledgerService = new VendorLedgerService($ledgerRepository);
         $metrics = new VendorMetricEmitterService();
         $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger());
-        $ledgerRepository->insert(new VendorLedgerEntryEntity('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 15.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntity('seed-1', 'tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 15.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
 
         $payoutId = $service->create(new VendorCreatePayoutDTO('vendor-1', 'USD', 1000, 0.10));
 

@@ -1,4 +1,4 @@
-# Vendoring Layer 3 Structure and Naming Canon
+﻿# Vendoring Layer 3 Structure and Naming Canon
 
 This file is machine-readable operational canon for agents and code generators. Do not paraphrase it when editing code.
 
@@ -10,10 +10,10 @@ Runtime dispatch is owned by Cruding:
 
 ```text
 URI
-→ Cruding grammar
-→ providerKey / routeKey
-→ App\Vendoring\Service\Http\Vendor\...\*Service
-→ optional App\Vendoring\Form\Vendor\...\*Type
+в†’ Cruding grammar
+в†’ providerKey / routeKey
+в†’ App\Vendoring\Service\Http\Vendor\...\*Service
+в†’ optional App\Vendoring\Form\Vendor\...\*Type
 ```
 
 Forbidden active runtime layers:
@@ -91,7 +91,7 @@ Canonical replacements must be literal, for example:
 - `src/EventInterface/Vendor/VendorPayloadEventInterface.php`
 - `src/Policy/Vendor/VendorCategorySyndicationMappingPolicy.php`
 - `src/PolicyInterface/Vendor/VendorCategorySyndicationMappingPolicyInterface.php`
-- `src/Repository/Vendor/VendorLedgerEntryRepository.php`
+- `src/Repository/Vendor/VendorLedgerRepository.php`
 - `src/RepositoryInterface/Vendor/VendorPayoutRepositoryInterface.php`
 
 ## Security layer rule
@@ -119,7 +119,7 @@ For runtime HTTP entrypoints, derive the target from the route-map key:
 
 ```text
 vendor.attachment.document.index
-→ App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentIndexService
+в†’ App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentIndexService
 ```
 
 ## EntityInterface literal addendum

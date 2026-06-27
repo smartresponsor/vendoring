@@ -50,6 +50,20 @@ class VendorProfileEntity extends VendorAbstractEntity
         return $this;
     }
 
+    public function updateProfile(
+        ?string $displayName,
+        ?string $about,
+        ?string $website,
+        ?array $socials,
+        ?string $seoTitle,
+        ?string $seoDescription,
+    ): self {
+        $this->updateContent($displayName, $about, $website);
+        $this->replaceSocials($socials);
+
+        return $this->updateSeo($seoTitle, $seoDescription);
+    }
+
     public function updateSeo(?string $seoTitle, ?string $seoDescription): self
     {
         $this->seoTitle = $seoTitle;

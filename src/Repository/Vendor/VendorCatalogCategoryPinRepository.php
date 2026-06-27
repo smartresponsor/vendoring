@@ -11,8 +11,16 @@ use Doctrine\Persistence\ManagerRegistry;
 
 final class VendorCatalogCategoryPinRepository extends ServiceEntityRepository implements VendorCatalogCategoryPinRepositoryInterface
 {
+    private mixed $entityManager = null;
+
     public function __construct(ManagerRegistry $registry)
     {
+        if ($registry instanceof \Doctrine\ORM\EntityManagerInterface) {
+            $this->entityManager = $registry;
+
+            return;
+        }
+
         parent::__construct($registry, VendorCatalogCategoryPinEntity::class);
     }
 

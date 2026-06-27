@@ -1,53 +1,46 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 namespace App\Vendoring\Service\Ledger;
 
-use App\Vendoring\DTO\Ledger\VendorLedgerEntryDTO;
-use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
+use App\Vendoring\DTO\Ledger\VendorLedgerDTO;
+use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface;
-use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
-use InvalidArgumentException;
-use Symfony\Component\Uid\Uuid;
 
 final readonly class VendorLedgerService implements VendorLedgerServiceInterface
 {
-    public function __construct(private VendorLedgerEntryRepositoryInterface $repo) {}
+    public function __construct(private VendorLedgerRepositoryInterface $repo)
+    {
+    }
 
     /**
      * @throws Exception
      */
-    public function record(VendorLedgerEntryDTO $dto): VendorLedgerEntryEntity
+    public function record(VendorLedgerDTO $dto): VendorLedgerEntity
     {
-        $createdAt = $dto->occurredAt;
-        if (null === $createdAt) {
-            $occurredAt = new DateTimeImmutable();
-            $createdAt = $occurredAt->format('Y-m-d H:i:s');
-        }
         $amount = $dto->amountCents / 100;
 
         [$debitAccount, $creditAccount] = match ($dto->direction) {
             'debit' => [$dto->type, 'VENDOR_PAYABLE'],
             'credit' => ['VENDOR_PAYABLE', $dto->type],
-            default => throw new InvalidArgumentException(sprintf('Unsupported ledger direction "%s".', $dto->direction)),
+            default => throw new \InvalidArgumentException(sprintf('Unsupported ledger direction "%s".', $dto->direction)),
         };
 
-        $entry = new VendorLedgerEntryEntity(
-            Uuid::v4()->toRfc4122(),
-            $dto->tenantId,
-            $debitAccount,
-            $creditAccount,
-            $amount,
-            $dto->currency,
-            $dto->type,
-            $dto->entityId,
-            $dto->vendorId,
-            $createdAt,
+        $entry = new VendorLedgerEntity(
+            tenantId: $dto->tenantId,
+            vendorId: $dto->vendorId,
+            referenceType: $dto->type,
+            referenceId: $dto->entityId,
+            debitAccount: $debitAccount,
+            creditAccount: $creditAccount,
+            amount: $amount,
+            currency: $dto->currency,
+            occurredAt: $dto->occurredAt,
         );
 
         $this->repo->insert($entry);

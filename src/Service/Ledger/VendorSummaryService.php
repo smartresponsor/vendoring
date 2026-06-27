@@ -1,20 +1,23 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 namespace App\Vendoring\Service\Ledger;
 
-use Doctrine\DBAL\Exception;
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorSummaryServiceInterface;
+use Doctrine\DBAL\Exception;
 
 final class VendorSummaryService implements VendorSummaryServiceInterface
 {
     private const array ACCOUNTS = ['REVENUE', 'REFUNDS_PAYABLE', 'VENDOR_PAYABLE', 'CASH', 'payout_fee'];
 
-    public function __construct(private readonly VendorLedgerEntryRepositoryInterface $ledgerEntries) {}
+    public function __construct(private readonly VendorLedgerRepositoryInterface $ledgerEntries)
+    {
+    }
 
     /** @throws Exception */
     public function build(string $tenantId, string $vendorId, string $from, string $to, string $currency): array

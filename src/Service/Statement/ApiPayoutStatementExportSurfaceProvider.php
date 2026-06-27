@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Statement;
 
-use App\Cruding\Dto\Surface\CrudSurfaceRequest;
-use App\Cruding\ServiceInterface\Surface\CrudSurfaceProviderInterface;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Dto\Resource\CrudResourceRequest;
+use App\Cruding\ServiceInterface\Crud\Resource\CrudResourceProviderInterface;
+use App\Cruding\Value\Resource\CrudResourceContract;
 use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
 use App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPdfServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 
-final readonly class ApiPayoutStatementExportSurfaceProvider implements CrudSurfaceProviderInterface
+final readonly class ApiPayoutStatementExportSurfaceProvider implements CrudResourceProviderInterface
 {
     public function __construct(
         private VendorStatementServiceInterface $statementService,
@@ -23,7 +23,7 @@ final readonly class ApiPayoutStatementExportSurfaceProvider implements CrudSurf
     ) {
     }
 
-    public function provide(CrudSurfaceRequest $request): CrudSurfaceContract
+    public function provide(CrudResourceRequest $request): CrudResourceContract
     {
         $httpRequest = $request->httpRequest;
         if (null === $httpRequest) {
@@ -83,7 +83,7 @@ final readonly class ApiPayoutStatementExportSurfaceProvider implements CrudSurf
             'path' => $path,
         ];
 
-        return CrudSurfaceContract::forSurface(
+        return CrudResourceContract::forResource(
             'export',
             $request->routeContext->toArray(),
             [
@@ -112,9 +112,9 @@ final readonly class ApiPayoutStatementExportSurfaceProvider implements CrudSurf
         );
     }
 
-    private function errorContract(CrudSurfaceRequest $request, string $errorCode, string $hint, int $statusCode = 422): CrudSurfaceContract
+    private function errorContract(CrudResourceRequest $request, string $errorCode, string $hint, int $statusCode = 422): CrudResourceContract
     {
-        return CrudSurfaceContract::forSurface(
+        return CrudResourceContract::forResource(
             'export',
             $request->routeContext->toArray(),
             [

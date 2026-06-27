@@ -6,17 +6,19 @@ namespace App\Vendoring\Service\Statement;
 
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Doctrine\DBAL\Exception;
-use RuntimeException;
 
 final readonly class VendorStatementService implements VendorStatementServiceInterface
 {
-    public function __construct(private VendorLedgerEntryRepositoryInterface $ledger) {}
+    public function __construct(private VendorLedgerRepositoryInterface $ledger)
+    {
+    }
 
     /**
      * @return array{tenantId:string, vendorId:string, from:string, to:string, currency:string, opening:float, earnings:float, refunds:float, fees:float, closing:float, items:list<array{type:string, amount:float, currency:string}>}
+     *
      * @throws Exception
      */
     public function build(VendorStatementRequestDTO $dto): array
@@ -65,11 +67,11 @@ final readonly class VendorStatementService implements VendorStatementServiceInt
     public function exportCsv(VendorStatementRequestDTO $dto): string
     {
         $data = $this->build($dto);
-        $path = sys_get_temp_dir() . '/statement_' . $dto->vendorId . '_' . date('YmdHis') . '.csv';
+        $path = sys_get_temp_dir().'/statement_'.$dto->vendorId.'_'.date('YmdHis').'.csv';
         $stream = fopen($path, 'w');
 
         if (false === $stream) {
-            throw new RuntimeException(sprintf('Failed to open csv stream: %s', $path));
+            throw new \RuntimeException(sprintf('Failed to open csv stream: %s', $path));
         }
 
         fputcsv($stream, ['Section', 'Amount', 'Currency']);

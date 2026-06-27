@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Http\Vendor;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudEntrypointContext;
-use App\Cruding\Service\Crud\Entrypoint\AbstractCrudEntrypointService;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
+use App\Cruding\Value\Resource\CrudResourceContract;
 use App\Vendoring\DTO\VendorCreateDTO;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Event\Vendor\VendorCreatedEvent;
@@ -15,7 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorCreateService extends AbstractCrudEntrypointService
+final class VendorCreateService extends AbstractVendorCrudRouteService
 {
     public function __construct(
         private VendorHttpRouteResponseService $responseService,
@@ -26,7 +25,7 @@ final class VendorCreateService extends AbstractCrudEntrypointService
     ) {
     }
 
-    public function get(CrudEntrypointContext $context): CrudSurfaceContract
+    public function get(CrudServiceContext $context): CrudResourceContract
     {
         return $this->responseService->read(
             $context,
@@ -40,7 +39,7 @@ final class VendorCreateService extends AbstractCrudEntrypointService
         );
     }
 
-    public function post(CrudEntrypointContext $context): CrudSurfaceContract
+    public function post(CrudServiceContext $context): CrudResourceContract
     {
         $input = $context->request->request->all();
         $vendor = $this->createVendor(new VendorCreateDTO(
@@ -103,17 +102,17 @@ final class VendorCreateService extends AbstractCrudEntrypointService
         return $normalized;
     }
 
-    private function resourcePath(): string
+    protected function resourcePath(): string
     {
         return 'vendor';
     }
 
-    private function operation(): string
+    protected function operation(): string
     {
         return 'create';
     }
 
-    private function title(): string
+    protected function title(): string
     {
         return 'Vendor '.$this->resourcePath().' '.$this->operation();
     }

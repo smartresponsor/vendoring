@@ -11,7 +11,9 @@ use Doctrine\ORM\QueryBuilder;
 
 final class DoctrineBackedVendorTransactionRepository implements VendorTransactionRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager) {}
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
+    }
 
     public function findByVendorId(string $vendorId): array
     {
@@ -60,6 +62,45 @@ final class DoctrineBackedVendorTransactionRepository implements VendorTransacti
         }
 
         return (int) $queryBuilder->getQuery()->getSingleScalarResult() > 0;
+    }
+
+    public function find(mixed $id): ?object
+    {
+        if (!is_scalar($id)) {
+            return null;
+        }
+
+        return $this->entityManager->find(VendorTransactionEntity::class, $id);
+    }
+
+    public function findOneBy(array $criteria): ?object
+    {
+        return $this->entityManager
+            ->getRepository(VendorTransactionEntity::class)
+            ->findOneBy($criteria);
+    }
+
+    public function findBy(array $criteria): array
+    {
+        /** @var list<object> $transactions */
+        $transactions = $this->entityManager
+            ->getRepository(VendorTransactionEntity::class)
+            ->findBy($criteria);
+
+        return $transactions;
+    }
+
+    public function save(object $entity, bool $flush = false): void
+    {
+        if (!$entity instanceof VendorTransactionEntity) {
+            return;
+        }
+
+        $this->entityManager->persist($entity);
+
+        if ($flush) {
+            $this->entityManager->flush();
+        }
     }
 
     private function baseQueryBuilder(): QueryBuilder

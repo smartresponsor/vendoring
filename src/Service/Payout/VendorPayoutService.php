@@ -1,21 +1,20 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 namespace App\Vendoring\Service\Payout;
 
-use App\Vendoring\DTO\Ledger\VendorLedgerEntryDTO;
+use App\Vendoring\DTO\Ledger\VendorLedgerDTO;
 use App\Vendoring\DTO\Payout\VendorCreatePayoutDTO;
 use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorMetricCollectorServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface;
-use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
 use Random\RandomException;
 use Symfony\Component\Uid\Uuid;
@@ -23,12 +22,13 @@ use Symfony\Component\Uid\Uuid;
 final readonly class VendorPayoutService implements VendorPayoutServiceInterface
 {
     public function __construct(
-        private VendorPayoutRepositoryInterface      $repo,
-        private VendorLedgerEntryRepositoryInterface $ledgerRepo,
-        private VendorLedgerServiceInterface   $ledger,
-        private VendorMetricCollectorServiceInterface       $metrics,
-        private VendorRuntimeLoggerServiceInterface         $runtimeLogger,
-    ) {}
+        private VendorPayoutRepositoryInterface $repo,
+        private VendorLedgerRepositoryInterface $ledgerRepo,
+        private VendorLedgerServiceInterface $ledger,
+        private VendorMetricCollectorServiceInterface $metrics,
+        private VendorRuntimeLoggerServiceInterface $runtimeLogger,
+    ) {
+    }
 
     /**
      * @throws Exception
@@ -37,7 +37,7 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
      */
     public function create(VendorCreatePayoutDTO $dto): ?string
     {
-        // 1) Получаем баланс в валюте
+        // 1) РџРѕР»СѓС‡Р°РµРј Р±Р°Р»Р°РЅСЃ РІ РІР°Р»СЋС‚Рµ
         $balances = $this->ledgerRepo->balancesForVendor($dto->vendorId);
         $matchedBalance = null;
         foreach ($balances as $balance) {
@@ -56,16 +56,16 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
                 'threshold_cents' => (string) $dto->thresholdCents,
             ]);
 
-            return null; // недостаточно средств для выплаты
+            return null; // РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ СЃСЂРµРґСЃС‚РІ РґР»СЏ РІС‹РїР»Р°С‚С‹
         }
 
-        // 2) Рассчитываем комиссии/нетто
+        // 2) Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РєРѕРјРёСЃСЃРёРё/РЅРµС‚С‚Рѕ
         $fee = (int) round($balanceCents * $dto->retentionFeePercent);
         $net = max(0, $balanceCents - $fee);
 
-        // 3) Создаём payout
+        // 3) РЎРѕР·РґР°С‘Рј payout
         $payoutId = Uuid::v4()->toRfc4122();
-        $createdAt = new DateTimeImmutable();
+        $createdAt = new \DateTimeImmutable();
 
         $payout = new VendorPayoutEntity(
             id: $payoutId,
@@ -84,8 +84,8 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
         );
         $this->repo->insert($payout);
 
-        // 4) Записываем дебет в Ledger (резерв под выплату)
-        $this->ledger->record(new VendorLedgerEntryDTO(
+        // 4) Р—Р°РїРёСЃС‹РІР°РµРј РґРµР±РµС‚ РІ Ledger (СЂРµР·РµСЂРІ РїРѕРґ РІС‹РїР»Р°С‚Сѓ)
+        $this->ledger->record(new VendorLedgerDTO(
             type: 'payout_reserve',
             entityId: $payoutId,
             sagaId: Uuid::v4()->toRfc4122(),
@@ -109,8 +109,6 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
     }
 
     /**
-     * @param string $payoutId
-     * @return bool
      * @throws Exception
      * @throws RandomException
      */
@@ -126,9 +124,9 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
             return false;
         }
 
-        // Тут должен быть вызов внешнего платёжного адаптера для перевода средств вендору (bank/stripe connect)
-        // Для демо считаем успешным и записываем ledger: payout_processed (debit fee), payout_fee
-        $this->ledger->record(new VendorLedgerEntryDTO(
+        // РўСѓС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РѕРІ РІРЅРµС€РЅРµРіРѕ РїР»Р°С‚С‘Р¶РЅРѕРіРѕ Р°РґР°РїС‚РµСЂР° РґР»СЏ РїРµСЂРµРІРѕРґР° СЃСЂРµРґСЃС‚РІ РІРµРЅРґРѕСЂСѓ (bank/stripe connect)
+        // Р”Р»СЏ РґРµРјРѕ СЃС‡РёС‚Р°РµРј СѓСЃРїРµС€РЅС‹Рј Рё Р·Р°РїРёСЃС‹РІР°РµРј ledger: payout_processed (debit fee), payout_fee
+        $this->ledger->record(new VendorLedgerDTO(
             type: 'payout_processed',
             entityId: $payoutId,
             sagaId: Uuid::v4()->toRfc4122(),
@@ -139,7 +137,7 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
             meta: ['payoutId' => $payoutId],
         ));
         if ($payout->feeCents > 0) {
-            $this->ledger->record(new VendorLedgerEntryDTO(
+            $this->ledger->record(new VendorLedgerDTO(
                 type: 'payout_fee',
                 entityId: $payoutId,
                 sagaId: Uuid::v4()->toRfc4122(),
@@ -151,7 +149,7 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
             ));
         }
 
-        $processedAt = new DateTimeImmutable();
+        $processedAt = new \DateTimeImmutable();
         $this->repo->markProcessed($payoutId, $processedAt->format('Y-m-d H:i:s'));
         $this->metrics->increment('payout_processed_total', ['currency' => $payout->currency]);
         $this->runtimeLogger->info('vendor_payout_processed', [

@@ -1,4 +1,4 @@
-# Vendoring Wave 14 — Entity-to-template coverage audit
+﻿# Vendoring Wave 14 вЂ” Entity-to-template coverage audit
 
 ## Scope
 
@@ -81,7 +81,7 @@ These are the high-risk objects for your stated criterion: business entities can
 | `VendorGroupEntity` | `VendorGroup` | `business_entity_without_cruding_surface` |
 | `VendorIbanEntity` | `VendorIban` | `business_entity_without_cruding_surface` |
 | `VendorLedgerBindingEntity` | `VendorLedgerBinding` | `business_entity_without_cruding_surface` |
-| `VendorLedgerEntryEntity` | `VendorLedgerEntry` | `business_entity_without_cruding_surface` |
+| `VendorLedgerEntity` | `VendorLedger` | `business_entity_without_cruding_surface` |
 | `VendorLogEntity` | `VendorLog` | `business_entity_without_cruding_surface` |
 | `VendorMediaEntity` | `VendorMedia` | `business_entity_without_cruding_surface` |
 | `VendorPassportEntity` | `VendorPassport` | `business_entity_without_cruding_surface` |

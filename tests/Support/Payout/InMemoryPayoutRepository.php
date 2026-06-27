@@ -27,6 +27,43 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
         $this->items[$item->payoutId][] = $item;
     }
 
+    public function find(mixed $id): ?object
+    {
+        if (!is_scalar($id)) {
+            return null;
+        }
+
+        return $this->byId((string) $id);
+    }
+
+    public function findOneBy(array $criteria): ?object
+    {
+        return $this->findBy($criteria)[0] ?? null;
+    }
+
+    public function findBy(array $criteria): array
+    {
+        return array_values(array_filter(
+            $this->payouts,
+            static function (VendorPayoutEntity $payout) use ($criteria): bool {
+                foreach ($criteria as $field => $value) {
+                    if (!property_exists($payout, $field) || $payout->{$field} !== $value) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
+        ));
+    }
+
+    public function save(object $entity, bool $flush = false): void
+    {
+        if ($entity instanceof VendorPayoutEntity) {
+            $this->insert($entity);
+        }
+    }
+
     public function byId(string $id): ?VendorPayoutEntity
     {
         return $this->payouts[$id] ?? null;

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Http\Vendor;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudEntrypointContext;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
+use App\Cruding\Value\Resource\CrudResourceContract;
 
 final readonly class VendorHttpRouteResponseService
 {
     public function read(
-        CrudEntrypointContext $context,
+        CrudServiceContext $context,
         string $resourcePath,
         string $operation,
         string $title,
         mixed $data = null,
-    ): CrudSurfaceContract {
+    ): CrudResourceContract {
         return $this->contract(
             $context,
             $resourcePath,
@@ -29,12 +29,12 @@ final readonly class VendorHttpRouteResponseService
     }
 
     public function mutation(
-        CrudEntrypointContext $context,
+        CrudServiceContext $context,
         string $resourcePath,
         string $operation,
         string $title,
         mixed $data,
-    ): CrudSurfaceContract {
+    ): CrudResourceContract {
         return $this->contract(
             $context,
             $resourcePath,
@@ -48,11 +48,11 @@ final readonly class VendorHttpRouteResponseService
     }
 
     public function blocked(
-        CrudEntrypointContext $context,
+        CrudServiceContext $context,
         string $resourcePath,
         string $operation,
         string $title,
-    ): CrudSurfaceContract {
+    ): CrudResourceContract {
         return $this->contract(
             $context,
             $resourcePath,
@@ -66,7 +66,7 @@ final readonly class VendorHttpRouteResponseService
     }
 
     private function contract(
-        CrudEntrypointContext $context,
+        CrudServiceContext $context,
         string $resourcePath,
         string $operation,
         string $status,
@@ -74,7 +74,7 @@ final readonly class VendorHttpRouteResponseService
         bool $mutationAllowed,
         string $view,
         mixed $data,
-    ): CrudSurfaceContract {
+    ): CrudResourceContract {
         $routeContext = [
             'surface' => 'vendor',
             'resourcePath' => $resourcePath,
@@ -123,7 +123,7 @@ final readonly class VendorHttpRouteResponseService
             ],
         ];
 
-        return CrudSurfaceContract::forSurface(
+        return CrudResourceContract::forResource(
             view: $view,
             routeContext: $routeContext,
             locations: $locations,
@@ -146,7 +146,7 @@ final readonly class VendorHttpRouteResponseService
             'controllerAllowed' => false,
             'entrypointPattern' => 'Vendor*Service',
             'businessService' => $this->businessServiceName($resourcePath, $operation),
-            'result' => 'CrudSurfaceContract',
+            'result' => 'CrudResourceContract',
         ];
     }
 

@@ -15,4 +15,6 @@ interface VendorApiKeyRepositoryInterface
     public function findBy(array $criteria): array;
 
     public function save(object $entity, bool $flush = false): void;
+
+    public function findActiveByToken(string $token): ?object;
 }

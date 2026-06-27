@@ -30,5 +30,8 @@
         <include>
             <directory suffix=".php">src</directory>
         </include>
+        <exclude>
+            <file>src/DTO/Ledger/VendorLedgerEntryDTO.php</file>
+        </exclude>
     </source>
 </phpunit>

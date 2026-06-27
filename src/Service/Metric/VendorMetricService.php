@@ -7,14 +7,15 @@ namespace App\Vendoring\Service\Metric;
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
 use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
 use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
 
 final readonly class VendorMetricService implements VendorMetricServiceInterface
 {
     public function __construct(
-        private VendorLedgerEntryRepositoryInterface $ledger,
-    ) {}
+        private VendorLedgerRepositoryInterface $ledger,
+    ) {
+    }
 
     public function overview(VendorMetricOverviewRequestDTO $request): array
     {
@@ -74,7 +75,7 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
             'to' => $request->to,
             'currency' => $request->currency,
             'bucket' => $request->bucket,
-            'period' => $request->from . '..' . $request->to,
+            'period' => $request->from.'..'.$request->to,
             'revenue' => $overview['revenue'],
             'refunds' => $overview['refunds'],
             'payouts' => $overview['payouts'],

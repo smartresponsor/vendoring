@@ -17,13 +17,19 @@ class VendorUserAssignmentEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'boolean')] private bool $primaryAssignment = false;
     #[ORM\Column(type: 'datetime_immutable')] private \DateTimeImmutable $grantedAt;
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $revokedAt = null;
-    public function __construct(VendorEntity|int $vendor, int $userId, string $role = 'owner', bool $isPrimary = false)
+    public function __construct(...$arguments)
     {
+        $vendor = $arguments['vendorId'] ?? $arguments['vendor'] ?? $arguments[0] ?? null;
+        $userId = (int) ($arguments['userId'] ?? $arguments[1] ?? 0);
+        $role = (string) ($arguments['role'] ?? $arguments[2] ?? 'owner');
+        $status = (string) ($arguments['status'] ?? 'active');
+        $isPrimary = (bool) ($arguments['isPrimary'] ?? $arguments[3] ?? false);
+
         parent::__construct('active');
         $this->vendor = $vendor instanceof VendorEntity ? $vendor : new VendorEntity('unresolved-vendor-'.$vendor);
         $this->userId = $userId;
         $this->role = $role;
-        $this->status = 'active';
+        $this->status = $status;
         $this->primaryAssignment = $isPrimary;
         $this->grantedAt = new \DateTimeImmutable();
     }
@@ -70,6 +76,27 @@ class VendorUserAssignmentEntity extends VendorAbstractEntity
     {
         $this->status = 'active';
         $this->revokedAt = null;
+
+        return $this;
+    }
+
+    public function changeRole(string $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function markPrimary(): self
+    {
+        $this->primaryAssignment = true;
+
+        return $this;
+    }
+
+    public function clearPrimary(): self
+    {
+        $this->primaryAssignment = false;
 
         return $this;
     }

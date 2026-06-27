@@ -40,7 +40,10 @@
     "autoload": {
         "psr-4": {
             "App\\Vendoring\\": "src/"
-        }
+        },
+        "exclude-from-classmap": [
+            "src/DTO/Ledger/VendorLedgerEntryDTO.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

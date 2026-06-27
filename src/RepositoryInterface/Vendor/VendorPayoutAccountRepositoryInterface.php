@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\RepositoryInterface\Vendor;
 
+use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
+
 interface VendorPayoutAccountRepositoryInterface
 {
     public function find(mixed $id): ?object;
@@ -15,4 +17,8 @@ interface VendorPayoutAccountRepositoryInterface
     public function findBy(array $criteria): array;
 
     public function save(object $entity, bool $flush = false): void;
+
+    public function get(string $tenantId, string $vendorId): ?VendorPayoutAccountEntity;
+
+    public function upsert(VendorPayoutAccountEntity $account): VendorPayoutAccountEntity;
 }

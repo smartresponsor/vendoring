@@ -1,13 +1,13 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 namespace App\Vendoring\ServiceInterface\Ledger;
 
-use App\Vendoring\DTO\Ledger\VendorLedgerEntryDTO;
-use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
+use App\Vendoring\DTO\Ledger\VendorLedgerDTO;
+use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
 use Doctrine\DBAL\Exception;
 use Random\RandomException;
 
@@ -17,5 +17,5 @@ interface VendorLedgerServiceInterface
      * @throws Exception
      * @throws RandomException
      */
-    public function record(VendorLedgerEntryDTO $dto): VendorLedgerEntryEntity;
+    public function record(VendorLedgerDTO $dto): VendorLedgerEntity;
 }

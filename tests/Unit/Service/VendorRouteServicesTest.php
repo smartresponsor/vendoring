@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Service;
 
 use App\Cruding\Dto\Crud\CrudContext;
-use App\Cruding\Dto\Crud\Entrypoint\CrudEntrypointContext;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
+use App\Cruding\Value\Resource\CrudResourceContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use App\Vendoring\Service\Http\Vendor\VendorCreateService;
@@ -54,7 +54,7 @@ final class VendorRouteServicesTest extends TestCase
 
         $service = new VendorIndexService($this->responseService, $this->vendorRepository);
 
-        self::assertInstanceOf(CrudSurfaceContract::class, $service->get($this->context('index')));
+        self::assertInstanceOf(CrudResourceContract::class, $service->get($this->context('index')));
     }
 
     public function testShowReturnsSurfaceContractForResolvedVendor(): void
@@ -63,7 +63,7 @@ final class VendorRouteServicesTest extends TestCase
 
         $service = new VendorShowService($this->responseService, $this->vendorRepository);
 
-        self::assertInstanceOf(CrudSurfaceContract::class, $service->get($this->context('show', object: $vendor, identifierValue: 1)));
+        self::assertInstanceOf(CrudResourceContract::class, $service->get($this->context('show', object: $vendor, identifierValue: 1)));
     }
 
     public function testCreateTrimsBrandNameBeforeEntityConstruction(): void
@@ -94,7 +94,7 @@ final class VendorRouteServicesTest extends TestCase
             'ownerUserId' => null,
         ]));
 
-        self::assertInstanceOf(CrudSurfaceContract::class, $response);
+        self::assertInstanceOf(CrudResourceContract::class, $response);
     }
 
     public function testCreateThrowsDomainValidationExceptionWhenDtoInvalid(): void
@@ -155,7 +155,7 @@ final class VendorRouteServicesTest extends TestCase
         ]));
 
         self::assertSame('New Name', $vendor->getBrandName());
-        self::assertInstanceOf(CrudSurfaceContract::class, $response);
+        self::assertInstanceOf(CrudResourceContract::class, $response);
     }
 
     public function testDeleteRemovesVendorEntity(): void
@@ -169,7 +169,7 @@ final class VendorRouteServicesTest extends TestCase
 
         $response = $service->delete($this->context('delete', object: $vendor, identifierValue: 1));
 
-        self::assertInstanceOf(CrudSurfaceContract::class, $response);
+        self::assertInstanceOf(CrudResourceContract::class, $response);
     }
 
     private function context(
@@ -177,7 +177,7 @@ final class VendorRouteServicesTest extends TestCase
         ?object $object = null,
         string|int|null $identifierValue = null,
         array $requestData = [],
-    ): CrudEntrypointContext {
+    ): CrudServiceContext {
         $request = new Request([], $requestData);
         $request->attributes->set('_route', 'vendor.'.$operation);
         $request->attributes->set('_crud_actor_is_admin', true);
@@ -186,7 +186,7 @@ final class VendorRouteServicesTest extends TestCase
             $request->attributes->set('_crud_actor_identity_value', $identifierValue);
         }
 
-        return new CrudEntrypointContext(
+        return new CrudServiceContext(
             request: $request,
             crudContext: new CrudContext(
                 surface: 'admin',

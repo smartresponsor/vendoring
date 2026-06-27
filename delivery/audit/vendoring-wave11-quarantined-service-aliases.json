@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorAnalyticsRepositoryInterface",
     "target": "App\\Vendoring\\Repository\\Vendor\\VendorAnalyticsRepository"
@@ -136,8 +136,8 @@
     "target": "App\\Vendoring\\Repository\\Vendor\\VendorPassportRepository"
   },
   {
-    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorLedgerEntryRepositoryInterface",
-    "target": "App\\Vendoring\\Repository\\Vendor\\VendorLedgerEntryRepository"
+    "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorLedgerRepositoryInterface",
+    "target": "App\\Vendoring\\Repository\\Vendor\\VendorLedgerRepository"
   },
   {
     "alias": "App\\Vendoring\\RepositoryInterface\\Vendor\\VendorPayoutRepositoryInterface",

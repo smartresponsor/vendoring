@@ -103,7 +103,7 @@ services:
   App\Vendoring\RepositoryInterface\Vendor\VendorGroupRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorGroupRepository'
   App\Vendoring\RepositoryInterface\Vendor\VendorIbanRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorIbanRepository'
   App\Vendoring\RepositoryInterface\Vendor\VendorLedgerBindingRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLedgerBindingRepository'
-  App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLedgerEntryRepository'
+  App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLedgerRepository'
   App\Vendoring\RepositoryInterface\Vendor\VendorLogRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLogRepository'
   App\Vendoring\RepositoryInterface\Vendor\VendorMediaAttachmentRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorMediaAttachmentRepository'
   App\Vendoring\RepositoryInterface\Vendor\VendorMediaRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorMediaRepository'

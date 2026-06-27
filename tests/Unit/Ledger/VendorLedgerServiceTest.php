@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Ledger;
 
-use App\Vendoring\DTO\Ledger\VendorLedgerEntryDTO;
-use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
+use App\Vendoring\DTO\Ledger\VendorLedgerDTO;
+use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
 use App\Vendoring\Service\Ledger\VendorLedgerService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorLedgerServiceTest extends TestCase
 {
-    private VendorLedgerEntryRepositoryInterface&MockObject $repository;
+    private VendorLedgerRepositoryInterface&MockObject $repository;
 
     protected function setUp(): void
     {
-        $this->repository = $this->createMock(VendorLedgerEntryRepositoryInterface::class);
+        $this->repository = $this->createMock(VendorLedgerRepositoryInterface::class);
     }
 
     public function testRecordCreatesDebitSideEntryAndPersistsIt(): void
@@ -25,7 +25,7 @@ final class VendorLedgerServiceTest extends TestCase
         $this->repository
             ->expects(self::once())
             ->method('insert')
-            ->with(self::callback(function (VendorLedgerEntryEntity $entry): bool {
+            ->with(self::callback(function (VendorLedgerEntity $entry): bool {
                 self::assertSame('tenant-1', $entry->tenantId);
                 self::assertSame('order_paid', $entry->debitAccount);
                 self::assertSame('VENDOR_PAYABLE', $entry->creditAccount);
@@ -39,7 +39,7 @@ final class VendorLedgerServiceTest extends TestCase
                 return true;
             }));
 
-        $entry = (new VendorLedgerService($this->repository))->record(new VendorLedgerEntryDTO(
+        $entry = (new VendorLedgerService($this->repository))->record(new VendorLedgerDTO(
             type: 'order_paid',
             entityId: 'entity-1',
             sagaId: 'saga-1',
@@ -60,7 +60,7 @@ final class VendorLedgerServiceTest extends TestCase
         $this->repository
             ->expects(self::once())
             ->method('insert')
-            ->with(self::callback(function (VendorLedgerEntryEntity $entry): bool {
+            ->with(self::callback(function (VendorLedgerEntity $entry): bool {
                 self::assertSame('VENDOR_PAYABLE', $entry->debitAccount);
                 self::assertSame('refund', $entry->creditAccount);
                 self::assertSame(5.0, $entry->amount);
@@ -68,7 +68,7 @@ final class VendorLedgerServiceTest extends TestCase
                 return true;
             }));
 
-        $entry = (new VendorLedgerService($this->repository))->record(new VendorLedgerEntryDTO(
+        $entry = (new VendorLedgerService($this->repository))->record(new VendorLedgerDTO(
             type: 'refund',
             entityId: 'entity-2',
             sagaId: 'saga-2',
@@ -91,7 +91,7 @@ final class VendorLedgerServiceTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unsupported ledger direction "sideways".');
 
-        $service->record(new VendorLedgerEntryDTO(
+        $service->record(new VendorLedgerDTO(
             type: 'refund',
             entityId: 'entity-2',
             sagaId: 'saga-2',

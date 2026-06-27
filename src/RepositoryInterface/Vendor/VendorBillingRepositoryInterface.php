@@ -15,4 +15,7 @@ interface VendorBillingRepositoryInterface
     public function findBy(array $criteria): array;
 
     public function save(object $entity, bool $flush = false): void;
+
+    /** @return list<object> */
+    public function findAll(): array;
 }

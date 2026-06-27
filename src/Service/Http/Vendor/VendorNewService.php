@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Http\Vendor;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudEntrypointContext;
-use App\Cruding\Service\Crud\Entrypoint\AbstractCrudEntrypointService;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
+use App\Cruding\Value\Resource\CrudResourceContract;
 
-final class VendorNewService extends AbstractCrudEntrypointService
+final class VendorNewService extends AbstractVendorCrudRouteService
 {
     public function __construct(private VendorHttpRouteResponseService $responseService)
     {
     }
 
-    public function get(CrudEntrypointContext $context): CrudSurfaceContract
+    public function get(CrudServiceContext $context): CrudResourceContract
     {
         return $this->responseService->read(
             $context,
@@ -28,17 +27,17 @@ final class VendorNewService extends AbstractCrudEntrypointService
         );
     }
 
-    private function resourcePath(): string
+    protected function resourcePath(): string
     {
         return 'vendor';
     }
 
-    private function operation(): string
+    protected function operation(): string
     {
         return 'new';
     }
 
-    private function title(): string
+    protected function title(): string
     {
         return 'Vendor '.$this->resourcePath().' '.$this->operation();
     }

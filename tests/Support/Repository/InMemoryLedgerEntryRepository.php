@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Support\Repository;
 
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
-use App\Vendoring\Entity\Vendor\VendorLedgerEntryEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
+use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
 
-final class InMemoryLedgerEntryRepository implements VendorLedgerEntryRepositoryInterface
+final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInterface
 {
-    /** @var list<VendorLedgerEntryEntity> */
+    /** @var list<VendorLedgerEntity> */
     private array $entries = [];
 
-    public function insert(VendorLedgerEntryEntity $entry): void
+    public function insert(VendorLedgerEntity $entry): void
     {
         $this->entries[] = $entry;
     }
@@ -22,7 +22,7 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerEntryRepository
     {
         return array_values(array_filter(
             $this->entries,
-            static function (VendorLedgerEntryEntity $entry) use ($tenantId, $referenceType, $referenceId, $vendorId): bool {
+            static function (VendorLedgerEntity $entry) use ($tenantId, $referenceType, $referenceId, $vendorId): bool {
                 if ($entry->tenantId !== $tenantId) {
                     return false;
                 }
@@ -38,6 +38,49 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerEntryRepository
                 return true;
             },
         ));
+    }
+
+    public function find(mixed $id): ?object
+    {
+        if (!is_scalar($id)) {
+            return null;
+        }
+
+        foreach ($this->entries as $entry) {
+            if (property_exists($entry, 'id') && $entry->id === (string) $id) {
+                return $entry;
+            }
+        }
+
+        return null;
+    }
+
+    public function findOneBy(array $criteria): ?object
+    {
+        return $this->findBy($criteria)[0] ?? null;
+    }
+
+    public function findBy(array $criteria): array
+    {
+        return array_values(array_filter(
+            $this->entries,
+            static function (VendorLedgerEntity $entry) use ($criteria): bool {
+                foreach ($criteria as $field => $value) {
+                    if (!property_exists($entry, $field) || $entry->{$field} !== $value) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
+        ));
+    }
+
+    public function save(object $entity, bool $flush = false): void
+    {
+        if ($entity instanceof VendorLedgerEntity) {
+            $this->insert($entity);
+        }
     }
 
     public function sumByAccount(VendorLedgerAccountSumCriteriaDTO $criteria): float
@@ -91,7 +134,7 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerEntryRepository
         }
 
         return array_map(
-            static fn(string $currency, int $balanceCents): object => (object) [
+            static fn (string $currency, int $balanceCents): object => (object) [
                 'currency' => $currency,
                 'balanceCents' => $balanceCents,
             ],
@@ -101,7 +144,7 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerEntryRepository
     }
 
     /**
-     * @return list<VendorLedgerEntryEntity>
+     * @return list<VendorLedgerEntity>
      */
     public function all(): array
     {

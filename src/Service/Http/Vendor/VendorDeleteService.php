@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Http\Vendor;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudEntrypointContext;
-use App\Cruding\Service\Crud\Entrypoint\AbstractCrudEntrypointService;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
+use App\Cruding\Value\Resource\CrudResourceContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-final class VendorDeleteService extends AbstractCrudEntrypointService
+final class VendorDeleteService extends AbstractVendorCrudRouteService
 {
     public function __construct(
         private VendorHttpRouteResponseService $responseService,
@@ -21,7 +20,7 @@ final class VendorDeleteService extends AbstractCrudEntrypointService
     ) {
     }
 
-    public function get(CrudEntrypointContext $context): CrudSurfaceContract
+    public function get(CrudServiceContext $context): CrudResourceContract
     {
         return $this->responseService->read(
             $context,
@@ -32,17 +31,17 @@ final class VendorDeleteService extends AbstractCrudEntrypointService
         );
     }
 
-    public function post(CrudEntrypointContext $context): CrudSurfaceContract
+    public function post(CrudServiceContext $context): CrudResourceContract
     {
         return $this->deleteVendor($context);
     }
 
-    public function delete(CrudEntrypointContext $context): CrudSurfaceContract
+    public function delete(CrudServiceContext $context): CrudResourceContract
     {
         return $this->deleteVendor($context);
     }
 
-    private function deleteVendor(CrudEntrypointContext $context): CrudSurfaceContract
+    private function deleteVendor(CrudServiceContext $context): CrudResourceContract
     {
         $vendor = $this->resolveVendor($context);
         $this->entityManager->remove($vendor);
@@ -60,7 +59,7 @@ final class VendorDeleteService extends AbstractCrudEntrypointService
         );
     }
 
-    private function resolveVendor(CrudEntrypointContext $context): VendorEntity
+    private function resolveVendor(CrudServiceContext $context): VendorEntity
     {
         if ($context->object instanceof VendorEntity) {
             return $context->object;
@@ -79,17 +78,17 @@ final class VendorDeleteService extends AbstractCrudEntrypointService
         return $vendor;
     }
 
-    private function resourcePath(): string
+    protected function resourcePath(): string
     {
         return 'vendor';
     }
 
-    private function operation(): string
+    protected function operation(): string
     {
         return 'delete';
     }
 
-    private function title(): string
+    protected function title(): string
     {
         return 'Vendor '.$this->resourcePath().' '.$this->operation();
     }

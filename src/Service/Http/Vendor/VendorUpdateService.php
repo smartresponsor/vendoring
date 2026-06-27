@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Http\Vendor;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudEntrypointContext;
-use App\Cruding\Service\Crud\Entrypoint\AbstractCrudEntrypointService;
-use App\Cruding\Value\Surface\CrudSurfaceContract;
+use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
+use App\Cruding\Value\Resource\CrudResourceContract;
 use App\Vendoring\DTO\VendorUpdateDTO;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Event\Vendor\VendorActivatedEvent;
@@ -17,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class VendorUpdateService extends AbstractCrudEntrypointService
+final class VendorUpdateService extends AbstractVendorCrudRouteService
 {
     public function __construct(
         private VendorHttpRouteResponseService $responseService,
@@ -29,7 +28,7 @@ final class VendorUpdateService extends AbstractCrudEntrypointService
     ) {
     }
 
-    public function get(CrudEntrypointContext $context): CrudSurfaceContract
+    public function get(CrudServiceContext $context): CrudResourceContract
     {
         return $this->responseService->read(
             $context,
@@ -40,22 +39,22 @@ final class VendorUpdateService extends AbstractCrudEntrypointService
         );
     }
 
-    public function post(CrudEntrypointContext $context): CrudSurfaceContract
+    public function post(CrudServiceContext $context): CrudResourceContract
     {
         return $this->mutate($context);
     }
 
-    public function put(CrudEntrypointContext $context): CrudSurfaceContract
+    public function put(CrudServiceContext $context): CrudResourceContract
     {
         return $this->mutate($context);
     }
 
-    public function patch(CrudEntrypointContext $context): CrudSurfaceContract
+    public function patch(CrudServiceContext $context): CrudResourceContract
     {
         return $this->mutate($context);
     }
 
-    private function mutate(CrudEntrypointContext $context): CrudSurfaceContract
+    private function mutate(CrudServiceContext $context): CrudResourceContract
     {
         $input = $context->request->request->all();
         $vendor = $this->resolveVendor($context);
@@ -104,7 +103,7 @@ final class VendorUpdateService extends AbstractCrudEntrypointService
         return $vendor;
     }
 
-    private function resolveVendor(CrudEntrypointContext $context): VendorEntity
+    private function resolveVendor(CrudServiceContext $context): VendorEntity
     {
         if ($context->object instanceof VendorEntity) {
             return $context->object;
@@ -149,17 +148,17 @@ final class VendorUpdateService extends AbstractCrudEntrypointService
         return $normalized;
     }
 
-    private function resourcePath(): string
+    protected function resourcePath(): string
     {
         return 'vendor';
     }
 
-    private function operation(): string
+    protected function operation(): string
     {
         return 'update';
     }
 
-    private function title(): string
+    protected function title(): string
     {
         return 'Vendor '.$this->resourcePath().' '.$this->operation();
     }

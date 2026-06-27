@@ -28,4 +28,12 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
     {
         return $this->find($id);
     }
+
+    public function findActiveByToken(string $token): ?object
+    {
+        return $this->findOneBy([
+            'tokenHash' => hash('sha256', $token),
+            'status' => 'active',
+        ]);
+    }
 }

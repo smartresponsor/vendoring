@@ -108,8 +108,8 @@ if (!is_file($abstractService)) {
     $errors[] = 'Missing AbstractVendorCrudRouteService.php';
 } else {
     $source = file_get_contents($abstractService) ?: '';
-    if (!str_contains($source, 'extends AbstractCrudEntrypointService')) {
-        $errors[] = 'AbstractVendorCrudRouteService must extend AbstractCrudEntrypointService.';
+    if (!str_contains($source, 'extends AbstractCrudService')) {
+        $errors[] = 'AbstractVendorCrudRouteService must extend AbstractCrudService.';
     }
 }
 

@@ -7,18 +7,18 @@ namespace App\Vendoring\Tests\Unit\Metric;
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
 use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
 use App\Vendoring\Service\Metric\VendorMetricService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorMetricServiceTest extends TestCase
 {
-    private VendorLedgerEntryRepositoryInterface&MockObject $ledger;
+    private VendorLedgerRepositoryInterface&MockObject $ledger;
 
     protected function setUp(): void
     {
-        $this->ledger = $this->createMock(VendorLedgerEntryRepositoryInterface::class);
+        $this->ledger = $this->createMock(VendorLedgerRepositoryInterface::class);
     }
 
     public function testOverviewBuildsRevenueRefundPayoutAndBalanceFromLedgerAccounts(): void
@@ -56,7 +56,7 @@ final class VendorMetricServiceTest extends TestCase
         $this->ledger
             ->expects(self::exactly(3))
             ->method('sumByAccount')
-            ->willReturnCallback(static fn(): float => -100.0);
+            ->willReturnCallback(static fn (): float => -100.0);
 
         $payload = (new VendorMetricService($this->ledger))
             ->overview(new VendorMetricOverviewRequestDTO('tenant-1', 'vendor-1'));

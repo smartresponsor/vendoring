@@ -13,21 +13,23 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class VendorCatalogMerchService implements VendorCatalogMerchServiceInterface
 {
-    public function __construct(private EntityManagerInterface $entityManager) {}
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
+    }
 
     public function pinCreate(string $categoryId, string $recordId, int $position): void
     {
-        $pin = new VendorCatalogCategoryPinEntity($categoryId, $recordId, $position);
+        $pin = new VendorCatalogCategoryPinEntity($categoryId, [
+            'recordId' => $recordId,
+            'position' => $position,
+        ]);
         $this->entityManager->persist($pin);
         $this->entityManager->flush();
     }
 
     public function pinDelete(string $categoryId, string $recordId): void
     {
-        $pin = $this->entityManager->getRepository(VendorCatalogCategoryPinEntity::class)->findOneBy([
-            'categoryId' => $categoryId,
-            'recordId' => $recordId,
-        ]);
+        $pin = $this->findPin($categoryId, $recordId);
 
         if (null === $pin) {
             return;
@@ -38,18 +40,13 @@ final readonly class VendorCatalogMerchService implements VendorCatalogMerchServ
     }
 
     /**
-     * @param string $categoryId
      * @param list<string> $recordIds
      */
     public function orderSet(string $categoryId, array $recordIds): void
     {
         $position = 0;
-        $repository = $this->entityManager->getRepository(VendorCatalogCategoryPinEntity::class);
         foreach ($recordIds as $recordId) {
-            $pin = $repository->findOneBy([
-                'categoryId' => $categoryId,
-                'recordId' => $recordId,
-            ]);
+            $pin = $this->findPin($categoryId, $recordId);
 
             if (null === $pin) {
                 ++$position;
@@ -81,5 +78,24 @@ final readonly class VendorCatalogMerchService implements VendorCatalogMerchServ
         $this->entityManager->flush();
 
         return $htmlBlock->id();
+    }
+
+    private function findPin(string $categoryId, string $recordId): ?VendorCatalogCategoryPinEntity
+    {
+        $pins = $this->entityManager->getRepository(VendorCatalogCategoryPinEntity::class)->findBy([
+            'code' => $categoryId,
+        ]);
+
+        foreach ($pins as $pin) {
+            if (!$pin instanceof VendorCatalogCategoryPinEntity) {
+                continue;
+            }
+
+            if ($pin->recordId() === $recordId) {
+                return $pin;
+            }
+        }
+
+        return null;
     }
 }

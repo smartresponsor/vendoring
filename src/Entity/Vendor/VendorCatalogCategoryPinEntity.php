@@ -6,7 +6,7 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorCatalogCategoryPinRepository::class)]
+#[ORM\Entity]
 #[ORM\Table(name: 'vendor_catalog_category_pin')]
 class VendorCatalogCategoryPinEntity extends VendorAbstractEntity
 {
@@ -17,5 +17,20 @@ class VendorCatalogCategoryPinEntity extends VendorAbstractEntity
         parent::__construct('active');
         $this->code = $code;
         $this->payload = $payload;
+    }
+
+    public function recordId(): string
+    {
+        return (string) ($this->payload['recordId'] ?? '');
+    }
+
+    public function position(): int
+    {
+        return (int) ($this->payload['position'] ?? 0);
+    }
+
+    public function reorder(int $position): void
+    {
+        $this->payload['position'] = $position;
     }
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "summary": {
     "sourceCurrentSlice": "www-clean-20260611-151149.zip",
     "entityGraphSource": "Pasted text(753).txt",
@@ -640,9 +640,9 @@
       "directTemplateExists": false
     },
     {
-      "entity": "VendorLedgerEntryEntity",
+      "entity": "VendorLedgerEntity",
       "candidateStems": [
-        "VendorLedgerEntry"
+        "VendorLedger"
       ],
       "status": "entity_missing",
       "risk": "business_entity_without_cruding_surface",
