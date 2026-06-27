@@ -7,7 +7,9 @@ namespace App\Vendoring\Service\Runtime\Profile;
 
 use App\Vendoring\ServiceInterface\Profile\VendorProfileProjectionBuilderServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 
+#[AsController]
 final readonly class VendorProfileShowService
 {
     public function __construct(
