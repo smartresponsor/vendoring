@@ -1,4 +1,4 @@
 # Zero-controller / zero-route component export.
 # Vendoring no longer exports Symfony controller routes.
-# Host routing is owned by Cruding catch-all grammar and App\Vendoring\Service\Http\* FQCN convention.
+# Host routing is owned by Cruding catch-all grammar and App\Vendoring\Service\Vendor\* FQCN convention.
 # Route-map registry files live under config/platform/routes/ and are not native Symfony routes.

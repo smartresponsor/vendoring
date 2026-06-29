@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Profile;
 
+use App\Vendoring\Entity\Vendor\VendorMediaEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileAvatarEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileCoverEntity;
 use App\Vendoring\Projection\Vendor\VendorPublicProfileAttachmentProjection;
@@ -63,7 +64,7 @@ final readonly class VendorLegacyProfileAttachmentResolverService implements Ven
 
         $media = $this->mediaRepository->findOneBy(['vendor' => $vendor]);
 
-        return $media?->getLogoPath();
+        return $media instanceof VendorMediaEntity ? $media->getLogoPath() : null;
     }
 
     private function resolveLegacyCoverPath(object $vendor): ?string
@@ -76,7 +77,7 @@ final readonly class VendorLegacyProfileAttachmentResolverService implements Ven
 
         $media = $this->mediaRepository->findOneBy(['vendor' => $vendor]);
 
-        return $media?->getBannerPath();
+        return $media instanceof VendorMediaEntity ? $media->getBannerPath() : null;
     }
 
     private function normalizeLegacyPublicUrl(string $path): string

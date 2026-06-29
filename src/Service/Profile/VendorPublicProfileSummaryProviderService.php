@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Profile;
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorProfileEntity;
 use App\Vendoring\Projection\Vendor\VendorPublicProfileSummary;
 use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
@@ -29,11 +31,15 @@ final readonly class VendorPublicProfileSummaryProviderService implements Vendor
     {
         $vendor = $this->vendorRepository->find($vendorId);
 
-        if (null === $vendor) {
+        if (!$vendor instanceof VendorEntity) {
             return null;
         }
 
         $profile = $this->profileRepository->findOneBy(['vendor' => $vendor]);
+        if (!$profile instanceof VendorProfileEntity) {
+            $profile = null;
+        }
+
         $brandName = trim($vendor->getBrandName());
         $displayName = null === $profile?->getDisplayName() ? null : trim($profile->getDisplayName());
         $publicName = null !== $displayName && '' !== $displayName ? $displayName : $brandName;
@@ -64,7 +70,11 @@ final readonly class VendorPublicProfileSummaryProviderService implements Vendor
         }
 
         $vendor = $this->vendorRepository->findOneBy(['ownerUserId' => $actorId]);
-        $vendorId = $vendor?->getId();
+        if (!$vendor instanceof VendorEntity) {
+            return null;
+        }
+
+        $vendorId = $vendor->getId();
 
         if (!is_int($vendorId)) {
             return null;

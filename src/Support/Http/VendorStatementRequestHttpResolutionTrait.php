@@ -36,4 +36,14 @@ trait VendorStatementRequestHttpResolutionTrait
 
         return $dto;
     }
+
+    private function validationErrorResponse(string $errorCode, string $hint): JsonResponse
+    {
+        return new JsonResponse([
+            'ok' => false,
+            'component' => 'vendoring',
+            'errorCode' => $errorCode,
+            'hint' => $hint,
+        ], 422);
+    }
 }

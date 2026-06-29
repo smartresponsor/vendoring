@@ -36,7 +36,9 @@ class VendorApiKeyEntity extends VendorAbstractEntity
 
     public function deactivate(): self
     {
-        return $this->setStatus('inactive');
+        $this->setStatus('inactive');
+
+        return $this;
     }
 
     public function getLastUsedAt(): ?\DateTimeImmutable

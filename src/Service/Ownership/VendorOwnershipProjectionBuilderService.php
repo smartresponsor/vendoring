@@ -4,27 +4,26 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Ownership;
 
-use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorCategoryEntity;
 use App\Vendoring\Entity\Vendor\VendorCodeStorageEntity;
 use App\Vendoring\Entity\Vendor\VendorCommissionEntity;
 use App\Vendoring\Entity\Vendor\VendorCommissionHistoryEntity;
 use App\Vendoring\Entity\Vendor\VendorConversationEntity;
-use App\Vendoring\Entity\Vendor\VendorConversationMessageEntity;
 use App\Vendoring\Entity\Vendor\VendorCustomerOrderEntity;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorFavouriteEntity;
 use App\Vendoring\Entity\Vendor\VendorGroupEntity;
 use App\Vendoring\Entity\Vendor\VendorLogEntity;
 use App\Vendoring\Entity\Vendor\VendorPaymentEntity;
 use App\Vendoring\Entity\Vendor\VendorRememberMeTokenEntity;
 use App\Vendoring\Entity\Vendor\VendorShipmentEntity;
+use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
 use App\Vendoring\Entity\Vendor\VendorWishlistEntity;
-use App\Vendoring\Entity\Vendor\VendorWishlistItemEntity;
 use App\Vendoring\Projection\Vendor\VendorOwnershipProjection;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
-use App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixServiceInterface;
 use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -37,18 +36,23 @@ final readonly class VendorOwnershipProjectionBuilderService implements VendorOw
         private VendorUserAssignmentRepositoryInterface $assignmentRepository,
         private VendorAuthorizationMatrixServiceInterface $authorizationMatrix,
         private EntityManagerInterface $entityManager,
-    ) {}
+    ) {
+    }
 
     public function buildForVendorId(int $vendorId): ?VendorOwnershipProjection
     {
         $vendor = $this->vendorRepository->find($vendorId);
 
-        if (null === $vendor) {
+        if (!$vendor instanceof VendorEntity) {
             return null;
         }
 
         $assignments = [];
         foreach ($this->assignmentRepository->findActiveByVendorId($vendorId) as $assignment) {
+            if (!$assignment instanceof VendorUserAssignmentEntity) {
+                continue;
+            }
+
             $assignments[] = [
                 'userId' => $assignment->getUserId(),
                 'role' => $assignment->getRole(),
@@ -93,7 +97,7 @@ final readonly class VendorOwnershipProjectionBuilderService implements VendorOw
     }
 
     /**
-     * @param class-string<object> $entityClass
+     * @param class-string<object>  $entityClass
      * @param array<string, object> $criteria
      */
     private function countByVendor(string $entityClass, array $criteria): int

@@ -9,7 +9,7 @@ Documentation must keep the current runtime architecture explicit:
 ```text
 Vendoring = zero-controller / zero-route component
 Cruding   = URI grammar owner
-Vendoring = canonical App\Vendoring\Service\Http\Vendor\... service owner
+Vendoring = canonical App\Vendoring\Service\Vendor\... service owner
 ```
 
 ## Documentation layers
@@ -61,7 +61,7 @@ Required active documentation targets:
 - `config/platform/routes.crud.yaml`
 - `config/platform/routes.business.yaml`
 - `config/platform/routes/**/*.yaml`
-- `src/Service/Http/Vendor/.../*Service.php`
+- `src/Service/Vendor/.../*Service.php`
 - `src/Form/Vendor/.../*Type.php`
 
 ## Layer 3 structure and naming canon for machine agents
@@ -78,11 +78,11 @@ The following folders are locked to one direct child folder named `Vendor` when 
 - `src/RepositoryInterface/`
 - `src/Projection/`
 
-Canonical HTTP runtime services are an exception to the Vendoring namespace because Cruding FQCN convention expects the host-level Symfony namespace:
+Canonical HTTP runtime services are an exception to the Vendoring namespace because Cruding service-layer convention expects the host-level Symfony namespace:
 
 ```text
-src/Service/Http/Vendor/.../*Service.php
-namespace App\Vendoring\Service\Http\Vendor\...
+src/Service/Vendor/.../*Service.php
+namespace App\Vendoring\Service\Vendor\...
 ```
 
 Form Types used by the route-map follow:
@@ -101,7 +101,7 @@ See `docs/internal/LAYER3_STRUCTURE_NAMING_CANON.md` for the complete literal co
 ## Required documentation targets
 
 - route-map registry files under `config/platform/`
-- canonical `App\Vendoring\Service\Http\Vendor\...` runtime services
+- canonical `App\Vendoring\Service\Vendor\...` runtime services
 - canonical `App\Vendoring\Form\Vendor\...` form types
 - repository and policy contracts
 - release evidence and smoke commands

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$serviceRoot = $root.'/src/Service/Http/Vendor';
+$serviceRoot = $root.'/src/Service/Vendor';
 $formRoot = $root.'/src/Form/Vendor';
 $responseService = $serviceRoot.'/VendorHttpRouteResponseService.php';
 

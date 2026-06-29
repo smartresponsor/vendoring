@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
+use App\Vendoring\EntityInterface\Vendor\VendorUserAssignmentEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorUserAssignmentRepository::class)]
 #[ORM\Table(name: 'vendor_user_assignment')]
-class VendorUserAssignmentEntity extends VendorAbstractEntity
+class VendorUserAssignmentEntity extends VendorAbstractEntity implements VendorUserAssignmentEntityInterface
 {
     #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'userAssignments')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
     #[ORM\Column(type: 'integer')] private int $userId;
@@ -24,6 +25,8 @@ class VendorUserAssignmentEntity extends VendorAbstractEntity
         $role = (string) ($arguments['role'] ?? $arguments[2] ?? 'owner');
         $status = (string) ($arguments['status'] ?? 'active');
         $isPrimary = (bool) ($arguments['isPrimary'] ?? $arguments[3] ?? false);
+        $grantedAt = $arguments['grantedAt'] ?? null;
+        $revokedAt = $arguments['revokedAt'] ?? null;
 
         parent::__construct('active');
         $this->vendor = $vendor instanceof VendorEntity ? $vendor : new VendorEntity('unresolved-vendor-'.$vendor);
@@ -31,7 +34,15 @@ class VendorUserAssignmentEntity extends VendorAbstractEntity
         $this->role = $role;
         $this->status = $status;
         $this->primaryAssignment = $isPrimary;
-        $this->grantedAt = new \DateTimeImmutable();
+        $this->grantedAt = $grantedAt instanceof \DateTimeImmutable ? $grantedAt : new \DateTimeImmutable();
+        $this->revokedAt = $revokedAt instanceof \DateTimeImmutable ? $revokedAt : null;
+    }
+
+    public function getVendorId(): int
+    {
+        return $this->vendor instanceof VendorEntity && null !== $this->vendor->getId()
+            ? $this->vendor->getId()
+            : 0;
     }
 
     public function getUserId(): int

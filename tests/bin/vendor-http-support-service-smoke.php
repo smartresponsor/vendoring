@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$serviceRoot = $root.'/src/Service/Http/Vendor';
+$serviceRoot = $root.'/src/Service/Vendor';
 
 $errors = [];
 
 if (!is_dir($serviceRoot)) {
-    fwrite(STDERR, "Missing src/Service/Http/Vendor.\n");
+    fwrite(STDERR, "Missing src/Service/Vendor.\n");
     exit(1);
 }
 
@@ -25,8 +25,8 @@ foreach ($iterator as $file) {
     $relative = str_replace('\\', '/', substr($path, strlen($root) + 1));
     $contents = (string) file_get_contents($path);
 
-    if (!str_contains($contents, 'namespace App\\Vendoring\\Service\\Http\\Vendor')) {
-        $errors[] = sprintf('%s must stay under App\\Vendoring\\Service\\Http\\Vendor namespace', $relative);
+    if (!str_contains($contents, 'namespace App\\Vendoring\\Service\\Vendor')) {
+        $errors[] = sprintf('%s must stay under App\\Vendoring\\Service\\Vendor namespace', $relative);
     }
 
     if (str_contains($contents, 'extends AbstractController') || str_contains($contents, '#[Route(')) {

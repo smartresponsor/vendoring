@@ -6,10 +6,9 @@ namespace App\Vendoring\Tests\Unit\Transaction;
 
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\Event\Vendor\VendorTransactionEvent;
+use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
-use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
-use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
 use App\Vendoring\Service\Policy\VendorTransactionAmountPolicyService;
 use App\Vendoring\Service\Policy\VendorTransactionStatusPolicyService;
 use App\Vendoring\Service\Transaction\VendorTransactionLifecycleService;
@@ -17,15 +16,14 @@ use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class VendorTransactionLifecycleServiceTest extends TestCase
 {
     private EntityManagerInterface&MockObject $entityManager;
-
     private EventDispatcherInterface&MockObject $dispatcher;
-
     private VendorTransactionRepositoryInterface&MockObject $transactions;
 
     protected function setUp(): void
@@ -65,9 +63,7 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
                     && 'pending' === $transaction->getStatus();
             }));
 
-        $this->entityManager
-            ->expects(self::once())
-            ->method('flush');
+        $this->entityManager->expects(self::once())->method('flush');
 
         $this->dispatcher
             ->expects(self::once())
@@ -76,7 +72,7 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
                 self::callback(static function (VendorTransactionEvent $event): bool {
                     return 'vendor-1' === $event->transaction->getVendorId();
                 }),
-                VendorTransactionEvent::NAME,
+                VendorTransactionEvent::EVENT_NAME,
             )
             ->willReturnArgument(0);
 
@@ -115,14 +111,8 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
                 return null === $transaction->getProjectId();
             }));
 
-        $this->entityManager
-            ->expects(self::once())
-            ->method('flush');
-
-        $this->dispatcher
-            ->expects(self::once())
-            ->method('dispatch')
-            ->willReturnArgument(0);
+        $this->entityManager->expects(self::once())->method('flush');
+        $this->dispatcher->expects(self::once())->method('dispatch')->willReturnArgument(0);
 
         $transaction = $manager->createTransaction($data);
 
@@ -148,17 +138,9 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
             ->with('vendor-1', 'order-1', null)
             ->willReturn(true);
 
-        $this->entityManager
-            ->expects(self::never())
-            ->method('persist');
-
-        $this->entityManager
-            ->expects(self::never())
-            ->method('flush');
-
-        $this->dispatcher
-            ->expects(self::never())
-            ->method('dispatch');
+        $this->entityManager->expects(self::never())->method('persist');
+        $this->entityManager->expects(self::never())->method('flush');
+        $this->dispatcher->expects(self::never())->method('dispatch');
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('duplicate_transaction');
@@ -193,14 +175,8 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
                     && 'order-1' === $transaction->getOrderId();
             }));
 
-        $this->entityManager
-            ->expects(self::once())
-            ->method('flush');
-
-        $this->dispatcher
-            ->expects(self::once())
-            ->method('dispatch')
-            ->willReturnArgument(0);
+        $this->entityManager->expects(self::once())->method('flush');
+        $this->dispatcher->expects(self::once())->method('dispatch')->willReturnArgument(0);
 
         $transaction = $manager->createTransaction($data);
 
@@ -221,21 +197,10 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
 
         $data = new VendorTransactionDataValueObject('   ', 'order-1', null, '10.50');
 
-        $this->transactions
-            ->expects(self::never())
-            ->method('existsForVendorOrderProject');
-
-        $this->entityManager
-            ->expects(self::never())
-            ->method('persist');
-
-        $this->entityManager
-            ->expects(self::never())
-            ->method('flush');
-
-        $this->dispatcher
-            ->expects(self::never())
-            ->method('dispatch');
+        $this->transactions->expects(self::never())->method('existsForVendorOrderProject');
+        $this->entityManager->expects(self::never())->method('persist');
+        $this->entityManager->expects(self::never())->method('flush');
+        $this->dispatcher->expects(self::never())->method('dispatch');
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('vendor_id_required');
@@ -262,17 +227,9 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
             ->with('vendor-1', 'order-1', 'project-1')
             ->willReturn(false);
 
-        $this->entityManager
-            ->expects(self::never())
-            ->method('persist');
-
-        $this->entityManager
-            ->expects(self::never())
-            ->method('flush');
-
-        $this->dispatcher
-            ->expects(self::never())
-            ->method('dispatch');
+        $this->entityManager->expects(self::never())->method('persist');
+        $this->entityManager->expects(self::never())->method('flush');
+        $this->dispatcher->expects(self::never())->method('dispatch');
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('amount_not_positive');
@@ -293,20 +250,18 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
 
         $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.50');
 
-        $this->entityManager
-            ->expects(self::once())
-            ->method('flush');
+        $this->entityManager->expects(self::once())->method('flush');
 
         $this->dispatcher
             ->expects(self::once())
             ->method('dispatch')
             ->with(
                 self::callback(static function (object $event) use ($transaction): bool {
-                    return $event instanceof \App\Vendoring\Event\Vendor\VendorTransactionEvent
+                    return $event instanceof VendorTransactionEvent
                         && $event->transaction === $transaction
                         && 'authorized' === $event->transaction->getStatus();
                 }),
-                VendorTransactionEvent::NAME,
+                VendorTransactionEvent::EVENT_NAME,
             )
             ->willReturnArgument(0);
 
@@ -329,13 +284,8 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
 
         $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.50');
 
-        $this->entityManager
-            ->expects(self::never())
-            ->method('flush');
-
-        $this->dispatcher
-            ->expects(self::never())
-            ->method('dispatch');
+        $this->entityManager->expects(self::never())->method('flush');
+        $this->dispatcher->expects(self::never())->method('dispatch');
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('invalid_status_transition');
@@ -343,8 +293,90 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
         $manager->updateStatus($transaction, ' refunded ');
     }
 
+    public function testUpdateStatusLogsErrorOnPersistFailure(): void
+    {
+        $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
+        $logger->expects(self::once())
+            ->method('error')
+            ->with('vendor_transaction_status_update_failed', self::isArray());
+
+        $runtimeLogger = new VendorRuntimeLoggerService(
+            $logger,
+            new VendorCorrelationContextService(),
+            new RequestStack(),
+        );
+
+        $manager = new VendorTransactionLifecycleService(
+            $this->entityManager,
+            $this->dispatcher,
+            new VendorTransactionStatusPolicyService(),
+            new VendorTransactionAmountPolicyService(),
+            $this->transactions,
+            $runtimeLogger,
+        );
+
+        $transaction = new VendorTransactionEntity('vendor-1', 'order-1', null, '10.50');
+
+        $this->entityManager
+            ->expects(self::once())
+            ->method('flush')
+            ->willThrowException(new \RuntimeException('DB connection lost'));
+
+        $this->dispatcher->expects(self::never())->method('dispatch');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('DB connection lost');
+
+        $manager->updateStatus($transaction, 'authorized');
+    }
+
+    public function testCreateTransactionLogsErrorOnNonDuplicatePersistFailure(): void
+    {
+        $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
+        $logger->expects(self::once())
+            ->method('error')
+            ->with('vendor_transaction_persist_failed', self::isArray());
+
+        $runtimeLogger = new VendorRuntimeLoggerService(
+            $logger,
+            new VendorCorrelationContextService(),
+            new RequestStack(),
+        );
+
+        $manager = new VendorTransactionLifecycleService(
+            $this->entityManager,
+            $this->dispatcher,
+            new VendorTransactionStatusPolicyService(),
+            new VendorTransactionAmountPolicyService(),
+            $this->transactions,
+            $runtimeLogger,
+        );
+
+        $this->transactions
+            ->method('existsForVendorOrderProject')
+            ->willReturn(false);
+
+        $this->entityManager->method('persist');
+        $this->entityManager
+            ->expects(self::once())
+            ->method('flush')
+            ->willThrowException(new \RuntimeException('Deadlock'));
+
+        $this->dispatcher->expects(self::never())->method('dispatch');
+
+        $this->expectException(\RuntimeException::class);
+
+        $manager->createTransaction(
+            new VendorTransactionDataValueObject('vendor-1', 'order-1', null, '10.50'),
+        );
+    }
+
     private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService());
+        return new VendorRuntimeLoggerService(
+            new NullLogger(),
+            new VendorCorrelationContextService(),
+            new RequestStack(),
+        );
     }
 }

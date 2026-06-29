@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 namespace App\Vendoring\Tests\Unit\Command;
 
 use App\Vendoring\Command\VendorPayoutCreateCommand;
@@ -14,10 +12,10 @@ use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
 use App\Vendoring\Service\Payout\VendorPayoutRequestService;
 use App\Vendoring\Service\Payout\VendorPayoutService;
-use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Tests\Support\Payout\InMemoryPayoutRepository;
 use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -139,6 +137,10 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
     private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService());
+        return new VendorRuntimeLoggerService(
+            new NullLogger(),
+            new VendorCorrelationContextService(),
+            new RequestStack(),
+        );
     }
 }

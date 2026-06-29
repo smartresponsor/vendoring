@@ -7,40 +7,46 @@ namespace App\Vendoring\Repository\Vendor;
 use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 final class VendorPayoutRepository extends ServiceEntityRepository implements VendorPayoutRepositoryInterface
 {
-    private mixed $entityManager = null;
+    private ?EntityManagerInterface $directEm = null;
 
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * Accepts either a ManagerRegistry (Symfony DI path) or an EntityManagerInterface
+     * directly (unit test path without a full DI container).
+     */
+    public function __construct(mixed $registry)
     {
-        if ($registry instanceof \Doctrine\ORM\EntityManagerInterface) {
-            $this->entityManager = $registry;
+        if ($registry instanceof EntityManagerInterface) {
+            $this->directEm = $registry;
 
             return;
         }
 
+        /* @var ManagerRegistry $registry */
         parent::__construct($registry, VendorPayoutEntity::class);
     }
 
-    private function em(): mixed
+    private function em(): EntityManagerInterface
     {
-        return $this->entityManager ?? $this->getEntityManager();
+        return $this->directEm ?? $this->getEntityManager();
     }
 
     public function save(object $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->em()->persist($entity);
         if ($flush) {
-            $this->getEntityManager()->flush();
+            $this->em()->flush();
         }
     }
 
     public function byId(mixed $id): ?object
     {
-        if (null !== $this->entityManager) {
-            return $this->entityManager->find(VendorPayoutEntity::class, $id);
+        if (null !== $this->directEm) {
+            return $this->directEm->find(VendorPayoutEntity::class, $id);
         }
 
         return $this->find($id);

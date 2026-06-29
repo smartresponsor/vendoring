@@ -1,0 +1,17 @@
+# ---------------------------------------------------------------------------
+# Vendoring — /api/vendor/statement/ routes
+# ---------------------------------------------------------------------------
+# id always last token.
+# ---------------------------------------------------------------------------
+
+# Statement build
+vendor.api.statement.show_id:
+    { path: /api/vendor/statement/show/{id},
+      service: App\Vendoring\Service\Vendor\Statement\VendorStatementHttpService,
+      resolver: id }
+
+# Statement delivery runtime
+vendor.api.statement.delivery.runtime_id:
+    { path: /api/vendor/statement/delivery/runtime/{id},
+      service: App\Vendoring\Service\Vendor\Statement\Delivery\Runtime\VendorStatementDeliveryRuntimeService,
+      resolver: id }

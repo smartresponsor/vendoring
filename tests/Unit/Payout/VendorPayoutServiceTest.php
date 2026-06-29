@@ -11,10 +11,10 @@ use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
 use App\Vendoring\Service\Payout\VendorPayoutService;
-use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Tests\Support\Payout\InMemoryPayoutRepository;
 use App\Vendoring\Tests\Support\Repository\InMemoryLedgerEntryRepository;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final class VendorPayoutServiceTest extends TestCase
@@ -85,6 +85,10 @@ final class VendorPayoutServiceTest extends TestCase
 
     private function runtimeLogger(): VendorRuntimeLoggerService
     {
-        return new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService());
+        return new VendorRuntimeLoggerService(
+            new NullLogger(),
+            new VendorCorrelationContextService(),
+            new RequestStack(),
+        );
     }
 }

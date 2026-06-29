@@ -5,46 +5,56 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Payout;
 
 use App\Vendoring\DTO\Payout\VendorPayoutTransferDTO;
-use App\Vendoring\Service\Payout\VendorPayoutProviderService;
+use App\Vendoring\Exception\Payout\VendorPayoutProviderNotConfiguredException;
+use App\Vendoring\Service\Payout\VendorNullPayoutProviderService;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Unit tests for VendorNullPayoutProviderService.
+ *
+ * The null-object replaces the previous silent stub that returned ok=true
+ * without executing any real transfer. The null-object throws explicitly
+ * so that unconfigured payout attempts surface immediately at call time
+ * rather than producing ghost transactions.
+ */
 final class VendorPayoutProviderServiceTest extends TestCase
 {
-    public function testTransferReturnsSuccessfulLocalBridgePayload(): void
+    public function testTransferThrowsWhenNoProviderIsConfigured(): void
     {
-        $payload = (new VendorPayoutProviderService())->transfer(new VendorPayoutTransferDTO(
-            'tenant-1',
-            'vendor-1',
-            'bank',
-            'iban-123',
-            95.5,
-            'USD',
-        ));
+        $this->expectException(VendorPayoutProviderNotConfiguredException::class);
 
-        self::assertTrue($payload['ok']);
-        self::assertSame('tenant-1', $payload['tenantId']);
-        self::assertSame('vendor-1', $payload['vendorId']);
-        self::assertSame('bank', $payload['provider']);
-        self::assertSame('iban-123', $payload['accountRef']);
-        self::assertSame(95.5, $payload['amount']);
-        self::assertSame('USD', $payload['currency']);
-        self::assertNull($payload['error']);
-        self::assertIsString($payload['ref']);
-        self::assertMatchesRegularExpression('/^bank_payout_[a-f0-9]{8}$/', $payload['ref']);
+        (new VendorNullPayoutProviderService())->transfer(new VendorPayoutTransferDTO(
+            tenantId: 'tenant-1',
+            vendorId: 'vendor-1',
+            provider: 'bank',
+            accountRef: 'iban-123',
+            amount: 95.5,
+            currency: 'USD',
+        ));
     }
 
-    public function testTransferEmbedsProviderIntoGeneratedReference(): void
+    public function testTransferExceptionMessageIncludesProviderName(): void
     {
-        $payload = (new VendorPayoutProviderService())->transfer(new VendorPayoutTransferDTO(
-            'tenant-1',
-            'vendor-1',
-            'stripe',
-            'acct_123',
-            10.0,
-            'EUR',
-        ));
+        try {
+            (new VendorNullPayoutProviderService())->transfer(new VendorPayoutTransferDTO(
+                tenantId: 'tenant-1',
+                vendorId: 'vendor-1',
+                provider: 'stripe',
+                accountRef: 'acct_123',
+                amount: 10.0,
+                currency: 'EUR',
+            ));
+            self::fail('Expected VendorPayoutProviderNotConfiguredException was not thrown.');
+        } catch (VendorPayoutProviderNotConfiguredException $exception) {
+            self::assertStringContainsString('stripe', $exception->getMessage());
+        }
+    }
 
-        self::assertIsString($payload['ref']);
-        self::assertStringStartsWith('stripe_payout_', $payload['ref']);
+    public function testNullProviderImplementsPayoutProviderInterface(): void
+    {
+        self::assertInstanceOf(
+            \App\Vendoring\ServiceInterface\Payout\VendorPayoutProviderServiceInterface::class,
+            new VendorNullPayoutProviderService(),
+        );
     }
 }

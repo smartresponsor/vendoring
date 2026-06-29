@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
@@ -65,7 +66,7 @@ final class VendorApiKeyRotateCommand extends Command
             return Command::FAILURE;
         }
 
-        if (null === $key) {
+        if (!$key instanceof VendorApiKeyEntity) {
             $this->commandResultEmitter->emitError($output, $format, 'not_found', 'API key not found', [
                 'keyId' => $keyId,
             ]);

@@ -1,6 +1,6 @@
 # Vendoring Zero-Controller Runtime Contract
 
-This component is expected to be consumed through Cruding catch-all routes and FQCN convention.
+This component is expected to be consumed through Cruding catch-all routes and service-layer convention.
 
 ## Runtime dispatch
 
@@ -8,7 +8,7 @@ This component is expected to be consumed through Cruding catch-all routes and F
 URI
 → Cruding grammar
 → providerKey / routeKey
-→ App\Vendoring\Service\Http\Vendor\...\*Service
+→ App\Vendoring\Service\Vendor\...\*Service
 → optional App\Vendoring\Form\Vendor\...\*Type
 ```
 
@@ -46,10 +46,10 @@ Operational smoke scripts may contain negative-check strings such as retired rou
 
 ## Runtime service contract
 
-Every route-map referenced runtime service under `src/Service/Http/Vendor` must:
+Every route-map referenced runtime service under `src/Service/Vendor` must:
 
 ```text
-use namespace App\Vendoring\Service\Http\Vendor\...
+use namespace App\Vendoring\Service\Vendor\...
 end with Service
 be final
 expose __invoke()
@@ -71,5 +71,5 @@ Artifact expectations are listed in:
 docs/runtime-artifact-inventory.md
 ```
 
-Support services and traits may live below `src/Service/Http/Vendor`, but the strict Cruding runtime contract applies only to FQCN services referenced by `config/platform/routes/**/*.yaml`.
+Support services and traits may live below `src/Service/Vendor`, but the strict Cruding runtime contract applies only to FQCN services referenced by `config/platform/routes/**/*.yaml`.
 

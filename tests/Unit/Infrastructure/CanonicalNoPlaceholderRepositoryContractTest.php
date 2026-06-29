@@ -16,7 +16,9 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
             $root.'/tests/',
             $root.'/.idea/',
             $root.'/deploy/_templates/',
+            $root.'/deploy/_template/',
             $root.'/.phpunit.cache/',
+            $root.'/templates/',
             $root.'/.patch-backup/',
             $root.'/build/docs/phpdocumentor/',
             $root.'/docs/',
@@ -52,6 +54,7 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
                 || str_contains($normalized, '/vendor/')
                 || str_contains($normalized, '/node_modules/')
                 || str_contains($normalized, '/deploy/_templates/')
+                || str_contains($normalized, '/deploy/_template/')
                 || preg_match('/\.(zip|tar|gz|tgz)$/i', $normalized)
             ) {
                 continue;

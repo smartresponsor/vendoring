@@ -8,15 +8,24 @@ use App\Vendoring\EntityInterface\Vendor\VendorTransactionEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorTransactionRepository::class)]
-#[ORM\Table(name: 'vendor_transaction')]
+#[ORM\Table(
+    name: 'vendor_transaction',
+    uniqueConstraints: [
+        new ORM\UniqueConstraint(name: 'uniq_vendor_transaction_vendor_order_project_nonnull', columns: ['vendor_id', 'order_id', 'project_id'], options: ['where' => 'project_id IS NOT NULL']),
+        new ORM\UniqueConstraint(name: 'uniq_vendor_transaction_vendor_order_nullproject', columns: ['vendor_id', 'order_id'], options: ['where' => 'project_id IS NULL']),
+    ],
+    indexes: [
+        new ORM\Index(name: 'idx_vendor_transaction_vendor_id', columns: ['vendor_id']),
+    ],
+)]
 class VendorTransactionEntity extends VendorAbstractEntity implements VendorTransactionEntityInterface
 {
-    #[ORM\Column(type: 'string', length: 64)] private string $vendorId;
-    #[ORM\Column(type: 'string', length: 64)] private string $orderId;
-    #[ORM\Column(type: 'string', length: 64, nullable: true)] private ?string $projectId = null;
+    #[ORM\Column(type: 'string', length: 64, name: 'vendor_id')] private string $vendorId;
+    #[ORM\Column(type: 'string', length: 64, name: 'order_id')] private string $orderId;
+    #[ORM\Column(type: 'string', length: 64, nullable: true, name: 'project_id')] private ?string $projectId = null;
     #[ORM\Column(type: 'decimal', precision: 12, scale: 2)] private string $amount;
-    #[ORM\Column(type: 'string', length: 64)] private string $status = 'pending';
-    #[ORM\Column(type: 'datetime_immutable')] private \DateTimeImmutable $createdAt;
+    #[ORM\Column(type: 'string', length: 64, name: 'status')] private string $status = 'pending';
+    #[ORM\Column(type: 'datetime_immutable', name: 'created_at')] private \DateTimeImmutable $createdAt;
     public function __construct(string $vendorId, string $orderId, ?string $projectId, string $amount, string $status = 'pending')
     {
         parent::__construct($status);

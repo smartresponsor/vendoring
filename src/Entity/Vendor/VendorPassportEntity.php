@@ -47,6 +47,8 @@ class VendorPassportEntity extends VendorAbstractEntity
     {
         $this->verified = true;
 
-        return $this->setStatus('verified');
+        $this->setStatus('verified');
+
+        return $this;
     }
 }

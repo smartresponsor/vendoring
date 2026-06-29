@@ -25,7 +25,7 @@ foreach ($iterator as $file) {
         continue;
     }
 
-    if (str_contains($content, 'App\\Service\\Http\\') || str_contains($content, 'App\\Form\\')) {
+    if (str_contains($content, 'App\\Service\\Vendor\\') || str_contains($content, 'App\\Form\\')) {
         $errors[] = 'Legacy non-component FQCN remains: '.$path;
     }
 

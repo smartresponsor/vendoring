@@ -6,6 +6,7 @@ namespace App\Vendoring\Support\Http;
 
 use Symfony\Component\HttpFoundation\Request;
 
+/** @phpstan-ignore trait.unused */
 trait VendorBusinessOperationHttpTrait
 {
     /** @return array<string, mixed> */

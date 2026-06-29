@@ -14,7 +14,7 @@ composer require symfony/framework-bundle symfony/validator symfony/form doctrin
 == 2) Wire route-map registry and services
 
 Vendoring does not export component-owned Symfony controller routes.
-Import the route-map registry and let Cruding resolve runtime services through FQCN convention.
+Import the route-map registry and let Cruding resolve runtime services through service-layer convention.
 
 [source,yaml]
 ----
@@ -44,7 +44,7 @@ VENDOR_SQLITE_DSN=sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite
 == 4) Minimal Cruding integration flow
 
 * Upsert vendor profile through the canonical `vendor.*` service map.
-* Read vendor runtime projection through `App\Vendoring\Service\Http\Vendor\Runtime\...` services.
+* Read vendor runtime projection through `App\Vendoring\Service\Vendor\Runtime\...` services.
 * Create payout when ready through the vendor business route-map.
 
 == 5) Enable only needed parts

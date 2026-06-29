@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 namespace App\Vendoring\Service\Transaction;
 
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
@@ -17,24 +15,22 @@ use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
 use App\Vendoring\ValueObject\VendorTransactionErrorCodeValueObject;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
-use Throwable;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorTransactionLifecycleService implements VendorTransactionLifecycleServiceInterface
 {
-    // Stable validation surface: duplicate_transaction.
     public function __construct(
-        private EntityManagerInterface                 $em,
-        private EventDispatcherInterface               $dispatcher,
+        private EntityManagerInterface $em,
+        private EventDispatcherInterface $dispatcher,
         private VendorTransactionStatusPolicyServiceInterface $statusPolicy,
         private VendorTransactionAmountPolicyServiceInterface $amountPolicy,
-        private VendorTransactionRepositoryInterface   $transactions,
-        private VendorRuntimeLoggerServiceInterface                 $runtimeLogger,
-    ) {}
+        private VendorTransactionRepositoryInterface $transactions,
+        private VendorRuntimeLoggerServiceInterface $runtimeLogger,
+    ) {
+    }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function createTransaction(VendorTransactionDataValueObject $data): VendorTransactionEntity
     {
@@ -50,7 +46,7 @@ final readonly class VendorTransactionLifecycleService implements VendorTransact
                 'error_code' => VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION,
             ]);
 
-            throw new InvalidArgumentException(VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION);
+            throw new \InvalidArgumentException(VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION);
         }
 
         $tx = new VendorTransactionEntity(
@@ -64,22 +60,34 @@ final readonly class VendorTransactionLifecycleService implements VendorTransact
 
         try {
             $this->em->flush();
-        } catch (Throwable $exception) {
-            if (!$exception instanceof UniqueConstraintViolationException) {
-                throw $exception;
+        } catch (\Throwable $exception) {
+            if ($exception instanceof UniqueConstraintViolationException) {
+                $this->runtimeLogger->warning('vendor_transaction_duplicate_rejected', [
+                    'vendor_id' => $vendorId,
+                    'order_id' => $orderId,
+                    'project_id' => $projectId,
+                    'error_code' => VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION,
+                ]);
+
+                throw new \InvalidArgumentException(VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION, previous: $exception);
             }
 
-            $this->runtimeLogger->warning('vendor_transaction_duplicate_rejected', [
+            // Non-duplicate persistence failure: log with full context before rethrow
+            // so the observability stream captures vendor/order context.
+            $this->runtimeLogger->error('vendor_transaction_persist_failed', [
                 'vendor_id' => $vendorId,
                 'order_id' => $orderId,
                 'project_id' => $projectId,
-                'error_code' => VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION,
+                'error_code' => 'persist_failed',
+                'exception_class' => $exception::class,
+                'exception_message' => $exception->getMessage(),
             ]);
 
-            throw new InvalidArgumentException(VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION, previous: $exception);
+            throw $exception;
         }
 
         $this->dispatcher->dispatch(new VendorTransactionEvent($tx), VendorTransactionEvent::EVENT_NAME);
+
         $this->runtimeLogger->info('vendor_transaction_created', [
             'vendor_id' => $tx->getVendorId(),
             'transaction_id' => null !== $tx->getId() ? (string) $tx->getId() : null,
@@ -104,13 +112,29 @@ final readonly class VendorTransactionLifecycleService implements VendorTransact
                 'error_code' => VendorTransactionErrorCodeValueObject::INVALID_STATUS_TRANSITION,
             ]);
 
-            throw new InvalidArgumentException(VendorTransactionErrorCodeValueObject::INVALID_STATUS_TRANSITION);
+            throw new \InvalidArgumentException(VendorTransactionErrorCodeValueObject::INVALID_STATUS_TRANSITION);
         }
 
         $tx->setStatus($normalizedStatus);
-        $this->em->flush();
+
+        try {
+            $this->em->flush();
+        } catch (\Throwable $exception) {
+            $this->runtimeLogger->error('vendor_transaction_status_update_failed', [
+                'vendor_id' => $tx->getVendorId(),
+                'transaction_id' => null !== $tx->getId() ? (string) $tx->getId() : null,
+                'from_status' => $tx->getStatus(),
+                'to_status' => $normalizedStatus,
+                'error_code' => 'status_update_persist_failed',
+                'exception_class' => $exception::class,
+                'exception_message' => $exception->getMessage(),
+            ]);
+
+            throw $exception;
+        }
 
         $this->dispatcher->dispatch(new VendorTransactionEvent($tx), VendorTransactionEvent::EVENT_NAME);
+
         $this->runtimeLogger->info('vendor_transaction_status_updated', [
             'vendor_id' => $tx->getVendorId(),
             'transaction_id' => null !== $tx->getId() ? (string) $tx->getId() : null,
@@ -124,8 +148,8 @@ final readonly class VendorTransactionLifecycleService implements VendorTransact
     {
         $normalized = trim($value);
 
-        if ('' == $normalized) {
-            throw new InvalidArgumentException($message);
+        if ('' === $normalized) {
+            throw new \InvalidArgumentException($message);
         }
 
         return $normalized;

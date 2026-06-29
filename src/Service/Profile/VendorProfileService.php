@@ -13,7 +13,6 @@ use App\Vendoring\Event\Vendor\VendorProfileUpdatedEvent;
 use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
 use App\Vendoring\ServiceInterface\Profile\VendorProfileServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorProfileService implements VendorProfileServiceInterface
@@ -22,11 +21,16 @@ final readonly class VendorProfileService implements VendorProfileServiceInterfa
         private EntityManagerInterface $em,
         private VendorProfileRepositoryInterface $repository,
         private EventDispatcherInterface $dispatcher,
-    ) {}
+    ) {
+    }
 
     public function upsert(VendorEntity $vendor, VendorProfileDTO $dto): VendorProfileEntity
     {
         $profile = $this->repository->findOneBy(['vendor' => $vendor]) ?? new VendorProfileEntity($vendor);
+        if (!$profile instanceof VendorProfileEntity) {
+            $profile = new VendorProfileEntity($vendor);
+        }
+
         $profile->updateContent(
             $this->normalizeNullableString($dto->displayName),
             $this->normalizeNullableString($dto->about),
@@ -40,7 +44,7 @@ final readonly class VendorProfileService implements VendorProfileServiceInterfa
 
         if ('publish' === $dto->publicationAction) {
             if (!$this->isPublishable($profile)) {
-                throw new InvalidArgumentException('public_profile_incomplete');
+                throw new \InvalidArgumentException('public_profile_incomplete');
             }
 
             $profile->publish();
@@ -69,6 +73,7 @@ final readonly class VendorProfileService implements VendorProfileServiceInterfa
 
     /**
      * @param array<string, string>|null $socials
+     *
      * @return array<string, string>|null
      */
     private function normalizeSocials(?array $socials): ?array

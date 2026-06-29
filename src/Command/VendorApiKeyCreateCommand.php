@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
@@ -68,7 +69,7 @@ final class VendorApiKeyCreateCommand extends Command
             return Command::FAILURE;
         }
 
-        if (null === $vendor) {
+        if (!$vendor instanceof VendorEntity) {
             $this->commandResultEmitter->emitError($output, $format, 'not_found', 'Vendor not found', [
                 'vendorId' => $vendorId,
             ]);

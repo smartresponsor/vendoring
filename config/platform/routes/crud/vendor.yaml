@@ -26,10 +26,10 @@
 #   vendor.delete_id  -> no dedicated template
 # ---------------------------------------------------------------------------
 
-vendor.index:      { path: /vendor/index,       service: App\Vendoring\Service\Http\Vendor\VendorIndexService }
-vendor.show_id:    { path: /vendor/show/{id},   service: App\Vendoring\Service\Http\Vendor\VendorShowService, resolver: id }
-vendor.new:        { path: /vendor/new,         service: App\Vendoring\Service\Http\Vendor\VendorNewService }
-vendor.create:     { path: /vendor/create,      type: App\Vendoring\Form\Vendor\VendorCreateType, service: App\Vendoring\Service\Http\Vendor\VendorCreateService }
-vendor.edit_id:    { path: /vendor/edit/{id},   service: App\Vendoring\Service\Http\Vendor\VendorEditService, resolver: id }
-vendor.update_id:  { path: /vendor/update/{id}, type: App\Vendoring\Form\Vendor\VendorUpdateType, service: App\Vendoring\Service\Http\Vendor\VendorUpdateService, resolver: id }
-vendor.delete_id:  { path: /vendor/delete/{id}, service: App\Vendoring\Service\Http\Vendor\VendorDeleteService, resolver: id }
+vendor.index:      { path: /vendor/index,       service: App\Vendoring\Service\Vendor\VendorIndexService }
+vendor.show_id:    { path: /vendor/show/{id},   service: App\Vendoring\Service\Vendor\VendorShowService, resolver: id }
+vendor.new:        { path: /vendor/new,         service: App\Vendoring\Service\Vendor\VendorNewService }
+vendor.create:     { path: /vendor/create,      type: App\Vendoring\Form\Vendor\VendorCreateType, service: App\Vendoring\Service\Vendor\VendorCreateService }
+vendor.edit_id:    { path: /vendor/edit/{id},   service: App\Vendoring\Service\Vendor\VendorEditService, resolver: id }
+vendor.update_id:  { path: /vendor/update/{id}, type: App\Vendoring\Form\Vendor\VendorUpdateType, service: App\Vendoring\Service\Vendor\VendorUpdateService, resolver: id }
+vendor.delete_id:  { path: /vendor/delete/{id}, service: App\Vendoring\Service\Vendor\VendorDeleteService, resolver: id }

@@ -124,7 +124,7 @@ Reason: the current slice does not contain replacement entities/repositories/pro
 Wave 12 should be one of these, not both at once:
 
 1. **Vendoring route/http surface repair**
-   - `config/platform/routes/*` points to `App\Vendoring\Service\Http\Vendor\*`, but `src/Service/Http` is absent.
+   - `config/platform/routes/*` points to `App\Vendoring\Service\Vendor\*`, but `src/Service/Vendor` is absent.
    - Decide whether routes stay registry-only or generate Symfony-oriented thin HTTP services.
 
 2. **Vendoring persistence rebuild design**

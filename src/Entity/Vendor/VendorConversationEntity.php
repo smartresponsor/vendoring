@@ -38,7 +38,9 @@ class VendorConversationEntity extends VendorAbstractEntity
         $this->status = $status;
         $this->meta = $meta;
 
-        return $this->setStatus($status);
+        $this->setStatus($status);
+
+        return $this;
     }
 
     public function getVendor(): ?VendorEntity

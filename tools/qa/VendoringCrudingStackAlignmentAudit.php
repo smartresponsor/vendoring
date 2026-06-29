@@ -83,7 +83,7 @@ foreach (array_keys($formTargets) as $fqcn) {
     }
 }
 
-$responseService = $root.'/src/Service/Http/Vendor/VendorHttpRouteResponseService.php';
+$responseService = $root.'/src/Service/Vendor/VendorHttpRouteResponseService.php';
 if (!is_file($responseService)) {
     $errors[] = 'Missing VendorHttpRouteResponseService.php';
 } else {
@@ -103,7 +103,7 @@ if (!is_file($responseService)) {
     }
 }
 
-$abstractService = $root.'/src/Service/Http/Vendor/AbstractVendorCrudRouteService.php';
+$abstractService = $root.'/src/Service/Vendor/AbstractVendorCrudRouteService.php';
 if (!is_file($abstractService)) {
     $errors[] = 'Missing AbstractVendorCrudRouteService.php';
 } else {
@@ -113,7 +113,7 @@ if (!is_file($abstractService)) {
     }
 }
 
-foreach (wave13PhpFiles($root.'/src/Service/Http/Vendor') as $file) {
+foreach (wave13PhpFiles($root.'/src/Service/Vendor') as $file) {
     $relative = substr($file, strlen($root) + 1);
     $source = file_get_contents($file) ?: '';
 

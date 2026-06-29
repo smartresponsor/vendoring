@@ -1,4 +1,4 @@
-﻿# Vendoring Layer 3 Structure and Naming Canon
+# Vendoring Layer 3 Structure and Naming Canon
 
 This file is machine-readable operational canon for agents and code generators. Do not paraphrase it when editing code.
 
@@ -12,7 +12,7 @@ Runtime dispatch is owned by Cruding:
 URI
 в†’ Cruding grammar
 в†’ providerKey / routeKey
-в†’ App\Vendoring\Service\Http\Vendor\...\*Service
+в†’ App\Vendoring\Service\Vendor\...\*Service
 в†’ optional App\Vendoring\Form\Vendor\...\*Type
 ```
 
@@ -53,13 +53,13 @@ The parent folders listed above must not contain PHP files directly and must not
 
 ## HTTP service and form exception
 
-`src/Service/Http/` and `src/Form/` follow Cruding FQCN convention, not the `App\Vendoring\...` namespace.
+`src/Service/Vendor/` and `src/Form/` follow Cruding service-layer convention, not the `App\Vendoring\...` namespace.
 
 Allowed:
 
-- `src/Service/Http/Vendor/VendorIndexService.php`
-- `src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php`
-- namespace `App\Vendoring\Service\Http\Vendor\...`
+- `src/Service/Vendor/VendorIndexService.php`
+- `src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php`
+- namespace `App\Vendoring\Service\Vendor\...`
 - `src/Form/Vendor/VendorCreateType.php`
 - namespace `App\Vendoring\Form\Vendor\...`
 
@@ -68,7 +68,7 @@ Forbidden:
 - `src/Controller/`
 - `src/ControllerTrait/`
 - retired controller namespace classes
-- `App\Vendoring\Service\Http\...`
+- `App\Vendoring\Service\Vendor\...`
 
 ## Forbidden examples
 
@@ -119,7 +119,7 @@ For runtime HTTP entrypoints, derive the target from the route-map key:
 
 ```text
 vendor.attachment.document.index
-в†’ App\Vendoring\Service\Http\Vendor\Attachment\Document\VendorAttachmentDocumentIndexService
+в†’ App\Vendoring\Service\Vendor\Attachment\Document\VendorAttachmentDocumentIndexService
 ```
 
 ## EntityInterface literal addendum

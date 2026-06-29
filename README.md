@@ -60,7 +60,7 @@ This gives a production-relevant “vendor readiness + payout prep” path witho
 ## Source and runtime canon
 
 Vendoring is a **zero-controller / zero-route component**.
-Runtime entrypoints are owned by Cruding and resolved through route-map keys plus FQCN convention.
+Runtime entrypoints are owned by Cruding and resolved through route-map keys plus service-layer convention.
 
 Forbidden component artifacts:
 
@@ -79,7 +79,7 @@ Canonical runtime artifacts:
 - `config/platform/routes/crud/vendor.attachment.document.yaml`
 - `config/platform/routes/crud/vendor.attachment.media.yaml`
 - `config/platform/routes/business/vendor.yaml`
-- `src/Service/Http/Vendor/.../*Service.php`
+- `src/Service/Vendor/.../*Service.php`
 - `src/Form/Vendor/.../*Type.php` when an operation needs form/input validation
 
 The canonical dispatch contract is:
@@ -88,7 +88,7 @@ The canonical dispatch contract is:
 URI
 → Cruding grammar
 → providerKey / routeKey
-→ App\Vendoring\Service\Http\Vendor\...\*Service
+→ App\Vendoring\Service\Vendor\...\*Service
 → optional App\Vendoring\Form\Vendor\...\*Type
 ```
 
@@ -119,7 +119,7 @@ imports:
   - { resource: '../../vendor/.../config/component/services.yaml' }
 ```
 
-In this repository, the registry lives under `config/platform/` and the canonical runtime services are registered from `src/Service/Http/` as `App\Vendoring\Service\Http\...`.
+In this repository, the registry lives under `config/platform/` and the canonical runtime services are registered from `src/Service/Vendor/` as `App\Vendoring\Service\Vendor\...`.
 
 ### 3) Runtime configuration
 ## API surface (consumer-oriented)
@@ -270,7 +270,7 @@ Policy canon: `src/Policy/Vendor/Vendor*Policy.php` and `src/PolicyInterface/Ven
 
 ## Vendor business route-map coverage
 
-The component now contains canonical `App\Vendoring\Service\Http\Vendor\...*Service` and `App\Vendoring\Form\Vendor\...*Type` artifacts for `config/platform/routes/business/vendor.yaml`.
+The component now contains canonical `App\Vendoring\Service\Vendor\...*Service` and `App\Vendoring\Form\Vendor\...*Type` artifacts for `config/platform/routes/business/vendor.yaml`.
 
 Smoke:
 

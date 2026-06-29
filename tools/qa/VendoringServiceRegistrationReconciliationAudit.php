@@ -37,7 +37,7 @@ foreach ($obsoleteMarkers as $marker) {
 }
 
 $requiredMarkers = [
-    "App\\Vendoring\\Service\\Http\\:\n    resource: '../../src/Service/Http/'",
+    "App\\Vendoring\\Service\\Vendor\\:\n    resource: '../../src/Service/Vendor/'",
     "App\\Vendoring\\Form\\:\n    resource: '../../src/Form/'",
     "App\\Vendoring\\ServiceInterface\\Profile\\VendorProfileAttachmentResolverServiceInterface: '@App\\Vendoring\\Service\\Profile\\NullVendorProfileAttachmentResolverService'",
     "App\\Vendoring\\Service\\Config\\VendoringFeatureFlagsConfigService:",

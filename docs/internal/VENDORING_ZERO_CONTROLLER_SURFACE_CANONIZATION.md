@@ -5,7 +5,7 @@ Vendoring is normalized as a zero-controller component. Route-map targets remain
 ## Canon
 
 - No `Controller/` surface is introduced.
-- Route service targets are `App\Vendoring\Service\Http\Vendor\...\Vendor*Service`.
+- Route service targets are `App\Vendoring\Service\Vendor\...\Vendor*Service`.
 - Form targets are `App\Vendoring\Form\Vendor\...\Vendor*Type`.
 - Read routes remain executable through the read route response service.
 - Write/business mutation routes remain inert while the Vendor persistence/domain surface is quarantined.

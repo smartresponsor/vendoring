@@ -28,7 +28,7 @@ foreach ($iterator as $file) {
 
     if (preg_match_all('/service:\s*([^,\}\s]+)/', $contents, $matches) > 0) {
         foreach ($matches[1] as $fqcn) {
-            if (str_starts_with($fqcn, 'App\\Vendoring\\Service\\Http\\Vendor\\')) {
+            if (str_starts_with($fqcn, 'App\\Vendoring\\Service\\Vendor\\')) {
                 $services[$fqcn] = true;
             }
         }
@@ -75,8 +75,8 @@ foreach (array_keys($services) as $fqcn) {
         $errors[] = sprintf('%s must end with Service.php', $relative);
     }
 
-    if (!str_contains($contents, 'namespace App\\Vendoring\\Service\\Http\\Vendor')) {
-        $errors[] = sprintf('%s must use App\\Vendoring\\Service\\Http\\Vendor namespace', $relative);
+    if (!str_contains($contents, 'namespace App\\Vendoring\\Service\\Vendor')) {
+        $errors[] = sprintf('%s must use App\\Vendoring\\Service\\Vendor namespace', $relative);
     }
 
     if (!preg_match('/final\s+(?:readonly\s+)?class\s+'.preg_quote($shortName, '/').'\b/', $contents)) {

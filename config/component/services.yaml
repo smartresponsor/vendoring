@@ -6,7 +6,7 @@ parameters:
   vendoring_observability_dir: '%kernel.project_dir%/var/observability'
   vendoring_fault_tolerance_dir: '%kernel.project_dir%/var/fault-tolerance'
   vendoring_alert_thresholds:
-    errorLogThreshold: 1
+    errorLogThreshold: 5
     openBreakerThreshold: 1
     missingProbeThreshold: 1
   vendoring_public_profile_path_template: '/vendor/{vendorId}'
@@ -35,10 +35,13 @@ services:
       - '../../src/RepositoryInterface/'
       - '../../src/ServiceInterface/'
       - '../../src/Support/'
-      - '../../src/Service/Http/'
+      - '../../src/Service/Vendor/'
       - '../../src/Service/Profile/Bridge/'
       - '../../src/ValueObject/'
       - '../../src/Form/'
+
+      # Contract DTO is a value object — must not be registered as a service.
+      - '../../src/Contract/'
 
       # Optional bridge coordinator is registered only when the host imports
       # config/component/optional/attaching_profile_bridge.yaml.
@@ -47,28 +50,28 @@ services:
 
 
   # Canonical zero-controller HTTP surface services resolved by Cruding FQCN convention.
-  App\Vendoring\Service\Http\:
-    resource: '../../src/Service/Http/'
+  App\Vendoring\Service\Vendor\:
+    resource: '../../src/Service/Vendor/'
     exclude:
-      - '../../src/Service/Http/**/*Trait.php'
-      - '../../src/Service/Http/Vendor/VendorApiErrorResponseTrait.php'
-      - '../../src/Service/Http/Vendor/VendorBusinessOperationHttpTrait.php'
-      - '../../src/Service/Http/Vendor/VendorHttpRequestTrait.php'
-      - '../../src/Service/Http/Vendor/VendorStatementRequestHttpResolutionTrait.php'
-      - '../../src/Service/Http/Vendor/Ownership/VendorOwnershipMutationService.php'
-  App\Vendoring\Service\Http\Vendor\VendorIndexService:
+      - '../../src/Service/Vendor/**/*Trait.php'
+      - '../../src/Service/Vendor/VendorApiErrorResponseTrait.php'
+      - '../../src/Service/Vendor/VendorBusinessOperationHttpTrait.php'
+      - '../../src/Service/Vendor/VendorHttpRequestTrait.php'
+      - '../../src/Service/Vendor/VendorStatementRequestHttpResolutionTrait.php'
+      - '../../src/Service/Vendor/Ownership/VendorOwnershipMutationService.php'
+  App\Vendoring\Service\Vendor\VendorIndexService:
     public: true
-  App\Vendoring\Service\Http\Vendor\VendorShowService:
+  App\Vendoring\Service\Vendor\VendorShowService:
     public: true
-  App\Vendoring\Service\Http\Vendor\VendorNewService:
+  App\Vendoring\Service\Vendor\VendorNewService:
     public: true
-  App\Vendoring\Service\Http\Vendor\VendorCreateService:
+  App\Vendoring\Service\Vendor\VendorCreateService:
     public: true
-  App\Vendoring\Service\Http\Vendor\VendorEditService:
+  App\Vendoring\Service\Vendor\VendorEditService:
     public: true
-  App\Vendoring\Service\Http\Vendor\VendorUpdateService:
+  App\Vendoring\Service\Vendor\VendorUpdateService:
     public: true
-  App\Vendoring\Service\Http\Vendor\VendorDeleteService:
+  App\Vendoring\Service\Vendor\VendorDeleteService:
     public: true
   App\Vendoring\ServiceInterface\Crud\VendorCrudServiceInterface:
     alias: App\Vendoring\Service\Crud\VendorCrudService
@@ -156,9 +159,14 @@ services:
   App\Vendoring\ServiceInterface\Category\Suggest\VendorCategoryRuleSuggestServiceInterface: '@App\Vendoring\Service\Category\Suggest\VendorCategoryRuleSuggestService'
   App\Vendoring\ServiceInterface\Payout\VendorPayoutRequestServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutRequestService'
   App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutService'
+  App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationMappingServiceInterface: '@App\Vendoring\Service\Syndication\VendorCatalogSyndicationMappingService'
+  App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaReadinessServiceInterface: '@App\Vendoring\Service\Media\VendorCatalogDestinationMediaReadinessService'
+  App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaFallbackServiceInterface: '@App\Vendoring\Service\Media\VendorCatalogDestinationMediaFallbackService'
+  App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationFallbackAwarePackageGateServiceInterface: '@App\Vendoring\Service\Syndication\VendorCatalogSyndicationFallbackAwarePackageGateService'
+  App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaPolicyPreferenceServiceInterface: '@App\Vendoring\Service\Media\VendorCatalogDestinationMediaPolicyPreferenceService'
   App\Vendoring\ServiceInterface\Search\VendorTfIdfSearchServiceInterface: '@App\Vendoring\Service\Search\VendorTfIdfSearchService'
   App\Vendoring\ServiceInterface\Security\VendorHmacServiceInterface: '@App\Vendoring\Service\Security\VendorHmacService'
-  App\Vendoring\ServiceInterface\Payout\VendorPayoutProviderServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutProviderService'
+  App\Vendoring\ServiceInterface\Payout\VendorPayoutProviderServiceInterface: '@App\Vendoring\Service\Payout\VendorNullPayoutProviderService'
 
   App\Vendoring\ServiceInterface\Api\VendorTenantQueryRequestResolverServiceInterface: '@App\Vendoring\Service\Api\VendorTenantQueryRequestResolverService'
   App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface: '@App\Vendoring\Service\Api\VendorStatementWindowQueryRequestResolverService'
@@ -175,7 +183,7 @@ services:
   App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface: '@App\Vendoring\Service\Ledger\VendorLedgerService'
   App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementDeliveryRuntimeProjectionBuilderService'
   App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface: '@App\Vendoring\Service\Integration\VendorExternalIntegrationRuntimeProjectionBuilderService'
-  App\Vendoring\ServiceInterface\Integration\VendorCrmServiceInterface: '@App\Vendoring\Service\Integration\VendorCrmService'
+  App\Vendoring\ServiceInterface\Integration\VendorCrmServiceInterface: '@App\Vendoring\Service\Integration\VendorNullCrmService'
   App\Vendoring\ServiceInterface\Transaction\VendorTransactionInputResolverServiceInterface: '@App\Vendoring\Service\Transaction\VendorTransactionInputResolverService'
   App\Vendoring\ServiceInterface\Policy\VendorTransactionStatusPolicyServiceInterface: '@App\Vendoring\Service\Policy\VendorTransactionStatusPolicyService'
   App\Vendoring\ServiceInterface\Policy\VendorTransactionAmountPolicyServiceInterface: '@App\Vendoring\Service\Policy\VendorTransactionAmountPolicyService'
@@ -184,11 +192,15 @@ services:
   App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementRecipientProviderService'
   App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementRequestResolverService'
   App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementService'
-  App\Vendoring\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface: '@App\Vendoring\Service\WebhooksConsumer\VendorWebhooksConsumerService'
+  App\Vendoring\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface: '@App\Vendoring\Service\WebhooksConsumer\VendorNullWebhooksConsumerService'
 
   App\Vendoring\Service\Config\VendoringFeatureFlagsConfigService:
     arguments:
       $projectDir: '%kernel.project_dir%'
+
+  App\Vendoring\Service\Observability\VendorRuntimeLoggerService:
+    arguments:
+      $logger: '@monolog.logger.vendoring'
 
   App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService:
     arguments:
@@ -219,6 +231,12 @@ services:
       $collectors:
         - '@App\Vendoring\Service\Observability\VendorMetricEmitterService'
         - '@App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService'
+
+  # VendorWriteRateLimiterService uses fail-open by default (no backend configured).
+  # To enable real rate limiting, inject a backend callable from the host application:
+  #   App\Vendoring\Service\Traffic\VendorWriteRateLimiterService:
+  #       arguments:
+  #           $backendFactory: '@your_rate_limiter_adapter'
 
   App\Vendoring\Service\Rollout\VendorFeatureFlagService:
     arguments:

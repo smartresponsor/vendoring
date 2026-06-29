@@ -33,7 +33,7 @@ This keeps read routes executable while persistence is unavailable and gives fut
 
 Changed:
 
-- `src/Service/Http/Vendor/VendorHttpRouteResponseService.php`
+- `src/Service/Vendor/VendorHttpRouteResponseService.php`
 - `tools/qa/VendoringCrudingViewingAlignmentAudit.php`
 - `docs/internal/VENDORING_CRUDING_VIEWING_ALIGNMENT.md`
 - `delivery/audit/vendoring-wave12e-cruding-viewing-alignment.json`
@@ -50,7 +50,7 @@ Not changed:
 ## Checks
 
 ```bash
-php -l src/Service/Http/Vendor/VendorHttpRouteResponseService.php
+php -l src/Service/Vendor/VendorHttpRouteResponseService.php
 php -l tools/qa/VendoringCrudingViewingAlignmentAudit.php
 php tools/qa/VendoringCrudingViewingAlignmentAudit.php
 php tools/qa/VendoringZeroControllerSurfaceAudit.php

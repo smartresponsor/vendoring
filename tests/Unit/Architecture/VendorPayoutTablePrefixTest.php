@@ -27,7 +27,7 @@ final class VendorPayoutTablePrefixTest extends TestCase
         $attributes = $reflection->getAttributes(Table::class);
 
         self::assertNotSame([], $attributes);
-        self::assertSame($expectedTableName, $attributes[0]->newInstance()->nameEntity);
-        self::assertStringStartsWith('vendor_', $attributes[0]->newInstance()->nameEntity);
+        self::assertSame($expectedTableName, $attributes[0]->newInstance()->name);
+        self::assertStringStartsWith('vendor_', $attributes[0]->newInstance()->name);
     }
 }

@@ -26,7 +26,7 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
 
         $tableAttributes = $reflection->getAttributes(ORM\Table::class);
         self::assertCount(1, $tableAttributes);
-        self::assertSame('vendor_transaction', $tableAttributes[0]->getArguments()['nameEntity'] ?? null);
+        self::assertSame('vendor_transaction', $tableAttributes[0]->getArguments()['name'] ?? null);
     }
 
     public function testPersistentFieldsExposeExpectedDoctrineColumns(): void

@@ -1,0 +1,20 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Vendoring\:
+        resource: '../src/'
+        exclude:
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/DTO/Ledger/VendorLedgerEntryDTO.php'
+            - '../src/Repository/'
+
+    App\Vendoring\Repository\Vendor\VendorLedgerEntryRepository:
+        arguments:
+            $registry: '@doctrine'
+
+    App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLedgerEntryRepository'
+
+    App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLedgerEntryRepository'

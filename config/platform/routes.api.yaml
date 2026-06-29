@@ -1,0 +1,12 @@
+# ---------------------------------------------------------------------------
+# Vendoring API route-map registry
+# ---------------------------------------------------------------------------
+# JSON API surface. All routes prefixed /api/vendor/.
+# id/slug always last token — canonical grammar rule.
+# Services resolve by FQCN convention via Cruding catch-all.
+# ---------------------------------------------------------------------------
+
+imports:
+    - { resource: 'routes/api/vendor.yaml' }
+    - { resource: 'routes/api/vendor.runtime.yaml' }
+    - { resource: 'routes/api/vendor.statement.yaml' }

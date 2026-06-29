@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
 use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
@@ -109,7 +110,7 @@ final class VendorPayoutCreateCommand extends Command
             return Command::FAILURE;
         }
 
-        if (null === $payout) {
+        if (!$payout instanceof VendorPayoutEntity) {
             $this->commandResultEmitter->emitError($output, $format, 'failed', 'VendorPayoutEntity was created but cannot be loaded from repository.', [
                 'payoutId' => $payoutId,
                 'payload' => $payload,

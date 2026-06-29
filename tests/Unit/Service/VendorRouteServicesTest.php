@@ -9,12 +9,12 @@ use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
 use App\Cruding\Value\Resource\CrudResourceContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
-use App\Vendoring\Service\Http\Vendor\VendorCreateService;
-use App\Vendoring\Service\Http\Vendor\VendorDeleteService;
-use App\Vendoring\Service\Http\Vendor\VendorHttpRouteResponseService;
-use App\Vendoring\Service\Http\Vendor\VendorIndexService;
-use App\Vendoring\Service\Http\Vendor\VendorShowService;
-use App\Vendoring\Service\Http\Vendor\VendorUpdateService;
+use App\Vendoring\Service\Vendor\VendorCreateService;
+use App\Vendoring\Service\Vendor\VendorDeleteService;
+use App\Vendoring\Service\Vendor\VendorHttpRouteResponseService;
+use App\Vendoring\Service\Vendor\VendorIndexService;
+use App\Vendoring\Service\Vendor\VendorShowService;
+use App\Vendoring\Service\Vendor\VendorUpdateService;
 use App\Vendoring\ServiceInterface\Assignment\VendorUserAssignmentServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -172,6 +172,9 @@ final class VendorRouteServicesTest extends TestCase
         self::assertInstanceOf(CrudResourceContract::class, $response);
     }
 
+    /**
+     * @param array<string, mixed> $requestData
+     */
     private function context(
         string $operation,
         ?object $object = null,
@@ -189,7 +192,7 @@ final class VendorRouteServicesTest extends TestCase
         return new CrudServiceContext(
             request: $request,
             crudContext: new CrudContext(
-                surface: 'admin',
+                view: 'admin',
                 operation: $operation,
                 resourcePath: 'vendor',
                 entityClass: VendorEntity::class,

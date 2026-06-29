@@ -4,7 +4,7 @@ Wave 16 reconciles Symfony service registration with the physically restored Ven
 
 ## Activated
 
-- canonical `App\Vendoring\Service\Http\` resource;
+- canonical `App\Vendoring\Service\Vendor\` resource;
 - canonical `App\Vendoring\Form\` resource;
 - persistence-bound business services previously excluded by Wave 11;
 - 46 `Vendor*RepositoryInterface -> Vendor*Repository` bindings;

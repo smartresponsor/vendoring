@@ -18,7 +18,7 @@ foreach ($objects as $object) {
 
     foreach ($actions as $action) {
         $Action = ucfirst($action);
-        $service = $root.'/src/Service/Http/Vendor/Attachment/'.$Object.'/VendorAttachment'.$Object.$Action.'Service.php';
+        $service = $root.'/src/Service/Vendor/Attachment/'.$Object.'/VendorAttachment'.$Object.$Action.'Service.php';
         if (!file_exists($service)) {
             $errors[] = 'Missing service: '.$service;
         }

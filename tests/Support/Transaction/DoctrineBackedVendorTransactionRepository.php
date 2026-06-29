@@ -73,6 +73,11 @@ final class DoctrineBackedVendorTransactionRepository implements VendorTransacti
         return $this->entityManager->find(VendorTransactionEntity::class, $id);
     }
 
+    public function byId(mixed $id): ?object
+    {
+        return $this->find($id);
+    }
+
     public function findOneBy(array $criteria): ?object
     {
         return $this->entityManager
@@ -80,12 +85,12 @@ final class DoctrineBackedVendorTransactionRepository implements VendorTransacti
             ->findOneBy($criteria);
     }
 
-    public function findBy(array $criteria): array
+    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
         /** @var list<object> $transactions */
         $transactions = $this->entityManager
             ->getRepository(VendorTransactionEntity::class)
-            ->findBy($criteria);
+            ->findBy($criteria, $orderBy, $limit, $offset);
 
         return $transactions;
     }

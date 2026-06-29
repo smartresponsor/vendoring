@@ -36,11 +36,11 @@ if (!is_file($services)) {
 } else {
     $contents = (string) file_get_contents($services);
 
-    if (!str_contains($contents, "- '../../src/Service/Http/'")) {
-        $failures[] = "config/component/services.yaml must exclude ../../src/Service/Http/ from App\\Vendoring\\ resource; App\\Vendoring\\Service\\Http\\ owns it.";
+    if (!str_contains($contents, "- '../../src/Service/Vendor/'")) {
+        $failures[] = "config/component/services.yaml must exclude ../../src/Service/Vendor/ from App\\Vendoring\\ resource; App\\Vendoring\\Service\\Vendor\\ owns it.";
     }
-    if (!str_contains($contents, 'App\\Vendoring\\Service\\Http\\:')) {
-        $failures[] = 'config/component/services.yaml must export App\\Vendoring\\Service\\Http\\ for Cruding FQCN convention.';
+    if (!str_contains($contents, 'App\\Vendoring\\Service\\Vendor\\:')) {
+        $failures[] = 'config/component/services.yaml must export App\\Vendoring\\Service\\Vendor\\ for Cruding FQCN convention.';
     }
     if (!str_contains($contents, 'App\\Vendoring\\Form\\:')) {
         $failures[] = 'config/component/services.yaml must export App\\Vendoring\\Form\\ for canonical Type classes.';
@@ -51,17 +51,17 @@ if (!is_file($services)) {
 }
 
 $expectedFiles = [
-    'src/Service/Http/Vendor/VendorIndexService.php',
-    'src/Service/Http/Vendor/VendorShowService.php',
-    'src/Service/Http/Vendor/VendorCreateService.php',
-    'src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php',
-    'src/Service/Http/Vendor/Attachment/Document/VendorAttachmentDocumentShowService.php',
-    'src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaIndexService.php',
-    'src/Service/Http/Vendor/Attachment/Media/VendorAttachmentMediaShowService.php',
-    'src/Service/Http/Vendor/Category/VendorCategoryAssignService.php',
-    'src/Service/Http/Vendor/Document/VendorDocumentVerifyService.php',
-    'src/Service/Http/Vendor/Payout/VendorPayoutCalculateService.php',
-    'src/Service/Http/Vendor/Product/VendorProductAssignService.php',
+    'src/Service/Vendor/VendorIndexService.php',
+    'src/Service/Vendor/VendorShowService.php',
+    'src/Service/Vendor/VendorCreateService.php',
+    'src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php',
+    'src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentShowService.php',
+    'src/Service/Vendor/Attachment/Media/VendorAttachmentMediaIndexService.php',
+    'src/Service/Vendor/Attachment/Media/VendorAttachmentMediaShowService.php',
+    'src/Service/Vendor/Category/VendorCategoryAssignService.php',
+    'src/Service/Vendor/Document/VendorDocumentVerifyService.php',
+    'src/Service/Vendor/Payout/VendorPayoutCalculateService.php',
+    'src/Service/Vendor/Product/VendorProductAssignService.php',
     'src/Form/Vendor/VendorCreateType.php',
     'src/Form/Vendor/Category/VendorCategoryAssignType.php',
     'src/Form/Vendor/Payout/VendorPayoutCalculateType.php',
@@ -86,11 +86,11 @@ foreach ($srcIterator as $fileInfo) {
     $relative = substr($fileInfo->getPathname(), strlen($root) + 1);
     $contents = (string) file_get_contents($fileInfo->getPathname());
 
-    if (str_starts_with($relative, 'src/Service/Http/') && str_contains($contents, 'namespace App\\Vendoring\\Service\\Http')) {
-        $failures[] = 'Service/Http file must use App\\Service\\Http namespace for Cruding FQCN convention: ' . $relative;
+    if (str_starts_with($relative, 'src/Service/Vendor/') && str_contains($contents, 'namespace App\\Vendoring\\Service\\Vendor')) {
+        $failures[] = 'Service/Http file must use App\\Service\\Vendor namespace for Cruding FQCN convention: ' . $relative;
     }
-    if (str_starts_with($relative, 'src/Service/Http/') && str_contains($contents, 'use App\\Vendoring\\Service\\Http')) {
-        $failures[] = 'Service/Http file must not import App\\Vendoring\\Service\\Http after canonical namespace migration: ' . $relative;
+    if (str_starts_with($relative, 'src/Service/Vendor/') && str_contains($contents, 'use App\\Vendoring\\Service\\Vendor')) {
+        $failures[] = 'Service/Http file must not import App\\Vendoring\\Service\\Vendor after canonical namespace migration: ' . $relative;
     }
     if (str_contains($contents, 'Symfony\\Component\\Routing\\Annotation\\Route') || str_contains($contents, 'Symfony\\Component\\Routing\\Attribute\\Route')) {
         $failures[] = 'Forbidden Symfony Route import in zero-controller component: ' . $relative;

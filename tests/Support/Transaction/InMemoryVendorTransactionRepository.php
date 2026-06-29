@@ -18,11 +18,62 @@ final class InMemoryVendorTransactionRepository implements VendorTransactionRepo
         $this->items = $items;
     }
 
+    public function find(mixed $id): ?object
+    {
+        if (!is_scalar($id)) {
+            return null;
+        }
+
+        return $this->byId((int) $id);
+    }
+
+    public function byId(mixed $id): ?object
+    {
+        if (!is_scalar($id)) {
+            return null;
+        }
+
+        foreach ($this->items as $transaction) {
+            if ($transaction->getId() === (int) $id) {
+                return $transaction;
+            }
+        }
+
+        return null;
+    }
+
+    /** @param array<string,mixed> $criteria */
+    public function findOneBy(array $criteria): ?object
+    {
+        return $this->findBy($criteria)[0] ?? null;
+    }
+
+    /**
+     * @param array<string,mixed>       $criteria
+     * @param array<string,string>|null $orderBy
+     *
+     * @return list<object>
+     */
+    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
+    {
+        /** @var list<object> $items */
+        $items = array_values($this->items);
+
+        return $items;
+    }
+
+    public function save(object $entity, bool $flush = false): void
+    {
+        if ($entity instanceof VendorTransactionEntity) {
+            $this->items[] = $entity;
+        }
+    }
+
     public function findByVendorId(string $vendorId): array
     {
         return array_values(array_filter(
             $this->items,
-            static fn(VendorTransactionEntity $transaction): bool => $transaction->getVendorId() === $vendorId,
+            static fn (VendorTransactionEntity $transaction): bool => $transaction->getVendorId() === $vendorId,
         ));
     }
 

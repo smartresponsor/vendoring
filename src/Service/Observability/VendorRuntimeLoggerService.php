@@ -7,28 +7,47 @@ namespace App\Vendoring\Service\Observability;
 use App\Vendoring\ServiceInterface\Observability\VendorCorrelationContextServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorObservabilityRecordExporterServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface;
-use App\Vendoring\ServiceInterface\Runtime\VendorAppEnvResolverServiceInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Structured runtime logger for request-scoped operational events.
+ * Structured runtime logger backed by a PSR-3 / Monolog channel.
  *
- * The logger builds a deterministic operational envelope that includes correlation,
- * route, path, and caller-supplied context fields. In non-test environments the
- * envelope is emitted as one JSON line via the PHP error log.
+ * Replaces the previous error_log() implementation which:
+ *   - bypassed Symfony's Monolog channel routing
+ *   - had no handler, formatter, or processor support
+ *   - could not be integrated with Sentry, ELK, or OpenTelemetry without raw log parsing
+ *
+ * The logger still maintains an in-memory snapshot() for test inspection and
+ * forwards every record to the observability exporter stream when one is injected.
+ *
+ * Symfony DI wiring (services.yaml):
+ *
+ *   App\Vendoring\Service\Observability\VendorRuntimeLoggerService:
+ *       arguments:
+ *           $logger: '@monolog.logger.vendoring'
+ *
+ * monolog.yaml:
+ *
+ *   monolog:
+ *       channels: [vendoring]
+ *       handlers:
+ *           vendoring:
+ *               type: stream
+ *               path: '%kernel.logs_dir%/vendoring.log'
+ *               level: info
+ *               channels: [vendoring]
  */
 final class VendorRuntimeLoggerService implements VendorRuntimeLoggerServiceInterface
 {
-    /**
-     * @var list<array<string, scalar|null>>
-     */
+    /** @var list<array<string, scalar|null>> */
     private array $records = [];
 
     public function __construct(
+        private readonly LoggerInterface $logger,
         private readonly VendorCorrelationContextServiceInterface $correlationContext,
         private readonly RequestStack $requestStack,
-        private readonly VendorAppEnvResolverServiceInterface $appEnvResolver,
         private readonly ?VendorObservabilityRecordExporterServiceInterface $exporter = null,
     ) {
     }
@@ -48,26 +67,21 @@ final class VendorRuntimeLoggerService implements VendorRuntimeLoggerServiceInte
         $this->write('error', $message, $context);
     }
 
+    /** @return list<array<string, scalar|null>> */
     public function snapshot(): array
     {
         return $this->records;
     }
 
-    /**
-     * Write one structured runtime record.
-     *
-     * @param array<string, scalar|null> $context additional structured fields merged into the log envelope
-     */
+    /** @param array<string, scalar|null> $context */
     private function write(string $level, string $message, array $context): void
     {
         $request = $this->requestStack->getCurrentRequest();
         $correlationId = $this->correlationContext->currentCorrelationId();
 
-        $timestamp = new \DateTimeImmutable();
-
         /** @var array<string, scalar|null> $record */
         $record = [
-            'timestamp' => $timestamp->format(DATE_ATOM),
+            'timestamp' => (new \DateTimeImmutable())->format(\DATE_ATOM),
             'level' => $level,
             'message' => $message,
             'request_id' => $correlationId,
@@ -89,20 +103,21 @@ final class VendorRuntimeLoggerService implements VendorRuntimeLoggerServiceInte
             $this->exporter->export('runtime_logs', $record);
         }
 
-        $environment = $this->appEnvResolver->resolve();
-        if ('test' === $environment) {
-            return;
-        }
+        // Route through Monolog — supports handlers, formatters, processors,
+        // channel routing, Sentry, ELK, OpenTelemetry out of the box.
+        $logContext = array_filter(
+            $record,
+            static fn (mixed $v): bool => null !== $v,
+        );
+        unset($logContext['timestamp'], $logContext['level'], $logContext['message']);
 
-        $encoded = json_encode($record, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        if (false !== $encoded) {
-            error_log($encoded);
-        }
+        match ($level) {
+            'error' => $this->logger->error($message, $logContext),
+            'warning' => $this->logger->warning($message, $logContext),
+            default => $this->logger->info($message, $logContext),
+        };
     }
 
-    /**
-     * Resolve the current Symfony route nameEntity from the active request.
-     */
     private function routeName(?Request $request): ?string
     {
         if (!$request instanceof Request) {

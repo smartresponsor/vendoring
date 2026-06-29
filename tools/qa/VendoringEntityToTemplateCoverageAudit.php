@@ -24,7 +24,7 @@ if ($controllerFiles !== []) {
 }
 
 $serviceNamingViolations = [];
-foreach (glob($root . '/src/Service/Http/Vendor/**/*.php') ?: [] as $file) {
+foreach (glob($root . '/src/Service/Vendor/**/*.php') ?: [] as $file) {
     $class = basename($file, '.php');
     if ($class === 'AbstractVendorCrudRouteService') {
         continue;

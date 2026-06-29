@@ -1,6 +1,5 @@
 <?php
 
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Vendoring\Service\Catalog;
@@ -19,10 +18,7 @@ final readonly class VendorCatalogMerchService implements VendorCatalogMerchServ
 
     public function pinCreate(string $categoryId, string $recordId, int $position): void
     {
-        $pin = new VendorCatalogCategoryPinEntity($categoryId, [
-            'recordId' => $recordId,
-            'position' => $position,
-        ]);
+        $pin = new VendorCatalogCategoryPinEntity($categoryId, $recordId, $position);
         $this->entityManager->persist($pin);
         $this->entityManager->flush();
     }
@@ -82,20 +78,20 @@ final readonly class VendorCatalogMerchService implements VendorCatalogMerchServ
 
     private function findPin(string $categoryId, string $recordId): ?VendorCatalogCategoryPinEntity
     {
-        $pins = $this->entityManager->getRepository(VendorCatalogCategoryPinEntity::class)->findBy([
-            'code' => $categoryId,
-        ]);
+        // ObjectCodeEmbeddableTrait stores categoryId as object_code via embedded
+        /** @var VendorCatalogCategoryPinEntity|null $pin */
+        $pin = $this->entityManager
+            ->createQueryBuilder()
+            ->select('p')
+            ->from(VendorCatalogCategoryPinEntity::class, 'p')
+            ->where('p.objectCode.objectCode = :categoryId')
+            ->andWhere('p.recordId = :recordId')
+            ->setParameter('categoryId', $categoryId)
+            ->setParameter('recordId', $recordId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
 
-        foreach ($pins as $pin) {
-            if (!$pin instanceof VendorCatalogCategoryPinEntity) {
-                continue;
-            }
-
-            if ($pin->recordId() === $recordId) {
-                return $pin;
-            }
-        }
-
-        return null;
+        return $pin;
     }
 }

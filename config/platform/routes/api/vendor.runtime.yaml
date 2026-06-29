@@ -1,0 +1,23 @@
+# ---------------------------------------------------------------------------
+# Vendoring — /api/vendor/runtime/ routes
+# ---------------------------------------------------------------------------
+# Runtime projection surfaces. id always last token.
+# ---------------------------------------------------------------------------
+
+# Finance runtime
+vendor.api.runtime.finance.show_id:
+    { path: /api/vendor/runtime/finance/show/{id},
+      service: App\Vendoring\Service\Vendor\Runtime\Finance\VendorRuntimeFinanceShowService,
+      resolver: id }
+
+# Status runtime
+vendor.api.runtime.status.show_id:
+    { path: /api/vendor/runtime/status/show/{id},
+      service: App\Vendoring\Service\Vendor\Runtime\Status\VendorRuntimeStatusShowService,
+      resolver: id }
+
+# External integration runtime
+vendor.api.runtime.integration.show_id:
+    { path: /api/vendor/runtime/integration/show/{id},
+      service: App\Vendoring\Service\Vendor\Runtime\ExternalIntegration\VendorRuntimeExternalIntegrationShowService,
+      resolver: id }

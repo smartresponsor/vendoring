@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Profile;
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileEntity;
 use App\Vendoring\Projection\Vendor\VendorProfileProjection;
 use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
@@ -53,11 +54,15 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
     {
         $vendor = $this->vendorRepository->find($vendorId);
 
-        if (null === $vendor) {
+        if (!$vendor instanceof VendorEntity) {
             return null;
         }
 
         $profile = $this->profileRepository->findOneBy(['vendor' => $vendor]);
+        if (!$profile instanceof VendorProfileEntity) {
+            $profile = null;
+        }
+
         $profileData = $this->buildProfileData($profile, $vendor->getBrandName(), $vendor->getOwnerUserId(), $vendor->getStatus());
         $sections = $this->buildSections($profileData);
         $totalFields = 0;
@@ -126,6 +131,11 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
         $displayName = $profile?->getDisplayName();
         $publicName = null !== $displayName && '' !== trim($displayName) ? $displayName : $brandName;
 
+        $socials = $profile?->getSocials() ?? [];
+        $socials = array_filter($socials, static fn (mixed $value, mixed $key): bool => is_string($key) && is_string($value), ARRAY_FILTER_USE_BOTH);
+        /** @var array<string, string> $socials */
+        $socials = $socials;
+
         return [
             'brandName' => $brandName,
             'vendorStatus' => $vendorStatus,
@@ -139,7 +149,7 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
             'cover' => ['attachmentId' => null, 'url' => null],
             'about' => $profile?->getAbout(),
             'website' => $profile?->getWebsite(),
-            'socials' => $profile?->getSocials() ?? [],
+            'socials' => $socials,
             'seoTitle' => $profile?->getSeoTitle(),
             'seoDescription' => $profile?->getSeoDescription(),
         ];

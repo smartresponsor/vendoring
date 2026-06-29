@@ -37,7 +37,7 @@ final readonly class VendorReleaseBaselineReaderService implements VendorRelease
         $projectRoot = dirname(__DIR__, 3);
         $artifactStatus = [
             'runtimeStatusCommand' => file_exists($projectRoot.'/src/Command/VendorRuntimeStatusCommand.php'),
-            'runtimeStatusHttpService' => file_exists($projectRoot.'/src/Service/Http/Vendor/Runtime/Status/VendorRuntimeStatusShowService.php'),
+            'runtimeStatusHttpService' => file_exists($projectRoot.'/src/Service/Vendor/Runtime/Status/VendorRuntimeStatusShowService.php'),
             'runtimeStatusCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_RUNTIME_STATUS_CANON.md'),
             'ownerCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_OWNER_IDENTITY_CANON.md'),
             'userAssignmentCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_USER_ASSIGNMENT_CANON.md'),

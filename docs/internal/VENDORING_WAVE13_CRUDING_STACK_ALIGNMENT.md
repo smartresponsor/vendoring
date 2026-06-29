@@ -22,7 +22,7 @@ Observed files:
 
 Relevant contract:
 
-- URI-derived entrypoints are `App\Vendoring\Service\Http\...`.
+- Service-layer entrypoints are `App\Vendoring\Service\Vendor\...`.
 - Entrypoints may be small, per-operation classes.
 - Supported hooks are `get`, `post`, `put`, `patch`, `delete`.
 - Entrypoints may return `CrudSurfaceContract`.
@@ -65,15 +65,15 @@ Relevant contract:
 
 All route-map service targets under `config/platform/routes/**` now have physical classes under:
 
-- `src/Service/Http/Vendor/**`
+- `src/Service/Vendor/**`
 
 These classes use the route-map namespace expected by Cruding:
 
-- `App\Vendoring\Service\Http\Vendor\...`
+- `App\Vendoring\Service\Vendor\...`
 
 They extend:
 
-- `App\Vendoring\Service\Http\Vendor\AbstractVendorCrudRouteService`
+- `App\Vendoring\Service\Vendor\AbstractVendorCrudRouteService`
 
 The abstract base extends:
 

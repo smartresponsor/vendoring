@@ -40,7 +40,9 @@ class VendorCustomerOrderEntity extends VendorAbstractEntity
         $this->netCents = $netCents;
         $this->meta = $meta;
 
-        return $this->setStatus($status);
+        $this->setStatus($status);
+
+        return $this;
     }
 
     public function getVendor(): ?VendorEntity

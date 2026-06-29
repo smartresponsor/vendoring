@@ -4,7 +4,7 @@
 
 Wave 12A repairs the route-map target surface after Wave 11 quarantined the broken persistence-bound services.
 
-The `config/platform/routes/**` files are registry/protocol files consumed by Cruding. They referenced HTTP service targets under `App\Vendoring\Service\Http\Vendor\*` and form targets under `App\Vendoring\Form\Vendor\*`, but the corresponding files were absent from `src/`.
+The `config/platform/routes/**` files are registry/protocol files consumed by Cruding. They referenced HTTP service targets under `App\Vendoring\Service\Vendor\*` and form targets under `App\Vendoring\Form\Vendor\*`, but the corresponding files were absent from `src/`.
 
 ## Result
 
@@ -21,7 +21,7 @@ The skeletons intentionally do not restore persistence behavior. They only make 
 - No Doctrine entities were added.
 - No repository layer was restored.
 - The route-map remains registry-only.
-- HTTP surface classes live under `src/Service/Http` with the default Symfony `App\Service\Http` namespace used by the route-map.
+- HTTP surface classes live under `src/Service/Vendor` with the default Symfony `App\Service\Vendor` namespace used by the route-map.
 - Form surface classes live under `src/Form` with the default Symfony `App\Form` namespace used by the route-map.
 
 ## Next Step

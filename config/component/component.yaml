@@ -33,4 +33,4 @@ component:
   zero_controller_runtime:
     enabled: true
     owner: cruding
-    service_convention: App\Vendoring\Service\Http\*
+    service_convention: App\Vendoring\Service\Vendor\*

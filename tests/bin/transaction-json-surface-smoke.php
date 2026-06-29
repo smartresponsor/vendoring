@@ -12,7 +12,7 @@ if (!isset($scripts['test:transaction-json'])) {
     exit(1);
 }
 
-$service = (string) file_get_contents($root.'/src/Service/Http/Vendor/Transaction/VendorTransactionHttpService.php');
+$service = (string) file_get_contents($root.'/src/Service/Vendor/Transaction/VendorTransactionHttpService.php');
 if (!str_contains($service, 'VendorTransactionErrorCodeValueObject::MALFORMED_JSON')) {
     fwrite(STDERR, 'Transaction HTTP service does not map malformed JSON'.PHP_EOL);
     exit(1);

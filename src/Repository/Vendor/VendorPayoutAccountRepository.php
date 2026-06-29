@@ -7,47 +7,46 @@ namespace App\Vendoring\Repository\Vendor;
 use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 final class VendorPayoutAccountRepository extends ServiceEntityRepository implements VendorPayoutAccountRepositoryInterface
 {
-    private mixed $entityManager = null;
+    private ?EntityManagerInterface $directEm = null;
 
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * Accepts either a ManagerRegistry (Symfony DI path) or an EntityManagerInterface
+     * directly (unit test path without a full DI container).
+     */
+    public function __construct(mixed $registry)
     {
-        if ($registry instanceof \Doctrine\ORM\EntityManagerInterface) {
-            $this->entityManager = $registry;
+        if ($registry instanceof EntityManagerInterface) {
+            $this->directEm = $registry;
 
             return;
         }
 
+        /* @var ManagerRegistry $registry */
         parent::__construct($registry, VendorPayoutAccountEntity::class);
     }
 
-    private function em(): mixed
+    private function em(): EntityManagerInterface
     {
-        return $this->entityManager ?? $this->getEntityManager();
-    }
-
-    private function finishExisting(VendorPayoutAccountEntity $existing): VendorPayoutAccountEntity
-    {
-        $this->em()->flush();
-
-        return $existing;
+        return $this->directEm ?? $this->getEntityManager();
     }
 
     public function save(object $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->em()->persist($entity);
         if ($flush) {
-            $this->getEntityManager()->flush();
+            $this->em()->flush();
         }
     }
 
     public function findOneBy(array $criteria, ?array $orderBy = null): ?object
     {
-        if (null !== $this->entityManager) {
-            return $this->entityManager->getRepository(VendorPayoutAccountEntity::class)->findOneBy($criteria);
+        if (null !== $this->directEm) {
+            return $this->directEm->getRepository(VendorPayoutAccountEntity::class)->findOneBy($criteria);
         }
 
         return parent::findOneBy($criteria, $orderBy);
@@ -68,11 +67,11 @@ final class VendorPayoutAccountRepository extends ServiceEntityRepository implem
             $existing->currency = $account->currency;
             $existing->active = $account->active;
 
-            return $this->finishExisting($existing);
-            $this->em()->persist($existing);
+            $this->em()->flush();
+
+            return $existing;
         }
 
-        $account->active = true;
         $this->em()->persist($account);
         $this->em()->flush();
 
@@ -81,6 +80,10 @@ final class VendorPayoutAccountRepository extends ServiceEntityRepository implem
 
     public function byId(mixed $id): ?object
     {
+        if (null !== $this->directEm) {
+            return $this->directEm->find(VendorPayoutAccountEntity::class, $id);
+        }
+
         return $this->find($id);
     }
 }

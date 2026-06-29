@@ -75,9 +75,9 @@ foreach (array_keys($typeTargets) as $target) {
     }
 }
 
-$legacyFactory = $root . '/src/Service/Http/Vendor/VendorReadRouteResponseFactory.php';
+$legacyFactory = $root . '/src/Service/Vendor/VendorReadRouteResponseFactory.php';
 if (is_file($legacyFactory)) {
-    $errors[] = 'Legacy non-Service helper remains: src/Service/Http/Vendor/VendorReadRouteResponseFactory.php';
+    $errors[] = 'Legacy non-Service helper remains: src/Service/Vendor/VendorReadRouteResponseFactory.php';
 }
 
 if ($errors !== []) {

@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace App\Vendoring\DataFixtures;
 
-use App\DataFixtures\AbstractFakerFixture;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileAvatarEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileCoverEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 
-final class VendorProfile42BusinessFixture extends AbstractFakerFixture implements FixtureGroupInterface
+final class VendorProfile42BusinessFixture extends Fixture implements FixtureGroupInterface
 {
     public function __construct(
         private readonly VendorRepositoryInterface $vendorRepository,
@@ -30,11 +31,10 @@ final class VendorProfile42BusinessFixture extends AbstractFakerFixture implemen
 
     public function load(ObjectManager $manager): void
     {
-        $faker = $this->faker();
         $brandName = 'Market Vendor 42 LLC';
         $displayName = 'Vendor 42';
         $website = 'https://vendor-42.vendoring.test';
-        $about = $faker->paragraphs(2, true);
+        $about = 'Vendor 42 is a deterministic fixture profile for vendoring business acceptance checks.';
         $socials = [
             'instagram' => '@vendor_42',
             'linkedin' => 'vendor-42',
@@ -55,13 +55,17 @@ final class VendorProfile42BusinessFixture extends AbstractFakerFixture implemen
         $manager->persist($vendor);
 
         $profile = $this->vendorProfileRepository->findOneBy(['vendor' => $vendor]) ?? new VendorProfileEntity($vendor);
+        if (!$profile instanceof VendorProfileEntity) {
+            $profile = new VendorProfileEntity($vendor);
+        }
+
         $profile->updateProfile(
             displayName: $displayName,
             about: $about,
             website: $website,
             socials: $socials,
             seoTitle: $brandName,
-            seoDescription: $faker->sentence(12),
+            seoDescription: 'Deterministic Vendor 42 profile used for vendoring fixture validation.',
         );
         $profile->publish();
         $manager->persist($profile);
@@ -90,6 +94,10 @@ final class VendorProfile42BusinessFixture extends AbstractFakerFixture implemen
 
     private function seedVendorRow(ObjectManager $manager, string $brandName): void
     {
+        if (!$manager instanceof EntityManagerInterface) {
+            return;
+        }
+
         $connection = $manager->getConnection();
         $createdAt = new \DateTimeImmutable();
 

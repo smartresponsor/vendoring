@@ -27,7 +27,7 @@ foreach ($iterator as $file) {
 
     if (preg_match_all('/service:\s*([^,\}\s]+)/', $contents, $matches) > 0) {
         foreach ($matches[1] as $fqcn) {
-            if (str_starts_with($fqcn, 'App\\Vendoring\\Service\\Http\\Vendor\\')) {
+            if (str_starts_with($fqcn, 'App\\Vendoring\\Service\\Vendor\\')) {
                 $services[$fqcn] = true;
             }
         }

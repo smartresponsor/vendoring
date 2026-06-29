@@ -9,7 +9,7 @@ $composerJsonPath = $root.'/composer.json';
 $repoInterfacePath = $root.'/src/RepositoryInterface/Vendor/VendorTransactionRepositoryInterface.php';
 $repoPath = $root.'/src/Repository/Vendor/VendorTransactionRepository.php';
 $managerPath = $root.'/src/Service/Transaction/VendorTransactionLifecycleService.php';
-$transactionHttpServicePath = $root.'/src/Service/Http/Vendor/Transaction/VendorTransactionHttpService.php';
+$transactionHttpServicePath = $root.'/src/Service/Vendor/Transaction/VendorTransactionHttpService.php';
 $pgMigrationPath = $root.'/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql';
 $sqliteMigrationPath = $root.'/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql';
 

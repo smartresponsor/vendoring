@@ -28,4 +28,15 @@ final class VendorBillingRepository extends ServiceEntityRepository implements V
     {
         return $this->find($id);
     }
+
+    public function findOneByVendorId(int $vendorId): ?VendorBillingEntity
+    {
+        return $this->createQueryBuilder('billing')
+            ->innerJoin('billing.vendor', 'vendor')
+            ->andWhere('vendor.id = :vendorId')
+            ->setParameter('vendorId', (int) $vendorId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

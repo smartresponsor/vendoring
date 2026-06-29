@@ -13,7 +13,7 @@ use App\Vendoring\ServiceInterface\Observability\VendorMetricEmitterServiceInter
 final class VendorMetricEmitterService implements VendorMetricCollectorServiceInterface, VendorMetricEmitterServiceInterface
 {
     /**
-     * @var list<array{name:string,tags:array<string,string>}>
+     * @var list<array{nameEntity:string,tags:array<string,string>}>
      */
     private array $increments = [];
 

@@ -24,17 +24,23 @@ final class VendorInterfacingTemplateCandidateProviderService implements VendorI
     {
         return match ($surfaceName) {
             VendorInterfacingSurfaceNameValueObject::INDEX => [
+                '@Interfacing/vendor/index.html.twig',
                 '@Interfacing/vendor/index',
+                'vendor/index.html.twig',
                 'vendor/index',
             ],
             VendorInterfacingSurfaceNameValueObject::PROFILE => [
+                '@Interfacing/vendor/profile/show.html.twig',
                 '@Interfacing/vendor/profile/show',
+                '@Interfacing/vendor/profile/index.html.twig',
                 '@Interfacing/vendor/profile/index',
                 '@Interfacing/vendor/profile',
                 '@Interfacing/vendor/index',
+                'vendor/profile/show.html.twig',
                 'vendor/profile/show',
                 'vendor/profile/index',
                 'vendor/profile',
+                'vendor/index.html.twig',
                 'vendor/index',
             ],
             default => [],

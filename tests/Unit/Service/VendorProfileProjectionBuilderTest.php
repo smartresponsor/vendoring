@@ -82,7 +82,19 @@ final class VendorProfileProjectionBuilderTest extends TestCase
         self::assertSame(['brandName' => 'Brand Name', 'vendorStatus' => 'active', 'ownerUserId' => 42], $payload['businessProfile']);
         self::assertSame('draft', $payload['publication']['status']);
         self::assertTrue($payload['publication']['canPublish']);
-        self::assertSame(['displayName' => 'Vendor Portal', 'publicDisplayName' => 'Vendor Portal', 'about' => 'High-quality home goods.', 'website' => 'https://vendor.example', 'socials' => ['x' => 'https://x.example/vendor'], 'status' => 'draft', 'publishedAt' => null], $payload['publicProfile']);
+
+        // publicProfile now includes publicName, avatar, cover in addition to previous fields
+        self::assertSame('Vendor Portal', $payload['publicProfile']['displayName']);
+        self::assertSame('Vendor Portal', $payload['publicProfile']['publicDisplayName']);
+        self::assertSame('Vendor Portal', $payload['publicProfile']['publicName']);
+        self::assertSame('High-quality home goods.', $payload['publicProfile']['about']);
+        self::assertSame('https://vendor.example', $payload['publicProfile']['website']);
+        self::assertSame(['x' => 'https://x.example/vendor'], $payload['publicProfile']['socials']);
+        self::assertSame('draft', $payload['publicProfile']['status']);
+        self::assertNull($payload['publicProfile']['publishedAt']);
+        self::assertArrayHasKey('avatar', $payload['publicProfile']);
+        self::assertArrayHasKey('cover', $payload['publicProfile']);
+
         self::assertSame([], $payload['sections']['search']['missing']);
     }
 

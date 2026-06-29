@@ -6,7 +6,7 @@ The strongest current runtime contour is `VendorTransaction`.
 It now spans:
 
 - Cruding-owned URI grammar
-- canonical `App\Vendoring\Service\Http\Vendor\...` runtime services
+- canonical `App\Vendoring\Service\Vendor\...` runtime services
 - manager/service orchestration
 - amount and status policy checks
 - repository abstractions

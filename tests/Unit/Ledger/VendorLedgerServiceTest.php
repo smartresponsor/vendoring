@@ -31,8 +31,8 @@ final class VendorLedgerServiceTest extends TestCase
                 self::assertSame('VENDOR_PAYABLE', $entry->creditAccount);
                 self::assertSame(12.5, $entry->amount);
                 self::assertSame('USD', $entry->currency);
-                self::assertSame('order_paid', $entry->type);
-                self::assertSame('entity-1', $entry->entityId);
+                self::assertSame('order_paid', $entry->getType());
+                self::assertSame('entity-1', $entry->getEntityId());
                 self::assertSame('vendor-1', $entry->vendorId);
                 self::assertSame('2026-03-31 10:00:00', $entry->createdAt);
 

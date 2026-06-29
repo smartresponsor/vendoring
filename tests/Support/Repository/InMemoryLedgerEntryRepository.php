@@ -47,7 +47,7 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
         }
 
         foreach ($this->entries as $entry) {
-            if (property_exists($entry, 'id') && $entry->id === (string) $id) {
+            if ($entry->getObjectUuid() === (string) $id) {
                 return $entry;
             }
         }

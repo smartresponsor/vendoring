@@ -46,13 +46,13 @@ foreach ($forbiddenRoutes as $route) {
 }
 
 foreach ([
-    'App\\Vendoring\\Service\\Http\\Vendor\\VendorIndexService',
-    'App\\Vendoring\\Service\\Http\\Vendor\\VendorShowService',
-    'App\\Vendoring\\Service\\Http\\Vendor\\VendorNewService',
-    'App\\Vendoring\\Service\\Http\\Vendor\\VendorCreateService',
-    'App\\Vendoring\\Service\\Http\\Vendor\\VendorEditService',
-    'App\\Vendoring\\Service\\Http\\Vendor\\VendorUpdateService',
-    'App\\Vendoring\\Service\\Http\\Vendor\\VendorDeleteService',
+    'App\\Vendoring\\Service\\Vendor\\VendorIndexService',
+    'App\\Vendoring\\Service\\Vendor\\VendorShowService',
+    'App\\Vendoring\\Service\\Vendor\\VendorNewService',
+    'App\\Vendoring\\Service\\Vendor\\VendorCreateService',
+    'App\\Vendoring\\Service\\Vendor\\VendorEditService',
+    'App\\Vendoring\\Service\\Vendor\\VendorUpdateService',
+    'App\\Vendoring\\Service\\Vendor\\VendorDeleteService',
     'App\\Vendoring\\Form\\Vendor\\VendorCreateType',
     'App\\Vendoring\\Form\\Vendor\\VendorUpdateType',
 ] as $fqcn) {
@@ -69,7 +69,7 @@ if (preg_match('/\\$slug\\b|function\\s+getSlug\\s*\\(/', $entity)) {
     $errors[] = 'VendorEntity now has slug support; route policy must be reviewed.';
 }
 
-$response = file_get_contents($root.'/src/Service/Http/Vendor/VendorHttpRouteResponseService.php') ?: '';
+$response = file_get_contents($root.'/src/Service/Vendor/VendorHttpRouteResponseService.php') ?: '';
 foreach ([
     'vendor/index.html.twig',
     'vendor/show.html.twig',

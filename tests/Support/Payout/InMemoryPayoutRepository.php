@@ -18,13 +18,14 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
 
     public function insert(VendorPayoutEntity $payout): void
     {
-        $this->payouts[$payout->id] = $payout;
+        $this->payouts[$payout->payoutId] = $payout;
     }
 
     public function insertItem(VendorPayoutItemEntity $item): void
     {
-        $this->items[$item->payoutId] ??= [];
-        $this->items[$item->payoutId][] = $item;
+        $payoutId = $item->payout->payoutId;
+        $this->items[$payoutId] ??= [];
+        $this->items[$payoutId][] = $item;
     }
 
     public function find(mixed $id): ?object
@@ -41,7 +42,13 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
         return $this->findBy($criteria)[0] ?? null;
     }
 
-    public function findBy(array $criteria): array
+    /**
+     * @param array<string,mixed>       $criteria
+     * @param array<string,string>|null $orderBy
+     *
+     * @return list<object>
+     */
+    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
         return array_values(array_filter(
             $this->payouts,
@@ -64,16 +71,26 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
         }
     }
 
-    public function byId(string $id): ?VendorPayoutEntity
+    public function byId(mixed $id): ?object
     {
+        if (!is_scalar($id)) {
+            return null;
+        }
+
+        $id = (string) $id;
+
         return $this->payouts[$id] ?? null;
     }
 
+    /** @return list<VendorPayoutItemEntity> */
     public function items(string $payoutId): array
     {
         return $this->items[$payoutId] ?? [];
     }
 
+    /**
+     * @param array<string, mixed> $meta
+     */
     public function markProcessed(string $id, string $processedAt, array $meta = []): void
     {
         if (!isset($this->payouts[$id])) {
@@ -85,6 +102,9 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
         $this->payouts[$id]->meta = [...$this->payouts[$id]->meta, ...$meta];
     }
 
+    /**
+     * @param array<string, mixed> $meta
+     */
     public function markFailed(string $id, string $processedAt, array $meta = []): void
     {
         if (!isset($this->payouts[$id])) {

@@ -19,7 +19,7 @@ final class CatalogMerchServiceTest extends TestCase
         $entityManager = CatalogMerchEntityManagerFactory::createSqliteMemoryEntityManager(dirname(__DIR__, 3));
         $schemaTool = new SchemaTool($entityManager);
         $schemaTool->createSchema(array_map(
-            static fn(string $class): \Doctrine\ORM\Mapping\ClassMetadata => $entityManager->getClassMetadata($class),
+            static fn (string $class): \Doctrine\ORM\Mapping\ClassMetadata => $entityManager->getClassMetadata($class),
             CatalogMerchEntityManagerFactory::catalogMerchClasses(),
         ));
 
@@ -28,16 +28,28 @@ final class CatalogMerchServiceTest extends TestCase
         $service->pinCreate('cat-1', 'record-b', 20);
         $service->orderSet('cat-1', ['record-b', 'record-a']);
 
+        // DQL query via embeddable path: objectCode.objectCode
         /** @var VendorCatalogCategoryPinEntity|null $first */
-        $first = $entityManager->getRepository(VendorCatalogCategoryPinEntity::class)->findOneBy([
-            'categoryId' => 'cat-1',
-            'recordId' => 'record-a',
-        ]);
+        $first = $entityManager->createQueryBuilder()
+            ->select('p')
+            ->from(VendorCatalogCategoryPinEntity::class, 'p')
+            ->where('p.objectCode.objectCode = :cat')
+            ->andWhere('p.recordId = :rec')
+            ->setParameter('cat', 'cat-1')
+            ->setParameter('rec', 'record-a')
+            ->getQuery()
+            ->getOneOrNullResult();
+
         /** @var VendorCatalogCategoryPinEntity|null $second */
-        $second = $entityManager->getRepository(VendorCatalogCategoryPinEntity::class)->findOneBy([
-            'categoryId' => 'cat-1',
-            'recordId' => 'record-b',
-        ]);
+        $second = $entityManager->createQueryBuilder()
+            ->select('p')
+            ->from(VendorCatalogCategoryPinEntity::class, 'p')
+            ->where('p.objectCode.objectCode = :cat')
+            ->andWhere('p.recordId = :rec')
+            ->setParameter('cat', 'cat-1')
+            ->setParameter('rec', 'record-b')
+            ->getQuery()
+            ->getOneOrNullResult();
 
         self::assertNotNull($first);
         self::assertNotNull($second);
@@ -45,10 +57,16 @@ final class CatalogMerchServiceTest extends TestCase
         self::assertSame(0, $second->position());
 
         $service->pinDelete('cat-1', 'record-a');
-        $deleted = $entityManager->getRepository(VendorCatalogCategoryPinEntity::class)->findOneBy([
-            'categoryId' => 'cat-1',
-            'recordId' => 'record-a',
-        ]);
+
+        $deleted = $entityManager->createQueryBuilder()
+            ->select('p')
+            ->from(VendorCatalogCategoryPinEntity::class, 'p')
+            ->where('p.objectCode.objectCode = :cat')
+            ->andWhere('p.recordId = :rec')
+            ->setParameter('cat', 'cat-1')
+            ->setParameter('rec', 'record-a')
+            ->getQuery()
+            ->getOneOrNullResult();
 
         self::assertNull($deleted);
     }
@@ -58,7 +76,7 @@ final class CatalogMerchServiceTest extends TestCase
         $entityManager = CatalogMerchEntityManagerFactory::createSqliteMemoryEntityManager(dirname(__DIR__, 3));
         $schemaTool = new SchemaTool($entityManager);
         $schemaTool->createSchema(array_map(
-            static fn(string $class): \Doctrine\ORM\Mapping\ClassMetadata => $entityManager->getClassMetadata($class),
+            static fn (string $class): \Doctrine\ORM\Mapping\ClassMetadata => $entityManager->getClassMetadata($class),
             CatalogMerchEntityManagerFactory::catalogMerchClasses(),
         ));
 

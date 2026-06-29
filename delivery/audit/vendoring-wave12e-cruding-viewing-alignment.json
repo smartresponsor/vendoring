@@ -7,7 +7,7 @@
   "persistenceRestored": false,
   "interfacingDirectDependency": false,
   "changedFiles": [
-    "src/Service/Http/Vendor/VendorHttpRouteResponseService.php",
+    "src/Service/Vendor/VendorHttpRouteResponseService.php",
     "tools/qa/VendoringCrudingViewingAlignmentAudit.php",
     "docs/internal/VENDORING_CRUDING_VIEWING_ALIGNMENT.md",
     "delivery/audit/vendoring-wave12e-cruding-viewing-alignment.json"
@@ -28,7 +28,7 @@
     "formPattern": "Vendor*Type"
   },
   "checks": [
-    "php -l src/Service/Http/Vendor/VendorHttpRouteResponseService.php",
+    "php -l src/Service/Vendor/VendorHttpRouteResponseService.php",
     "php -l tools/qa/VendoringCrudingViewingAlignmentAudit.php",
     "php tools/qa/VendoringCrudingViewingAlignmentAudit.php",
     "php tools/qa/VendoringZeroControllerSurfaceAudit.php",

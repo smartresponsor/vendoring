@@ -6,19 +6,39 @@ namespace App\Vendoring\Service\Traffic;
 
 use App\Vendoring\ServiceInterface\Traffic\VendorWriteRateLimiterServiceInterface;
 use App\Vendoring\ValueObject\Traffic\VendorWriteRateLimitDecisionValueObject;
-use JsonException;
 
 /**
- * File-backed write rate limiter for low-complexity runtime environments.
+ * Write rate limiter with pluggable backend strategy.
  *
- * The limiter persists timestamp history in the local filesystem and produces immutable
- * rate-limit decisions for one scope/actor pair.
+ * The limiter accepts a callable factory that produces per-bucket decision arrays,
+ * allowing the host application to inject any backend (Symfony RateLimiter, Redis,
+ * APCu, or a test double) without a hard compile-time dependency on a specific package.
+ *
+ * Default (no backend injected): fail-open — all requests are allowed.
+ * This is a safe default for environments where rate limiting is not yet configured.
+ * Override by injecting a factory in the host application's services.yaml.
+ *
+ * Host application wiring example using Symfony RateLimiter:
+ *
+ *   App\Vendoring\Service\Traffic\VendorWriteRateLimiterService:
+ *       arguments:
+ *           $backendFactory: !closure
+ *               '@limiter.vendor_write'
+ *
+ * Or via a decorated service that wraps RateLimiterFactory.
+ *
+ * @phpstan-type BackendDecision array{allowed: bool, remaining: int, retryAfterSeconds: int}
  */
 final class VendorWriteRateLimiterService implements VendorWriteRateLimiterServiceInterface
 {
     /**
-     * Consume one slot from the write-rate limit bucket for the given scope and actor.
+     * @param callable(string $bucketId, int $limit): BackendDecision|null $backendFactory
      */
+    public function __construct(
+        private readonly mixed $backendFactory = null,
+    ) {
+    }
+
     public function consume(string $scope, string $actorKey, int $limit, int $windowSeconds): VendorWriteRateLimitDecisionValueObject
     {
         $normalizedScope = trim($scope);
@@ -28,105 +48,21 @@ final class VendorWriteRateLimiterService implements VendorWriteRateLimiterServi
             return new VendorWriteRateLimitDecisionValueObject(true, max(1, $limit), max(0, $limit - 1), 0);
         }
 
-        $path = $this->storagePath($normalizedScope, $normalizedActorKey);
-        $directory = dirname($path);
-        if (!is_dir($directory) && !mkdir($directory, 0777, true) && !is_dir($directory)) {
+        if (null === $this->backendFactory) {
+            // Fail-open: no backend configured — allow all requests.
             return new VendorWriteRateLimitDecisionValueObject(true, $limit, max(0, $limit - 1), 0);
         }
 
-        $handle = fopen($path, 'c+');
-        if (false === $handle) {
-            return new VendorWriteRateLimitDecisionValueObject(true, $limit, max(0, $limit - 1), 0);
-        }
+        $bucketId = $normalizedScope.'.'.$normalizedActorKey;
 
-        try {
-            if (!flock($handle, LOCK_EX)) {
-                return new VendorWriteRateLimitDecisionValueObject(true, $limit, max(0, $limit - 1), 0);
-            }
+        /** @var BackendDecision $decision */
+        $decision = ($this->backendFactory)($bucketId, $limit);
 
-            $now = time();
-            $history = $this->readTimestamps($handle);
-            $threshold = $now - $windowSeconds;
-            $history = array_values(array_filter($history, static fn(int $timestamp): bool => $timestamp > $threshold));
-
-            if (count($history) >= $limit) {
-                $oldest = min($history);
-                $retryAfter = max(1, ($oldest + $windowSeconds) - $now);
-
-                $this->writeTimestamps($handle, $history);
-
-                return new VendorWriteRateLimitDecisionValueObject(false, $limit, 0, $retryAfter);
-            }
-
-            $history[] = $now;
-            $this->writeTimestamps($handle, $history);
-
-            return new VendorWriteRateLimitDecisionValueObject(true, $limit, max(0, $limit - count($history)), 0);
-        } finally {
-            flock($handle, LOCK_UN);
-            fclose($handle);
-        }
-    }
-
-    /**
-     * Resolve the storage path for one rate-limit bucket.
-     */
-    private function storagePath(string $scope, string $actorKey): string
-    {
-        $hash = sha1($scope . '|' . $actorKey);
-
-        return sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'vendoring_rate_limit' . DIRECTORY_SEPARATOR . $hash . '.json';
-    }
-
-    /**
-     * Read persisted timestamps from one file handle.
-     *
-     * @return list<int> Historical timestamps still associated with the bucket file.
-     */
-    private function readTimestamps(mixed $handle): array
-    {
-        if (!is_resource($handle)) {
-            return [];
-        }
-
-        rewind($handle);
-        $contents = stream_get_contents($handle);
-
-        if (!is_string($contents) || '' === trim($contents)) {
-            return [];
-        }
-
-        $decoded = json_decode($contents, true);
-        if (!is_array($decoded)) {
-            return [];
-        }
-
-        $timestamps = [];
-        foreach ($decoded as $value) {
-            if (is_int($value)) {
-                $timestamps[] = $value;
-            }
-        }
-
-        return $timestamps;
-    }
-
-    /**
-     * Persist the normalized timestamp history back into the bucket file.
-     *
-     * @param mixed $handle
-     * @param list<int> $timestamps Timestamp history to persist.
-     * @throws JsonException
-     */
-    private function writeTimestamps(mixed $handle, array $timestamps): void
-    {
-        if (!is_resource($handle)) {
-            return;
-        }
-
-        rewind($handle);
-        ftruncate($handle, 0);
-        fwrite($handle, json_encode($timestamps, JSON_THROW_ON_ERROR));
-        fflush($handle);
+        return new VendorWriteRateLimitDecisionValueObject(
+            $decision['allowed'],
+            $limit,
+            $decision['remaining'],
+            $decision['retryAfterSeconds'],
+        );
     }
 }

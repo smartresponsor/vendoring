@@ -28,7 +28,9 @@ class VendorWishlistEntity extends VendorAbstractEntity
         $this->nameEntity = $nameEntity;
         $this->status = $status;
 
-        return $this->setStatus($status);
+        $this->setStatus($status);
+
+        return $this;
     }
 
     public function getVendor(): ?VendorEntity

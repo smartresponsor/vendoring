@@ -35,9 +35,9 @@ final class ReleaseCandidateDocumentationContractTest extends TestCase
     {
         $phpunit = (string) file_get_contents(dirname(__DIR__, 3).'/phpunit.xml.dist');
 
-        self::assertStringContainsString('<testsuite nameEntity="unit">', $phpunit);
-        self::assertStringContainsString('<testsuite nameEntity="integration">', $phpunit);
-        self::assertStringContainsString('<testsuite nameEntity="smoke">', $phpunit);
+        self::assertStringContainsString('<testsuite name="unit">', $phpunit);
+        self::assertStringContainsString('<testsuite name="integration">', $phpunit);
+        self::assertStringContainsString('<testsuite name="smoke">', $phpunit);
     }
 
     public function testReleaseCandidateWorkflowsExistAndReferenceGroupedScripts(): void

@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Config;
 
-use App\Administering\Service\Config\ConfigApplyService;
-use App\Administering\Service\Config\ConfigFileWriterService;
-use App\Administering\ServiceInterface\Config\AdministrationConfigToolServiceInterface;
-use App\Administering\Value\Config\AdministrationConfigToolDescriptor;
+use App\Administering\Service\Config\AdministrationConfigApplyService;
+use App\Administering\Service\Config\AdministrationConfigFileWriterService;
+use App\Administering\ServiceInterface\Config\ConfigToolServiceInterface;
+use App\Administering\Value\Config\ConfigToolDescriptor;
 use App\Vendoring\Form\Config\VendoringFeatureFlagsConfigFormType;
 use App\Vendoring\Value\Form\Config\VendoringFeatureFlagsConfigData;
 use Symfony\Component\Yaml\Yaml;
 
-final readonly class VendoringFeatureFlagsConfigService implements AdministrationConfigToolServiceInterface
+final readonly class VendoringFeatureFlagsConfigService implements ConfigToolServiceInterface
 {
     public function __construct(
         private string $projectDir,
-        private ConfigApplyService $applyService,
-        private ConfigFileWriterService $fileWriter,
+        private AdministrationConfigApplyService $applyService,
+        private AdministrationConfigFileWriterService $fileWriter,
     ) {
     }
 
-    public function descriptor(): AdministrationConfigToolDescriptor
+    public function descriptor(): ConfigToolDescriptor
     {
-        return new AdministrationConfigToolDescriptor(
+        return new ConfigToolDescriptor(
             applicationCode: 'Vendoring',
             toolCode: 'vendoring.feature_flags',
             label: 'Vendoring Feature Flags',
