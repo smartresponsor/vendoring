@@ -8,10 +8,10 @@ use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
 use App\Vendoring\Projection\Vendor\VendorFinanceRuntimeProjection;
 use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface;
-use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeProjectionBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
 use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface;
+use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Doctrine\DBAL\Exception;
 
 /**
@@ -25,7 +25,8 @@ final readonly class VendorFinanceRuntimeProjectionBuilderService implements Ven
         private VendorMetricServiceInterface $metricService,
         private VendorPayoutAccountRepositoryInterface $payoutAccountRepository,
         private VendorStatementServiceInterface $statementService,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws Exception
@@ -59,7 +60,7 @@ final readonly class VendorFinanceRuntimeProjectionBuilderService implements Ven
                 'accountRef' => $payoutAccountEntity->accountRef,
                 'currency' => $payoutAccountEntity->currency,
                 'active' => $payoutAccountEntity->active,
-                'createdAt' => $payoutAccountEntity->createdAt,
+                'createdAt' => $payoutAccountEntity->getCreatedAt()->format('Y-m-d H:i:s'),
             ];
         }
 

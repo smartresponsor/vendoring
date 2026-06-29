@@ -7,7 +7,13 @@ namespace App\Vendoring\Entity\Vendor;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorPayoutRepository::class)]
-#[ORM\Table(name: 'vendor_payout')]
+#[ORM\Table(
+    name: 'vendor_payout',
+    indexes: [
+        new ORM\Index(name: 'idx_vendor_payout_vendor_id', columns: ['vendor_id']),
+        new ORM\Index(name: 'idx_vendor_payout_status', columns: ['status']),
+    ],
+)]
 class VendorPayoutEntity extends VendorAbstractEntity
 {
     #[ORM\Column(type: 'string', length: 64)] public string $payoutId;
@@ -19,8 +25,6 @@ class VendorPayoutEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 32)] public string $status;
     #[ORM\Column(type: 'string', length: 32, nullable: true)] public ?string $processedAt = null;
     #[ORM\Column(type: 'json')] public array $meta = [];
-    public string $createdAt;
-
     public function __construct(
         string $id,
         string $vendorId,
@@ -29,7 +33,6 @@ class VendorPayoutEntity extends VendorAbstractEntity
         int $feeCents,
         int $netCents,
         string $status = 'pending',
-        mixed $createdAt = null,
         mixed $processedAt = null,
         mixed $meta = [],
     ) {
@@ -41,7 +44,6 @@ class VendorPayoutEntity extends VendorAbstractEntity
         $this->feeCents = $feeCents;
         $this->netCents = $netCents;
         $this->status = $status;
-        $this->createdAt = is_scalar($createdAt) ? (string) $createdAt : date('Y-m-d H:i:s');
         $this->processedAt = is_scalar($processedAt) ? (string) $processedAt : null;
         $this->meta = is_array($meta) ? $meta : [];
     }

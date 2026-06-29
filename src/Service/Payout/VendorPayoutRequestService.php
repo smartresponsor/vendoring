@@ -8,7 +8,6 @@ namespace App\Vendoring\Service\Payout;
 use App\Vendoring\DTO\Payout\VendorCreatePayoutDTO;
 use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutRequestServiceInterface;
-use InvalidArgumentException;
 
 final class VendorPayoutRequestService implements VendorPayoutRequestServiceInterface
 {
@@ -17,7 +16,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
     {
         foreach (['tenantId', 'vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
             if (!isset($payload[$field])) {
-                throw new InvalidArgumentException(sprintf('%s required', $field));
+                throw new \InvalidArgumentException(sprintf('%s required', $field));
             }
         }
 
@@ -40,7 +39,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             'feeCents' => $payout->feeCents,
             'netCents' => $payout->netCents,
             'status' => $payout->status,
-            'createdAt' => $payout->createdAt,
+            'createdAt' => $payout->getCreatedAt()->format('Y-m-d H:i:s'),
             'processedAt' => $payout->processedAt,
             'meta' => $payout->meta,
         ];
@@ -59,7 +58,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             return (string) $value;
         }
 
-        throw new InvalidArgumentException(sprintf('%s required', $field));
+        throw new \InvalidArgumentException(sprintf('%s required', $field));
     }
 
     /** @param array<string, mixed> $payload */
@@ -77,7 +76,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             return (int) $numericCandidate;
         }
 
-        throw new InvalidArgumentException('thresholdCents required');
+        throw new \InvalidArgumentException('thresholdCents required');
     }
 
     /** @param array<string, mixed> $payload */
@@ -97,11 +96,11 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
         }
 
         if (null === $parsed) {
-            throw new InvalidArgumentException('retentionFeePercent required');
+            throw new \InvalidArgumentException('retentionFeePercent required');
         }
 
         if ($parsed < 0.0 || $parsed > 1.0) {
-            throw new InvalidArgumentException('retentionFeePercent out_of_range');
+            throw new \InvalidArgumentException('retentionFeePercent out_of_range');
         }
 
         return $parsed;

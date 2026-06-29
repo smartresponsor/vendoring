@@ -8,29 +8,27 @@ namespace App\Vendoring\Service\Payout;
 use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
-use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
-use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class VendorPayoutAccountService implements VendorPayoutAccountServiceInterface
 {
-    public function __construct(private VendorPayoutAccountRepositoryInterface $accounts) {}
+    public function __construct(private VendorPayoutAccountRepositoryInterface $accounts)
+    {
+    }
 
     /**
      * @param array<string, mixed> $payload
-     * @return VendorPayoutAccountEntity
+     *
      * @throws Exception
      */
     public function upsertFromPayload(array $payload): VendorPayoutAccountEntity
     {
         foreach (['tenantId', 'vendorId', 'provider', 'accountRef', 'currency'] as $field) {
             if (!isset($payload[$field])) {
-                throw new InvalidArgumentException(sprintf('%s required', $field));
+                throw new \InvalidArgumentException(sprintf('%s required', $field));
             }
         }
-
-        $createdAt = new DateTimeImmutable();
 
         $account = new VendorPayoutAccountEntity(
             Uuid::v4()->toRfc4122(),
@@ -40,7 +38,6 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
             $this->requiredString($payload, 'accountRef'),
             strtoupper($this->requiredString($payload, 'currency')),
             $this->boolValue($payload['active'] ?? true),
-            $createdAt->format('Y-m-d H:i:s'),
         );
 
         $this->accounts->upsert($account);
@@ -66,7 +63,7 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
             return $normalized;
         }
 
-        throw new InvalidArgumentException(sprintf('%s required', $field));
+        throw new \InvalidArgumentException(sprintf('%s required', $field));
     }
 
     private function boolValue(mixed $value): bool

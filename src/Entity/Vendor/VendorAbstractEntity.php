@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
+use App\Objecting\EntityInterface\ObjectAuditedInterface;
+use App\Objecting\EntityInterface\ObjectIdentifiedInterface;
+use App\Objecting\EntityInterface\ObjectStatefulInterface;
 use App\Objecting\EntityTrait\Embeddable\ObjectAuditEmbeddableTrait;
 use App\Objecting\EntityTrait\Embeddable\ObjectIdentityEmbeddableTrait;
 use App\Objecting\EntityTrait\Embeddable\ObjectStateEmbeddableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
-abstract class VendorAbstractEntity
+abstract class VendorAbstractEntity implements ObjectIdentifiedInterface, ObjectAuditedInterface, ObjectStatefulInterface
 {
     use ObjectIdentityEmbeddableTrait;
     use ObjectAuditEmbeddableTrait;

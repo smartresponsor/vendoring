@@ -65,7 +65,6 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
 
         // 3) РЎРѕР·РґР°С‘Рј payout
         $payoutId = Uuid::v4()->toRfc4122();
-        $createdAt = new \DateTimeImmutable();
 
         $payout = new VendorPayoutEntity(
             id: $payoutId,
@@ -75,7 +74,6 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
             feeCents: $fee,
             netCents: $net,
             status: 'pending',
-            createdAt: $createdAt->format('Y-m-d H:i:s'),
             meta: [
                 'tenantId' => $dto->tenantId,
                 'threshold' => $dto->thresholdCents,
