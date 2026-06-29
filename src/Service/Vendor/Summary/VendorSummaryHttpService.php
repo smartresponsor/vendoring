@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Vendoring\Service\Http\Vendor\Summary;
+namespace App\Vendoring\Service\Vendor\Summary;
 
 use App\Vendoring\ServiceInterface\Ledger\VendorSummaryServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,7 +15,7 @@ final class VendorSummaryHttpService
     {
     }
 
-    public function summary(string $vendorId, Request $r): JsonResponse
+    public function summary(string $id, Request $r): JsonResponse
     {
         $tenantId = (string) ($r->query->get('tenantId') ?? '');
         $from = (string) ($r->query->get('from') ?? '');
@@ -24,7 +24,7 @@ final class VendorSummaryHttpService
         if (!$tenantId) {
             return new JsonResponse(['error' => 'tenantId required'], 422);
         }
-        $summary = $this->vendorSummaryService->build($tenantId, $vendorId, $from, $to, $currency);
+        $summary = $this->vendorSummaryService->build($tenantId, $id, $from, $to, $currency);
 
         return new JsonResponse(['data' => $summary], 200);
     }

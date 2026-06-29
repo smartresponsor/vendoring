@@ -3,7 +3,7 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Vendoring\Service\Http\Vendor\Statement;
+namespace App\Vendoring\Service\Vendor\Statement;
 
 use App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverServiceInterface;
@@ -27,10 +27,10 @@ final class VendorStatementHttpService
     }
 
     /** @throws Exception */
-    public function build(string $vendorId, Request $r): JsonResponse
+    public function build(string $id, Request $r): JsonResponse
     {
         $dto = $this->resolveStatementRequestOrErrorResponse(
-            $vendorId,
+            $id,
             $r,
             $this->statementWindowQueryRequestResolver,
             $this->requestResolver,

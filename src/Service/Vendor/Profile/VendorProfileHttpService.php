@@ -3,7 +3,7 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Vendoring\Service\Http\Vendor\Profile;
+namespace App\Vendoring\Service\Vendor\Profile;
 
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use App\Vendoring\ServiceInterface\Profile\VendorProfileProjectionBuilderServiceInterface;
@@ -63,9 +63,9 @@ final class VendorProfileHttpService
         return new JsonResponse(['data' => $projection->toArray()], 200);
     }
 
-    public function show(int $vendorId): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $projection = $this->profileProjectionBuilder->buildForVendorId($vendorId);
+        $projection = $this->profileProjectionBuilder->buildForVendorId($id);
 
         if (null === $projection) {
             return new JsonResponse(['error' => 'vendor_not_found'], 404);

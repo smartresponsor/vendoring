@@ -3,7 +3,7 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Vendoring\Service\Http\Vendor\Transaction;
+namespace App\Vendoring\Service\Vendor\Transaction;
 
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
@@ -111,10 +111,10 @@ final class VendorTransactionHttpService
      *
      * Response schema: {data: VendorTransactionResource[]}.
      */
-    public function listByVendor(string $vendorId): JsonResponse
+    public function listByVendor(string $id): JsonResponse
     {
         $items = [];
-        foreach ($this->repo->findByVendorId($vendorId) as $tx) {
+        foreach ($this->repo->findByVendorId($id) as $tx) {
             $items[] = $this->normalize($tx);
         }
 
