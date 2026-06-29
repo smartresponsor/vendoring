@@ -19,6 +19,7 @@ phpunit.log
 
 # Local backup residue produced by manual patching or IDE/runtime tools
 *.bak
+*.bak.*
 *.bak_*
 *.orig
 *.rej
