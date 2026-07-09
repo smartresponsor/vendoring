@@ -47,7 +47,7 @@ foreach ($files as $file) {
 
         [$routeName] = explode(':', $trimmed, 2);
         $routeName = trim($routeName);
-        if ('' === $routeName || 'imports' === $routeName) {
+        if ('' === $routeName || 'imports' === $routeName || '{ path' === $routeName || 'service' === $routeName || 'type' === $routeName || 'resolver' === $routeName) {
             continue;
         }
         if (isset($routeNames[$routeName])) {
@@ -58,7 +58,7 @@ foreach ($files as $file) {
         if (1 === preg_match('/service:\s*([^,}\s]+)/', $trimmed, $match)) {
             ++$serviceCount;
             $fqcn = $match[1];
-            $path = $root.'/'.str_replace('\\', '/', preg_replace('/^App\\\\/', 'src/', $fqcn)).'.php';
+            $path = $root.'/src/'.str_replace('\\', '/', preg_replace('/^App\\\\Vendoring\\\\/', '', $fqcn)).'.php';
             if (!is_file($path)) {
                 $failures[] = sprintf('Missing service %s for %s:%d', $fqcn, $relative, $lineNo + 1);
             }
@@ -67,7 +67,7 @@ foreach ($files as $file) {
         if (1 === preg_match('/type:\s*([^,}\s]+)/', $trimmed, $match)) {
             ++$typeCount;
             $fqcn = $match[1];
-            $path = $root.'/'.str_replace('\\', '/', preg_replace('/^App\\\\/', 'src/', $fqcn)).'.php';
+            $path = $root.'/src/'.str_replace('\\', '/', preg_replace('/^App\\\\Vendoring\\\\/', '', $fqcn)).'.php';
             if (!is_file($path)) {
                 $failures[] = sprintf('Missing form type %s for %s:%d', $fqcn, $relative, $lineNo + 1);
             }

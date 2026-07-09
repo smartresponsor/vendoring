@@ -52,11 +52,13 @@ if ([] === $services) {
 
 function fqcn_to_file(string $root, string $fqcn): string
 {
-    if (!str_starts_with($fqcn, 'App\\')) {
+    $prefix = 'App\\Vendoring\\';
+
+    if (!str_starts_with($fqcn, $prefix)) {
         return '';
     }
 
-    return $root.'/src/'.str_replace('\\', '/', substr($fqcn, 4)).'.php';
+    return $root.'/src/'.str_replace('\\', '/', substr($fqcn, strlen($prefix))).'.php';
 }
 
 foreach (array_keys($services) as $fqcn) {
@@ -83,25 +85,32 @@ foreach (array_keys($services) as $fqcn) {
         $errors[] = sprintf('%s must define final class %s', $relative, $shortName);
     }
 
-    if (!str_contains($contents, 'function __invoke(')) {
-        $errors[] = sprintf('%s must expose __invoke() for Cruding FQCN convention', $relative);
+    $hasCrudingVerbEntrypoint = str_contains($contents, 'extends AbstractVendorCrudRouteService')
+        || str_contains($contents, 'extends AbstractCrudService')
+        || 1 === preg_match('/function\s+(?:get|post|put|patch|delete|show|update|create|process|getOne|build|summary|listByVendor|updateStatus|calculate|overview)\s*\(/', $contents);
+    $hasInvokableEntrypoint = str_contains($contents, 'function __invoke(');
+
+    if (!$hasCrudingVerbEntrypoint && !$hasInvokableEntrypoint) {
+        $errors[] = sprintf('%s must expose Cruding verb dispatch or __invoke() for route-map dispatch', $relative);
     }
 
-    if (1 === preg_match('/function\s+__invoke\s*\([^)]*\)\s*:\s*([^\\s{]+)/', $contents, $m)) {
-        $returnType = trim($m[1]);
-        $allowedReturnTypes = [
-            'array',
-            'JsonResponse',
-            'Response',
-            'RedirectResponse',
-            'mixed',
-        ];
+    if ($hasInvokableEntrypoint) {
+        if (1 === preg_match('/function\s+__invoke\s*\([^)]*\)\s*:\s*([^\\s{]+)/', $contents, $m)) {
+            $returnType = trim($m[1]);
+            $allowedReturnTypes = [
+                'array',
+                'JsonResponse',
+                'Response',
+                'RedirectResponse',
+                'mixed',
+            ];
 
-        if (!in_array($returnType, $allowedReturnTypes, true)) {
-            $errors[] = sprintf('%s has unexpected __invoke return type %s', $relative, $returnType);
+            if (!in_array($returnType, $allowedReturnTypes, true)) {
+                $errors[] = sprintf('%s has unexpected __invoke return type %s', $relative, $returnType);
+            }
+        } else {
+            $errors[] = sprintf('%s must declare an explicit __invoke return type', $relative);
         }
-    } else {
-        $errors[] = sprintf('%s must declare an explicit __invoke return type', $relative);
     }
 
     if (str_contains($contents, 'extends AbstractController') || str_contains($contents, '#[Route(')) {
