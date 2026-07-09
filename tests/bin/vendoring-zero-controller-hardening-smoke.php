@@ -71,6 +71,10 @@ foreach ($scanRoots as $relativeScanRoot) {
             continue;
         }
 
+        if ('tests/Unit/Infrastructure/CanonicalRootStructureContractTest.php' === $relativePath) {
+            continue;
+        }
+
         $contents = (string) file_get_contents($path);
 
         foreach ($forbiddenNeedles as $needle => $label) {

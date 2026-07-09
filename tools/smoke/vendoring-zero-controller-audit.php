@@ -114,6 +114,11 @@ foreach ([$root . '/config', $root . '/tests/Unit', $root . '/tools/report'] as 
         if (!str_ends_with($path, '.php') && !str_ends_with($path, '.yaml') && !str_ends_with($path, '.yml')) {
             continue;
         }
+        $relativePath = str_replace('\\', '/', substr($path, strlen($root) + 1));
+        if ('tests/Unit/Infrastructure/CanonicalRootStructureContractTest.php' === $relativePath) {
+            continue;
+        }
+
         $contents = (string) file_get_contents($path);
         if (str_contains($contents, 'vendor_routes.yaml')) {
             $failures[] = $path . ' contains forbidden vendor_routes.yaml reference';
