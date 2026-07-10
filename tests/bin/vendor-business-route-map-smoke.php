@@ -18,13 +18,13 @@ preg_match_all('/type:\s*([^,}\s]+)/', $contents, $typeMatches);
 
 $missing = [];
 foreach (array_unique($serviceMatches[1] ?? []) as $fqcn) {
-    $path = $root.'/'.str_replace('\\', '/', preg_replace('/^App\\\\/', 'src/', $fqcn)).'.php';
+    $path = $root.'/src/'.str_replace('\\', '/', preg_replace('/^App\\\\Vendoring\\\\/', '', $fqcn)).'.php';
     if (!file_exists($path)) {
         $missing[] = 'Missing service: '.$fqcn.' at '.$path;
     }
 }
 foreach (array_unique($typeMatches[1] ?? []) as $fqcn) {
-    $path = $root.'/'.str_replace('\\', '/', preg_replace('/^App\\\\/', 'src/', $fqcn)).'.php';
+    $path = $root.'/src/'.str_replace('\\', '/', preg_replace('/^App\\\\Vendoring\\\\/', '', $fqcn)).'.php';
     if (!file_exists($path)) {
         $missing[] = 'Missing type: '.$fqcn.' at '.$path;
     }

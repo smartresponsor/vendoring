@@ -33,6 +33,7 @@ class VendorPayoutEntity extends VendorAbstractEntity
         int $feeCents,
         int $netCents,
         string $status = 'pending',
+        mixed $createdAt = null,
         mixed $processedAt = null,
         mixed $meta = [],
     ) {
@@ -43,6 +44,7 @@ class VendorPayoutEntity extends VendorAbstractEntity
         $this->grossCents = $grossCents;
         $this->feeCents = $feeCents;
         $this->netCents = $netCents;
+        unset($createdAt);
         $this->status = $status;
         $this->processedAt = is_scalar($processedAt) ? (string) $processedAt : null;
         $this->meta = is_array($meta) ? $meta : [];

@@ -10,10 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorTransactionRepository::class)]
 #[ORM\Table(
     name: 'vendor_transaction',
-    uniqueConstraints: [
-        new ORM\UniqueConstraint(name: 'uniq_vendor_transaction_vendor_order_project_nonnull', columns: ['vendor_id', 'order_id', 'project_id'], options: ['where' => 'project_id IS NOT NULL']),
-        new ORM\UniqueConstraint(name: 'uniq_vendor_transaction_vendor_order_nullproject', columns: ['vendor_id', 'order_id'], options: ['where' => 'project_id IS NULL']),
-    ],
     indexes: [
         new ORM\Index(name: 'idx_vendor_transaction_vendor_id', columns: ['vendor_id']),
     ],
