@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Cruding",
-                "reference": "167df96cc8992f8e8f792216bab7d25cbacccb11"
+                "reference": "10b67ecfbbdeea01ec20f32b21e16a1a4338202d"
             },
             "require": {
                 "doctrine/doctrine-bundle": "^3.2",
@@ -52,6 +52,36 @@
             "scripts": {
                 "canon:cruding": [
                     "php tools/cruding/interfacing-provider-rendering-guard.php"
+                ],
+                "smoke:cruding": [
+                    "@php tools/smoke/cruding-catch-all-resource-boundary-smoke.php",
+                    "@php tools/smoke/cruding-composer-autoload-dev-psr4-smoke.php",
+                    "@php tools/smoke/cruding-config-declarative-only-smoke.php",
+                    "@php tools/smoke/cruding-config-driven-operation-token-router-smoke.php",
+                    "@php tools/smoke/cruding-direct-entity-fqcn-canon-smoke.php",
+                    "@php tools/smoke/cruding-entrypoint-contract-finalization-smoke.php",
+                    "@php tools/smoke/cruding-entrypoint-migration-contract-smoke.php",
+                    "@php tools/smoke/cruding-entrypoint-operation-method-parity-smoke.php",
+                    "@php tools/smoke/cruding-entrypoint-readonly-inheritance-smoke.php",
+                    "@php tools/smoke/cruding-entrypoint-safe-hook-invocation-smoke.php",
+                    "@php tools/smoke/cruding-entrypoint-trace-diagnostics-smoke.php",
+                    "@php tools/smoke/cruding-index-operation-grammar-smoke.php",
+                    "@php tools/smoke/cruding-legacy-invokable-entrypoint-bridge-smoke.php",
+                    "@php tools/smoke/cruding-my-actor-scope-tokenized-resolver-smoke.php",
+                    "@php tools/smoke/cruding-operation-token-route-coverage-smoke.php",
+                    "@php tools/smoke/cruding-positional-operation-token-grammar-smoke.php",
+                    "@php tools/smoke/cruding-reserved-identity-token-guard.php",
+                    "@php tools/smoke/cruding-resource-path-operation-suffix-regex-smoke.php",
+                    "@php tools/smoke/cruding-route-parameter-fallback-smoke.php",
+                    "@php tools/smoke/cruding-single-route-runtime-smoke.php",
+                    "@php tools/smoke/cruding-tokenized-before-legacy-resource-route-order-smoke.php",
+                    "@php tools/smoke/cruding-tokenized-controller-service-registration-smoke.php",
+                    "@php tools/smoke/cruding-tokenized-route-resolver-smoke.php",
+                    "@php tools/smoke/cruding-uri-entrypoint-extension-smoke.php"
+                ],
+                "check:cruding": [
+                    "@canon:cruding",
+                    "@smoke:cruding"
                 ]
             },
             "license": [
@@ -1237,7 +1267,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Objecting",
-                "reference": "ecf07fca5c8fcc4430a96113b9bbca744e636845"
+                "reference": "d232919c26470c2ccd9e158a83aa3f5995abc620"
             },
             "require": {
                 "doctrine/orm": "^3.3",
@@ -1273,6 +1303,9 @@
                 "test:canon": [
                     "@php tools/test/objecting_canon_check.php"
                 ],
+                "test:lifecycle-identity-canon": [
+                    "@php tools/test/objecting_lifecycle_identity_canon_check.php"
+                ],
                 "test:package-surface": [
                     "@php tools/test/objecting_package_surface_check.php"
                 ],
@@ -1281,6 +1314,8 @@
                 ],
                 "test:quality": [
                     "@test:canon",
+                    "@test:lifecycle-identity-canon",
+                    "@test:internal-types",
                     "@test:layer-suffix",
                     "@test:package-surface",
                     "@test:platform-constraints",
@@ -1375,6 +1410,9 @@
                 ],
                 "test:layer-suffix": [
                     "@php tools/test/objecting_layer_suffix_check.php"
+                ],
+                "test:internal-types": [
+                    "@php tools/test/objecting_internal_type_resolution_check.php"
                 ]
             },
             "license": [
@@ -2445,16 +2483,16 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.7.0",
+            "version": "v3.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "50f59d1f3ca46d41ac911f97a78626b6756af35b"
+                "reference": "f3202fa1b5097b0af062dc978b32ecf63404e31d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/50f59d1f3ca46d41ac911f97a78626b6756af35b",
-                "reference": "50f59d1f3ca46d41ac911f97a78626b6756af35b",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/f3202fa1b5097b0af062dc978b32ecf63404e31d",
+                "reference": "f3202fa1b5097b0af062dc978b32ecf63404e31d",
                 "shasum": ""
             },
             "require": {
@@ -2492,7 +2530,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.7.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.7.1"
             },
             "funding": [
                 {
@@ -2512,7 +2550,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-13T15:52:40+00:00"
+            "time": "2026-06-05T06:23:12+00:00"
         },
         {
             "name": "symfony/doctrine-bridge",
@@ -9557,20 +9595,20 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v8.0.8",
+            "version": "v8.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "284ace90732b445b027728b5e0eec6418a17a364"
+                "reference": "1dfadd25537c8fcb6752cce5775f24647d976bdc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/284ace90732b445b027728b5e0eec6418a17a364",
-                "reference": "284ace90732b445b027728b5e0eec6418a17a364",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/1dfadd25537c8fcb6752cce5775f24647d976bdc",
+                "reference": "1dfadd25537c8fcb6752cce5775f24647d976bdc",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.4",
+                "php": ">=8.4.1",
                 "symfony/polyfill-ctype": "^1.8",
                 "symfony/polyfill-mbstring": "^1.0"
             },
@@ -9603,7 +9641,7 @@
             "description": "Eases DOM navigation for HTML and XML documents",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dom-crawler/tree/v8.0.8"
+                "source": "https://github.com/symfony/dom-crawler/tree/v8.1.1"
             },
             "funding": [
                 {
@@ -9623,7 +9661,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-30T15:14:47+00:00"
+            "time": "2026-06-05T06:23:12+00:00"
         },
         {
             "name": "symfony/http-client",
