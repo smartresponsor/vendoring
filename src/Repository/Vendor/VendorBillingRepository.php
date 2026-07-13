@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorBillingRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorBillingEntity> */
 final class VendorBillingRepository extends ServiceEntityRepository implements VendorBillingRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,7 +17,21 @@ final class VendorBillingRepository extends ServiceEntityRepository implements V
         parent::__construct($registry, VendorBillingEntity::class);
     }
 
-    public function save(object $entity, bool $flush = false): void
+    public function find(mixed $id, \Doctrine\DBAL\LockMode|int|null $lockMode = null, ?int $lockVersion = null): ?VendorBillingEntity
+    {
+        $entity = parent::find($id, $lockMode, $lockVersion);
+
+        return $entity instanceof VendorBillingEntity ? $entity : null;
+    }
+
+    public function findOneBy(array $criteria, ?array $orderBy = null): ?VendorBillingEntity
+    {
+        $entity = parent::findOneBy($criteria, $orderBy);
+
+        return $entity instanceof VendorBillingEntity ? $entity : null;
+    }
+
+    public function save(VendorBillingEntity $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
         if ($flush) {
@@ -24,19 +39,21 @@ final class VendorBillingRepository extends ServiceEntityRepository implements V
         }
     }
 
-    public function byId(mixed $id): ?object
+    public function byId(mixed $id): ?VendorBillingEntity
     {
         return $this->find($id);
     }
 
     public function findOneByVendorId(int $vendorId): ?VendorBillingEntity
     {
-        return $this->createQueryBuilder('billing')
+        $result = $this->createQueryBuilder('billing')
             ->innerJoin('billing.vendor', 'vendor')
             ->andWhere('vendor.id = :vendorId')
-            ->setParameter('vendorId', (int) $vendorId)
+            ->setParameter('vendorId', $vendorId)
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+
+        return $result instanceof VendorBillingEntity ? $result : null;
     }
 }

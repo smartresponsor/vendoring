@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorProfileCoverRepositoryInterfa
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorProfileCoverEntity> */
 final class VendorProfileCoverRepository extends ServiceEntityRepository implements VendorProfileCoverRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

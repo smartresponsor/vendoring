@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorCodeStorageRepositoryInterfac
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorCodeStorageEntity> */
 final class VendorCodeStorageRepository extends ServiceEntityRepository implements VendorCodeStorageRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

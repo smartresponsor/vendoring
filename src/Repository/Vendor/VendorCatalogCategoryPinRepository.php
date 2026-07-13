@@ -9,18 +9,11 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogCategoryPinRepositoryI
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorCatalogCategoryPinEntity> */
 final class VendorCatalogCategoryPinRepository extends ServiceEntityRepository implements VendorCatalogCategoryPinRepositoryInterface
 {
-    private mixed $entityManager = null;
-
     public function __construct(ManagerRegistry $registry)
     {
-        if ($registry instanceof \Doctrine\ORM\EntityManagerInterface) {
-            $this->entityManager = $registry;
-
-            return;
-        }
-
         parent::__construct($registry, VendorCatalogCategoryPinEntity::class);
     }
 

@@ -10,6 +10,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorPayoutEntity> */
 final class VendorPayoutRepository extends ServiceEntityRepository implements VendorPayoutRepositoryInterface
 {
     private ?EntityManagerInterface $directEm = null;
@@ -18,7 +19,7 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
      * Accepts either a ManagerRegistry (Symfony DI path) or an EntityManagerInterface
      * directly (unit test path without a full DI container).
      */
-    public function __construct(mixed $registry)
+    public function __construct(ManagerRegistry|EntityManagerInterface $registry)
     {
         if ($registry instanceof EntityManagerInterface) {
             $this->directEm = $registry;
@@ -26,8 +27,20 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
             return;
         }
 
-        /* @var ManagerRegistry $registry */
         parent::__construct($registry, VendorPayoutEntity::class);
+    }
+
+    public function find(mixed $id, \Doctrine\DBAL\LockMode|int|null $lockMode = null, ?int $lockVersion = null): ?VendorPayoutEntity
+    {
+        if (null !== $this->directEm) {
+            $entity = $this->directEm->find(VendorPayoutEntity::class, $id);
+
+            return $entity instanceof VendorPayoutEntity ? $entity : null;
+        }
+
+        $entity = parent::find($id, $lockMode, $lockVersion);
+
+        return $entity instanceof VendorPayoutEntity ? $entity : null;
     }
 
     private function em(): EntityManagerInterface
@@ -35,7 +48,20 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
         return $this->directEm ?? $this->getEntityManager();
     }
 
-    public function save(object $entity, bool $flush = false): void
+    public function findOneBy(array $criteria, ?array $orderBy = null): ?VendorPayoutEntity
+    {
+        if (null !== $this->directEm) {
+            $entity = $this->directEm->getRepository(VendorPayoutEntity::class)->findOneBy($criteria, $orderBy);
+
+            return $entity instanceof VendorPayoutEntity ? $entity : null;
+        }
+
+        $entity = parent::findOneBy($criteria, $orderBy);
+
+        return $entity instanceof VendorPayoutEntity ? $entity : null;
+    }
+
+    public function save(VendorPayoutEntity $entity, bool $flush = false): void
     {
         $this->em()->persist($entity);
         if ($flush) {
@@ -43,7 +69,7 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
         }
     }
 
-    public function byId(mixed $id): ?object
+    public function byId(mixed $id): ?VendorPayoutEntity
     {
         if (null !== $this->directEm) {
             return $this->directEm->find(VendorPayoutEntity::class, $id);
@@ -68,6 +94,7 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
         }
     }
 
+    /** @param array<string, mixed> $meta */
     public function markFailed(string $id, string $processedAt, array $meta = []): void
     {
         $payout = $this->byId($id);

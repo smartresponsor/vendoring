@@ -10,6 +10,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorPayoutAccountEntity> */
 final class VendorPayoutAccountRepository extends ServiceEntityRepository implements VendorPayoutAccountRepositoryInterface
 {
     private ?EntityManagerInterface $directEm = null;
@@ -18,7 +19,7 @@ final class VendorPayoutAccountRepository extends ServiceEntityRepository implem
      * Accepts either a ManagerRegistry (Symfony DI path) or an EntityManagerInterface
      * directly (unit test path without a full DI container).
      */
-    public function __construct(mixed $registry)
+    public function __construct(ManagerRegistry|EntityManagerInterface $registry)
     {
         if ($registry instanceof EntityManagerInterface) {
             $this->directEm = $registry;

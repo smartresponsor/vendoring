@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorSecurityRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorSecurityEntity> */
 final class VendorSecurityRepository extends ServiceEntityRepository implements VendorSecurityRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

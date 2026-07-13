@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorEntity> */
 final class VendorRepository extends ServiceEntityRepository implements VendorRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,7 +17,21 @@ final class VendorRepository extends ServiceEntityRepository implements VendorRe
         parent::__construct($registry, VendorEntity::class);
     }
 
-    public function save(object $entity, bool $flush = false): void
+    public function find(mixed $id, \Doctrine\DBAL\LockMode|int|null $lockMode = null, ?int $lockVersion = null): ?VendorEntity
+    {
+        $entity = parent::find($id, $lockMode, $lockVersion);
+
+        return $entity instanceof VendorEntity ? $entity : null;
+    }
+
+    public function findOneBy(array $criteria, ?array $orderBy = null): ?VendorEntity
+    {
+        $entity = parent::findOneBy($criteria, $orderBy);
+
+        return $entity instanceof VendorEntity ? $entity : null;
+    }
+
+    public function save(VendorEntity $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
         if ($flush) {
@@ -24,7 +39,7 @@ final class VendorRepository extends ServiceEntityRepository implements VendorRe
         }
     }
 
-    public function byId(mixed $id): ?object
+    public function byId(mixed $id): ?VendorEntity
     {
         return $this->find($id);
     }

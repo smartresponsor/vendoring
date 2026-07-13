@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogCategoryChangeRequestR
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorCatalogCategoryChangeRequestEntity> */
 final class VendorCatalogCategoryChangeRequestRepository extends ServiceEntityRepository implements VendorCatalogCategoryChangeRequestRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,7 +17,21 @@ final class VendorCatalogCategoryChangeRequestRepository extends ServiceEntityRe
         parent::__construct($registry, VendorCatalogCategoryChangeRequestEntity::class);
     }
 
-    public function save(object $entity, bool $flush = false): void
+    public function find(mixed $id, \Doctrine\DBAL\LockMode|int|null $lockMode = null, ?int $lockVersion = null): ?VendorCatalogCategoryChangeRequestEntity
+    {
+        $entity = parent::find($id, $lockMode, $lockVersion);
+
+        return $entity instanceof VendorCatalogCategoryChangeRequestEntity ? $entity : null;
+    }
+
+    public function findOneBy(array $criteria, ?array $orderBy = null): ?VendorCatalogCategoryChangeRequestEntity
+    {
+        $entity = parent::findOneBy($criteria, $orderBy);
+
+        return $entity instanceof VendorCatalogCategoryChangeRequestEntity ? $entity : null;
+    }
+
+    public function save(VendorCatalogCategoryChangeRequestEntity $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
         if ($flush) {
@@ -24,7 +39,7 @@ final class VendorCatalogCategoryChangeRequestRepository extends ServiceEntityRe
         }
     }
 
-    public function byId(mixed $id): ?object
+    public function byId(mixed $id): ?VendorCatalogCategoryChangeRequestEntity
     {
         return $this->find($id);
     }

@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorRememberMeTokenRepositoryInte
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorRememberMeTokenEntity> */
 final class VendorRememberMeTokenRepository extends ServiceEntityRepository implements VendorRememberMeTokenRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

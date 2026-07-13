@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogCategoryHtmlBlockRepos
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorCatalogCategoryHtmlBlockEntity> */
 final class VendorCatalogCategoryHtmlBlockRepository extends ServiceEntityRepository implements VendorCatalogCategoryHtmlBlockRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

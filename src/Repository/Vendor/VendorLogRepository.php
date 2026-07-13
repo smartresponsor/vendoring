@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorLogRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorLogEntity> */
 final class VendorLogRepository extends ServiceEntityRepository implements VendorLogRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

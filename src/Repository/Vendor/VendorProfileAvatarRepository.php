@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorProfileAvatarRepositoryInterf
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorProfileAvatarEntity> */
 final class VendorProfileAvatarRepository extends ServiceEntityRepository implements VendorProfileAvatarRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

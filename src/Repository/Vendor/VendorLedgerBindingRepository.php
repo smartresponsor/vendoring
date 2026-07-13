@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerBindingRepositoryInterf
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorLedgerBindingEntity> */
 final class VendorLedgerBindingRepository extends ServiceEntityRepository implements VendorLedgerBindingRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

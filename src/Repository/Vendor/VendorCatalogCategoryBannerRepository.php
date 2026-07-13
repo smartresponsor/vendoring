@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogCategoryBannerReposito
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorCatalogCategoryBannerEntity> */
 final class VendorCatalogCategoryBannerRepository extends ServiceEntityRepository implements VendorCatalogCategoryBannerRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

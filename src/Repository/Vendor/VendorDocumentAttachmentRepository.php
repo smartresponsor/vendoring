@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorDocumentAttachmentRepositoryI
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorDocumentAttachmentEntity> */
 final class VendorDocumentAttachmentRepository extends ServiceEntityRepository implements VendorDocumentAttachmentRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

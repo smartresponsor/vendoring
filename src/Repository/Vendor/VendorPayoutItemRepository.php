@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutItemRepositoryInterface
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorPayoutItemEntity> */
 final class VendorPayoutItemRepository extends ServiceEntityRepository implements VendorPayoutItemRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

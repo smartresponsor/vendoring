@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Vendoring\Repository\Vendor;
 
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
+use App\Vendoring\DTO\Ledger\VendorLedgerBalanceDTO;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorLedgerEntity> */
 final class VendorLedgerRepository extends ServiceEntityRepository implements VendorLedgerRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -47,7 +49,16 @@ final class VendorLedgerRepository extends ServiceEntityRepository implements Ve
                 ->setParameter('vendorId', $vendorId);
         }
 
-        return $queryBuilder->getQuery()->getResult();
+        $result = $queryBuilder->getQuery()->getResult();
+
+        if (!is_array($result)) {
+            return [];
+        }
+
+        return array_values(array_filter(
+            $result,
+            static fn (mixed $entry): bool => $entry instanceof VendorLedgerEntity,
+        ));
     }
 
     public function sumByAccount(VendorLedgerAccountSumCriteriaDTO $criteria): float
@@ -55,10 +66,6 @@ final class VendorLedgerRepository extends ServiceEntityRepository implements Ve
         $sum = 0.0;
 
         foreach ($this->findBy(['tenantId' => $criteria->tenantId]) as $entry) {
-            if (!$entry instanceof VendorLedgerEntity) {
-                continue;
-            }
-
             if (null !== $criteria->vendorId && $entry->vendorId !== $criteria->vendorId) {
                 continue;
             }
@@ -84,19 +91,15 @@ final class VendorLedgerRepository extends ServiceEntityRepository implements Ve
         $balances = [];
 
         foreach ($this->findBy(['vendorId' => $vendorId]) as $entry) {
-            if (!$entry instanceof VendorLedgerEntity) {
-                continue;
-            }
-
             $balances[$entry->currency] ??= 0;
             $balances[$entry->currency] += (int) round($entry->amount * 100);
         }
 
         return array_map(
-            static fn (string $currency, int $balanceCents): object => (object) [
-                'currency' => $currency,
-                'balanceCents' => $balanceCents,
-            ],
+            static fn (string $currency, int $balanceCents): VendorLedgerBalanceDTO => new VendorLedgerBalanceDTO(
+                currency: $currency,
+                balanceCents: $balanceCents,
+            ),
             array_keys($balances),
             array_values($balances),
         );

@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorConversationRepositoryInterfa
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorConversationEntity> */
 final class VendorConversationRepository extends ServiceEntityRepository implements VendorConversationRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

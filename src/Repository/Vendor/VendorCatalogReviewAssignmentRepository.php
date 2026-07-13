@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogReviewAssignmentReposi
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorCatalogReviewAssignmentEntity> */
 final class VendorCatalogReviewAssignmentRepository extends ServiceEntityRepository implements VendorCatalogReviewAssignmentRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

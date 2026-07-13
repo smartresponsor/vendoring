@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorCustomerOrderRepositoryInterf
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorCustomerOrderEntity> */
 final class VendorCustomerOrderRepository extends ServiceEntityRepository implements VendorCustomerOrderRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

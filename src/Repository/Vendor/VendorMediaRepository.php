@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorMediaRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorMediaEntity> */
 final class VendorMediaRepository extends ServiceEntityRepository implements VendorMediaRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,7 +17,21 @@ final class VendorMediaRepository extends ServiceEntityRepository implements Ven
         parent::__construct($registry, VendorMediaEntity::class);
     }
 
-    public function save(object $entity, bool $flush = false): void
+    public function find(mixed $id, \Doctrine\DBAL\LockMode|int|null $lockMode = null, ?int $lockVersion = null): ?VendorMediaEntity
+    {
+        $entity = parent::find($id, $lockMode, $lockVersion);
+
+        return $entity instanceof VendorMediaEntity ? $entity : null;
+    }
+
+    public function findOneBy(array $criteria, ?array $orderBy = null): ?VendorMediaEntity
+    {
+        $entity = parent::findOneBy($criteria, $orderBy);
+
+        return $entity instanceof VendorMediaEntity ? $entity : null;
+    }
+
+    public function save(VendorMediaEntity $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
         if ($flush) {
@@ -24,7 +39,7 @@ final class VendorMediaRepository extends ServiceEntityRepository implements Ven
         }
     }
 
-    public function byId(mixed $id): ?object
+    public function byId(mixed $id): ?VendorMediaEntity
     {
         return $this->find($id);
     }

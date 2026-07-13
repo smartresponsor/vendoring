@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorAddressRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorAddressEntity> */
 final class VendorAddressRepository extends ServiceEntityRepository implements VendorAddressRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

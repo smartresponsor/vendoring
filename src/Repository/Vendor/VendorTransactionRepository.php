@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterfac
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorTransactionEntity> */
 final class VendorTransactionRepository extends ServiceEntityRepository implements VendorTransactionRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,7 +17,21 @@ final class VendorTransactionRepository extends ServiceEntityRepository implemen
         parent::__construct($registry, VendorTransactionEntity::class);
     }
 
-    public function save(object $entity, bool $flush = false): void
+    public function find(mixed $id, \Doctrine\DBAL\LockMode|int|null $lockMode = null, ?int $lockVersion = null): ?VendorTransactionEntity
+    {
+        $entity = parent::find($id, $lockMode, $lockVersion);
+
+        return $entity instanceof VendorTransactionEntity ? $entity : null;
+    }
+
+    public function findOneBy(array $criteria, ?array $orderBy = null): ?VendorTransactionEntity
+    {
+        $entity = parent::findOneBy($criteria, $orderBy);
+
+        return $entity instanceof VendorTransactionEntity ? $entity : null;
+    }
+
+    public function save(VendorTransactionEntity $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
         if ($flush) {
@@ -36,9 +51,17 @@ final class VendorTransactionRepository extends ServiceEntityRepository implemen
         return $this->findBy(['vendorId' => $vendorId], ['createdAt' => 'DESC', 'id' => 'DESC']);
     }
 
-    public function byId(mixed $id): ?object
+    public function byId(mixed $id): ?VendorTransactionEntity
     {
         return $this->find($id);
+    }
+
+    public function findOneByIdAndVendorId(int $id, string $vendorId): ?VendorTransactionEntity
+    {
+        return $this->findOneBy([
+            'id' => $id,
+            'vendorId' => $vendorId,
+        ]);
     }
 
     /**

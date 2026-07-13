@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorWishlistItemRepositoryInterfa
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorWishlistItemEntity> */
 final class VendorWishlistItemRepository extends ServiceEntityRepository implements VendorWishlistItemRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorApiKeyEntity> */
 final class VendorApiKeyRepository extends ServiceEntityRepository implements VendorApiKeyRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,7 +17,21 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
         parent::__construct($registry, VendorApiKeyEntity::class);
     }
 
-    public function save(object $entity, bool $flush = false): void
+    public function find(mixed $id, \Doctrine\DBAL\LockMode|int|null $lockMode = null, ?int $lockVersion = null): ?VendorApiKeyEntity
+    {
+        $entity = parent::find($id, $lockMode, $lockVersion);
+
+        return $entity instanceof VendorApiKeyEntity ? $entity : null;
+    }
+
+    public function findOneBy(array $criteria, ?array $orderBy = null): ?VendorApiKeyEntity
+    {
+        $entity = parent::findOneBy($criteria, $orderBy);
+
+        return $entity instanceof VendorApiKeyEntity ? $entity : null;
+    }
+
+    public function save(VendorApiKeyEntity $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
         if ($flush) {
@@ -24,15 +39,15 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
         }
     }
 
-    public function byId(mixed $id): ?object
+    public function byId(mixed $id): ?VendorApiKeyEntity
     {
         return $this->find($id);
     }
 
-    public function findActiveByToken(string $token): ?object
+    public function findActiveByTokenHash(string $tokenHash): ?VendorApiKeyEntity
     {
         return $this->findOneBy([
-            'tokenHash' => hash('sha256', $token),
+            'tokenHash' => $tokenHash,
             'status' => 'active',
         ]);
     }

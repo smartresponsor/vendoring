@@ -9,6 +9,7 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorIbanRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @extends ServiceEntityRepository<VendorIbanEntity> */
 final class VendorIbanRepository extends ServiceEntityRepository implements VendorIbanRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
