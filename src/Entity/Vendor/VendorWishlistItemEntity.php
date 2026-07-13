@@ -33,27 +33,27 @@ class VendorWishlistItemEntity extends VendorAbstractEntity
         return $this;
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->wishlist->getVendor();
     }
 
-    public function getTargetType()
+    public function getTargetType(): string
     {
         return $this->targetType;
     }
 
-    public function getTargetId()
+    public function getTargetId(): string
     {
         return $this->targetId;
     }
 
-    public function getQuantity()
+    public function getQuantity(): int
     {
         return $this->quantity;
     }
 
-    public function getNote()
+    public function getNote(): ?string
     {
         return $this->note;
     }

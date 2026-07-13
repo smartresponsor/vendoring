@@ -16,9 +16,11 @@ class VendorShipmentEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $methodCode = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $trackingNumber = null;
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $shippedAt = null;
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $deliveredAt = null;
+    /** @param array<string, mixed> $meta */
     public function __construct(VendorEntity $vendor, array $meta = [])
     {
         parent::__construct('pending');
@@ -26,6 +28,7 @@ class VendorShipmentEntity extends VendorAbstractEntity
         $this->meta = $meta;
     }
 
+    /** @param array<string, mixed> $meta */
     public function update(?string $externalShipmentId, ?string $carrierCode, ?string $methodCode, ?string $trackingNumber, string $status, array $meta): self
     {
         $this->externalShipmentId = $externalShipmentId;
@@ -40,27 +43,27 @@ class VendorShipmentEntity extends VendorAbstractEntity
         return $this;
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getExternalShipmentId()
+    public function getExternalShipmentId(): ?string
     {
         return $this->externalShipmentId;
     }
 
-    public function getCarrierCode()
+    public function getCarrierCode(): ?string
     {
         return $this->carrierCode;
     }
 
-    public function getMethodCode()
+    public function getMethodCode(): ?string
     {
         return $this->methodCode;
     }
 
-    public function getTrackingNumber()
+    public function getTrackingNumber(): ?string
     {
         return $this->trackingNumber;
     }
@@ -70,17 +73,18 @@ class VendorShipmentEntity extends VendorAbstractEntity
         return $this->status;
     }
 
-    public function getMeta()
+    /** @return array<string, mixed> */
+    public function getMeta(): array
     {
         return $this->meta;
     }
 
-    public function getShippedAt()
+    public function getShippedAt(): ?\DateTimeImmutable
     {
         return $this->shippedAt;
     }
 
-    public function getDeliveredAt()
+    public function getDeliveredAt(): ?\DateTimeImmutable
     {
         return $this->deliveredAt;
     }

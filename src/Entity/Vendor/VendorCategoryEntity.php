@@ -33,30 +33,30 @@ class VendorCategoryEntity extends VendorAbstractEntity
             $this->isPrimary = $isPrimary;
         }
 
-return $this;
+        return $this;
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getCategoryCode()
+    public function getCategoryCode(): string
     {
         return $this->categoryCode;
     }
 
-    public function getCategoryName()
+    public function getCategoryName(): ?string
     {
         return $this->categoryName;
     }
 
-    public function isIsPrimary()
+    public function isIsPrimary(): bool
     {
         return $this->isPrimary;
     }
 
-    public function getAssignedAt()
+    public function getAssignedAt(): ?\DateTimeImmutable
     {
         return $this->assignedAt;
     }

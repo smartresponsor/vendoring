@@ -15,9 +15,11 @@ class VendorConversationMessageEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $direction = '';
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $body = '';
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $externalMessageId = null;
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];
     #[ORM\Column(type: 'datetime_immutable', nullable: false)] private ?\DateTimeImmutable $sentAt = null;
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $readAt = null;
+    /** @param array<string, mixed> $meta */
     public function __construct(VendorConversationEntity $conversation, string $direction, string $body, ?VendorEntity $senderVendor = null, ?string $externalMessageId = null, array $meta = [])
     {
         parent::__construct();
@@ -39,35 +41,36 @@ class VendorConversationMessageEntity extends VendorAbstractEntity
 
     public function getVendor(): ?VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->senderVendor;
     }
 
-    public function getDirection()
+    public function getDirection(): string
     {
         return $this->direction;
     }
 
-    public function getBody()
+    public function getBody(): string
     {
         return $this->body;
     }
 
-    public function getExternalMessageId()
+    public function getExternalMessageId(): ?string
     {
         return $this->externalMessageId;
     }
 
-    public function getMeta()
+    /** @return array<string, mixed> */
+    public function getMeta(): array
     {
         return $this->meta;
     }
 
-    public function getSentAt()
+    public function getSentAt(): ?\DateTimeImmutable
     {
         return $this->sentAt;
     }
 
-    public function getReadAt()
+    public function getReadAt(): ?\DateTimeImmutable
     {
         return $this->readAt;
     }

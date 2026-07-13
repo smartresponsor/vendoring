@@ -35,32 +35,32 @@ class VendorRememberMeTokenEntity extends VendorAbstractEntity
         return $this;
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getSeries()
+    public function getSeries(): string
     {
         return $this->series;
     }
 
-    public function getTokenValue()
+    public function getTokenValue(): string
     {
         return $this->tokenValue;
     }
 
-    public function getLastUsedAt()
+    public function getLastUsedAt(): ?\DateTimeImmutable
     {
         return $this->lastUsedAt;
     }
 
-    public function getProviderClass()
+    public function getProviderClass(): string
     {
         return $this->providerClass;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }

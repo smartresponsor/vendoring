@@ -17,7 +17,9 @@ class VendorPaymentEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $label = null;
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
     #[ORM\Column(type: 'boolean')] private bool $isDefault = false;
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];
+    /** @param array<string, mixed> $meta */
     public function __construct(VendorEntity $vendor, array $meta = [])
     {
         parent::__construct('active');
@@ -25,6 +27,7 @@ class VendorPaymentEntity extends VendorAbstractEntity
         $this->meta = $meta;
     }
 
+    /** @param array<string, mixed> $meta */
     public function update(string $providerCode, string $methodCode, ?string $externalPaymentId, ?string $label, string $status, bool $isDefault, array $meta): self
     {
         $this->providerCode = $providerCode;
@@ -40,27 +43,27 @@ class VendorPaymentEntity extends VendorAbstractEntity
         return $this;
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getProviderCode()
+    public function getProviderCode(): string
     {
         return $this->providerCode;
     }
 
-    public function getMethodCode()
+    public function getMethodCode(): ?string
     {
         return $this->methodCode;
     }
 
-    public function getExternalPaymentId()
+    public function getExternalPaymentId(): ?string
     {
         return $this->externalPaymentId;
     }
 
-    public function getLabel()
+    public function getLabel(): ?string
     {
         return $this->label;
     }
@@ -70,12 +73,13 @@ class VendorPaymentEntity extends VendorAbstractEntity
         return $this->status;
     }
 
-    public function isIsDefault()
+    public function isIsDefault(): bool
     {
         return $this->isDefault;
     }
 
-    public function getMeta()
+    /** @return array<string, mixed> */
+    public function getMeta(): array
     {
         return $this->meta;
     }

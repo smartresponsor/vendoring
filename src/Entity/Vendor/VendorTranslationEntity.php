@@ -14,7 +14,9 @@ class VendorTranslationEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 16)] private string $localeCode;
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $displayName = null;
     #[ORM\Column(type: 'text', nullable: true)] private ?string $description = null;
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];
+    /** @param array<string, mixed> $meta */
     public function __construct(VendorEntity $vendor, string $localeCode, ?string $displayName = null, ?string $description = null, array $meta = [])
     {
         parent::__construct('active');

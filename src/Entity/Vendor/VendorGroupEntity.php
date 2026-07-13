@@ -14,7 +14,9 @@ class VendorGroupEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $code = '';
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $nameEntity = '';
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];
+    /** @param array<string, mixed> $meta */
     public function __construct(VendorEntity $vendor, string $code, string $nameEntity, array $meta = [])
     {
         parent::__construct('active');
@@ -25,6 +27,7 @@ class VendorGroupEntity extends VendorAbstractEntity
         $this->meta = $meta;
     }
 
+    /** @param array<string, mixed> $meta */
     public function update(string $nameEntity, string $status, array $meta = []): self
     {
         $this->nameEntity = $nameEntity;
@@ -36,17 +39,17 @@ class VendorGroupEntity extends VendorAbstractEntity
         return $this;
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getCode()
+    public function getCode(): string
     {
         return $this->code;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->nameEntity;
     }
@@ -56,7 +59,8 @@ class VendorGroupEntity extends VendorAbstractEntity
         return $this->status;
     }
 
-    public function getMeta()
+    /** @return array<string, mixed> */
+    public function getMeta(): array
     {
         return $this->meta;
     }

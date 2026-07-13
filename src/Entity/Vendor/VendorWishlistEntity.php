@@ -33,17 +33,17 @@ class VendorWishlistEntity extends VendorAbstractEntity
         return $this;
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getCustomerReference()
+    public function getCustomerReference(): string
     {
         return $this->customerReference;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->nameEntity;
     }

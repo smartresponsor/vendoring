@@ -18,31 +18,30 @@ class VendorUserAssignmentEntity extends VendorAbstractEntity implements VendorU
     #[ORM\Column(type: 'boolean')] private bool $primaryAssignment = false;
     #[ORM\Column(type: 'datetime_immutable')] private \DateTimeImmutable $grantedAt;
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $revokedAt = null;
-    public function __construct(...$arguments)
-    {
-        $vendor = $arguments['vendorId'] ?? $arguments['vendor'] ?? $arguments[0] ?? null;
-        $userId = (int) ($arguments['userId'] ?? $arguments[1] ?? 0);
-        $role = (string) ($arguments['role'] ?? $arguments[2] ?? 'owner');
-        $status = (string) ($arguments['status'] ?? 'active');
-        $isPrimary = (bool) ($arguments['isPrimary'] ?? $arguments[3] ?? false);
-        $grantedAt = $arguments['grantedAt'] ?? null;
-        $revokedAt = $arguments['revokedAt'] ?? null;
-
+    public function __construct(
+        VendorEntity|int $vendorId,
+        int $userId,
+        string $role,
+        string $status = 'active',
+        bool $isPrimary = false,
+        ?\DateTimeImmutable $grantedAt = null,
+        ?\DateTimeImmutable $revokedAt = null,
+    ) {
         parent::__construct('active');
-        $this->vendor = $vendor instanceof VendorEntity ? $vendor : new VendorEntity('unresolved-vendor-'.$vendor);
+        $this->vendor = $vendorId instanceof VendorEntity
+            ? $vendorId
+            : new VendorEntity('unresolved-vendor-'.$vendorId);
         $this->userId = $userId;
         $this->role = $role;
         $this->status = $status;
         $this->primaryAssignment = $isPrimary;
-        $this->grantedAt = $grantedAt instanceof \DateTimeImmutable ? $grantedAt : new \DateTimeImmutable();
-        $this->revokedAt = $revokedAt instanceof \DateTimeImmutable ? $revokedAt : null;
+        $this->grantedAt = $grantedAt ?? new \DateTimeImmutable();
+        $this->revokedAt = $revokedAt;
     }
 
     public function getVendorId(): int
     {
-        return $this->vendor instanceof VendorEntity && null !== $this->vendor->getId()
-            ? $this->vendor->getId()
-            : 0;
+        return $this->vendor->getId() ?? 0;
     }
 
     public function getUserId(): int

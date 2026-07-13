@@ -13,6 +13,7 @@ class VendorLogEntity extends VendorAbstractEntity
     #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'logs')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $actionName = '';
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $payloadJson = '';
+    /** @param array<string, mixed> $payload */
     public function __construct(VendorEntity $vendor, string $actionName, array $payload)
     {
         parent::__construct();
@@ -21,17 +22,17 @@ class VendorLogEntity extends VendorAbstractEntity
         $this->payloadJson = json_encode($payload, JSON_THROW_ON_ERROR);
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getActionName()
+    public function getActionName(): string
     {
         return $this->actionName;
     }
 
-    public function getPayloadJson()
+    public function getPayloadJson(): string
     {
         return $this->payloadJson;
     }

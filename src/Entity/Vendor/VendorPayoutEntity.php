@@ -24,6 +24,7 @@ class VendorPayoutEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'integer')] public int $netCents;
     #[ORM\Column(type: 'string', length: 32)] public string $status;
     #[ORM\Column(type: 'string', length: 32, nullable: true)] public ?string $processedAt = null;
+    /** @var array<array-key, mixed> */
     #[ORM\Column(type: 'json')] public array $meta = [];
     public function __construct(
         string $id,
@@ -50,9 +51,9 @@ class VendorPayoutEntity extends VendorAbstractEntity
         $this->meta = is_array($meta) ? $meta : [];
     }
 
-    public function __get(string $name): mixed
+    public function getPayoutId(): string
     {
-        return 'id' === $name ? $this->payoutId : null;
+        return $this->payoutId;
     }
 
     public function markProcessed(): self

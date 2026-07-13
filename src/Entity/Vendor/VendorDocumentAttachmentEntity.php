@@ -28,4 +28,12 @@ class VendorDocumentAttachmentEntity extends VendorAbstractEntity
     {
         return $this->filePath;
     }
+
+    public function update(string $filePath): self
+    {
+        $this->filePath = $filePath;
+        $this->touchModified();
+
+        return $this;
+    }
 }

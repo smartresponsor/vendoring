@@ -35,37 +35,37 @@ class VendorCodeStorageEntity extends VendorAbstractEntity
         return $this;
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getCode()
+    public function getCode(): string
     {
         return $this->code;
     }
 
-    public function getPhone()
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    public function getPurpose()
+    public function getPurpose(): string
     {
         return $this->purpose;
     }
 
-    public function isIsLogin()
+    public function isIsLogin(): bool
     {
         return $this->isLogin;
     }
 
-    public function getExpiresAt()
+    public function getExpiresAt(): ?\DateTimeImmutable
     {
         return $this->expiresAt;
     }
 
-    public function getConsumedAt()
+    public function getConsumedAt(): ?\DateTimeImmutable
     {
         return $this->consumedAt;
     }

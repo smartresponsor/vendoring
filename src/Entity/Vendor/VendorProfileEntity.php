@@ -24,6 +24,7 @@ class VendorProfileEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $displayName = null;
     #[ORM\Column(type: 'text', nullable: true)] private ?string $about = null;
     #[ORM\Column(type: 'string', length: 512, nullable: true)] private ?string $website = null;
+    /** @var array<string, mixed>|null */
     #[ORM\Column(type: 'json', nullable: true)] private ?array $socials = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $seoTitle = null;
     #[ORM\Column(type: 'text', nullable: true)] private ?string $seoDescription = null;
@@ -50,6 +51,7 @@ class VendorProfileEntity extends VendorAbstractEntity
         return $this;
     }
 
+    /** @param array<string, mixed>|null $socials */
     public function replaceSocials(?array $socials): self
     {
         $this->socials = $socials;
@@ -58,6 +60,7 @@ class VendorProfileEntity extends VendorAbstractEntity
         return $this;
     }
 
+    /** @param array<string, mixed>|null $socials */
     public function updateProfile(
         ?string $displayName,
         ?string $about,
@@ -116,6 +119,7 @@ class VendorProfileEntity extends VendorAbstractEntity
         return $this->website;
     }
 
+    /** @return array<string, mixed>|null */
     public function getSocials(): ?array
     {
         return $this->socials;

@@ -6,6 +6,8 @@ namespace App\Vendoring\EntityInterface\Vendor;
 
 interface VendorTransactionEntityInterface
 {
+    public function getId(): ?int;
+
     public function getVendorId(): string;
 
     public function getOrderId(): string;

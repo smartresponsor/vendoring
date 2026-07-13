@@ -49,7 +49,8 @@ final class VendorCreateForm extends AbstractType
             }
 
             $form = $event->getForm();
-            $brandName = trim((string) $form->get('brandName')->getData());
+            $brandNameData = $form->get('brandName')->getData();
+            $brandName = is_string($brandNameData) ? trim($brandNameData) : '';
             if ('' !== $brandName) {
                 $vendor->rename($brandName);
             }
@@ -61,7 +62,15 @@ final class VendorCreateForm extends AbstractType
                 return;
             }
 
-            $vendor->changeOwnerUserId((int) $ownerUserId);
+            if (is_int($ownerUserId)) {
+                $vendor->changeOwnerUserId($ownerUserId);
+
+                return;
+            }
+
+            if (is_string($ownerUserId) && ctype_digit($ownerUserId)) {
+                $vendor->changeOwnerUserId((int) $ownerUserId);
+            }
         });
     }
 

@@ -50,4 +50,13 @@ class VendorDocumentEntity extends VendorAbstractEntity
     {
         return $this->uploaderId;
     }
+
+    public function assignMetadata(?\DateTimeImmutable $expiresAt, ?int $uploaderId): self
+    {
+        $this->expiresAt = $expiresAt;
+        $this->uploaderId = $uploaderId;
+        $this->touchModified();
+
+        return $this;
+    }
 }

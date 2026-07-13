@@ -17,9 +17,11 @@ class VendorConversationEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $counterpartyId = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $counterpartyName = null;
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];
     #[ORM\Column(type: 'datetime_immutable', nullable: false)] private ?\DateTimeImmutable $openedAt = null;
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $closedAt = null;
+    /** @param array<string, mixed> $meta */
     public function __construct(VendorEntity $vendor, array $meta = [])
     {
         parent::__construct('open');
@@ -28,6 +30,7 @@ class VendorConversationEntity extends VendorAbstractEntity
         $this->openedAt = new \DateTimeImmutable();
     }
 
+    /** @param array<string, mixed> $meta */
     public function update(?string $subject, string $channel, ?string $counterpartyType, ?string $counterpartyId, ?string $counterpartyName, string $status, array $meta): self
     {
         $this->subject = $subject;
@@ -43,32 +46,32 @@ class VendorConversationEntity extends VendorAbstractEntity
         return $this;
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getSubject()
+    public function getSubject(): ?string
     {
         return $this->subject;
     }
 
-    public function getChannel()
+    public function getChannel(): string
     {
         return $this->channel;
     }
 
-    public function getCounterpartyType()
+    public function getCounterpartyType(): ?string
     {
         return $this->counterpartyType;
     }
 
-    public function getCounterpartyId()
+    public function getCounterpartyId(): ?string
     {
         return $this->counterpartyId;
     }
 
-    public function getCounterpartyName()
+    public function getCounterpartyName(): ?string
     {
         return $this->counterpartyName;
     }
@@ -78,17 +81,18 @@ class VendorConversationEntity extends VendorAbstractEntity
         return $this->status;
     }
 
-    public function getMeta()
+    /** @return array<string, mixed> */
+    public function getMeta(): array
     {
         return $this->meta;
     }
 
-    public function getOpenedAt()
+    public function getOpenedAt(): ?\DateTimeImmutable
     {
         return $this->openedAt;
     }
 
-    public function getClosedAt()
+    public function getClosedAt(): ?\DateTimeImmutable
     {
         return $this->closedAt;
     }

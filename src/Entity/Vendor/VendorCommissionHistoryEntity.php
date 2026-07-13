@@ -29,32 +29,32 @@ class VendorCommissionHistoryEntity extends VendorAbstractEntity
         $this->changedAt = new \DateTimeImmutable();
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getChangedByUserId()
+    public function getChangedByUserId(): ?int
     {
         return $this->changedByUserId;
     }
 
-    public function getPreviousRatePercent()
+    public function getPreviousRatePercent(): ?string
     {
         return $this->previousRatePercent;
     }
 
-    public function getNewRatePercent()
+    public function getNewRatePercent(): string
     {
         return $this->newRatePercent;
     }
 
-    public function getReason()
+    public function getReason(): ?string
     {
         return $this->reason;
     }
 
-    public function getChangedAt()
+    public function getChangedAt(): ?\DateTimeImmutable
     {
         return $this->changedAt;
     }

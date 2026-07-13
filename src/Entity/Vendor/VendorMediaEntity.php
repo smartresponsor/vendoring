@@ -14,6 +14,7 @@ class VendorMediaEntity extends VendorAbstractEntity
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
     #[ORM\Column(type: 'string', length: 1024, nullable: true)] private ?string $logoPath = null;
     #[ORM\Column(type: 'string', length: 1024, nullable: true)] private ?string $bannerPath = null;
+    /** @var array<int|string, mixed>|null */
     #[ORM\Column(type: 'json', nullable: true)] private ?array $gallery = null;
     public function __construct(VendorEntity $vendor)
     {
@@ -26,6 +27,7 @@ class VendorMediaEntity extends VendorAbstractEntity
         return $this->vendor;
     }
 
+    /** @param array<int|string, mixed>|null $gallery */
     public function update(?string $logoPath, ?string $bannerPath, ?array $gallery): self
     {
         $this->logoPath = $logoPath;
@@ -46,6 +48,7 @@ class VendorMediaEntity extends VendorAbstractEntity
         return $this->bannerPath;
     }
 
+    /** @return array<int|string, mixed>|null */
     public function getGallery(): ?array
     {
         return $this->gallery;

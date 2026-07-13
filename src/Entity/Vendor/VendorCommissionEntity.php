@@ -17,7 +17,9 @@ class VendorCommissionEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
     #[ORM\Column(type: 'datetime_immutable', nullable: false)] private ?\DateTimeImmutable $effectiveFrom = null;
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $effectiveTo = null;
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];
+    /** @param array<string, mixed> $meta */
     public function __construct(VendorEntity $vendor, string $code, string $direction, string $ratePercent, array $meta = [])
     {
         parent::__construct('active');
@@ -29,6 +31,7 @@ class VendorCommissionEntity extends VendorAbstractEntity
         $this->effectiveFrom = new \DateTimeImmutable();
     }
 
+    /** @param array<string, mixed> $meta */
     public function update(string $direction, string $ratePercent, string $status, ?\DateTimeImmutable $effectiveFrom = null, ?\DateTimeImmutable $effectiveTo = null, array $meta = []): self
     {
         $this->direction = $direction;
@@ -43,22 +46,22 @@ class VendorCommissionEntity extends VendorAbstractEntity
         return $this;
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getCode()
+    public function getCode(): string
     {
         return $this->code;
     }
 
-    public function getDirection()
+    public function getDirection(): string
     {
         return $this->direction;
     }
 
-    public function getRatePercent()
+    public function getRatePercent(): string
     {
         return $this->ratePercent;
     }
@@ -68,17 +71,18 @@ class VendorCommissionEntity extends VendorAbstractEntity
         return $this->status;
     }
 
-    public function getEffectiveFrom()
+    public function getEffectiveFrom(): ?\DateTimeImmutable
     {
         return $this->effectiveFrom;
     }
 
-    public function getEffectiveTo()
+    public function getEffectiveTo(): ?\DateTimeImmutable
     {
         return $this->effectiveTo;
     }
 
-    public function getMeta()
+    /** @return array<string, mixed> */
+    public function getMeta(): array
     {
         return $this->meta;
     }

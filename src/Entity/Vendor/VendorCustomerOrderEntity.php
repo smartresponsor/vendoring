@@ -17,8 +17,10 @@ class VendorCustomerOrderEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $currency = '';
     #[ORM\Column(type: 'integer')] private int $grossCents = 0;
     #[ORM\Column(type: 'integer')] private int $netCents = 0;
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];
     #[ORM\Column(type: 'datetime_immutable', nullable: false)] private ?\DateTimeImmutable $placedAt = null;
+    /** @param array<string, mixed> $meta */
     public function __construct(VendorEntity $vendor, string $externalOrderId, string $currency, int $grossCents, int $netCents, array $meta = [])
     {
         parent::__construct('placed');
@@ -31,6 +33,7 @@ class VendorCustomerOrderEntity extends VendorAbstractEntity
         $this->placedAt = new \DateTimeImmutable();
     }
 
+    /** @param array<string, mixed> $meta */
     public function update(?string $orderNumber, string $status, string $currency, int $grossCents, int $netCents, array $meta): self
     {
         $this->orderNumber = $orderNumber;
@@ -45,17 +48,17 @@ class VendorCustomerOrderEntity extends VendorAbstractEntity
         return $this;
     }
 
-    public function getVendor(): ?VendorEntity
+    public function getVendor(): VendorEntity
     {
-        return $this->vendor ?? null;
+        return $this->vendor;
     }
 
-    public function getExternalOrderId()
+    public function getExternalOrderId(): string
     {
         return $this->externalOrderId;
     }
 
-    public function getOrderNumber()
+    public function getOrderNumber(): ?string
     {
         return $this->orderNumber;
     }
@@ -65,27 +68,28 @@ class VendorCustomerOrderEntity extends VendorAbstractEntity
         return $this->status;
     }
 
-    public function getCurrency()
+    public function getCurrency(): string
     {
         return $this->currency;
     }
 
-    public function getGrossCents()
+    public function getGrossCents(): int
     {
         return $this->grossCents;
     }
 
-    public function getNetCents()
+    public function getNetCents(): int
     {
         return $this->netCents;
     }
 
-    public function getMeta()
+    /** @return array<string, mixed> */
+    public function getMeta(): array
     {
         return $this->meta;
     }
 
-    public function getPlacedAt()
+    public function getPlacedAt(): ?\DateTimeImmutable
     {
         return $this->placedAt;
     }

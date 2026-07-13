@@ -38,42 +38,61 @@ class VendorEntity extends VendorAbstractEntity
     #[ORM\OneToOne(mappedBy: 'vendor', targetEntity: VendorIbanEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?VendorIbanEntity $iban = null;
 
+    /** @var Collection<int, VendorDocumentEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorDocumentEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $documents;
+    /** @var Collection<int, VendorAttachmentEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorAttachmentEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $attachments;
+    /** @var Collection<int, VendorUserAssignmentEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorUserAssignmentEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $userAssignments;
+    /** @var Collection<int, VendorPaymentEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorPaymentEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $payments;
+    /** @var Collection<int, VendorCommissionEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorCommissionEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $commissions;
+    /** @var Collection<int, VendorCommissionHistoryEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorCommissionHistoryEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $commissionHistory;
+    /** @var Collection<int, VendorConversationEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorConversationEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $conversations;
+    /** @var Collection<int, VendorConversationMessageEntity> */
     #[ORM\OneToMany(mappedBy: 'senderVendor', targetEntity: VendorConversationMessageEntity::class)]
     private Collection $sentConversationMessages;
+    /** @var Collection<int, VendorShipmentEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorShipmentEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $shipments;
+    /** @var Collection<int, VendorGroupEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorGroupEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $groups;
+    /** @var Collection<int, VendorCategoryEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorCategoryEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $categories;
+    /** @var Collection<int, VendorFavouriteEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorFavouriteEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $favourites;
+    /** @var Collection<int, VendorWishlistEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorWishlistEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $wishlists;
+    /** @var Collection<int, VendorCodeStorageEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorCodeStorageEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $codeStorage;
+    /** @var Collection<int, VendorRememberMeTokenEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorRememberMeTokenEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $rememberMeTokens;
+    /** @var Collection<int, VendorCustomerOrderEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorCustomerOrderEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $customerOrders;
+    /** @var Collection<int, VendorLogEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorLogEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $logs;
+    /** @var Collection<int, VendorChannelEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorChannelEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $channels;
+    /** @var Collection<int, VendorTranslationEntity> */
     #[ORM\OneToMany(mappedBy: 'vendor', targetEntity: VendorTranslationEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $translations;
 
@@ -115,11 +134,15 @@ class VendorEntity extends VendorAbstractEntity
 
     public function activate(): self
     {
-        return $this->setStatus('active');
+        $this->setStatus('active');
+
+        return $this;
     }
 
     public function deactivate(): self
     {
-        return $this->setStatus('inactive');
+        $this->setStatus('inactive');
+
+        return $this;
     }
 }
