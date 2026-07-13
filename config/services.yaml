@@ -11,10 +11,8 @@ services:
             - '../src/DTO/Ledger/VendorLedgerEntryDTO.php'
             - '../src/Repository/'
 
-    App\Vendoring\Repository\Vendor\VendorLedgerEntryRepository:
+    App\Vendoring\Repository\Vendor\VendorLedgerRepository:
         arguments:
             $registry: '@doctrine'
 
-    App\Vendoring\RepositoryInterface\Vendor\VendorLedgerEntryRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLedgerEntryRepository'
-
-    App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLedgerEntryRepository'
+    App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLedgerRepository'

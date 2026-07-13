@@ -105,7 +105,7 @@ final readonly class VendorRollbackDecisionEvaluatorService implements VendorRol
             'generatedAt' => (new \DateTimeImmutable())->format(\DATE_ATOM),
             'decision' => $decision,
             'severity' => $severity,
-            'reasons' => array_values($reasons),
+            'reasons' => $reasons,
             'actions' => $this->actionsFor($decision),
         ];
     }

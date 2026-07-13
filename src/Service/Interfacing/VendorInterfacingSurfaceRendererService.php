@@ -49,12 +49,10 @@ final readonly class VendorInterfacingSurfaceRendererService implements VendorIn
                 continue;
             }
 
-            if ($response instanceof Response) {
-                $response->headers->set('X-Vendoring-Render-Mode', 'template');
-                $response->headers->set('X-Vendoring-Template', $resolvedTemplateName);
+            $response->headers->set('X-Vendoring-Render-Mode', 'template');
+            $response->headers->set('X-Vendoring-Template', $resolvedTemplateName);
 
-                return $response;
-            }
+            return $response;
         }
 
         $fallbackTemplate = $this->buildTemplateName('@Interfacing/index/index');
@@ -73,13 +71,11 @@ final readonly class VendorInterfacingSurfaceRendererService implements VendorIn
             ]);
             $response = new Response($content, $statusCode);
 
-            if ($response instanceof Response) {
-                $response->headers->set('X-Vendoring-Render-Mode', 'template_fallback');
-                $response->headers->set('X-Vendoring-Fallback-Reason', 'interfacing_template_not_found');
-                $response->headers->set('X-Vendoring-Template', $fallbackTemplate);
+            $response->headers->set('X-Vendoring-Render-Mode', 'template_fallback');
+            $response->headers->set('X-Vendoring-Fallback-Reason', 'interfacing_template_not_found');
+            $response->headers->set('X-Vendoring-Template', $fallbackTemplate);
 
-                return $response;
-            }
+            return $response;
         } catch (\Throwable) {
             // Fall through to the standalone response below.
         }

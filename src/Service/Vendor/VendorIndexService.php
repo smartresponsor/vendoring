@@ -49,10 +49,7 @@ final class VendorIndexService extends AbstractVendorCrudRouteService
     private function vendors(): array
     {
         try {
-            return array_values(array_filter(
-                $this->vendorRepository->findBy([]),
-                static fn (object $entity): bool => $entity instanceof VendorEntity,
-            ));
+            return $this->vendorRepository->findBy([]);
         } catch (\Throwable) {
             return [];
         }

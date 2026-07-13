@@ -4,44 +4,55 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Config;
 
-use App\Administering\Service\Config\AdministrationConfigApplyService;
-use App\Administering\Service\Config\AdministrationConfigFileWriterService;
-use App\Administering\ServiceInterface\Config\ConfigToolServiceInterface;
-use App\Administering\Value\Config\ConfigToolDescriptor;
 use App\Vendoring\Form\Config\VendoringFeatureFlagsConfigFormType;
 use App\Vendoring\Value\Form\Config\VendoringFeatureFlagsConfigData;
 use Symfony\Component\Yaml\Yaml;
 
-final readonly class VendoringFeatureFlagsConfigService implements ConfigToolServiceInterface
+final readonly class VendoringFeatureFlagsConfigService
 {
-    public function __construct(
-        private string $projectDir,
-        private AdministrationConfigApplyService $applyService,
-        private AdministrationConfigFileWriterService $fileWriter,
-    ) {
+    public function __construct(private string $projectDir)
+    {
     }
 
-    public function descriptor(): ConfigToolDescriptor
+    /**
+     * @return array{
+     *   applicationCode:string,
+     *   toolCode:string,
+     *   label:string,
+     *   description:string,
+     *   formClass:class-string,
+     *   serviceClass:class-string,
+     *   requiredPermission:string,
+     *   editableFields:list<string>,
+     *   sensitiveFields:list<string>,
+     *   readableFiles:list<string>,
+     *   writableFiles:list<string>,
+     *   metadata:array{section:string, kind:string},
+     *   secretNames:list<string>,
+     *   applyStrategy:string
+     * }
+     */
+    public function descriptor(): array
     {
-        return new ConfigToolDescriptor(
-            applicationCode: 'Vendoring',
-            toolCode: 'vendoring.feature_flags',
-            label: 'Vendoring Feature Flags',
-            description: 'Safe runtime feature flags stored in vendoring runtime manifest.',
-            formClass: VendoringFeatureFlagsConfigFormType::class,
-            serviceClass: self::class,
-            requiredPermission: 'administration.config.update',
-            editableFields: ['featureFlagsJson'],
-            sensitiveFields: [],
-            readableFiles: ['config/component/runtime.yaml'],
-            writableFiles: ['config/component/runtime.yaml'],
-            metadata: [
+        return [
+            'applicationCode' => 'Vendoring',
+            'toolCode' => 'vendoring.feature_flags',
+            'label' => 'Vendoring Feature Flags',
+            'description' => 'Safe runtime feature flags stored in vendoring runtime manifest.',
+            'formClass' => VendoringFeatureFlagsConfigFormType::class,
+            'serviceClass' => self::class,
+            'requiredPermission' => 'administration.config.update',
+            'editableFields' => ['featureFlagsJson'],
+            'sensitiveFields' => [],
+            'readableFiles' => ['config/component/runtime.yaml'],
+            'writableFiles' => ['config/component/runtime.yaml'],
+            'metadata' => [
                 'section' => 'Configuration',
                 'kind' => 'feature_flags',
             ],
-            secretNames: [],
-            applyStrategy: 'component_runtime_yaml',
-        );
+            'secretNames' => [],
+            'applyStrategy' => 'component_runtime_yaml',
+        ];
     }
 
     public function loadData(): object
@@ -53,47 +64,54 @@ final readonly class VendoringFeatureFlagsConfigService implements ConfigToolSer
         return $data;
     }
 
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @return array{status:string, actor:string, values:array<string, array{fieldType:string, secret:bool, current:?string, pending:?string, masked:?string, status:string}>}
+     */
     public function save(object $data, array $context = []): array
     {
         $payload = $this->assertData($data);
-        $values = $this->stateRows($payload, 'pending');
-        $masked = [
-            'vendoring_feature_flags' => $payload->featureFlagsJson,
-        ];
+        $actor = $context['actor'] ?? 'system';
 
-        return $this->applyService->save($this->descriptor(), (string) ($context['actor'] ?? 'system'), $values, $masked, []);
+        return [
+            'status' => 'pending',
+            'actor' => is_string($actor) ? $actor : 'system',
+            'values' => $this->stateRows($payload, 'pending'),
+        ];
     }
 
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @return array{status:string, actor:string, path:string, backup_path:?string, message:string, values:array<string, array{fieldType:string, secret:bool, current:?string, pending:?string, masked:?string, status:string}>}
+     */
     public function apply(object $data, array $context = []): array
     {
         $payload = $this->assertData($data);
         $patch = $this->runtimePatch($payload);
-        $write = $this->fileWriter->write(
-            $this->projectDir.'/../Vendoring',
-            'config/component/runtime.yaml',
-            $patch,
-            $this->descriptor()->writableFiles,
-        );
+        $path = $this->projectDir.'/config/component/runtime.yaml';
+        $backupPath = is_file($path) ? $path.'.bak' : null;
 
-        $status = 'applied' === $write['status'] ? 'applied' : 'failed';
-        $values = $this->stateRows($payload, $status);
+        if (null !== $backupPath && !copy($path, $backupPath)) {
+            throw new \RuntimeException('Unable to back up Vendoring runtime manifest.');
+        }
 
-        return $this->applyService->apply(
-            $this->descriptor(),
-            (string) ($context['actor'] ?? 'system'),
-            $values,
-            $patch,
-            [],
-            [[
-                'path' => $write['path'],
-                'backup_path' => $write['backup_path'],
-                'status' => $write['status'],
-                'message' => $write['message'],
-            ]],
-            [],
-            'applied' === $write['status'] ? null : $write['message'],
-            $status,
-        );
+        $encoded = Yaml::dump($patch, 4, 2);
+        if (false === file_put_contents($path, $encoded, LOCK_EX)) {
+            throw new \RuntimeException('Unable to write Vendoring runtime manifest.');
+        }
+
+        $actor = $context['actor'] ?? 'system';
+
+        return [
+            'status' => 'applied',
+            'actor' => is_string($actor) ? $actor : 'system',
+            'path' => $path,
+            'backup_path' => $backupPath,
+            'message' => 'Vendoring runtime feature flags applied.',
+            'values' => $this->stateRows($payload, 'applied'),
+        ];
     }
 
     private function assertData(object $data): VendoringFeatureFlagsConfigData
@@ -110,8 +128,18 @@ final readonly class VendoringFeatureFlagsConfigService implements ConfigToolSer
     {
         $path = $this->projectDir.'/../Vendoring/config/component/runtime.yaml';
         $parsed = is_file($path) ? Yaml::parseFile($path) : [];
+        if (!is_array($parsed)) {
+            return [];
+        }
 
-        return is_array($parsed) ? $parsed : [];
+        $manifest = [];
+        foreach ($parsed as $key => $value) {
+            if (is_string($key)) {
+                $manifest[$key] = $value;
+            }
+        }
+
+        return $manifest;
     }
 
     /**

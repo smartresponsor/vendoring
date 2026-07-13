@@ -32,7 +32,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
     public function normalizePayout(VendorPayoutEntity $payout): array
     {
         return [
-            'id' => $payout->id,
+            'id' => $payout->getPayoutId(),
             'vendorId' => $payout->vendorId,
             'currency' => $payout->currency,
             'grossCents' => $payout->grossCents,

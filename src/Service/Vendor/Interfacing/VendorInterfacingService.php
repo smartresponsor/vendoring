@@ -6,7 +6,6 @@ namespace App\Vendoring\Service\Vendor\Interfacing;
 
 use App\Vendoring\ServiceInterface\Interfacing\VendorInterfacingSurfaceRendererServiceInterface;
 use App\Vendoring\ServiceInterface\Interfacing\VendorInterfacingTemplateCandidateProviderServiceInterface;
-use App\Vendoring\ServiceInterface\Profile\VendorPublicProfileSummaryProviderServiceInterface;
 use App\Vendoring\ValueObject\Interfacing\VendorInterfacingSurfaceNameValueObject;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 final class VendorInterfacingService
 {
     public function __construct(
-        private readonly VendorPublicProfileSummaryProviderServiceInterface $publicProfileSummaryProvider,
         private readonly VendorInterfacingTemplateCandidateProviderServiceInterface $templateCandidateProvider,
         private readonly VendorInterfacingSurfaceRendererServiceInterface $surfaceRenderer,
     ) {
@@ -49,8 +47,16 @@ final class VendorInterfacingService
      */
     private function renderSurface(string $surfaceName, array $payload): Response
     {
-        $payload['slotMap'] = array_replace($payload['slotMap'] ?? [], $this->buildShellSlotMap($payload));
-        $payload['slots'] = array_replace($payload['slots'] ?? [], $this->buildShellSlots($payload));
+        $existingSlotMap = $payload['slotMap'] ?? [];
+        $existingSlots = $payload['slots'] ?? [];
+        $payload['slotMap'] = array_replace(
+            is_array($existingSlotMap) ? $existingSlotMap : [],
+            $this->buildShellSlotMap($payload),
+        );
+        $payload['slots'] = array_replace(
+            is_array($existingSlots) ? $existingSlots : [],
+            $this->buildShellSlots($payload),
+        );
 
         return $this->surfaceRenderer->renderOrJson(
             surfaceName: $surfaceName,
@@ -66,13 +72,13 @@ final class VendorInterfacingService
      */
     private function buildShellSlotMap(array $payload): array
     {
-        $publicName = (string) ($payload['publicName'] ?? 'Vendor');
+        $publicName = $this->scalarString($payload['publicName'] ?? null, 'Vendor');
 
         return [
             'shell.body.top' => 'Vendor landing',
             'shell.head.left.logo' => $publicName.' logo',
             'shell.head.left.nameEntity' => $publicName,
-            'shell.head.left.title' => (string) ($payload['brandName'] ?? $publicName),
+            'shell.head.left.title' => $this->scalarString($payload['brandName'] ?? null, $publicName),
             'shell.head.context' => 'Vendor context',
             'shell.head.main' => 'Vendor index',
             'shell.head.right.user' => 'Vendor',
@@ -107,17 +113,17 @@ final class VendorInterfacingService
      */
     private function buildShellSlots(array $payload): array
     {
-        $publicName = (string) ($payload['publicName'] ?? 'Vendor');
-        $brandName = (string) ($payload['brandName'] ?? $publicName);
-        $vendorStatus = (string) ($payload['vendorStatus'] ?? 'unknown');
-        $profileStatus = (string) ($payload['profileStatus'] ?? 'draft');
+        $publicName = $this->scalarString($payload['publicName'] ?? null, 'Vendor');
+        $brandName = $this->scalarString($payload['brandName'] ?? null, $publicName);
+        $vendorStatus = $this->scalarString($payload['vendorStatus'] ?? null, 'unknown');
+        $profileStatus = $this->scalarString($payload['profileStatus'] ?? null, 'draft');
         $publishedAt = $payload['publishedAt'] ?? null;
-        $vendorId = is_scalar($payload['vendorId'] ?? null) ? (string) ($payload['vendorId'] ?? '') : '';
+        $vendorId = $this->scalarString($payload['vendorId'], '');
         $profileUrl = '' !== $vendorId ? '/vendor/'.$vendorId : null;
         $homeUrl = '/vendor/';
         $avatarUrl = $this->resolveVendorAssetUrl($payload['avatar'] ?? null, $payload['avatarUrl'] ?? null);
         $coverUrl = $this->resolveVendorAssetUrl($payload['cover'] ?? null, $payload['coverUrl'] ?? null);
-        $publishedLabel = null !== $publishedAt && '' !== (string) $publishedAt ? (string) $publishedAt : 'n/a';
+        $publishedLabel = $this->scalarString($publishedAt, 'n/a');
         $isDetailSurface = '' !== $vendorId;
         $primaryLinkUrl = $isDetailSurface ? $profileUrl : $homeUrl;
         $primaryLinkLabel = $isDetailSurface ? 'My profile' : 'Vendor index';
@@ -228,7 +234,7 @@ final class VendorInterfacingService
                 ['type' => 'text', 'label' => 'Cover', 'value' => null !== $coverUrl ? $coverUrl : 'missing'],
             ],
             'shell.main.bottom' => [
-                ['type' => 'text', 'label' => 'Summary', 'value' => (string) ($payload['summary'] ?? 'Vendor public profile')],
+                ['type' => 'text', 'label' => 'Summary', 'value' => $this->scalarString($payload['summary'] ?? null, 'Vendor public profile')],
             ],
             'shell.right.top' => [
                 ['type' => 'text', 'label' => 'Avatar', 'value' => null !== $avatarUrl ? 'available' : 'missing'],
@@ -255,6 +261,17 @@ final class VendorInterfacingService
                 ['type' => 'text', 'label' => 'Base', 'value' => 'Interfacing root base'],
             ],
         ];
+    }
+
+    private function scalarString(mixed $value, string $default): string
+    {
+        if (!is_scalar($value)) {
+            return $default;
+        }
+
+        $normalized = trim((string) $value);
+
+        return '' === $normalized ? $default : $normalized;
     }
 
     private function resolveVendorAssetUrl(mixed $primary, mixed $secondary): ?string

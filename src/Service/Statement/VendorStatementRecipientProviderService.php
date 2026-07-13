@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Statement;
 
 use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
-use App\Vendoring\Entity\Vendor\VendorBillingEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorBillingRepositoryInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderServiceInterface;
 
@@ -20,10 +19,6 @@ final readonly class VendorStatementRecipientProviderService implements VendorSt
         $recipients = [];
 
         foreach ($this->billings->findAll() as $billing) {
-            if (!$billing instanceof VendorBillingEntity) {
-                continue;
-            }
-
             $vendorId = $billing->getVendor()->getId();
             $email = null !== $billing->getBillingEmail() ? trim($billing->getBillingEmail()) : '';
 

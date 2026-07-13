@@ -197,10 +197,17 @@ final readonly class VendorMonitoringSnapshotBuilderService implements VendorMon
         $records = [];
         foreach ($lines as $line) {
             $decoded = json_decode((string) $line, true);
-            if (is_array($decoded)) {
-                /* @var array<string, mixed> $decoded */
-                $records[] = $decoded;
+            if (!is_array($decoded)) {
+                continue;
             }
+
+            $record = [];
+            foreach ($decoded as $key => $value) {
+                if (is_string($key)) {
+                    $record[$key] = $value;
+                }
+            }
+            $records[] = $record;
         }
 
         return $records;

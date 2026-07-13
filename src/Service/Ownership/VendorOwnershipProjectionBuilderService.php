@@ -17,7 +17,6 @@ use App\Vendoring\Entity\Vendor\VendorLogEntity;
 use App\Vendoring\Entity\Vendor\VendorPaymentEntity;
 use App\Vendoring\Entity\Vendor\VendorRememberMeTokenEntity;
 use App\Vendoring\Entity\Vendor\VendorShipmentEntity;
-use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
 use App\Vendoring\Entity\Vendor\VendorWishlistEntity;
 use App\Vendoring\Projection\Vendor\VendorOwnershipProjection;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
@@ -49,10 +48,6 @@ final readonly class VendorOwnershipProjectionBuilderService implements VendorOw
 
         $assignments = [];
         foreach ($this->assignmentRepository->findActiveByVendorId($vendorId) as $assignment) {
-            if (!$assignment instanceof VendorUserAssignmentEntity) {
-                continue;
-            }
-
             $assignments[] = [
                 'userId' => $assignment->getUserId(),
                 'role' => $assignment->getRole(),

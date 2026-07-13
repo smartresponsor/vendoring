@@ -34,10 +34,7 @@ final readonly class VendorCrudService implements VendorCrudServiceInterface
     public function index(): array
     {
         try {
-            return array_values(array_filter(
-                $this->vendorRepository->findBy([]),
-                static fn (object $entity): bool => $entity instanceof VendorEntity,
-            ));
+            return $this->vendorRepository->findBy([]);
         } catch (TableNotFoundException) {
             return [];
         } catch (\Throwable) {
@@ -55,7 +52,7 @@ final readonly class VendorCrudService implements VendorCrudServiceInterface
             return null;
         }
 
-        return $vendor instanceof VendorEntity ? $vendor : null;
+        return $vendor;
     }
 
     public function create(VendorCreateDTO $dto): VendorEntity

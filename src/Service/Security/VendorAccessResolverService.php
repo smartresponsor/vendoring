@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Security;
 
-use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
 use App\Vendoring\ServiceInterface\Security\VendorAccessResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixServiceInterface;
@@ -34,10 +33,6 @@ final readonly class VendorAccessResolverService implements VendorAccessResolver
         $roles = [];
 
         foreach ($this->assignmentRepository->findActiveByVendorId($vendorId) as $assignment) {
-            if (!$assignment instanceof VendorUserAssignmentEntity) {
-                continue;
-            }
-
             if ($assignment->getUserId() !== $userId) {
                 continue;
             }

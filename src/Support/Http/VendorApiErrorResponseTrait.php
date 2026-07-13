@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Support\Http;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 trait VendorApiErrorResponseTrait
 {
     /**
@@ -19,5 +21,25 @@ trait VendorApiErrorResponseTrait
             'reason' => $reason,
             'payload' => $payload,
         ];
+    }
+
+    private function validationErrorResponse(string $errorCode, string $hint): JsonResponse
+    {
+        return new JsonResponse([
+            'ok' => false,
+            'component' => 'vendoring',
+            'errorCode' => $errorCode,
+            'hint' => $hint,
+        ], 422);
+    }
+
+    private function runtimeErrorResponse(string $errorCode, string $hint): JsonResponse
+    {
+        return new JsonResponse([
+            'ok' => false,
+            'component' => 'vendoring',
+            'errorCode' => $errorCode,
+            'hint' => $hint,
+        ], 500);
     }
 }

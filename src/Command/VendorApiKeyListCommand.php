@@ -6,7 +6,6 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
-use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
@@ -63,11 +62,6 @@ final class VendorApiKeyListCommand extends Command
 
             return Command::FAILURE;
         }
-
-        $keys = array_values(array_filter(
-            $keys,
-            static fn (object $key): bool => $key instanceof VendorApiKeyEntity,
-        ));
 
         if (VendorCommandOutputFormatEnum::isJson($format)) {
             if (!$this->commandResultEmitter->emitJson($output, [

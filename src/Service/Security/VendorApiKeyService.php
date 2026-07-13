@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Security;
 
-use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
 use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,7 +26,8 @@ final readonly class VendorApiKeyService implements VendorApiKeyServiceInterface
     public function __construct(
         private EntityManagerInterface $em,
         private VendorApiKeyRepositoryInterface $apiKeyRepo,
-    ) {}
+    ) {
+    }
 
     /** @throws RandomException */
     public function createKey(VendorEntity $vendor, string $permissions): string
@@ -73,7 +74,7 @@ final readonly class VendorApiKeyService implements VendorApiKeyServiceInterface
     {
         $tokenHash = hash('sha256', $plainToken);
 
-        $apiKey = $this->apiKeyRepo->findActiveByToken($tokenHash);
+        $apiKey = $this->apiKeyRepo->findActiveByTokenHash($tokenHash);
 
         if (null === $apiKey) {
             return null;

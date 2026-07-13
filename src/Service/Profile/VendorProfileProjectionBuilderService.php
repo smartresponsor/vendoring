@@ -132,7 +132,7 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
         $publicName = null !== $displayName && '' !== trim($displayName) ? $displayName : $brandName;
 
         $socials = $profile?->getSocials() ?? [];
-        $socials = array_filter($socials, static fn (mixed $value, mixed $key): bool => is_string($key) && is_string($value), ARRAY_FILTER_USE_BOTH);
+        $socials = array_filter($socials, static fn (mixed $value): bool => is_string($value));
         /** @var array<string, string> $socials */
         $socials = $socials;
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\RepositoryInterface\Vendor;
 
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
+use App\Vendoring\DTO\Ledger\VendorLedgerBalanceDTO;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
 
 interface VendorLedgerRepositoryInterface
@@ -30,6 +31,6 @@ interface VendorLedgerRepositoryInterface
 
     public function sumByAccount(VendorLedgerAccountSumCriteriaDTO $criteria): float;
 
-    /** @return list<object> */
+    /** @return list<VendorLedgerBalanceDTO> */
     public function balancesForVendor(string $vendorId): array;
 }

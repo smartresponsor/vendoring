@@ -4,32 +4,31 @@ declare(strict_types=1);
 
 namespace App\Vendoring\RepositoryInterface\Vendor;
 
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
+
 interface VendorTransactionRepositoryInterface
 {
-    public function find(mixed $id): ?object;
+    public function find(mixed $id): ?VendorTransactionEntity;
 
-    public function byId(mixed $id): ?object;
+    public function byId(mixed $id): ?VendorTransactionEntity;
 
     /** @param array<string,mixed> $criteria */
-    public function findOneBy(array $criteria): ?object;
+    public function findOneBy(array $criteria): ?VendorTransactionEntity;
 
     /**
      * @param array<string,mixed>       $criteria
      * @param array<string,string>|null $orderBy
      *
-     * @return list<object>
+     * @return list<VendorTransactionEntity>
      */
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array;
 
-    /** @return list<object> */
+    /** @return list<VendorTransactionEntity> */
     public function findByVendorId(string $vendorId): array;
 
-    public function save(object $entity, bool $flush = false): void;
+    public function findOneByIdAndVendorId(int $id, string $vendorId): ?VendorTransactionEntity;
 
-    /**
-     * Returns true when a transaction already exists for the given business key.
-     * Used for pre-flush duplicate detection to provide stable error codes
-     * without relying solely on database constraint violations.
-     */
+    public function save(VendorTransactionEntity $entity, bool $flush = false): void;
+
     public function existsForVendorOrderProject(string $vendorId, string $orderId, ?string $projectId): bool;
 }

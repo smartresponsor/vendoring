@@ -124,10 +124,19 @@ final class VendorCreateService extends AbstractVendorCrudRouteService
 
     private function nullableIntValue(mixed $value): ?int
     {
-        if (null === $value || '' === $value) {
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (!is_string($value)) {
             return null;
         }
 
-        return false !== filter_var($value, FILTER_VALIDATE_INT) ? (int) $value : null;
+        $normalized = trim($value);
+        if ('' === $normalized || 1 !== preg_match('/^-?\d+$/D', $normalized)) {
+            return null;
+        }
+
+        return (int) $normalized;
     }
 }

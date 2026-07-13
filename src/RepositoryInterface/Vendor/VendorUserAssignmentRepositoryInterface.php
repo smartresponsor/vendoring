@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Vendoring\RepositoryInterface\Vendor;
 
+use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
+
 interface VendorUserAssignmentRepositoryInterface
 {
-    public function find(mixed $id): ?object;
+    public function find(mixed $id): ?VendorUserAssignmentEntity;
 
-    public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?object;
+    public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?VendorUserAssignmentEntity;
 
-    /** @return list<object> */
+    /** @return list<VendorUserAssignmentEntity> */
     public function findActiveByVendorId(int $vendorId): array;
 
-    public function save(object $entity, bool $flush = false): void;
+    public function save(VendorUserAssignmentEntity $entity, bool $flush = false): void;
 }

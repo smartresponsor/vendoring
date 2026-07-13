@@ -6,18 +6,18 @@ namespace App\Vendoring\Service\Catalog;
 
 use App\Vendoring\Entity\Vendor\VendorCatalogReviewAssignmentEntity;
 use App\Vendoring\Policy\Vendor\VendorCategoryReviewAssignmentPolicy;
-use App\Vendoring\Repository\Vendor\VendorCatalogCategoryChangeRequestRepository;
-use App\Vendoring\Repository\Vendor\VendorCatalogReviewAssignmentRepository;
+use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogCategoryChangeRequestRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogReviewAssignmentRepositoryInterface;
 use App\Vendoring\ServiceInterface\Catalog\VendorCatalogReviewAssignmentServiceInterface;
-use InvalidArgumentException;
 
 final readonly class VendorCatalogReviewAssignmentService implements VendorCatalogReviewAssignmentServiceInterface
 {
     public function __construct(
-        private VendorCatalogCategoryChangeRequestRepository $requestRepository,
-        private VendorCatalogReviewAssignmentRepository $assignmentRepository,
-        private VendorCategoryReviewAssignmentPolicy     $policy,
-    ) {}
+        private VendorCatalogCategoryChangeRequestRepositoryInterface $requestRepository,
+        private VendorCatalogReviewAssignmentRepositoryInterface $assignmentRepository,
+        private VendorCategoryReviewAssignmentPolicy $policy,
+    ) {
+    }
 
     /**
      * @return array<string, string>
@@ -27,16 +27,16 @@ final readonly class VendorCatalogReviewAssignmentService implements VendorCatal
         $request = $this->requestRepository->byId($requestId);
 
         if (null === $request) {
-            throw new InvalidArgumentException(sprintf('category_change_request_not_found:%s', $requestId));
+            throw new \InvalidArgumentException(sprintf('category_change_request_not_found:%s', $requestId));
         }
 
-        $assignment = new VendorCatalogReviewAssignmentEntity(
-            $requestId,
-            $request->categoryId(),
-            trim($reviewer),
-            trim($assignedBy),
-            $this->policy->normalizePriority($priority),
-        );
+        $assignment = new VendorCatalogReviewAssignmentEntity($requestId, [
+            'requestId' => $requestId,
+            'categoryId' => $request->categoryId(),
+            'reviewer' => trim($reviewer),
+            'assignedBy' => trim($assignedBy),
+            'priority' => $this->policy->normalizePriority($priority),
+        ]);
 
         $this->assignmentRepository->save($assignment);
 

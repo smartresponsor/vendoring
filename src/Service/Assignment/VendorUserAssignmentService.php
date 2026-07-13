@@ -10,14 +10,14 @@ use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInter
 use App\Vendoring\ServiceInterface\Assignment\VendorUserAssignmentServiceInterface;
 use App\Vendoring\ValueObject\VendorRoleValueObject;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 
 final readonly class VendorUserAssignmentService implements VendorUserAssignmentServiceInterface
 {
     public function __construct(
         private VendorUserAssignmentRepositoryInterface $assignmentRepository,
-        private EntityManagerInterface                  $entityManager,
-    ) {}
+        private EntityManagerInterface $entityManager,
+    ) {
+    }
 
     public function assignOwner(int $vendorId, int $userId): VendorUserAssignmentEntityInterface
     {
@@ -29,19 +29,15 @@ final readonly class VendorUserAssignmentService implements VendorUserAssignment
         $normalizedRole = VendorRoleValueObject::normalize($role);
 
         if (!VendorRoleValueObject::isValid($normalizedRole)) {
-            throw new InvalidArgumentException(sprintf('Unsupported vendor role "%s".', $role));
+            throw new \InvalidArgumentException(sprintf('Unsupported vendor role "%s".', $role));
         }
 
         $existing = $this->assignmentRepository->findOneByVendorIdAndUserId($vendorId, $userId);
 
-        if ($existing instanceof VendorUserAssignmentEntityInterface) {
-            if (method_exists($existing, 'activate')) {
-                $existing->activate();
-            }
-            if (method_exists($existing, 'changeRole')) {
-                $existing->changeRole($normalizedRole);
-            }
-            if ($isPrimary && method_exists($existing, 'markPrimary')) {
+        if ($existing instanceof VendorUserAssignmentEntity) {
+            $existing->activate();
+            $existing->changeRole($normalizedRole);
+            if ($isPrimary) {
                 $this->clearPrimaryForVendor($vendorId);
                 $existing->markPrimary();
             }
@@ -72,14 +68,11 @@ final readonly class VendorUserAssignmentService implements VendorUserAssignment
     {
         $assignment = $this->assignmentRepository->findOneByVendorIdAndUserId($vendorId, $userId);
 
-        if (!$assignment instanceof VendorUserAssignmentEntityInterface) {
+        if (null === $assignment) {
             return;
         }
 
-        if (method_exists($assignment, 'revoke')) {
-            $assignment->revoke();
-        }
-
+        $assignment->revoke();
         $this->assignmentRepository->save($assignment, true);
     }
 
@@ -87,16 +80,12 @@ final readonly class VendorUserAssignmentService implements VendorUserAssignment
     {
         $assignment = $this->assignmentRepository->findOneByVendorIdAndUserId($vendorId, $userId);
 
-        if (!$assignment instanceof VendorUserAssignmentEntityInterface) {
+        if (null === $assignment) {
             return;
         }
 
         $this->clearPrimaryForVendor($vendorId);
-
-        if (method_exists($assignment, 'markPrimary')) {
-            $assignment->markPrimary();
-        }
-
+        $assignment->markPrimary();
         $this->assignmentRepository->save($assignment, true);
     }
 
@@ -108,10 +97,8 @@ final readonly class VendorUserAssignmentService implements VendorUserAssignment
     private function clearPrimaryForVendor(int $vendorId): void
     {
         foreach ($this->assignmentRepository->findActiveByVendorId($vendorId) as $assignment) {
-            if (method_exists($assignment, 'clearPrimary')) {
-                $assignment->clearPrimary();
-                $this->assignmentRepository->save($assignment);
-            }
+            $assignment->clearPrimary();
+            $this->assignmentRepository->save($assignment);
         }
 
         $this->entityManager->flush();
