@@ -5,17 +5,17 @@ declare(strict_types=1);
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
-use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Service\Policy\VendorOutboundOperationPolicyService;
 use App\Vendoring\Service\Reliability\VendorOutboundCircuitBreakerService;
 use App\Vendoring\Service\Statement\VendorStatementMailerService;
 use App\Vendoring\Tests\Support\Statement\FakeMailer;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-require dirname(__DIR__, 2) . '/vendor/autoload.php';
+require dirname(__DIR__, 2).'/vendor/autoload.php';
 
 $policy = new VendorOutboundOperationPolicyService();
-$breakerDir = sys_get_temp_dir() . '/vendoring-fault-smoke-' . bin2hex(random_bytes(4));
+$breakerDir = sys_get_temp_dir().'/vendoring-fault-smoke-'.bin2hex(random_bytes(4));
 $breaker = new VendorOutboundCircuitBreakerService($breakerDir);
 $scopeKey = 'tenant-1:vendor-1';
 $breaker->recordFailure('statement_mail_send', $scopeKey, 2, 60);
@@ -26,7 +26,7 @@ $mailer = new FakeMailer();
 $service = new VendorStatementMailerService(
     $mailer,
     new VendorMetricEmitterService(),
-    new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService()),
+    new VendorRuntimeLoggerService(new NullLogger(), new VendorCorrelationContextService(), new RequestStack()),
     $policy,
     $breaker,
 );

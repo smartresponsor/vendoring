@@ -23,6 +23,7 @@ final class VendorPayoutTablePrefixTest extends TestCase
     /** @dataProvider payoutEntityTableProvider */
     public function testPayoutEntitiesUseVendorTablePrefix(string $entityClass, string $expectedTableName): void
     {
+        self::assertTrue(class_exists($entityClass));
         $reflection = new \ReflectionClass($entityClass);
         $attributes = $reflection->getAttributes(Table::class);
 

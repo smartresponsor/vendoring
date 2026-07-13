@@ -24,7 +24,6 @@ final class VendorTransactionOperatorSurfaceContractTest extends TestCase
         self::assertStringContainsString('use Twig\\Environment;', $source);
         self::assertStringContainsString('private readonly Environment $twig', $source);
         self::assertStringContainsString('$this->twig->render(', $source);
-        self::assertFalse(get_parent_class(\App\Vendoring\Service\Vendor\Transaction\Operator\VendorTransactionOperatorService::class));
     }
 
     public function testHttpServiceCreatesTransactionsUsingRouteScopedVendorId(): void

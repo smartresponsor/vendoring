@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service;
 
-use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
 use App\Vendoring\Service\Security\VendorApiKeyService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -89,7 +89,7 @@ final class VendorApiKeyServiceTest extends TestCase
 
         $this->repository
             ->expects(self::exactly(2))
-            ->method('findActiveByToken')
+            ->method('findActiveByTokenHash')
             ->with(hash('sha256', 'plain-token'))
             ->willReturn($apiKey);
         $this->entityManager->expects(self::once())->method('flush');
@@ -110,7 +110,7 @@ final class VendorApiKeyServiceTest extends TestCase
 
         $this->repository
             ->expects(self::once())
-            ->method('findActiveByToken')
+            ->method('findActiveByTokenHash')
             ->with(hash('sha256', 'plain-token'))
             ->willReturn($apiKey);
         $this->entityManager->expects(self::once())->method('flush');

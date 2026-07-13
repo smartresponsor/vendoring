@@ -7,7 +7,6 @@ namespace App\Vendoring\Tests\Integration\Transaction;
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
-use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use App\Vendoring\Service\Policy\VendorTransactionAmountPolicyService;
 use App\Vendoring\Service\Policy\VendorTransactionStatusPolicyService;
 use App\Vendoring\Service\Transaction\VendorTransactionLifecycleService;
@@ -16,6 +15,7 @@ use App\Vendoring\Tests\Support\Transaction\DoctrineEntityManagerFactory;
 use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -52,7 +52,7 @@ final class VendorTransactionSqliteIntegrationTest extends TestCase
             new VendorTransactionStatusPolicyService(),
             new VendorTransactionAmountPolicyService(),
             $repository,
-            new VendorRuntimeLoggerService(new VendorCorrelationContextService(), new RequestStack(), new VendorAppEnvResolverService()),
+            new VendorRuntimeLoggerService(new NullLogger(), new VendorCorrelationContextService(), new RequestStack()),
         );
 
         $created = $manager->createTransaction(new VendorTransactionDataValueObject('vendor-1', 'order-1', null, '10.50'));

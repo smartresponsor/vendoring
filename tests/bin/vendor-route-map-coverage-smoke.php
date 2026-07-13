@@ -58,7 +58,7 @@ foreach ($files as $file) {
         if (1 === preg_match('/service:\s*([^,}\s]+)/', $trimmed, $match)) {
             ++$serviceCount;
             $fqcn = $match[1];
-            $path = $root.'/src/'.str_replace('\\', '/', preg_replace('/^App\\\\Vendoring\\\\/', '', $fqcn)).'.php';
+            $path = $root.'/src/'.str_replace('\\', '/', (string) preg_replace('/^App\\\\Vendoring\\\\/', '', $fqcn)).'.php';
             if (!is_file($path)) {
                 $failures[] = sprintf('Missing service %s for %s:%d', $fqcn, $relative, $lineNo + 1);
             }
@@ -67,7 +67,7 @@ foreach ($files as $file) {
         if (1 === preg_match('/type:\s*([^,}\s]+)/', $trimmed, $match)) {
             ++$typeCount;
             $fqcn = $match[1];
-            $path = $root.'/src/'.str_replace('\\', '/', preg_replace('/^App\\\\Vendoring\\\\/', '', $fqcn)).'.php';
+            $path = $root.'/src/'.str_replace('\\', '/', (string) preg_replace('/^App\\\\Vendoring\\\\/', '', $fqcn)).'.php';
             if (!is_file($path)) {
                 $failures[] = sprintf('Missing form type %s for %s:%d', $fqcn, $relative, $lineNo + 1);
             }

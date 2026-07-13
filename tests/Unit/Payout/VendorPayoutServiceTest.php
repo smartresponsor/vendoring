@@ -76,8 +76,8 @@ final class VendorPayoutServiceTest extends TestCase
 
         self::assertSame(
             [
-                ['nameEntity' => 'payout_created_total', 'tags' => ['currency' => 'USD']],
-                ['nameEntity' => 'payout_processed_total', 'tags' => ['currency' => 'USD']],
+                ['name' => 'payout_created_total', 'tags' => ['currency' => 'USD']],
+                ['name' => 'payout_processed_total', 'tags' => ['currency' => 'USD']],
             ],
             $metrics->snapshot(),
         );

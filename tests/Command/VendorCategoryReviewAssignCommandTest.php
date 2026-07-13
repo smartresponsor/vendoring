@@ -10,9 +10,10 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Command;
 
 use App\Vendoring\Command\VendorCategoryReviewAssignCommand;
+use App\Vendoring\Entity\Vendor\VendorCatalogCategoryChangeRequestEntity;
 use App\Vendoring\Policy\Vendor\VendorCategoryReviewAssignmentPolicy;
-use App\Vendoring\Repository\Vendor\VendorCatalogCategoryChangeRequestRepository;
-use App\Vendoring\Repository\Vendor\VendorCatalogReviewAssignmentRepository;
+use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogCategoryChangeRequestRepositoryInterface;
+use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogReviewAssignmentRepositoryInterface;
 use App\Vendoring\Service\Catalog\VendorCatalogReviewAssignmentService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -21,12 +22,20 @@ final class VendorCategoryReviewAssignCommandTest extends TestCase
 {
     public function testExecutePrintsAssignmentPayload(): void
     {
-        $requestRepository = new VendorCatalogCategoryChangeRequestRepository();
-        $requestRepository->save(\App\Vendoring\Entity\Vendor\VendorCatalogCategoryChangeRequestEntity::open('req-100', 'cat-100', 'submitter-1', 'Promote category', ['title' => 'Garden']));
+        $request = new VendorCatalogCategoryChangeRequestEntity('req-100', [
+            'categoryId' => 'cat-100',
+            'submitter' => 'submitter-1',
+            'reason' => 'Promote category',
+            'title' => 'Garden',
+        ]);
+        $requestRepository = $this->createMock(VendorCatalogCategoryChangeRequestRepositoryInterface::class);
+        $requestRepository->method('byId')->with('req-100')->willReturn($request);
+        $assignmentRepository = $this->createMock(VendorCatalogReviewAssignmentRepositoryInterface::class);
+        $assignmentRepository->expects(self::once())->method('save');
 
         $service = new VendorCatalogReviewAssignmentService(
             $requestRepository,
-            new VendorCatalogReviewAssignmentRepository(),
+            $assignmentRepository,
             new VendorCategoryReviewAssignmentPolicy(),
         );
 

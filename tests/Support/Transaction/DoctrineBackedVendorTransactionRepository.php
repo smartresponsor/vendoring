@@ -64,43 +64,53 @@ final class DoctrineBackedVendorTransactionRepository implements VendorTransacti
         return (int) $queryBuilder->getQuery()->getSingleScalarResult() > 0;
     }
 
-    public function find(mixed $id): ?object
+    public function find(mixed $id): ?VendorTransactionEntity
     {
         if (!is_scalar($id)) {
             return null;
         }
 
-        return $this->entityManager->find(VendorTransactionEntity::class, $id);
+        $transaction = $this->entityManager->find(VendorTransactionEntity::class, $id);
+
+        return $transaction instanceof VendorTransactionEntity ? $transaction : null;
     }
 
-    public function byId(mixed $id): ?object
+    public function byId(mixed $id): ?VendorTransactionEntity
     {
         return $this->find($id);
     }
 
-    public function findOneBy(array $criteria): ?object
+    public function findOneBy(array $criteria): ?VendorTransactionEntity
     {
-        return $this->entityManager
+        $transaction = $this->entityManager
             ->getRepository(VendorTransactionEntity::class)
             ->findOneBy($criteria);
+
+        return $transaction instanceof VendorTransactionEntity ? $transaction : null;
     }
 
+    /** @return list<VendorTransactionEntity> */
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
-        /** @var list<object> $transactions */
+        $normalizedOrderBy = null;
+        if (null !== $orderBy) {
+            $normalizedOrderBy = [];
+            foreach ($orderBy as $field => $direction) {
+                if (in_array($direction, ['ASC', 'asc', 'DESC', 'desc'], true)) {
+                    $normalizedOrderBy[$field] = $direction;
+                }
+            }
+        }
+
         $transactions = $this->entityManager
             ->getRepository(VendorTransactionEntity::class)
-            ->findBy($criteria, $orderBy, $limit, $offset);
+            ->findBy($criteria, $normalizedOrderBy, $limit, $offset);
 
         return $transactions;
     }
 
-    public function save(object $entity, bool $flush = false): void
+    public function save(VendorTransactionEntity $entity, bool $flush = false): void
     {
-        if (!$entity instanceof VendorTransactionEntity) {
-            return;
-        }
-
         $this->entityManager->persist($entity);
 
         if ($flush) {

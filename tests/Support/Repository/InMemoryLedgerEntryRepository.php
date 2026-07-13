@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Support\Repository;
 
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
+use App\Vendoring\DTO\Ledger\VendorLedgerBalanceDTO;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
 
@@ -134,10 +135,10 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
         }
 
         return array_map(
-            static fn (string $currency, int $balanceCents): object => (object) [
-                'currency' => $currency,
-                'balanceCents' => $balanceCents,
-            ],
+            static fn (string $currency, int $balanceCents): VendorLedgerBalanceDTO => new VendorLedgerBalanceDTO(
+                currency: $currency,
+                balanceCents: $balanceCents,
+            ),
             array_keys($balances),
             array_values($balances),
         );

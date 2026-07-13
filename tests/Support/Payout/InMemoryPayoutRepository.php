@@ -28,7 +28,7 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
         $this->items[$payoutId][] = $item;
     }
 
-    public function find(mixed $id): ?object
+    public function find(mixed $id): ?VendorPayoutEntity
     {
         if (!is_scalar($id)) {
             return null;
@@ -37,7 +37,7 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
         return $this->byId((string) $id);
     }
 
-    public function findOneBy(array $criteria): ?object
+    public function findOneBy(array $criteria): ?VendorPayoutEntity
     {
         return $this->findBy($criteria)[0] ?? null;
     }
@@ -46,7 +46,7 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
      * @param array<string,mixed>       $criteria
      * @param array<string,string>|null $orderBy
      *
-     * @return list<object>
+     * @return list<VendorPayoutEntity>
      */
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
@@ -64,14 +64,12 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
         ));
     }
 
-    public function save(object $entity, bool $flush = false): void
+    public function save(VendorPayoutEntity $entity, bool $flush = false): void
     {
-        if ($entity instanceof VendorPayoutEntity) {
-            $this->insert($entity);
-        }
+        $this->insert($entity);
     }
 
-    public function byId(mixed $id): ?object
+    public function byId(mixed $id): ?VendorPayoutEntity
     {
         if (!is_scalar($id)) {
             return null;

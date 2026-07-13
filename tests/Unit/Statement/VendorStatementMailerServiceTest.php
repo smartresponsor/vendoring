@@ -36,7 +36,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertTrue($result['attached']);
         self::assertSame('closed', $result['circuitState']);
         self::assertCount(1, $mailer->messages());
-        self::assertSame('statement_mail_sent_total', $metrics->snapshot()[0]['nameEntity']);
+        self::assertSame('statement_mail_sent_total', $metrics->snapshot()[0]['name']);
 
         unlink($pdf);
     }
@@ -52,7 +52,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertFalse($result['ok']);
         self::assertSame('statement_mail_invalid_email', $result['message']);
         self::assertCount(0, $mailer->messages());
-        self::assertSame('statement_mail_invalid_email_total', $metrics->snapshot()[0]['nameEntity']);
+        self::assertSame('statement_mail_invalid_email_total', $metrics->snapshot()[0]['name']);
     }
 
     public function testSendReturnsFailureAndEmitsMetricsWhenMailerThrows(): void
@@ -71,8 +71,8 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertIsString($errorMessage);
         self::assertSame('mailer transport failed', $errorMessage);
         self::assertSame('closed', $result['circuitState']);
-        self::assertSame('statement_mail_attachment_missing_total', $metrics->snapshot()[0]['nameEntity']);
-        self::assertSame('statement_mail_failed_total', $metrics->snapshot()[1]['nameEntity']);
+        self::assertSame('statement_mail_attachment_missing_total', $metrics->snapshot()[0]['name']);
+        self::assertSame('statement_mail_failed_total', $metrics->snapshot()[1]['name']);
     }
 
     public function testSendShortCircuitsWhenCircuitBreakerIsOpen(): void
@@ -90,7 +90,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertSame('statement_mail_circuit_open', $result['message']);
         self::assertSame('open', $result['circuitState']);
         self::assertCount(0, $mailer->messages());
-        self::assertSame('statement_mail_circuit_open_total', $metrics->snapshot()[0]['nameEntity']);
+        self::assertSame('statement_mail_circuit_open_total', $metrics->snapshot()[0]['name']);
     }
 
     public function testSendDoesNotSwallowNonTransportExceptions(): void

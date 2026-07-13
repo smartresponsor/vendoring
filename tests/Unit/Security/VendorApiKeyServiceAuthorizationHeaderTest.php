@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Security;
 
-use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
 use App\Vendoring\Service\Security\VendorApiKeyService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +27,7 @@ final class VendorApiKeyServiceAuthorizationHeaderTest extends TestCase
     {
         $service = new VendorApiKeyService($this->entityManager, $this->repository);
 
-        $this->repository->expects(self::never())->method('findActiveByToken');
+        $this->repository->expects(self::never())->method('findActiveByTokenHash');
         $this->entityManager->expects(self::never())->method('flush');
 
         self::assertNull($service->validateAuthorizationHeader('', 'write:transactions'));
@@ -41,7 +41,7 @@ final class VendorApiKeyServiceAuthorizationHeaderTest extends TestCase
 
         $this->repository
             ->expects(self::once())
-            ->method('findActiveByToken')
+            ->method('findActiveByTokenHash')
             ->with(hash('sha256', 'plain-token'))
             ->willReturn($apiKey);
 
@@ -58,7 +58,7 @@ final class VendorApiKeyServiceAuthorizationHeaderTest extends TestCase
 
         $this->repository
             ->expects(self::once())
-            ->method('findActiveByToken')
+            ->method('findActiveByTokenHash')
             ->with(hash('sha256', 'plain-token'))
             ->willReturn($apiKey);
 

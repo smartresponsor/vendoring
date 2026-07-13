@@ -7,6 +7,7 @@ use App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
 use App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService;
 use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,7 +23,7 @@ $request = Request::create('/api/vendor/transaction');
 $request->attributes->set('_route', 'app_vendor_transaction_create');
 $requestStack->push($request);
 
-$logger = new VendorRuntimeLoggerService($correlationContext, $requestStack, new VendorAppEnvResolverService(), $exporter);
+$logger = new VendorRuntimeLoggerService(new NullLogger(), $correlationContext, $requestStack, $exporter);
 $metrics = new VendorRuntimeMetricCollectorService($correlationContext, new VendorAppEnvResolverService(), $exporter);
 
 $logger->info('observability_backend_smoke', ['vendor_id' => 'vendor-1']);

@@ -16,8 +16,13 @@ final class ComposerConfigurationSmokeTest extends TestCase
         $composerFile = dirname(__DIR__, 2).'/composer.json';
         $decoded = json_decode((string) file_get_contents($composerFile), true, 512, JSON_THROW_ON_ERROR);
         self::assertIsArray($decoded);
-        /* @var array<string, mixed> $decoded */
-        $this->composer = $decoded;
+        $composer = [];
+        foreach ($decoded as $key => $value) {
+            if (is_string($key)) {
+                $composer[$key] = $value;
+            }
+        }
+        $this->composer = $composer;
     }
 
     public function testRuntimePhpConstraintIsCanonical(): void
@@ -82,7 +87,13 @@ final class ComposerConfigurationSmokeTest extends TestCase
             return [];
         }
 
-        /* @var array<string, mixed> $value */
-        return $value;
+        $section = [];
+        foreach ($value as $key => $item) {
+            if (is_string($key)) {
+                $section[$key] = $item;
+            }
+        }
+
+        return $section;
     }
 }

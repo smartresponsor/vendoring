@@ -18,7 +18,7 @@ final class InMemoryVendorTransactionRepository implements VendorTransactionRepo
         $this->items = $items;
     }
 
-    public function find(mixed $id): ?object
+    public function find(mixed $id): ?VendorTransactionEntity
     {
         if (!is_scalar($id)) {
             return null;
@@ -27,7 +27,7 @@ final class InMemoryVendorTransactionRepository implements VendorTransactionRepo
         return $this->byId((int) $id);
     }
 
-    public function byId(mixed $id): ?object
+    public function byId(mixed $id): ?VendorTransactionEntity
     {
         if (!is_scalar($id)) {
             return null;
@@ -43,7 +43,7 @@ final class InMemoryVendorTransactionRepository implements VendorTransactionRepo
     }
 
     /** @param array<string,mixed> $criteria */
-    public function findOneBy(array $criteria): ?object
+    public function findOneBy(array $criteria): ?VendorTransactionEntity
     {
         return $this->findBy($criteria)[0] ?? null;
     }
@@ -52,21 +52,16 @@ final class InMemoryVendorTransactionRepository implements VendorTransactionRepo
      * @param array<string,mixed>       $criteria
      * @param array<string,string>|null $orderBy
      *
-     * @return list<object>
+     * @return list<VendorTransactionEntity>
      */
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
-        /** @var list<object> $items */
-        $items = array_values($this->items);
-
-        return $items;
+        return $this->items;
     }
 
-    public function save(object $entity, bool $flush = false): void
+    public function save(VendorTransactionEntity $entity, bool $flush = false): void
     {
-        if ($entity instanceof VendorTransactionEntity) {
-            $this->items[] = $entity;
-        }
+        $this->items[] = $entity;
     }
 
     public function findByVendorId(string $vendorId): array
