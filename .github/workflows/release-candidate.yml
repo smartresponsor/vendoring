@@ -2,7 +2,7 @@ name: Release Candidate
 
 on:
   push:
-    branches: [main]
+    branches: [master, main]
   workflow_dispatch:
 
 jobs:
@@ -24,11 +24,11 @@ jobs:
       - name: Full RC validation
         run: composer quality:release-candidate
 
+      - name: Generate RC evidence
+        run: composer docs:rc-evidence
+
       - name: Upload RC evidence artifacts
         uses: actions/upload-artifact@v4
         with:
           name: rc-evidence
           path: build/release/**
-
-      - name: Generate RC evidence
-        run: composer docs:rc-evidence
