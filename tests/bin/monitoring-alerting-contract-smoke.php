@@ -37,7 +37,9 @@ file_put_contents($projectDir.'/docs/PHASE60_DEPLOY_READINESS_POST_DEPLOY_PACK.m
 
 $builder = new VendorMonitoringSnapshotBuilderService($observabilityDir, $faultToleranceDir, $projectDir);
 $snapshot = $builder->build(900);
-$alerts = (new VendorAlertRuleEvaluatorService())->evaluate($snapshot);
+$alerts = (new VendorAlertRuleEvaluatorService([
+    'errorLogThreshold' => 1,
+]))->evaluate($snapshot);
 
 if ('warn' !== $snapshot['status']) {
     fwrite(STDERR, "monitoring alerting smoke failed: snapshot status mismatch\n");

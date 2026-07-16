@@ -198,7 +198,16 @@
             "@quality:runtime",
             "@quality:persistence",
             "@quality:api",
+            "@quality:production-hardening",
             "@quality:docs"
+        ],
+        "quality:production-hardening": [
+            "@test:vendor-rbac-contract",
+            "@test:observability-backend",
+            "@test:monitoring-alerting",
+            "@test:outbound-fault-tolerance",
+            "@test:release-rollback-manifest",
+            "@test:canary-rollout"
         ],
         "quality:runtime": [
             "@test",
