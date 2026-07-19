@@ -10,7 +10,7 @@
     "vendor.update_id"
   ],
   "disabled_reasons": {
-    "slug": "VendorEntity has no slug field or slug repository lookup",
+    "slug": "VendorEntity has Objecting-backed object_slug identity; slug repository lookup and route services are not implemented",
     "delete_bulk_import_export_archive_restore_duplicate": "No proven Vendor core business capability"
   },
   "template_candidates": [

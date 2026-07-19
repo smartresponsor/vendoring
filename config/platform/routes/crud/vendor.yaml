@@ -12,7 +12,7 @@
 #   - VendorUpdateService
 #   - VendorDeleteService
 #
-# VendorEntity currently has no slug field, therefore slug variants are not active.
+# VendorEntity has Objecting-backed object_slug identity; slug routes remain inactive until repository lookup and route services are implemented.
 # Delete, bulk, import, export, archive, restore and duplicate are not registered
 # until a corresponding business capability exists outside the HTTP entrypoint.
 #

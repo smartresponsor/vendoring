@@ -90,5 +90,5 @@ if ($errors !== []) {
 fwrite(STDOUT, "Vendoring core entrypoint responsibility audit OK\n");
 fwrite(STDOUT, "Active routes: 6\n");
 fwrite(STDOUT, "Active form types: 2\n");
-fwrite(STDOUT, "Slug routes: disabled (VendorEntity has no slug)\n");
+fwrite(STDOUT, "Slug routes: disabled (Objecting slug exists; repository lookup and route services are not implemented)\n");
 fwrite(STDOUT, "Unsupported generic CRUD routes: not registered\n");
