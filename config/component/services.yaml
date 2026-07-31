@@ -37,6 +37,7 @@ services:
       - '../../src/Support/'
       - '../../src/Service/Vendor/'
       - '../../src/Service/Profile/Bridge/'
+      - '../../src/Service/Attachment/Bridge/'
       - '../../src/ValueObject/'
       - '../../src/Form/'
 
@@ -73,8 +74,23 @@ services:
     public: true
   App\Vendoring\Service\Vendor\VendorDeleteService:
     public: true
+
+  # Route-facing zero-controller HTTP services must remain fetchable by FQCN.
+  App\Vendoring\Service\Vendor\Profile\VendorProfileHttpService:
+    public: true
+    tags: ['controller.service_arguments']
+  App\Vendoring\Service\Vendor\Statement\VendorStatementHttpService:
+    public: true
+    tags: ['controller.service_arguments']
+  App\Vendoring\Service\Vendor\Summary\VendorSummaryHttpService:
+    public: true
+    tags: ['controller.service_arguments']
+  App\Vendoring\Service\Vendor\Transaction\VendorTransactionHttpService:
+    public: true
+    tags: ['controller.service_arguments']
   App\Vendoring\ServiceInterface\Crud\VendorCrudServiceInterface:
     alias: App\Vendoring\Service\Crud\VendorCrudService
+  App\Vendoring\ServiceInterface\Attachment\VendorAttachmentOwnerPurgeServiceInterface: '@App\Vendoring\Service\Attachment\NullVendorAttachmentOwnerPurgeService'
   App\Vendoring\Form\:
     resource: '../../src/Form/'
 
@@ -204,9 +220,11 @@ services:
     arguments:
       $projectDir: '%kernel.project_dir%'
 
+  Psr\Log\NullLogger: ~
+
   App\Vendoring\Service\Observability\VendorRuntimeLoggerService:
     arguments:
-      $logger: '@monolog.logger.vendoring'
+      $logger: '@Psr\Log\NullLogger'
 
   App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService:
     arguments:
