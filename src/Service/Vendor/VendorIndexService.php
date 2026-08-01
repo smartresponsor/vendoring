@@ -6,7 +6,6 @@ namespace App\Vendoring\Service\Vendor;
 
 use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
 use App\Cruding\Value\Resource\CrudResourceContract;
-use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 
 final class VendorIndexService extends AbstractVendorCrudRouteService
@@ -43,13 +42,11 @@ final class VendorIndexService extends AbstractVendorCrudRouteService
         return 'Vendor '.$this->resourcePath().' '.$this->operation();
     }
 
-    /**
-     * @return list<VendorEntity>
-     */
+    /** @return list<array{id: int, brandName: string, ownerUserId: int|null}> */
     private function vendors(): array
     {
         try {
-            return $this->vendorRepository->findBy([]);
+            return $this->vendorRepository->findIndexRows();
         } catch (\Throwable) {
             return [];
         }

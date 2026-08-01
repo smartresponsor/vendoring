@@ -39,6 +39,18 @@ final class VendorRepository extends ServiceEntityRepository implements VendorRe
         }
     }
 
+    public function findIndexRows(): array
+    {
+        /** @var list<array{id: int, brandName: string, ownerUserId: int|null}> $rows */
+        $rows = $this->createQueryBuilder('vendor')
+            ->select('vendor.id', 'vendor.brandName', 'vendor.ownerUserId')
+            ->orderBy('vendor.id', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+
+        return $rows;
+    }
+
     public function byId(mixed $id): ?VendorEntity
     {
         return $this->find($id);

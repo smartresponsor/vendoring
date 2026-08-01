@@ -9,6 +9,7 @@ use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
 use App\Cruding\Value\Resource\CrudResourceContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\Vendoring\Service\Attachment\NullVendorAttachmentOwnerPurgeService;
 use App\Vendoring\Service\Vendor\VendorCreateService;
 use App\Vendoring\Service\Vendor\VendorDeleteService;
 use App\Vendoring\Service\Vendor\VendorHttpRouteResponseService;
@@ -48,9 +49,12 @@ final class VendorRouteServicesTest extends TestCase
     {
         $this->vendorRepository
             ->expects(self::once())
-            ->method('findBy')
-            ->with([])
-            ->willReturn([new VendorEntity('Alpha')]);
+            ->method('findIndexRows')
+            ->willReturn([[
+                'id' => 1,
+                'brandName' => 'Alpha',
+                'ownerUserId' => null,
+            ]]);
 
         $service = new VendorIndexService($this->responseService, $this->vendorRepository);
 
@@ -165,7 +169,12 @@ final class VendorRouteServicesTest extends TestCase
         $this->entityManager->expects(self::once())->method('remove')->with($vendor);
         $this->entityManager->expects(self::once())->method('flush');
 
-        $service = new VendorDeleteService($this->responseService, $this->vendorRepository, $this->entityManager);
+        $service = new VendorDeleteService(
+            $this->responseService,
+            $this->vendorRepository,
+            $this->entityManager,
+            new NullVendorAttachmentOwnerPurgeService(),
+        );
 
         $response = $service->delete($this->context('delete', object: $vendor, identifierValue: 1));
 

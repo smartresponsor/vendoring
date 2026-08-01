@@ -23,5 +23,10 @@ interface VendorRepositoryInterface
      */
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array;
 
+    /**
+     * @return list<array{id: int, brandName: string, ownerUserId: int|null}>
+     */
+    public function findIndexRows(): array;
+
     public function save(VendorEntity $entity, bool $flush = false): void;
 }
