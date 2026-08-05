@@ -175,6 +175,7 @@ final readonly class VendorHttpRouteResponseService
         return match ($operation) {
             'index' => 'vendor/index.html.twig',
             'show' => 'vendor/show.html.twig',
+            'page' => 'vendor/page.html.twig',
             'new', 'edit' => 'vendor/form.html.twig',
             default => null,
         };

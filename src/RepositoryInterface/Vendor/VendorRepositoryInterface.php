@@ -28,5 +28,7 @@ interface VendorRepositoryInterface
      */
     public function findIndexRows(): array;
 
+    public function findOneForUserId(int $userId): ?VendorEntity;
+
     public function save(VendorEntity $entity, bool $flush = false): void;
 }

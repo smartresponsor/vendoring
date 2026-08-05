@@ -51,6 +51,22 @@ final class VendorRepository extends ServiceEntityRepository implements VendorRe
         return $rows;
     }
 
+    public function findOneForUserId(int $userId): ?VendorEntity
+    {
+        $vendor = $this->createQueryBuilder('vendor')
+            ->leftJoin('vendor.userAssignments', 'assignment')
+            ->andWhere('vendor.ownerUserId = :userId OR (assignment.userId = :userId AND assignment.status = :activeStatus)')
+            ->setParameter('userId', $userId)
+            ->setParameter('activeStatus', 'active')
+            ->addOrderBy('assignment.primaryAssignment', 'DESC')
+            ->addOrderBy('vendor.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $vendor instanceof VendorEntity ? $vendor : null;
+    }
+
     public function byId(mixed $id): ?VendorEntity
     {
         return $this->find($id);

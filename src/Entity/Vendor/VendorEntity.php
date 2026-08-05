@@ -27,6 +27,10 @@ class VendorEntity extends VendorAbstractEntity
     private ?VendorProfileEntity $profile = null;
     #[ORM\OneToOne(mappedBy: 'vendor', targetEntity: VendorMediaEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?VendorMediaEntity $media = null;
+    #[ORM\OneToOne(mappedBy: 'vendor', targetEntity: VendorProfileAvatarEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private ?VendorProfileAvatarEntity $profileAvatar = null;
+    #[ORM\OneToOne(mappedBy: 'vendor', targetEntity: VendorProfileCoverEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private ?VendorProfileCoverEntity $profileCover = null;
     #[ORM\OneToOne(mappedBy: 'vendor', targetEntity: VendorBillingEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?VendorBillingEntity $billing = null;
     #[ORM\OneToOne(mappedBy: 'vendor', targetEntity: VendorSecurityEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -111,6 +115,11 @@ class VendorEntity extends VendorAbstractEntity
         return $this->brandName;
     }
 
+    public function getTitle(): string
+    {
+        return $this->brandName;
+    }
+
     public function rename(string $brandName): self
     {
         $this->brandName = trim($brandName);
@@ -124,12 +133,77 @@ class VendorEntity extends VendorAbstractEntity
         return $this->ownerUserId;
     }
 
+    public function getProfile(): ?VendorProfileEntity
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(VendorProfileEntity $profile): self
+    {
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+    public function getMedia(): ?VendorMediaEntity
+    {
+        return $this->media;
+    }
+
+    public function setMedia(VendorMediaEntity $media): self
+    {
+        $this->media = $media;
+
+        return $this;
+    }
+
     public function changeOwnerUserId(?int $ownerUserId): self
     {
         $this->ownerUserId = $ownerUserId;
         $this->touchModified();
 
         return $this;
+    }
+
+    public function getProfileAvatar(): ?VendorProfileAvatarEntity
+    {
+        return $this->profileAvatar;
+    }
+
+    public function getProfileCover(): ?VendorProfileCoverEntity
+    {
+        return $this->profileCover;
+    }
+
+    public function getDisplayName(): string
+    {
+        return $this->profile?->getDisplayName() ?: $this->brandName;
+    }
+
+    public function getAbout(): ?string
+    {
+        return $this->profile?->getAbout();
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->profile?->getWebsite();
+    }
+
+    /** @return array<string, mixed>|null */
+    public function getSocials(): ?array
+    {
+        return $this->profile?->getSocials();
+    }
+
+    public function getAvatarPath(): ?string
+    {
+        return $this->profileAvatar?->getFilePath() ?? $this->media?->getLogoPath();
+    }
+
+    public function getCoverPath(): ?string
+    {
+        return $this->profileCover?->getFilePath() ?? $this->media?->getBannerPath();
     }
 
     public function activate(): self
