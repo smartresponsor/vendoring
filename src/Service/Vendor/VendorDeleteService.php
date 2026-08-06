@@ -8,6 +8,7 @@ use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
 use App\Cruding\Value\Resource\CrudResourceContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\Vendoring\ServiceInterface\Attachment\VendorAttachmentOwnerPurgeServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -17,6 +18,7 @@ final class VendorDeleteService extends AbstractVendorCrudRouteService
         private VendorHttpRouteResponseService $responseService,
         private VendorRepositoryInterface $vendorRepository,
         private EntityManagerInterface $entityManager,
+        private VendorAttachmentOwnerPurgeServiceInterface $attachmentOwnerPurgeService,
     ) {
     }
 
@@ -44,6 +46,8 @@ final class VendorDeleteService extends AbstractVendorCrudRouteService
     private function deleteVendor(CrudServiceContext $context): CrudResourceContract
     {
         $vendor = $this->resolveVendor($context);
+        $vendorId = (string) ($context->identifierValue() ?? $vendor->getId());
+        $this->attachmentOwnerPurgeService->purge('vendor', $vendorId);
         $this->entityManager->remove($vendor);
         $this->entityManager->flush();
 
