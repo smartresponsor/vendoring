@@ -887,6 +887,26 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         resolve_target_entities?: array<string, scalar|Param|null>,
  *     },
  * }
+ * @psalm-type CrudingConfig = array{
+ *     resource_path_requirement?: scalar|Param|null, // Default: "[a-z][a-z0-9_-]*(?:/(?!(?:new|edit|delete|audit|visibility|attach|detach)$)[a-z0-9][a-z0-9_-]*)*"
+ *     route_guard?: array{
+ *         runtime_scope_env?: scalar|Param|null, // Default: "APP_RUNTIME_SCOPE"
+ *         runtime_entity_env?: scalar|Param|null, // Default: "APP_RUNTIME_ENTITY"
+ *         runtime_view_token_env?: scalar|Param|null, // Default: "APP_RUNTIME_VIEW_TOKEN"
+ *         runtime_reserved_env?: scalar|Param|null, // Default: "APP_RUNTIME_RESERVED"
+ *         reserved_tokens?: list<scalar|Param|null>,
+ *         view_tokens?: list<scalar|Param|null>,
+ *         operation_tokens?: list<scalar|Param|null>,
+ *         resource_path_reserved_tokens?: list<scalar|Param|null>,
+ *         runtime_lock_glob?: scalar|Param|null, // Default: "config/kernel/runtime_scope.{env}.lock.php"
+ *         require_runtime_lock?: bool|Param, // Default: false
+ *         require_composer_packages?: bool|Param, // Default: false
+ *         scope_package_map?: array<string, scalar|Param|null>,
+ *     },
+ *     capability_map?: array<string, mixed>,
+ *     entity_class_alias_map?: array<string, scalar|Param|null>,
+ *     form_type_map?: array<string, scalar|Param|null>,
+ * }
  * @psalm-type VendoringConfig = array{
  *     observability_dir?: scalar|Param|null, // Default: "%kernel.project_dir%/var/observability"
  *     fault_tolerance_dir?: scalar|Param|null, // Default: "%kernel.project_dir%/var/fault-tolerance"
@@ -979,6 +999,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     services?: ServicesConfig,
  *     framework?: FrameworkConfig,
  *     doctrine?: DoctrineConfig,
+ *     cruding?: CrudingConfig,
  *     vendoring?: VendoringConfig,
  *     twig?: TwigConfig,
  *     nelmio_api_doc?: NelmioApiDocConfig,
@@ -988,6 +1009,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
+ *         cruding?: CrudingConfig,
  *         vendoring?: VendoringConfig,
  *         twig?: TwigConfig,
  *         nelmio_api_doc?: NelmioApiDocConfig,
@@ -998,6 +1020,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
+ *         cruding?: CrudingConfig,
  *         vendoring?: VendoringConfig,
  *         twig?: TwigConfig,
  *         nelmio_api_doc?: NelmioApiDocConfig,

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b72f336b6cd4ea35986d2c61001be2b",
+    "content-hash": "fbed9e49489e438cbdd2b88f17e6ddfc",
     "packages": [
         {
             "name": "cruding/crud",
@@ -1267,7 +1267,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Objecting",
-                "reference": "d232919c26470c2ccd9e158a83aa3f5995abc620"
+                "reference": "b088c15c9b7391f9b752ac5e5a1c00a36da172d4"
             },
             "require": {
                 "doctrine/orm": "^3.3",
@@ -1303,6 +1303,12 @@
                 "test:canon": [
                     "@php tools/test/objecting_canon_check.php"
                 ],
+                "test:responsibility-boundary": [
+                    "@php tools/test/objecting_responsibility_boundary_check.php"
+                ],
+                "test:semantic-manifest": [
+                    "@php tools/test/objecting_semantic_manifest_check.php"
+                ],
                 "test:lifecycle-identity-canon": [
                     "@php tools/test/objecting_lifecycle_identity_canon_check.php"
                 ],
@@ -1314,6 +1320,8 @@
                 ],
                 "test:quality": [
                     "@test:canon",
+                    "@test:responsibility-boundary",
+                    "@test:semantic-manifest",
                     "@test:lifecycle-identity-canon",
                     "@test:internal-types",
                     "@test:layer-suffix",

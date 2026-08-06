@@ -50,6 +50,11 @@
             "App\\Vendoring\\Tests\\": "tests/"
         }
     },
+    "extra": {
+        "symfony": {
+            "bundle": "App\\Vendoring\\VendoringBundle"
+        }
+    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
