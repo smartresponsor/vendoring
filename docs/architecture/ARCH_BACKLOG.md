@@ -1,5 +1,8 @@
 # Vendoring Architecture Backlog
 
+> Canonical forward plan: `docs/architecture/VENDORING_PRODUCTION_HARDENING_ROADMAP.md`.
+> This backlog remains an issue-oriented source and must not override that roadmap.
+
 ## Purpose
 
 This backlog translates the architecture review into concrete work items for the current repository shape:

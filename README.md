@@ -229,6 +229,7 @@ composer quality
 - `docs/release/RC_RUNTIME_SURFACES.md`
 - `docs/release/RC_GATE_CHECKLIST.md`
 - `docs/release/RC_ROADMAP.md`
+- `docs/architecture/VENDORING_PRODUCTION_HARDENING_ROADMAP.md`
 
 Generated artifacts:
 
