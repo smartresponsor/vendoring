@@ -40,7 +40,7 @@ final class VendorDoubleEntryServiceTest extends TestCase
         self::assertSame('inv-100', $result[0]->referenceId);
         self::assertSame('vendor-1', $result[0]->vendorId);
         self::assertSame('2026-03-15 08:30:00', $result[0]->createdAt);
-        self::assertMatchesRegularExpression('/^[0-9a-f-]{36}$/', $result[0]->getObjectUuid());
+        self::assertMatchesRegularExpression('/^[0-9A-HJKMNP-TV-Z]{26}$/', $result[0]->getObjectUuid());
     }
 
     public function testPostCreatesTimestampWhenDtoDoesNotProvideOne(): void
