@@ -94,6 +94,16 @@ services:
   App\Vendoring\Form\:
     resource: '../../src/Form/'
 
+  App\Vendoring\Repository\Vendor\VendorPayoutAccountRepository:
+    autowire: false
+    arguments:
+      $registry: '@doctrine'
+
+  App\Vendoring\Repository\Vendor\VendorPayoutRepository:
+    autowire: false
+    arguments:
+      $registry: '@doctrine'
+
 
 
 
