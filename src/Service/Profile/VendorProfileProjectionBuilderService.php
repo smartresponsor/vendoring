@@ -9,7 +9,9 @@ use App\Vendoring\Entity\Vendor\VendorProfileEntity;
 use App\Vendoring\Projection\Vendor\VendorProfileProjection;
 use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\Vendoring\ServiceInterface\Profile\VendorProfileAttachmentResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Profile\VendorProfileProjectionBuilderServiceInterface;
+use App\Vendoring\ValueObject\VendorProfileAttachmentSlotValueObject;
 
 final class VendorProfileProjectionBuilderService implements VendorProfileProjectionBuilderServiceInterface
 {
@@ -47,6 +49,7 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
     public function __construct(
         private readonly VendorRepositoryInterface $vendorRepository,
         private readonly VendorProfileRepositoryInterface $profileRepository,
+        private readonly VendorProfileAttachmentResolverServiceInterface $attachmentResolver,
     ) {
     }
 
@@ -63,7 +66,7 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
             $profile = null;
         }
 
-        $profileData = $this->buildProfileData($profile, $vendor->getBrandName(), $vendor->getOwnerUserId(), $vendor->getStatus());
+        $profileData = $this->buildProfileData($vendorId, $profile, $vendor->getBrandName(), $vendor->getOwnerUserId(), $vendor->getStatus());
         $sections = $this->buildSections($profileData);
         $totalFields = 0;
         $completedFields = 0;
@@ -123,6 +126,7 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
      * }
      */
     private function buildProfileData(
+        int $vendorId,
         ?VendorProfileEntity $profile,
         string $brandName,
         ?int $ownerUserId = null,
@@ -130,6 +134,15 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
     ): array {
         $displayName = $profile?->getDisplayName();
         $publicName = null !== $displayName && '' !== trim($displayName) ? $displayName : $brandName;
+
+        $avatar = $this->attachmentResolver->resolvePrimaryForVendorSlot(
+            $vendorId,
+            VendorProfileAttachmentSlotValueObject::SLOT_AVATAR,
+        );
+        $cover = $this->attachmentResolver->resolvePrimaryForVendorSlot(
+            $vendorId,
+            VendorProfileAttachmentSlotValueObject::SLOT_COVER,
+        );
 
         $socials = $profile?->getSocials() ?? [];
         $socials = array_filter($socials, static fn (mixed $value): bool => is_string($value));
@@ -145,8 +158,8 @@ final class VendorProfileProjectionBuilderService implements VendorProfileProjec
             'displayName' => $displayName,
             'publicDisplayName' => $publicName,
             'publicName' => $publicName,
-            'avatar' => ['attachmentId' => null, 'url' => null],
-            'cover' => ['attachmentId' => null, 'url' => null],
+            'avatar' => $avatar->toArray(),
+            'cover' => $cover->toArray(),
             'about' => $profile?->getAbout(),
             'website' => $profile?->getWebsite(),
             'socials' => $socials,

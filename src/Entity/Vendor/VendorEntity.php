@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
+use App\Objecting\EntityInterface\ObjectEntityInterface;
+use App\Objecting\EntityTrait\Embeddable\ObjectTitleEmbeddableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,8 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
         new ORM\Index(name: 'idx_vendor_owner_user_id', columns: ['owner_user_id']),
     ],
 )]
-class VendorEntity extends VendorAbstractEntity
+class VendorEntity extends VendorAbstractEntity implements ObjectEntityInterface
 {
+    use ObjectTitleEmbeddableTrait;
     #[ORM\Column(type: 'string', length: 255)]
     private string $brandName;
 
@@ -103,6 +106,7 @@ class VendorEntity extends VendorAbstractEntity
     public function __construct(string $brandName, ?int $ownerUserId = null)
     {
         parent::__construct('inactive');
+        $this->initializeObjectTitle(firstTitle: trim($brandName));
         $this->brandName = trim($brandName);
         $this->ownerUserId = $ownerUserId;
         foreach (['documents', 'attachments', 'userAssignments', 'payments', 'commissions', 'commissionHistory', 'conversations', 'sentConversationMessages', 'shipments', 'groups', 'categories', 'favourites', 'wishlists', 'codeStorage', 'rememberMeTokens', 'customerOrders', 'logs', 'channels', 'translations'] as $property) {
