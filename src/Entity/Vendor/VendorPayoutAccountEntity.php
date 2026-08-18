@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 class VendorPayoutAccountEntity extends VendorAbstractEntity
 {
-    public string $accountId;
+    #[ORM\Column(type: 'string', length: 64, unique: true)] public string $accountId;
     #[ORM\Column(type: 'string', length: 64)] public string $tenantId;
     #[ORM\Column(type: 'string', length: 64)] public string $vendorId;
     #[ORM\Column(type: 'string', length: 64)] public string $provider;

@@ -81,10 +81,11 @@ final class VendorPayoutAccountRepository extends ServiceEntityRepository implem
 
     public function byId(mixed $id): ?object
     {
-        if (null !== $this->directEm) {
-            return $this->directEm->find(VendorPayoutAccountEntity::class, $id);
+        $identifier = trim((string) $id);
+        if ('' === $identifier) {
+            return null;
         }
 
-        return $this->find($id);
+        return $this->findOneBy(['accountId' => $identifier]);
     }
 }

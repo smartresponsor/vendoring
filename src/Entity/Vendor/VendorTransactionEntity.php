@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(
     name: 'vendor_transaction',
     indexes: [
-        new ORM\Index(name: 'idx_vendor_transaction_vendor_id', columns: ['vendor_id']),
+        new ORM\Index(name: 'idx_vendor_transaction_vendor_created', columns: ['vendor_id', 'created_at']),
     ],
 )]
 class VendorTransactionEntity extends VendorAbstractEntity implements VendorTransactionEntityInterface
