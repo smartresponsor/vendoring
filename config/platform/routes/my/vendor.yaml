@@ -19,9 +19,5 @@ vendor.my.statement.show:    { path: /my/vendor/statement/show,   service: App\V
 # My summary
 vendor.my.summary.show:      { path: /my/vendor/summary/show,     service: App\Vendoring\Service\Vendor\Summary\VendorSummaryHttpService }
 
-# My payout
-vendor.my.payout.show:       { path: /my/vendor/payout/show,      service: App\Vendoring\Service\Vendor\Payout\VendorPayoutHttpService }
-vendor.my.payout.calculate:  { path: /my/vendor/payout/calculate, service: App\Vendoring\Service\Vendor\Payout\VendorPayoutCalculateService }
-
 # My runtime finance
 vendor.my.runtime.finance.show: { path: /my/vendor/runtime/finance/show, service: App\Vendoring\Service\Vendor\Runtime\Finance\VendorRuntimeFinanceShowService }

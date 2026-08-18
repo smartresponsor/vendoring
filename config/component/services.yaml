@@ -38,6 +38,10 @@ services:
       - '../../src/Service/Vendor/'
       - '../../src/Service/Profile/Bridge/'
       - '../../src/Service/Attachment/Bridge/'
+      - '../../src/Command/VendorPayoutCreateCommand.php'
+      - '../../src/Command/VendorPayoutProcessCommand.php'
+      - '../../src/Service/Payout/VendorPayoutService.php'
+      - '../../src/Service/Vendor/Payout/VendorPayoutHttpService.php'
       - '../../src/ValueObject/'
       - '../../src/Form/'
 
@@ -60,6 +64,7 @@ services:
       - '../../src/Service/Vendor/VendorHttpRequestTrait.php'
       - '../../src/Service/Vendor/VendorStatementRequestHttpResolutionTrait.php'
       - '../../src/Service/Vendor/Ownership/VendorOwnershipMutationService.php'
+      - '../../src/Service/Vendor/Payout/VendorPayoutHttpService.php'
   App\Vendoring\Service\Vendor\VendorIndexService:
     public: true
   App\Vendoring\Service\Vendor\VendorShowService:
@@ -190,7 +195,6 @@ services:
   App\Vendoring\ServiceInterface\Category\Rule\VendorCategoryRuleEngineServiceInterface: '@App\Vendoring\Service\Category\Rule\VendorCategoryRuleEngineService'
   App\Vendoring\ServiceInterface\Category\Suggest\VendorCategoryRuleSuggestServiceInterface: '@App\Vendoring\Service\Category\Suggest\VendorCategoryRuleSuggestService'
   App\Vendoring\ServiceInterface\Payout\VendorPayoutRequestServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutRequestService'
-  App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutService'
   App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationMappingServiceInterface: '@App\Vendoring\Service\Syndication\VendorCatalogSyndicationMappingService'
   App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaReadinessServiceInterface: '@App\Vendoring\Service\Media\VendorCatalogDestinationMediaReadinessService'
   App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaFallbackServiceInterface: '@App\Vendoring\Service\Media\VendorCatalogDestinationMediaFallbackService'
