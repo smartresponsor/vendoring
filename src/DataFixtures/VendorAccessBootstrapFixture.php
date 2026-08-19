@@ -38,6 +38,10 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
                 continue;
             }
 
+            if (!$this->isAdministrativeUser($user) && !$this->isProfessionalUser($user)) {
+                continue;
+            }
+
             $vendor = $manager->getRepository(VendorEntity::class)->findOneBy(['ownerUserId' => $userId]);
             if (!$vendor instanceof VendorEntity) {
                 $vendor = new VendorEntity($this->brandName($user, $userId), $userId);
@@ -66,6 +70,8 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
 
             if ($this->isAdministrativeUser($user)) {
                 $this->loadAdministrativeProfile($manager, $vendor);
+            } elseif ($this->isProfessionalUser($user)) {
+                $this->loadProfessionalProfile($manager, $vendor, $user);
             }
         }
 
@@ -78,6 +84,14 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
         $roles = json_decode((string) ($user['roles'] ?? '[]'), true);
 
         return is_array($roles) && in_array('ROLE_ADMIN_BOOTSTRAP', $roles, true);
+    }
+
+    /** @param array<string, mixed> $user */
+    private function isProfessionalUser(array $user): bool
+    {
+        $roles = json_decode((string) ($user['roles'] ?? '[]'), true);
+
+        return is_array($roles) && in_array('ROLE_PRO', $roles, true);
     }
 
     private function loadAdministrativeProfile(EntityManagerInterface $manager, VendorEntity $vendor): void
@@ -133,14 +147,93 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
     }
 
     /** @param array<string, mixed> $user */
+    private function loadProfessionalProfile(EntityManagerInterface $manager, VendorEntity $vendor, array $user): void
+    {
+        $definition = $this->professionalDefinition((string) ($user['email'] ?? ''));
+        $vendor->rename($definition['brand']);
+
+        $profile = $manager->getRepository(VendorProfileEntity::class)->findOneBy(['vendor' => $vendor]);
+        if (!$profile instanceof VendorProfileEntity) {
+            $profile = new VendorProfileEntity($vendor);
+            $vendor->setProfile($profile);
+            $manager->persist($profile);
+        }
+        $profile
+            ->updateProfile(
+                displayName: $definition['display'],
+                about: $definition['about'],
+                website: null,
+                socials: null,
+                seoTitle: $definition['brand'],
+                seoDescription: $definition['about'],
+            )
+            ->publish();
+
+        $avatar = $manager->getRepository(VendorProfileAvatarEntity::class)->findOneBy(['vendor' => $vendor]);
+        if (!$avatar instanceof VendorProfileAvatarEntity) {
+            $avatar = new VendorProfileAvatarEntity($vendor, $definition['avatar']);
+            $manager->persist($avatar);
+        } else {
+            $avatar->update($definition['avatar']);
+        }
+
+        $cover = $manager->getRepository(VendorProfileCoverEntity::class)->findOneBy(['vendor' => $vendor]);
+        if (!$cover instanceof VendorProfileCoverEntity) {
+            $cover = new VendorProfileCoverEntity($vendor, $definition['cover']);
+            $manager->persist($cover);
+        } else {
+            $cover->update($definition['cover']);
+        }
+    }
+
+    /** @return array{brand: string, display: string, about: string, avatar: string, cover: string} */
+    private function professionalDefinition(string $email): array
+    {
+        return match (strtolower(trim($email))) {
+            'alex.pro@smartresponsor.local' => [
+                'brand' => 'OneTasker Houston',
+                'display' => 'Alex Morgan',
+                'about' => 'Indoor home-service professional focused on TV mounting, fixtures, lighting, ceiling fans, smart locks, doorbells, and appliance installation across west Houston.',
+                'avatar' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=640&h=640&q=85',
+                'cover' => 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1600&h=600&q=85',
+            ],
+            'maria.pro@smartresponsor.local' => [
+                'brand' => 'Katy Home Care',
+                'display' => 'Maria Hernandez',
+                'about' => 'Residential cleaning and home-organization professional serving Katy and nearby west Houston neighborhoods.',
+                'avatar' => 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=640&h=640&q=85',
+                'cover' => 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1600&h=600&q=85',
+            ],
+            'daniel.pro@smartresponsor.local' => [
+                'brand' => 'Bayou Assembly & Mounting',
+                'display' => 'Daniel Brooks',
+                'about' => 'Furniture assembly, wall mounting, art and mirror hanging, shelving, and window-treatment installation for Houston-area homes.',
+                'avatar' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=640&h=640&q=85',
+                'cover' => 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1600&h=600&q=85',
+            ],
+            default => [
+                'brand' => 'Houston Home Services',
+                'display' => 'Houston Home Services',
+                'about' => 'Residential indoor home-service professional serving the Houston metro area.',
+                'avatar' => 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=640&h=640&q=85',
+                'cover' => 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1600&h=600&q=85',
+            ],
+        };
+    }
+
+    /** @param array<string, mixed> $user */
     private function brandName(array $user, int $userId): string
     {
+        $email = trim((string) ($user['email'] ?? ''));
+        if ($this->isProfessionalUser($user)) {
+            return $this->professionalDefinition($email)['brand'];
+        }
+
         $displayName = trim((string) ($user['display_name'] ?? ''));
         if ('' !== $displayName) {
             return $displayName;
         }
 
-        $email = trim((string) ($user['email'] ?? ''));
         if ('' !== $email) {
             return strstr($email, '@', true) ?: $email;
         }
