@@ -39,6 +39,7 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
             }
 
             if (!$this->isAdministrativeUser($user) && !$this->isProfessionalUser($user)) {
+                $this->deactivateNonProfessionalVendor($manager, $userId);
                 continue;
             }
 
@@ -76,6 +77,32 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
         }
 
         $manager->flush();
+    }
+
+    private function deactivateNonProfessionalVendor(EntityManagerInterface $manager, int $userId): void
+    {
+        $vendor = $manager->getRepository(VendorEntity::class)->findOneBy(['ownerUserId' => $userId]);
+        if (!$vendor instanceof VendorEntity) {
+            return;
+        }
+
+        $vendor->deactivate();
+        $manager->persist($vendor);
+
+        $assignment = $manager->getRepository(VendorUserAssignmentEntity::class)->findOneBy([
+            'vendor' => $vendor,
+            'userId' => $userId,
+        ]);
+        if ($assignment instanceof VendorUserAssignmentEntity) {
+            $assignment->revoke()->clearPrimary();
+            $manager->persist($assignment);
+        }
+
+        $profile = $manager->getRepository(VendorProfileEntity::class)->findOneBy(['vendor' => $vendor]);
+        if ($profile instanceof VendorProfileEntity) {
+            $profile->unpublish();
+            $manager->persist($profile);
+        }
     }
 
     /** @param array<string, mixed> $user */
