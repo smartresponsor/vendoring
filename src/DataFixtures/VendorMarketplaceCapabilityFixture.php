@@ -48,6 +48,17 @@ final class VendorMarketplaceCapabilityFixture extends Fixture implements Fixtur
             $capabilities[$key]['offeringIds'][] = $offeringId;
         }
 
+        foreach ($manager->getRepository(VendorServiceEntity::class)->findAll() as $existingService) {
+            if (!$existingService instanceof VendorServiceEntity || 'retailing' !== ($existingService->getPayload()['source'] ?? null)) {
+                continue;
+            }
+
+            $key = $existingService->getVendor()->getId().':'.$existingService->getCategoryId();
+            if (!isset($capabilities[$key])) {
+                $existingService->setStatus('inactive');
+            }
+        }
+
         foreach ($capabilities as $capability) {
             $vendor = $manager->getRepository(VendorEntity::class)->find($capability['vendorId']);
             if (!$vendor instanceof VendorEntity) {
