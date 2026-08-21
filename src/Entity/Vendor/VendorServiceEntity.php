@@ -22,7 +22,7 @@ class VendorServiceEntity extends VendorAbstractEntity
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private VendorEntity $vendor;
 
-    #[ORM\Column(name: 'category_id', type: 'string', length: 64)]
+    #[ORM\Column(name: 'category_id', type: 'string', length: 255)]
     private string $categoryId;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

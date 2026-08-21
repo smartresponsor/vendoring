@@ -25,38 +25,27 @@ final class VendorMarketplaceCapabilityFixture extends Fixture implements Fixtur
         }
 
         $rows = $manager->getConnection()->fetchAllAssociative(
-            "SELECT id, owner_id, category_id, catalog_code FROM retail WHERE kind = 'service' AND owner_type = 'vendor' AND object_status = 'published' ORDER BY owner_id, category_id, id",
+            "SELECT id, owner_id, type_path, catalog_code FROM retail WHERE kind = 'service' AND owner_type = 'vendor' AND object_status = 'published' ORDER BY owner_id, type_path, id",
         );
 
-        /** @var array<string, array{vendorId: int, categoryId: string, catalogCode: ?string, offeringIds: list<int>}> $capabilities */
+        /** @var array<string, array{vendorId: int, typePath: string, catalogCode: ?string, offeringIds: list<int>}> $capabilities */
         $capabilities = [];
         foreach ($rows as $row) {
             $vendorId = is_numeric($row['owner_id'] ?? null) ? (int) $row['owner_id'] : 0;
-            $categoryId = trim((string) ($row['category_id'] ?? ''));
+            $typePath = trim((string) ($row['type_path'] ?? ''));
             $offeringId = is_numeric($row['id'] ?? null) ? (int) $row['id'] : 0;
-            if ($vendorId < 1 || '' === $categoryId || $offeringId < 1) {
+            if ($vendorId < 1 || '' === $typePath || $offeringId < 1) {
                 continue;
             }
 
-            $key = $vendorId.':'.$categoryId;
+            $key = $vendorId.':'.$typePath;
             $capabilities[$key] ??= [
                 'vendorId' => $vendorId,
-                'categoryId' => $categoryId,
+                'typePath' => $typePath,
                 'catalogCode' => null === ($row['catalog_code'] ?? null) ? null : trim((string) $row['catalog_code']),
                 'offeringIds' => [],
             ];
             $capabilities[$key]['offeringIds'][] = $offeringId;
-        }
-
-        foreach ($manager->getRepository(VendorServiceEntity::class)->findAll() as $existingService) {
-            if (!$existingService instanceof VendorServiceEntity || 'retailing' !== ($existingService->getPayload()['source'] ?? null)) {
-                continue;
-            }
-
-            $key = $existingService->getVendor()->getId().':'.$existingService->getCategoryId();
-            if (!isset($capabilities[$key])) {
-                $existingService->setStatus('inactive');
-            }
         }
 
         foreach ($capabilities as $capability) {
@@ -68,16 +57,17 @@ final class VendorMarketplaceCapabilityFixture extends Fixture implements Fixtur
             $payload = [
                 'source' => 'retailing',
                 'catalogCode' => $capability['catalogCode'],
+                'typePath' => $capability['typePath'],
                 'offeringIds' => array_values(array_unique($capability['offeringIds'])),
             ];
-            $code = 'services:'.$capability['categoryId'];
+            $code = 'retailing:'.$capability['typePath'];
 
             $service = $manager->getRepository(VendorServiceEntity::class)->findOneBy([
                 'vendor' => $vendor,
-                'categoryId' => $capability['categoryId'],
+                'categoryId' => $capability['typePath'],
             ]);
             if (!$service instanceof VendorServiceEntity) {
-                $service = new VendorServiceEntity($vendor, $capability['categoryId'], $code, $payload);
+                $service = new VendorServiceEntity($vendor, $capability['typePath'], $code, $payload);
                 $manager->persist($service);
             } else {
                 $service->update($code, $payload)->setStatus('active');
