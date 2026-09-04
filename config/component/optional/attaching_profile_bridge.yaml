@@ -1,14 +1,14 @@
 # Optional host-level bridge. Import this file only in applications where Attaching is installed
-# and exposes App\Attaching\ServiceInterface\Attachment\AttachmentPrimaryLinkResolverServiceInterface.
+# and exposes App\Attaching\ServiceInterface\Linking\Attachment\AttachmentPrimaryLinkResolverServiceInterface.
 services:
   App\Vendoring\Service\Attachment\Bridge\VendorAttachingOwnerPurgeService:
     arguments:
-      $attachmentOwnerPurgeService: '@App\Attaching\ServiceInterface\Attachment\AttachmentOwnerPurgeServiceInterface'
+      $attachmentOwnerPurgeService: '@App\Attaching\ServiceInterface\Linking\Attachment\AttachmentOwnerPurgeServiceInterface'
 
   App\Vendoring\ServiceInterface\Attachment\VendorAttachmentOwnerPurgeServiceInterface: '@App\Vendoring\Service\Attachment\Bridge\VendorAttachingOwnerPurgeService'
 
   App\Vendoring\Service\Profile\Bridge\VendorAttachingProfileAttachmentResolverService:
     arguments:
-      $attachmentPrimaryLinkResolver: '@App\Attaching\ServiceInterface\Attachment\AttachmentPrimaryLinkResolverServiceInterface'
+      $attachmentPrimaryLinkResolver: '@App\Attaching\ServiceInterface\Linking\Attachment\AttachmentPrimaryLinkResolverServiceInterface'
 
   App\Vendoring\ServiceInterface\Profile\VendorProfileAttachmentResolverServiceInterface: '@App\Vendoring\Service\Profile\Bridge\VendorAttachingProfileAttachmentResolverService'
