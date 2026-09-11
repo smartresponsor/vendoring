@@ -95,7 +95,7 @@ services:
     tags: ['controller.service_arguments']
   App\Vendoring\ServiceInterface\Crud\VendorCrudServiceInterface:
     alias: App\Vendoring\Service\Crud\VendorCrudService
-  App\Vendoring\ServiceInterface\Attachment\VendorAttachmentOwnerPurgeServiceInterface: '@App\Vendoring\Service\Attachment\NullVendorAttachmentOwnerPurgeService'
+  App\Vendoring\ServiceInterface\Attachment\VendorAttachmentOwnerPurgeServiceInterface: '@App\Vendoring\Service\Attachment\VendorAttachmentOwnerPurgeService'
   App\Vendoring\Form\:
     resource: '../../src/Form/'
 

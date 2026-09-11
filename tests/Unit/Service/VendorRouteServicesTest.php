@@ -9,7 +9,7 @@ use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
 use App\Cruding\Value\Resource\CrudResourceContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
-use App\Vendoring\Service\Attachment\NullVendorAttachmentOwnerPurgeService;
+use App\Vendoring\Service\Attachment\VendorAttachmentOwnerPurgeService;
 use App\Vendoring\Service\Vendor\VendorCreateService;
 use App\Vendoring\Service\Vendor\VendorDeleteService;
 use App\Vendoring\Service\Vendor\VendorHttpRouteResponseService;
@@ -173,7 +173,7 @@ final class VendorRouteServicesTest extends TestCase
             $this->responseService,
             $this->vendorRepository,
             $this->entityManager,
-            new NullVendorAttachmentOwnerPurgeService(),
+            new VendorAttachmentOwnerPurgeService(),
         );
 
         $response = $service->delete($this->context('delete', object: $vendor, identifierValue: 1));
