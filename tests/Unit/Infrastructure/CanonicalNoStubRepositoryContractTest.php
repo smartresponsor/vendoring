@@ -50,6 +50,7 @@ final class CanonicalNoStubRepositoryContractTest extends TestCase
             'deploy/',
             '.github/workflows/consuming.yml',
             '.consuming/',
+            '.gating/',
             'tools/report/VendorConfigGuardReport.php',
             '.php-cs-fixer.cache',
             '.patch-backup/',

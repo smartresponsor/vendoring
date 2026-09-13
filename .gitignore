@@ -10,6 +10,7 @@ logs/
 # Runtime/build scratch
 var/
 .cache/
+.phpunit.cache/
 .report/
 report/
 reports/

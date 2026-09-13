@@ -32,7 +32,8 @@ final class VendorMarketplaceCapabilityFixture extends Fixture implements Fixtur
         $capabilities = [];
         foreach ($rows as $row) {
             $vendorId = is_numeric($row['owner_id'] ?? null) ? (int) $row['owner_id'] : 0;
-            $typePath = trim((string) ($row['type_path'] ?? ''));
+            $typePathValue = $row['type_path'] ?? null;
+            $typePath = is_scalar($typePathValue) ? trim((string) $typePathValue) : '';
             $offeringId = is_numeric($row['id'] ?? null) ? (int) $row['id'] : 0;
             if ($vendorId < 1 || '' === $typePath || $offeringId < 1) {
                 continue;
@@ -42,7 +43,7 @@ final class VendorMarketplaceCapabilityFixture extends Fixture implements Fixtur
             $capabilities[$key] ??= [
                 'vendorId' => $vendorId,
                 'typePath' => $typePath,
-                'catalogCode' => null === ($row['catalog_code'] ?? null) ? null : trim((string) $row['catalog_code']),
+                'catalogCode' => is_scalar($row['catalog_code'] ?? null) ? trim((string) $row['catalog_code']) : null,
                 'offeringIds' => [],
             ];
             $capabilities[$key]['offeringIds'][] = $offeringId;

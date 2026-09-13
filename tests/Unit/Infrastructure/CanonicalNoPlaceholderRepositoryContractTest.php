@@ -26,6 +26,7 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
             $root.'/var/',
             $root.'/deploy/systemd/',
             $root.'/.consuming/',
+            $root.'/.gating/',
         ];
         $allowedFiles = [
             $root.'/composer.json',

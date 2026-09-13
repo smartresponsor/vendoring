@@ -33,7 +33,7 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
         );
 
         foreach ($users as $user) {
-            $userId = (int) ($user['id'] ?? 0);
+            $userId = is_numeric($user['id'] ?? null) ? (int) $user['id'] : 0;
             if ($userId < 1) {
                 continue;
             }
@@ -108,7 +108,7 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
     /** @param array<string, mixed> $user */
     private function isAdministrativeUser(array $user): bool
     {
-        $roles = json_decode((string) ($user['roles'] ?? '[]'), true);
+        $roles = json_decode($this->scalarString($user['roles'] ?? null, '[]'), true);
 
         return is_array($roles) && in_array('ROLE_ADMIN_BOOTSTRAP', $roles, true);
     }
@@ -116,7 +116,7 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
     /** @param array<string, mixed> $user */
     private function isProfessionalUser(array $user): bool
     {
-        $roles = json_decode((string) ($user['roles'] ?? '[]'), true);
+        $roles = json_decode($this->scalarString($user['roles'] ?? null, '[]'), true);
 
         return is_array($roles) && in_array('ROLE_PRO', $roles, true);
     }
@@ -176,7 +176,7 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
     /** @param array<string, mixed> $user */
     private function loadProfessionalProfile(EntityManagerInterface $manager, VendorEntity $vendor, array $user): void
     {
-        $definition = $this->professionalDefinition((string) ($user['email'] ?? ''));
+        $definition = $this->professionalDefinition($this->scalarString($user['email'] ?? null));
         $vendor->rename($definition['brand']);
 
         $profile = $manager->getRepository(VendorProfileEntity::class)->findOneBy(['vendor' => $vendor]);
@@ -251,12 +251,12 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
     /** @param array<string, mixed> $user */
     private function brandName(array $user, int $userId): string
     {
-        $email = trim((string) ($user['email'] ?? ''));
+        $email = trim($this->scalarString($user['email'] ?? null));
         if ($this->isProfessionalUser($user)) {
             return $this->professionalDefinition($email)['brand'];
         }
 
-        $displayName = trim((string) ($user['display_name'] ?? ''));
+        $displayName = trim($this->scalarString($user['display_name'] ?? null));
         if ('' !== $displayName) {
             return $displayName;
         }
@@ -266,5 +266,10 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
         }
 
         return 'Vendor '.$userId;
+    }
+
+    private function scalarString(mixed $value, string $default = ''): string
+    {
+        return is_scalar($value) ? (string) $value : $default;
     }
 }
