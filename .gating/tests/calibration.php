@@ -10,9 +10,15 @@ use Gating\Gate\Contract\RuleContext;
 use Gating\Gate\Inventory\InventoryScanner;
 use Gating\Gate\Rule\Canon\Canon027DatabaseEngineBaselineRule;
 use Gating\Gate\Rule\Canon\Canon028DualDoctrineConnectionRule;
+use Gating\Gate\Rule\Canon\Canon032BundleRegistrationRule;
+use Gating\Gate\Rule\Canon\Canon035SymfonyContainerReuseRule;
 use Gating\Gate\Rule\Canon\Canon036DocumentationProducerOwnershipRule;
 use Gating\Gate\Rule\Canon\Canon037GeneratedReferenceArtifactRule;
 use Gating\Gate\Rule\Canon\Canon038ConfigYamlSubjectPrefixRule;
+use Gating\Gate\Rule\Canon\Canon039PhpTestToolingRule;
+use Gating\Gate\Rule\Canon\Canon040PhpTestCoverageRule;
+use Gating\Gate\Rule\Canon\Canon041BehavioralUiTestToolingRule;
+use Gating\Gate\Rule\Canon\Canon042BehavioralUiCoverageRule;
 use Gating\Gate\Rule\Documentation\DocblockPreservationRule;
 use Gating\Gate\Rule\Mirror\ServiceInterfaceMirrorRule;
 use Gating\Gate\Rule\Mutation\MutationSafetyRule;
@@ -107,6 +113,31 @@ YAML);
     $databaseEngines = (new Canon027DatabaseEngineBaselineRule())->check(new RuleContext($root));
     $assert('failed' === $databaseEngines->status, 'MySQL must fail the PostgreSQL and SQLite engine baseline.');
 
+    $appKernelRoot = $root.'/app-kernel';
+    mkdir($appKernelRoot.'/app', 0777, true);
+    mkdir($appKernelRoot.'/bin', 0777, true);
+    mkdir($appKernelRoot.'/config', 0777, true);
+    mkdir($appKernelRoot.'/src', 0777, true);
+    file_put_contents($appKernelRoot.'/composer.json', '{"require":{"symfony/framework-bundle":"^8.1"}}');
+    file_put_contents($appKernelRoot.'/bin/console', "#!/usr/bin/env php\n");
+    file_put_contents($appKernelRoot.'/app/Kernel.php', "<?php namespace App; final class Kernel {}\n");
+    file_put_contents($appKernelRoot.'/src/ExampleBundle.php', "<?php\nnamespace App\\Example;\nfinal class ExampleBundle {}\n");
+    file_put_contents($appKernelRoot.'/config/bundles.php', "<?php return [App\\Example\\ExampleBundle::class => ['all' => true]];\n");
+    $bundleRegistration = (new Canon032BundleRegistrationRule())->check(new RuleContext($appKernelRoot));
+    $assert('passed' === $bundleRegistration->status, 'Canonical app/Kernel.php standalone mode must be recognized by Canon032; got '.$bundleRegistration->status.': '.$bundleRegistration->message.' '.implode(' | ', $bundleRegistration->evidence));
+    $containerReuse = (new Canon035SymfonyContainerReuseRule())->check(new RuleContext($appKernelRoot));
+    $assert('passed' === $containerReuse->status, 'Canonical app/Kernel.php standalone mode must be recognized by Canon035; got '.$containerReuse->status.': '.$containerReuse->message.' '.implode(' | ', $containerReuse->evidence));
+    unlink($appKernelRoot.'/composer.json');
+    unlink($appKernelRoot.'/bin/console');
+    unlink($appKernelRoot.'/app/Kernel.php');
+    unlink($appKernelRoot.'/src/ExampleBundle.php');
+    unlink($appKernelRoot.'/config/bundles.php');
+    rmdir($appKernelRoot.'/app');
+    rmdir($appKernelRoot.'/bin');
+    rmdir($appKernelRoot.'/config');
+    rmdir($appKernelRoot.'/src');
+    rmdir($appKernelRoot);
+
     $yamlRoot = $root.'/yaml-prefix';
     mkdir($yamlRoot.'/config/packages', 0777, true);
     mkdir($yamlRoot.'/config/routes', 0777, true);
@@ -133,6 +164,127 @@ JSON);
     $yamlPrefix = (new Canon038ConfigYamlSubjectPrefixRule())->check(new RuleContext($yamlRoot));
     $assert('failed' === $yamlPrefix->status, 'Subject vocabulary after the semantic filename must fail the left-edge Canon038 prefix contract.');
     unlink($yamlRoot.'/config/packages/doctrine_catalog.yaml');
+
+    $testingRoot = $root.'/php-test-coverage';
+    mkdir($testingRoot.'/src', 0777, true);
+    mkdir($testingRoot.'/var/coverage', 0777, true);
+    file_put_contents($testingRoot.'/src/ExampleService.php', '<?php namespace App\\Service; final class ExampleService { public function run(bool $flag): int { return $flag ? 1 : 0; } }'."\n");
+    file_put_contents($testingRoot.'/composer.json', json_encode([
+        'require' => ['php' => '^8.4'],
+        'require-dev' => ['phpunit/phpunit' => '^13.3.3'],
+        'scripts' => [
+            'test' => 'phpunit',
+            'test:coverage' => 'phpunit --branch-coverage --coverage-text=var/coverage/summary.txt',
+        ],
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    file_put_contents($testingRoot.'/phpunit.xml.dist', <<<'XML'
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+  <source>
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+  </source>
+  <coverage includeUncoveredFiles="true" branchCoverage="true">
+    <report>
+      <text outputFile="var/coverage/summary.txt" showOnlySummary="true"/>
+    </report>
+  </coverage>
+</phpunit>
+XML);
+    $testTooling = (new Canon039PhpTestToolingRule())->check(new RuleContext($testingRoot));
+    $assert('passed' === $testTooling->status, 'Canonical PHPUnit dependency/config/scripts must pass Canon039; got '.$testTooling->status.': '.$testTooling->message.' '.implode(' | ', $testTooling->evidence));
+
+    file_put_contents($testingRoot.'/var/coverage/summary.txt', <<<'COVERAGE'
+Code Coverage Report:
+  Methods: 80.00% (4/5)
+  Branches: 70.00% (7/10)
+  Lines: 80.00% (8/10)
+COVERAGE);
+    touch($testingRoot.'/var/coverage/summary.txt', time() + 5);
+    $testCoverage = (new Canon040PhpTestCoverageRule())->check(new RuleContext($testingRoot));
+    $assert('passed' === $testCoverage->status, 'Exactly 80/80/70 coverage must pass Canon040; got '.$testCoverage->status.': '.$testCoverage->message.' '.implode(' | ', $testCoverage->evidence));
+
+    file_put_contents($testingRoot.'/var/coverage/summary.txt', <<<'COVERAGE'
+Code Coverage Report:
+  Methods: 40.00% (2/5)
+  Branches: 30.00% (3/10)
+  Lines: 40.00% (4/10)
+COVERAGE);
+    touch($testingRoot.'/var/coverage/summary.txt', time() + 5);
+    $testCoverage = (new Canon040PhpTestCoverageRule())->check(new RuleContext($testingRoot));
+    $assert('warning' === $testCoverage->status && str_contains($testCoverage->message, 'HIGH_TEST_DEBT'), '40/40/30 coverage must warn and classify HIGH_TEST_DEBT.');
+
+    file_put_contents($testingRoot.'/var/coverage/summary.txt', <<<'COVERAGE'
+Code Coverage Report:
+  Methods: 100.00% (5/5)
+  Lines: 100.00% (10/10)
+COVERAGE);
+    touch($testingRoot.'/var/coverage/summary.txt', time() + 5);
+    $testCoverage = (new Canon040PhpTestCoverageRule())->check(new RuleContext($testingRoot));
+    $assert('warning' === $testCoverage->status && str_contains(implode(' | ', $testCoverage->evidence), 'Missing Branches metric'), 'Missing branch instrumentation must warn instead of being treated as full branch coverage.');
+
+    $uiTestingRoot = $root.'/behavioral-ui-testing';
+    mkdir($uiTestingRoot.'/src', 0777, true);
+    mkdir($uiTestingRoot.'/var/coverage', 0777, true);
+    file_put_contents($uiTestingRoot.'/src/Kernel.php', "<?php namespace App; final class Kernel {}\n");
+    file_put_contents($uiTestingRoot.'/composer.json', json_encode([
+        'require' => ['symfony/framework-bundle' => '^8.1'],
+        'require-dev' => [
+            'phpunit/phpunit' => '^13.3',
+            'symfony/test-pack' => '^2.0',
+            'symfony/panther' => '^2.3',
+        ],
+        'scripts' => ['test' => 'phpunit'],
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    file_put_contents($uiTestingRoot.'/package.json', json_encode([
+        'devDependencies' => ['@playwright/test' => '^1.0'],
+        'scripts' => ['test:ui' => 'playwright test'],
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    file_put_contents($uiTestingRoot.'/playwright.config.ts', "export default {};\n");
+
+    $behavioralTooling = (new Canon041BehavioralUiTestToolingRule())->check(new RuleContext($uiTestingRoot));
+    $assert('passed' === $behavioralTooling->status, 'Canonical Symfony Test Pack, Panther, and Playwright tooling must pass Canon041; got '.$behavioralTooling->status.': '.$behavioralTooling->message.' '.implode(' | ', $behavioralTooling->evidence));
+
+    file_put_contents($uiTestingRoot.'/var/coverage/behavioral-ui.json', json_encode([
+        'functional' => ['covered' => 8, 'total' => 10],
+        'behavioral' => ['covered' => 8, 'total' => 10],
+        'ui' => ['covered' => 7, 'total' => 10],
+        'critical' => ['covered' => 3, 'total' => 3],
+    ], JSON_PRETTY_PRINT));
+    touch($uiTestingRoot.'/var/coverage/behavioral-ui.json', time() + 5);
+    $behavioralCoverage = (new Canon042BehavioralUiCoverageRule())->check(new RuleContext($uiTestingRoot));
+    $assert('passed' === $behavioralCoverage->status, 'Exactly 80/80/70/100 behavioral/UI coverage must pass Canon042; got '.$behavioralCoverage->status.': '.$behavioralCoverage->message.' '.implode(' | ', $behavioralCoverage->evidence));
+
+    file_put_contents($uiTestingRoot.'/var/coverage/behavioral-ui.json', json_encode([
+        'functional' => ['covered' => 4, 'total' => 10],
+        'behavioral' => ['covered' => 4, 'total' => 10],
+        'ui' => ['covered' => 3, 'total' => 10],
+        'critical' => ['covered' => 2, 'total' => 3],
+    ], JSON_PRETTY_PRINT));
+    touch($uiTestingRoot.'/var/coverage/behavioral-ui.json', time() + 5);
+    $behavioralCoverage = (new Canon042BehavioralUiCoverageRule())->check(new RuleContext($uiTestingRoot));
+    $assert('warning' === $behavioralCoverage->status && str_contains($behavioralCoverage->message, 'HIGH_BEHAVIORAL_TEST_DEBT'), '40/40/30/66.7 behavioral/UI coverage must warn and classify HIGH_BEHAVIORAL_TEST_DEBT.');
+
+    unlink($uiTestingRoot.'/var/coverage/behavioral-ui.json');
+    unlink($uiTestingRoot.'/playwright.config.ts');
+    unlink($uiTestingRoot.'/package.json');
+    unlink($uiTestingRoot.'/composer.json');
+    unlink($uiTestingRoot.'/src/Kernel.php');
+    rmdir($uiTestingRoot.'/var/coverage');
+    rmdir($uiTestingRoot.'/var');
+    rmdir($uiTestingRoot.'/src');
+    rmdir($uiTestingRoot);
+
+    unlink($testingRoot.'/var/coverage/summary.txt');
+    unlink($testingRoot.'/phpunit.xml.dist');
+    unlink($testingRoot.'/composer.json');
+    unlink($testingRoot.'/src/ExampleService.php');
+    rmdir($testingRoot.'/var/coverage');
+    rmdir($testingRoot.'/var');
+    rmdir($testingRoot.'/src');
+    rmdir($testingRoot);
+
     unlink($root.'/bin/console');
     unlink($root.'/config/bundles.php');
     mkdir($root.'/public/bundles/vendor', 0777, true);
@@ -156,6 +308,11 @@ JSON);
         'mutation_scan_excluded_paths' => ['.automation/**'],
     ]]));
     $assert('passed' === $mutation->status, 'Explicit component mutation-scan exclusion must suppress only the declared path.');
+    unlink($root.'/.automation/cleanup.ps1');
+    mkdir($root.'/.gating', 0777, true);
+    file_put_contents($root.'/.gating/internal-cleanup.ps1', $dangerousMutation);
+    $mutation = (new MutationSafetyRule())->check(new RuleContext($root));
+    $assert('passed' === $mutation->status, 'Consumer-local .gating tooling must not be treated as component mutation surface.');
 
     mkdir($root.'/src/Service/Example', 0777, true);
     mkdir($root.'/src/Contract', 0777, true);
