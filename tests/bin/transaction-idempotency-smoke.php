@@ -39,12 +39,12 @@ if (!str_contains($repoInterface, 'existsForVendorOrderProject')) {
     exit(1);
 }
 
-if (!str_contains($repo, 'transaction.projectId IS NULL')) {
+if (!str_contains($repo, 't.projectId IS NULL')) {
     fwrite(STDERR, "null-project idempotency query branch missing in concrete repository\n");
     exit(1);
 }
 
-if (!str_contains($manager, 'duplicate_transaction')) {
+if (!str_contains($manager, 'VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION')) {
     fwrite(STDERR, "duplicate transaction guard missing in manager\n");
     exit(1);
 }

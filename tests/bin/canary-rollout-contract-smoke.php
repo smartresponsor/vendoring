@@ -13,8 +13,9 @@ use App\Vendoring\Service\Rollout\VendorTrafficCohortResolverService;
 require dirname(__DIR__, 2).'/vendor/autoload.php';
 
 $root = dirname(__DIR__, 2);
-$observabilityDir = $root.'/var/observability';
-$faultToleranceDir = $root.'/var/fault-tolerance';
+$smokeStateDir = sys_get_temp_dir().'/vendoring-canary-smoke-'.bin2hex(random_bytes(4));
+$observabilityDir = $smokeStateDir.'/observability';
+$faultToleranceDir = $smokeStateDir.'/fault-tolerance';
 
 @mkdir($observabilityDir, 0777, true);
 @mkdir($faultToleranceDir.'/circuit-breakers', 0777, true);

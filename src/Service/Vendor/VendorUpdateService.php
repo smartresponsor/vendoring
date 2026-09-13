@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Vendor;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
-use App\Cruding\Value\Resource\CrudResourceContract;
+use App\Cruding\DTO\Entrypoint\CrudServiceContextDTO;
+use App\Cruding\ValueObject\Resource\CrudResourceContract;
 use App\Vendoring\DTO\VendorUpdateDTO;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Event\Vendor\VendorActivatedEvent;
@@ -28,7 +28,7 @@ final class VendorUpdateService extends AbstractVendorCrudRouteService
     ) {
     }
 
-    public function get(CrudServiceContext $context): CrudResourceContract
+    public function get(CrudServiceContextDTO $context): CrudResourceContract
     {
         return $this->responseService->read(
             $context,
@@ -39,22 +39,22 @@ final class VendorUpdateService extends AbstractVendorCrudRouteService
         );
     }
 
-    public function post(CrudServiceContext $context): CrudResourceContract
+    public function post(CrudServiceContextDTO $context): CrudResourceContract
     {
         return $this->mutate($context);
     }
 
-    public function put(CrudServiceContext $context): CrudResourceContract
+    public function put(CrudServiceContextDTO $context): CrudResourceContract
     {
         return $this->mutate($context);
     }
 
-    public function patch(CrudServiceContext $context): CrudResourceContract
+    public function patch(CrudServiceContextDTO $context): CrudResourceContract
     {
         return $this->mutate($context);
     }
 
-    private function mutate(CrudServiceContext $context): CrudResourceContract
+    private function mutate(CrudServiceContextDTO $context): CrudResourceContract
     {
         $input = $context->request->request->all();
         $vendor = $this->resolveVendor($context);
@@ -103,7 +103,7 @@ final class VendorUpdateService extends AbstractVendorCrudRouteService
         return $vendor;
     }
 
-    private function resolveVendor(CrudServiceContext $context): VendorEntity
+    private function resolveVendor(CrudServiceContextDTO $context): VendorEntity
     {
         if ($context->object instanceof VendorEntity) {
             return $context->object;

@@ -25,7 +25,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             $payload = KernelRuntimeHarness::decodeJson($response);
 
             self::assertSame(422, $response->getStatusCode());
-            self::assertSame($expectedError, $payload['error'] ?? null);
+            self::assertSame($expectedError, $payload['errorCode'] ?? null);
         } finally {
             KernelRuntimeHarness::cleanupRuntimeState($kernel);
         }
@@ -71,7 +71,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             $payload = KernelRuntimeHarness::decodeJson($response);
 
             self::assertSame(422, $response->getStatusCode());
-            self::assertSame('retention_fee_percent_out_of_range', $payload['error'] ?? null);
+            self::assertSame('retention_fee_percent_out_of_range', $payload['errorCode'] ?? null);
         } finally {
             KernelRuntimeHarness::cleanupRuntimeState($kernel);
         }
@@ -124,7 +124,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             $payload = KernelRuntimeHarness::decodeJson($response);
 
             self::assertSame(422, $response->getStatusCode());
-            self::assertSame('retention_fee_percent_out_of_range', $payload['error'] ?? null);
+            self::assertSame('retention_fee_percent_out_of_range', $payload['errorCode'] ?? null);
         } finally {
             KernelRuntimeHarness::cleanupRuntimeState($kernel);
         }
@@ -149,7 +149,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             $payload = KernelRuntimeHarness::decodeJson($response);
 
             self::assertSame(422, $response->getStatusCode());
-            self::assertSame('retention_fee_percent_required', $payload['error'] ?? null);
+            self::assertSame('retention_fee_percent_required', $payload['errorCode'] ?? null);
         } finally {
             KernelRuntimeHarness::cleanupRuntimeState($kernel);
         }
@@ -174,7 +174,7 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             $payload = KernelRuntimeHarness::decodeJson($response);
 
             self::assertSame(422, $response->getStatusCode());
-            self::assertSame('threshold_cents_required', $payload['error'] ?? null);
+            self::assertSame('threshold_cents_required', $payload['errorCode'] ?? null);
         } finally {
             KernelRuntimeHarness::cleanupRuntimeState($kernel);
         }

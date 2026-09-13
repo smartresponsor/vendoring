@@ -8,6 +8,7 @@ use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\Vendoring\Service\Profile\NullVendorProfileAttachmentResolverService;
 use App\Vendoring\Service\Profile\VendorProfileProjectionBuilderService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -100,7 +101,11 @@ final class VendorProfileProjectionBuilderTest extends TestCase
 
     private function buildService(): VendorProfileProjectionBuilderService
     {
-        return new VendorProfileProjectionBuilderService($this->vendorRepository, $this->profileRepository);
+        return new VendorProfileProjectionBuilderService(
+            $this->vendorRepository,
+            $this->profileRepository,
+            new NullVendorProfileAttachmentResolverService(),
+        );
     }
 
     private function forceId(VendorEntity $vendor, int $id): void

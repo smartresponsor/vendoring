@@ -81,6 +81,10 @@ final class VendorPayoutAccountRepository extends ServiceEntityRepository implem
 
     public function byId(mixed $id): ?object
     {
+        if (!is_scalar($id)) {
+            return null;
+        }
+
         $identifier = trim((string) $id);
         if ('' === $identifier) {
             return null;

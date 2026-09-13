@@ -48,7 +48,7 @@ final class VendorApiKeyRepository extends ServiceEntityRepository implements Ve
     {
         return $this->findOneBy([
             'tokenHash' => $tokenHash,
-            'status' => 'active',
+            'objectState.objectStatus' => 'active',
         ]);
     }
 }

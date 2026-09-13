@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Vendor;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
-use App\Cruding\Service\Crud\AbstractCrudService;
-use App\Cruding\Value\Resource\CrudResourceContract;
+use App\Cruding\DTO\Entrypoint\CrudServiceContextDTO;
+use App\Cruding\Service\CrudAbstractService;
+use App\Cruding\ValueObject\Resource\CrudResourceContract;
 use App\Vendoring\DTO\VendorCreateDTO;
 use App\Vendoring\DTO\VendorUpdateDTO;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\ServiceInterface\Crud\VendorCrudServiceInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-abstract class AbstractVendorCrudRouteService extends AbstractCrudService
+abstract class AbstractVendorCrudRouteService extends CrudAbstractService
 {
     public function __construct(
         private readonly VendorHttpRouteResponseService $responseService,
@@ -21,7 +21,7 @@ abstract class AbstractVendorCrudRouteService extends AbstractCrudService
     ) {
     }
 
-    public function get(CrudServiceContext $context): CrudResourceContract
+    public function get(CrudServiceContextDTO $context): CrudResourceContract
     {
         return match ($this->operation()) {
             'index' => $this->responseService->read(
@@ -52,7 +52,7 @@ abstract class AbstractVendorCrudRouteService extends AbstractCrudService
         };
     }
 
-    public function post(CrudServiceContext $context): CrudResourceContract
+    public function post(CrudServiceContextDTO $context): CrudResourceContract
     {
         return match ($this->operation()) {
             'create' => $this->createVendor($context),
@@ -61,21 +61,21 @@ abstract class AbstractVendorCrudRouteService extends AbstractCrudService
         };
     }
 
-    public function put(CrudServiceContext $context): CrudResourceContract
+    public function put(CrudServiceContextDTO $context): CrudResourceContract
     {
         return 'update' === $this->operation()
             ? $this->updateVendor($context)
             : $this->blocked($context);
     }
 
-    public function patch(CrudServiceContext $context): CrudResourceContract
+    public function patch(CrudServiceContextDTO $context): CrudResourceContract
     {
         return 'update' === $this->operation()
             ? $this->updateVendor($context)
             : $this->blocked($context);
     }
 
-    public function delete(CrudServiceContext $context): CrudResourceContract
+    public function delete(CrudServiceContextDTO $context): CrudResourceContract
     {
         return $this->blocked($context);
     }
@@ -89,7 +89,7 @@ abstract class AbstractVendorCrudRouteService extends AbstractCrudService
         return 'Vendor '.str_replace('/', ' ', $this->resourcePath()).' '.$this->operation();
     }
 
-    private function createVendor(CrudServiceContext $context): CrudResourceContract
+    private function createVendor(CrudServiceContextDTO $context): CrudResourceContract
     {
         $input = $context->request->request->all();
         $vendor = $this->vendorCrudService->create(new VendorCreateDTO(
@@ -106,7 +106,7 @@ abstract class AbstractVendorCrudRouteService extends AbstractCrudService
         );
     }
 
-    private function updateVendor(CrudServiceContext $context): CrudResourceContract
+    private function updateVendor(CrudServiceContextDTO $context): CrudResourceContract
     {
         $input = $context->request->request->all();
         $vendor = $this->resolveVendor($context);
@@ -125,7 +125,7 @@ abstract class AbstractVendorCrudRouteService extends AbstractCrudService
         );
     }
 
-    private function resolveVendor(CrudServiceContext $context): VendorEntity
+    private function resolveVendor(CrudServiceContextDTO $context): VendorEntity
     {
         if ($context->object instanceof VendorEntity) {
             return $context->object;
@@ -144,7 +144,7 @@ abstract class AbstractVendorCrudRouteService extends AbstractCrudService
         return $vendor;
     }
 
-    private function blocked(CrudServiceContext $context): CrudResourceContract
+    private function blocked(CrudServiceContextDTO $context): CrudResourceContract
     {
         return $this->responseService->blocked(
             $context,

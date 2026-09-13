@@ -9,23 +9,22 @@ namespace App\Vendoring\Service\Vendor\Runtime\Finance;
 use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
 use App\Vendoring\ServiceInterface\Api\VendorTenantQueryRequestResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeProjectionBuilderServiceInterface;
+use App\Vendoring\Support\Http\VendorApiErrorResponseTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 final readonly class VendorRuntimeFinanceShowService
 {
+    use VendorApiErrorResponseTrait;
+
     public function __construct(
         private VendorFinanceRuntimeProjectionBuilderServiceInterface $runtimeProjectionBuilder,
         private VendorTenantQueryRequestResolverServiceInterface $tenantQueryRequestResolver,
     ) {
     }
 
-    public function __invoke(object $request): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
-        if (!$request instanceof Request) {
-            return new JsonResponse(['error' => 'request_required'], 400);
-        }
-
         $vendorId = $this->attribute($request, 'id') ?? $this->attribute($request, 'slug') ?? $this->attribute($request, 'item') ?? (string) $request->query->get('vendorId', '');
         if ('' === $vendorId) {
             return new JsonResponse(['error' => 'vendor_identifier_required'], 422);
@@ -53,10 +52,5 @@ final readonly class VendorRuntimeFinanceShowService
         $value = $request->attributes->get($nameEntity);
 
         return is_scalar($value) && '' !== trim((string) $value) ? trim((string) $value) : null;
-    }
-
-    private function validationErrorResponse(string $errorCode, string $hint): JsonResponse
-    {
-        return new JsonResponse(['error' => $errorCode, 'hint' => $hint], 422);
     }
 }

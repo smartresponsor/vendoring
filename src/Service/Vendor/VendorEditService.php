@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Vendor;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
-use App\Cruding\Value\Resource\CrudResourceContract;
+use App\Cruding\DTO\Entrypoint\CrudServiceContextDTO;
+use App\Cruding\ValueObject\Resource\CrudResourceContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -18,7 +18,7 @@ final class VendorEditService extends AbstractVendorCrudRouteService
     ) {
     }
 
-    public function get(CrudServiceContext $context): CrudResourceContract
+    public function get(CrudServiceContextDTO $context): CrudResourceContract
     {
         return $this->responseService->read(
             $context,
@@ -44,7 +44,7 @@ final class VendorEditService extends AbstractVendorCrudRouteService
         return 'Vendor '.$this->resourcePath().' '.$this->operation();
     }
 
-    private function resolveVendor(CrudServiceContext $context): VendorEntity
+    private function resolveVendor(CrudServiceContextDTO $context): VendorEntity
     {
         if ($context->object instanceof VendorEntity) {
             return $context->object;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring;
 
+use App\Cruding\CrudingBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -76,7 +77,15 @@ final class Kernel extends BaseKernel
 
         $configDir = $this->getProjectDir().'/config';
 
-        $routes->import($configDir.'/platform/routes*.yaml');
-        $routes->import($configDir.'/platform/routes/**/*.yaml');
+        $crudingBundleFile = (new \ReflectionClass(CrudingBundle::class))->getFileName();
+        if (false === $crudingBundleFile) {
+            throw new \RuntimeException('cruding_bundle_path_unavailable');
+        }
+
+        $crudingRoot = \dirname($crudingBundleFile, 2);
+        $routes->import($configDir.'/routes_business.yaml');
+        $routes->import($crudingRoot.'/config/routes/crud_api_crud.yaml');
+        $routes->import($crudingRoot.'/config/routes/crud_crud.yaml');
+        $routes->import($configDir.'/routes_runtime.php');
     }
 }

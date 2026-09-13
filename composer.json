@@ -27,8 +27,13 @@
         "symfony/security-csrf": "^8.1",
         "nelmio/api-doc-bundle": "^5.3",
         "ext-pdo": "*",
-        "cruding/crud": "*@dev",
-        "objecting/object": "*@dev"
+        "collectioning/collection": "dev-master",
+        "cruding/crud": "dev-master",
+        "easycorp/easyadmin-bundle": "^5.0",
+        "interfacing/interface": "dev-master",
+        "objecting/object": "dev-master",
+        "tabling/table": "dev-master",
+        "viewing/view": "dev-master"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.3",
@@ -285,6 +290,9 @@
             "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter CanonicalIdeRuntimeArtifactContractTest"
         ],
         "test:integration": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration",
+        "test:integration:api-query": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter ApiQueryValidationKernelRuntimeTest",
+        "test:integration:transaction-kernel": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter VendorTransactionKernelRuntimeTest",
+        "test:integration:remaining": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter \"/(VendorReleaseBaselineRuntimeConsistencyTest|ProductionKernelBootTest|VendorRuntimeFinanceConsistencyTest|VendorRuntimeProfileReadinessConsistencyTest|VendorTransactionOperatorSurfaceTest|VendorStatementDeliveryRecipientConsistencyTest|VendorTransactionSqliteIntegrationTest)/\"",
         "test:mail": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --filter VendorStatementMailerServiceTest",
         "test:no-example-command-help": [
             "php tests/bin/no-example-command-help-smoke.php",
@@ -420,6 +428,13 @@
     "repositories": [
         {
             "type": "path",
+            "url": "../Collectioning",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
             "url": "../Objecting",
             "options": {
                 "symlink": true
@@ -428,6 +443,27 @@
         {
             "type": "path",
             "url": "../Cruding",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../Interfacing",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../Tabling",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../Viewing",
             "options": {
                 "symlink": true
             }

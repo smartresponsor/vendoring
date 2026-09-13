@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Vendor;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
-use App\Cruding\Value\Resource\CrudResourceContract;
+use App\Cruding\DTO\Entrypoint\CrudServiceContextDTO;
+use App\Cruding\ValueObject\Resource\CrudResourceContract;
 
 final readonly class VendorHttpRouteResponseService
 {
     public function read(
-        CrudServiceContext $context,
+        CrudServiceContextDTO $context,
         string $resourcePath,
         string $operation,
         string $title,
@@ -29,7 +29,7 @@ final readonly class VendorHttpRouteResponseService
     }
 
     public function mutation(
-        CrudServiceContext $context,
+        CrudServiceContextDTO $context,
         string $resourcePath,
         string $operation,
         string $title,
@@ -48,7 +48,7 @@ final readonly class VendorHttpRouteResponseService
     }
 
     public function blocked(
-        CrudServiceContext $context,
+        CrudServiceContextDTO $context,
         string $resourcePath,
         string $operation,
         string $title,
@@ -66,7 +66,7 @@ final readonly class VendorHttpRouteResponseService
     }
 
     private function contract(
-        CrudServiceContext $context,
+        CrudServiceContextDTO $context,
         string $resourcePath,
         string $operation,
         string $status,

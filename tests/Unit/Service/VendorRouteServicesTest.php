@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service;
 
-use App\Cruding\Dto\Crud\CrudContext;
-use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
-use App\Cruding\Value\Resource\CrudResourceContract;
+use App\Cruding\DTO\CrudContextDTO;
+use App\Cruding\DTO\Entrypoint\CrudServiceContextDTO;
+use App\Cruding\ValueObject\Resource\CrudResourceContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use App\Vendoring\Service\Attachment\VendorAttachmentOwnerPurgeService;
@@ -189,7 +189,7 @@ final class VendorRouteServicesTest extends TestCase
         ?object $object = null,
         string|int|null $identifierValue = null,
         array $requestData = [],
-    ): CrudServiceContext {
+    ): CrudServiceContextDTO {
         $request = new Request([], $requestData);
         $request->attributes->set('_route', 'vendor.'.$operation);
         $request->attributes->set('_crud_actor_is_admin', true);
@@ -198,9 +198,9 @@ final class VendorRouteServicesTest extends TestCase
             $request->attributes->set('_crud_actor_identity_value', $identifierValue);
         }
 
-        return new CrudServiceContext(
+        return new CrudServiceContextDTO(
             request: $request,
-            crudContext: new CrudContext(
+            crudContext: new CrudContextDTO(
                 view: 'admin',
                 operation: $operation,
                 resourcePath: 'vendor',

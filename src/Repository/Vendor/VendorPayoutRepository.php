@@ -71,12 +71,16 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
 
     public function byId(mixed $id): ?VendorPayoutEntity
     {
+        if (!is_scalar($id)) {
+            return null;
+        }
+
         $identifier = trim((string) $id);
         if ('' === $identifier) {
             return null;
         }
 
-        return $this->findOneBy(['payoutId' => $identifier]);
+        return $this->find($identifier);
     }
 
     public function insert(VendorPayoutEntity $payout): void

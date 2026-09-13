@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Vendor;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
-use App\Cruding\Value\Resource\CrudResourceContract;
+use App\Cruding\DTO\Entrypoint\CrudServiceContextDTO;
+use App\Cruding\ValueObject\Resource\CrudResourceContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
 use App\Vendoring\ServiceInterface\Attachment\VendorAttachmentOwnerPurgeServiceInterface;
@@ -22,7 +22,7 @@ final class VendorDeleteService extends AbstractVendorCrudRouteService
     ) {
     }
 
-    public function get(CrudServiceContext $context): CrudResourceContract
+    public function get(CrudServiceContextDTO $context): CrudResourceContract
     {
         return $this->responseService->read(
             $context,
@@ -33,17 +33,17 @@ final class VendorDeleteService extends AbstractVendorCrudRouteService
         );
     }
 
-    public function post(CrudServiceContext $context): CrudResourceContract
+    public function post(CrudServiceContextDTO $context): CrudResourceContract
     {
         return $this->deleteVendor($context);
     }
 
-    public function delete(CrudServiceContext $context): CrudResourceContract
+    public function delete(CrudServiceContextDTO $context): CrudResourceContract
     {
         return $this->deleteVendor($context);
     }
 
-    private function deleteVendor(CrudServiceContext $context): CrudResourceContract
+    private function deleteVendor(CrudServiceContextDTO $context): CrudResourceContract
     {
         $vendor = $this->resolveVendor($context);
         $vendorId = (string) ($context->identifierValue() ?? $vendor->getId());
@@ -63,7 +63,7 @@ final class VendorDeleteService extends AbstractVendorCrudRouteService
         );
     }
 
-    private function resolveVendor(CrudServiceContext $context): VendorEntity
+    private function resolveVendor(CrudServiceContextDTO $context): VendorEntity
     {
         if ($context->object instanceof VendorEntity) {
             return $context->object;

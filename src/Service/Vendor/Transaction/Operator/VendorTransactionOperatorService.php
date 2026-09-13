@@ -57,7 +57,7 @@ final class VendorTransactionOperatorService
 
         $input = new VendorTransactionCreateInputDTO(vendorId: $vendorId);
         $form = $this->formFactory->create(VendorTransactionCreateForm::class, $input, [
-            'action' => sprintf('/ops/vendor-transactions/%s/create', rawurlencode($vendorId)),
+            'action' => sprintf('/ops/vendor/transaction/%s/create', rawurlencode($vendorId)),
             'method' => 'POST',
             'csrf_protection' => false,
         ]);
@@ -85,6 +85,17 @@ final class VendorTransactionOperatorService
         return $this->redirectWithQuery($vendorId, 'message', 'Transaction created.');
     }
 
+    public function updateStatusById(int $id, Request $request): RedirectResponse
+    {
+        $transaction = $this->transactions->byId($id);
+
+        if (null === $transaction) {
+            return new RedirectResponse('/ops/vendor/transaction?error=not_found');
+        }
+
+        return $this->updateStatus($transaction->getVendorId(), $id, $request);
+    }
+
     /**
      * Handle minimal operator status update submission.
      */
@@ -98,7 +109,7 @@ final class VendorTransactionOperatorService
 
         $input = new VendorTransactionStatusUpdateInputDTO($transaction->getStatus());
         $form = $this->formFactory->create(VendorTransactionStatusUpdateForm::class, $input, [
-            'action' => sprintf('/ops/vendor-transactions/%s/%d/status', rawurlencode($vendorId), $id),
+            'action' => sprintf('/ops/vendor/transaction/%s/%d/status', rawurlencode($vendorId), $id),
             'method' => 'POST',
             'csrf_protection' => false,
         ]);
@@ -124,7 +135,7 @@ final class VendorTransactionOperatorService
     {
         $template = sprintf('%s.%s', 'ops/vendor_transactions/index', 'html.twig');
         $createForm = $this->formFactory->create(VendorTransactionCreateForm::class, new VendorTransactionCreateInputDTO(vendorId: $vendorId), [
-            'action' => sprintf('/ops/vendor-transactions/%s/create', rawurlencode($vendorId)),
+            'action' => sprintf('/ops/vendor/transaction/%s/create', rawurlencode($vendorId)),
             'method' => 'POST',
             'csrf_protection' => false,
         ]);
@@ -136,7 +147,7 @@ final class VendorTransactionOperatorService
                 VendorTransactionStatusUpdateForm::class,
                 new VendorTransactionStatusUpdateInputDTO($transaction->getStatus()),
                 [
-                    'action' => sprintf('/ops/vendor-transactions/%s/%d/status', rawurlencode($vendorId), $transaction->getId()),
+                    'action' => sprintf('/ops/vendor/transaction/%s/%d/status', rawurlencode($vendorId), $transaction->getId()),
                     'method' => 'POST',
                     'csrf_protection' => false,
                 ],
@@ -253,7 +264,7 @@ final class VendorTransactionOperatorService
 
     private function redirectWithQuery(string $vendorId, string $key, string $value): RedirectResponse
     {
-        return new RedirectResponse(sprintf('/ops/vendor-transactions/%s?%s=%s', rawurlencode($vendorId), rawurlencode($key), rawurlencode($value)));
+        return new RedirectResponse(sprintf('/ops/vendor/transaction/%s?%s=%s', rawurlencode($vendorId), rawurlencode($key), rawurlencode($value)));
     }
 
     private function nullableTrimmedProjectId(Request $request): ?string

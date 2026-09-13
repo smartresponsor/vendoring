@@ -41,9 +41,9 @@
 #   reserved component roots must not be captured as business resources.
 #
 # Canon:
-#   routeKey keeps full business chain, for example:
+#   routeKey keeps full business chain, such as:
 #     vendor.attachment.document.show
-#   template target may stay short, for example:
+#   template target may stay short, such as:
 #     document/show/index.html.twig
 #   no {ref}; use {id}/{slug}; use semantic {productId}/{mediaId} for relations.
 # ---------------------------------------------------------------------------

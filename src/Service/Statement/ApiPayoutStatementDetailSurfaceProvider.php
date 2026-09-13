@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Statement;
 
-use App\Cruding\Dto\Resource\CrudResourceRequest;
-use App\Cruding\ServiceInterface\Crud\Resource\CrudResourceProviderInterface;
-use App\Cruding\Value\Resource\CrudResourceContract;
+use App\Cruding\DTO\Resource\CrudResourceRequestDTO;
+use App\Cruding\ServiceInterface\Resource\CrudResourceProviderInterface;
+use App\Cruding\ValueObject\Resource\CrudResourceContract;
 use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
 use App\Vendoring\ServiceInterface\Api\VendorStatementWindowQueryRequestResolverServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementRequestResolverServiceInterface;
@@ -21,7 +21,7 @@ readonly class ApiPayoutStatementDetailSurfaceProvider implements CrudResourcePr
     ) {
     }
 
-    public function provide(CrudResourceRequest $request): CrudResourceContract
+    public function provide(CrudResourceRequestDTO $request): CrudResourceContract
     {
         $httpRequest = $request->httpRequest;
         if (null === $httpRequest) {
@@ -86,7 +86,7 @@ readonly class ApiPayoutStatementDetailSurfaceProvider implements CrudResourcePr
         );
     }
 
-    private function errorContract(CrudResourceRequest $request, string $errorCode, string $hint, int $statusCode = 422): CrudResourceContract
+    private function errorContract(CrudResourceRequestDTO $request, string $errorCode, string $hint, int $statusCode = 422): CrudResourceContract
     {
         return CrudResourceContract::forResource(
             'detail',

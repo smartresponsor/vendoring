@@ -188,6 +188,17 @@ final class VendorTransactionHttpService
         return new JsonResponse(['id' => $updated->getId(), 'status' => $updated->getStatus()]);
     }
 
+    public function updateStatusById(int $id, Request $request): JsonResponse
+    {
+        $transaction = $this->repo->byId($id);
+
+        if (!$transaction instanceof VendorTransactionEntity) {
+            return new JsonResponse(['error' => VendorTransactionErrorCodeValueObject::NOT_FOUND], 404);
+        }
+
+        return $this->updateStatus($transaction->getVendorId(), $id, $request);
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -198,7 +209,7 @@ final class VendorTransactionHttpService
             'vendorId' => $transaction->getVendorId(),
             'orderId' => $transaction->getOrderId(),
             'projectId' => $transaction->getProjectId(),
-            'amount' => $transaction->getAmount(),
+            'amount' => number_format((float) $transaction->getAmount(), 2, '.', ''),
             'status' => $transaction->getStatus(),
         ];
     }

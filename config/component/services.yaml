@@ -40,8 +40,6 @@ services:
       - '../../src/Service/Attachment/Bridge/'
       - '../../src/Command/VendorPayoutCreateCommand.php'
       - '../../src/Command/VendorPayoutProcessCommand.php'
-      - '../../src/Service/Payout/VendorPayoutService.php'
-      - '../../src/Service/Vendor/Payout/VendorPayoutHttpService.php'
       - '../../src/ValueObject/'
       - '../../src/Form/'
 
@@ -64,7 +62,6 @@ services:
       - '../../src/Service/Vendor/VendorHttpRequestTrait.php'
       - '../../src/Service/Vendor/VendorStatementRequestHttpResolutionTrait.php'
       - '../../src/Service/Vendor/Ownership/VendorOwnershipMutationService.php'
-      - '../../src/Service/Vendor/Payout/VendorPayoutHttpService.php'
   App\Vendoring\Service\Vendor\VendorIndexService:
     public: true
   App\Vendoring\Service\Vendor\VendorShowService:
@@ -91,6 +88,24 @@ services:
     public: true
     tags: ['controller.service_arguments']
   App\Vendoring\Service\Vendor\Transaction\VendorTransactionHttpService:
+    public: true
+    tags: ['controller.service_arguments']
+  App\Vendoring\Service\Vendor\Transaction\Operator\VendorTransactionOperatorService:
+    public: true
+    tags: ['controller.service_arguments']
+  App\Vendoring\Service\Ownership\VendorOwnershipHttpService:
+    public: true
+    tags: ['controller.service_arguments']
+  App\Vendoring\Service\Vendor\Runtime\Finance\VendorRuntimeFinanceShowService:
+    public: true
+    tags: ['controller.service_arguments']
+  App\Vendoring\Service\Vendor\Statement\Export\VendorStatementExportService:
+    public: true
+    tags: ['controller.service_arguments']
+  App\Vendoring\Service\Vendor\Payout\VendorPayoutHttpService:
+    public: true
+    tags: ['controller.service_arguments']
+  App\Vendoring\Service\Vendor\Payout\Account\VendorPayoutAccountService:
     public: true
     tags: ['controller.service_arguments']
   App\Vendoring\ServiceInterface\Crud\VendorCrudServiceInterface:
@@ -161,7 +176,7 @@ services:
   App\Vendoring\RepositoryInterface\Vendor\VendorWishlistRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorWishlistRepository'
 
   # Safe default; optional Attaching integration overrides this alias with the chained resolver.
-  App\Vendoring\ServiceInterface\Profile\VendorProfileAttachmentResolverServiceInterface: '@App\Vendoring\Service\Profile\NullVendorProfileAttachmentResolverService'
+  App\Vendoring\ServiceInterface\Profile\VendorProfileAttachmentResolverServiceInterface: '@App\Vendoring\Service\Profile\VendorProfileAttachmentResolverService'
   App\Vendoring\ServiceInterface\Profile\VendorPublicProfileSummaryProviderServiceInterface: '@App\Vendoring\Service\Profile\VendorPublicProfileSummaryProviderService'
   App\Vendoring\ServiceInterface\Profile\VendorProfileServiceInterface: '@App\Vendoring\Service\Profile\VendorProfileService'
   App\Vendoring\ServiceInterface\Billing\VendorBillingServiceInterface: '@App\Vendoring\Service\Billing\VendorBillingService'
@@ -177,6 +192,7 @@ services:
   App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixServiceInterface: '@App\Vendoring\Service\Security\VendorAuthorizationMatrixService'
   App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface: '@App\Vendoring\Service\Security\VendorApiKeyService'
   App\Vendoring\ServiceInterface\Payout\VendorPayoutAccountServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutAccountService'
+  App\Vendoring\ServiceInterface\Payout\VendorPayoutServiceInterface: '@App\Vendoring\Service\Payout\VendorPayoutService'
   App\Vendoring\ServiceInterface\Ledger\VendorSummaryServiceInterface: '@App\Vendoring\Service\Ledger\VendorSummaryService'
   App\Vendoring\ServiceInterface\Observability\VendorCorrelationContextServiceInterface: '@App\Vendoring\Service\Observability\VendorCorrelationContextService'
   App\Vendoring\ServiceInterface\Transaction\VendorTransactionLifecycleServiceInterface: '@App\Vendoring\Service\Transaction\VendorTransactionLifecycleService'
@@ -214,6 +230,8 @@ services:
   App\Vendoring\ServiceInterface\Ops\VendorRollbackDecisionEvaluatorServiceInterface: '@App\Vendoring\Service\Ops\VendorRollbackDecisionEvaluatorService'
   App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServiceInterface: '@App\Vendoring\Service\Ops\VendorRuntimeStatusProjectionBuilderService'
   App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface: '@App\Vendoring\Service\Ownership\VendorOwnershipProjectionBuilderService'
+  App\Vendoring\ServiceInterface\Ownership\VendorOwnershipWriteRequestResolverServiceInterface: '@App\Vendoring\Service\Ownership\VendorOwnershipWriteRequestResolverService'
+  App\Vendoring\ServiceInterface\Ownership\VendorOwnershipWriteServiceInterface: '@App\Vendoring\Service\Ownership\VendorOwnershipWriteService'
   App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeProjectionBuilderServiceInterface: '@App\Vendoring\Service\Finance\VendorFinanceRuntimeProjectionBuilderService'
   App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface: '@App\Vendoring\Service\Metric\VendorMetricService'
   App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface: '@App\Vendoring\Service\Ledger\VendorLedgerService'

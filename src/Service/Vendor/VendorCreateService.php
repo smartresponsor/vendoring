@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Vendor;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
-use App\Cruding\Value\Resource\CrudResourceContract;
+use App\Cruding\DTO\Entrypoint\CrudServiceContextDTO;
+use App\Cruding\ValueObject\Resource\CrudResourceContract;
 use App\Vendoring\DTO\VendorCreateDTO;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Event\Vendor\VendorCreatedEvent;
@@ -25,7 +25,7 @@ final class VendorCreateService extends AbstractVendorCrudRouteService
     ) {
     }
 
-    public function get(CrudServiceContext $context): CrudResourceContract
+    public function get(CrudServiceContextDTO $context): CrudResourceContract
     {
         return $this->responseService->read(
             $context,
@@ -39,7 +39,7 @@ final class VendorCreateService extends AbstractVendorCrudRouteService
         );
     }
 
-    public function post(CrudServiceContext $context): CrudResourceContract
+    public function post(CrudServiceContextDTO $context): CrudResourceContract
     {
         $input = $context->request->request->all();
         $vendor = $this->createVendor(new VendorCreateDTO(
