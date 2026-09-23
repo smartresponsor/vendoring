@@ -11,6 +11,7 @@ return array_filter([
     App\Cruding\CrudingBundle::class => ['all' => true],
     App\Tabling\TablingBundle::class => ['all' => true],
     App\Vendoring\VendoringBundle::class => ['all' => true],
+    App\Objecting\ObjectBundle::class => ['all' => true],
     Symfony\Bundle\TwigBundle\TwigBundle::class => class_exists(Symfony\Bundle\TwigBundle\TwigBundle::class) ? ['all' => true] : null,
     Nelmio\ApiDocBundle\NelmioApiDocBundle::class => class_exists(Nelmio\ApiDocBundle\NelmioApiDocBundle::class) ? ['all' => true] : null,
 ]);
