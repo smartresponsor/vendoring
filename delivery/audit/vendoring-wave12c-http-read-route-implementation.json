@@ -8,13 +8,13 @@
     "enable_write_side": false
   },
   "implemented_services": [
-    "src/Service/Vendor/VendorIndexService.php",
-    "src/Service/Vendor/VendorShowService.php",
-    "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php",
-    "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentShowService.php",
-    "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaIndexService.php",
-    "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaShowService.php",
-    "src/Service/Vendor/VendorReadRouteResponseFactory.php"
+    "src/Service/VendorIndexService.php",
+    "src/Service/VendorShowService.php",
+    "src/Service/Attachment/Document/VendorAttachmentDocumentIndexService.php",
+    "src/Service/Attachment/Document/VendorAttachmentDocumentShowService.php",
+    "src/Service/Attachment/Media/VendorAttachmentMediaIndexService.php",
+    "src/Service/Attachment/Media/VendorAttachmentMediaShowService.php",
+    "src/Service/VendorReadRouteResponseFactory.php"
   ],
   "implemented_route_keys": [
     "vendor.index",

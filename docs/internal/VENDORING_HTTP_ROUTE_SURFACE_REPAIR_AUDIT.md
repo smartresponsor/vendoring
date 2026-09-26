@@ -4,7 +4,7 @@
 
 Wave 12A repairs the route-map target surface after Wave 11 quarantined the broken persistence-bound services.
 
-The `config/platform/routes/**` files are registry/protocol files consumed by Cruding. They referenced HTTP service targets under `App\Vendoring\Service\Vendor\*` and form targets under `App\Vendoring\Form\Vendor\*`, but the corresponding files were absent from `src/`.
+The `config/platform/routes/**` files are registry/protocol files consumed by Cruding. They referenced HTTP service targets under `App\Vendoring\Service\*` and form targets under `App\Vendoring\Form\*`, but the corresponding files were absent from `src/`.
 
 ## Result
 

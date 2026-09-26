@@ -8,8 +8,8 @@ This component is expected to be consumed through Cruding catch-all routes and s
 URI
 → Cruding grammar
 → providerKey / routeKey
-→ App\Vendoring\Service\Vendor\...\*Service
-→ optional App\Vendoring\Form\Vendor\...\*Type
+→ App\Vendoring\Service\...\*Service
+→ optional App\Vendoring\Form\...\*Type
 ```
 
 ## Forbidden
@@ -24,13 +24,13 @@ Symfony Route attributes inside component code
 ## Route-map registry
 
 ```text
-config/platform/routes.platform.yaml
-config/platform/routes.crud.yaml
-config/platform/routes.business.yaml
-config/platform/routes/crud/vendor.yaml
-config/platform/routes/crud/vendor.attachment.document.yaml
-config/platform/routes/crud/vendor.attachment.media.yaml
-config/platform/routes/business/vendor.yaml
+config/platform/vendor_routes_platform.yaml
+config/platform/vendor_routes_crud.yaml
+config/platform/vendor_routes_business.yaml
+config/platform/routes/crud/vendor_crud.yaml
+config/platform/routes/crud/vendor_attachment_document.yaml
+config/platform/routes/crud/vendor_attachment_media.yaml
+config/platform/routes/business/vendor_business.yaml
 ```
 
 ## Required smoke
@@ -49,7 +49,7 @@ Operational smoke scripts may contain negative-check strings such as retired rou
 Every route-map referenced runtime service under `src/Service/Vendor` must:
 
 ```text
-use namespace App\Vendoring\Service\Vendor\...
+use namespace App\Vendoring\Service\...
 end with Service
 be final
 expose __invoke()
@@ -60,7 +60,7 @@ avoid controller/route vocabulary
 Every form under `src/Form/Vendor` must:
 
 ```text
-use namespace App\Vendoring\Form\Vendor\...
+use namespace App\Vendoring\Form\...
 end with Type
 extend Symfony AbstractType
 ```

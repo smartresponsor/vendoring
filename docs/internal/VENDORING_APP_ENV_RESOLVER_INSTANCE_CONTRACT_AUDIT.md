@@ -4,16 +4,16 @@ Wave AA removes the remaining static environment resolver usage from active runt
 
 ## Findings
 
-- `VendorAppEnvResolverServiceInterface` exposed a static `resolve()` method, which made DI aliases less useful and encouraged static calls through the interface.
-- `VendorLocalDevSurfaceBuilder` called `VendorAppEnvResolverServiceInterface::resolve()` directly instead of using an injected service.
-- Runtime observability services imported the concrete `VendorAppEnvResolverService` only to call the static resolver.
+- `VendorAppEnvResolverInterface` exposed a static `resolve()` method, which made DI aliases less useful and encouraged static calls through the interface.
+- `VendorLocalDevSurfaceBuilder` called `VendorAppEnvResolverInterface::resolve()` directly instead of using an injected service.
+- Runtime observability services imported the concrete `VendorAppEnvResolver` only to call the static resolver.
 
 ## Changes
 
-- Converted `VendorAppEnvResolverServiceInterface::resolve()` to an instance method.
-- Converted `VendorAppEnvResolverService::resolve()` to an instance method.
-- Injected `VendorAppEnvResolverServiceInterface` into `VendorLocalDevSurfaceBuilder`.
-- Injected `VendorAppEnvResolverServiceInterface` into runtime logger and metric collector services.
+- Converted `VendorAppEnvResolverInterface::resolve()` to an instance method.
+- Converted `VendorAppEnvResolver::resolve()` to an instance method.
+- Injected `VendorAppEnvResolverInterface` into `VendorLocalDevSurfaceBuilder`.
+- Injected `VendorAppEnvResolverInterface` into runtime logger and metric collector services.
 - Removed concrete service imports from observability services.
 
 ## Scope boundary

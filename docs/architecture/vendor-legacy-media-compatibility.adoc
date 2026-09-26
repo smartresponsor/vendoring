@@ -22,17 +22,17 @@ Vendoring owns only the business meaning of the public profile surface.
 
 == Runtime fallback
 
-`VendorLegacyProfileAttachmentResolverService` reads legacy Vendoring fields when no canonical Attaching primary link is available.
+`VendorLegacyProfileAttachmentResolver` reads legacy Vendoring fields when no canonical Attaching primary link is available.
 It is the default standalone resolver so older local/demo/profile flows still show avatar and cover URLs without requiring Attaching.
 
-When the host application imports `config/component/optional/attaching_profile_bridge.yaml`, Vendoring uses `VendorChainedProfileAttachmentResolverService`:
+When the host application imports `config/component/optional/vendor_attaching_profile_bridge.yaml`, Vendoring uses `VendorChainedProfileAttachmentResolver`:
 
 . resolve from Attaching first;
 . fall back to legacy Vendoring media paths only when Attaching has no primary link.
 
 == Migration candidates
 
-`VendorLegacyMediaAttachmentCandidateProviderService` exposes a non-destructive migration plan from old media fields:
+`VendorLegacyMediaAttachmentCandidateProvider` exposes a non-destructive migration plan from old media fields:
 
 [source,text]
 ----

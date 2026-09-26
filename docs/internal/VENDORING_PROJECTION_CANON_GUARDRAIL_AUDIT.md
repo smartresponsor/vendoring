@@ -10,7 +10,7 @@ It does not introduce a new runtime layer and does not change repository namespa
 - Root README and gate/prompt metadata still allowed `Vendor*View.php` as the projection filename pattern.
 - API inventory and PHPDoc guidance still described runtime projection payloads as `views`.
 - One surface-builder error code still exposed `profile_view_unavailable`, which could reintroduce the old terminology into API-facing behavior.
-- `VendorOwnershipSurfaceBuilder` still referred to an ownership view builder in PHPDoc despite using `VendorOwnershipProjectionBuilderServiceInterface`.
+- `VendorOwnershipSurfaceBuilder` still referred to an ownership view builder in PHPDoc despite using `VendorOwnershipProjectionBuilderInterface`.
 
 ## Changes
 

@@ -10,10 +10,10 @@ Wave T: vendor/entity wording boundary cleanup.
 - `docs/PHASE64_WRITE_API_AUTH_ENFORCEMENT.md`
 - `src/Controller/Vendor/VendorLocalDevSurfaceBuilder.php`
 - `src/Controller/Vendor/VendorStatementExportSurfaceBuilder.php`
-- `src/Projection/Vendor/VendorExternalIntegrationRuntimeProjection.php`
-- `src/Projection/Vendor/VendorFinanceRuntimeProjection.php`
-- `src/Projection/Vendor/VendorProfileProjection.php`
-- `src/Projection/Vendor/VendorStatementDeliveryRuntimeProjection.php`
+- `src/Projection/VendorExternalIntegrationRuntimeProjection.php`
+- `src/Projection/VendorFinanceRuntimeProjection.php`
+- `src/Projection/VendorProfileProjection.php`
+- `src/Projection/VendorStatementDeliveryRuntimeProjection.php`
 - `docs/internal/VENDORING_VENDOR_ENTITY_WORDING_CLEANUP_AUDIT.md`
 - `docs/internal/VENDORING_VENDOR_ENTITY_WORDING_CLEANUP_PATCH_MANIFEST.md`
 

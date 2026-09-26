@@ -10,10 +10,10 @@
 - `docs/internal/BEHAVIORAL_SCENARIO_CANON.md`
 - `docs/internal/PHPDOC_WAVE_A_PATCH_GUIDE.md`
 - `docs/modules/ROOT/pages/install.adoc`
-- `src/Projection/Vendor/VendorProfileProjection.php`
-- `src/Projection/Vendor/VendorReleaseBaselineProjection.php`
-- `src/Projection/Vendor/VendorRuntimeStatusProjection.php`
-- `src/Service/Ops/VendorRuntimeStatusProjectionBuilderService.php`
+- `src/Projection/VendorProfileProjection.php`
+- `src/Projection/VendorReleaseBaselineProjection.php`
+- `src/Projection/VendorRuntimeStatusProjection.php`
+- `src/Builder/Ops/VendorRuntimeStatusProjectionBuilder.php`
 
 ## Removed
 

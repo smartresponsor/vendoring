@@ -145,53 +145,53 @@
       ],
       "serviceFilesExist": true,
       "serviceFiles": [
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentArchiveService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentBulkService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentCreateService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentDeleteService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentDuplicateService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentEditService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentExportService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentImportService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentNewService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentRestoreService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentShowService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentUpdateService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaArchiveService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaBulkService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaCreateService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaDeleteService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaDuplicateService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaEditService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaExportService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaImportService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaIndexService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaNewService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaRestoreService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaShowService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaUpdateService.php"
+        "src/Service/Attachment/Document/VendorAttachmentDocumentArchiveService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentBulkService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentCreateService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentDeleteService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentDuplicateService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentEditService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentExportService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentImportService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentIndexService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentNewService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentRestoreService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentShowService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentUpdateService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaArchiveService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaBulkService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaCreateService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaDeleteService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaDuplicateService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaEditService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaExportService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaImportService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaIndexService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaNewService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaRestoreService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaShowService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaUpdateService.php"
       ],
       "formTypeFilesExist": true,
       "formTypeFiles": [
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentArchiveType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentBulkType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentCreateType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentDeleteType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentDuplicateType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentExportType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentImportType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentRestoreType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentUpdateType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaArchiveType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaBulkType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaCreateType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaDeleteType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaDuplicateType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaExportType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaImportType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaRestoreType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaUpdateType.php"
+        "src/Form/Attachment/Document/VendorAttachmentDocumentArchiveType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentBulkType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentCreateType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentDeleteType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentDuplicateType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentExportType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentImportType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentRestoreType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentUpdateType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaArchiveType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaBulkType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaCreateType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaDeleteType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaDuplicateType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaExportType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaImportType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaRestoreType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaUpdateType.php"
       ],
       "directTemplates": [],
       "directTemplateExists": false
@@ -320,13 +320,13 @@
       ],
       "serviceFilesExist": true,
       "serviceFiles": [
-        "src/Service/Vendor/Category/VendorCategoryAssignService.php",
-        "src/Service/Vendor/Category/VendorCategoryUnassignService.php"
+        "src/Service/Category/VendorCategoryAssignService.php",
+        "src/Service/Category/VendorCategoryUnassignService.php"
       ],
       "formTypeFilesExist": true,
       "formTypeFiles": [
-        "src/Form/Vendor/Category/VendorCategoryAssignType.php",
-        "src/Form/Vendor/Category/VendorCategoryUnassignType.php"
+        "src/Form/Category/VendorCategoryAssignType.php",
+        "src/Form/Category/VendorCategoryUnassignType.php"
       ],
       "directTemplates": [],
       "directTemplateExists": false
@@ -384,13 +384,13 @@
       ],
       "serviceFilesExist": true,
       "serviceFiles": [
-        "src/Service/Vendor/Commission/VendorCommissionAdjustService.php",
-        "src/Service/Vendor/Commission/VendorCommissionCalculateService.php"
+        "src/Service/Commission/VendorCommissionAdjustService.php",
+        "src/Service/Commission/VendorCommissionCalculateService.php"
       ],
       "formTypeFilesExist": true,
       "formTypeFiles": [
-        "src/Form/Vendor/Commission/VendorCommissionAdjustType.php",
-        "src/Form/Vendor/Commission/VendorCommissionCalculateType.php"
+        "src/Form/Commission/VendorCommissionAdjustType.php",
+        "src/Form/Commission/VendorCommissionCalculateType.php"
       ],
       "directTemplates": [],
       "directTemplateExists": false
@@ -412,13 +412,13 @@
       ],
       "serviceFilesExist": true,
       "serviceFiles": [
-        "src/Service/Vendor/Commission/VendorCommissionAdjustService.php",
-        "src/Service/Vendor/Commission/VendorCommissionCalculateService.php"
+        "src/Service/Commission/VendorCommissionAdjustService.php",
+        "src/Service/Commission/VendorCommissionCalculateService.php"
       ],
       "formTypeFilesExist": true,
       "formTypeFiles": [
-        "src/Form/Vendor/Commission/VendorCommissionAdjustType.php",
-        "src/Form/Vendor/Commission/VendorCommissionCalculateType.php"
+        "src/Form/Commission/VendorCommissionAdjustType.php",
+        "src/Form/Commission/VendorCommissionCalculateType.php"
       ],
       "directTemplates": [],
       "directTemplateExists": false
@@ -511,31 +511,31 @@
       ],
       "serviceFilesExist": true,
       "serviceFiles": [
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentArchiveService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentBulkService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentCreateService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentDeleteService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentDuplicateService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentEditService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentExportService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentImportService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentNewService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentRestoreService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentShowService.php",
-        "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentUpdateService.php"
+        "src/Service/Attachment/Document/VendorAttachmentDocumentArchiveService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentBulkService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentCreateService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentDeleteService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentDuplicateService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentEditService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentExportService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentImportService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentIndexService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentNewService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentRestoreService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentShowService.php",
+        "src/Service/Attachment/Document/VendorAttachmentDocumentUpdateService.php"
       ],
       "formTypeFilesExist": true,
       "formTypeFiles": [
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentArchiveType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentBulkType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentCreateType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentDeleteType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentDuplicateType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentExportType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentImportType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentRestoreType.php",
-        "src/Form/Vendor/Attachment/Document/VendorAttachmentDocumentUpdateType.php"
+        "src/Form/Attachment/Document/VendorAttachmentDocumentArchiveType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentBulkType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentCreateType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentDeleteType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentDuplicateType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentExportType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentImportType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentRestoreType.php",
+        "src/Form/Attachment/Document/VendorAttachmentDocumentUpdateType.php"
       ],
       "directTemplates": [],
       "directTemplateExists": false
@@ -556,13 +556,13 @@
       ],
       "serviceFilesExist": true,
       "serviceFiles": [
-        "src/Service/Vendor/Document/VendorDocumentRejectService.php",
-        "src/Service/Vendor/Document/VendorDocumentVerifyService.php"
+        "src/Service/Document/VendorDocumentRejectService.php",
+        "src/Service/Document/VendorDocumentVerifyService.php"
       ],
       "formTypeFilesExist": true,
       "formTypeFiles": [
-        "src/Form/Vendor/Document/VendorDocumentRejectType.php",
-        "src/Form/Vendor/Document/VendorDocumentVerifyType.php"
+        "src/Form/Document/VendorDocumentRejectType.php",
+        "src/Form/Document/VendorDocumentVerifyType.php"
       ],
       "directTemplates": [],
       "directTemplateExists": false
@@ -709,31 +709,31 @@
       ],
       "serviceFilesExist": true,
       "serviceFiles": [
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaArchiveService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaBulkService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaCreateService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaDeleteService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaDuplicateService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaEditService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaExportService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaImportService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaIndexService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaNewService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaRestoreService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaShowService.php",
-        "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaUpdateService.php"
+        "src/Service/Attachment/Media/VendorAttachmentMediaArchiveService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaBulkService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaCreateService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaDeleteService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaDuplicateService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaEditService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaExportService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaImportService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaIndexService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaNewService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaRestoreService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaShowService.php",
+        "src/Service/Attachment/Media/VendorAttachmentMediaUpdateService.php"
       ],
       "formTypeFilesExist": true,
       "formTypeFiles": [
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaArchiveType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaBulkType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaCreateType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaDeleteType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaDuplicateType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaExportType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaImportType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaRestoreType.php",
-        "src/Form/Vendor/Attachment/Media/VendorAttachmentMediaUpdateType.php"
+        "src/Form/Attachment/Media/VendorAttachmentMediaArchiveType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaBulkType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaCreateType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaDeleteType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaDuplicateType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaExportType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaImportType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaRestoreType.php",
+        "src/Form/Attachment/Media/VendorAttachmentMediaUpdateType.php"
       ],
       "directTemplates": [],
       "directTemplateExists": false
@@ -828,15 +828,15 @@
       ],
       "serviceFilesExist": true,
       "serviceFiles": [
-        "src/Service/Vendor/Payout/VendorPayoutApproveService.php",
-        "src/Service/Vendor/Payout/VendorPayoutCalculateService.php",
-        "src/Service/Vendor/Payout/VendorPayoutPayService.php"
+        "src/Service/Payout/VendorPayoutApproveService.php",
+        "src/Service/Payout/VendorPayoutCalculateService.php",
+        "src/Service/Payout/VendorPayoutPayService.php"
       ],
       "formTypeFilesExist": true,
       "formTypeFiles": [
-        "src/Form/Vendor/Payout/VendorPayoutApproveType.php",
-        "src/Form/Vendor/Payout/VendorPayoutCalculateType.php",
-        "src/Form/Vendor/Payout/VendorPayoutPayType.php"
+        "src/Form/Payout/VendorPayoutApproveType.php",
+        "src/Form/Payout/VendorPayoutCalculateType.php",
+        "src/Form/Payout/VendorPayoutPayType.php"
       ],
       "directTemplates": [],
       "directTemplateExists": false
@@ -859,15 +859,15 @@
       ],
       "serviceFilesExist": true,
       "serviceFiles": [
-        "src/Service/Vendor/Payout/VendorPayoutApproveService.php",
-        "src/Service/Vendor/Payout/VendorPayoutCalculateService.php",
-        "src/Service/Vendor/Payout/VendorPayoutPayService.php"
+        "src/Service/Payout/VendorPayoutApproveService.php",
+        "src/Service/Payout/VendorPayoutCalculateService.php",
+        "src/Service/Payout/VendorPayoutPayService.php"
       ],
       "formTypeFilesExist": true,
       "formTypeFiles": [
-        "src/Form/Vendor/Payout/VendorPayoutApproveType.php",
-        "src/Form/Vendor/Payout/VendorPayoutCalculateType.php",
-        "src/Form/Vendor/Payout/VendorPayoutPayType.php"
+        "src/Form/Payout/VendorPayoutApproveType.php",
+        "src/Form/Payout/VendorPayoutCalculateType.php",
+        "src/Form/Payout/VendorPayoutPayType.php"
       ],
       "directTemplates": [],
       "directTemplateExists": false
@@ -1113,650 +1113,650 @@
     {
       "key": "vendor.category.assign",
       "path": "/vendor/category/assign/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Category\\VendorCategoryAssignService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Category\\VendorCategoryAssignType",
+      "service": "App\\Vendoring\\Service\\Category\\VendorCategoryAssignService",
+      "type": "App\\Vendoring\\Form\\Category\\VendorCategoryAssignType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.category.unassign",
       "path": "/vendor/category/unassign/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Category\\VendorCategoryUnassignService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Category\\VendorCategoryUnassignType",
+      "service": "App\\Vendoring\\Service\\Category\\VendorCategoryUnassignService",
+      "type": "App\\Vendoring\\Form\\Category\\VendorCategoryUnassignType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.commission.adjust",
       "path": "/vendor/commission/adjust/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Commission\\VendorCommissionAdjustService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Commission\\VendorCommissionAdjustType",
+      "service": "App\\Vendoring\\Service\\Commission\\VendorCommissionAdjustService",
+      "type": "App\\Vendoring\\Form\\Commission\\VendorCommissionAdjustType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.commission.calculate_id",
       "path": "/vendor/commission/calculate/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Commission\\VendorCommissionCalculateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Commission\\VendorCommissionCalculateType",
+      "service": "App\\Vendoring\\Service\\Commission\\VendorCommissionCalculateService",
+      "type": "App\\Vendoring\\Form\\Commission\\VendorCommissionCalculateType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.commission.calculate_slug",
       "path": "/vendor/commission/calculate/{vendorSlug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Commission\\VendorCommissionCalculateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Commission\\VendorCommissionCalculateType",
+      "service": "App\\Vendoring\\Service\\Commission\\VendorCommissionCalculateService",
+      "type": "App\\Vendoring\\Form\\Commission\\VendorCommissionCalculateType",
       "resolver": "slug",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.document.reject",
       "path": "/vendor/document/reject/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Document\\VendorDocumentRejectService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Document\\VendorDocumentRejectType",
+      "service": "App\\Vendoring\\Service\\Document\\VendorDocumentRejectService",
+      "type": "App\\Vendoring\\Form\\Document\\VendorDocumentRejectType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.document.verify",
       "path": "/vendor/document/verify/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Document\\VendorDocumentVerifyService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Document\\VendorDocumentVerifyType",
+      "service": "App\\Vendoring\\Service\\Document\\VendorDocumentVerifyService",
+      "type": "App\\Vendoring\\Form\\Document\\VendorDocumentVerifyType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.onboarding.approve_id",
       "path": "/vendor/onboarding/approve/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Onboarding\\VendorOnboardingApproveService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingApproveType",
+      "service": "App\\Vendoring\\Service\\Onboarding\\VendorOnboardingApproveService",
+      "type": "App\\Vendoring\\Form\\Onboarding\\VendorOnboardingApproveType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.onboarding.approve_slug",
       "path": "/vendor/onboarding/approve/{vendorSlug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Onboarding\\VendorOnboardingApproveService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingApproveType",
+      "service": "App\\Vendoring\\Service\\Onboarding\\VendorOnboardingApproveService",
+      "type": "App\\Vendoring\\Form\\Onboarding\\VendorOnboardingApproveType",
       "resolver": "slug",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.onboarding.reject_id",
       "path": "/vendor/onboarding/reject/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Onboarding\\VendorOnboardingRejectService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingRejectType",
+      "service": "App\\Vendoring\\Service\\Onboarding\\VendorOnboardingRejectService",
+      "type": "App\\Vendoring\\Form\\Onboarding\\VendorOnboardingRejectType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.onboarding.reject_slug",
       "path": "/vendor/onboarding/reject/{vendorSlug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Onboarding\\VendorOnboardingRejectService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingRejectType",
+      "service": "App\\Vendoring\\Service\\Onboarding\\VendorOnboardingRejectService",
+      "type": "App\\Vendoring\\Form\\Onboarding\\VendorOnboardingRejectType",
       "resolver": "slug",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.onboarding.start_id",
       "path": "/vendor/onboarding/start/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Onboarding\\VendorOnboardingStartService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingStartType",
+      "service": "App\\Vendoring\\Service\\Onboarding\\VendorOnboardingStartService",
+      "type": "App\\Vendoring\\Form\\Onboarding\\VendorOnboardingStartType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.onboarding.start_slug",
       "path": "/vendor/onboarding/start/{vendorSlug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Onboarding\\VendorOnboardingStartService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Onboarding\\VendorOnboardingStartType",
+      "service": "App\\Vendoring\\Service\\Onboarding\\VendorOnboardingStartService",
+      "type": "App\\Vendoring\\Form\\Onboarding\\VendorOnboardingStartType",
       "resolver": "slug",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.payout.approve",
       "path": "/vendor/payout/approve/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Payout\\VendorPayoutApproveService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutApproveType",
+      "service": "App\\Vendoring\\Service\\Payout\\VendorPayoutApproveService",
+      "type": "App\\Vendoring\\Form\\Payout\\VendorPayoutApproveType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.payout.calculate_id",
       "path": "/vendor/payout/calculate/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Payout\\VendorPayoutCalculateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutCalculateType",
+      "service": "App\\Vendoring\\Service\\Payout\\VendorPayoutCalculateService",
+      "type": "App\\Vendoring\\Form\\Payout\\VendorPayoutCalculateType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.payout.calculate_slug",
       "path": "/vendor/payout/calculate/{vendorSlug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Payout\\VendorPayoutCalculateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutCalculateType",
+      "service": "App\\Vendoring\\Service\\Payout\\VendorPayoutCalculateService",
+      "type": "App\\Vendoring\\Form\\Payout\\VendorPayoutCalculateType",
       "resolver": "slug",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.payout.pay",
       "path": "/vendor/payout/pay/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Payout\\VendorPayoutPayService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Payout\\VendorPayoutPayType",
+      "service": "App\\Vendoring\\Service\\Payout\\VendorPayoutPayService",
+      "type": "App\\Vendoring\\Form\\Payout\\VendorPayoutPayType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.product.assign",
       "path": "/vendor/product/assign/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Product\\VendorProductAssignService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Product\\VendorProductAssignType",
+      "service": "App\\Vendoring\\Service\\Product\\VendorProductAssignService",
+      "type": "App\\Vendoring\\Form\\Product\\VendorProductAssignType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.product.unassign",
       "path": "/vendor/product/unassign/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Product\\VendorProductUnassignService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Product\\VendorProductUnassignType",
+      "service": "App\\Vendoring\\Service\\Product\\VendorProductUnassignService",
+      "type": "App\\Vendoring\\Form\\Product\\VendorProductUnassignType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.rating.recalculate_id",
       "path": "/vendor/rating/recalculate/{vendorId",
-      "service": "App\\Vendoring\\Service\\Vendor\\Rating\\VendorRatingRecalculateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Rating\\VendorRatingRecalculateType",
+      "service": "App\\Vendoring\\Service\\Rating\\VendorRatingRecalculateService",
+      "type": "App\\Vendoring\\Form\\Rating\\VendorRatingRecalculateType",
       "resolver": "id",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.rating.recalculate_slug",
       "path": "/vendor/rating/recalculate/{vendorSlug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Rating\\VendorRatingRecalculateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Rating\\VendorRatingRecalculateType",
+      "service": "App\\Vendoring\\Service\\Rating\\VendorRatingRecalculateService",
+      "type": "App\\Vendoring\\Form\\Rating\\VendorRatingRecalculateType",
       "resolver": "slug",
-      "file": "config/platform/routes/business/vendor.yaml"
+      "file": "config/platform/routes/business/vendor_business.yaml"
     },
     {
       "key": "vendor.attachment.document.index",
       "path": "/vendor/attachment/document/index",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentIndexService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentIndexService",
       "type": null,
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.show_id",
       "path": "/vendor/attachment/document/show/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentShowService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentShowService",
       "type": null,
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.show_slug",
       "path": "/vendor/attachment/document/show/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentShowService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentShowService",
       "type": null,
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.new",
       "path": "/vendor/attachment/document/new",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentNewService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentNewService",
       "type": null,
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.create",
       "path": "/vendor/attachment/document/create",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentCreateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentCreateType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentCreateService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentCreateType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.edit_id",
       "path": "/vendor/attachment/document/edit/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentEditService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentEditService",
       "type": null,
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.edit_slug",
       "path": "/vendor/attachment/document/edit/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentEditService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentEditService",
       "type": null,
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.update_id",
       "path": "/vendor/attachment/document/update/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentUpdateService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentUpdateType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.update_slug",
       "path": "/vendor/attachment/document/update/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentUpdateType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentUpdateService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentUpdateType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.delete_id",
       "path": "/vendor/attachment/document/delete/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentDeleteService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentDeleteType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.delete_slug",
       "path": "/vendor/attachment/document/delete/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDeleteType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentDeleteService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentDeleteType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.bulk",
       "path": "/vendor/attachment/document/bulk",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentBulkService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentBulkType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentBulkService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentBulkType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.import",
       "path": "/vendor/attachment/document/import",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentImportService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentImportType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentImportService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentImportType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.export",
       "path": "/vendor/attachment/document/export",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentExportService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentExportType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentExportService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentExportType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.archive_id",
       "path": "/vendor/attachment/document/archive/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentArchiveService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentArchiveType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.archive_slug",
       "path": "/vendor/attachment/document/archive/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentArchiveType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentArchiveService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentArchiveType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.restore_id",
       "path": "/vendor/attachment/document/restore/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentRestoreService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentRestoreType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.restore_slug",
       "path": "/vendor/attachment/document/restore/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentRestoreType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentRestoreService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentRestoreType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.duplicate_id",
       "path": "/vendor/attachment/document/duplicate/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentDuplicateService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentDuplicateType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.document.duplicate_slug",
       "path": "/vendor/attachment/document/duplicate/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentDuplicateType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentDuplicateService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Document\\VendorAttachmentDocumentDuplicateType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.document.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_document.yaml"
     },
     {
       "key": "vendor.attachment.media.index",
       "path": "/vendor/attachment/media/index",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaIndexService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaIndexService",
       "type": null,
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.show_id",
       "path": "/vendor/attachment/media/show/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaShowService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaShowService",
       "type": null,
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.show_slug",
       "path": "/vendor/attachment/media/show/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaShowService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaShowService",
       "type": null,
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.new",
       "path": "/vendor/attachment/media/new",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaNewService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaNewService",
       "type": null,
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.create",
       "path": "/vendor/attachment/media/create",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaCreateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaCreateType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaCreateService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaCreateType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.edit_id",
       "path": "/vendor/attachment/media/edit/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaEditService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaEditService",
       "type": null,
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.edit_slug",
       "path": "/vendor/attachment/media/edit/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaEditService",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaEditService",
       "type": null,
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.update_id",
       "path": "/vendor/attachment/media/update/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaUpdateService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaUpdateType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.update_slug",
       "path": "/vendor/attachment/media/update/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaUpdateType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaUpdateService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaUpdateType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.delete_id",
       "path": "/vendor/attachment/media/delete/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaDeleteService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaDeleteType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.delete_slug",
       "path": "/vendor/attachment/media/delete/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDeleteType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaDeleteService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaDeleteType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.bulk",
       "path": "/vendor/attachment/media/bulk",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaBulkService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaBulkType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaBulkService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaBulkType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.import",
       "path": "/vendor/attachment/media/import",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaImportService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaImportType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaImportService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaImportType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.export",
       "path": "/vendor/attachment/media/export",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaExportService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaExportType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaExportService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaExportType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.archive_id",
       "path": "/vendor/attachment/media/archive/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaArchiveService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaArchiveType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.archive_slug",
       "path": "/vendor/attachment/media/archive/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaArchiveType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaArchiveService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaArchiveType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.restore_id",
       "path": "/vendor/attachment/media/restore/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaRestoreService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaRestoreType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.restore_slug",
       "path": "/vendor/attachment/media/restore/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaRestoreType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaRestoreService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaRestoreType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.duplicate_id",
       "path": "/vendor/attachment/media/duplicate/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaDuplicateService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaDuplicateType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.attachment.media.duplicate_slug",
       "path": "/vendor/attachment/media/duplicate/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\Attachment\\Media\\VendorAttachmentMediaDuplicateType",
+      "service": "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaDuplicateService",
+      "type": "App\\Vendoring\\Form\\Attachment\\Media\\VendorAttachmentMediaDuplicateType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.attachment.media.yaml"
+      "file": "config/platform/routes/crud/vendor_attachment_media.yaml"
     },
     {
       "key": "vendor.index",
       "path": "/vendor/index",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorIndexService",
+      "service": "App\\Vendoring\\Service\\VendorIndexService",
       "type": null,
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.show_id",
       "path": "/vendor/show/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorShowService",
+      "service": "App\\Vendoring\\Service\\VendorShowService",
       "type": null,
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.show_slug",
       "path": "/vendor/show/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorShowService",
+      "service": "App\\Vendoring\\Service\\VendorShowService",
       "type": null,
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.new",
       "path": "/vendor/new",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorNewService",
+      "service": "App\\Vendoring\\Service\\VendorNewService",
       "type": null,
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.create",
       "path": "/vendor/create",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorCreateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorCreateType",
+      "service": "App\\Vendoring\\Service\\VendorCreateService",
+      "type": "App\\Vendoring\\Form\\VendorCreateType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.edit_id",
       "path": "/vendor/edit/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorEditService",
+      "service": "App\\Vendoring\\Service\\VendorEditService",
       "type": null,
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.edit_slug",
       "path": "/vendor/edit/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorEditService",
+      "service": "App\\Vendoring\\Service\\VendorEditService",
       "type": null,
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.update_id",
       "path": "/vendor/update/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorUpdateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorUpdateType",
+      "service": "App\\Vendoring\\Service\\VendorUpdateService",
+      "type": "App\\Vendoring\\Form\\VendorUpdateType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.update_slug",
       "path": "/vendor/update/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorUpdateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorUpdateType",
+      "service": "App\\Vendoring\\Service\\VendorUpdateService",
+      "type": "App\\Vendoring\\Form\\VendorUpdateType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.delete_id",
       "path": "/vendor/delete/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorDeleteService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorDeleteType",
+      "service": "App\\Vendoring\\Service\\VendorDeleteService",
+      "type": "App\\Vendoring\\Form\\VendorDeleteType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.delete_slug",
       "path": "/vendor/delete/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorDeleteService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorDeleteType",
+      "service": "App\\Vendoring\\Service\\VendorDeleteService",
+      "type": "App\\Vendoring\\Form\\VendorDeleteType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.bulk",
       "path": "/vendor/bulk",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorBulkService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorBulkType",
+      "service": "App\\Vendoring\\Service\\VendorBulkService",
+      "type": "App\\Vendoring\\Form\\VendorBulkType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.import",
       "path": "/vendor/import",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorImportService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorImportType",
+      "service": "App\\Vendoring\\Service\\VendorImportService",
+      "type": "App\\Vendoring\\Form\\VendorImportType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.export",
       "path": "/vendor/export",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorExportService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorExportType",
+      "service": "App\\Vendoring\\Service\\VendorExportService",
+      "type": "App\\Vendoring\\Form\\VendorExportType",
       "resolver": null,
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.archive_id",
       "path": "/vendor/archive/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorArchiveService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorArchiveType",
+      "service": "App\\Vendoring\\Service\\VendorArchiveService",
+      "type": "App\\Vendoring\\Form\\VendorArchiveType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.archive_slug",
       "path": "/vendor/archive/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorArchiveService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorArchiveType",
+      "service": "App\\Vendoring\\Service\\VendorArchiveService",
+      "type": "App\\Vendoring\\Form\\VendorArchiveType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.restore_id",
       "path": "/vendor/restore/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorRestoreService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorRestoreType",
+      "service": "App\\Vendoring\\Service\\VendorRestoreService",
+      "type": "App\\Vendoring\\Form\\VendorRestoreType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.restore_slug",
       "path": "/vendor/restore/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorRestoreService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorRestoreType",
+      "service": "App\\Vendoring\\Service\\VendorRestoreService",
+      "type": "App\\Vendoring\\Form\\VendorRestoreType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.duplicate_id",
       "path": "/vendor/duplicate/{id",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorDuplicateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorDuplicateType",
+      "service": "App\\Vendoring\\Service\\VendorDuplicateService",
+      "type": "App\\Vendoring\\Form\\VendorDuplicateType",
       "resolver": "id",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     },
     {
       "key": "vendor.duplicate_slug",
       "path": "/vendor/duplicate/{slug",
-      "service": "App\\Vendoring\\Service\\Vendor\\VendorDuplicateService",
-      "type": "App\\Vendoring\\Form\\Vendor\\VendorDuplicateType",
+      "service": "App\\Vendoring\\Service\\VendorDuplicateService",
+      "type": "App\\Vendoring\\Form\\VendorDuplicateType",
       "resolver": "slug",
-      "file": "config/platform/routes/crud/vendor.yaml"
+      "file": "config/platform/routes/crud/vendor_crud.yaml"
     }
   ],
   "templates": [
