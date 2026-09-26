@@ -36,3 +36,4 @@ final class Version20260925020500 extends AbstractMigration
             'Canonical Vendor identity must not be split back into a parallel tenant identity.',
         );
     }
+}
