@@ -15,7 +15,7 @@ class VendorShipmentEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $carrierCode = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $methodCode = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $trackingNumber = null;
-    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    #[ORM\Column(name: 'shipment_status', type: 'string', length: 255, nullable: false)] private string $status = '';
     /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $shippedAt = null;

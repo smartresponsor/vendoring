@@ -10,13 +10,13 @@ use PHPUnit\Framework\TestCase;
 
 final class VendorApiQueryValidationExceptionTest extends TestCase
 {
-    public function testFromConstraintMessageMapsKnownTenantCodeToHint(): void
+    public function testFromConstraintMessageMapsKnownVendorCodeToHint(): void
     {
-        $exception = VendorApiQueryValidationException::fromConstraintMessage('tenant_id_required');
+        $exception = VendorApiQueryValidationException::fromConstraintMessage('vendor_id_required');
 
-        self::assertSame('tenant_id_required', $exception->errorCode());
-        self::assertSame('Provide the tenantId query parameter.', $exception->hint());
-        self::assertSame('tenant_id_required', $exception->getMessage());
+        self::assertSame('vendor_id_required', $exception->errorCode());
+        self::assertSame('Provide the vendorId query parameter.', $exception->hint());
+        self::assertSame('vendor_id_required', $exception->getMessage());
     }
 
     public function testFromConstraintMessageMapsUnknownCodeToFallback(): void

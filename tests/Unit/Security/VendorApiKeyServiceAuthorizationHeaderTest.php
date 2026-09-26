@@ -6,29 +6,25 @@ namespace App\Vendoring\Tests\Unit\Security;
 
 use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
 use App\Vendoring\Entity\Vendor\VendorEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorApiKeyRepositoryInterface;
 use App\Vendoring\Service\Security\VendorApiKeyService;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorApiKeyServiceAuthorizationHeaderTest extends TestCase
 {
-    private EntityManagerInterface&MockObject $entityManager;
     private VendorApiKeyRepositoryInterface&MockObject $repository;
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->repository = $this->createMock(VendorApiKeyRepositoryInterface::class);
     }
 
     public function testValidateAuthorizationHeaderReturnsNullWhenHeaderMissing(): void
     {
-        $service = new VendorApiKeyService($this->entityManager, $this->repository);
+        $service = new VendorApiKeyService($this->repository);
 
         $this->repository->expects(self::never())->method('findActiveByTokenHash');
-        $this->entityManager->expects(self::never())->method('flush');
 
         self::assertNull($service->validateAuthorizationHeader('', 'write:transactions'));
     }
@@ -37,7 +33,7 @@ final class VendorApiKeyServiceAuthorizationHeaderTest extends TestCase
     {
         $vendor = new VendorEntity('Vendor A');
         $apiKey = new VendorApiKeyEntity($vendor, hash('sha256', 'plain-token'), 'write:transactions');
-        $service = new VendorApiKeyService($this->entityManager, $this->repository);
+        $service = new VendorApiKeyService($this->repository);
 
         $this->repository
             ->expects(self::once())
@@ -45,7 +41,7 @@ final class VendorApiKeyServiceAuthorizationHeaderTest extends TestCase
             ->with(hash('sha256', 'plain-token'))
             ->willReturn($apiKey);
 
-        $this->entityManager->expects(self::once())->method('flush');
+        $this->repository->expects(self::once())->method('save')->with($apiKey, true);
 
         self::assertSame($vendor, $service->validateAuthorizationHeader('Bearer plain-token', 'write:transactions'));
     }
@@ -54,15 +50,13 @@ final class VendorApiKeyServiceAuthorizationHeaderTest extends TestCase
     {
         $vendor = new VendorEntity('Vendor A');
         $apiKey = new VendorApiKeyEntity($vendor, hash('sha256', 'plain-token'), 'read:transactions');
-        $service = new VendorApiKeyService($this->entityManager, $this->repository);
+        $service = new VendorApiKeyService($this->repository);
 
         $this->repository
             ->expects(self::once())
             ->method('findActiveByTokenHash')
             ->with(hash('sha256', 'plain-token'))
             ->willReturn($apiKey);
-
-        $this->entityManager->expects(self::never())->method('flush');
 
         self::assertNull($service->validateAuthorizationHeader('Bearer plain-token', 'write:transactions'));
     }

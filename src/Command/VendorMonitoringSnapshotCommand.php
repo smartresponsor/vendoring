@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\BuilderInterface\Observability\VendorMonitoringSnapshotBuilderInterface;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\Exception\Command\VendorCommandIoException;
 use App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorAlertRuleEvaluatorServiceInterface;
-use App\Vendoring\ServiceInterface\Observability\VendorMonitoringSnapshotBuilderServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class VendorMonitoringSnapshotCommand extends Command
 {
     public function __construct(
-        private readonly VendorMonitoringSnapshotBuilderServiceInterface $snapshotBuilder,
+        private readonly VendorMonitoringSnapshotBuilderInterface $snapshotBuilder,
         private readonly VendorAlertRuleEvaluatorServiceInterface $alertRuleEvaluator,
         private readonly VendorCommandJsonArtifactWriterServiceInterface $commandJsonArtifactWriter,
         private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter,

@@ -8,23 +8,23 @@ namespace App\Vendoring\Service\Identity;
 
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorPassportEntity;
-use App\Vendoring\Event\Vendor\VendorVerifiedEvent;
+use App\Vendoring\Event\VendorVerifiedEvent;
+use App\Vendoring\RepositoryInterface\VendorPassportRepositoryInterface;
 use App\Vendoring\ServiceInterface\Identity\VendorPassportServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorPassportService implements VendorPassportServiceInterface
 {
     public function __construct(
-        private EntityManagerInterface   $em,
+        private VendorPassportRepositoryInterface $passportRepository,
         private EventDispatcherInterface $dispatcher,
-    ) {}
+    ) {
+    }
 
     public function issue(VendorEntity $vendor, string $taxId, string $country): VendorPassportEntity
     {
         $passport = new VendorPassportEntity($vendor, $taxId, $country);
-        $this->em->persist($passport);
-        $this->em->flush();
+        $this->passportRepository->save($passport, true);
 
         return $passport;
     }
@@ -32,7 +32,7 @@ final readonly class VendorPassportService implements VendorPassportServiceInter
     public function verify(VendorPassportEntity $passport): VendorPassportEntity
     {
         $passport->markVerified();
-        $this->em->flush();
+        $this->passportRepository->save($passport, true);
 
         $this->dispatcher->dispatch(new VendorVerifiedEvent($passport));
 

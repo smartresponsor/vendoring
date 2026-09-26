@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
-use App\Vendoring\EntityInterface\Vendor\VendorTransactionEntityInterface;
+use App\Vendoring\EntityInterface\VendorTransactionEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorTransactionRepository::class)]
 #[ORM\Table(
     name: 'vendor_transaction',
     indexes: [
-        new ORM\Index(name: 'idx_vendor_transaction_vendor_created', columns: ['vendor_id', 'created_at']),
+        new ORM\Index(name: 'idx_vendor_transaction_vendor_created', columns: ['vendor_id', 'transaction_created_at']),
     ],
 )]
 class VendorTransactionEntity extends VendorAbstractEntity implements VendorTransactionEntityInterface
@@ -20,8 +20,8 @@ class VendorTransactionEntity extends VendorAbstractEntity implements VendorTran
     #[ORM\Column(type: 'string', length: 64, name: 'order_id')] private string $orderId;
     #[ORM\Column(type: 'string', length: 64, nullable: true, name: 'project_id')] private ?string $projectId = null;
     #[ORM\Column(type: 'decimal', precision: 12, scale: 2)] private string $amount;
-    #[ORM\Column(type: 'string', length: 64, name: 'status')] private string $status = 'pending';
-    #[ORM\Column(type: 'datetime_immutable', name: 'created_at')] private \DateTimeImmutable $createdAt;
+    #[ORM\Column(type: 'string', length: 64, name: 'transaction_status')] private string $status = 'pending';
+    #[ORM\Column(type: 'datetime_immutable', name: 'transaction_created_at')] private \DateTimeImmutable $createdAt;
     public function __construct(string $vendorId, string $orderId, ?string $projectId, string $amount, string $status = 'pending')
     {
         parent::__construct($status);

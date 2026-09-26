@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Observability;
 
+use App\Vendoring\ResolverInterface\Runtime\VendorAppEnvResolverInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorCorrelationContextServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorMetricCollectorServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorObservabilityRecordExporterServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorRuntimeMetricCollectorServiceInterface;
-use App\Vendoring\ServiceInterface\Runtime\VendorAppEnvResolverServiceInterface;
 
 /**
  * Structured metric collector for runtime observability events.
@@ -33,7 +33,7 @@ final class VendorRuntimeMetricCollectorService implements VendorMetricCollector
 
     public function __construct(
         private readonly VendorCorrelationContextServiceInterface $correlationContext,
-        private readonly VendorAppEnvResolverServiceInterface $appEnvResolver,
+        private readonly VendorAppEnvResolverInterface $appEnvResolver,
         private readonly ?VendorObservabilityRecordExporterServiceInterface $exporter = null,
     ) {
     }

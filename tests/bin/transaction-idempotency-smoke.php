@@ -6,10 +6,10 @@ require_once __DIR__.'/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
 $composerJsonPath = $root.'/composer.json';
-$repoInterfacePath = $root.'/src/RepositoryInterface/Vendor/VendorTransactionRepositoryInterface.php';
-$repoPath = $root.'/src/Repository/Vendor/VendorTransactionRepository.php';
+$repoInterfacePath = $root.'/src/RepositoryInterface/VendorTransactionRepositoryInterface.php';
+$repoPath = $root.'/src/Repository/VendorTransactionRepository.php';
 $managerPath = $root.'/src/Service/Transaction/VendorTransactionLifecycleService.php';
-$transactionHttpServicePath = $root.'/src/Service/Vendor/Transaction/VendorTransactionHttpService.php';
+$transactionHttpServicePath = $root.'/src/Service/Transaction/VendorTransactionHttpService.php';
 $pgMigrationPath = $root.'/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql';
 $sqliteMigrationPath = $root.'/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql';
 

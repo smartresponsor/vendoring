@@ -16,14 +16,13 @@ final class VendorDoubleEntryServiceTest extends TestCase
         $repository = new InMemoryLedgerEntryRepository();
         $service = new VendorDoubleEntryService($repository);
         $dto = new VendorDoubleEntryDTO(
-            'tenant-1',
+            'vendor-1',
             'VENDOR_PAYABLE',
             'REVENUE',
             125.50,
             'USD',
             'invoice',
             'inv-100',
-            'vendor-1',
             '2026-03-15 08:30:00',
         );
 
@@ -31,7 +30,6 @@ final class VendorDoubleEntryServiceTest extends TestCase
 
         self::assertCount(1, $result);
         self::assertSame($repository->all(), $result);
-        self::assertSame('tenant-1', $result[0]->tenantId);
         self::assertSame('VENDOR_PAYABLE', $result[0]->debitAccount);
         self::assertSame('REVENUE', $result[0]->creditAccount);
         self::assertSame(125.50, $result[0]->amount);
@@ -47,7 +45,7 @@ final class VendorDoubleEntryServiceTest extends TestCase
     {
         $repository = new InMemoryLedgerEntryRepository();
         $service = new VendorDoubleEntryService($repository);
-        $dto = new VendorDoubleEntryDTO('tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 10.0, 'USD', 'invoice', 'inv-101');
+        $dto = new VendorDoubleEntryDTO('vendor-1', 'VENDOR_PAYABLE', 'REVENUE', 10.0, 'USD', 'invoice', 'inv-101');
 
         $result = $service->post($dto);
 

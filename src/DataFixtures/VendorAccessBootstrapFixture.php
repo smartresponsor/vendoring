@@ -10,13 +10,28 @@ use App\Vendoring\Entity\Vendor\VendorProfileAvatarEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileCoverEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileEntity;
 use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
+use App\Vendoring\RepositoryInterface\VendorMediaRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorProfileAvatarRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorProfileCoverRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorProfileRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 
 final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroupInterface
 {
+    public function __construct(
+        private readonly VendorRepositoryInterface $vendorRepository,
+        private readonly VendorUserAssignmentRepositoryInterface $assignmentRepository,
+        private readonly VendorProfileRepositoryInterface $profileRepository,
+        private readonly VendorMediaRepositoryInterface $mediaRepository,
+        private readonly VendorProfileAvatarRepositoryInterface $avatarRepository,
+        private readonly VendorProfileCoverRepositoryInterface $coverRepository,
+    ) {
+    }
+
     public static function getGroups(): array
     {
         return ['vendoring_access_bootstrap'];
@@ -24,13 +39,12 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
 
     public function load(ObjectManager $manager): void
     {
-        if (!$manager instanceof EntityManagerInterface) {
-            return;
-        }
+        $this->run();
+    }
 
-        $users = $manager->getConnection()->fetchAllAssociative(
-            'SELECT id, email, display_name, roles FROM access ORDER BY id',
-        );
+    public function run(): void
+    {
+        $users = $this->vendorRepository->findAccessBootstrapRows();
 
         foreach ($users as $user) {
             $userId = is_numeric($user['id'] ?? null) ? (int) $user['id'] : 0;
@@ -39,19 +53,18 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
             }
 
             if (!$this->isAdministrativeUser($user) && !$this->isProfessionalUser($user)) {
-                $this->deactivateNonProfessionalVendor($manager, $userId);
+                $this->deactivateNonProfessionalVendor($userId);
                 continue;
             }
 
-            $vendor = $manager->getRepository(VendorEntity::class)->findOneBy(['ownerUserId' => $userId]);
+            $vendor = $this->vendorRepository->findOneBy(['ownerUserId' => $userId]);
             if (!$vendor instanceof VendorEntity) {
                 $vendor = new VendorEntity($this->brandName($user, $userId), $userId);
                 $vendor->activate();
-                $manager->persist($vendor);
-                $manager->flush();
+                $this->vendorRepository->save($vendor, true);
             }
 
-            $assignment = $manager->getRepository(VendorUserAssignmentEntity::class)->findOneBy([
+            $assignment = $this->assignmentRepository->findOneBy([
                 'vendor' => $vendor,
                 'userId' => $userId,
             ]);
@@ -64,45 +77,46 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
                     status: 'active',
                     isPrimary: true,
                 );
-                $manager->persist($assignment);
             } else {
                 $assignment->changeRole('owner')->activate()->markPrimary();
             }
+            $this->assignmentRepository->save($assignment);
 
             if ($this->isAdministrativeUser($user)) {
-                $this->loadAdministrativeProfile($manager, $vendor);
+                $this->loadAdministrativeProfile($vendor);
             } elseif ($this->isProfessionalUser($user)) {
-                $this->loadProfessionalProfile($manager, $vendor, $user);
+                $this->loadProfessionalProfile($vendor, $user);
             }
-        }
 
-        $manager->flush();
+            $this->vendorRepository->save($vendor, true);
+        }
     }
 
-    private function deactivateNonProfessionalVendor(EntityManagerInterface $manager, int $userId): void
+    private function deactivateNonProfessionalVendor(int $userId): void
     {
-        $vendor = $manager->getRepository(VendorEntity::class)->findOneBy(['ownerUserId' => $userId]);
+        $vendor = $this->vendorRepository->findOneBy(['ownerUserId' => $userId]);
         if (!$vendor instanceof VendorEntity) {
             return;
         }
 
         $vendor->deactivate();
-        $manager->persist($vendor);
 
-        $assignment = $manager->getRepository(VendorUserAssignmentEntity::class)->findOneBy([
+        $assignment = $this->assignmentRepository->findOneBy([
             'vendor' => $vendor,
             'userId' => $userId,
         ]);
         if ($assignment instanceof VendorUserAssignmentEntity) {
             $assignment->revoke()->clearPrimary();
-            $manager->persist($assignment);
+            $this->assignmentRepository->save($assignment);
         }
 
-        $profile = $manager->getRepository(VendorProfileEntity::class)->findOneBy(['vendor' => $vendor]);
+        $profile = $this->profileRepository->findOneBy(['vendor' => $vendor]);
         if ($profile instanceof VendorProfileEntity) {
             $profile->unpublish();
-            $manager->persist($profile);
+            $this->profileRepository->save($profile);
         }
+
+        $this->vendorRepository->save($vendor, true);
     }
 
     /** @param array<string, mixed> $user */
@@ -121,13 +135,12 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
         return is_array($roles) && in_array('ROLE_PRO', $roles, true);
     }
 
-    private function loadAdministrativeProfile(EntityManagerInterface $manager, VendorEntity $vendor): void
+    private function loadAdministrativeProfile(VendorEntity $vendor): void
     {
-        $profile = $manager->getRepository(VendorProfileEntity::class)->findOneBy(['vendor' => $vendor]);
+        $profile = $this->profileRepository->findOneBy(['vendor' => $vendor]);
         if (!$profile instanceof VendorProfileEntity) {
             $profile = new VendorProfileEntity($vendor);
             $vendor->setProfile($profile);
-            $manager->persist($profile);
         }
         $profile
             ->updateProfile(
@@ -143,47 +156,47 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
                 seoDescription: 'Official SmartResponsor administrative vendor profile, platform updates, services, and marketplace activity.',
             )
             ->publish();
+        $this->profileRepository->save($profile);
 
-        $media = $manager->getRepository(VendorMediaEntity::class)->findOneBy(['vendor' => $vendor]);
+        $media = $this->mediaRepository->findOneBy(['vendor' => $vendor]);
         if (!$media instanceof VendorMediaEntity) {
             $media = new VendorMediaEntity($vendor);
             $vendor->setMedia($media);
-            $manager->persist($media);
         }
         $media->update(
             logoPath: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&h=800&q=85',
             bannerPath: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1640&h=624&q=85',
             gallery: [],
         );
+        $this->mediaRepository->save($media);
 
-        $avatar = $manager->getRepository(VendorProfileAvatarEntity::class)->findOneBy(['vendor' => $vendor]);
+        $avatar = $this->avatarRepository->findOneBy(['vendor' => $vendor]);
         if (!$avatar instanceof VendorProfileAvatarEntity) {
             $avatar = new VendorProfileAvatarEntity($vendor, 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&h=800&q=85');
-            $manager->persist($avatar);
         } else {
             $avatar->update('https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&h=800&q=85');
         }
+        $this->avatarRepository->save($avatar);
 
-        $cover = $manager->getRepository(VendorProfileCoverEntity::class)->findOneBy(['vendor' => $vendor]);
+        $cover = $this->coverRepository->findOneBy(['vendor' => $vendor]);
         if (!$cover instanceof VendorProfileCoverEntity) {
             $cover = new VendorProfileCoverEntity($vendor, 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1640&h=624&q=85');
-            $manager->persist($cover);
         } else {
             $cover->update('https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1640&h=624&q=85');
         }
+        $this->coverRepository->save($cover);
     }
 
     /** @param array<string, mixed> $user */
-    private function loadProfessionalProfile(EntityManagerInterface $manager, VendorEntity $vendor, array $user): void
+    private function loadProfessionalProfile(VendorEntity $vendor, array $user): void
     {
         $definition = $this->professionalDefinition($this->scalarString($user['email'] ?? null));
         $vendor->rename($definition['brand']);
 
-        $profile = $manager->getRepository(VendorProfileEntity::class)->findOneBy(['vendor' => $vendor]);
+        $profile = $this->profileRepository->findOneBy(['vendor' => $vendor]);
         if (!$profile instanceof VendorProfileEntity) {
             $profile = new VendorProfileEntity($vendor);
             $vendor->setProfile($profile);
-            $manager->persist($profile);
         }
         $profile
             ->updateProfile(
@@ -195,22 +208,23 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
                 seoDescription: $definition['about'],
             )
             ->publish();
+        $this->profileRepository->save($profile);
 
-        $avatar = $manager->getRepository(VendorProfileAvatarEntity::class)->findOneBy(['vendor' => $vendor]);
+        $avatar = $this->avatarRepository->findOneBy(['vendor' => $vendor]);
         if (!$avatar instanceof VendorProfileAvatarEntity) {
             $avatar = new VendorProfileAvatarEntity($vendor, $definition['avatar']);
-            $manager->persist($avatar);
         } else {
             $avatar->update($definition['avatar']);
         }
+        $this->avatarRepository->save($avatar);
 
-        $cover = $manager->getRepository(VendorProfileCoverEntity::class)->findOneBy(['vendor' => $vendor]);
+        $cover = $this->coverRepository->findOneBy(['vendor' => $vendor]);
         if (!$cover instanceof VendorProfileCoverEntity) {
             $cover = new VendorProfileCoverEntity($vendor, $definition['cover']);
-            $manager->persist($cover);
         } else {
             $cover->update($definition['cover']);
         }
+        $this->coverRepository->save($cover);
     }
 
     /** @return array{brand: string, display: string, about: string, avatar: string, cover: string} */

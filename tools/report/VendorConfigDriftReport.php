@@ -8,7 +8,7 @@ vendorReportHeader('Vendoring config drift report');
 
 $pairs = [
     ['config/packages/vendor_nelmio_api_doc.yaml.dist', 'config/routes/vendor_nelmio_api_doc.yaml.dist'],
-    ['config/platform/routes/crud/vendor.yaml', 'config/routes_runtime.php'],
+    ['config/platform/routes/crud/vendor_crud.yaml', 'config/routes_runtime.php'],
 ];
 
 $hasWarning = false;

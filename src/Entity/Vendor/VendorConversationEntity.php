@@ -16,7 +16,7 @@ class VendorConversationEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $counterpartyType = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $counterpartyId = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $counterpartyName = null;
-    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    #[ORM\Column(name: 'conversation_status', type: 'string', length: 255, nullable: false)] private string $status = '';
     /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];
     #[ORM\Column(type: 'datetime_immutable', nullable: false)] private ?\DateTimeImmutable $openedAt = null;

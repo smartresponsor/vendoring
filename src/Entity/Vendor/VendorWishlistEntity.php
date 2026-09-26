@@ -13,7 +13,7 @@ class VendorWishlistEntity extends VendorAbstractEntity
     #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'wishlists')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $customerReference = '';
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $nameEntity = '';
-    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    #[ORM\Column(name: 'wishlist_status', type: 'string', length: 255, nullable: false)] private string $status = '';
     public function __construct(VendorEntity $vendor, string $customerReference, string $nameEntity)
     {
         parent::__construct('active');

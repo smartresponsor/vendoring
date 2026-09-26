@@ -7,7 +7,7 @@ namespace App\Vendoring\Tests\Support\Repository;
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
 use App\Vendoring\DTO\Ledger\VendorLedgerBalanceDTO;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 
 final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInterface
 {
@@ -19,20 +19,16 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
         $this->entries[] = $entry;
     }
 
-    public function listByRef(string $tenantId, string $referenceType, string $referenceId, ?string $vendorId = null): array
+    public function listByRef(string $vendorId, string $referenceType, string $referenceId): array
     {
         return array_values(array_filter(
             $this->entries,
-            static function (VendorLedgerEntity $entry) use ($tenantId, $referenceType, $referenceId, $vendorId): bool {
-                if ($entry->tenantId !== $tenantId) {
-                    return false;
-                }
-
+            static function (VendorLedgerEntity $entry) use ($vendorId, $referenceType, $referenceId): bool {
                 if ($entry->referenceType !== $referenceType || $entry->referenceId !== $referenceId) {
                     return false;
                 }
 
-                if (null !== $vendorId && $entry->vendorId !== $vendorId) {
+                if ($entry->vendorId !== $vendorId) {
                     return false;
                 }
 
@@ -89,11 +85,7 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
         $sum = 0.0;
 
         foreach ($this->entries as $entry) {
-            if ($entry->tenantId !== $criteria->tenantId) {
-                continue;
-            }
-
-            if (null !== $criteria->vendorId && $entry->vendorId !== $criteria->vendorId) {
+            if ($entry->vendorId !== $criteria->vendorId) {
                 continue;
             }
 

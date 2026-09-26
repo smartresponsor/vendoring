@@ -7,12 +7,12 @@ namespace App\Vendoring\Command;
 use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\ProviderInterface\Statement\VendorStatementRecipientProviderInterface;
 use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
 use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPdfServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -26,14 +26,14 @@ final class VendorSendVendorStatementsCommand extends Command
     private readonly VendorStatementServiceInterface $svc;
     private readonly VendorStatementExporterPdfServiceInterface $pdf;
     private readonly VendorStatementMailerServiceInterface $mailer;
-    private readonly VendorStatementRecipientProviderServiceInterface $recipientProvider;
+    private readonly VendorStatementRecipientProviderInterface $recipientProvider;
     private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter;
 
     public function __construct(
         VendorStatementServiceInterface $svc,
         VendorStatementExporterPdfServiceInterface $pdf,
         VendorStatementMailerServiceInterface $mailer,
-        VendorStatementRecipientProviderServiceInterface $recipientProvider,
+        VendorStatementRecipientProviderInterface $recipientProvider,
         ?VendorCommandResultEmitterServiceInterface $commandResultEmitter = null,
     ) {
         $this->svc = $svc;
@@ -48,7 +48,6 @@ final class VendorSendVendorStatementsCommand extends Command
     {
         parent::configure();
         $this
-            ->addOption('tenant-id', null, InputOption::VALUE_REQUIRED)
             ->addOption('vendor-id', null, InputOption::VALUE_REQUIRED)
             ->addOption('email', null, InputOption::VALUE_REQUIRED)
             ->addOption('currency', null, InputOption::VALUE_REQUIRED, 'Statement currency', 'USD')
@@ -100,15 +99,14 @@ final class VendorSendVendorStatementsCommand extends Command
 
         foreach ($recipients as $recipient) {
             try {
-                $dto = new VendorStatementRequestDTO($recipient->tenantId, $recipient->vendorId, $from, $to, $recipient->currency);
+                $dto = new VendorStatementRequestDTO($recipient->vendorId, $from, $to, $recipient->currency);
                 $data = $this->svc->build($dto);
                 $pdfPath = $this->pdf->export($dto, $data);
-                $result = $this->mailer->send($recipient->tenantId, $recipient->vendorId, $recipient->email, $pdfPath, $period);
+                $result = $this->mailer->send($recipient->vendorId, $recipient->email, $pdfPath, $period);
             } catch (\Throwable $throwable) {
                 $result = [
                     'ok' => false,
                     'message' => 'statement_generation_failed',
-                    'tenantId' => $recipient->tenantId,
                     'vendorId' => $recipient->vendorId,
                     'email' => $recipient->email,
                     'pdfPath' => '',
@@ -133,8 +131,7 @@ final class VendorSendVendorStatementsCommand extends Command
 
             if (!VendorCommandOutputFormatEnum::isJson($format)) {
                 $output->writeln(sprintf(
-                    '[%s/%s] %s email=%s period=%s currency=%s pdf=%s attached=%s message=%s',
-                    $recipient->tenantId,
+                    '[%s] %s email=%s period=%s currency=%s pdf=%s attached=%s message=%s',
                     $recipient->vendorId,
                     $result['ok'] ? 'SENT' : 'FAIL',
                     $result['email'],
@@ -167,17 +164,16 @@ final class VendorSendVendorStatementsCommand extends Command
     /** @return list<VendorStatementRecipientDTO> */
     private function resolveRecipients(InputInterface $input, string $from, string $to): array
     {
-        $tenantId = trim($this->stringOption($input, 'tenant-id'));
         $vendorId = trim($this->stringOption($input, 'vendor-id'));
         $email = trim($this->stringOption($input, 'email'));
         $currency = strtoupper(trim($this->stringOption($input, 'currency')));
 
-        if ('' !== $tenantId || '' !== $vendorId || '' !== $email) {
-            if ('' === $tenantId || '' === $vendorId || '' === $email) {
+        if ('' !== $vendorId || '' !== $email) {
+            if ('' === $vendorId || '' === $email) {
                 return [];
             }
 
-            return [new VendorStatementRecipientDTO($tenantId, $vendorId, $email, '' !== $currency ? $currency : 'USD')];
+            return [new VendorStatementRecipientDTO($vendorId, $email, '' !== $currency ? $currency : 'USD')];
         }
 
         return $this->recipientProvider->forPeriod($from, $to);

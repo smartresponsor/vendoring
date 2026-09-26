@@ -12,19 +12,20 @@ use Doctrine\ORM\Mapping as ORM;
     indexes: [
         new ORM\Index(name: 'idx_vendor_payout_account_vendor_id', columns: ['vendor_id']),
     ],
+    uniqueConstraints: [
+        new ORM\UniqueConstraint(name: 'uniq_vendor_payout_account_business_id', columns: ['account_id']),
+    ],
 )]
 class VendorPayoutAccountEntity extends VendorAbstractEntity
 {
-    #[ORM\Column(type: 'string', length: 64, unique: true)] public string $accountId;
-    #[ORM\Column(type: 'string', length: 64)] public string $tenantId;
+    #[ORM\Column(type: 'string', length: 64)] public string $accountId;
     #[ORM\Column(type: 'string', length: 64)] public string $vendorId;
     #[ORM\Column(type: 'string', length: 64)] public string $provider;
     #[ORM\Column(type: 'string', length: 128)] public string $accountRef;
     #[ORM\Column(type: 'string', length: 8)] public string $currency;
-    #[ORM\Column(type: 'boolean')] public bool $active = true;
+    #[ORM\Column(name: 'account_active', type: 'boolean')] public bool $active = true;
     public function __construct(
         string $id,
-        string $tenantId,
         string $vendorId,
         string $provider,
         string $accountRef,
@@ -35,7 +36,6 @@ class VendorPayoutAccountEntity extends VendorAbstractEntity
         parent::__construct('active');
         $this->accountId = $id;
         unset($createdAt);
-        $this->tenantId = $tenantId;
         $this->vendorId = $vendorId;
         $this->provider = $provider;
         $this->accountRef = $accountRef;

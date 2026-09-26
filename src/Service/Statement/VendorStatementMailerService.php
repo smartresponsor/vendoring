@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Statement;
 
+use App\Vendoring\PolicyInterface\VendorOutboundOperationPolicyInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorMetricCollectorServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface;
-use App\Vendoring\ServiceInterface\Policy\VendorOutboundOperationPolicyServiceInterface;
 use App\Vendoring\ServiceInterface\Reliability\VendorOutboundCircuitBreakerServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -23,25 +23,25 @@ use Symfony\Component\Mime\Email;
 final readonly class VendorStatementMailerService implements VendorStatementMailerServiceInterface
 {
     public function __construct(
-        private MailerInterface                  $mailer,
-        private VendorMetricCollectorServiceInterface         $metrics,
-        private VendorRuntimeLoggerServiceInterface           $runtimeLogger,
-        private VendorOutboundOperationPolicyServiceInterface $outboundPolicy,
-        private VendorOutboundCircuitBreakerServiceInterface  $circuitBreaker,
-    ) {}
+        private MailerInterface $mailer,
+        private VendorMetricCollectorServiceInterface $metrics,
+        private VendorRuntimeLoggerServiceInterface $runtimeLogger,
+        private VendorOutboundOperationPolicyInterface $outboundPolicy,
+        private VendorOutboundCircuitBreakerServiceInterface $circuitBreaker,
+    ) {
+    }
 
     /**
      * @throws \JsonException
      */
-    public function send(string $tenantId, string $vendorId, string $email, string $pdfPath, string $periodLabel): array
+    public function send(string $vendorId, string $email, string $pdfPath, string $periodLabel): array
     {
         $policy = $this->outboundPolicy->forOperation('statement_mail_send');
-        $scopeKey = $tenantId . ':' . $vendorId;
+        $scopeKey = $vendorId;
 
         $result = [
             'ok' => false,
             'message' => 'statement_mail_send_failed',
-            'tenantId' => $tenantId,
             'vendorId' => $vendorId,
             'email' => $email,
             'pdfPath' => $pdfPath,
@@ -57,11 +57,9 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
 
         if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->metrics->increment('statement_mail_invalid_email_total', [
-                'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
             ]);
             $this->runtimeLogger->warning('vendor_statement_mail_rejected', [
-                'tenant_id' => $tenantId,
                 'vendor_id' => $vendorId,
                 'email' => $email,
                 'error_code' => 'statement_mail_invalid_email',
@@ -82,11 +80,9 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
 
         if (true !== $breaker['allowRequest']) {
             $this->metrics->increment('statement_mail_circuit_open_total', [
-                'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
             ]);
             $this->runtimeLogger->warning('vendor_statement_mail_short_circuited', [
-                'tenant_id' => $tenantId,
                 'vendor_id' => $vendorId,
                 'email' => $email,
                 'error_code' => 'statement_mail_circuit_open',
@@ -104,9 +100,8 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             ->to($email)
             ->subject(sprintf('Monthly Vendor Statement for %s', $periodLabel))
             ->text(sprintf(
-                "Hello,\nPlease find attached your statement for %s.\nTenant: %s, Vendor: %s",
+                "Hello,\nPlease find attached your statement for %s.\nVendor: %s",
                 $periodLabel,
-                $tenantId,
                 $vendorId,
             ));
 
@@ -115,11 +110,9 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             $message->attachFromPath($pdfPath, 'statement.pdf', 'application/pdf');
         } elseif ('' !== $pdfPath) {
             $this->metrics->increment('statement_mail_attachment_missing_total', [
-                'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
             ]);
             $this->runtimeLogger->warning('vendor_statement_mail_attachment_missing', [
-                'tenant_id' => $tenantId,
                 'vendor_id' => $vendorId,
                 'pdf_path' => $pdfPath,
             ]);
@@ -136,12 +129,10 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             );
 
             $this->metrics->increment('statement_mail_failed_total', [
-                'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
                 'errorClass' => $transportException::class,
             ]);
             $this->runtimeLogger->error('vendor_statement_mail_failed', [
-                'tenant_id' => $tenantId,
                 'vendor_id' => $vendorId,
                 'email' => $email,
                 'error_class' => $transportException::class,
@@ -162,11 +153,9 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
 
         $this->circuitBreaker->recordSuccess('statement_mail_send', $scopeKey);
         $this->metrics->increment('statement_mail_sent_total', [
-            'tenantId' => $tenantId,
             'vendorId' => $vendorId,
         ]);
         $this->runtimeLogger->info('vendor_statement_mail_sent', [
-            'tenant_id' => $tenantId,
             'vendor_id' => $vendorId,
             'email' => $email,
             'attached' => $attached,
@@ -175,7 +164,6 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
         return [
             'ok' => true,
             'message' => 'sent',
-            'tenantId' => $tenantId,
             'vendorId' => $vendorId,
             'email' => $email,
             'pdfPath' => $pdfPath,

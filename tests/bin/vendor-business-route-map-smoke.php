@@ -5,7 +5,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$routeMap = $root.'/config/platform/routes/business/vendor.yaml';
+$routeMap = $root.'/config/platform/routes/business/vendor_business.yaml';
 
 if (!file_exists($routeMap)) {
     fwrite(STDERR, "Missing vendor business route map.\n");

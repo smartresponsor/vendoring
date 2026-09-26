@@ -44,6 +44,7 @@ final class CanonicalNoStubRepositoryContractTest extends TestCase
             '.idea/',
             '.git',
             'build/release/',
+            'var/',
             'vendor/',
             'deploy/_templates/',
             'deploy/systemd/',
@@ -53,9 +54,11 @@ final class CanonicalNoStubRepositoryContractTest extends TestCase
             '.gating/',
             'tools/report/VendorConfigGuardReport.php',
             '.php-cs-fixer.cache',
+            '.console-mcp/',
             '.patch-backup/',
             'var/.php-cs-fixer.cache',
             'composer.json',
+            'composer.prod.json',
             'composer.lock',
         ] as $prefix) {
             if (str_starts_with($path, $prefix)) {

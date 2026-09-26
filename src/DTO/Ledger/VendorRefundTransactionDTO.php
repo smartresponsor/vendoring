@@ -6,5 +6,7 @@ namespace App\Vendoring\DTO\Ledger;
 
 final class VendorRefundTransactionDTO
 {
-    public function __construct(public string $tenantId, public string $vendorId, public string $rmaId, public string $orderId, public float $amount, public string $currency) {}
+    public function __construct(public string $vendorId, public string $rmaId, public string $orderId, public float $amount, public string $currency)
+    {
+    }
 }

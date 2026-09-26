@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Vendoring\Command;
 
 use App\Vendoring\DataFixtures\VendorAccessBootstrapFixture;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,14 +18,13 @@ final class VendorFixtureLoadCommand extends Command
 {
     public function __construct(
         private readonly VendorAccessBootstrapFixture $fixture,
-        private readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->fixture->load($this->entityManager);
+        $this->fixture->run();
 
         $output->writeln('<info>Vendor fixtures loaded.</info>');
 

@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
-use App\Vendoring\Service\Security\VendorAccessResolverService;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Resolver\Security\VendorAccessResolver;
 use App\Vendoring\Service\Security\VendorAuthorizationMatrixService;
 use App\Vendoring\ValueObject\VendorRoleValueObject;
 
@@ -41,7 +41,7 @@ $repository = new class implements VendorUserAssignmentRepositoryInterface {
     }
 };
 
-$resolver = new VendorAccessResolverService($repository, $matrix);
+$resolver = new VendorAccessResolver($repository, $matrix);
 $explanation = $resolver->explainUserAccessVendorCapability(42, 7, 'payouts.write');
 
 if (!$explanation['granted'] || 'role_grants_capability' !== $explanation['reason']) {

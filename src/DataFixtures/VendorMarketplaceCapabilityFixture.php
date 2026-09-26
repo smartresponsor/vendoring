@@ -6,13 +6,20 @@ namespace App\Vendoring\DataFixtures;
 
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorServiceEntity;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorServiceRepositoryInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 
 final class VendorMarketplaceCapabilityFixture extends Fixture implements FixtureGroupInterface
 {
+    public function __construct(
+        private readonly VendorRepositoryInterface $vendorRepository,
+        private readonly VendorServiceRepositoryInterface $serviceRepository,
+    ) {
+    }
+
     public static function getGroups(): array
     {
         return ['vendoring_marketplace_capabilities'];
@@ -20,13 +27,7 @@ final class VendorMarketplaceCapabilityFixture extends Fixture implements Fixtur
 
     public function load(ObjectManager $manager): void
     {
-        if (!$manager instanceof EntityManagerInterface) {
-            return;
-        }
-
-        $rows = $manager->getConnection()->fetchAllAssociative(
-            "SELECT id, owner_id, type_path, catalog_code FROM retail WHERE kind = 'service' AND owner_type = 'vendor' AND object_status = 'published' ORDER BY owner_id, type_path, id",
-        );
+        $rows = $this->vendorRepository->findPublishedRetailServiceRows();
 
         /** @var array<string, array{vendorId: int, typePath: string, catalogCode: ?string, offeringIds: list<int>}> $capabilities */
         $capabilities = [];
@@ -50,7 +51,7 @@ final class VendorMarketplaceCapabilityFixture extends Fixture implements Fixtur
         }
 
         foreach ($capabilities as $capability) {
-            $vendor = $manager->getRepository(VendorEntity::class)->find($capability['vendorId']);
+            $vendor = $this->vendorRepository->find($capability['vendorId']);
             if (!$vendor instanceof VendorEntity) {
                 throw new \RuntimeException(sprintf('Published retail offering references missing vendor %d.', $capability['vendorId']));
             }
@@ -63,18 +64,17 @@ final class VendorMarketplaceCapabilityFixture extends Fixture implements Fixtur
             ];
             $code = 'retailing:'.$capability['typePath'];
 
-            $service = $manager->getRepository(VendorServiceEntity::class)->findOneBy([
+            $service = $this->serviceRepository->findOneBy([
                 'vendor' => $vendor,
                 'categoryId' => $capability['typePath'],
             ]);
             if (!$service instanceof VendorServiceEntity) {
                 $service = new VendorServiceEntity($vendor, $capability['typePath'], $code, $payload);
-                $manager->persist($service);
             } else {
                 $service->update($code, $payload)->setStatus('active');
             }
-        }
 
-        $manager->flush();
+            $this->serviceRepository->save($service, true);
+        }
     }
 }

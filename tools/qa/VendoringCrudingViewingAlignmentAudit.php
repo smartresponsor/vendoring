@@ -56,7 +56,7 @@ foreach ($serviceFiles as $file) {
     $source = file_get_contents($file) ?: '';
     $relative = substr($file, strlen($root) + 1);
 
-    if (str_ends_with($relative, 'AbstractVendorCrudRouteService.php')) {
+    if (str_ends_with($relative, 'VendorAbstractCrudRouteService.php')) {
         if (!preg_match('/\babstract\s+class\s+AbstractVendor[A-Za-z0-9_]*Service\b/', $source)) {
             $errors[] = 'Abstract HTTP support service must remain AbstractVendor*Service: '.$relative;
         }

@@ -13,7 +13,7 @@ class VendorGroupEntity extends VendorAbstractEntity
     #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'groups')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $code = '';
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $nameEntity = '';
-    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    #[ORM\Column(name: 'group_status', type: 'string', length: 255, nullable: false)] private string $status = '';
     /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];
     /** @param array<string, mixed> $meta */

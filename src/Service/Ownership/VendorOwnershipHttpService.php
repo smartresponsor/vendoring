@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Ownership;
 
-use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface;
+use App\Vendoring\BuilderInterface\Ownership\VendorOwnershipProjectionBuilderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 final readonly class VendorOwnershipHttpService
 {
     public function __construct(
-        private VendorOwnershipProjectionBuilderServiceInterface $projectionBuilder,
+        private VendorOwnershipProjectionBuilderInterface $projectionBuilder,
     ) {
     }
 

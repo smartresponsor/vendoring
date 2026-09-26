@@ -34,8 +34,7 @@ final class VendorCanaryRolloutCommand extends Command
         parent::configure();
         $this
             ->addOption('flag', null, InputOption::VALUE_REQUIRED, 'Canonical feature flag identifier')
-            ->addOption('tenantId', null, InputOption::VALUE_OPTIONAL, 'Optional tenant scope')
-            ->addOption('vendorId', null, InputOption::VALUE_OPTIONAL, 'Optional vendor scope')
+            ->addOption('vendorId', null, InputOption::VALUE_OPTIONAL, 'Optional Vendor scope')
             ->addOption('windowSeconds', null, InputOption::VALUE_OPTIONAL, 'Lookback window in seconds', '900')
             ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Output format: text|json', 'text')
             ->addOption('write', null, InputOption::VALUE_NONE, 'Write canary rollout report to build/release/canary-rollout.json')
@@ -55,16 +54,14 @@ final class VendorCanaryRolloutCommand extends Command
             return Command::INVALID;
         }
 
-        $tenantOption = $input->getOption('tenantId');
         $vendorOption = $input->getOption('vendorId');
         $windowOption = $input->getOption('windowSeconds');
 
-        $tenantId = is_scalar($tenantOption) && '' !== trim((string) $tenantOption) ? trim((string) $tenantOption) : null;
         $vendorId = is_scalar($vendorOption) && '' !== trim((string) $vendorOption) ? trim((string) $vendorOption) : null;
         $windowSeconds = is_scalar($windowOption) ? max(1, (int) $windowOption) : 900;
 
         try {
-            $report = $this->canaryRolloutCoordinator->evaluate($flagName, $tenantId, $vendorId, $windowSeconds);
+            $report = $this->canaryRolloutCoordinator->evaluate($flagName, $vendorId, $windowSeconds);
         } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError(
                 $output,
@@ -74,7 +71,6 @@ final class VendorCanaryRolloutCommand extends Command
                 $throwable,
                 [
                     'flag' => $flagName,
-                    'tenantId' => $tenantId,
                     'vendorId' => $vendorId,
                     'windowSeconds' => $windowSeconds,
                 ],
@@ -93,7 +89,6 @@ final class VendorCanaryRolloutCommand extends Command
         } catch (VendorCommandIoException $exception) {
             $this->commandResultEmitter->emitError($output, $format, 'failed', $exception->getMessage(), [
                 'flag' => $flagName,
-                'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
                 'windowSeconds' => $windowSeconds,
             ]);

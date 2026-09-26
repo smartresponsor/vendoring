@@ -14,12 +14,11 @@ namespace App\Vendoring\ServiceInterface\Statement;
 interface VendorStatementMailerServiceInterface
 {
     /**
-     * Send one statement email for the supplied tenant/vendor period.
+     * Send one statement email for the supplied vendor period.
      *
      * @return array{
      *   ok:bool,
      *   message:string,
-     *   tenantId:string,
      *   vendorId:string,
      *   email:string,
      *   pdfPath:string,
@@ -35,5 +34,5 @@ interface VendorStatementMailerServiceInterface
      *   errorMessage?:string
      * }
      */
-    public function send(string $tenantId, string $vendorId, string $email, string $pdfPath, string $periodLabel): array;
+    public function send(string $vendorId, string $email, string $pdfPath, string $periodLabel): array;
 }

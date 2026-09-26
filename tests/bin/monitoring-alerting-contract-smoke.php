@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Vendoring\Builder\Observability\VendorMonitoringSnapshotBuilder;
 use App\Vendoring\Service\Observability\VendorAlertRuleEvaluatorService;
-use App\Vendoring\Service\Observability\VendorMonitoringSnapshotBuilderService;
 
 require dirname(__DIR__, 2).'/vendor/autoload.php';
 
@@ -35,7 +35,7 @@ file_put_contents($projectDir.'/docs/PHASE61_FINANCE_SYNTHETIC_PROBE.md', 'ok');
 file_put_contents($projectDir.'/docs/PHASE62_PAYOUT_PROCESSING_SYNTHETIC_PROBE.md', 'ok');
 file_put_contents($projectDir.'/docs/PHASE60_DEPLOY_READINESS_POST_DEPLOY_PACK.md', 'ok');
 
-$builder = new VendorMonitoringSnapshotBuilderService($observabilityDir, $faultToleranceDir, $projectDir);
+$builder = new VendorMonitoringSnapshotBuilder($observabilityDir, $faultToleranceDir, $projectDir);
 $snapshot = $builder->build(900);
 $alerts = (new VendorAlertRuleEvaluatorService([
     'errorLogThreshold' => 1,

@@ -14,7 +14,7 @@ class VendorCommissionEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $code = '';
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $direction = '';
     #[ORM\Column(type: 'decimal', precision: 6, scale: 2, nullable: false)] private string $ratePercent = '0.00';
-    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    #[ORM\Column(name: 'commission_status', type: 'string', length: 255, nullable: false)] private string $status = '';
     #[ORM\Column(type: 'datetime_immutable', nullable: false)] private ?\DateTimeImmutable $effectiveFrom = null;
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $effectiveTo = null;
     /** @var array<string, mixed> */

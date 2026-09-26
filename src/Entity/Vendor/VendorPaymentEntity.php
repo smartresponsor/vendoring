@@ -15,7 +15,7 @@ class VendorPaymentEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $methodCode = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $externalPaymentId = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $label = null;
-    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    #[ORM\Column(name: 'payment_status', type: 'string', length: 255, nullable: false)] private string $status = '';
     #[ORM\Column(type: 'boolean')] private bool $isDefault = false;
     /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')] private array $meta = [];

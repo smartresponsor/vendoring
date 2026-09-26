@@ -1,0 +1,47 @@
+# ---------------------------------------------------------------------------
+# Vendoring — business routes
+# ---------------------------------------------------------------------------
+# Grammar rule: id/slug ONLY as last token.
+# Two-id pattern /{vendorId}/{itemId} is forbidden.
+# Secondary item identifier passes via request body (POST payload).
+# ---------------------------------------------------------------------------
+
+# Category
+vendor.category.assign:       { path: /vendor/category/assign/{id},        type: App\Vendoring\Form\Category\VendorCategoryAssignType,    service: App\Vendoring\Service\Category\VendorCategoryAssignService,    resolver: id }
+vendor.category.unassign:     { path: /vendor/category/unassign/{id},      type: App\Vendoring\Form\Category\VendorCategoryUnassignType,  service: App\Vendoring\Service\Category\VendorCategoryUnassignService,  resolver: id }
+
+# Commission
+vendor.commission.adjust:     { path: /vendor/commission/adjust/{id},      type: App\Vendoring\Form\Commission\VendorCommissionAdjustType,   service: App\Vendoring\Service\Commission\VendorCommissionAdjustService,   resolver: id }
+vendor.commission.calculate_id:   { path: /vendor/commission/calculate/{id},   type: App\Vendoring\Form\Commission\VendorCommissionCalculateType, service: App\Vendoring\Service\Commission\VendorCommissionCalculateService, resolver: id }
+vendor.commission.calculate_slug: { path: /vendor/commission/calculate/{slug},  type: App\Vendoring\Form\Commission\VendorCommissionCalculateType, service: App\Vendoring\Service\Commission\VendorCommissionCalculateService, resolver: slug }
+
+# Document
+vendor.document.reject:       { path: /vendor/document/reject/{id},        type: App\Vendoring\Form\Document\VendorDocumentRejectType,   service: App\Vendoring\Service\Document\VendorDocumentRejectService,   resolver: id }
+vendor.document.verify:       { path: /vendor/document/verify/{id},        type: App\Vendoring\Form\Document\VendorDocumentVerifyType,   service: App\Vendoring\Service\Document\VendorDocumentVerifyService,   resolver: id }
+
+# Onboarding
+vendor.onboarding.approve_id:   { path: /vendor/onboarding/approve/{id},   type: App\Vendoring\Form\Onboarding\VendorOnboardingApproveType, service: App\Vendoring\Service\Onboarding\VendorOnboardingApproveService, resolver: id }
+vendor.onboarding.approve_slug: { path: /vendor/onboarding/approve/{slug}, type: App\Vendoring\Form\Onboarding\VendorOnboardingApproveType, service: App\Vendoring\Service\Onboarding\VendorOnboardingApproveService, resolver: slug }
+vendor.onboarding.reject_id:    { path: /vendor/onboarding/reject/{id},    type: App\Vendoring\Form\Onboarding\VendorOnboardingRejectType,  service: App\Vendoring\Service\Onboarding\VendorOnboardingRejectService,  resolver: id }
+vendor.onboarding.reject_slug:  { path: /vendor/onboarding/reject/{slug},  type: App\Vendoring\Form\Onboarding\VendorOnboardingRejectType,  service: App\Vendoring\Service\Onboarding\VendorOnboardingRejectService,  resolver: slug }
+vendor.onboarding.start_id:     { path: /vendor/onboarding/start/{id},     type: App\Vendoring\Form\Onboarding\VendorOnboardingStartType,   service: App\Vendoring\Service\Onboarding\VendorOnboardingStartService,   resolver: id }
+vendor.onboarding.start_slug:   { path: /vendor/onboarding/start/{slug},   type: App\Vendoring\Form\Onboarding\VendorOnboardingStartType,   service: App\Vendoring\Service\Onboarding\VendorOnboardingStartService,   resolver: slug }
+
+# Payout
+vendor.payout.approve_id:   { path: /vendor/payout/approve/{id},   type: App\Vendoring\Form\Payout\VendorPayoutApproveType,   service: App\Vendoring\Service\Payout\VendorPayoutApproveService,   resolver: id }
+vendor.payout.calculate_id:   { path: /vendor/payout/calculate/{id},   type: App\Vendoring\Form\Payout\VendorPayoutCalculateType, service: App\Vendoring\Service\Payout\VendorPayoutCalculateService, resolver: id }
+vendor.payout.calculate_slug: { path: /vendor/payout/calculate/{slug}, type: App\Vendoring\Form\Payout\VendorPayoutCalculateType, service: App\Vendoring\Service\Payout\VendorPayoutCalculateService, resolver: slug }
+vendor.payout.pay_id:       { path: /vendor/payout/pay/{id},       type: App\Vendoring\Form\Payout\VendorPayoutPayType,       service: App\Vendoring\Service\Payout\VendorPayoutPayService,       resolver: id }
+
+# Product
+vendor.product.assign:       { path: /vendor/product/assign/{id},      type: App\Vendoring\Form\Product\VendorProductAssignType,   service: App\Vendoring\Service\Product\VendorProductAssignService,   resolver: id }
+vendor.product.unassign:     { path: /vendor/product/unassign/{id},    type: App\Vendoring\Form\Product\VendorProductUnassignType, service: App\Vendoring\Service\Product\VendorProductUnassignService, resolver: id }
+
+# Rating
+vendor.rating.recalculate_id:   { path: /vendor/rating/recalculate/{id},   type: App\Vendoring\Form\Rating\VendorRatingRecalculateType, service: App\Vendoring\Service\Rating\VendorRatingRecalculateService, resolver: id }
+vendor.rating.recalculate_slug: { path: /vendor/rating/recalculate/{slug}, type: App\Vendoring\Form\Rating\VendorRatingRecalculateType, service: App\Vendoring\Service\Rating\VendorRatingRecalculateService, resolver: slug }
+
+# Runtime
+vendor.runtime.finance.show_id:   { path: /vendor/runtime/finance/show/{id},   service: App\Vendoring\Service\Runtime\Finance\VendorRuntimeFinanceShowService,   resolver: id }
+vendor.runtime.status.show_id:    { path: /vendor/runtime/status/show/{id},    service: App\Vendoring\Service\Runtime\Status\VendorRuntimeStatusShowService,    resolver: id }
+vendor.runtime.integration.show_id: { path: /vendor/runtime/integration/show/{id}, service: App\Vendoring\Service\Runtime\ExternalIntegration\VendorRuntimeExternalIntegrationShowService, resolver: id }

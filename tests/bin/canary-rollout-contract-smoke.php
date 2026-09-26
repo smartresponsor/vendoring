@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
+use App\Vendoring\Builder\Observability\VendorMonitoringSnapshotBuilder;
+use App\Vendoring\Builder\Ops\VendorReleaseManifestBuilder;
+use App\Vendoring\Resolver\Rollout\VendorTrafficCohortResolver;
 use App\Vendoring\Service\Observability\VendorAlertRuleEvaluatorService;
-use App\Vendoring\Service\Observability\VendorMonitoringSnapshotBuilderService;
-use App\Vendoring\Service\Ops\VendorReleaseManifestBuilderService;
 use App\Vendoring\Service\Ops\VendorRollbackDecisionEvaluatorService;
 use App\Vendoring\Service\Rollout\VendorCanaryRolloutCoordinatorService;
 use App\Vendoring\Service\Rollout\VendorFeatureFlagService;
-use App\Vendoring\Service\Rollout\VendorTrafficCohortResolverService;
 
 require dirname(__DIR__, 2).'/vendor/autoload.php';
 
@@ -57,10 +57,10 @@ $featureFlags = [
 ];
 
 $coordinator = new VendorCanaryRolloutCoordinatorService(
-    new VendorFeatureFlagService(new VendorTrafficCohortResolverService(), $featureFlags),
-    new VendorTrafficCohortResolverService(),
-    new VendorReleaseManifestBuilderService(
-        new VendorMonitoringSnapshotBuilderService($observabilityDir, $faultToleranceDir, $root),
+    new VendorFeatureFlagService(new VendorTrafficCohortResolver(), $featureFlags),
+    new VendorTrafficCohortResolver(),
+    new VendorReleaseManifestBuilder(
+        new VendorMonitoringSnapshotBuilder($observabilityDir, $faultToleranceDir, $root),
         new VendorAlertRuleEvaluatorService(),
         $root,
     ),

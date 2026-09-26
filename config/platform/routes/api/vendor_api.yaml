@@ -1,0 +1,21 @@
+# ---------------------------------------------------------------------------
+# Vendoring — /api/vendor/ core JSON API routes
+# ---------------------------------------------------------------------------
+# Grammar: /api/vendor/{operation}/{id}
+# id/slug always last token — canonical grammar rule.
+# ---------------------------------------------------------------------------
+
+# Profile
+vendor.api.profile.show_id:           { path: /api/vendor/profile/show/{id},           service: App\Vendoring\Service\Profile\VendorProfileHttpService, resolver: id }
+vendor.api.profile.update_id:         { path: /api/vendor/profile/update/{id},         service: App\Vendoring\Service\Profile\VendorProfileHttpService, resolver: id }
+
+# Transaction
+vendor.api.transaction.create:        { path: /api/vendor/transaction/create,           service: App\Vendoring\Service\Transaction\VendorTransactionHttpService }
+vendor.api.transaction.list_id:       { path: /api/vendor/transaction/list/{id},        service: App\Vendoring\Service\Transaction\VendorTransactionHttpService, resolver: id }
+vendor.api.transaction.status_id:     { path: /api/vendor/transaction/status/{id},      service: App\Vendoring\Service\Transaction\VendorTransactionHttpService, resolver: id }
+
+# Summary
+vendor.api.summary.show_id:           { path: /api/vendor/summary/show/{id},            service: App\Vendoring\Service\Summary\VendorSummaryHttpService, resolver: id }
+
+# Canary rollout — no id, query params only
+vendor.api.canary.rollout.overview:   { path: /api/vendor/canary/rollout/overview,      service: App\Vendoring\Service\Canary\Rollout\VendorCanaryRolloutOverviewService }

@@ -83,7 +83,7 @@ final class Kernel extends BaseKernel
         }
 
         $crudingRoot = \dirname($crudingBundleFile, 2);
-        $routes->import($configDir.'/routes_business.yaml');
+        $routes->import($configDir.'/vendor_routes_business.yaml');
         $routes->import($crudingRoot.'/config/routes/crud_api_crud.yaml');
         $routes->import($crudingRoot.'/config/routes/crud_crud.yaml');
         $routes->import($configDir.'/routes_runtime.php');

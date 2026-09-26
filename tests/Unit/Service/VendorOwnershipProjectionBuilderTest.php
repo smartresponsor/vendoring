@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service;
 
+use App\Vendoring\Builder\Ownership\VendorOwnershipProjectionBuilder;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
-use App\Vendoring\Service\Ownership\VendorOwnershipProjectionBuilderService;
+use App\Vendoring\RepositoryInterface\VendorOwnershipProjectionRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use App\Vendoring\ServiceInterface\Security\VendorAuthorizationMatrixServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -34,7 +33,7 @@ final class VendorOwnershipProjectionBuilderTest extends TestCase
         $this->assignments->expects(self::never())->method('findActiveByVendorId');
         $this->authorizationMatrix->expects(self::never())->method('capabilitiesForRole');
 
-        $view = (new VendorOwnershipProjectionBuilderService($this->vendors, $this->assignments, $this->authorizationMatrix, $this->entityManagerWithZeroCounts()))->buildForVendorId(404);
+        $view = (new VendorOwnershipProjectionBuilder($this->vendors, $this->assignments, $this->authorizationMatrix, $this->entityManagerWithZeroCounts()))->buildForVendorId(404);
 
         self::assertNull($view);
     }
@@ -71,7 +70,7 @@ final class VendorOwnershipProjectionBuilderTest extends TestCase
                 ['viewer', ['billing.read']],
             ]);
 
-        $view = (new VendorOwnershipProjectionBuilderService($this->vendors, $this->assignments, $this->authorizationMatrix, $this->entityManagerWithZeroCounts()))->buildForVendorId(101);
+        $view = (new VendorOwnershipProjectionBuilder($this->vendors, $this->assignments, $this->authorizationMatrix, $this->entityManagerWithZeroCounts()))->buildForVendorId(101);
         self::assertNotNull($view);
 
         $payload = $view->toArray();
@@ -87,14 +86,12 @@ final class VendorOwnershipProjectionBuilderTest extends TestCase
         self::assertSame(['billing.read'], $payload['assignments'][1]['capabilities']);
         self::assertSame('2026-03-10T12:00:00+00:00', $payload['assignments'][1]['revokedAt']);
     }
-    private function entityManagerWithZeroCounts(): EntityManagerInterface
+
+    private function entityManagerWithZeroCounts(): VendorOwnershipProjectionRepositoryInterface
     {
-        $repository = $this->createMock(EntityRepository::class);
-        $repository->method('count')->willReturn(0);
+        $repository = $this->createMock(VendorOwnershipProjectionRepositoryInterface::class);
+        $repository->method('relationCounts')->willReturn([]);
 
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->method('getRepository')->willReturn($repository);
-
-        return $entityManager;
+        return $repository;
     }
 }

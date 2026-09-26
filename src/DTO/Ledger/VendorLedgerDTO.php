@@ -16,7 +16,6 @@ final class VendorLedgerDTO
         public string $currency,
         public string $direction,
         public array $meta = [],
-        public string $tenantId = 'default',
         public ?string $occurredAt = null,
     ) {
     }

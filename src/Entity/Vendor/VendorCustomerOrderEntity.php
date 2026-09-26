@@ -13,7 +13,7 @@ class VendorCustomerOrderEntity extends VendorAbstractEntity
     #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'customerOrders')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $externalOrderId = '';
     #[ORM\Column(type: 'string', length: 255, nullable: true)] private ?string $orderNumber = null;
-    #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $status = '';
+    #[ORM\Column(name: 'customer_order_status', type: 'string', length: 255, nullable: false)] private string $status = '';
     #[ORM\Column(type: 'string', length: 255, nullable: false)] private string $currency = '';
     #[ORM\Column(type: 'integer')] private int $grossCents = 0;
     #[ORM\Column(type: 'integer')] private int $netCents = 0;

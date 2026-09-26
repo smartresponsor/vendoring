@@ -11,7 +11,7 @@ $requiredFiles = [
     'config/bundles.php',
     'config/packages/framework.yaml',
     'config/packages/doctrine.yaml',
-    'config/platform/routes/crud/vendor.yaml',
+    'config/platform/routes/crud/vendor_crud.yaml',
     'config/routes_runtime.php',
 ];
 

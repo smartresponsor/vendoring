@@ -36,18 +36,13 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
      */
     public static function validationSurfaceProvider(): iterable
     {
-        yield 'finance runtime requires tenantId' => [
-            'uri' => '/api/vendor/runtime/finance/vendor-1',
-            'expectedError' => 'tenant_id_required',
-        ];
-
         yield 'statement runtime requires from' => [
-            'uri' => '/api/vendor/payout/statement/vendor-1?tenantId=tenant-1&to=2026-01-31&currency=USD',
+            'uri' => '/api/vendor/payout/statement/vendor-1?to=2026-01-31&currency=USD',
             'expectedError' => 'statement_from_required',
         ];
 
         yield 'statement runtime requires to' => [
-            'uri' => '/api/vendor/payout/statement/vendor-1?tenantId=tenant-1&from=2026-01-01&currency=USD',
+            'uri' => '/api/vendor/payout/statement/vendor-1?from=2026-01-01&currency=USD',
             'expectedError' => 'statement_to_required',
         ];
     }
@@ -62,7 +57,6 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
 
         try {
             $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
-                'tenantId' => 'tenant-1',
                 'vendorId' => 'vendor-1',
                 'currency' => 'USD',
                 'thresholdCents' => 1000,
@@ -87,7 +81,6 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
 
         try {
             $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
-                'tenantId' => 'tenant-1',
                 'vendorId' => 'vendor-1',
                 'currency' => 'USD',
                 'thresholdCents' => ' 1000 ',
@@ -115,7 +108,6 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
 
         try {
             $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
-                'tenantId' => 'tenant-1',
                 'vendorId' => 'vendor-1',
                 'currency' => 'USD',
                 'thresholdCents' => ' 1000 ',
@@ -140,7 +132,6 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
 
         try {
             $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
-                'tenantId' => 'tenant-1',
                 'vendorId' => 'vendor-1',
                 'currency' => 'USD',
                 'thresholdCents' => ' 1000 ',
@@ -165,7 +156,6 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
 
         try {
             $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
-                'tenantId' => 'tenant-1',
                 'vendorId' => 'vendor-1',
                 'currency' => 'USD',
                 'thresholdCents' => '   ',

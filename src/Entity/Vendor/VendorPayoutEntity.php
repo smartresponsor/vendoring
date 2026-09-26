@@ -11,18 +11,21 @@ use Doctrine\ORM\Mapping as ORM;
     name: 'vendor_payout',
     indexes: [
         new ORM\Index(name: 'idx_vendor_payout_vendor_id', columns: ['vendor_id']),
-        new ORM\Index(name: 'idx_vendor_payout_status', columns: ['status']),
+        new ORM\Index(name: 'idx_vendor_payout_status', columns: ['payout_status']),
+    ],
+    uniqueConstraints: [
+        new ORM\UniqueConstraint(name: 'uniq_vendor_payout_business_id', columns: ['payout_id']),
     ],
 )]
 class VendorPayoutEntity extends VendorAbstractEntity
 {
-    #[ORM\Column(type: 'string', length: 64, unique: true)] public string $payoutId;
+    #[ORM\Column(type: 'string', length: 64)] public string $payoutId;
     #[ORM\Column(type: 'string', length: 64)] public string $vendorId;
     #[ORM\Column(type: 'string', length: 8)] public string $currency;
     #[ORM\Column(type: 'integer')] public int $grossCents;
     #[ORM\Column(type: 'integer')] public int $feeCents;
     #[ORM\Column(type: 'integer')] public int $netCents;
-    #[ORM\Column(type: 'string', length: 32)] public string $status;
+    #[ORM\Column(name: 'payout_status', type: 'string', length: 32)] public string $status;
     #[ORM\Column(type: 'string', length: 32, nullable: true)] public ?string $processedAt = null;
     /** @var array<array-key, mixed> */
     #[ORM\Column(type: 'json')] public array $meta = [];

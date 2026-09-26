@@ -11,33 +11,30 @@ use PHPUnit\Framework\TestCase;
 
 final class VendorPayoutRequestServiceTest extends TestCase
 {
-    public function testToCreateDtoRequiresTenantAwarePayoutPayload(): void
+    public function testToCreateDtoBuildsVendorPayoutPayload(): void
     {
         $service = new VendorPayoutRequestService();
         $dto = $service->toCreateDto([
-            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => '1000',
             'retentionFeePercent' => '0.05',
         ]);
 
-        self::assertSame('tenant-1', $dto->tenantId);
         self::assertSame('vendor-1', $dto->vendorId);
         self::assertSame('USD', $dto->currency);
         self::assertSame(1000, $dto->thresholdCents);
         self::assertSame(0.05, $dto->retentionFeePercent);
     }
 
-    public function testToCreateDtoRejectsMissingTenantId(): void
+    public function testToCreateDtoRejectsMissingVendorId(): void
     {
         $service = new VendorPayoutRequestService();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('tenantId required');
+        $this->expectExceptionMessage('vendorId required');
 
         $service->toCreateDto([
-            'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
             'retentionFeePercent' => 0.05,
@@ -57,14 +54,13 @@ final class VendorPayoutRequestServiceTest extends TestCase
             status: 'processed',
             createdAt: '2026-03-30 10:00:00',
             processedAt: '2026-03-30 11:00:00',
-            meta: ['tenantId' => 'tenant-1', 'providerRef' => 'bank_ref_123'],
+            meta: ['providerRef' => 'bank_ref_123'],
         );
 
         $normalized = $service->normalizePayout($payout);
 
         self::assertSame('payout-1', $normalized['id']);
         self::assertIsArray($normalized['meta'] ?? null);
-        self::assertSame('tenant-1', $normalized['meta']['tenantId'] ?? null);
         self::assertSame('bank_ref_123', $normalized['meta']['providerRef'] ?? null);
     }
 
@@ -76,7 +72,6 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $this->expectExceptionMessage('retentionFeePercent out_of_range');
 
         $service->toCreateDto([
-            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
@@ -89,14 +84,12 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $service = new VendorPayoutRequestService();
 
         $zeroFeeDto = $service->toCreateDto([
-            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
             'retentionFeePercent' => 0.0,
         ]);
         $fullFeeDto = $service->toCreateDto([
-            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
@@ -112,7 +105,6 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $service = new VendorPayoutRequestService();
 
         $dto = $service->toCreateDto([
-            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => ' 1000 ',
@@ -131,7 +123,6 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $this->expectExceptionMessage('retentionFeePercent required');
 
         $service->toCreateDto([
-            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
@@ -147,7 +138,6 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $this->expectExceptionMessage('thresholdCents required');
 
         $service->toCreateDto([
-            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => '   ',

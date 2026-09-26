@@ -16,17 +16,17 @@ use App\Vendoring\Entity\Vendor\VendorPaymentEntity;
 use App\Vendoring\Entity\Vendor\VendorRememberMeTokenEntity;
 use App\Vendoring\Entity\Vendor\VendorShipmentEntity;
 use App\Vendoring\Entity\Vendor\VendorWishlistEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorCategoryRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorCodeStorageRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorCommissionRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorConversationRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorCustomerOrderRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorFavouriteRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorGroupRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorPaymentRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorRememberMeTokenRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorShipmentRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorWishlistRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorCategoryRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorCodeStorageRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorCommissionRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorConversationRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorCustomerOrderRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorFavouriteRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorGroupRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorPaymentRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorRememberMeTokenRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorShipmentRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorWishlistRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipWriteServiceInterface;
 
 final readonly class VendorOwnershipWriteService implements VendorOwnershipWriteServiceInterface

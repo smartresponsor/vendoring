@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Entity\Vendor;
 
 use App\Objecting\EntityInterface\ObjectRelationEntityInterface;
-use App\Vendoring\EntityInterface\Vendor\VendorUserAssignmentEntityInterface;
+use App\Vendoring\EntityInterface\VendorUserAssignmentEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorUserAssignmentRepository::class)]
@@ -15,7 +15,7 @@ class VendorUserAssignmentEntity extends VendorAbstractEntity implements VendorU
     #[ORM\ManyToOne(targetEntity: VendorEntity::class, inversedBy: 'userAssignments')] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] private VendorEntity $vendor;
     #[ORM\Column(type: 'integer')] private int $userId;
     #[ORM\Column(type: 'string', length: 64)] private string $role;
-    #[ORM\Column(type: 'string', length: 32)] private string $status;
+    #[ORM\Column(name: 'assignment_status', type: 'string', length: 32)] private string $status;
     #[ORM\Column(type: 'boolean')] private bool $primaryAssignment = false;
     #[ORM\Column(type: 'datetime_immutable')] private \DateTimeImmutable $grantedAt;
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $revokedAt = null;

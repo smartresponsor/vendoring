@@ -7,23 +7,24 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Billing;
 
 use App\Vendoring\DTO\VendorBillingDTO;
-use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorBillingEntity;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorIbanEntity;
-use App\Vendoring\Event\Vendor\VendorPayoutCompletedEvent;
-use App\Vendoring\Event\Vendor\VendorPayoutRequestedEvent;
-use App\Vendoring\RepositoryInterface\Vendor\VendorBillingRepositoryInterface;
+use App\Vendoring\Event\VendorPayoutCompletedEvent;
+use App\Vendoring\Event\VendorPayoutRequestedEvent;
+use App\Vendoring\RepositoryInterface\VendorBillingRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorIbanRepositoryInterface;
 use App\Vendoring\ServiceInterface\Billing\VendorBillingServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorBillingService implements VendorBillingServiceInterface
 {
     public function __construct(
-        private EntityManagerInterface $em,
         private VendorBillingRepositoryInterface $repository,
+        private VendorIbanRepositoryInterface $ibanRepository,
         private EventDispatcherInterface $dispatcher,
-    ) {}
+    ) {
+    }
 
     public function upsert(VendorEntity $vendor, VendorBillingDTO $dto): VendorBillingEntity
     {
@@ -35,9 +36,9 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
             $this->normalizeNullableString($dto->billingEmail),
         );
 
-        $this->em->persist($billing);
+        $this->repository->save($billing);
         $this->synchronizeIban($vendor, $this->normalizeNullableString($dto->iban), $this->normalizeNullableString($dto->swift));
-        $this->em->flush();
+        $this->repository->flush();
 
         return $billing;
     }
@@ -45,7 +46,7 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
     public function requestPayout(VendorBillingEntity $billing, int $amountMinor): void
     {
         $billing->markPayoutRequested();
-        $this->em->flush();
+        $this->repository->save($billing, true);
 
         $this->dispatcher->dispatch(new VendorPayoutRequestedEvent($billing, $amountMinor));
     }
@@ -53,20 +54,18 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
     public function completePayout(VendorBillingEntity $billing, int $amountMinor): void
     {
         $billing->markPayoutCompleted();
-        $this->em->flush();
+        $this->repository->save($billing, true);
 
         $this->dispatcher->dispatch(new VendorPayoutCompletedEvent($billing, $amountMinor));
     }
 
-
     private function synchronizeIban(VendorEntity $vendor, ?string $iban, ?string $swift): void
     {
-        $repository = $this->em->getRepository(VendorIbanEntity::class);
-        $existing = $repository->findOneBy(['vendor' => $vendor]);
+        $existing = $this->ibanRepository->findOneBy(['vendor' => $vendor]);
 
         if (null === $iban) {
             if ($existing instanceof VendorIbanEntity) {
-                $this->em->remove($existing);
+                $this->ibanRepository->remove($existing);
             }
 
             return;
@@ -78,7 +77,7 @@ final readonly class VendorBillingService implements VendorBillingServiceInterfa
             return;
         }
 
-        $this->em->persist(new VendorIbanEntity($vendor, $iban, $swift));
+        $this->ibanRepository->save(new VendorIbanEntity($vendor, $iban, $swift));
     }
 
     private function normalizeNullableString(?string $value): ?string

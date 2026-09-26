@@ -6,9 +6,9 @@ services:
     App\Vendoring\DataFixtures\VendorAccessBootstrapFixture: ~
     App\Vendoring\Command\VendorFixtureLoadCommand: ~
 
-    App\Vendoring\Repository\Vendor\VendorRepository: ~
-    App\Vendoring\Repository\Vendor\VendorUserAssignmentRepository: ~
-    App\Vendoring\Repository\Vendor\VendorProfileRepository: ~
-    App\Vendoring\Repository\Vendor\VendorMediaRepository: ~
-    App\Vendoring\Repository\Vendor\VendorProfileAvatarRepository: ~
-    App\Vendoring\Repository\Vendor\VendorProfileCoverRepository: ~
+    App\Vendoring\Repository\VendorRepository: ~
+    App\Vendoring\Repository\VendorUserAssignmentRepository: ~
+    App\Vendoring\Repository\VendorProfileRepository: ~
+    App\Vendoring\Repository\VendorMediaRepository: ~
+    App\Vendoring\Repository\VendorProfileAvatarRepository: ~
+    App\Vendoring\Repository\VendorProfileCoverRepository: ~

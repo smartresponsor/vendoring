@@ -10,7 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 final readonly class VendorTenantQueryRequestDTO
 {
     public function __construct(
-        #[Assert\NotBlank(message: 'tenant_id_required')]
-        public string $tenantId,
-    ) {}
+        #[Assert\NotBlank(message: 'vendor_id_required')]
+        public string $vendorId,
+    ) {
+    }
 }

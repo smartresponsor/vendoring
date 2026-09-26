@@ -32,9 +32,9 @@ $env:VENDOR_DSN = $hostDatabaseUrl
 
 Push-Location $repositoryRoot
 try {
-    $fixturesCache = Join-Path $repositoryRoot 'var/cache/fixtures'
-    if (Test-Path $fixturesCache) {
-        Remove-Item -Recurse -Force $fixturesCache
+    & php bin/console cache:clear --env=fixtures --no-interaction
+    if ($LASTEXITCODE -ne 0) {
+        throw "Vendoring fixtures cache clear failed with exit code $LASTEXITCODE."
     }
 
     & php bin/console app:vendor:fixtures:load --env=fixtures --no-interaction

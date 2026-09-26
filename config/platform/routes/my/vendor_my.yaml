@@ -1,0 +1,23 @@
+# ---------------------------------------------------------------------------
+# Vendoring — /my/vendor/ self-service routes
+# ---------------------------------------------------------------------------
+# Authenticated vendor sees only their own data.
+# No {id} in path — identity resolved from security context.
+# ---------------------------------------------------------------------------
+
+# My profile
+vendor.my.profile.show:     { path: /my/vendor/profile/show,     service: App\Vendoring\Service\Profile\VendorProfileHttpService }
+vendor.my.profile.update:   { path: /my/vendor/profile/update,   service: App\Vendoring\Service\Profile\VendorProfileHttpService }
+
+# My transactions
+vendor.my.transaction.index: { path: /my/vendor/transaction/index, service: App\Vendoring\Service\Transaction\VendorTransactionHttpService }
+vendor.my.transaction.create: { path: /my/vendor/transaction/create, service: App\Vendoring\Service\Transaction\VendorTransactionHttpService }
+
+# My statement
+vendor.my.statement.show:    { path: /my/vendor/statement/show,   service: App\Vendoring\Service\Statement\VendorStatementHttpService }
+
+# My summary
+vendor.my.summary.show:      { path: /my/vendor/summary/show,     service: App\Vendoring\Service\Summary\VendorSummaryHttpService }
+
+# My runtime finance
+vendor.my.runtime.finance.show: { path: /my/vendor/runtime/finance/show, service: App\Vendoring\Service\Runtime\Finance\VendorRuntimeFinanceShowService }

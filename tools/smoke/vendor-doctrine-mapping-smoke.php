@@ -24,8 +24,8 @@ $needles = [
     "name: 'vendor_transaction'",
     'implements VendorTransactionEntityInterface',
     "name: 'vendor_id'",
-    "name: 'status'",
-    "name: 'created_at'",
+    "name: 'transaction_status'",
+    "name: 'transaction_created_at'",
 ];
 
 foreach ($needles as $needle) {

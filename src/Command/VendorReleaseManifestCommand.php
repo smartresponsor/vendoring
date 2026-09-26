@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\BuilderInterface\Ops\VendorReleaseManifestBuilderInterface;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\Exception\Command\VendorCommandIoException;
 use App\Vendoring\Service\Command\VendorCommandJsonArtifactWriterService;
 use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
-use App\Vendoring\ServiceInterface\Ops\VendorReleaseManifestBuilderServiceInterface;
 use App\Vendoring\ServiceInterface\Ops\VendorRollbackDecisionEvaluatorServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -23,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class VendorReleaseManifestCommand extends Command
 {
     public function __construct(
-        private readonly VendorReleaseManifestBuilderServiceInterface $releaseManifestBuilder,
+        private readonly VendorReleaseManifestBuilderInterface $releaseManifestBuilder,
         private readonly VendorRollbackDecisionEvaluatorServiceInterface $rollbackDecisionEvaluator,
         private readonly VendorCommandJsonArtifactWriterService $commandJsonArtifactWriter,
         private readonly VendorCommandResultEmitterService $commandResultEmitter,
