@@ -35,9 +35,18 @@ $repository = new class implements VendorUserAssignmentRepositoryInterface {
         return null;
     }
 
+    public function findOneBy(array $criteria): ?VendorUserAssignmentEntity
+    {
+        return null;
+    }
+
     public function find(mixed $id): ?VendorUserAssignmentEntity
     {
         return null;
+    }
+
+    public function flush(): void
+    {
     }
 };
 

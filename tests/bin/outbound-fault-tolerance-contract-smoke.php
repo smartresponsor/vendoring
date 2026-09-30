@@ -17,7 +17,7 @@ require dirname(__DIR__, 2).'/vendor/autoload.php';
 $policy = new VendorOutboundOperationPolicy();
 $breakerDir = sys_get_temp_dir().'/vendoring-fault-smoke-'.bin2hex(random_bytes(4));
 $breaker = new VendorOutboundCircuitBreakerService($breakerDir);
-$scopeKey = 'tenant-1:vendor-1';
+$scopeKey = 'vendor-1';
 $breaker->recordFailure('statement_mail_send', $scopeKey, 2, 60);
 $breaker->recordFailure('statement_mail_send', $scopeKey, 2, 60);
 
@@ -31,7 +31,7 @@ $service = new VendorStatementMailerService(
     $breaker,
 );
 
-$result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '', 'March 2026');
+$result = $service->send('vendor-1', 'vendor@example.com', '', 'March 2026');
 
 if ($result['ok']) {
     fwrite(STDERR, "expected circuit-open failure\n");
