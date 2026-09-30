@@ -19,5 +19,6 @@ final readonly class VendorPaymentUpsertDTO
         public ?string $status = 'active',
         public ?bool $isDefault = null,
         public array $meta = [],
-    ) {}
+    ) {
+    }
 }

@@ -258,8 +258,15 @@ final readonly class VendorOwnershipWriteRequestResolver implements VendorOwners
             throw new \InvalidArgumentException('meta_invalid');
         }
 
-        /* @var array<string, mixed> $meta */
-        return $meta;
+        $normalized = [];
+        foreach ($meta as $key => $value) {
+            if (!is_string($key)) {
+                throw new \InvalidArgumentException('meta_invalid');
+            }
+            $normalized[$key] = $value;
+        }
+
+        return $normalized;
     }
 
     /**

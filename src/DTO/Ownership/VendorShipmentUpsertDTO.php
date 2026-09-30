@@ -18,5 +18,6 @@ final readonly class VendorShipmentUpsertDTO
         public ?string $trackingNumber = null,
         public ?string $status = 'pending',
         public array $meta = [],
-    ) {}
+    ) {
+    }
 }

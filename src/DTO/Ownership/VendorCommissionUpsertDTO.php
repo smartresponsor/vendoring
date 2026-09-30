@@ -19,5 +19,6 @@ final readonly class VendorCommissionUpsertDTO
         public ?int $changedByUserId = null,
         public ?string $reason = null,
         public array $meta = [],
-    ) {}
+    ) {
+    }
 }

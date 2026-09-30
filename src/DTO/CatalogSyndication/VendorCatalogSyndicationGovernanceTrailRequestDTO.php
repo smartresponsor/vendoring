@@ -19,5 +19,6 @@ final readonly class VendorCatalogSyndicationGovernanceTrailRequestDTO
         public array $recoveryPayload,
         public string $actorId,
         public string $reason,
-    ) {}
+    ) {
+    }
 }
