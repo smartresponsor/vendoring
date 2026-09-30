@@ -6,7 +6,7 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorServiceRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorServiceRepository::class)]
 #[ORM\Table(
     name: 'vendor_service',
     uniqueConstraints: [

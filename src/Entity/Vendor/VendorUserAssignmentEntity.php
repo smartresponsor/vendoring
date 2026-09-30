@@ -8,7 +8,7 @@ use App\Objecting\EntityInterface\ObjectRelationEntityInterface;
 use App\Vendoring\EntityInterface\VendorUserAssignmentEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorUserAssignmentRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorUserAssignmentRepository::class)]
 #[ORM\Table(name: 'vendor_user_assignment')]
 class VendorUserAssignmentEntity extends VendorAbstractEntity implements VendorUserAssignmentEntityInterface, ObjectRelationEntityInterface
 {

@@ -160,6 +160,10 @@ SQL
         ];
     }
 
+    /**
+     * @param class-string<object> $entityClass
+     * @param array<string, mixed> $criteria
+     */
     private function countRelation(string $entityClass, array $criteria): int
     {
         return $this->getEntityManager()->getRepository($entityClass)->count($criteria);

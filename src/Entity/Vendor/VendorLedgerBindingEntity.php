@@ -6,7 +6,7 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorLedgerBindingRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorLedgerBindingRepository::class)]
 #[ORM\Table(
     name: 'vendor_ledger_binding',
     uniqueConstraints: [

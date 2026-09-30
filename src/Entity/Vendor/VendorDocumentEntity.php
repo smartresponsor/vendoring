@@ -6,7 +6,7 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorDocumentRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorDocumentRepository::class)]
 #[ORM\Table(name: 'vendor_document')]
 class VendorDocumentEntity extends VendorAbstractEntity
 {

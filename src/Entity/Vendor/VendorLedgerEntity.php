@@ -6,7 +6,7 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorLedgerRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorLedgerRepository::class)]
 #[ORM\Table(name: 'vendor_ledger_entries')]
 class VendorLedgerEntity extends VendorAbstractEntity
 {

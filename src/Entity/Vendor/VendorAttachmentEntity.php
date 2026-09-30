@@ -6,7 +6,7 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorAttachmentRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorAttachmentRepository::class)]
 #[ORM\Table(name: 'vendor_attachment')]
 class VendorAttachmentEntity extends VendorAbstractEntity
 {

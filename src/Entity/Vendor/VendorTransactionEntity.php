@@ -7,7 +7,7 @@ namespace App\Vendoring\Entity\Vendor;
 use App\Vendoring\EntityInterface\VendorTransactionEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorTransactionRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorTransactionRepository::class)]
 #[ORM\Table(
     name: 'vendor_transaction',
     indexes: [
