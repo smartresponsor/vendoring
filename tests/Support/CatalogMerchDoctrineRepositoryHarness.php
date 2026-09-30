@@ -60,8 +60,7 @@ final readonly class CatalogMerchDoctrineRepositoryHarness implements VendorCata
     public function findOneByCategoryAndRecord(string $categoryId, string $recordId): ?object
     {
         foreach ($this->entityManager->getRepository(VendorCatalogCategoryPinEntity::class)->findAll() as $pin) {
-            if ($pin instanceof VendorCatalogCategoryPinEntity
-                && $pin->categoryId() === $categoryId
+            if ($pin->categoryId() === $categoryId
                 && $pin->recordId() === $recordId) {
                 return $pin;
             }

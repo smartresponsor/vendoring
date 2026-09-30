@@ -132,7 +132,14 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
             self::fail('Expected array payload.');
         }
 
-        /* @var array<string, mixed> $value */
-        return $value;
+        $normalized = [];
+        foreach ($value as $key => $item) {
+            if (!is_string($key)) {
+                self::fail('Expected string-keyed array payload.');
+            }
+            $normalized[$key] = $item;
+        }
+
+        return $normalized;
     }
 }

@@ -11,7 +11,7 @@ final class InterfaceAliasCoverageTest extends TestCase
 {
     public function testServicesConfigurationCoversCanonicalRepositoryAndServiceInterfaces(): void
     {
-        $config = (string) file_get_contents(dirname(__DIR__, 3) . '/config/component/services.yaml');
+        $config = (string) file_get_contents(dirname(__DIR__, 3).'/config/component/services.yaml');
         $aliasMap = $this->extractAliasMap($config);
 
         self::assertNotSame([], $aliasMap, 'No interface aliases were found in config/component/services.yaml.');
@@ -19,11 +19,11 @@ final class InterfaceAliasCoverageTest extends TestCase
         foreach ($aliasMap as $interfaceClass => $implementationClass) {
             self::assertTrue(
                 interface_exists($interfaceClass),
-                'Missing canonical interface ' . $interfaceClass,
+                'Missing canonical interface '.$interfaceClass,
             );
             self::assertTrue(
                 class_exists($implementationClass),
-                'Missing implementation class ' . $implementationClass,
+                'Missing implementation class '.$implementationClass,
             );
         }
     }

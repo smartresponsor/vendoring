@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Entity;
 
-use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
 use App\Vendoring\Entity\Vendor\VendorBillingEntity;
 use App\Vendoring\Entity\Vendor\VendorDocumentEntity;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorPassportEntity;
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use PHPUnit\Framework\TestCase;
