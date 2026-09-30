@@ -334,8 +334,15 @@ final readonly class VendorOwnershipWriteService implements VendorOwnershipWrite
             throw new \InvalidArgumentException($key.'_invalid');
         }
 
-        /* @var array<string, mixed> $value */
-        return $value;
+        $normalized = [];
+        foreach ($value as $itemKey => $itemValue) {
+            if (!is_string($itemKey)) {
+                throw new \InvalidArgumentException($key.'_invalid');
+            }
+            $normalized[$itemKey] = $itemValue;
+        }
+
+        return $normalized;
     }
 
     /** @param array<string, mixed> $data */

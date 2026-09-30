@@ -25,7 +25,7 @@ final readonly class VendorRuntimeExternalIntegrationShowService
 
         $vendorId = $this->attribute($request, 'id') ?? $this->attribute($request, 'slug') ?? $this->attribute($request, 'item') ?? (string) $request->query->get('vendorId', '');
         if ('' === $vendorId) {
-            return new JsonResponse(['error' => 'vendor_identifier_required'], 422);
+            return $this->validationErrorResponse('vendor_identifier_required', 'Provide id, slug, item, or vendorId.');
         }
 
         $projection = $this->runtimeProjectionBuilder->build($vendorId);

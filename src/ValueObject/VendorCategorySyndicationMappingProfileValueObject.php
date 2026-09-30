@@ -13,10 +13,11 @@ final readonly class VendorCategorySyndicationMappingProfileValueObject
     public function __construct(
         private string $destinationId,
         private string $version,
-        private array  $fieldMap,
-        private array  $requiredFields,
+        private array $fieldMap,
+        private array $requiredFields,
         private string $localeMode,
-    ) {}
+    ) {
+    }
 
     public function destinationId(): string
     {

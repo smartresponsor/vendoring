@@ -8,13 +8,13 @@ use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\ServiceInterface\Command\VendorCommandJsonEncoderServiceInterface;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 final readonly class VendorCommandResultEmitterService implements VendorCommandResultEmitterServiceInterface
 {
     public function __construct(
         private VendorCommandJsonEncoderServiceInterface $commandJsonEncoder,
-    ) {}
+    ) {
+    }
 
     /**
      * @param array<string, mixed> $payload
@@ -52,9 +52,10 @@ final readonly class VendorCommandResultEmitterService implements VendorCommandR
 
     /**
      * @noinspection PhpTooManyParametersInspection
+     *
      * @param array<string, mixed> $context
      */
-    public function emitThrowableError(OutputInterface $output, string $format, string $status, string $prefix, Throwable $throwable, array $context = []): bool
+    public function emitThrowableError(OutputInterface $output, string $format, string $status, string $prefix, \Throwable $throwable, array $context = []): bool
     {
         $message = '' !== trim($throwable->getMessage())
             ? sprintf('%s: %s', $prefix, $throwable->getMessage())

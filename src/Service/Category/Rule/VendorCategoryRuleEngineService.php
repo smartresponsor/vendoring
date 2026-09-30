@@ -24,52 +24,57 @@ final class VendorCategoryRuleEngineService implements VendorCategoryRuleEngineS
      */
     private function evalNode(array $node, array $payload): bool
     {
-        if (array_any($this->nodeList($node['all'] ?? null), fn($child) => !$this->evalNode($child, $payload))) {
-            return false;
-        }
-        if (isset($node['all'])) {
-            return true;
-        }
-
-        if (array_any($this->nodeList($node['any'] ?? null), fn($child) => $this->evalNode($child, $payload))) {
-            return true;
-        }
-        if (isset($node['any'])) {
-            return false;
+        foreach (['all', 'any', 'none'] as $operator) {
+            if (array_key_exists($operator, $node)) {
+                return $this->evalGroup($operator, $node[$operator], $payload);
+            }
         }
 
-        if (array_any($this->nodeList($node['none'] ?? null), fn($child) => $this->evalNode($child, $payload))) {
-            return false;
-        }
-        if (isset($node['none'])) {
-            return true;
-        }
+        return $this->evalComparison($node, $payload);
+    }
 
-        $attr = isset($node['attr']) && is_scalar($node['attr']) ? (string) $node['attr'] : null;
-        $op = isset($node['op']) && is_scalar($node['op']) ? (string) $node['op'] : null;
-        $val = $node['value'] ?? null;
-        if (null === $attr || null === $op) {
-            return false;
-        }
+    /**
+     * @param array<string, mixed> $payload
+     */
+    private function evalGroup(string $operator, mixed $value, array $payload): bool
+    {
+        $children = $this->nodeList($value);
 
-        $payloadValue = $payload[$attr] ?? null;
-
-        return match ($op) {
-            'eq' => $payloadValue === $val,
-            'neq' => $payloadValue !== $val,
-            'lt' => is_numeric($payloadValue) && is_numeric($val) && (float) $payloadValue < (float) $val,
-            'lte' => is_numeric($payloadValue) && is_numeric($val) && (float) $payloadValue <= (float) $val,
-            'gt' => is_numeric($payloadValue) && is_numeric($val) && (float) $payloadValue > (float) $val,
-            'gte' => is_numeric($payloadValue) && is_numeric($val) && (float) $payloadValue >= (float) $val,
-            'in' => is_array($val) && in_array($payloadValue, $val, true),
-            'inTree' => is_scalar($payloadValue) && is_scalar($val) && str_starts_with((string) $payloadValue, (string) $val),
+        return match ($operator) {
+            'all' => !array_any($children, fn ($child) => !$this->evalNode($child, $payload)),
+            'any' => array_any($children, fn ($child) => $this->evalNode($child, $payload)),
+            'none' => !array_any($children, fn ($child) => $this->evalNode($child, $payload)),
             default => false,
         };
     }
 
     /**
-     * @param mixed $value
-     *
+     * @param array<string, mixed> $node
+     * @param array<string, mixed> $payload
+     */
+    private function evalComparison(array $node, array $payload): bool
+    {
+        if (!isset($node['attr'], $node['op']) || !is_scalar($node['attr']) || !is_scalar($node['op'])) {
+            return false;
+        }
+
+        $payloadValue = $payload[(string) $node['attr']] ?? null;
+        $value = $node['value'] ?? null;
+
+        return match ((string) $node['op']) {
+            'eq' => $payloadValue === $value,
+            'neq' => $payloadValue !== $value,
+            'lt' => is_numeric($payloadValue) && is_numeric($value) && (float) $payloadValue < (float) $value,
+            'lte' => is_numeric($payloadValue) && is_numeric($value) && (float) $payloadValue <= (float) $value,
+            'gt' => is_numeric($payloadValue) && is_numeric($value) && (float) $payloadValue > (float) $value,
+            'gte' => is_numeric($payloadValue) && is_numeric($value) && (float) $payloadValue >= (float) $value,
+            'in' => is_array($value) && in_array($payloadValue, $value, true),
+            'inTree' => is_scalar($payloadValue) && is_scalar($value) && str_starts_with((string) $payloadValue, (string) $value),
+            default => false,
+        };
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function arrayMap(mixed $value): array
@@ -84,8 +89,6 @@ final class VendorCategoryRuleEngineService implements VendorCategoryRuleEngineS
     }
 
     /**
-     * @param mixed $value
-     *
      * @return list<array<string, mixed>>
      */
     private function nodeList(mixed $value): array

@@ -16,10 +16,11 @@ final readonly class VendorCategorySyndicationPublishPackageValueObject
         private string $categoryId,
         private string $version,
         private string $localeMode,
-        private array  $payload,
-        private array  $missingRequiredFields,
-        private bool   $publishable,
-    ) {}
+        private array $payload,
+        private array $missingRequiredFields,
+        private bool $publishable,
+    ) {
+    }
 
     public function packageId(): string
     {

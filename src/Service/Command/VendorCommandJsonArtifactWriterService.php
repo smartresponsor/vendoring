@@ -12,10 +12,12 @@ final readonly class VendorCommandJsonArtifactWriterService implements VendorCom
 {
     public function __construct(
         private VendorCommandJsonFileWriterServiceInterface $commandJsonFileWriter,
-    ) {}
+    ) {
+    }
 
     /**
      * @param array<string, mixed> $payload
+     *
      * @throws VendorCommandIoException
      */
     public function writeIfRequested(bool $shouldWrite, mixed $outputOption, string $defaultPath, array $payload): ?string
