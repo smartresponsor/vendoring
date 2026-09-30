@@ -158,3 +158,77 @@
 - Gating owner enforcement was corrected against normative Canonization for Canon001 open technical-role roots and Canon026 independently versioned Symfony packages. The final administering sweep is green: 71 rules, 0 failed, 6 warnings, 0 suppressed, 12 skipped.
 - Remaining warnings are review/evidence work only: Canon011 silent-fallback review, Canon016 compatibility lifecycle metadata, Canon021 CRUD-boundary review, Canon031 PHPDoc coverage, Canon040 PHPUnit coverage evidence, and Canon042 behavioral/UI coverage evidence.
 
+## 2026-09-29 Inspecting remediation continuation
+
+### Baseline
+
+- Task: `engine-20260930042108-vendoring-6667ca`; workspace `D:\\PhpstormProjects\\www\\Vendoring`; branch `release/vendoring-local-head-20260904`.
+- Re-read Vendoring `AGENTS.md`, `README.md`, `composer.json`, the mandatory Objecting/Cruding/Viewing/Interfacing/Gating/Canonization contracts, and the supplied Inspecting RED evidence.
+- Composer confirms Objecting, Cruding, Viewing and Interfacing as first-party path/symlink dependencies; Inspecting remains an external quality engine rather than an application dependency.
+- Supplied Inspecting evidence identified one HIGH actionable finding: cyclomatic complexity 33 in `VendorCategoryRuleEngineService::evalNode()`; remaining supplied findings are MEDIUM maintainability/design review candidates.
+- Pre-existing dirty state is isolated under consumer `.gating/`; it is preserved and is not silently absorbed into this remediation.
+
+### Canon mapping and selected work
+
+- Canon019/020: preserve Symfony role-first `src/Service` / `src/ServiceInterface` topology; introduce no Domain/Port/Adapter taxonomy.
+- Canon021: no generic CRUD controller or routing work is introduced; Cruding ownership remains unchanged.
+- Canon052: consumer `.gating/` remains artifact-only; copied/untracked Gating material is not treated as Vendoring product source.
+- RC-critical: split rule-group evaluation and scalar comparison from recursive dispatch to remove the HIGH complexity hotspot without changing the public service contract.
+- Growth (post-RC): broader MEDIUM long-method/API-cohesion findings remain separate from correctness/RC remediation unless deterministic verification promotes them.
+
+### Gates to run
+
+- PHP lint/static analysis and unit/contract tests.
+- Aggregate Gating / release-candidate contour as applicable.
+- Fresh Inspecting after mutation; the HIGH finding must disappear before this remediation front is considered green.
+
+## 2026-09-29 autonomous RC static-quality continuation
+
+### Baseline
+
+- Task: `engine-20260930042251-vendoring-33f0b1`; workspace `D:\\PhpstormProjects\\www\\Vendoring`; branch `release/vendoring-local-head-20260904`.
+- Re-read the authoritative task specification, Vendoring `AGENTS.md`/`README.md`/`composer.json`, current orchestration journal, supplied Inspecting evidence, and supplied RED PHPStan/PHP-CS-Fixer reports.
+- Re-read the mandatory Objecting, Cruding, Viewing, Interfacing, Gating, and Canonization contracts. Canonization Canon002 and Canon029 are directly relevant: implementation/interface trees must mirror, while PHP-CS-Fixer and PHPStan own commodity style/static defects.
+- Current worktree already contains an in-progress, bounded `VendorCategoryRuleEngineService` complexity remediation from the immediately preceding Vendoring execution; preserve it and verify it rather than overwrite it. The unrelated consumer `.gating/` copy remains protected dirty state.
+
+### Product/market boundary
+
+- Mature vendor-management platforms expect deterministic onboarding/readiness state, auditability, payout-readiness prerequisites, reliable operator/API surfaces, and diagnosable failures.
+- RC-critical work is static correctness, deterministic formatting, contract parity, rule-engine maintainability, tests/gates, and release evidence inside Vendoring.
+- Growth remains separate: richer vendor scoring/readiness diagnostics, operator UX, and integration capability must not absorb Ordering/Billing/Paying/Shipping/Taxation ownership.
+
+### Selected work and gates
+
+- Remediate the supplied PHP-CS-Fixer RED report through the repository-owned fixer.
+- Re-run current PHPStan against the post-format tree, fix only current in-scope defects, and preserve component boundaries.
+- Verify the rule-engine behavioral contract, aggregate canonical gate, Composer validation, and fresh Inspecting after relevant source mutation.
+- No browser/mobile UI surface is intentionally changed by this workstream; visual verification is therefore applicability-driven and expected to remain NOT_VERIFIED unless a user-observable surface changes.
+
+### Material remediation
+
+- Applied the repository-owned PHP-CS-Fixer remediation for the supplied RED style report; the formatter changed the 121 files identified by the upstream report and final `cs:check` reports 0/830 fixable files.
+- Corrected Doctrine `repositoryClass` references across active Vendor entities from the stale `App\\Vendoring\\Repository\\Vendor\\...` namespace to the canonical flattened `App\\Vendoring\\Repository\\...` topology required by the actual repositories and Canon002 mirror contract.
+- Closed the remaining PHPStan defects with explicit class-string/criteria typing, formatter-stable string-key normalization, current service signatures, current repository-interface methods, and current Vendor-only rollout/outbound identity fixtures.
+- Preserved and verified the preceding `VendorCategoryRuleEngineService` decomposition; the former HIGH complexity-33 hotspot no longer exists.
+- Corrected the DI/container smoke and Doctrine mapping unit expectations that still referenced the pre-flattening repository namespace.
+
+### Acceptance evidence
+
+- `composer cs:check`: GREEN, 0/830 fixable files.
+- `composer phpstan`: GREEN, 0 errors across 827 analyzed files.
+- Changed-PHP lint: GREEN across 100 reported changed PHP paths.
+- `composer validate --strict --check-lock`: GREEN.
+- `composer test:unit`: GREEN, 317/317 tests, 5053 assertions; only PHPUnit deprecation notices remain.
+- PHPUnit smoke suite: GREEN, 8/8 tests / 38 assertions.
+- Security unit subset: GREEN, 15/15 tests / 52 assertions.
+- Doctrine mapping, container boot, canary rollout, outbound fault-tolerance, and vendor RBAC contract smokes: GREEN.
+- `composer gate`: GREEN, 9 rules, 0 failed, 0 warnings, 2 skipped because no optional profile was provided.
+- Fresh post-final-mutation Inspecting report: `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Vendoring-20260930-045911.json`; PHPStan errors 0, HIGH findings 0, max complexity 24. The 39 remaining findings are MEDIUM design/maintainability/complexity observations and are not promoted to RC blockers by the consulted canon/gate evidence.
+- No browser/mobile UI surface changed; visual evidence is NOT_VERIFIED by applicability rather than missing required UI verification.
+
+### Git / integration state
+
+- The branch `release/vendoring-local-head-20260904` had one already-committed local commit ahead of upstream; the guarded sync plan reported `push_current` with no blocks, and that committed history was published successfully to `origin/release/vendoring-local-head-20260904`.
+- Post-push verification reports `ahead=0`, `behind=0`, and an empty cached diff. The protected `.gating/` tree is dirty/untracked but not staged, so it can remain untouched while explicit Vendoring paths are committed in coherent signed batches.
+- No reset, stash, clean, untrack, overwrite, or destructive index manipulation is required or permitted.
+
