@@ -1,5 +1,71 @@
 # CMCP Orchestration Journal
 
+## 2026-10-03 Vendoring RC remediation verification — engine-20261003233428-vendoring-1ca7b1
+
+### Baseline and reconnaissance
+
+- Workspace `D:\\PhpstormProjects\\www\\Vendoring`; branch `release/vendoring-local-head-20260904`; upstream initially synchronized at `698a13a4ef3abeeb7a8787aea50a0e88b46f2dd7`.
+- Pre-existing dirty state at entry: deleted `.gating/README.md`, modified `AGENTS.md`, modified `CMCP_CHANGELOG.md`, and the in-progress `src/Service/Category/VendorCategoryCollectionService.php` complexity remediation.
+- Read the task specification, Vendoring `AGENTS.md` / `README.md` / `composer.json`, current diff/journal, the supplied 2026-09-29 CanonScanning RED report, and the mandatory Objecting, Cruding, Viewing, Interfacing, Gating, and Canonization contracts.
+- Consulted normative Canonization rules Canon019, Canon020, Canon021, and Canon052. The category-service refactor stays in typed `src/Service/Category`, introduces no alternative architecture taxonomy, no CRUD ownership, and no consumer-local Gating policy.
+- Market/product boundary remains vendor onboarding/readiness/payout-preparation state; buyer payment rails, Ordering, Shipping, Taxation, and generic CRUD remain outside Vendoring.
+
+### RC-critical workstream
+
+- Preserved and completed the existing decomposition of `VendorCategoryCollectionService::filter()` into typed parsing, predicate construction, matching, and scalar-list normalization helpers without changing its public contract.
+- Added `tests/Unit/Category/VendorCategoryCollectionServiceTest.php` to lock AND/OR semantics, invalid-token empty-predicate behavior, numeric comparison behavior, and scalar tag/category normalization.
+- Protected unrelated/pre-existing `.gating/README.md` deletion and `AGENTS.md` modification from this bounded implementation commit.
+
+### Growth workstream
+
+- Keep the remaining Inspecting MEDIUM findings as post-RC maintainability/design work unless a deterministic canon or runtime gate promotes a specific finding to correctness/safety/operability severity.
+
+### Verification evidence
+
+- `composer validate --strict --check-lock`: GREEN.
+- Changed PHP lint: GREEN for the service and new unit test.
+- `composer test:unit`: GREEN, 321 tests / 5058 assertions; existing deprecation notices only.
+- Fresh Inspecting after source mutation: GREEN for static acceptance (`phpstan.errors=0`, HIGH findings=0); 37 remaining findings are MEDIUM observations. Report: `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Vendoring-20261003-233951.json`.
+- Aggregate `composer gate` could not be admitted asynchronously because Console MCP was in `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `ENGINE_BACKLOG_HIGH`; a synchronous attempt exceeded the tool window. This is an execution-capacity blocker, not a repository failure, and remains the only unavailable deterministic acceptance lane at this checkpoint.
+- No browser/mobile/UI surface changed; visual evidence is not applicable to this patch.
+
+## 2026-10-03 Inspecting remediation continuation — engine-20261003202128-vendoring-7ffbe6
+
+### Baseline and market boundary
+
+- Workspace `D:\\PhpstormProjects\\www\\Vendoring`; branch `release/vendoring-local-head-20260904`; protected pre-existing dirty state at task start: deleted `.gating/README.md` and modified `AGENTS.md`.
+- Read Vendoring `AGENTS.md`, `README.md`, `composer.json`, release/architecture Markdown and AsciiDoc surfaces, the supplied 2026-09-29 Inspecting RED report, and the current category rule/collection services.
+- Read mandatory Objecting, Cruding, Viewing, Interfacing, Gating and Canonization contracts. Composer confirms Objecting/Cruding/Viewing/Interfacing first-party dependencies and local path/symlink wiring.
+- Market baseline: mature marketplace/vendor platforms emphasize onboarding/verification, operational readiness, payout prerequisites, reconciliation and diagnostics. Vendoring keeps these vendor-side readiness concerns while payment-rail/PSP execution stays outside its boundary.
+
+### Canon mapping
+
+- Canon019: no Domain/Application/Infrastructure or Port/Adapter/Adaptor roots introduced.
+- Canon020: remediation stays in typed `src/Service/Category` with no generic helper root.
+- Canon021: generic CRUD remains owned by Cruding; this remediation changes no controller or routing surface.
+- Canon052: Gating remains the executable companion; protected consumer `.gating/` state is not absorbed into product work.
+- Objecting/Viewing/Interfacing boundaries are unchanged; no system-field, rendering, shell, or navigation ownership is moved into Vendoring.
+
+### RC-critical workstream
+
+- The supplied RED report is stale for its only HIGH finding: `VendorCategoryRuleEngineService::evalNode()` was already decomposed in the current tree and previously re-verified with HIGH=0.
+- Selected the next measured Inspecting hotspot in the same remediation front: `VendorCategoryCollectionService::filter()` (72 lines / complexity 23 in the supplied report).
+- Decomposed rule parsing, predicate construction and product matching into private typed helpers while preserving the public interface and existing AND/OR, tag/category and numeric-price semantics.
+- No browser/mobile UI surface changed; visual verification is not applicable to this patch.
+
+### Growth workstream
+
+- Keep broader MEDIUM long-method/API-cohesion findings as post-RC maturity work unless current deterministic evidence promotes one to correctness, safety or operability blocking status.
+- Potential growth remains richer readiness diagnostics, vendor operator UX and stronger typed rule/value contracts without absorbing Paying, Ordering, Shipping or Taxation ownership.
+
+### Verification plan / evidence
+
+- `composer validate --strict --check-lock`: GREEN.
+- Target PHP syntax for `VendorCategoryCollectionService.php`: GREEN.
+- Fresh Inspecting was requested after reconnaissance; the synchronous Console MCP call exceeded its tool window, so current acceptance still requires a completed fresh Inspecting result after this mutation.
+- Aggregate Composer/Gating execution is temporarily capacity-gated by Console MCP (`RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / engine backlog), not by repository state; retry before closure.
+- Required remaining gates: changed PHP lint, PHPStan/static, focused/unit behavior, aggregate Gating, fresh Inspecting, then Git status/diff/upstream reconciliation.
+
 ## engine-20260911154044-vendoring-5849e1
 
 ### Baseline
