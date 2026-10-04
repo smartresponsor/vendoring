@@ -13,10 +13,8 @@ final class LocalDevPantherTest extends PantherTestCase
     private const SERVER_HOST = '127.0.0.1';
     private const SERVER_START_SCRIPT = 'tools/local/server-start.sh';
     private const SERVER_STOP_SCRIPT = 'tools/local/server-stop.sh';
-    private const HOME_PAGE_TITLE = 'Vendoring Local Dev';
-    private const HOME_PAGE_HEADING = 'Vendoring Local Dev';
-    private const HOME_PAGE_BODY = 'Local runtime is up.';
-    private const HEALTH_RESPONSE_FRAGMENT = '"status":"ok"';
+    private const CANONICAL_TRANSACTION_CREATE_PATH = '/api/vendor/transaction';
+    private const METHOD_NOT_ALLOWED_STATUS = 405;
     private const CHROMEDRIVER_SKIP_MESSAGE = 'chromedriver is not available on this host';
     private const CHROME_SKIP_MESSAGE = 'Chrome binary is not available on this host';
     private const CHROMEDRIVER_BINARY = 'drivers/chromedriver';
@@ -28,32 +26,36 @@ final class LocalDevPantherTest extends PantherTestCase
         'chrome',
     ];
     private const PROCESS_TIMEOUT_SECONDS = 30;
+    private const SERVER_HEALTH_ATTEMPTS = 50;
+    private const SERVER_HEALTH_INTERVAL_MICROSECONDS = 200_000;
     private const CHROMEDRIVER_CHECK_TIMEOUT_SECONDS = 5;
     private const EXCEPTION_HANDLER_RESTORE_ATTEMPTS = 32;
     private static int $serverPort;
+    private static ?Process $serverProcess = null;
 
     public static function setUpBeforeClass(): void
     {
         self::configurePantherEnvironment();
         self::$serverPort = self::allocatePort();
 
-        self::runServerCommand(self::SERVER_START_SCRIPT);
+        self::startLocalServer();
     }
 
     public static function tearDownAfterClass(): void
     {
-        self::runServerCommand(self::SERVER_STOP_SCRIPT);
+        self::stopLocalServer();
     }
 
-    public function testHomePageAndHealthEndpointLoadInChromium(): void
+    public function testCanonicalTransactionRouteIsReachableInChromium(): void
     {
         self::requireChromeDriver();
         self::requireChromeBinary();
         $client = $this->createLocalDevClient();
 
         try {
-            $this->assertHomePageLoads($client);
-            $this->assertHealthEndpointLoads($client);
+            $client->request('GET', self::CANONICAL_TRANSACTION_CREATE_PATH);
+
+            self::assertSame(self::METHOD_NOT_ALLOWED_STATUS, $client->getInternalResponse()->getStatusCode());
         } finally {
             self::quitClient($client);
         }
@@ -73,22 +75,41 @@ final class LocalDevPantherTest extends PantherTestCase
         ], [], ['port' => self::allocatePort()]);
     }
 
-    private function assertHomePageLoads(Client $client): void
+    private static function startLocalServer(): void
     {
-        $client->request('GET', '/');
+        if ('Windows' !== PHP_OS_FAMILY) {
+            self::runServerCommand(self::SERVER_START_SCRIPT);
 
-        $pageSource = $client->getPageSource();
+            return;
+        }
 
-        self::assertStringContainsString(self::HOME_PAGE_TITLE, $pageSource);
-        self::assertStringContainsString(self::HOME_PAGE_HEADING, $pageSource);
-        self::assertStringContainsString(self::HOME_PAGE_BODY, $pageSource);
+        self::$serverProcess = new Process([
+            PHP_BINARY,
+            '-S',
+            sprintf('%s:%d', self::SERVER_HOST, self::$serverPort),
+            '-t',
+            'public',
+            'public/index.php',
+        ], self::projectRoot(), self::serverCommandEnvironment());
+        self::$serverProcess->setTimeout(null);
+        self::$serverProcess->start();
+
+        self::waitForServerReady();
     }
 
-    private function assertHealthEndpointLoads(Client $client): void
+    private static function stopLocalServer(): void
     {
-        $client->request('GET', '/healthz');
+        if ('Windows' !== PHP_OS_FAMILY) {
+            self::runServerCommand(self::SERVER_STOP_SCRIPT);
 
-        self::assertStringContainsString(self::HEALTH_RESPONSE_FRAGMENT, $client->getPageSource());
+            return;
+        }
+
+        if (self::$serverProcess instanceof Process && self::$serverProcess->isRunning()) {
+            self::$serverProcess->stop(1.0);
+        }
+
+        self::$serverProcess = null;
     }
 
     private static function runServerCommand(string $relativeScriptPath): void
@@ -96,6 +117,26 @@ final class LocalDevPantherTest extends PantherTestCase
         $process = new Process([self::projectPath($relativeScriptPath)], self::projectRoot(), self::serverCommandEnvironment());
         $process->setTimeout(self::PROCESS_TIMEOUT_SECONDS);
         $process->mustRun();
+    }
+
+    private static function waitForServerReady(): void
+    {
+        for ($attempt = 0; $attempt < self::SERVER_HEALTH_ATTEMPTS; ++$attempt) {
+            if (self::$serverProcess instanceof Process && !self::$serverProcess->isRunning()) {
+                throw new \RuntimeException(sprintf('Local PHP server stopped before accepting connections: %s', self::$serverProcess->getErrorOutput()));
+            }
+
+            $socket = @fsockopen(self::SERVER_HOST, self::$serverPort, $errorCode, $errorMessage, 0.2);
+            if (is_resource($socket)) {
+                fclose($socket);
+
+                return;
+            }
+
+            usleep(self::SERVER_HEALTH_INTERVAL_MICROSECONDS);
+        }
+
+        throw new \RuntimeException(sprintf('Local PHP server failed to accept connections at %s.', self::serverBaseUri()));
     }
 
     private static function serverBaseUri(): string
