@@ -13,10 +13,10 @@ if (false === $services) {
 
 $errors = [];
 $repositoryCount = 0;
-foreach (glob($root.'/src/Repository/Vendor/*Repository.php') ?: [] as $repositoryFile) {
+foreach (glob($root.'/src/Repository/*Repository.php') ?: [] as $repositoryFile) {
     $repository = basename($repositoryFile, '.php');
-    $interface = 'App\\Vendoring\\RepositoryInterface\\Vendor\\'.$repository.'Interface';
-    $implementation = 'App\\Vendoring\\Repository\\Vendor\\'.$repository;
+    $interface = 'App\\Vendoring\\RepositoryInterface\\'.$repository.'Interface';
+    $implementation = 'App\\Vendoring\\Repository\\'.$repository;
     $expected = $interface.": '@".$implementation."'";
     if (!str_contains($services, $expected)) {
         $errors[] = 'Missing repository binding: '.$expected;
@@ -37,9 +37,9 @@ foreach ($obsoleteMarkers as $marker) {
 }
 
 $requiredMarkers = [
-    "App\\Vendoring\\Service\\Vendor\\:\n    resource: '../../src/Service/Vendor/'",
+    "App\\Vendoring\\Service\\:\n    resource: '../../src/Service/'",
     "App\\Vendoring\\Form\\:\n    resource: '../../src/Form/'",
-    "App\\Vendoring\\ServiceInterface\\Profile\\VendorProfileAttachmentResolverServiceInterface: '@App\\Vendoring\\Service\\Profile\\NullVendorProfileAttachmentResolverService'",
+    "App\\Vendoring\\ResolverInterface\\Profile\\VendorProfileAttachmentResolverInterface: '@App\\Vendoring\\Resolver\\Profile\\VendorNullProfileAttachmentResolver'",
     "App\\Vendoring\\Service\\Config\\VendoringFeatureFlagsConfigService:",
     '$projectDir: \'%kernel.project_dir%\'',
 ];

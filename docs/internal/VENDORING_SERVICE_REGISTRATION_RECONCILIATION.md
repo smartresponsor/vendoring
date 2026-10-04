@@ -4,17 +4,17 @@ Wave 16 reconciles Symfony service registration with the physically restored Ven
 
 ## Activated
 
-- canonical `App\Vendoring\Service\Vendor\` resource;
+- canonical `App\Vendoring\Service\` resource;
 - canonical `App\Vendoring\Form\` resource;
 - persistence-bound business services previously excluded by Wave 11;
 - 46 `Vendor*RepositoryInterface -> Vendor*Repository` bindings;
-- safe default `VendorProfileAttachmentResolverServiceInterface` binding to `NullVendorProfileAttachmentResolverService`.
+- safe default `VendorProfileAttachmentResolverInterface` binding to `VendorNullProfileAttachmentResolver`.
 
 ## Still intentionally isolated
 
 - Doctrine entities and interfaces remain excluded from service discovery;
 - `Service/Profile/Bridge/` remains optional;
-- `VendorChainedProfileAttachmentResolverService` is registered only by `optional/attaching_profile_bridge.yaml`;
+- `VendorChainedProfileAttachmentResolver` is registered only by `optional/attaching_profile_bridge.yaml`;
 - fixtures, DTOs, value objects and support classes remain outside service discovery.
 
 ## Important

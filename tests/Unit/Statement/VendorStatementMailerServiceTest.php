@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Statement;
 
+use App\Vendoring\Policy\VendorOutboundOperationPolicy;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
-use App\Vendoring\Service\Policy\VendorOutboundOperationPolicyService;
 use App\Vendoring\Service\Reliability\VendorOutboundCircuitBreakerService;
 use App\Vendoring\Service\Statement\VendorStatementMailerService;
 use App\Vendoring\Tests\Support\Statement\FakeMailer;
@@ -29,7 +29,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertNotFalse($pdf);
         file_put_contents($pdf, 'pdf');
 
-        $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', $pdf, 'March 2026');
+        $result = $service->send('vendor-1', 'vendor@example.com', $pdf, 'March 2026');
 
         self::assertTrue($result['ok']);
         self::assertSame('sent', $result['message']);
@@ -47,7 +47,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         $metrics = new VendorMetricEmitterService();
         $service = $this->service($mailer, $metrics);
 
-        $result = $service->send('tenant-1', 'vendor-1', 'not-an-email', '/tmp/missing.pdf', 'March 2026');
+        $result = $service->send('vendor-1', 'not-an-email', '/tmp/missing.pdf', 'March 2026');
 
         self::assertFalse($result['ok']);
         self::assertSame('statement_mail_invalid_email', $result['message']);
@@ -61,7 +61,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         $metrics = new VendorMetricEmitterService();
         $service = $this->service($mailer, $metrics);
 
-        $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
+        $result = $service->send('vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
 
         self::assertFalse($result['ok']);
         self::assertSame('statement_mail_send_failed', $result['message']);
@@ -80,11 +80,11 @@ final class VendorStatementMailerServiceTest extends TestCase
         $mailer = new FakeMailer();
         $metrics = new VendorMetricEmitterService();
         $breaker = $this->breaker();
-        $breaker->recordFailure('statement_mail_send', 'tenant-1:vendor-1', 2, 60);
-        $breaker->recordFailure('statement_mail_send', 'tenant-1:vendor-1', 2, 60);
+        $breaker->recordFailure('statement_mail_send', 'vendor-1', 2, 60);
+        $breaker->recordFailure('statement_mail_send', 'vendor-1', 2, 60);
 
         $service = $this->service($mailer, $metrics, $breaker);
-        $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '', 'March 2026');
+        $result = $service->send('vendor-1', 'vendor@example.com', '', 'March 2026');
 
         self::assertFalse($result['ok']);
         self::assertSame('statement_mail_circuit_open', $result['message']);
@@ -108,7 +108,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('unexpected mailer state');
 
-        $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
+        $service->send('vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
     }
 
     private function service(MailerInterface $mailer, VendorMetricEmitterService $metrics, ?VendorOutboundCircuitBreakerService $breaker = null): VendorStatementMailerService
@@ -117,7 +117,7 @@ final class VendorStatementMailerServiceTest extends TestCase
             $mailer,
             $metrics,
             $this->runtimeLogger(),
-            new VendorOutboundOperationPolicyService(),
+            new VendorOutboundOperationPolicy(),
             $breaker ?? $this->breaker(),
         );
     }

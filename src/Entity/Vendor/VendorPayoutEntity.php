@@ -6,12 +6,15 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorPayoutRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorPayoutRepository::class)]
 #[ORM\Table(
     name: 'vendor_payout',
     indexes: [
         new ORM\Index(name: 'idx_vendor_payout_vendor_id', columns: ['vendor_id']),
-        new ORM\Index(name: 'idx_vendor_payout_status', columns: ['status']),
+        new ORM\Index(name: 'idx_vendor_payout_status', columns: ['payout_status']),
+    ],
+    uniqueConstraints: [
+        new ORM\UniqueConstraint(name: 'uniq_vendor_payout_business_id', columns: ['payout_id']),
     ],
 )]
 class VendorPayoutEntity extends VendorAbstractEntity
@@ -22,7 +25,7 @@ class VendorPayoutEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'integer')] public int $grossCents;
     #[ORM\Column(type: 'integer')] public int $feeCents;
     #[ORM\Column(type: 'integer')] public int $netCents;
-    #[ORM\Column(type: 'string', length: 32)] public string $status;
+    #[ORM\Column(name: 'payout_status', type: 'string', length: 32)] public string $status;
     #[ORM\Column(type: 'string', length: 32, nullable: true)] public ?string $processedAt = null;
     /** @var array<array-key, mixed> */
     #[ORM\Column(type: 'json')] public array $meta = [];

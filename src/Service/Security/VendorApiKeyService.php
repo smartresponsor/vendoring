@@ -8,9 +8,8 @@ namespace App\Vendoring\Service\Security;
 
 use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
 use App\Vendoring\Entity\Vendor\VendorEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorApiKeyRepositoryInterface;
 use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ManagerException;
 use Random\RandomException;
 
@@ -24,7 +23,6 @@ use Random\RandomException;
 final readonly class VendorApiKeyService implements VendorApiKeyServiceInterface
 {
     public function __construct(
-        private EntityManagerInterface $em,
         private VendorApiKeyRepositoryInterface $apiKeyRepo,
     ) {
     }
@@ -57,8 +55,7 @@ final readonly class VendorApiKeyService implements VendorApiKeyServiceInterface
         );
 
         $this->apiKeyRepo->save($existingKey);
-        $this->apiKeyRepo->save($newKey);
-        $this->em->flush();
+        $this->apiKeyRepo->save($newKey, true);
 
         return $newToken;
     }
@@ -85,7 +82,7 @@ final readonly class VendorApiKeyService implements VendorApiKeyServiceInterface
         }
 
         $apiKey->touch();
-        $this->em->flush();
+        $this->apiKeyRepo->save($apiKey, true);
 
         return $apiKey->getVendor();
     }

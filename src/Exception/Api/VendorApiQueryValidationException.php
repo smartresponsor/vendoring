@@ -5,9 +5,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Exception\Api;
 
-use InvalidArgumentException;
-
-final class VendorApiQueryValidationException extends InvalidArgumentException
+final class VendorApiQueryValidationException extends \InvalidArgumentException
 {
     public function __construct(
         private readonly string $errorCode,
@@ -19,7 +17,7 @@ final class VendorApiQueryValidationException extends InvalidArgumentException
     public static function fromConstraintMessage(string $message): self
     {
         return match (trim($message)) {
-            'tenant_id_required' => new self('tenant_id_required', 'Provide the tenantId query parameter.'),
+            'vendor_id_required' => new self('vendor_id_required', 'Provide the vendorId query parameter.'),
             'statement_from_required' => new self('statement_from_required', 'Provide the from query parameter.'),
             'statement_to_required' => new self('statement_to_required', 'Provide the to query parameter.'),
             default => new self(

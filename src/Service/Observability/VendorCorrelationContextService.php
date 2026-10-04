@@ -13,18 +13,12 @@ final class VendorCorrelationContextService implements VendorCorrelationContextS
 {
     private ?string $correlationId = null;
 
-    /**
-     * {@inheritdoc}
-     */
     public function beginRequest(string $correlationId): void
     {
         $normalized = trim($correlationId);
         $this->correlationId = '' === $normalized ? null : $normalized;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function currentCorrelationId(): ?string
     {
         return $this->correlationId;

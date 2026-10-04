@@ -34,7 +34,6 @@ final class VendorReleaseBaselineCommand extends Command
     {
         parent::configure();
         $this
-            ->addOption('tenantId', null, InputOption::VALUE_REQUIRED, 'Tenant ID')
             ->addOption('vendorId', null, InputOption::VALUE_REQUIRED, 'Vendor ID')
             ->addOption('from', null, InputOption::VALUE_OPTIONAL, 'Statement period start')
             ->addOption('to', null, InputOption::VALUE_OPTIONAL, 'Statement period end')
@@ -50,8 +49,7 @@ final class VendorReleaseBaselineCommand extends Command
         $runtimeInput = VendorRuntimeWindowInputDTO::fromInput($input);
 
         if (!$runtimeInput->hasRequiredScope()) {
-            $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'invalid', 'Both --tenantId and --vendorId are required.', [
-                'tenantId' => $runtimeInput->tenantId,
+            $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'invalid', '--vendorId is required.', [
                 'vendorId' => $runtimeInput->vendorId,
             ]);
 
@@ -60,7 +58,6 @@ final class VendorReleaseBaselineCommand extends Command
 
         try {
             $projection = $this->releaseBaselineReader->build(
-                tenantId: $runtimeInput->tenantId,
                 vendorId: $runtimeInput->vendorId,
                 from: $runtimeInput->from,
                 to: $runtimeInput->to,
@@ -74,7 +71,6 @@ final class VendorReleaseBaselineCommand extends Command
                 'Failed to build vendor release baseline',
                 $throwable,
                 [
-                    'tenantId' => $runtimeInput->tenantId,
                     'vendorId' => $runtimeInput->vendorId,
                     'from' => $runtimeInput->from,
                     'to' => $runtimeInput->to,
@@ -94,7 +90,6 @@ final class VendorReleaseBaselineCommand extends Command
             );
         } catch (VendorCommandIoException $exception) {
             $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'failed', $exception->getMessage(), [
-                'tenantId' => $runtimeInput->tenantId,
                 'vendorId' => $runtimeInput->vendorId,
                 'from' => $runtimeInput->from,
                 'to' => $runtimeInput->to,
@@ -111,8 +106,7 @@ final class VendorReleaseBaselineCommand extends Command
         }
 
         $output->writeln(sprintf(
-            'tenantId=%s vendorId=%s status=%s',
-            $runtimeInput->tenantId,
+            'vendorId=%s status=%s',
             $runtimeInput->vendorId,
             $projection['status'],
         ));

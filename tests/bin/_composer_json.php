@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 function vendoring_load_composer_json(string $root): array
 {
-    $composerPath = $root . '/composer.json';
+    $composerPath = $root.'/composer.json';
     $decoded = json_decode((string) file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
 
     if (!is_array($decoded)) {
@@ -18,8 +18,7 @@ function vendoring_load_composer_json(string $root): array
         throw new RuntimeException('composer.json must decode to an associative array.');
     }
 
-    /** @var array<string, mixed> $decoded */
-    return $decoded;
+    return vendoring_string_keyed_array($decoded, 'composer.json must decode to an associative array.');
 }
 
 /**
@@ -39,8 +38,27 @@ function vendoring_composer_section(array $composer, string $section): array
         return [];
     }
 
-    /** @var array<string, mixed> $value */
-    return $value;
+    return vendoring_string_keyed_array($value, 'Composer section must use string keys.');
+}
+
+/**
+ * @param array<mixed> $value
+ *
+ * @return array<string, mixed>
+ */
+function vendoring_string_keyed_array(array $value, string $errorMessage): array
+{
+    $result = [];
+
+    foreach ($value as $key => $item) {
+        if (!is_string($key)) {
+            throw new RuntimeException($errorMessage);
+        }
+
+        $result[$key] = $item;
+    }
+
+    return $result;
 }
 
 /**
@@ -130,6 +148,5 @@ function vendoring_decode_json_array(string $json): array
         throw new RuntimeException('composer.json must decode to an associative array.');
     }
 
-    /** @var array<string, mixed> $decoded */
-    return $decoded;
+    return vendoring_string_keyed_array($decoded, 'composer.json must decode to an associative array.');
 }

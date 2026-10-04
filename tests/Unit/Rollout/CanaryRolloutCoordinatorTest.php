@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Rollout;
 
+use App\Vendoring\BuilderInterface\Ops\VendorReleaseManifestBuilderInterface;
+use App\Vendoring\ResolverInterface\Rollout\VendorTrafficCohortResolverInterface;
 use App\Vendoring\Service\Rollout\VendorCanaryRolloutCoordinatorService;
-use App\Vendoring\ServiceInterface\Ops\VendorReleaseManifestBuilderServiceInterface;
 use App\Vendoring\ServiceInterface\Ops\VendorRollbackDecisionEvaluatorServiceInterface;
 use App\Vendoring\ServiceInterface\Rollout\VendorFeatureFlagServiceInterface;
-use App\Vendoring\ServiceInterface\Rollout\VendorTrafficCohortResolverServiceInterface;
 use PHPUnit\Framework\TestCase;
 
 final class CanaryRolloutCoordinatorTest extends TestCase
@@ -22,13 +22,13 @@ final class CanaryRolloutCoordinatorTest extends TestCase
             $this->rollbackEvaluator(['decision' => 'proceed']),
         );
 
-        $report = $coordinator->evaluate('test_flag', 'tenant-1', '42');
+        $report = $coordinator->evaluate('test_flag', '42');
 
         self::assertSame('disabled', $report['canary']['decision']);
         self::assertSame('keep_flag_disabled', $report['canary']['recommendedAction']);
     }
 
-    public function testProceedingVendorCanarySuggestsTenantExpansion(): void
+    public function testProceedingVendorCanarySuggestsGlobalExpansion(): void
     {
         $coordinator = new VendorCanaryRolloutCoordinatorService(
             $this->featureFlagService(['flag' => 'test_flag', 'enabled' => true, 'cohort' => 'vendor:42', 'reason' => 'cohort_enabled', 'decision' => 'proceed', 'severity' => 'info', 'reasons' => [], 'actions' => []]),
@@ -37,11 +37,11 @@ final class CanaryRolloutCoordinatorTest extends TestCase
             $this->rollbackEvaluator(['decision' => 'proceed']),
         );
 
-        $report = $coordinator->evaluate('test_flag', 'tenant-1', '42');
+        $report = $coordinator->evaluate('test_flag', '42');
 
         self::assertSame('proceed', $report['canary']['decision']);
         self::assertSame('expand_canary_scope', $report['canary']['recommendedAction']);
-        self::assertSame('tenant:tenant-1', $report['canary']['nextCohort']);
+        self::assertSame('global', $report['canary']['nextCohort']);
     }
 
     public function testRollbackDecisionWinsOverEnabledFlag(): void
@@ -53,7 +53,7 @@ final class CanaryRolloutCoordinatorTest extends TestCase
             $this->rollbackEvaluator(['decision' => 'rollback']),
         );
 
-        $report = $coordinator->evaluate('test_flag', 'tenant-1', null);
+        $report = $coordinator->evaluate('test_flag');
 
         self::assertSame('rollback', $report['canary']['decision']);
         self::assertSame('disable_flag_for_current_cohort', $report['canary']['recommendedAction']);
@@ -68,7 +68,7 @@ final class CanaryRolloutCoordinatorTest extends TestCase
             $this->rollbackEvaluator(['decision' => 'proceed']),
         );
 
-        $report = $coordinator->evaluate('test_flag', 'tenant-1', null);
+        $report = $coordinator->evaluate('test_flag');
 
         self::assertSame('hold', $report['canary']['decision']);
         self::assertSame('required_probe_missing', $report['canary']['reason']);
@@ -80,14 +80,18 @@ final class CanaryRolloutCoordinatorTest extends TestCase
      */
     private function featureFlagService(array $decision): VendorFeatureFlagServiceInterface
     {
-        return new class ($decision) implements VendorFeatureFlagServiceInterface {
+        return new class($decision) implements VendorFeatureFlagServiceInterface {
             /** @param array{flag:string, enabled:bool, cohort:string, reason:string, decision?:string, severity?:string, reasons?:list<string>, actions?:list<string>} $decision */
-            public function __construct(private readonly array $decision) {}
-            public function isEnabled(string $flagName, ?string $tenantId = null, ?string $vendorId = null): bool
+            public function __construct(private readonly array $decision)
+            {
+            }
+
+            public function isEnabled(string $flagName, ?string $vendorId = null): bool
             {
                 return $this->decision['enabled'];
             }
-            public function explain(string $flagName, ?string $tenantId = null, ?string $vendorId = null): array
+
+            public function explain(string $flagName, ?string $vendorId = null): array
             {
                 return [
                     'flag' => (string) $this->decision['flag'],
@@ -99,11 +103,14 @@ final class CanaryRolloutCoordinatorTest extends TestCase
         };
     }
 
-    private function cohortResolver(string $cohort): VendorTrafficCohortResolverServiceInterface
+    private function cohortResolver(string $cohort): VendorTrafficCohortResolverInterface
     {
-        return new class ($cohort) implements VendorTrafficCohortResolverServiceInterface {
-            public function __construct(private readonly string $cohort) {}
-            public function resolve(?string $tenantId = null, ?string $vendorId = null): string
+        return new class($cohort) implements VendorTrafficCohortResolverInterface {
+            public function __construct(private readonly string $cohort)
+            {
+            }
+
+            public function resolve(?string $vendorId = null): string
             {
                 return $this->cohort;
             }
@@ -113,11 +120,14 @@ final class CanaryRolloutCoordinatorTest extends TestCase
     /**
      * @param list<string> $missingProbes
      */
-    private function manifestBuilder(array $missingProbes): VendorReleaseManifestBuilderServiceInterface
+    private function manifestBuilder(array $missingProbes): VendorReleaseManifestBuilderInterface
     {
-        return new class ($missingProbes) implements VendorReleaseManifestBuilderServiceInterface {
+        return new class($missingProbes) implements VendorReleaseManifestBuilderInterface {
             /** @param list<string> $missingProbes */
-            public function __construct(private readonly array $missingProbes) {}
+            public function __construct(private readonly array $missingProbes)
+            {
+            }
+
             public function build(int $windowSeconds = 900): array
             {
                 return [
@@ -143,9 +153,12 @@ final class CanaryRolloutCoordinatorTest extends TestCase
      */
     private function rollbackEvaluator(array $decision): VendorRollbackDecisionEvaluatorServiceInterface
     {
-        return new class ($decision) implements VendorRollbackDecisionEvaluatorServiceInterface {
+        return new class($decision) implements VendorRollbackDecisionEvaluatorServiceInterface {
             /** @param array<string,mixed> $decision */
-            public function __construct(private readonly array $decision) {}
+            public function __construct(private readonly array $decision)
+            {
+            }
+
             public function evaluate(array $manifest): array
             {
                 $decisionValue = $this->decision['decision'] ?? 'hold';

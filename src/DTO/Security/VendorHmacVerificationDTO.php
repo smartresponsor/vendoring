@@ -13,5 +13,6 @@ final readonly class VendorHmacVerificationDTO
         public string $algo = 'sha256',
         public int $leeway = 300,
         public ?int $timestamp = null,
-    ) {}
+    ) {
+    }
 }

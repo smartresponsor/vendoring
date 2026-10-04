@@ -22,12 +22,12 @@ namespace App\Vendoring\Contract;
  * Integration seams
  * ─────────────────
  * Neighbouring components consume Vendoring exclusively through:
- *   - VendorOwnershipProjectionBuilderServiceInterface
- *   - VendorFinanceRuntimeProjectionBuilderServiceInterface
+ *   - VendorOwnershipProjectionBuilderInterface
+ *   - VendorFinanceRuntimeProjectionBuilderInterface
  *   - VendorTransactionLifecycleServiceInterface
- *   - VendorPayoutProviderServiceInterface
+ *   - VendorPayoutProviderInterface
  *   - VendorStatementServiceInterface
- *   - VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface
+ *   - VendorExternalIntegrationRuntimeProjectionBuilderInterface
  */
 final readonly class VendoringIntegrationContract
 {
@@ -47,22 +47,22 @@ final readonly class VendoringIntegrationContract
         /** FQCN of the primary bundle class. */
         public string $bundleClass,
 
-        /** FQCN of VendorOwnershipProjectionBuilderServiceInterface. */
+        /** FQCN of VendorOwnershipProjectionBuilderInterface. */
         public string $ownershipProjectionBuilderInterface,
 
         /** FQCN of VendorTransactionLifecycleServiceInterface. */
         public string $transactionLifecycleInterface,
 
-        /** FQCN of VendorPayoutProviderServiceInterface. */
+        /** FQCN of VendorPayoutProviderInterface. */
         public string $payoutProviderInterface,
 
         /** FQCN of VendorStatementServiceInterface. */
         public string $statementInterface,
 
-        /** FQCN of VendorFinanceRuntimeProjectionBuilderServiceInterface. */
+        /** FQCN of VendorFinanceRuntimeProjectionBuilderInterface. */
         public string $financeRuntimeProjectionBuilderInterface,
 
-        /** FQCN of VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface. */
+        /** FQCN of VendorExternalIntegrationRuntimeProjectionBuilderInterface. */
         public string $externalIntegrationRuntimeProjectionBuilderInterface,
 
         /**

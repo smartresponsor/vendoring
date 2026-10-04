@@ -6,5 +6,5 @@ namespace App\Vendoring\ServiceInterface\Payout;
 
 interface VendorSettlementCalculatorServiceInterface
 {
-    public function netForPeriod(string $tenantId, string $vendorId, string $from, string $to, string $currency): float;
+    public function netForPeriod(string $vendorId, string $from, string $to, string $currency): float;
 }

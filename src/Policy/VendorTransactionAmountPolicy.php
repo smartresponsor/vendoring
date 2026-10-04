@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Vendoring\Policy;
+
+use App\Vendoring\PolicyInterface\VendorTransactionAmountPolicyInterface;
+use App\Vendoring\ValueObject\VendorTransactionErrorCodeValueObject;
+
+/**
+ * Read-side policy that validates and normalizes transport-facing transaction amounts.
+ */
+final class VendorTransactionAmountPolicy implements VendorTransactionAmountPolicyInterface
+{
+    /**
+     * Normalize one transaction amount into canonical decimal-string form.
+     *
+     * Stable validation error codes include:
+     * - amount_required
+     * - amount_not_numeric
+     * - amount_not_positive
+     *
+     * @throws \InvalidArgumentException when the amount cannot be normalized under policy rules
+     */
+    public function normalize(string $amount): string
+    {
+        $normalized = trim($amount);
+
+        if ('' === $normalized) {
+            throw new \InvalidArgumentException(VendorTransactionErrorCodeValueObject::AMOUNT_REQUIRED);
+        }
+
+        if (!is_numeric($normalized)) {
+            throw new \InvalidArgumentException(VendorTransactionErrorCodeValueObject::AMOUNT_NOT_NUMERIC);
+        }
+
+        $value = round((float) $normalized, 2);
+
+        if ($value <= 0.0) {
+            throw new \InvalidArgumentException(VendorTransactionErrorCodeValueObject::AMOUNT_NOT_POSITIVE);
+        }
+
+        return number_format($value, 2, '.', '');
+    }
+}

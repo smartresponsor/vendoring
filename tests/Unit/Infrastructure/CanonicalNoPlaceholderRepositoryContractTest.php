@@ -18,6 +18,7 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
             $root.'/deploy/_templates/',
             $root.'/deploy/_template/',
             $root.'/.phpunit.cache/',
+            $root.'/.console-mcp/',
             $root.'/templates/',
             $root.'/.patch-backup/',
             $root.'/build/docs/phpdocumentor/',
@@ -26,9 +27,11 @@ final class CanonicalNoPlaceholderRepositoryContractTest extends TestCase
             $root.'/var/',
             $root.'/deploy/systemd/',
             $root.'/.consuming/',
+            $root.'/.gating/',
         ];
         $allowedFiles = [
             $root.'/composer.json',
+            $root.'/composer.prod.json',
             $root.'/package-lock.json',
             $root.'/bin/generate-phpdocumentor-site.php',
             $root.'/bin/generate-rc-evidence.php',

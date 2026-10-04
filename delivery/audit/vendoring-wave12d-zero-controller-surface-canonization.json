@@ -8,19 +8,19 @@
   "blockedRouteEntrypoints": 1,
   "implementedReadEntrypoints": 6,
   "deletedFiles": [
-    "src/Service/Vendor/VendorReadRouteResponseFactory.php"
+    "src/Service/VendorReadRouteResponseFactory.php"
   ],
   "addedFiles": [
-    "src/Service/Vendor/VendorHttpRouteResponseService.php",
+    "src/Service/VendorHttpRouteResponseService.php",
     "tools/qa/VendoringZeroControllerSurfaceAudit.php",
     "docs/internal/VENDORING_ZERO_CONTROLLER_SURFACE_CANONIZATION.md"
   ],
   "readEntrypoints": [
-    "src/Service/Vendor/VendorIndexService.php",
-    "src/Service/Vendor/VendorShowService.php",
-    "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php",
-    "src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentShowService.php",
-    "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaIndexService.php",
-    "src/Service/Vendor/Attachment/Media/VendorAttachmentMediaShowService.php"
+    "src/Service/VendorIndexService.php",
+    "src/Service/VendorShowService.php",
+    "src/Service/Attachment/Document/VendorAttachmentDocumentIndexService.php",
+    "src/Service/Attachment/Document/VendorAttachmentDocumentShowService.php",
+    "src/Service/Attachment/Media/VendorAttachmentMediaIndexService.php",
+    "src/Service/Attachment/Media/VendorAttachmentMediaShowService.php"
   ]
 }

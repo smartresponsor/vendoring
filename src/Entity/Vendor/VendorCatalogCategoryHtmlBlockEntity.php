@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Schema is stable: no JSON payload.
  * schema:update --force is safe on this entity.
  */
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorCatalogCategoryHtmlBlockRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorCatalogCategoryHtmlBlockRepository::class)]
 #[ORM\Table(name: 'vendor_catalog_category_html_block')]
 class VendorCatalogCategoryHtmlBlockEntity extends VendorAbstractEntity
 {

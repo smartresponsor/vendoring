@@ -9,7 +9,9 @@ use App\Vendoring\ServiceInterface\Category\VendorCategoryApproxTotalServiceInte
 
 final readonly class VendorCategoryApproxTotalService implements VendorCategoryApproxTotalServiceInterface
 {
-    public function __construct(private string $file = '') {}
+    public function __construct(private string $file = '')
+    {
+    }
 
     /** @return array{value:int,accuracy:string} */
     public function get(string $key, bool $withTotal): array

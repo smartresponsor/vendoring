@@ -23,9 +23,10 @@ final readonly class VendorCategorySyndicationFallbackAwarePackageGateReportValu
         private array $checks,
         private array $exactMatchedBindingIds,
         private array $fallbackMatchedBindingIds,
-        private bool  $strictPublishable,
-        private bool  $fallbackPublishable,
-    ) {}
+        private bool $strictPublishable,
+        private bool $fallbackPublishable,
+    ) {
+    }
 
     /** @return list<string> */
     public function packageMissingRequiredFields(): array

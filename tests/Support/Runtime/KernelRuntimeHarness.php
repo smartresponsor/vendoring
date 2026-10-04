@@ -32,9 +32,12 @@ final class KernelRuntimeHarness
         }
 
         $databaseDsn = 'sqlite:///'.$databaseFile;
+        $kernelEnvironment = 'test' === $environment
+            ? sprintf('test_runtime_%d_%s', getmypid(), bin2hex(random_bytes(4)))
+            : $environment;
 
-        $_ENV['APP_ENV'] = $environment;
-        $_SERVER['APP_ENV'] = $environment;
+        $_ENV['APP_ENV'] = $kernelEnvironment;
+        $_SERVER['APP_ENV'] = $kernelEnvironment;
         $_ENV['APP_DEBUG'] = $debug ? '1' : '0';
         $_SERVER['APP_DEBUG'] = $debug ? '1' : '0';
         $_ENV['APP_SECRET'] = 'vendoring-test-secret';
@@ -46,7 +49,7 @@ final class KernelRuntimeHarness
 
         chdir($projectRoot);
 
-        $kernel = new Kernel($environment, $debug);
+        $kernel = new Kernel($kernelEnvironment, $debug);
         $kernel->boot();
         $cacheDir = $kernel->getCacheDir();
 

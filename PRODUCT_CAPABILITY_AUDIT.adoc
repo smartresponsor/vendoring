@@ -1,0 +1,32 @@
+= Product Capability Audit: Vendoring
+:revdate: 2026-09-20
+
+== Boundary verdict
+
+Vendoring owns vendor/seller identity and vendor business lifecycle for marketplace scenarios. Product/catalog ownership remains Cataloging; listings Retailing; commission calculation Commissioning; payout execution belongs outside Vendoring.
+
+== Capability matrix
+
+[cols="3,1,4",options="header"]
+|===
+|Capability |Status |Audit
+|Vendor/seller identity |PARITY |Repository has explicit vendor entities and business routes.
+|Vendor lifecycle/status |PARITY |Business/operator lifecycle is in scope.
+|Vendor profile/brand metadata |PARITY |Existing tests reference brand normalization.
+|Vendor users/admin references |PARTIAL |Need explicit membership/role contracts without owning authentication.
+|Catalog/product association |PARTIAL |Reference Cataloging products; do not duplicate product master.
+|Listing ownership |PARTIAL |Retailing owns listing projection; Vendoring supplies seller reference/policy.
+|Order partition/reference |PARTIAL |Marketplace seller-order views need deterministic boundaries.
+|Commission policy reference |PARTIAL |Commissioning owns calculation.
+|Payout account/reference |PARTIAL |Financial account/execution belongs to payout/payment components.
+|Onboarding/KYC status |PARTIAL |Modern marketplace baseline; external verification provider can be referenced.
+|Vendor SLA/policy |MISSING |Useful for marketplace quality and fulfillment governance.
+|===
+
+== Milestone direction
+
+M1: seller identity, membership and lifecycle.
+M2: catalog/listing/order association contracts.
+M3: KYC/onboarding and commission/payout references.
+M4: seller operations/SLA and marketplace acceptance.
+

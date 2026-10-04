@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\CategoryEntity;
 
 use App\Vendoring\DTO\CatalogSyndication\VendorCatalogSyndicationPublishPackageRequestDTO;
-use App\Vendoring\Policy\Vendor\VendorCategorySyndicationPolicyAwarePackageGatePolicy;
+use App\Vendoring\Policy\VendorCategorySyndicationPolicyAwarePackageGatePolicy;
 use App\Vendoring\Service\Syndication\VendorCatalogSyndicationPolicyAwarePackageGateService;
 use App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaPolicyPreferenceServiceInterface;
 use App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationFallbackAwarePackageGateServiceInterface;
@@ -21,9 +21,9 @@ final class CatalogSyndicationPolicyAwarePackageGateServiceTest extends TestCase
     public function testBuildGatedPublishPackageResolvesPublishabilityViaPolicy(): void
     {
         $fallbackAwareGateService = new class implements VendorCatalogSyndicationFallbackAwarePackageGateServiceInterface {
-            public function buildGatedPublishPackage(VendorCatalogSyndicationPublishPackageRequestDTO $request): \App\Vendoring\EventInterface\Vendor\VendorCategorySyndicationFallbackAwarePackageGatedEventInterface
+            public function buildGatedPublishPackage(VendorCatalogSyndicationPublishPackageRequestDTO $request): \App\Vendoring\EventInterface\VendorCategorySyndicationFallbackAwarePackageGatedEventInterface
             {
-                return new \App\Vendoring\Event\Vendor\VendorCategorySyndicationFallbackAwarePackageGatedEvent([
+                return new \App\Vendoring\Event\VendorCategorySyndicationFallbackAwarePackageGatedEvent([
                     'packageId' => $request->packageId,
                     'destinationId' => $request->destinationId,
                     'categoryId' => $request->categoryId,
@@ -42,9 +42,9 @@ final class CatalogSyndicationPolicyAwarePackageGateServiceTest extends TestCase
         };
 
         $preferenceService = new class implements VendorCatalogDestinationMediaPolicyPreferenceServiceInterface {
-            public function evaluate(string $destinationId, string $categoryId, string $actorId, string $reason): \App\Vendoring\EventInterface\Vendor\VendorCategoryDestinationMediaPolicyPreferenceEvaluatedEventInterface
+            public function evaluate(string $destinationId, string $categoryId, string $actorId, string $reason): \App\Vendoring\EventInterface\VendorCategoryDestinationMediaPolicyPreferenceEvaluatedEventInterface
             {
-                return new \App\Vendoring\Event\Vendor\VendorCategoryDestinationMediaPolicyPreferenceEvaluatedEvent([
+                return new \App\Vendoring\Event\VendorCategoryDestinationMediaPolicyPreferenceEvaluatedEvent([
                     'destinationId' => $destinationId,
                     'categoryId' => $categoryId,
                     'mediaPolicyMode' => 'allow_fallback',

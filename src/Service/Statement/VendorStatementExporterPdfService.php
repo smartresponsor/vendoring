@@ -9,7 +9,7 @@ use App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPdfServiceIn
 
 final class VendorStatementExporterPdfService implements VendorStatementExporterPdfServiceInterface
 {
-    /** @param array{tenantId:string, vendorId:string, from:string, to:string, currency:string, opening:float, earnings:float, refunds:float, fees:float, closing:float, items:list<array{type:string, amount:float, currency:string}>} $data */
+    /** @param array{vendorId:string, from:string, to:string, currency:string, opening:float, earnings:float, refunds:float, fees:float, closing:float, items:list<array{type:string, amount:float, currency:string}>} $data */
     public function export(VendorStatementRequestDTO $dto, array $data, ?string $logoPath = null): string
     {
         $fromTs = $this->safeTimestamp($dto->from);
@@ -20,10 +20,9 @@ final class VendorStatementExporterPdfService implements VendorStatementExporter
             mkdir($dir, 0777, true);
         }
 
-        $file = $dir . '/statement_' . date('Ymd', $fromTs) . '_' . date('Ymd', $toTs) . '.pdf';
+        $file = $dir.'/statement_'.date('Ymd', $fromTs).'_'.date('Ymd', $toTs).'.pdf';
         $text = sprintf(
-            "Vendor Statement\nTenant: %s\nVendor: %s\nPeriod: %s .. %s\nCurrency: %s\n---\nOpening: %.2f\nEarnings: %.2f\nRefunds: %.2f\nFees: %.2f\nClosing: %.2f\n",
-            $dto->tenantId,
+            "Vendor Statement\nVendor: %s\nPeriod: %s .. %s\nCurrency: %s\n---\nOpening: %.2f\nEarnings: %.2f\nRefunds: %.2f\nFees: %.2f\nClosing: %.2f\n",
             $dto->vendorId,
             $dto->from,
             $dto->to,
@@ -52,7 +51,7 @@ final class VendorStatementExporterPdfService implements VendorStatementExporter
         $content = "%PDF-1.4\n";
         $content .= "1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n";
         $content .= "2 0 obj<</Type/Pages/Count 1/Kids[3 0 R]>>endobj\n";
-        $stream = 'BT /F1 12 Tf 72 720 Td (' . $this->escape($text) . ') Tj ET';
+        $stream = 'BT /F1 12 Tf 72 720 Td ('.$this->escape($text).') Tj ET';
         $len = strlen($stream);
         $content .= "3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>>>endobj\n";
         $content .= "4 0 obj<</Length $len>>stream\n$stream\nendstream endobj\n";

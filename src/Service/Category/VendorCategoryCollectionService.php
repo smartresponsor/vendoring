@@ -16,6 +16,19 @@ final class VendorCategoryCollectionService implements VendorCategoryCollectionS
      */
     public function filter(array $products, string $rule): array
     {
+        [$operator, $predicates] = $this->parseRule($rule);
+
+        return array_values(array_filter(
+            $products,
+            fn (array $product): bool => $this->matches($product, $operator, $predicates),
+        ));
+    }
+
+    /**
+     * @return array{0: 'AND'|'OR', 1: list<\Closure(array<string, mixed>): bool>}
+     */
+    private function parseRule(string $rule): array
+    {
         $tokens = preg_split('/\s+/', trim($rule));
         $tokenList = is_array($tokens) ? $tokens : [];
         $operator = 'AND';
@@ -31,65 +44,69 @@ final class VendorCategoryCollectionService implements VendorCategoryCollectionS
                 continue;
             }
 
-            if (str_starts_with($token, 'tag:')) {
-                $tag = substr($token, 4);
-                $predicates[] = static fn(array $product): bool => in_array($tag, self::stringList($product['tags'] ?? null), true);
-                continue;
-            }
-
-            if (str_starts_with($token, 'category:')) {
-                $categoryId = substr($token, 9);
-                $predicates[] = static fn(array $product): bool => in_array($categoryId, self::stringList($product['categoryIds'] ?? null), true);
-                continue;
-            }
-
-            if (1 === preg_match('/^price([<>]=?)(\d+(?:\.\d+)?)$/', $token, $matches)) {
-                $comparison = $matches[1];
-                $threshold = (float) $matches[2];
-                $predicates[] = static function (array $product) use ($comparison, $threshold): bool {
-                    $price = is_numeric($product['price'] ?? null) ? (float) $product['price'] : 0.0;
-
-                    return match ($comparison) {
-                        '>' => $price > $threshold,
-                        '>=' => $price >= $threshold,
-                        '<' => $price < $threshold,
-                        '<=' => $price <= $threshold,
-                        default => false,
-                    };
-                };
+            $predicate = $this->predicateForToken($token);
+            if (null !== $predicate) {
+                $predicates[] = $predicate;
             }
         }
 
-        $result = [];
-        foreach ($products as $product) {
-            $matched = 'AND' === $operator;
-            foreach ($predicates as $predicate) {
-                $ok = $predicate($product);
-                if ('AND' === $operator) {
-                    $matched = $matched && $ok;
-                    if (!$matched) {
-                        break;
-                    }
-                    continue;
-                }
-
-                $matched = $matched || $ok;
-                if ($matched) {
-                    break;
-                }
-            }
-
-            if ($matched) {
-                $result[] = $product;
-            }
-        }
-
-        return $result;
+        return [$operator, $predicates];
     }
 
     /**
-     * @param mixed $value
-     *
+     * @return \Closure(array<string, mixed>): bool|null
+     */
+    private function predicateForToken(string $token): ?\Closure
+    {
+        if (str_starts_with($token, 'tag:')) {
+            $tag = substr($token, 4);
+
+            return static fn (array $product): bool => in_array($tag, self::stringList($product['tags'] ?? null), true);
+        }
+
+        if (str_starts_with($token, 'category:')) {
+            $categoryId = substr($token, 9);
+
+            return static fn (array $product): bool => in_array($categoryId, self::stringList($product['categoryIds'] ?? null), true);
+        }
+
+        if (1 !== preg_match('/^price([<>]=?)(\d+(?:\.\d+)?)$/', $token, $matches)) {
+            return null;
+        }
+
+        $comparison = $matches[1];
+        $threshold = (float) $matches[2];
+
+        return static function (array $product) use ($comparison, $threshold): bool {
+            $price = is_numeric($product['price'] ?? null) ? (float) $product['price'] : 0.0;
+
+            return match ($comparison) {
+                '>' => $price > $threshold,
+                '>=' => $price >= $threshold,
+                '<' => $price < $threshold,
+                '<=' => $price <= $threshold,
+                default => false,
+            };
+        };
+    }
+
+    /**
+     * @param array<string, mixed>                       $product
+     * @param 'AND'|'OR'                                 $operator
+     * @param list<\Closure(array<string, mixed>): bool> $predicates
+     */
+    private function matches(array $product, string $operator, array $predicates): bool
+    {
+        if ([] === $predicates) {
+            return 'AND' === $operator;
+        }
+
+        return 'AND' === $operator
+            ? !array_any($predicates, static fn (\Closure $predicate): bool => !$predicate($product))
+            : array_any($predicates, static fn (\Closure $predicate): bool => $predicate($product));
+    }
+
+    /**
      * @return list<string>
      */
     private static function stringList(mixed $value): array

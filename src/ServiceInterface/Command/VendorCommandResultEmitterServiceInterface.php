@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Vendoring\ServiceInterface\Command;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 interface VendorCommandResultEmitterServiceInterface
 {
@@ -21,7 +20,8 @@ interface VendorCommandResultEmitterServiceInterface
 
     /**
      * @noinspection PhpTooManyParametersInspection
+     *
      * @param array<string, mixed> $context
      */
-    public function emitThrowableError(OutputInterface $output, string $format, string $status, string $prefix, Throwable $throwable, array $context = []): bool;
+    public function emitThrowableError(OutputInterface $output, string $format, string $status, string $prefix, \Throwable $throwable, array $context = []): bool;
 }

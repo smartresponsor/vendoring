@@ -12,8 +12,8 @@ Runtime dispatch is owned by Cruding:
 URI
 в†’ Cruding grammar
 в†’ providerKey / routeKey
-в†’ App\Vendoring\Service\Vendor\...\*Service
-в†’ optional App\Vendoring\Form\Vendor\...\*Type
+в†’ App\Vendoring\Service\...\*Service
+в†’ optional App\Vendoring\Form\...\*Type
 ```
 
 Forbidden active runtime layers:
@@ -27,14 +27,14 @@ Forbidden active runtime layers:
 
 For the Vendoring component, these Layer 3 source folders are locked to a single Vendor bucket when present:
 
-- `src/EntityInterface/Vendor/`
-- `src/Event/Vendor/`
-- `src/EventInterface/Vendor/`
-- `src/Policy/Vendor/`
-- `src/PolicyInterface/Vendor/`
-- `src/Repository/Vendor/`
-- `src/RepositoryInterface/Vendor/`
-- `src/Projection/Vendor/`
+- `src/EntityInterface/`
+- `src/Event/`
+- `src/EventInterface/`
+- `src/Policy/`
+- `src/PolicyInterface/`
+- `src/Repository/`
+- `src/RepositoryInterface/`
+- `src/Projection/`
 
 The parent folders listed above must not contain PHP files directly and must not contain any bucket other than `Vendor`.
 
@@ -53,22 +53,22 @@ The parent folders listed above must not contain PHP files directly and must not
 
 ## HTTP service and form exception
 
-`src/Service/Vendor/` and `src/Form/` follow Cruding service-layer convention, not the `App\Vendoring\...` namespace.
+`src/Service/` and `src/Form/` follow Cruding service-layer convention, not the `App\Vendoring\...` namespace.
 
 Allowed:
 
-- `src/Service/Vendor/VendorIndexService.php`
-- `src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php`
-- namespace `App\Vendoring\Service\Vendor\...`
-- `src/Form/Vendor/VendorCreateType.php`
-- namespace `App\Vendoring\Form\Vendor\...`
+- `src/Service/VendorIndexService.php`
+- `src/Service/Attachment/Document/VendorAttachmentDocumentIndexService.php`
+- namespace `App\Vendoring\Service\...`
+- `src/Form/VendorCreateType.php`
+- namespace `App\Vendoring\Form\...`
 
 Forbidden:
 
 - `src/Controller/`
 - `src/ControllerTrait/`
 - retired controller namespace classes
-- `App\Vendoring\Service\Vendor\...`
+- `App\Vendoring\Service\...`
 
 ## Forbidden examples
 
@@ -86,13 +86,13 @@ These paths are forbidden even when the class name looks meaningful:
 
 Canonical replacements must be literal, for example:
 
-- `src/Event/Vendor/VendorPayoutCreatedEvent.php`
-- `src/Event/Vendor/VendorCategorySyndicationPublishPackageBuiltEvent.php`
-- `src/EventInterface/Vendor/VendorPayloadEventInterface.php`
-- `src/Policy/Vendor/VendorCategorySyndicationMappingPolicy.php`
-- `src/PolicyInterface/Vendor/VendorCategorySyndicationMappingPolicyInterface.php`
-- `src/Repository/Vendor/VendorLedgerRepository.php`
-- `src/RepositoryInterface/Vendor/VendorPayoutRepositoryInterface.php`
+- `src/Event/VendorPayoutCreatedEvent.php`
+- `src/Event/VendorCategorySyndicationPublishPackageBuiltEvent.php`
+- `src/EventInterface/VendorPayloadEventInterface.php`
+- `src/Policy/VendorCategorySyndicationMappingPolicy.php`
+- `src/PolicyInterface/VendorCategorySyndicationMappingPolicyInterface.php`
+- `src/Repository/VendorLedgerRepository.php`
+- `src/RepositoryInterface/VendorPayoutRepositoryInterface.php`
 
 ## Security layer rule
 
@@ -119,7 +119,7 @@ For runtime HTTP entrypoints, derive the target from the route-map key:
 
 ```text
 vendor.attachment.document.index
-в†’ App\Vendoring\Service\Vendor\Attachment\Document\VendorAttachmentDocumentIndexService
+в†’ App\Vendoring\Service\Attachment\Document\VendorAttachmentDocumentIndexService
 ```
 
 ## EntityInterface literal addendum
@@ -128,7 +128,7 @@ vendor.attachment.document.index
 
 Allowed:
 
-- `src/EntityInterface/Vendor/Vendor*EntityInterface.php`
+- `src/EntityInterface/Vendor*EntityInterface.php`
 - namespace `App\Vendoring\EntityInterface\Vendor`
 
 Forbidden:
@@ -146,9 +146,9 @@ Entity contracts must not use a shorter `*Interface` name. They must use the ful
 
 Allowed:
 
-- `src/Policy/Vendor/Vendor*Policy.php`
+- `src/Policy/Vendor*Policy.php`
 - namespace `App\Vendoring\Policy\Vendor`
-- `src/PolicyInterface/Vendor/Vendor*PolicyInterface.php`
+- `src/PolicyInterface/Vendor*PolicyInterface.php`
 - namespace `App\Vendoring\PolicyInterface\Vendor`
 
 Forbidden:

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/_composer_json.php';
+require_once __DIR__.'/_composer_json.php';
 
 $root = dirname(__DIR__, 2);
-$amountPolicy = (string) file_get_contents($root . '/src/Service/Policy/VendorTransactionAmountPolicyService.php');
-$statusPolicy = (string) file_get_contents($root . '/src/Service/Policy/VendorTransactionStatusPolicyService.php');
-$servicesYaml = (string) file_get_contents($root . '/config/component/services.yaml');
+$amountPolicy = (string) file_get_contents($root.'/src/Policy/VendorTransactionAmountPolicy.php');
+$statusPolicy = (string) file_get_contents($root.'/src/Policy/VendorTransactionStatusPolicy.php');
+$servicesYaml = (string) file_get_contents($root.'/config/component/services.yaml');
 $composer = vendoring_load_composer_json($root);
 
 if (!vendoring_has_script($composer, 'test:transaction-policy')) {
@@ -22,12 +22,12 @@ if (!str_contains($statusPolicy, 'VendorTransactionErrorCodeValueObject::STATUS_
     fwrite(STDERR, "Status policy must use stable status error codes.\n");
     exit(1);
 }
-if (!str_contains($servicesYaml, "App\\Vendoring\\ServiceInterface\\Policy\\VendorTransactionAmountPolicyServiceInterface: '@App\\Vendoring\\Service\\Policy\\VendorTransactionAmountPolicyService'")) {
-    fwrite(STDERR, "component/services.yaml must alias VendorTransactionAmountPolicyServiceInterface.\n");
+if (!str_contains($servicesYaml, "App\\Vendoring\\PolicyInterface\\VendorTransactionAmountPolicyInterface: '@App\\Vendoring\\Policy\\VendorTransactionAmountPolicy'")) {
+    fwrite(STDERR, "component/services.yaml must alias VendorTransactionAmountPolicyInterface.\n");
     exit(1);
 }
-if (!str_contains($servicesYaml, "App\\Vendoring\\ServiceInterface\\Policy\\VendorTransactionStatusPolicyServiceInterface: '@App\\Vendoring\\Service\\Policy\\VendorTransactionStatusPolicyService'")) {
-    fwrite(STDERR, "component/services.yaml must alias VendorTransactionStatusPolicyServiceInterface.\n");
+if (!str_contains($servicesYaml, "App\\Vendoring\\PolicyInterface\\VendorTransactionStatusPolicyInterface: '@App\\Vendoring\\Policy\\VendorTransactionStatusPolicy'")) {
+    fwrite(STDERR, "component/services.yaml must alias VendorTransactionStatusPolicyInterface.\n");
     exit(1);
 }
 

@@ -6,7 +6,7 @@ The component Composer namespace is `App\Vendoring\ => src/`.
 
 Wave 15B aligns the complete HTTP and Form surfaces:
 
-- `App\Service\Vendor\...` → `App\Vendoring\Service\Vendor\...`
+- `App\Service\Vendor\...` → `App\Vendoring\Service\...`
 - `App\Form\...` → `App\Vendoring\Form\...`
 
 The update includes PHP namespace declarations, imports, route-map targets, tests,

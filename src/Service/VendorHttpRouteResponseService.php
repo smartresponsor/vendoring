@@ -1,0 +1,201 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Vendoring\Service;
+
+use App\Cruding\DTO\Entrypoint\CrudServiceContextDTO;
+use App\Cruding\ValueObject\Resource\CrudResourceContract;
+
+final readonly class VendorHttpRouteResponseService
+{
+    public function read(
+        CrudServiceContextDTO $context,
+        string $resourcePath,
+        string $operation,
+        string $title,
+        mixed $data = null,
+    ): CrudResourceContract {
+        return $this->contract(
+            $context,
+            $resourcePath,
+            $operation,
+            'read_route_ready',
+            $title,
+            false,
+            'index' === $operation ? 'collection' : 'item',
+            $data,
+        );
+    }
+
+    public function mutation(
+        CrudServiceContextDTO $context,
+        string $resourcePath,
+        string $operation,
+        string $title,
+        mixed $data,
+    ): CrudResourceContract {
+        return $this->contract(
+            $context,
+            $resourcePath,
+            $operation,
+            'mutation_completed',
+            $title,
+            true,
+            'item',
+            $data,
+        );
+    }
+
+    public function blocked(
+        CrudServiceContextDTO $context,
+        string $resourcePath,
+        string $operation,
+        string $title,
+    ): CrudResourceContract {
+        return $this->contract(
+            $context,
+            $resourcePath,
+            $operation,
+            'route_blocked',
+            $title,
+            false,
+            'blocked',
+            null,
+        );
+    }
+
+    private function contract(
+        CrudServiceContextDTO $context,
+        string $resourcePath,
+        string $operation,
+        string $status,
+        string $title,
+        bool $mutationAllowed,
+        string $view,
+        mixed $data,
+    ): CrudResourceContract {
+        $routeContext = [
+            'surface' => 'vendor',
+            'resourcePath' => $resourcePath,
+            'resourceLabel' => $this->label($resourcePath),
+            'operation' => $operation,
+            'identifierField' => $context->crudContext->identifierField,
+            'identifierValue' => $context->crudContext->identifierValue,
+            'formTypeClass' => $context->crudContext->formTypeClass,
+            'resolver' => $context->crudContext->identifierField,
+            'entrypointPattern' => 'Vendor*Service',
+            'controllerAllowed' => false,
+        ];
+
+        $meta = [
+            'title' => $title,
+            'status' => $status,
+            'format' => 'auto',
+            'component' => 'Vendoring',
+            'sourceComponent' => 'Vendoring',
+            'persistence' => 'active',
+            'mutationAllowed' => $mutationAllowed,
+            'controllerAllowed' => false,
+            'crudingContract' => $this->crudingContract($resourcePath, $operation, $mutationAllowed),
+            'viewingContract' => $this->viewingContract($resourcePath, $operation, $view),
+            'interfacingDependency' => 'not-bound-inside-vendoring',
+            'data' => $data,
+        ];
+
+        $locations = [
+            'body' => [
+                [
+                    'type' => 'vendor-resource',
+                    'resource' => $resourcePath,
+                    'operation' => $operation,
+                    'status' => $status,
+                    'data' => $data,
+                ],
+            ],
+            'diagnostic' => [
+                [
+                    'type' => 'vendor-route-contract',
+                    'cruding' => $meta['crudingContract'],
+                    'viewing' => $meta['viewingContract'],
+                    'interfacing' => $meta['interfacingDependency'],
+                ],
+            ],
+        ];
+
+        return CrudResourceContract::forResource(
+            view: $view,
+            routeContext: $routeContext,
+            locations: $locations,
+            meta: $meta,
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function crudingContract(string $resourcePath, string $operation, bool $mutationAllowed): array
+    {
+        return [
+            'grammar' => 'id-last',
+            'componentRole' => 'subject-entrypoint',
+            'resource' => $resourcePath,
+            'operation' => $operation,
+            'resolver' => 'id',
+            'mutationAllowed' => $mutationAllowed,
+            'controllerAllowed' => false,
+            'entrypointPattern' => 'Vendor*Service',
+            'businessService' => $this->businessServiceName($resourcePath, $operation),
+            'result' => 'CrudResourceContract',
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function viewingContract(string $resourcePath, string $operation, string $view): array
+    {
+        return [
+            'surface' => $view,
+            'resource' => $resourcePath,
+            'operation' => $operation,
+            'readModel' => 'VendorEntity',
+            'templateCandidate' => $this->templateCandidate($resourcePath, $operation),
+            'normalization' => 'surface-renderable-object',
+            'interfacingBridge' => 'not-bound-inside-vendoring',
+        ];
+    }
+
+    private function templateCandidate(string $resourcePath, string $operation): ?string
+    {
+        if ('vendor' !== $resourcePath) {
+            return null;
+        }
+
+        return match ($operation) {
+            'index' => 'vendor/index.html.twig',
+            'show' => 'vendor/show.html.twig',
+            'page' => 'vendor/page.html.twig',
+            'new', 'edit' => 'vendor/form.html.twig',
+            default => null,
+        };
+    }
+
+    private function label(string $resourcePath): string
+    {
+        return ucwords(str_replace('/', ' ', $resourcePath));
+    }
+
+    private function businessServiceName(string $resourcePath, string $operation): string
+    {
+        $normalizedPath = trim($resourcePath, '/');
+        $segments = array_filter(explode('/', $normalizedPath), static fn (string $segment): bool => '' !== $segment);
+        $studlyPath = implode('', array_map(static function (string $segment): string {
+            $segment = str_replace(['-', '_'], ' ', $segment);
+
+            return str_replace(' ', '', ucwords($segment));
+        }, $segments));
+
+        return $studlyPath.ucfirst($operation).'Service';
+    }
+}

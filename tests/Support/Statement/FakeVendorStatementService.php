@@ -11,7 +11,6 @@ final class FakeVendorStatementService implements VendorStatementServiceInterfac
 {
     /**
      * @var array{
-     *   tenantId:string,
      *   vendorId:string,
      *   from:string,
      *   to:string,
@@ -29,7 +28,7 @@ final class FakeVendorStatementService implements VendorStatementServiceInterfac
     /** @var list<VendorStatementRequestDTO> */
     private array $requests = [];
 
-    /** @param array{tenantId?:string, vendorId?:string, from?:string, to?:string, currency?:string, opening?:float|int, earnings?:float|int, refunds?:float|int, fees?:float|int, closing?:float|int, balance?:float|int, items?:list<array{type:string, amount:float|int, currency:string}>} $response */
+    /** @param array{vendorId?:string, from?:string, to?:string, currency?:string, opening?:float|int, earnings?:float|int, refunds?:float|int, fees?:float|int, closing?:float|int, balance?:float|int, items?:list<array{type:string, amount:float|int, currency:string}>} $response */
     public function __construct(array $response)
     {
         $items = [];
@@ -42,7 +41,6 @@ final class FakeVendorStatementService implements VendorStatementServiceInterfac
         }
 
         $this->response = [
-            'tenantId' => $response['tenantId'] ?? 'tenant-test',
             'vendorId' => $response['vendorId'] ?? 'vendor-test',
             'from' => $response['from'] ?? '',
             'to' => $response['to'] ?? '',
@@ -67,7 +65,7 @@ final class FakeVendorStatementService implements VendorStatementServiceInterfac
     {
         $this->requests[] = $dto;
 
-        return sys_get_temp_dir() . '/fake-statement.csv';
+        return sys_get_temp_dir().'/fake-statement.csv';
     }
 
     /** @return list<VendorStatementRequestDTO> */

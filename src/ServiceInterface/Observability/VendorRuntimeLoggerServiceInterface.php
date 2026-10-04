@@ -15,34 +15,34 @@ interface VendorRuntimeLoggerServiceInterface
     /**
      * Record an informational runtime event.
      *
-     * @param string                    $message Human-readable event message.
-     * @param array<string, scalar|null> $context Structured operational context such as route,
-     *                                            vendor_id, transaction_id, and error_code.
+     * @param string                     $message human-readable event message
+     * @param array<string, scalar|null> $context structured operational context such as route,
+     *                                            vendor_id, transaction_id, and error_code
      */
     public function info(string $message, array $context = []): void;
 
     /**
      * Record a warning-level runtime event.
      *
-     * @param string                    $message Human-readable warning message.
-     * @param array<string, scalar|null> $context Structured operational context such as route,
-     *                                            vendor_id, transaction_id, and error_code.
+     * @param string                     $message human-readable warning message
+     * @param array<string, scalar|null> $context structured operational context such as route,
+     *                                            vendor_id, transaction_id, and error_code
      */
     public function warning(string $message, array $context = []): void;
 
     /**
      * Record an error-level runtime event.
      *
-     * @param string                    $message Human-readable error message.
-     * @param array<string, scalar|null> $context Structured operational context such as route,
-     *                                            vendor_id, transaction_id, and error_code.
+     * @param string                     $message human-readable error message
+     * @param array<string, scalar|null> $context structured operational context such as route,
+     *                                            vendor_id, transaction_id, and error_code
      */
     public function error(string $message, array $context = []): void;
 
     /**
      * Return the in-memory inspection snapshot of emitted log records.
      *
-     * @return list<array<string, scalar|null>> Stable structured records captured by the logger.
+     * @return list<array<string, scalar|null>> stable structured records captured by the logger
      */
     public function snapshot(): array;
 }

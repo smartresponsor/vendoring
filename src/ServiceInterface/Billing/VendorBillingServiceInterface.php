@@ -7,8 +7,8 @@ declare(strict_types=1);
 namespace App\Vendoring\ServiceInterface\Billing;
 
 use App\Vendoring\DTO\VendorBillingDTO;
-use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorBillingEntity;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 

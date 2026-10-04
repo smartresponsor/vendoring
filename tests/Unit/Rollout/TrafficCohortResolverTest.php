@@ -4,29 +4,22 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Rollout;
 
-use App\Vendoring\Service\Rollout\VendorTrafficCohortResolverService;
+use App\Vendoring\Resolver\Rollout\VendorTrafficCohortResolver;
 use PHPUnit\Framework\TestCase;
 
 final class TrafficCohortResolverTest extends TestCase
 {
     public function testResolvePrefersVendorScopeWhenAvailable(): void
     {
-        $resolver = new VendorTrafficCohortResolverService();
+        $resolver = new VendorTrafficCohortResolver();
 
-        self::assertSame('vendor:42', $resolver->resolve('tenant-1', '42'));
-    }
-
-    public function testResolveFallsBackToTenantScope(): void
-    {
-        $resolver = new VendorTrafficCohortResolverService();
-
-        self::assertSame('tenant:tenant-1', $resolver->resolve('tenant-1', null));
+        self::assertSame('vendor:42', $resolver->resolve('42'));
     }
 
     public function testResolveFallsBackToGlobalScope(): void
     {
-        $resolver = new VendorTrafficCohortResolverService();
+        $resolver = new VendorTrafficCohortResolver();
 
-        self::assertSame('global', $resolver->resolve(null, null));
+        self::assertSame('global', $resolver->resolve(null));
     }
 }

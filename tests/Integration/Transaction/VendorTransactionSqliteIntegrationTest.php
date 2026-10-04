@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Integration\Transaction;
 
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
+use App\Vendoring\Policy\VendorTransactionAmountPolicy;
+use App\Vendoring\Policy\VendorTransactionStatusPolicy;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
-use App\Vendoring\Service\Policy\VendorTransactionAmountPolicyService;
-use App\Vendoring\Service\Policy\VendorTransactionStatusPolicyService;
 use App\Vendoring\Service\Transaction\VendorTransactionLifecycleService;
 use App\Vendoring\Tests\Support\Transaction\DoctrineBackedVendorTransactionRepository;
 use App\Vendoring\Tests\Support\Transaction\DoctrineEntityManagerFactory;
@@ -47,10 +47,9 @@ final class VendorTransactionSqliteIntegrationTest extends TestCase
 
         $repository = new DoctrineBackedVendorTransactionRepository($entityManager);
         $manager = new VendorTransactionLifecycleService(
-            $entityManager,
             $events,
-            new VendorTransactionStatusPolicyService(),
-            new VendorTransactionAmountPolicyService(),
+            new VendorTransactionStatusPolicy(),
+            new VendorTransactionAmountPolicy(),
             $repository,
             new VendorRuntimeLoggerService(new NullLogger(), new VendorCorrelationContextService(), new RequestStack()),
         );

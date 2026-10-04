@@ -7,14 +7,13 @@ namespace App\Vendoring\Service\Syndication;
 
 use App\Vendoring\DTO\CatalogSyndication\VendorCatalogSyndicationPublishPackageRequestDTO;
 use App\Vendoring\DTO\CatalogSyndication\VendorCategorySyndicationFallbackAwarePackageGateReportInputDTO;
-use App\Vendoring\Event\Vendor\VendorCategorySyndicationFallbackAwarePackageGatedEvent;
-use App\Vendoring\EventInterface\Vendor\VendorCategorySyndicationFallbackAwarePackageGatedEventInterface;
-use App\Vendoring\PolicyInterface\Vendor\VendorCategorySyndicationFallbackAwarePackageGatePolicyInterface;
+use App\Vendoring\Event\VendorCategorySyndicationFallbackAwarePackageGatedEvent;
+use App\Vendoring\EventInterface\VendorCategorySyndicationFallbackAwarePackageGatedEventInterface;
+use App\Vendoring\PolicyInterface\VendorCategorySyndicationFallbackAwarePackageGatePolicyInterface;
 use App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaFallbackServiceInterface;
 use App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaReadinessServiceInterface;
 use App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationFallbackAwarePackageGateServiceInterface;
 use App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationMappingServiceInterface;
-use DateTimeImmutable;
 
 final readonly class VendorCatalogSyndicationFallbackAwarePackageGateService implements VendorCatalogSyndicationFallbackAwarePackageGateServiceInterface
 {
@@ -23,7 +22,8 @@ final readonly class VendorCatalogSyndicationFallbackAwarePackageGateService imp
         private VendorCatalogDestinationMediaReadinessServiceInterface $destinationMediaReadinessService,
         private VendorCatalogDestinationMediaFallbackServiceInterface $destinationMediaFallbackService,
         private VendorCategorySyndicationFallbackAwarePackageGatePolicyInterface $policy,
-    ) {}
+    ) {
+    }
 
     public function buildGatedPublishPackage(VendorCatalogSyndicationPublishPackageRequestDTO $request): VendorCategorySyndicationFallbackAwarePackageGatedEventInterface
     {
@@ -79,7 +79,7 @@ final readonly class VendorCatalogSyndicationFallbackAwarePackageGateService imp
                 'actorId' => trim($request->actorId),
                 'reason' => trim($request->reason),
             ],
-            new DateTimeImmutable(),
+            new \DateTimeImmutable(),
         );
     }
 

@@ -1,0 +1,10 @@
+# ---------------------------------------------------------------------------
+# Vendoring self-service route-map registry
+# ---------------------------------------------------------------------------
+# /my/vendor/ surface — authenticated vendor sees only their own data.
+# No {id} tokens — identity resolved from security context.
+# Services resolve by FQCN convention via Cruding catch-all.
+# ---------------------------------------------------------------------------
+
+imports:
+    - { resource: 'routes/my/vendor_my.yaml' }

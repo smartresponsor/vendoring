@@ -1,7 +1,7 @@
-# SmartResponsor deploy/ skeleton
+# Platform deploy/ skeleton
 
 Purpose
-- This package provides the canonical `deploy/` folder layout for SmartResponsor repositories.
+- This package provides the canonical `deploy/` folder layout for platform repositories.
 - `deploy/` contains *deployment methods* (how to run / ship), not domain logic and not runtime application code.
 
 Rules

@@ -14,14 +14,14 @@ if (!array_key_exists('test:entrypoint', $scripts)) {
 }
 
 $expectedServices = [
-    'src/Service/Vendor/Transaction/VendorTransactionHttpService.php',
-    'src/Service/Vendor/Transaction/Operator/VendorTransactionOperatorService.php',
-    'src/Service/Vendor/Summary/VendorSummaryHttpService.php',
-    'src/Service/Vendor/Metric/VendorMetricService.php',
-    'src/Service/Vendor/Payout/Account/VendorPayoutAccountService.php',
-    'src/Service/Vendor/Payout/VendorPayoutHttpService.php',
-    'src/Service/Vendor/Statement/VendorStatementHttpService.php',
-    'src/Service/Vendor/Statement/Export/VendorStatementExportService.php',
+    'src/Service/Transaction/VendorTransactionHttpService.php',
+    'src/Service/Transaction/Operator/VendorTransactionOperatorService.php',
+    'src/Service/Summary/VendorSummaryHttpService.php',
+    'src/Service/Metric/VendorMetricHttpService.php',
+    'src/Service/Payout/Account/VendorPayoutAccountService.php',
+    'src/Service/Payout/VendorPayoutHttpService.php',
+    'src/Service/Statement/VendorStatementHttpService.php',
+    'src/Service/Statement/Export/VendorStatementExportService.php',
 ];
 
 foreach ($expectedServices as $relativePath) {
@@ -32,8 +32,8 @@ foreach ($expectedServices as $relativePath) {
     }
 
     $contents = (string) file_get_contents($path);
-    if (!str_contains($contents, 'namespace App\\Vendoring\\Service\\Vendor')) {
-        fwrite(STDERR, sprintf("HTTP service must use App\\Vendoring\\Service\\Vendor namespace: %s\n", $relativePath));
+    if (!str_contains($contents, 'namespace App\\Vendoring\\Service\\')) {
+        fwrite(STDERR, sprintf("HTTP service must use the canonical App\\Vendoring\\Service namespace: %s\n", $relativePath));
         exit(1);
     }
 

@@ -14,7 +14,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
     /** @param array<string, mixed> $payload */
     public function toCreateDto(array $payload): VendorCreatePayoutDTO
     {
-        foreach (['tenantId', 'vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
+        foreach (['vendorId', 'currency', 'thresholdCents', 'retentionFeePercent'] as $field) {
             if (!isset($payload[$field])) {
                 throw new \InvalidArgumentException(sprintf('%s required', $field));
             }
@@ -25,7 +25,6 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
             currency: $this->requiredString($payload, 'currency'),
             thresholdCents: $this->requiredThresholdCents($payload),
             retentionFeePercent: $this->requiredRetentionFeePercent($payload),
-            tenantId: $this->requiredString($payload, 'tenantId'),
         );
     }
 

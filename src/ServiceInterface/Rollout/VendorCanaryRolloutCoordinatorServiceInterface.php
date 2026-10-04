@@ -13,10 +13,9 @@ interface VendorCanaryRolloutCoordinatorServiceInterface
     /**
      * Evaluate canary rollout readiness for one feature flag and runtime cohort.
      *
-     * @param string      $flagName      Canonical feature flag identifier.
-     * @param string|null $tenantId      Optional tenant scope used for cohort routing.
-     * @param string|null $vendorId      Optional vendor scope used for cohort routing.
-     * @param int         $windowSeconds Monitoring and rollback evaluation lookback window.
+     * @param string      $flagName      canonical feature flag identifier
+     * @param string|null $vendorId      optional canonical Vendor scope used for cohort routing
+     * @param int         $windowSeconds monitoring and rollback evaluation lookback window
      *
      * @return array{
      *   'generatedAt': string,
@@ -38,5 +37,5 @@ interface VendorCanaryRolloutCoordinatorServiceInterface
      *   }
      * }
      */
-    public function evaluate(string $flagName, ?string $tenantId = null, ?string $vendorId = null, int $windowSeconds = 900): array;
+    public function evaluate(string $flagName, ?string $vendorId = null, int $windowSeconds = 900): array;
 }

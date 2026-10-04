@@ -6,13 +6,12 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Syndication;
 
 use App\Vendoring\DTO\CatalogSyndication\VendorCatalogSyndicationPublishPackageRequestDTO;
-use App\Vendoring\Event\Vendor\VendorCategorySyndicationPolicyAwarePackageGatedEvent;
-use App\Vendoring\EventInterface\Vendor\VendorCategorySyndicationPolicyAwarePackageGatedEventInterface;
-use App\Vendoring\PolicyInterface\Vendor\VendorCategorySyndicationPolicyAwarePackageGatePolicyInterface;
+use App\Vendoring\Event\VendorCategorySyndicationPolicyAwarePackageGatedEvent;
+use App\Vendoring\EventInterface\VendorCategorySyndicationPolicyAwarePackageGatedEventInterface;
+use App\Vendoring\PolicyInterface\VendorCategorySyndicationPolicyAwarePackageGatePolicyInterface;
 use App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaPolicyPreferenceServiceInterface;
 use App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationFallbackAwarePackageGateServiceInterface;
 use App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationPolicyAwarePackageGateServiceInterface;
-use DateTimeImmutable;
 
 final readonly class VendorCatalogSyndicationPolicyAwarePackageGateService implements VendorCatalogSyndicationPolicyAwarePackageGateServiceInterface
 {
@@ -20,7 +19,8 @@ final readonly class VendorCatalogSyndicationPolicyAwarePackageGateService imple
         private VendorCatalogSyndicationFallbackAwarePackageGateServiceInterface $fallbackAwareGateService,
         private VendorCatalogDestinationMediaPolicyPreferenceServiceInterface $destinationMediaPolicyPreferenceService,
         private VendorCategorySyndicationPolicyAwarePackageGatePolicyInterface $policy,
-    ) {}
+    ) {
+    }
 
     public function buildGatedPublishPackage(VendorCatalogSyndicationPublishPackageRequestDTO $request): VendorCategorySyndicationPolicyAwarePackageGatedEventInterface
     {
@@ -62,7 +62,7 @@ final readonly class VendorCatalogSyndicationPolicyAwarePackageGateService imple
                 'actorId' => trim($request->actorId),
                 'reason' => trim($request->reason),
             ],
-            new DateTimeImmutable(),
+            new \DateTimeImmutable(),
         );
     }
 

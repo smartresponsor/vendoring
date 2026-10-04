@@ -11,8 +11,8 @@ final class VendorCategorySerializerService implements VendorCategorySerializerS
 {
     /**
      * @param array<string, mixed> $source
-     * @param list<string> $includeFieldList
-     * @param list<string> $excludeFieldList
+     * @param list<string>         $includeFieldList
+     * @param list<string>         $excludeFieldList
      *
      * @return array<string, mixed>
      */

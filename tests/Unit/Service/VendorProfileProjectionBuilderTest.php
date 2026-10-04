@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service;
 
+use App\Vendoring\Builder\Profile\VendorProfileProjectionBuilder;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
-use App\Vendoring\Service\Profile\VendorProfileProjectionBuilderService;
+use App\Vendoring\RepositoryInterface\VendorProfileRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\Resolver\Profile\VendorNullProfileAttachmentResolver;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -98,9 +99,13 @@ final class VendorProfileProjectionBuilderTest extends TestCase
         self::assertSame([], $payload['sections']['search']['missing']);
     }
 
-    private function buildService(): VendorProfileProjectionBuilderService
+    private function buildService(): VendorProfileProjectionBuilder
     {
-        return new VendorProfileProjectionBuilderService($this->vendorRepository, $this->profileRepository);
+        return new VendorProfileProjectionBuilder(
+            $this->vendorRepository,
+            $this->profileRepository,
+            new VendorNullProfileAttachmentResolver(),
+        );
     }
 
     private function forceId(VendorEntity $vendor, int $id): void

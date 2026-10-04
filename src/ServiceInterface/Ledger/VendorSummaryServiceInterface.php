@@ -11,5 +11,5 @@ interface VendorSummaryServiceInterface
     /**
      * @return array{vendorId: string, from: string, to: string, currency: string, balances: array<string, float|int>}
      */
-    public function build(string $tenantId, string $vendorId, string $from, string $to, string $currency): array;
+    public function build(string $vendorId, string $from, string $to, string $currency): array;
 }

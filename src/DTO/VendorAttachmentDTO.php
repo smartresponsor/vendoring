@@ -11,5 +11,6 @@ final readonly class VendorAttachmentDTO
         public string $title,
         public string $filePath,
         public ?string $category = null,
-    ) {}
+    ) {
+    }
 }

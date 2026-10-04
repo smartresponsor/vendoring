@@ -5,7 +5,7 @@ Intent
 - This is the preferred path for production-like environments.
 
 What belongs here
-- chart(s) for SmartResponsor services
+- chart(s) for platform services
 - values files per environment (dev/stage/prod)
 - ingress, configmap, secret templates (secrets are injected, not committed)
 - upgrade/rollback notes

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Support\Transaction;
 
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 

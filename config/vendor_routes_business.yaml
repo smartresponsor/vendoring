@@ -1,0 +1,82 @@
+app_ops_vendor_transaction_operator_index:
+    path: /ops/vendor/transaction/{vendorId}
+    controller: App\Vendoring\Service\Transaction\Operator\VendorTransactionOperatorService::index
+    methods: [GET]
+
+vendor_transaction_operator_create:
+    path: /ops/vendor/transaction/create/{vendorId}
+    controller: App\Vendoring\Service\Transaction\Operator\VendorTransactionOperatorService::create
+    methods: [POST]
+
+vendor_transaction_operator_status:
+    path: /ops/vendor/transaction/status/{id}
+    controller: App\Vendoring\Service\Transaction\Operator\VendorTransactionOperatorService::updateStatusById
+    methods: [POST]
+    requirements:
+        id: '[1-9][0-9]*'
+
+vendor_transaction_create:
+    path: /api/vendor/transaction
+    controller: App\Vendoring\Service\Transaction\VendorTransactionHttpService::create
+    methods: [POST]
+
+vendor_transaction_list:
+    path: /api/vendor/transaction/{id}
+    controller: App\Vendoring\Service\Transaction\VendorTransactionHttpService::listByVendor
+    methods: [GET]
+
+vendor_transaction_status_update:
+    path: /api/vendor/transaction/status/{vendorId}/{id}
+    controller: App\Vendoring\Service\Transaction\VendorTransactionHttpService::updateStatus
+    methods: [POST]
+    requirements:
+        id: '[1-9][0-9]*'
+
+vendor_transaction_status_update_by_id:
+    path: /api/vendor/transaction/status/{id}
+    controller: App\Vendoring\Service\Transaction\VendorTransactionHttpService::updateStatusById
+    methods: [POST]
+    requirements:
+        id: '[1-9][0-9]*'
+
+vendor_ownership_show:
+    path: /api/vendor/ownership/{vendorId}
+    controller: App\Vendoring\Service\Ownership\VendorOwnershipHttpService::show
+    methods: [GET]
+    requirements:
+        vendorId: '[1-9][0-9]*'
+
+vendor_runtime_finance_show:
+    path: /api/vendor/runtime/finance/{id}
+    controller: App\Vendoring\Service\Runtime\Finance\VendorRuntimeFinanceShowService
+    methods: [GET]
+
+vendor_payout_statement_export:
+    path: /api/vendor/payout/statement/export/{vendorId}
+    controller: App\Vendoring\Service\Statement\Export\VendorStatementExportService::export
+    methods: [GET]
+
+vendor_payout_statement:
+    path: /api/vendor/payout/statement/{id}
+    controller: App\Vendoring\Service\Statement\VendorStatementHttpService::build
+    methods: [GET]
+
+vendor_payout_account_upsert:
+    path: /api/vendor/payout/account
+    controller: App\Vendoring\Service\Payout\Account\VendorPayoutAccountService::upsert
+    methods: [POST]
+
+vendor_payout_create:
+    path: /api/vendor/payout
+    controller: App\Vendoring\Service\Payout\VendorPayoutHttpService::create
+    methods: [POST]
+
+vendor_payout_process:
+    path: /api/vendor/payout/process/{payoutId}
+    controller: App\Vendoring\Service\Payout\VendorPayoutHttpService::process
+    methods: [POST]
+
+vendor_payout_show:
+    path: /api/vendor/payout/{payoutId}
+    controller: App\Vendoring\Service\Payout\VendorPayoutHttpService::getOne
+    methods: [GET]

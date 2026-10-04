@@ -18,7 +18,7 @@ final class VendorPayoutProviderNotConfiguredException extends \RuntimeException
         parent::__construct(
             sprintf(
                 'Payout provider "%s" is not configured. '
-                .'Bind a concrete implementation of VendorPayoutProviderServiceInterface '
+                .'Bind a concrete implementation of VendorPayoutProviderInterface '
                 .'or configure the provider credentials before initiating transfers.',
                 $provider,
             ),

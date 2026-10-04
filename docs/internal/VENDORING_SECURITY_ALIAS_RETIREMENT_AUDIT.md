@@ -14,7 +14,7 @@ Wave G retires the transitional security wrapper and removes empty root-level re
 ## Canonical result
 
 - Machine credential operations stay under `VendorApiKeyServiceInterface`.
-- Security-state projection remains under `VendorSecurityStateProjectionBuilderServiceInterface`.
+- Security-state projection remains under `VendorSecurityStateProjectionBuilderInterface`.
 - Empty deployment/smoke placeholders are removed from root instead of preserved as misleading structure.
 
 ## Deferred

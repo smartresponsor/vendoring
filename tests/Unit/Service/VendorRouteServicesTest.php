@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service;
 
-use App\Cruding\Dto\Crud\CrudContext;
-use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
-use App\Cruding\Value\Resource\CrudResourceContract;
+use App\Cruding\DTO\CrudContextDTO;
+use App\Cruding\DTO\Entrypoint\CrudServiceContextDTO;
+use App\Cruding\ValueObject\Resource\CrudResourceContract;
 use App\Vendoring\Entity\Vendor\VendorEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
-use App\Vendoring\Service\Vendor\VendorCreateService;
-use App\Vendoring\Service\Vendor\VendorDeleteService;
-use App\Vendoring\Service\Vendor\VendorHttpRouteResponseService;
-use App\Vendoring\Service\Vendor\VendorIndexService;
-use App\Vendoring\Service\Vendor\VendorShowService;
-use App\Vendoring\Service\Vendor\VendorUpdateService;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\Service\Attachment\VendorAttachmentOwnerPurgeService;
+use App\Vendoring\Service\VendorCreateService;
+use App\Vendoring\Service\VendorDeleteService;
+use App\Vendoring\Service\VendorHttpRouteResponseService;
+use App\Vendoring\Service\VendorIndexService;
+use App\Vendoring\Service\VendorShowService;
+use App\Vendoring\Service\VendorUpdateService;
 use App\Vendoring\ServiceInterface\Assignment\VendorUserAssignmentServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,6 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 final class VendorRouteServicesTest extends TestCase
 {
     private VendorRepositoryInterface&MockObject $vendorRepository;
-    private EntityManagerInterface&MockObject $entityManager;
     private EventDispatcherInterface&MockObject $dispatcher;
     private VendorUserAssignmentServiceInterface&MockObject $assignmentService;
     private ValidatorInterface&MockObject $validator;
@@ -37,7 +36,6 @@ final class VendorRouteServicesTest extends TestCase
     protected function setUp(): void
     {
         $this->vendorRepository = $this->createMock(VendorRepositoryInterface::class);
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->assignmentService = $this->createMock(VendorUserAssignmentServiceInterface::class);
         $this->validator = $this->createMock(ValidatorInterface::class);
@@ -48,9 +46,12 @@ final class VendorRouteServicesTest extends TestCase
     {
         $this->vendorRepository
             ->expects(self::once())
-            ->method('findBy')
-            ->with([])
-            ->willReturn([new VendorEntity('Alpha')]);
+            ->method('findIndexRows')
+            ->willReturn([[
+                'id' => 1,
+                'brandName' => 'Alpha',
+                'ownerUserId' => null,
+            ]]);
 
         $service = new VendorIndexService($this->responseService, $this->vendorRepository);
 
@@ -73,17 +74,19 @@ final class VendorRouteServicesTest extends TestCase
             ->method('validate')
             ->willReturn(new ConstraintViolationList());
 
-        $this->entityManager
+        $this->vendorRepository
             ->expects(self::once())
-            ->method('persist')
-            ->with(self::callback(static fn (object $entity): bool => $entity instanceof VendorEntity && 'Smartresponsor' === $entity->getBrandName()));
-        $this->entityManager->expects(self::once())->method('flush');
+            ->method('save')
+            ->with(
+                self::callback(static fn (object $entity): bool => $entity instanceof VendorEntity && 'Smartresponsor' === $entity->getBrandName()),
+                true,
+            );
         $this->assignmentService->expects(self::never())->method('assignOwner');
         $this->dispatcher->expects(self::once())->method('dispatch');
 
         $service = new VendorCreateService(
             $this->responseService,
-            $this->entityManager,
+            $this->vendorRepository,
             $this->dispatcher,
             $this->assignmentService,
             $this->validator,
@@ -106,12 +109,11 @@ final class VendorRouteServicesTest extends TestCase
                 new ConstraintViolation('brand_name_required', '', [], null, 'brandName', ''),
             ]));
 
-        $this->entityManager->expects(self::never())->method('persist');
-        $this->entityManager->expects(self::never())->method('flush');
+        $this->vendorRepository->expects(self::never())->method('save');
 
         $service = new VendorCreateService(
             $this->responseService,
-            $this->entityManager,
+            $this->vendorRepository,
             $this->dispatcher,
             $this->assignmentService,
             $this->validator,
@@ -135,14 +137,13 @@ final class VendorRouteServicesTest extends TestCase
             ->method('validate')
             ->willReturn(new ConstraintViolationList());
 
-        $this->entityManager->expects(self::once())->method('flush');
+        $this->vendorRepository->expects(self::once())->method('save')->with($vendor, true);
         $this->dispatcher->expects(self::once())->method('dispatch');
         $this->assignmentService->expects(self::never())->method('assignOwner');
 
         $service = new VendorUpdateService(
             $this->responseService,
             $this->vendorRepository,
-            $this->entityManager,
             $this->dispatcher,
             $this->assignmentService,
             $this->validator,
@@ -162,10 +163,13 @@ final class VendorRouteServicesTest extends TestCase
     {
         $vendor = new VendorEntity('Old');
 
-        $this->entityManager->expects(self::once())->method('remove')->with($vendor);
-        $this->entityManager->expects(self::once())->method('flush');
+        $this->vendorRepository->expects(self::once())->method('remove')->with($vendor, true);
 
-        $service = new VendorDeleteService($this->responseService, $this->vendorRepository, $this->entityManager);
+        $service = new VendorDeleteService(
+            $this->responseService,
+            $this->vendorRepository,
+            new VendorAttachmentOwnerPurgeService(),
+        );
 
         $response = $service->delete($this->context('delete', object: $vendor, identifierValue: 1));
 
@@ -180,7 +184,7 @@ final class VendorRouteServicesTest extends TestCase
         ?object $object = null,
         string|int|null $identifierValue = null,
         array $requestData = [],
-    ): CrudServiceContext {
+    ): CrudServiceContextDTO {
         $request = new Request([], $requestData);
         $request->attributes->set('_route', 'vendor.'.$operation);
         $request->attributes->set('_crud_actor_is_admin', true);
@@ -189,9 +193,9 @@ final class VendorRouteServicesTest extends TestCase
             $request->attributes->set('_crud_actor_identity_value', $identifierValue);
         }
 
-        return new CrudServiceContext(
+        return new CrudServiceContextDTO(
             request: $request,
-            crudContext: new CrudContext(
+            crudContext: new CrudContextDTO(
                 view: 'admin',
                 operation: $operation,
                 resourcePath: 'vendor',

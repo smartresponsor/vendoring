@@ -9,7 +9,9 @@ use App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPdfServiceIn
 
 final class FakeStatementExporterPdf implements VendorStatementExporterPdfServiceInterface
 {
-    public function __construct(private readonly string $path) {}
+    public function __construct(private readonly string $path)
+    {
+    }
 
     public function export(VendorStatementRequestDTO $dto, array $data, ?string $logoPath = null): string
     {

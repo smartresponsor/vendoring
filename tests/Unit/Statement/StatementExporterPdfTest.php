@@ -12,9 +12,8 @@ final class StatementExporterPdfTest extends TestCase
 {
     public function testExportCreatesPdfInExpectedVendorPeriodPath(): void
     {
-        $dto = new VendorStatementRequestDTO('tenant-1', 'vendor-42', '2026-03-01', '2026-03-31', 'USD');
+        $dto = new VendorStatementRequestDTO('vendor-42', '2026-03-01', '2026-03-31', 'USD');
         $data = [
-            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-42',
             'from' => '2026-03-01',
             'to' => '2026-03-31',
@@ -43,9 +42,8 @@ final class StatementExporterPdfTest extends TestCase
 
     public function testExportEmbedsStatementValuesIntoPdfStream(): void
     {
-        $dto = new VendorStatementRequestDTO('tenant-a', 'vendor-a', '2026-04-01', '2026-04-30', 'EUR');
+        $dto = new VendorStatementRequestDTO('vendor-a', '2026-04-01', '2026-04-30', 'EUR');
         $data = [
-            'tenantId' => 'tenant-a',
             'vendorId' => 'vendor-a',
             'from' => '2026-04-01',
             'to' => '2026-04-30',
@@ -64,7 +62,6 @@ final class StatementExporterPdfTest extends TestCase
         $content = file_get_contents($path);
         self::assertNotFalse($content);
 
-        self::assertStringContainsString('Tenant: tenant-a', $content);
         self::assertStringContainsString('Vendor: vendor-a', $content);
         self::assertStringContainsString('Currency: EUR', $content);
         self::assertStringContainsString('Opening: 100.50', $content);

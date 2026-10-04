@@ -72,15 +72,15 @@ Forbidden component artifacts:
 
 Canonical runtime artifacts:
 
-- `config/platform/routes.platform.yaml`
-- `config/platform/routes.crud.yaml`
-- `config/platform/routes.business.yaml`
-- `config/platform/routes/crud/vendor.yaml`
-- `config/platform/routes/crud/vendor.attachment.document.yaml`
-- `config/platform/routes/crud/vendor.attachment.media.yaml`
-- `config/platform/routes/business/vendor.yaml`
-- `src/Service/Vendor/.../*Service.php`
-- `src/Form/Vendor/.../*Type.php` when an operation needs form/input validation
+- `config/platform/vendor_routes_platform.yaml`
+- `config/platform/vendor_routes_crud.yaml`
+- `config/platform/vendor_routes_business.yaml`
+- `config/platform/routes/crud/vendor_crud.yaml`
+- `config/platform/routes/crud/vendor_attachment_document.yaml`
+- `config/platform/routes/crud/vendor_attachment_media.yaml`
+- `config/platform/routes/business/vendor_business.yaml`
+- `src/Service/.../*Service.php`
+- `src/Form/.../*Type.php` when an operation needs form/input validation
 
 The canonical dispatch contract is:
 
@@ -88,8 +88,8 @@ The canonical dispatch contract is:
 URI
 → Cruding grammar
 → providerKey / routeKey
-→ App\Vendoring\Service\Vendor\...\*Service
-→ optional App\Vendoring\Form\Vendor\...\*Type
+→ App\Vendoring\Service\...\*Service
+→ optional App\Vendoring\Form\...\*Type
 ```
 
 `src/Security/` is forbidden as a mixed bucket. Security services live in `src/Service/Security/` and mirrored service contracts live in `src/ServiceInterface/Security/`. The short alias folders `src/Service/Sec/` and `src/ServiceInterface/Sec/` are forbidden.
@@ -110,7 +110,7 @@ Vendoring does not export native Symfony controller routes. Import the platform 
 ```yaml
 # config/platform/routes.vendoring.yaml
 imports:
-  - { resource: '../../vendor/.../config/platform/routes.platform.yaml' }
+  - { resource: '../../vendor/.../config/platform/vendor_routes_platform.yaml' }
 ```
 
 ```yaml
@@ -119,7 +119,7 @@ imports:
   - { resource: '../../vendor/.../config/component/services.yaml' }
 ```
 
-In this repository, the registry lives under `config/platform/` and the canonical runtime services are registered from `src/Service/Vendor/` as `App\Vendoring\Service\Vendor\...`.
+In this repository, the registry lives under `config/platform/` and the canonical runtime services are registered from `src/Service/` as `App\Vendoring\Service\...`.
 
 ### 3) Runtime configuration
 ## API surface (consumer-oriented)
@@ -229,6 +229,7 @@ composer quality
 - `docs/release/RC_RUNTIME_SURFACES.md`
 - `docs/release/RC_GATE_CHECKLIST.md`
 - `docs/release/RC_ROADMAP.md`
+- `docs/architecture/VENDORING_PRODUCTION_HARDENING_ROADMAP.md`
 
 Generated artifacts:
 
@@ -238,13 +239,13 @@ Generated artifacts:
 - `build/release/`
 
 
-Policy canon: `src/Policy/Vendor/Vendor*Policy.php` and `src/PolicyInterface/Vendor/Vendor*PolicyInterface.php` are the only allowed policy surfaces. Root policy files and non-Vendor policy filenames are forbidden.
+Policy canon: `src/Policy/Vendor*Policy.php` and `src/PolicyInterface/Vendor*PolicyInterface.php` are the only allowed policy surfaces. Root policy files and non-Vendor policy filenames are forbidden.
 
 
 ### Projection layer canon
 
 - `src/Projection/` may contain only `Vendor/`.
-- Projection classes must live in `src/Projection/Vendor/` and match `Vendor*Projection.php`.
+- Projection classes must live in `src/Projection/` and match `Vendor*Projection.php`.
 - Projection namespace remains `App\Vendoring\Projection\Vendor`.
 
 ### Vendoring observability source-tree canon
@@ -270,7 +271,7 @@ Policy canon: `src/Policy/Vendor/Vendor*Policy.php` and `src/PolicyInterface/Ven
 
 ## Vendor business route-map coverage
 
-The component now contains canonical `App\Vendoring\Service\Vendor\...*Service` and `App\Vendoring\Form\Vendor\...*Type` artifacts for `config/platform/routes/business/vendor.yaml`.
+The component now contains canonical `App\Vendoring\Service\...*Service` and `App\Vendoring\Form\...*Type` artifacts for `config/platform/routes/business/vendor_business.yaml`.
 
 Smoke:
 

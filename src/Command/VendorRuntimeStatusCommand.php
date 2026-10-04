@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Command;
 
+use App\Vendoring\BuilderInterface\Ops\VendorRuntimeStatusProjectionBuilderInterface;
 use App\Vendoring\DTO\Command\VendorRuntimeWindowInputDTO;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\Exception\Command\VendorCommandIoException;
@@ -13,7 +14,6 @@ use App\Vendoring\Service\Command\VendorCommandJsonFileWriterService;
 use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
 use App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
-use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,12 +29,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class VendorRuntimeStatusCommand extends Command
 {
-    private readonly VendorRuntimeStatusProjectionBuilderServiceInterface $runtimeStatusProjectionBuilder;
+    private readonly VendorRuntimeStatusProjectionBuilderInterface $runtimeStatusProjectionBuilder;
     private readonly VendorCommandJsonArtifactWriterServiceInterface $commandJsonArtifactWriter;
     private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter;
 
     public function __construct(
-        VendorRuntimeStatusProjectionBuilderServiceInterface $runtimeStatusProjectionBuilder,
+        VendorRuntimeStatusProjectionBuilderInterface $runtimeStatusProjectionBuilder,
         ?VendorCommandJsonArtifactWriterServiceInterface $commandJsonArtifactWriter = null,
         ?VendorCommandResultEmitterServiceInterface $commandResultEmitter = null,
     ) {
@@ -48,7 +48,6 @@ final class VendorRuntimeStatusCommand extends Command
     {
         parent::configure();
         $this
-            ->addOption('tenantId', null, InputOption::VALUE_REQUIRED, 'Tenant ID')
             ->addOption('vendorId', null, InputOption::VALUE_REQUIRED, 'Vendor ID')
             ->addOption('from', null, InputOption::VALUE_OPTIONAL, 'Statement period start')
             ->addOption('to', null, InputOption::VALUE_OPTIONAL, 'Statement period end')
@@ -64,8 +63,7 @@ final class VendorRuntimeStatusCommand extends Command
         $runtimeInput = VendorRuntimeWindowInputDTO::fromInput($input);
 
         if (!$runtimeInput->hasRequiredScope()) {
-            $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'invalid', 'Both --tenantId and --vendorId are required.', [
-                'tenantId' => $runtimeInput->tenantId,
+            $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'invalid', '--vendorId is required.', [
                 'vendorId' => $runtimeInput->vendorId,
             ]);
 
@@ -74,7 +72,6 @@ final class VendorRuntimeStatusCommand extends Command
 
         try {
             $projection = $this->runtimeStatusProjectionBuilder->build(
-                tenantId: $runtimeInput->tenantId,
                 vendorId: $runtimeInput->vendorId,
                 from: $runtimeInput->from,
                 to: $runtimeInput->to,
@@ -88,7 +85,6 @@ final class VendorRuntimeStatusCommand extends Command
                 'Failed to build runtime status',
                 $throwable,
                 [
-                    'tenantId' => $runtimeInput->tenantId,
                     'vendorId' => $runtimeInput->vendorId,
                     'from' => $runtimeInput->from,
                     'to' => $runtimeInput->to,
@@ -108,7 +104,6 @@ final class VendorRuntimeStatusCommand extends Command
             );
         } catch (VendorCommandIoException $exception) {
             $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'failed', $exception->getMessage(), [
-                'tenantId' => $runtimeInput->tenantId,
                 'vendorId' => $runtimeInput->vendorId,
                 'from' => $runtimeInput->from,
                 'to' => $runtimeInput->to,
@@ -125,7 +120,7 @@ final class VendorRuntimeStatusCommand extends Command
         }
 
         $surfaceStatus = $projection['surfaceStatus'];
-        $output->writeln(sprintf('tenantId=%s vendorId=%s currency=%s', $runtimeInput->tenantId, $runtimeInput->vendorId, $runtimeInput->currency));
+        $output->writeln(sprintf('vendorId=%s currency=%s', $runtimeInput->vendorId, $runtimeInput->currency));
         $output->writeln(sprintf(
             'ownership=%s finance=%s statementDelivery=%s externalIntegration=%s',
             $surfaceStatus['ownership'] ? 'ready' : 'missing',

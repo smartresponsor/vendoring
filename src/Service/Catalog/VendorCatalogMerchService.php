@@ -7,20 +7,24 @@ namespace App\Vendoring\Service\Catalog;
 use App\Vendoring\Entity\Vendor\VendorCatalogCategoryBannerEntity;
 use App\Vendoring\Entity\Vendor\VendorCatalogCategoryHtmlBlockEntity;
 use App\Vendoring\Entity\Vendor\VendorCatalogCategoryPinEntity;
+use App\Vendoring\RepositoryInterface\VendorCatalogCategoryBannerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorCatalogCategoryHtmlBlockRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorCatalogCategoryPinRepositoryInterface;
 use App\Vendoring\ServiceInterface\Catalog\VendorCatalogMerchServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class VendorCatalogMerchService implements VendorCatalogMerchServiceInterface
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private VendorCatalogCategoryPinRepositoryInterface $pinRepository,
+        private VendorCatalogCategoryBannerRepositoryInterface $bannerRepository,
+        private VendorCatalogCategoryHtmlBlockRepositoryInterface $htmlBlockRepository,
+    ) {
     }
 
     public function pinCreate(string $categoryId, string $recordId, int $position): void
     {
         $pin = new VendorCatalogCategoryPinEntity($categoryId, $recordId, $position);
-        $this->entityManager->persist($pin);
-        $this->entityManager->flush();
+        $this->pinRepository->save($pin, true);
     }
 
     public function pinDelete(string $categoryId, string $recordId): void
@@ -31,8 +35,7 @@ final readonly class VendorCatalogMerchService implements VendorCatalogMerchServ
             return;
         }
 
-        $this->entityManager->remove($pin);
-        $this->entityManager->flush();
+        $this->pinRepository->remove($pin, true);
     }
 
     /**
@@ -53,15 +56,14 @@ final readonly class VendorCatalogMerchService implements VendorCatalogMerchServ
             ++$position;
         }
 
-        $this->entityManager->flush();
+        $this->pinRepository->flush();
     }
 
     public function bannerPublish(string $categoryId, string $title, string $content): string
     {
         $banner = new VendorCatalogCategoryBannerEntity($categoryId, $title, $content);
         $banner->publish();
-        $this->entityManager->persist($banner);
-        $this->entityManager->flush();
+        $this->bannerRepository->save($banner, true);
 
         return $banner->id();
     }
@@ -70,28 +72,15 @@ final readonly class VendorCatalogMerchService implements VendorCatalogMerchServ
     {
         $htmlBlock = new VendorCatalogCategoryHtmlBlockEntity($categoryId, $html);
         $htmlBlock->publish();
-        $this->entityManager->persist($htmlBlock);
-        $this->entityManager->flush();
+        $this->htmlBlockRepository->save($htmlBlock, true);
 
         return $htmlBlock->id();
     }
 
     private function findPin(string $categoryId, string $recordId): ?VendorCatalogCategoryPinEntity
     {
-        // ObjectCodeEmbeddableTrait stores categoryId as object_code via embedded
-        /** @var VendorCatalogCategoryPinEntity|null $pin */
-        $pin = $this->entityManager
-            ->createQueryBuilder()
-            ->select('p')
-            ->from(VendorCatalogCategoryPinEntity::class, 'p')
-            ->where('p.objectCode.objectCode = :categoryId')
-            ->andWhere('p.recordId = :recordId')
-            ->setParameter('categoryId', $categoryId)
-            ->setParameter('recordId', $recordId)
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $pin = $this->pinRepository->findOneByCategoryAndRecord($categoryId, $recordId);
 
-        return $pin;
+        return $pin instanceof VendorCatalogCategoryPinEntity ? $pin : null;
     }
 }

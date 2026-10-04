@@ -6,8 +6,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\ServiceInterface\Security;
 
-use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use Doctrine\ORM\Exception\ManagerException;
 use Random\RandomException;
 

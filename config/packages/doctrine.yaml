@@ -15,9 +15,15 @@ doctrine:
         entity_managers:
             default:
                 connection: user_data
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
                 mappings:
                     Vendoring:
                         type: attribute
                         dir: '%kernel.project_dir%/src/Entity/Vendor'
                         prefix: 'App\Vendoring\Entity\Vendor'
+                        is_bundle: false
+                    Objecting:
+                        type: attribute
+                        dir: '%kernel.project_dir%/vendor/objecting/object/src/Embeddable'
+                        prefix: 'App\Objecting\Embeddable'
                         is_bundle: false

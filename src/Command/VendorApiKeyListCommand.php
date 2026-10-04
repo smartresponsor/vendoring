@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Command;
 
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
-use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorApiKeyRepositoryInterface;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

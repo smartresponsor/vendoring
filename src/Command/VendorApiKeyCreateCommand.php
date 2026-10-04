@@ -8,7 +8,7 @@ namespace App\Vendoring\Command;
 
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
-use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
