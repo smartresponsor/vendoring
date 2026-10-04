@@ -44,5 +44,6 @@ config/reference.php
 
 # Local repository-analysis artifacts
 .console-mcp/
+.gating/
 .php-cs-fixer.cache
 *PROTOCOL_ANALYSIS.md

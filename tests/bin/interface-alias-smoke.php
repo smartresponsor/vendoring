@@ -8,11 +8,11 @@ $servicesVendorTransactions = (string) file_get_contents($root.'/config/vendor_s
 $config = $services."\n".$servicesVendorTransactions;
 
 $required = [
-    'App\Vendoring\\RepositoryInterface\\Vendor\\VendorAnalyticsRepositoryInterface',
-    'App\Vendoring\\RepositoryInterface\\Vendor\\VendorAttachmentRepositoryInterface',
-    'App\Vendoring\\RepositoryInterface\\Vendor\\VendorDocumentRepositoryInterface',
-    'App\Vendoring\\RepositoryInterface\\Vendor\\VendorLedgerBindingRepositoryInterface',
-    'App\Vendoring\\RepositoryInterface\\Vendor\\VendorSecurityRepositoryInterface',
+    'App\Vendoring\\RepositoryInterface\\VendorAnalyticsRepositoryInterface',
+    'App\Vendoring\\RepositoryInterface\\VendorAttachmentRepositoryInterface',
+    'App\Vendoring\\RepositoryInterface\\VendorDocumentRepositoryInterface',
+    'App\Vendoring\\RepositoryInterface\\VendorLedgerBindingRepositoryInterface',
+    'App\Vendoring\\RepositoryInterface\\VendorSecurityRepositoryInterface',
     'App\Vendoring\\ServiceInterface\\Integration\\VendorCrmServiceInterface',
     'App\Vendoring\\ServiceInterface\\Billing\\VendorBillingServiceInterface',
     'App\Vendoring\\ServiceInterface\\Document\\VendorDocumentServiceInterface',
@@ -21,7 +21,7 @@ $required = [
     'App\Vendoring\\ServiceInterface\\Profile\\VendorProfileServiceInterface',
     'App\Vendoring\\ServiceInterface\\Crud\\VendorCrudServiceInterface',
     'App\Vendoring\\ServiceInterface\\Ledger\\VendorDoubleEntryServiceInterface',
-    'App\Vendoring\\ServiceInterface\\Payout\\VendorPayoutProviderInterface',
+    'App\Vendoring\\ProviderInterface\\Payout\\VendorPayoutProviderInterface',
     'App\Vendoring\\ServiceInterface\\Payout\\VendorSettlementCalculatorServiceInterface',
 ];
 

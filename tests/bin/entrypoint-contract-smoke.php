@@ -32,8 +32,8 @@ foreach ($expectedServices as $relativePath) {
     }
 
     $contents = (string) file_get_contents($path);
-    if (!str_contains($contents, 'namespace App\\Vendoring\\Service\\Vendor')) {
-        fwrite(STDERR, sprintf("HTTP service must use App\\Vendoring\\Service\\Vendor namespace: %s\n", $relativePath));
+    if (!str_contains($contents, 'namespace App\\Vendoring\\Service\\')) {
+        fwrite(STDERR, sprintf("HTTP service must use the canonical App\\Vendoring\\Service namespace: %s\n", $relativePath));
         exit(1);
     }
 

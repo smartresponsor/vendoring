@@ -30,6 +30,7 @@
     "collectioning/collection": "dev-master",
     "cruding/crud": "dev-master",
     "easycorp/easyadmin-bundle": "^5.0",
+    "failing/failure": "dev-master",
     "interfacing/interface": "dev-master",
     "objecting/object": "dev-master",
     "tabling/table": "dev-master",
@@ -445,6 +446,11 @@
     {
       "type": "vcs",
       "url": "git@github.com:smartresponsor/cruding.git",
+      "no-api": true
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/failing.git",
       "no-api": true
     },
     {

@@ -11,7 +11,7 @@ $typed = ['create', 'update', 'delete', 'bulk', 'import', 'export', 'archive', '
 
 foreach ($objects as $object) {
     $Object = ucfirst($object);
-    $routeMap = $root.'/config/platform/routes/crud/vendor.attachment.'.$object.'.yaml';
+    $routeMap = $root.'/config/platform/routes/crud/vendor_attachment_'.$object.'.yaml';
     if (!file_exists($routeMap)) {
         $errors[] = 'Missing route map: '.$routeMap;
     }

@@ -30,6 +30,7 @@
     "collectioning/collection": "dev-master",
     "cruding/crud": "dev-master",
     "easycorp/easyadmin-bundle": "^5.0",
+    "failing/failure": "dev-master",
     "interfacing/interface": "dev-master",
     "objecting/object": "dev-master",
     "tabling/table": "dev-master",
@@ -460,6 +461,16 @@
         "symlink": true,
         "versions": {
           "cruding/crud": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Failing",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "failing/failure": "dev-master"
         }
       }
     },

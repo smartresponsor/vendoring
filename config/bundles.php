@@ -10,6 +10,7 @@ return array_filter([
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => class_exists(Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class) ? ['dev' => true, 'test' => true] : null,
     App\Collectioning\CollectioningBundle::class => ['all' => true],
     App\Cruding\CrudingBundle::class => ['all' => true],
+    App\Failing\FailingBundle::class => ['all' => true],
     App\Tabling\TablingBundle::class => ['all' => true],
     App\Vendoring\VendoringBundle::class => ['all' => true],
     App\Objecting\ObjectBundle::class => ['all' => true],
