@@ -26,7 +26,7 @@
 - Changed PHP lint: GREEN for the service and new unit test.
 - `composer test:unit`: GREEN, 321 tests / 5058 assertions; existing deprecation notices only.
 - Fresh Inspecting after source mutation: GREEN for static acceptance (`phpstan.errors=0`, HIGH findings=0); 37 remaining findings are MEDIUM observations. Report: `D:\\PhpstormProjects\\www\\Inspecting\\.inspecting\\reports\\D--PhpstormProjects-www-Vendoring-20261003-233951.json`.
-- Aggregate `composer gate` could not be admitted asynchronously because Console MCP was in `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `ENGINE_BACKLOG_HIGH`; a synchronous attempt exceeded the tool window. This is an execution-capacity blocker, not a repository failure, and remains the only unavailable deterministic acceptance lane at this checkpoint.
+- Aggregate `composer gate`: GREEN, 10 rules, 0 failed, 0 warnings, 3 skipped; the previous Console MCP capacity blocker cleared on retry.
 - No browser/mobile/UI surface changed; visual evidence is not applicable to this patch.
 
 ## 2026-10-03 Inspecting remediation continuation — engine-20261003202128-vendoring-7ffbe6
