@@ -203,7 +203,6 @@ final class KernelRuntimeHarness
             throw new \RuntimeException('Runtime harness did not discover any Vendoring Doctrine metadata.');
         }
 
-        $schemaTool->dropSchema($metadata);
         $schemaTool->createSchema($metadata);
     }
 

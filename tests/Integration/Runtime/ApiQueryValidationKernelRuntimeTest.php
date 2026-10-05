@@ -8,9 +8,30 @@ namespace App\Vendoring\Tests\Integration\Runtime;
 use App\Vendoring\Tests\Support\Runtime\KernelRuntimeHarness;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 final class ApiQueryValidationKernelRuntimeTest extends TestCase
 {
+    private static KernelInterface $kernel;
+
+    public static function setUpBeforeClass(): void
+    {
+        if (!extension_loaded('pdo_sqlite')) {
+            return;
+        }
+
+        self::$kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        if (!isset(self::$kernel)) {
+            return;
+        }
+
+        KernelRuntimeHarness::cleanupRuntimeState(self::$kernel);
+    }
+
     #[DataProvider('validationSurfaceProvider')]
     public function testKernelRuntimeReturnsExpectedApiValidationErrorCodes(string $uri, string $expectedError): void
     {
@@ -18,17 +39,11 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
         }
 
-        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+        $response = KernelRuntimeHarness::requestJson(self::$kernel, 'GET', $uri);
+        $payload = KernelRuntimeHarness::decodeJson($response);
 
-        try {
-            $response = KernelRuntimeHarness::requestJson($kernel, 'GET', $uri);
-            $payload = KernelRuntimeHarness::decodeJson($response);
-
-            self::assertSame(422, $response->getStatusCode());
-            self::assertSame($expectedError, $payload['errorCode'] ?? null);
-        } finally {
-            KernelRuntimeHarness::cleanupRuntimeState($kernel);
-        }
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame($expectedError, $payload['errorCode'] ?? null);
     }
 
     /**
@@ -53,22 +68,16 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
         }
 
-        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+        $response = KernelRuntimeHarness::requestJson(self::$kernel, 'POST', '/api/vendor/payout', [
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => 1000,
+            'retentionFeePercent' => 1.5,
+        ]);
+        $payload = KernelRuntimeHarness::decodeJson($response);
 
-        try {
-            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
-                'vendorId' => 'vendor-1',
-                'currency' => 'USD',
-                'thresholdCents' => 1000,
-                'retentionFeePercent' => 1.5,
-            ]);
-            $payload = KernelRuntimeHarness::decodeJson($response);
-
-            self::assertSame(422, $response->getStatusCode());
-            self::assertSame('retention_fee_percent_out_of_range', $payload['errorCode'] ?? null);
-        } finally {
-            KernelRuntimeHarness::cleanupRuntimeState($kernel);
-        }
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('retention_fee_percent_out_of_range', $payload['errorCode'] ?? null);
     }
 
     public function testKernelRuntimeAcceptsTrimmedNumericPayoutPayloadValues(): void
@@ -77,25 +86,19 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
         }
 
-        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+        $response = KernelRuntimeHarness::requestJson(self::$kernel, 'POST', '/api/vendor/payout', [
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => ' 1000 ',
+            'retentionFeePercent' => ' 0.05 ',
+        ]);
+        $payload = KernelRuntimeHarness::decodeJson($response);
+        $data = $payload['data'] ?? null;
 
-        try {
-            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
-                'vendorId' => 'vendor-1',
-                'currency' => 'USD',
-                'thresholdCents' => ' 1000 ',
-                'retentionFeePercent' => ' 0.05 ',
-            ]);
-            $payload = KernelRuntimeHarness::decodeJson($response);
-            $data = $payload['data'] ?? null;
-
-            self::assertSame(200, $response->getStatusCode());
-            self::assertIsArray($data);
-            self::assertFalse($data['created'] ?? null);
-            self::assertSame('threshold_not_met', $data['reason'] ?? null);
-        } finally {
-            KernelRuntimeHarness::cleanupRuntimeState($kernel);
-        }
+        self::assertSame(200, $response->getStatusCode());
+        self::assertIsArray($data);
+        self::assertFalse($data['created'] ?? null);
+        self::assertSame('threshold_not_met', $data['reason'] ?? null);
     }
 
     public function testKernelRuntimeMapsTrimmedOutOfRangeRetentionFeeToDedicatedValidationError(): void
@@ -104,22 +107,16 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
         }
 
-        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+        $response = KernelRuntimeHarness::requestJson(self::$kernel, 'POST', '/api/vendor/payout', [
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => ' 1000 ',
+            'retentionFeePercent' => ' 1.5 ',
+        ]);
+        $payload = KernelRuntimeHarness::decodeJson($response);
 
-        try {
-            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
-                'vendorId' => 'vendor-1',
-                'currency' => 'USD',
-                'thresholdCents' => ' 1000 ',
-                'retentionFeePercent' => ' 1.5 ',
-            ]);
-            $payload = KernelRuntimeHarness::decodeJson($response);
-
-            self::assertSame(422, $response->getStatusCode());
-            self::assertSame('retention_fee_percent_out_of_range', $payload['errorCode'] ?? null);
-        } finally {
-            KernelRuntimeHarness::cleanupRuntimeState($kernel);
-        }
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('retention_fee_percent_out_of_range', $payload['errorCode'] ?? null);
     }
 
     public function testKernelRuntimeTreatsWhitespaceOnlyRetentionFeeAsRequiredValidationFailure(): void
@@ -128,22 +125,16 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
         }
 
-        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+        $response = KernelRuntimeHarness::requestJson(self::$kernel, 'POST', '/api/vendor/payout', [
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => ' 1000 ',
+            'retentionFeePercent' => '   ',
+        ]);
+        $payload = KernelRuntimeHarness::decodeJson($response);
 
-        try {
-            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
-                'vendorId' => 'vendor-1',
-                'currency' => 'USD',
-                'thresholdCents' => ' 1000 ',
-                'retentionFeePercent' => '   ',
-            ]);
-            $payload = KernelRuntimeHarness::decodeJson($response);
-
-            self::assertSame(422, $response->getStatusCode());
-            self::assertSame('retention_fee_percent_required', $payload['errorCode'] ?? null);
-        } finally {
-            KernelRuntimeHarness::cleanupRuntimeState($kernel);
-        }
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('retention_fee_percent_required', $payload['errorCode'] ?? null);
     }
 
     public function testKernelRuntimeTreatsWhitespaceOnlyThresholdAsRequiredValidationFailure(): void
@@ -152,21 +143,15 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
             self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
         }
 
-        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+        $response = KernelRuntimeHarness::requestJson(self::$kernel, 'POST', '/api/vendor/payout', [
+            'vendorId' => 'vendor-1',
+            'currency' => 'USD',
+            'thresholdCents' => '   ',
+            'retentionFeePercent' => '0.05',
+        ]);
+        $payload = KernelRuntimeHarness::decodeJson($response);
 
-        try {
-            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/payout', [
-                'vendorId' => 'vendor-1',
-                'currency' => 'USD',
-                'thresholdCents' => '   ',
-                'retentionFeePercent' => '0.05',
-            ]);
-            $payload = KernelRuntimeHarness::decodeJson($response);
-
-            self::assertSame(422, $response->getStatusCode());
-            self::assertSame('threshold_cents_required', $payload['errorCode'] ?? null);
-        } finally {
-            KernelRuntimeHarness::cleanupRuntimeState($kernel);
-        }
+        self::assertSame(422, $response->getStatusCode());
+        self::assertSame('threshold_cents_required', $payload['errorCode'] ?? null);
     }
 }
