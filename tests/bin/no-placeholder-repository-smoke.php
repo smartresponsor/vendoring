@@ -10,6 +10,9 @@ $skipPrefixes = [
     $root.'/tests/',
     $root.'/.idea/',
     $root.'/.phpunit.cache/',
+    $root.'/.console-mcp/',
+    $root.'/node_modules/',
+    $root.'/templates/',
     $root.'/build/docs/phpdocumentor/',
     $root.'/docs/',
     $root.'/docs/release/',
@@ -18,6 +21,7 @@ $skipPrefixes = [
 ];
 $skipFiles = [
     $root.'/composer.json',
+    $root.'/composer.prod.json',
     $root.'/bin/generate-phpdocumentor-site.php',
     $root.'/bin/generate-rc-evidence.php',
     $root.'/config/reference.php',
@@ -53,7 +57,7 @@ foreach ($iterator as $file) {
             break;
         }
     }
-    if ($skip) {
+    if ($skip || 1 === preg_match('/\.(zip|tar|gz|tgz)$/i', $path)) {
         continue;
     }
 

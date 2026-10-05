@@ -15,7 +15,9 @@ final class FakeVendorTransactionLifecycle implements VendorTransactionLifecycle
     public ?VendorTransactionDataValueObject $createdData = null;
     public ?\InvalidArgumentException $exceptionToThrow = null;
 
-    public function __construct(private readonly VendorTransactionEntity $transaction) {}
+    public function __construct(private readonly VendorTransactionEntity $transaction)
+    {
+    }
 
     public function createTransaction(VendorTransactionDataValueObject $data): VendorTransactionEntity
     {

@@ -16,5 +16,6 @@ final readonly class VendorProfileDTO
         public ?string $seoTitle = null,
         public ?string $seoDescription = null,
         public ?string $publicationAction = null,
-    ) {}
+    ) {
+    }
 }

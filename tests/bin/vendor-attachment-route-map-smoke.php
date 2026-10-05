@@ -11,20 +11,20 @@ $typed = ['create', 'update', 'delete', 'bulk', 'import', 'export', 'archive', '
 
 foreach ($objects as $object) {
     $Object = ucfirst($object);
-    $routeMap = $root.'/config/platform/routes/crud/vendor.attachment.'.$object.'.yaml';
+    $routeMap = $root.'/config/platform/routes/crud/vendor_attachment_'.$object.'.yaml';
     if (!file_exists($routeMap)) {
         $errors[] = 'Missing route map: '.$routeMap;
     }
 
     foreach ($actions as $action) {
         $Action = ucfirst($action);
-        $service = $root.'/src/Service/Vendor/Attachment/'.$Object.'/VendorAttachment'.$Object.$Action.'Service.php';
+        $service = $root.'/src/Service/Attachment/'.$Object.'/VendorAttachment'.$Object.$Action.'Service.php';
         if (!file_exists($service)) {
             $errors[] = 'Missing service: '.$service;
         }
 
         if (in_array($action, $typed, true)) {
-            $type = $root.'/src/Form/Vendor/Attachment/'.$Object.'/VendorAttachment'.$Object.$Action.'Type.php';
+            $type = $root.'/src/Form/Attachment/'.$Object.'/VendorAttachment'.$Object.$Action.'Type.php';
             if (!file_exists($type)) {
                 $errors[] = 'Missing form type: '.$type;
             }

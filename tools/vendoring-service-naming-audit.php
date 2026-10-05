@@ -24,7 +24,7 @@ if (!is_dir($serviceDir)) {
 /** @var array<string, string> $retiredServiceNames */
 $retiredServiceNames = [
     'VendorService' => 'VendorCoreService',
-    'VendorSecurityService' => 'VendorAccessResolverService/VendorAuthorizationMatrixService/VendorSecurityStateProjectionBuilderService',
+    'VendorSecurityService' => 'VendorAccessResolver/VendorAuthorizationMatrixService/VendorSecurityStateProjectionBuilder',
     'VendorTransactionManagerService' => 'VendorTransactionLifecycleService',
     'VendorStatementExporterPDFService' => 'VendorStatementExporterPdfService',
     'VendorTfidfSearchService' => 'VendorTfIdfSearchService',

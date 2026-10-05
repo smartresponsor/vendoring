@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
 $requiredFiles = [
-    $root.'/src/Service/Vendor/Transaction/Operator/VendorTransactionOperatorService.php',
+    $root.'/src/Service/Transaction/Operator/VendorTransactionOperatorService.php',
     $root.'/tests/Integration/Runtime/VendorTransactionOperatorSurfaceTest.php',
     $root.'/docs/release/RC_OPERATOR_SURFACE.md',
 ];
@@ -16,9 +16,9 @@ foreach ($requiredFiles as $requiredFile) {
     }
 }
 
-$service = (string) file_get_contents($root.'/src/Service/Vendor/Transaction/Operator/VendorTransactionOperatorService.php');
-if (!str_contains($service, 'namespace App\\Vendoring\\Service\\Vendor\\Transaction\\Operator;')) {
-    fwrite(STDERR, 'Operator surface must live under App\\Vendoring\\Service\\Vendor\\Transaction\\Operator.'.PHP_EOL);
+$service = (string) file_get_contents($root.'/src/Service/Transaction/Operator/VendorTransactionOperatorService.php');
+if (!str_contains($service, 'namespace App\\Vendoring\\Service\\Transaction\\Operator;')) {
+    fwrite(STDERR, 'Operator surface must live under App\\Vendoring\\Service\\Transaction\\Operator.'.PHP_EOL);
     exit(1);
 }
 

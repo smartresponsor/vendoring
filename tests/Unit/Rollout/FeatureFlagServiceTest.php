@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Rollout;
 
+use App\Vendoring\Resolver\Rollout\VendorTrafficCohortResolver;
 use App\Vendoring\Service\Rollout\VendorFeatureFlagService;
-use App\Vendoring\Service\Rollout\VendorTrafficCohortResolverService;
 use PHPUnit\Framework\TestCase;
 
 final class FeatureFlagServiceTest extends TestCase
 {
     public function testUndefinedFlagIsDisabled(): void
     {
-        $service = new VendorFeatureFlagService(new VendorTrafficCohortResolverService());
+        $service = new VendorFeatureFlagService(new VendorTrafficCohortResolver());
 
-        self::assertFalse($service->isEnabled('missing_flag', 'tenant-1', '42'));
-        self::assertSame('flag_not_defined', $service->explain('missing_flag', 'tenant-1', '42')['reason']);
+        self::assertFalse($service->isEnabled('missing_flag', '42'));
+        self::assertSame('flag_not_defined', $service->explain('missing_flag', '42')['reason']);
     }
 
     public function testGloballyEnabledFlagHasStableExplanation(): void
     {
-        $service = new VendorFeatureFlagService(new VendorTrafficCohortResolverService(), [
+        $service = new VendorFeatureFlagService(new VendorTrafficCohortResolver(), [
             'new_operator_surface' => ['enabled' => true],
         ]);
 
-        $decision = $service->explain('new_operator_surface', null, null);
+        $decision = $service->explain('new_operator_surface', null);
 
         self::assertTrue($decision['enabled']);
         self::assertSame('global', $decision['cohort']);
@@ -33,16 +33,15 @@ final class FeatureFlagServiceTest extends TestCase
 
     public function testCohortFlagEnablesOnlyMatchingScope(): void
     {
-        $service = new VendorFeatureFlagService(new VendorTrafficCohortResolverService(), [
+        $service = new VendorFeatureFlagService(new VendorTrafficCohortResolver(), [
             'statement_canary' => [
                 'enabled' => false,
-                'cohorts' => ['tenant:tenant-1', 'vendor:42'],
+                'cohorts' => ['vendor:42'],
             ],
         ]);
 
-        self::assertTrue($service->isEnabled('statement_canary', 'tenant-1', null));
-        self::assertTrue($service->isEnabled('statement_canary', 'tenant-x', '42'));
-        self::assertFalse($service->isEnabled('statement_canary', 'tenant-x', '77'));
-        self::assertSame('cohort_disabled', $service->explain('statement_canary', 'tenant-x', '77')['reason']);
+        self::assertTrue($service->isEnabled('statement_canary', '42'));
+        self::assertFalse($service->isEnabled('statement_canary', '77'));
+        self::assertSame('cohort_disabled', $service->explain('statement_canary', '77')['reason']);
     }
 }

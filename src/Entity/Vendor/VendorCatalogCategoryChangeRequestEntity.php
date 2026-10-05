@@ -6,7 +6,7 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorCatalogCategoryChangeRequestRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorCatalogCategoryChangeRequestRepository::class)]
 #[ORM\Table(name: 'vendor_catalog_category_change_request')]
 class VendorCatalogCategoryChangeRequestEntity extends VendorAbstractEntity
 {

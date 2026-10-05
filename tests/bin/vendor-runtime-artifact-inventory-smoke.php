@@ -27,7 +27,7 @@ foreach ($iterator as $file) {
 
     if (preg_match_all('/service:\s*([^,\}\s]+)/', $contents, $matches) > 0) {
         foreach ($matches[1] as $fqcn) {
-            if (str_starts_with($fqcn, 'App\\Vendoring\\Service\\Vendor\\')) {
+            if (str_starts_with($fqcn, 'App\\Vendoring\\Service\\')) {
                 $services[$fqcn] = true;
             }
         }
@@ -35,7 +35,7 @@ foreach ($iterator as $file) {
 
     if (preg_match_all('/type:\s*([^,\}\s]+)/', $contents, $matches) > 0) {
         foreach ($matches[1] as $fqcn) {
-            if (str_starts_with($fqcn, 'App\\Vendoring\\Form\\Vendor\\')) {
+            if (str_starts_with($fqcn, 'App\\Vendoring\\Form\\')) {
                 $types[$fqcn] = true;
             }
         }

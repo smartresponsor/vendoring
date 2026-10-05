@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Statement;
 
-use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorBillingEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorBillingRepositoryInterface;
-use App\Vendoring\Service\Statement\VendorStatementRecipientProviderService;
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Provider\Statement\VendorStatementRecipientProvider;
+use App\Vendoring\RepositoryInterface\VendorBillingRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -27,10 +27,9 @@ final class VendorStatementRecipientProviderTest extends TestCase
 
         $this->billings->expects(self::once())->method('findAll')->willReturn([$billingA, $billingB]);
 
-        $recipients = (new VendorStatementRecipientProviderService($this->billings))->forPeriod('2026-03-01', '2026-03-31');
+        $recipients = (new VendorStatementRecipientProvider($this->billings))->forPeriod('2026-03-01', '2026-03-31');
 
         self::assertCount(2, $recipients);
-        self::assertSame('default', $recipients[0]->tenantId);
         self::assertSame('101', $recipients[0]->vendorId);
         self::assertSame('billing-a@example.com', $recipients[0]->email);
         self::assertSame('USD', $recipients[0]->currency);
@@ -45,7 +44,7 @@ final class VendorStatementRecipientProviderTest extends TestCase
 
         $this->billings->expects(self::once())->method('findAll')->willReturn([$billingWithoutEmail, $billingWithoutVendorId]);
 
-        $recipients = (new VendorStatementRecipientProviderService($this->billings))->forPeriod('2026-03-01', '2026-03-31');
+        $recipients = (new VendorStatementRecipientProvider($this->billings))->forPeriod('2026-03-01', '2026-03-31');
 
         self::assertSame([], $recipients);
     }

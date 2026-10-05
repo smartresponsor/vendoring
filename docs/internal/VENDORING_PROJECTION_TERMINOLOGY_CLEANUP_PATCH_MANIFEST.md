@@ -2,9 +2,9 @@
 
 ## Modified source files
 
-- `src/Service/Finance/VendorFinanceRuntimeProjectionBuilderService.php`
-- `src/Service/Integration/VendorExternalIntegrationRuntimeProjectionBuilderService.php`
-- `src/Service/Statement/VendorStatementDeliveryRuntimeProjectionBuilderService.php`
+- `src/Builder/Finance/VendorFinanceRuntimeProjectionBuilder.php`
+- `src/Builder/Integration/VendorExternalIntegrationRuntimeProjectionBuilder.php`
+- `src/Builder/Statement/VendorStatementDeliveryRuntimeProjectionBuilder.php`
 
 ## Modified documentation files
 

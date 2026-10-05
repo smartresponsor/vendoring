@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
+use App\Vendoring\Builder\Observability\VendorMonitoringSnapshotBuilder;
+use App\Vendoring\Builder\Ops\VendorReleaseManifestBuilder;
+use App\Vendoring\Resolver\Rollout\VendorTrafficCohortResolver;
 use App\Vendoring\Service\Observability\VendorAlertRuleEvaluatorService;
-use App\Vendoring\Service\Observability\VendorMonitoringSnapshotBuilderService;
-use App\Vendoring\Service\Ops\VendorReleaseManifestBuilderService;
 use App\Vendoring\Service\Ops\VendorRollbackDecisionEvaluatorService;
 use App\Vendoring\Service\Rollout\VendorCanaryRolloutCoordinatorService;
 use App\Vendoring\Service\Rollout\VendorFeatureFlagService;
-use App\Vendoring\Service\Rollout\VendorTrafficCohortResolverService;
 
 require dirname(__DIR__, 2).'/vendor/autoload.php';
 
 $root = dirname(__DIR__, 2);
-$observabilityDir = $root.'/var/observability';
-$faultToleranceDir = $root.'/var/fault-tolerance';
+$smokeStateDir = sys_get_temp_dir().'/vendoring-canary-smoke-'.bin2hex(random_bytes(4));
+$observabilityDir = $smokeStateDir.'/observability';
+$faultToleranceDir = $smokeStateDir.'/fault-tolerance';
 
 @mkdir($observabilityDir, 0777, true);
 @mkdir($faultToleranceDir.'/circuit-breakers', 0777, true);
@@ -56,17 +57,17 @@ $featureFlags = [
 ];
 
 $coordinator = new VendorCanaryRolloutCoordinatorService(
-    new VendorFeatureFlagService(new VendorTrafficCohortResolverService(), $featureFlags),
-    new VendorTrafficCohortResolverService(),
-    new VendorReleaseManifestBuilderService(
-        new VendorMonitoringSnapshotBuilderService($observabilityDir, $faultToleranceDir, $root),
+    new VendorFeatureFlagService(new VendorTrafficCohortResolver(), $featureFlags),
+    new VendorTrafficCohortResolver(),
+    new VendorReleaseManifestBuilder(
+        new VendorMonitoringSnapshotBuilder($observabilityDir, $faultToleranceDir, $root),
         new VendorAlertRuleEvaluatorService(),
         $root,
     ),
     new VendorRollbackDecisionEvaluatorService(),
 );
 
-$report = $coordinator->evaluate('transaction_canary', 'tenant-1', '42', 900);
+$report = $coordinator->evaluate('transaction_canary', '42', 900);
 
 if ('proceed' !== $report['canary']['decision']) {
     throw new RuntimeException('Canary rollout coordinator did not return proceed for a green vendor canary.');
@@ -74,8 +75,8 @@ if ('proceed' !== $report['canary']['decision']) {
 if ('expand_canary_scope' !== $report['canary']['recommendedAction']) {
     throw new RuntimeException('Canary rollout coordinator did not recommend expansion.');
 }
-if (($report['canary']['nextCohort'] ?? null) !== 'tenant:tenant-1') {
-    throw new RuntimeException('Canary rollout coordinator did not suggest tenant expansion.');
+if (($report['canary']['nextCohort'] ?? null) !== 'global') {
+    throw new RuntimeException('Canary rollout coordinator did not suggest global expansion.');
 }
 if ('vendor:42' !== $report['flagDecision']['cohort']) {
     throw new RuntimeException('Canary rollout coordinator did not preserve vendor cohort.');

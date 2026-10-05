@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Payout;
 
 use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorPayoutAccountRepositoryInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
 use Doctrine\DBAL\Exception;
 use Symfony\Component\Uid\Uuid;
@@ -24,7 +24,7 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
      */
     public function upsertFromPayload(array $payload): VendorPayoutAccountEntity
     {
-        foreach (['tenantId', 'vendorId', 'provider', 'accountRef', 'currency'] as $field) {
+        foreach (['vendorId', 'provider', 'accountRef', 'currency'] as $field) {
             if (!isset($payload[$field])) {
                 throw new \InvalidArgumentException(sprintf('%s required', $field));
             }
@@ -32,7 +32,6 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
 
         $account = new VendorPayoutAccountEntity(
             Uuid::v4()->toRfc4122(),
-            $this->requiredString($payload, 'tenantId'),
             $this->requiredString($payload, 'vendorId'),
             $this->requiredString($payload, 'provider'),
             $this->requiredString($payload, 'accountRef'),

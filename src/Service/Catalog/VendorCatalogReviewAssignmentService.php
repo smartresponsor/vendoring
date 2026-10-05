@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Catalog;
 
 use App\Vendoring\Entity\Vendor\VendorCatalogReviewAssignmentEntity;
-use App\Vendoring\Policy\Vendor\VendorCategoryReviewAssignmentPolicy;
-use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogCategoryChangeRequestRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogReviewAssignmentRepositoryInterface;
+use App\Vendoring\Policy\VendorCategoryReviewAssignmentPolicy;
+use App\Vendoring\RepositoryInterface\VendorCatalogCategoryChangeRequestRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorCatalogReviewAssignmentRepositoryInterface;
 use App\Vendoring\ServiceInterface\Catalog\VendorCatalogReviewAssignmentServiceInterface;
 
 final readonly class VendorCatalogReviewAssignmentService implements VendorCatalogReviewAssignmentServiceInterface

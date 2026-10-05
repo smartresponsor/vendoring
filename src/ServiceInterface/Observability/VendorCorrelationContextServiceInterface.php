@@ -14,14 +14,14 @@ interface VendorCorrelationContextServiceInterface
      *
      * Empty input is normalized by the implementation and may clear the active value.
      *
-     * @param string $correlationId External or generated correlation identifier.
+     * @param string $correlationId external or generated correlation identifier
      */
     public function beginRequest(string $correlationId): void;
 
     /**
      * Read the currently active correlation identifier.
      *
-     * @return string|null Active correlation identifier, or null when no request scope exists.
+     * @return string|null active correlation identifier, or null when no request scope exists
      */
     public function currentCorrelationId(): ?string;
 }

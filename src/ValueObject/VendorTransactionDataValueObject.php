@@ -15,9 +15,10 @@ namespace App\Vendoring\ValueObject;
 final readonly class VendorTransactionDataValueObject
 {
     public function __construct(
-        public string  $vendorId,
-        public string  $orderId,
+        public string $vendorId,
+        public string $orderId,
         public ?string $projectId,
-        public string  $amount,
-    ) {}
+        public string $amount,
+    ) {
+    }
 }

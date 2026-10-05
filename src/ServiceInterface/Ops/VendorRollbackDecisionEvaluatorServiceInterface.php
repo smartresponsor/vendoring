@@ -19,7 +19,7 @@ interface VendorRollbackDecisionEvaluatorServiceInterface
      *   buildArtifacts:array<string,bool>,
      *   monitoring:array{status:string,alertCount:int,alertCodes:list<string>,openBreakers:int,missingProbes:list<string>},
      *   status:string
-     * } $manifest Release manifest as returned by the release manifest builder.
+     * } $manifest Release manifest as returned by the release manifest builder
      *
      * @return array{generatedAt:string,decision:string,severity:string,reasons:list<string>,actions:list<string>}
      */

@@ -16,8 +16,8 @@ final class VendorTransactionMappingParityTest extends TestCase
         self::assertStringContainsString("name: 'vendor_id'", $source);
         self::assertStringContainsString("name: 'order_id'", $source);
         self::assertStringContainsString("name: 'project_id'", $source);
-        self::assertStringContainsString("name: 'status'", $source);
-        self::assertStringContainsString("name: 'created_at'", $source);
+        self::assertStringContainsString("name: 'transaction_status'", $source);
+        self::assertStringContainsString("name: 'transaction_created_at'", $source);
     }
 
     public function testDefaultStatusUsesCanonicalStatusCatalog(): void

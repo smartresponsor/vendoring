@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Entity\Vendor;
 
+use App\Objecting\EntityInterface\ObjectEntityInterface;
+use App\Objecting\EntityTrait\Embeddable\ObjectTitleEmbeddableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorRepository::class)]
 #[ORM\Table(
     name: 'vendor',
     indexes: [
         new ORM\Index(name: 'idx_vendor_owner_user_id', columns: ['owner_user_id']),
     ],
 )]
-class VendorEntity extends VendorAbstractEntity
+class VendorEntity extends VendorAbstractEntity implements ObjectEntityInterface
 {
+    use ObjectTitleEmbeddableTrait;
     #[ORM\Column(type: 'string', length: 255)]
     private string $brandName;
 
@@ -27,6 +30,10 @@ class VendorEntity extends VendorAbstractEntity
     private ?VendorProfileEntity $profile = null;
     #[ORM\OneToOne(mappedBy: 'vendor', targetEntity: VendorMediaEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?VendorMediaEntity $media = null;
+    #[ORM\OneToOne(mappedBy: 'vendor', targetEntity: VendorProfileAvatarEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private ?VendorProfileAvatarEntity $profileAvatar = null;
+    #[ORM\OneToOne(mappedBy: 'vendor', targetEntity: VendorProfileCoverEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private ?VendorProfileCoverEntity $profileCover = null;
     #[ORM\OneToOne(mappedBy: 'vendor', targetEntity: VendorBillingEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?VendorBillingEntity $billing = null;
     #[ORM\OneToOne(mappedBy: 'vendor', targetEntity: VendorSecurityEntity::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -99,6 +106,7 @@ class VendorEntity extends VendorAbstractEntity
     public function __construct(string $brandName, ?int $ownerUserId = null)
     {
         parent::__construct('inactive');
+        $this->initializeObjectTitle(firstTitle: trim($brandName));
         $this->brandName = trim($brandName);
         $this->ownerUserId = $ownerUserId;
         foreach (['documents', 'attachments', 'userAssignments', 'payments', 'commissions', 'commissionHistory', 'conversations', 'sentConversationMessages', 'shipments', 'groups', 'categories', 'favourites', 'wishlists', 'codeStorage', 'rememberMeTokens', 'customerOrders', 'logs', 'channels', 'translations'] as $property) {
@@ -107,6 +115,11 @@ class VendorEntity extends VendorAbstractEntity
     }
 
     public function getBrandName(): string
+    {
+        return $this->brandName;
+    }
+
+    public function getTitle(): string
     {
         return $this->brandName;
     }
@@ -124,12 +137,77 @@ class VendorEntity extends VendorAbstractEntity
         return $this->ownerUserId;
     }
 
+    public function getProfile(): ?VendorProfileEntity
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(VendorProfileEntity $profile): self
+    {
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+    public function getMedia(): ?VendorMediaEntity
+    {
+        return $this->media;
+    }
+
+    public function setMedia(VendorMediaEntity $media): self
+    {
+        $this->media = $media;
+
+        return $this;
+    }
+
     public function changeOwnerUserId(?int $ownerUserId): self
     {
         $this->ownerUserId = $ownerUserId;
         $this->touchModified();
 
         return $this;
+    }
+
+    public function getProfileAvatar(): ?VendorProfileAvatarEntity
+    {
+        return $this->profileAvatar;
+    }
+
+    public function getProfileCover(): ?VendorProfileCoverEntity
+    {
+        return $this->profileCover;
+    }
+
+    public function getDisplayName(): string
+    {
+        return $this->profile?->getDisplayName() ?: $this->brandName;
+    }
+
+    public function getAbout(): ?string
+    {
+        return $this->profile?->getAbout();
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->profile?->getWebsite();
+    }
+
+    /** @return array<string, mixed>|null */
+    public function getSocials(): ?array
+    {
+        return $this->profile?->getSocials();
+    }
+
+    public function getAvatarPath(): ?string
+    {
+        return $this->profileAvatar?->getFilePath() ?? $this->media?->getLogoPath();
+    }
+
+    public function getCoverPath(): ?string
+    {
+        return $this->profileCover?->getFilePath() ?? $this->media?->getBannerPath();
     }
 
     public function activate(): self

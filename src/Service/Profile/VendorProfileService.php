@@ -9,16 +9,14 @@ namespace App\Vendoring\Service\Profile;
 use App\Vendoring\DTO\VendorProfileDTO;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileEntity;
-use App\Vendoring\Event\Vendor\VendorProfileUpdatedEvent;
-use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
+use App\Vendoring\Event\VendorProfileUpdatedEvent;
+use App\Vendoring\RepositoryInterface\VendorProfileRepositoryInterface;
 use App\Vendoring\ServiceInterface\Profile\VendorProfileServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorProfileService implements VendorProfileServiceInterface
 {
     public function __construct(
-        private EntityManagerInterface $em,
         private VendorProfileRepositoryInterface $repository,
         private EventDispatcherInterface $dispatcher,
     ) {
@@ -52,8 +50,7 @@ final readonly class VendorProfileService implements VendorProfileServiceInterfa
             $profile->unpublish();
         }
 
-        $this->em->persist($profile);
-        $this->em->flush();
+        $this->repository->save($profile, true);
 
         $this->dispatcher->dispatch(new VendorProfileUpdatedEvent($profile));
 

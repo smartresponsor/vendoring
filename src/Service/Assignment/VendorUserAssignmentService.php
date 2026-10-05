@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Assignment;
 
 use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
-use App\Vendoring\EntityInterface\Vendor\VendorUserAssignmentEntityInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\EntityInterface\VendorUserAssignmentEntityInterface;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use App\Vendoring\ServiceInterface\Assignment\VendorUserAssignmentServiceInterface;
 use App\Vendoring\ValueObject\VendorRoleValueObject;
-use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class VendorUserAssignmentService implements VendorUserAssignmentServiceInterface
 {
     public function __construct(
         private VendorUserAssignmentRepositoryInterface $assignmentRepository,
-        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -101,6 +99,6 @@ final readonly class VendorUserAssignmentService implements VendorUserAssignment
             $this->assignmentRepository->save($assignment);
         }
 
-        $this->entityManager->flush();
+        $this->assignmentRepository->flush();
     }
 }

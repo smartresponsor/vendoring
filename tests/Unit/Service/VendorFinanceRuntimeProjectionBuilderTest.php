@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service;
 
+use App\Vendoring\Builder\Finance\VendorFinanceRuntimeProjectionBuilder;
+use App\Vendoring\BuilderInterface\Ownership\VendorOwnershipProjectionBuilderInterface;
 use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
 use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
-use App\Vendoring\Projection\Vendor\VendorOwnershipProjection;
-use App\Vendoring\Service\Finance\VendorFinanceRuntimeProjectionBuilderService;
-use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface;
+use App\Vendoring\Projection\VendorOwnershipProjection;
+use App\Vendoring\RepositoryInterface\VendorPayoutAccountRepositoryInterface;
 use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
-use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
 {
-    private VendorOwnershipProjectionBuilderServiceInterface&MockObject $ownership;
+    private VendorOwnershipProjectionBuilderInterface&MockObject $ownership;
     private VendorMetricServiceInterface&MockObject $metrics;
     private VendorPayoutAccountRepositoryInterface&MockObject $accounts;
     private VendorStatementServiceInterface&MockObject $statements;
 
     protected function setUp(): void
     {
-        $this->ownership = $this->createMock(VendorOwnershipProjectionBuilderServiceInterface::class);
+        $this->ownership = $this->createMock(VendorOwnershipProjectionBuilderInterface::class);
         $this->metrics = $this->createMock(VendorMetricServiceInterface::class);
         $this->accounts = $this->createMock(VendorPayoutAccountRepositoryInterface::class);
         $this->statements = $this->createMock(VendorStatementServiceInterface::class);
@@ -34,7 +34,6 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
     public function testBuildIncludesOwnershipMetricsPayoutAccountAndStatementWhenPeriodIsPresent(): void
     {
         $metricOverview = [
-            'tenantId' => 'tenant-1',
             'vendorId' => '101',
             'from' => '2026-03-01',
             'to' => '2026-03-31',
@@ -45,7 +44,6 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
             'balance' => 60.0,
         ];
         $statement = [
-            'tenantId' => 'tenant-1',
             'vendorId' => '101',
             'from' => '2026-03-01',
             'to' => '2026-03-31',
@@ -61,7 +59,6 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(101)
             ->willReturn(new VendorOwnershipProjection(101, 5001, [['userId' => 5002, 'role' => 'manager', 'status' => 'active', 'isPrimary' => false, 'grantedAt' => '2026-03-01T00:00:00+00:00', 'revokedAt' => null, 'capabilities' => []]]));
         $this->metrics->expects(self::once())->method('overview')->with(self::callback(function (VendorMetricOverviewRequestDTO $request): bool {
-            self::assertSame('tenant-1', $request->tenantId);
             self::assertSame('101', $request->vendorId);
             self::assertSame('2026-03-01', $request->from);
             self::assertSame('2026-03-31', $request->to);
@@ -70,10 +67,9 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
             return true;
         }))
             ->willReturn($metricOverview);
-        $this->accounts->expects(self::once())->method('get')->with('tenant-1', '101')
-            ->willReturn(new VendorPayoutAccountEntity('acc-1', 'tenant-1', '101', 'bank', 'iban-123', 'USD', true, '2026-03-01 10:00:00'));
+        $this->accounts->expects(self::once())->method('get')->with('101')
+            ->willReturn(new VendorPayoutAccountEntity('acc-1', '101', 'bank', 'iban-123', 'USD', true, '2026-03-01 10:00:00'));
         $this->statements->expects(self::once())->method('build')->with(self::callback(function (VendorStatementRequestDTO $dto): bool {
-            self::assertSame('tenant-1', $dto->tenantId);
             self::assertSame('101', $dto->vendorId);
             self::assertSame('2026-03-01', $dto->from);
             self::assertSame('2026-03-31', $dto->to);
@@ -82,14 +78,13 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
             return true;
         }))->willReturn($statement);
 
-        $view = (new VendorFinanceRuntimeProjectionBuilderService(
+        $view = (new VendorFinanceRuntimeProjectionBuilder(
             $this->ownership,
             $this->metrics,
             $this->accounts,
             $this->statements,
-        ))->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')->toArray();
+        ))->build('101', '2026-03-01', '2026-03-31', 'USD')->toArray();
 
-        self::assertSame('tenant-1', $view['tenantId']);
         self::assertSame('101', $view['vendorId']);
         self::assertSame('USD', $view['currency']);
         self::assertIsArray($view['ownership']);
@@ -104,7 +99,6 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
     public function testBuildSkipsOwnershipAndStatementForNonNumericVendorIdWithoutPeriod(): void
     {
         $metricOverview = [
-            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-alpha',
             'from' => null,
             'to' => null,
@@ -117,7 +111,6 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
 
         $this->ownership->expects(self::never())->method('buildForVendorId');
         $this->metrics->expects(self::once())->method('overview')->with(self::callback(function (VendorMetricOverviewRequestDTO $request): bool {
-            self::assertSame('tenant-1', $request->tenantId);
             self::assertSame('vendor-alpha', $request->vendorId);
             self::assertNull($request->from);
             self::assertNull($request->to);
@@ -126,15 +119,15 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
             return true;
         }))
             ->willReturn($metricOverview);
-        $this->accounts->expects(self::once())->method('get')->with('tenant-1', 'vendor-alpha')->willReturn(null);
+        $this->accounts->expects(self::once())->method('get')->with('vendor-alpha')->willReturn(null);
         $this->statements->expects(self::never())->method('build');
 
-        $view = (new VendorFinanceRuntimeProjectionBuilderService(
+        $view = (new VendorFinanceRuntimeProjectionBuilder(
             $this->ownership,
             $this->metrics,
             $this->accounts,
             $this->statements,
-        ))->build('tenant-1', 'vendor-alpha', null, null, 'EUR')->toArray();
+        ))->build('vendor-alpha', null, null, 'EUR')->toArray();
 
         self::assertNull($view['ownership']);
         self::assertSame($metricOverview, $view['metricOverview']);

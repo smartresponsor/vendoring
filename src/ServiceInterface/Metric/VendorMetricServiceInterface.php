@@ -11,7 +11,6 @@ interface VendorMetricServiceInterface
 {
     /**
      * @return array{
-     *   'tenantId': string,
      *   'vendorId': string,
      *   'from': ?string,
      *   'to': ?string,
@@ -26,7 +25,6 @@ interface VendorMetricServiceInterface
 
     /**
      * @return list<array{
-     *   'tenantId': string,
      *   'vendorId': string,
      *   'from': string,
      *   'to': string,

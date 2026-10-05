@@ -6,7 +6,7 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorPayoutItemRepository::class)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorPayoutItemRepository::class)]
 #[ORM\Table(
     name: 'vendor_payout_item',
     indexes: [

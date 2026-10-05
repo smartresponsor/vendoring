@@ -3,16 +3,12 @@ services:
         autowire: true
         autoconfigure: true
 
-    App\Vendoring\:
-        resource: '../src/'
-        exclude:
-            - '../src/Entity/'
-            - '../src/Kernel.php'
-            - '../src/DTO/Ledger/VendorLedgerEntryDTO.php'
-            - '../src/Repository/'
+    App\Vendoring\DataFixtures\VendorAccessBootstrapFixture: ~
+    App\Vendoring\Command\VendorFixtureLoadCommand: ~
 
-    App\Vendoring\Repository\Vendor\VendorLedgerRepository:
-        arguments:
-            $registry: '@doctrine'
-
-    App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface: '@App\Vendoring\Repository\Vendor\VendorLedgerRepository'
+    App\Vendoring\Repository\VendorRepository: ~
+    App\Vendoring\Repository\VendorUserAssignmentRepository: ~
+    App\Vendoring\Repository\VendorProfileRepository: ~
+    App\Vendoring\Repository\VendorMediaRepository: ~
+    App\Vendoring\Repository\VendorProfileAvatarRepository: ~
+    App\Vendoring\Repository\VendorProfileCoverRepository: ~

@@ -14,7 +14,7 @@ if (!isset($scripts['test:transaction-doctrine'])) {
 }
 
 $entityPath = $root.'/src/Entity/Vendor/VendorTransactionEntity.php';
-$interfacePath = $root.'/src/EntityInterface/Vendor/VendorTransactionEntityInterface.php';
+$interfacePath = $root.'/src/EntityInterface/VendorTransactionEntityInterface.php';
 
 foreach ([$entityPath, $interfacePath] as $path) {
     if (!is_file($path)) {

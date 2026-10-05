@@ -8,5 +8,6 @@ final class VendorTransactionStatusUpdateInputDTO
 {
     public function __construct(
         public string $status = 'pending',
-    ) {}
+    ) {
+    }
 }

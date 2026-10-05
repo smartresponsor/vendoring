@@ -8,8 +8,8 @@ use App\Vendoring\DTO\Ops\VendorTransactionStatusUpdateInputDTO;
 use App\Vendoring\Form\Ops\VendorTransactionStatusUpdateForm;
 use App\Vendoring\ValueObject\VendorTransactionStatusValueObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Form\Forms;
 use Symfony\Component\Validator\Validation;
 
 final class VendorTransactionStatusUpdateFormTest extends TestCase

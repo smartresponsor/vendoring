@@ -8,10 +8,11 @@ final readonly class VendorWriteRateLimitDecisionValueObject
 {
     public function __construct(
         private bool $allowed,
-        private int  $limit,
-        private int  $remaining,
-        private int  $retryAfterSeconds,
-    ) {}
+        private int $limit,
+        private int $remaining,
+        private int $retryAfterSeconds,
+    ) {
+    }
 
     public function allowed(): bool
     {

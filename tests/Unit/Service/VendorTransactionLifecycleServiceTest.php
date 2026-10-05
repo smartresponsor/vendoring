@@ -4,34 +4,31 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service;
 
+use App\Vendoring\PolicyInterface\VendorTransactionAmountPolicyInterface;
+use App\Vendoring\PolicyInterface\VendorTransactionStatusPolicyInterface;
+use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
 use App\Vendoring\Service\Transaction\VendorTransactionLifecycleService;
 use App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface;
-use App\Vendoring\ServiceInterface\Policy\VendorTransactionAmountPolicyServiceInterface;
-use App\Vendoring\ServiceInterface\Policy\VendorTransactionStatusPolicyServiceInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
 use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
 use App\Vendoring\ValueObject\VendorTransactionErrorCodeValueObject;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class VendorTransactionLifecycleServiceTest extends TestCase
 {
-    private EntityManagerInterface&MockObject $entityManager;
     private EventDispatcherInterface&MockObject $dispatcher;
-    private VendorTransactionStatusPolicyServiceInterface&MockObject $statusPolicy;
-    private VendorTransactionAmountPolicyServiceInterface&MockObject $amountPolicy;
+    private VendorTransactionStatusPolicyInterface&MockObject $statusPolicy;
+    private VendorTransactionAmountPolicyInterface&MockObject $amountPolicy;
     private VendorTransactionRepositoryInterface&MockObject $transactions;
     private VendorRuntimeLoggerServiceInterface&MockObject $runtimeLogger;
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->statusPolicy = $this->createMock(VendorTransactionStatusPolicyServiceInterface::class);
-        $this->amountPolicy = $this->createMock(VendorTransactionAmountPolicyServiceInterface::class);
+        $this->statusPolicy = $this->createMock(VendorTransactionStatusPolicyInterface::class);
+        $this->amountPolicy = $this->createMock(VendorTransactionAmountPolicyInterface::class);
         $this->transactions = $this->createMock(VendorTransactionRepositoryInterface::class);
         $this->runtimeLogger = $this->createMock(VendorRuntimeLoggerServiceInterface::class);
     }
@@ -45,8 +42,7 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
             ->willReturn(true);
 
         $this->amountPolicy->expects(self::never())->method('normalize');
-        $this->entityManager->expects(self::never())->method('persist');
-        $this->entityManager->expects(self::never())->method('flush');
+        $this->transactions->expects(self::never())->method('save');
         $this->dispatcher->expects(self::never())->method('dispatch');
         $this->runtimeLogger->expects(self::once())->method('warning');
         $this->runtimeLogger->expects(self::never())->method('info');
@@ -76,10 +72,10 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
             ->with('10.00')
             ->willReturn('10.00');
 
-        $this->entityManager->expects(self::once())->method('persist');
-        $this->entityManager
+        $this->transactions
             ->expects(self::once())
-            ->method('flush')
+            ->method('save')
+            ->with(self::isInstanceOf(\App\Vendoring\Entity\Vendor\VendorTransactionEntity::class), true)
             ->willThrowException($this->newUniqueConstraintViolationException());
 
         $this->dispatcher->expects(self::never())->method('dispatch');
@@ -104,7 +100,6 @@ final class VendorTransactionLifecycleServiceTest extends TestCase
     private function buildManager(): VendorTransactionLifecycleService
     {
         return new VendorTransactionLifecycleService(
-            $this->entityManager,
             $this->dispatcher,
             $this->statusPolicy,
             $this->amountPolicy,

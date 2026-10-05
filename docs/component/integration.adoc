@@ -40,7 +40,7 @@ Hosts should prefer semantic bundle configuration over ad hoc application parame
 
 [source,yaml]
 ----
-# config/packages/vendoring.yaml
+# config/packages/vendor_vendoring.yaml
 vendoring:
   secret: '%kernel.secret%'
   observability_dir: '%kernel.project_dir%/var/observability'

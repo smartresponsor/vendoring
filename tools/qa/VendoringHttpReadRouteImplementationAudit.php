@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
 $services = [
-    'src/Service/Vendor/VendorHttpRouteResponseService.php',
-    'src/Service/Vendor/VendorIndexService.php',
-    'src/Service/Vendor/VendorShowService.php',
-    'src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentIndexService.php',
-    'src/Service/Vendor/Attachment/Document/VendorAttachmentDocumentShowService.php',
-    'src/Service/Vendor/Attachment/Media/VendorAttachmentMediaIndexService.php',
-    'src/Service/Vendor/Attachment/Media/VendorAttachmentMediaShowService.php',
+    'src/Service/VendorHttpRouteResponseService.php',
+    'src/Service/VendorIndexService.php',
+    'src/Service/VendorShowService.php',
+    'src/Service/Attachment/Document/VendorAttachmentDocumentIndexService.php',
+    'src/Service/Attachment/Document/VendorAttachmentDocumentShowService.php',
+    'src/Service/Attachment/Media/VendorAttachmentMediaIndexService.php',
+    'src/Service/Attachment/Media/VendorAttachmentMediaShowService.php',
 ];
 
 foreach ($services as $service) {
@@ -37,7 +37,7 @@ foreach ($services as $service) {
     }
 }
 
-$responseService = file_get_contents($root . '/src/Service/Vendor/VendorHttpRouteResponseService.php');
+$responseService = file_get_contents($root . '/src/Service/VendorHttpRouteResponseService.php');
 if (!str_contains((string) $responseService, 'read_route_ready')) {
     fwrite(STDERR, "Read route response service does not emit read_route_ready status.\n");
     exit(1);

@@ -10,6 +10,7 @@ interface VendorCommandJsonArtifactWriterServiceInterface
 {
     /**
      * @param array<string, mixed> $payload
+     *
      * @throws VendorCommandIoException
      */
     public function writeIfRequested(bool $shouldWrite, mixed $outputOption, string $defaultPath, array $payload): ?string;

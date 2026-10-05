@@ -15,13 +15,13 @@ while preserving the files for a later intentional redesign.
 The current component has no active implementation directories for the namespaces that many services import:
 
 - `App\Vendoring\Entity\Vendor\*`
-- `App\Vendoring\Repository\Vendor\*`
-- `App\Vendoring\RepositoryInterface\Vendor\*`
-- `App\Vendoring\Projection\Vendor\*`
-- `App\Vendoring\Event\Vendor\*`
-- `App\Vendoring\EventInterface\Vendor\*`
-- `App\Vendoring\Policy\Vendor\*`
-- `App\Vendoring\PolicyInterface\Vendor\*`
+- `App\Vendoring\Repository\*`
+- `App\Vendoring\RepositoryInterface\*`
+- `App\Vendoring\Projection\*`
+- `App\Vendoring\Event\*`
+- `App\Vendoring\EventInterface\*`
+- `App\Vendoring\Policy\*`
+- `App\Vendoring\PolicyInterface\*`
 
 ### 2. Service graph is mixed
 
@@ -124,7 +124,7 @@ Reason: the current slice does not contain replacement entities/repositories/pro
 Wave 12 should be one of these, not both at once:
 
 1. **Vendoring route/http surface repair**
-   - `config/platform/routes/*` points to `App\Vendoring\Service\Vendor\*`, but `src/Service/Vendor` is absent.
+   - `config/platform/routes/*` points to `App\Vendoring\Service\*`, but `src/Service/Vendor` is absent.
    - Decide whether routes stay registry-only or generate Symfony-oriented thin HTTP services.
 
 2. **Vendoring persistence rebuild design**

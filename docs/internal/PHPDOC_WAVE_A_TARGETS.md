@@ -7,24 +7,24 @@ Apply deterministic PHPDoc coverage to the first runtime and release-read layer 
 ## Target files
 
 ### Ops
-- `src/ServiceInterface/Ops/VendorRuntimeStatusProjectionBuilderServiceInterface.php`
-- `src/Service/Ops/VendorRuntimeStatusProjectionBuilderService.php`
+- `src/BuilderInterface/Ops/VendorRuntimeStatusProjectionBuilderInterface.php`
+- `src/Builder/Ops/VendorRuntimeStatusProjectionBuilder.php`
 - `src/ServiceInterface/Ops/VendorReleaseBaselineReaderServiceInterface.php`
 - `src/Service/Ops/VendorReleaseBaselineReaderService.php`
 
 ### Finance
-- `src/ServiceInterface/VendorFinanceRuntimeProjectionBuilderServiceInterface.php`
-- `src/Service/VendorFinanceRuntimeProjectionBuilderService.php`
+- `src/ServiceInterface/VendorFinanceRuntimeProjectionBuilderInterface.php`
+- `src/Service/VendorFinanceRuntimeProjectionBuilder.php`
 
 ### Statement
-- `src/ServiceInterface/Statement/VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface.php`
-- `src/Service/Statement/VendorStatementDeliveryRuntimeProjectionBuilderService.php`
-- `src/ServiceInterface/Statement/VendorStatementRecipientProviderServiceInterface.php`
-- `src/Service/Statement/VendorStatementRecipientProviderService.php`
+- `src/BuilderInterface/Statement/VendorStatementDeliveryRuntimeProjectionBuilderInterface.php`
+- `src/Builder/Statement/VendorStatementDeliveryRuntimeProjectionBuilder.php`
+- `src/ProviderInterface/Statement/VendorStatementRecipientProviderInterface.php`
+- `src/Provider/Statement/VendorStatementRecipientProvider.php`
 
 ### Integration
-- `src/ServiceInterface/Integration/VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface.php`
-- `src/Service/Integration/VendorExternalIntegrationRuntimeProjectionBuilderService.php`
+- `src/BuilderInterface/Integration/VendorExternalIntegrationRuntimeProjectionBuilderInterface.php`
+- `src/Builder/Integration/VendorExternalIntegrationRuntimeProjectionBuilder.php`
 
 ## Acceptance criteria
 
@@ -54,7 +54,7 @@ Each target file should satisfy all of the following:
 
 ## Required array-shape candidates
 
-### VendorRuntimeStatusProjectionBuilderService
+### VendorRuntimeStatusProjectionBuilder
 - `ownership: array|null`
 - `profile: array|null`
 - `finance: array<string,mixed>`
@@ -76,7 +76,7 @@ array{
 }
 ```
 
-### VendorStatementDeliveryRuntimeProjectionBuilderService
+### VendorStatementDeliveryRuntimeProjectionBuilder
 - `ownership: array|null`
 - `export: array{path:string, exists:bool, readable:bool}|null`
 - `recipients: list<array{tenantId:string, vendorId:string, email:string, currency:string}>`

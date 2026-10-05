@@ -24,9 +24,9 @@ if ($controllerFiles !== []) {
 }
 
 $serviceNamingViolations = [];
-foreach (glob($root . '/src/Service/Vendor/**/*.php') ?: [] as $file) {
+foreach (glob($root . '/src/Service/**/*.php') ?: [] as $file) {
     $class = basename($file, '.php');
-    if ($class === 'AbstractVendorCrudRouteService') {
+    if ($class === 'VendorAbstractCrudRouteService') {
         continue;
     }
     if (!str_starts_with($class, 'Vendor') || !str_ends_with($class, 'Service')) {
@@ -35,7 +35,7 @@ foreach (glob($root . '/src/Service/Vendor/**/*.php') ?: [] as $file) {
 }
 
 $formNamingViolations = [];
-foreach (glob($root . '/src/Form/Vendor/**/*.php') ?: [] as $file) {
+foreach (glob($root . '/src/Form/**/*.php') ?: [] as $file) {
     $class = basename($file, '.php');
     if (!str_starts_with($class, 'Vendor') || !str_ends_with($class, 'Type')) {
         $formNamingViolations[] = substr($file, strlen($root) + 1);

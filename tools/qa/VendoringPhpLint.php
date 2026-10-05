@@ -12,9 +12,7 @@ $targets = [
     $projectRoot . '/bin',
 ];
 
-$phpBinary = PHP_BINARY;
-$errors = [];
-$checked = 0;
+$files = [];
 
 foreach ($targets as $target) {
     if (!is_dir($target) && !is_file($target)) {
@@ -22,17 +20,8 @@ foreach ($targets as $target) {
     }
 
     if (is_file($target)) {
-        if (pathinfo($target, PATHINFO_EXTENSION) !== 'php') {
-            continue;
-        }
-
-        $checked++;
-        $output = [];
-        $exitCode = 0;
-        exec(sprintf('"%s" -l "%s" 2>&1', $phpBinary, $target), $output, $exitCode);
-
-        if ($exitCode !== 0) {
-            $errors[$target] = implode(PHP_EOL, $output);
+        if (pathinfo($target, PATHINFO_EXTENSION) === 'php') {
+            $files[] = $target;
         }
 
         continue;
@@ -47,20 +36,61 @@ foreach ($targets as $target) {
             continue;
         }
 
-        $pathname = $file->getPathname();
-        $checked++;
-
-        $output = [];
-        $exitCode = 0;
-        exec(sprintf('"%s" -l "%s" 2>&1', $phpBinary, $pathname), $output, $exitCode);
-
-        if ($exitCode !== 0) {
-            $errors[$pathname] = implode(PHP_EOL, $output);
-        }
+        $files[] = $file->getPathname();
     }
 }
 
-echo sprintf("Vendoring PHP lint checked %d file(s).\n", $checked);
+sort($files, SORT_STRING);
+
+$phpBinary = PHP_BINARY;
+$errors = [];
+$concurrency = max(1, min(8, count($files)));
+
+foreach (array_chunk($files, $concurrency) as $batch) {
+    $processes = [];
+
+    foreach ($batch as $pathname) {
+        $descriptorSpec = [
+            0 => ['pipe', 'r'],
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w'],
+        ];
+        $process = proc_open([$phpBinary, '-l', $pathname], $descriptorSpec, $pipes, $projectRoot);
+
+        if (!is_resource($process)) {
+            $errors[$pathname] = 'Failed to start PHP lint process.';
+            continue;
+        }
+
+        fclose($pipes[0]);
+        $processes[] = [
+            'path' => $pathname,
+            'process' => $process,
+            'stdout' => $pipes[1],
+            'stderr' => $pipes[2],
+        ];
+    }
+
+    foreach ($processes as $entry) {
+        $stdout = stream_get_contents($entry['stdout']);
+        $stderr = stream_get_contents($entry['stderr']);
+        fclose($entry['stdout']);
+        fclose($entry['stderr']);
+        $exitCode = proc_close($entry['process']);
+
+        if ($exitCode === 0) {
+            continue;
+        }
+
+        $message = trim(implode(PHP_EOL, array_filter([
+            false === $stdout ? '' : trim($stdout),
+            false === $stderr ? '' : trim($stderr),
+        ])));
+        $errors[$entry['path']] = '' === $message ? sprintf('PHP lint exited with code %d.', $exitCode) : $message;
+    }
+}
+
+echo sprintf("Vendoring PHP lint checked %d file(s).\n", count($files));
 
 if ($errors !== []) {
     echo "\nSyntax errors found:\n\n";

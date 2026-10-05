@@ -9,8 +9,8 @@ namespace App\Vendoring\Service\Payout;
 use App\Vendoring\DTO\Ledger\VendorLedgerDTO;
 use App\Vendoring\DTO\Payout\VendorCreatePayoutDTO;
 use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorPayoutRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorMetricCollectorServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface;
@@ -75,7 +75,6 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
             netCents: $net,
             status: 'pending',
             meta: [
-                'tenantId' => $dto->tenantId,
                 'threshold' => $dto->thresholdCents,
                 'retention' => $dto->retentionFeePercent,
             ],

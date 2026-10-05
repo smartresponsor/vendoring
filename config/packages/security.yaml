@@ -1,0 +1,7 @@
+security:
+    access_decision_manager:
+        strategy: affirmative
+    firewalls:
+        vendoring_bootstrap:
+            pattern: '^$'
+            security: false

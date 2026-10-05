@@ -20,7 +20,7 @@ Import the route-map registry and let Cruding resolve runtime services through s
 ----
 # config/platform/routes.vendoring.yaml
 imports:
-  - { resource: '../../vendor/.../config/platform/routes.platform.yaml' }
+  - { resource: '../../vendor/.../config/platform/vendor_routes_platform.yaml' }
 ----
 
 [source,yaml]
@@ -44,7 +44,7 @@ VENDOR_SQLITE_DSN=sqlite:///%kernel.project_dir%/var/vendor_runtime.sqlite
 == 4) Minimal Cruding integration flow
 
 * Upsert vendor profile through the canonical `vendor.*` service map.
-* Read vendor runtime projection through `App\Vendoring\Service\Vendor\Runtime\...` services.
+* Read vendor runtime projection through `App\Vendoring\Service\Runtime\...` services.
 * Create payout when ready through the vendor business route-map.
 
 == 5) Enable only needed parts

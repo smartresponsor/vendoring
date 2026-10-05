@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
 
-$routeRegistry = $root.'/config/platform/routes.crud.yaml';
+$routeRegistry = $root.'/config/platform/vendor_routes_crud.yaml';
 $transactionServices = $root.'/config/vendor_services_transactions.yaml';
-$transactionHttpService = $root.'/src/Service/Vendor/Transaction/VendorTransactionHttpService.php';
+$transactionHttpService = $root.'/src/Service/Transaction/VendorTransactionHttpService.php';
 
 foreach ([$routeRegistry, $transactionServices, $transactionHttpService] as $requiredFile) {
     if (!is_file($requiredFile)) {

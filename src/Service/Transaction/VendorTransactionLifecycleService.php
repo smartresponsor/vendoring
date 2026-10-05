@@ -5,25 +5,23 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Transaction;
 
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
-use App\Vendoring\Event\Vendor\VendorTransactionEvent;
-use App\Vendoring\RepositoryInterface\Vendor\VendorTransactionRepositoryInterface;
+use App\Vendoring\Event\VendorTransactionEvent;
+use App\Vendoring\PolicyInterface\VendorTransactionAmountPolicyInterface;
+use App\Vendoring\PolicyInterface\VendorTransactionStatusPolicyInterface;
+use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface;
-use App\Vendoring\ServiceInterface\Policy\VendorTransactionAmountPolicyServiceInterface;
-use App\Vendoring\ServiceInterface\Policy\VendorTransactionStatusPolicyServiceInterface;
 use App\Vendoring\ServiceInterface\Transaction\VendorTransactionLifecycleServiceInterface;
 use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
 use App\Vendoring\ValueObject\VendorTransactionErrorCodeValueObject;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorTransactionLifecycleService implements VendorTransactionLifecycleServiceInterface
 {
     public function __construct(
-        private EntityManagerInterface $em,
         private EventDispatcherInterface $dispatcher,
-        private VendorTransactionStatusPolicyServiceInterface $statusPolicy,
-        private VendorTransactionAmountPolicyServiceInterface $amountPolicy,
+        private VendorTransactionStatusPolicyInterface $statusPolicy,
+        private VendorTransactionAmountPolicyInterface $amountPolicy,
         private VendorTransactionRepositoryInterface $transactions,
         private VendorRuntimeLoggerServiceInterface $runtimeLogger,
     ) {
@@ -56,10 +54,8 @@ final readonly class VendorTransactionLifecycleService implements VendorTransact
             amount: $this->amountPolicy->normalize($data->amount),
         );
 
-        $this->em->persist($tx);
-
         try {
-            $this->em->flush();
+            $this->transactions->save($tx, true);
         } catch (\Throwable $exception) {
             if ($exception instanceof UniqueConstraintViolationException) {
                 $this->runtimeLogger->warning('vendor_transaction_duplicate_rejected', [
@@ -118,7 +114,7 @@ final readonly class VendorTransactionLifecycleService implements VendorTransact
         $tx->setStatus($normalizedStatus);
 
         try {
-            $this->em->flush();
+            $this->transactions->save($tx, true);
         } catch (\Throwable $exception) {
             $this->runtimeLogger->error('vendor_transaction_status_update_failed', [
                 'vendor_id' => $tx->getVendorId(),

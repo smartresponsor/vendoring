@@ -44,8 +44,8 @@ final readonly class VendoringFeatureFlagsConfigService
             'requiredPermission' => 'administration.config.update',
             'editableFields' => ['featureFlagsJson'],
             'sensitiveFields' => [],
-            'readableFiles' => ['config/component/runtime.yaml'],
-            'writableFiles' => ['config/component/runtime.yaml'],
+            'readableFiles' => ['config/component/vendor_runtime.yaml'],
+            'writableFiles' => ['config/component/vendor_runtime.yaml'],
             'metadata' => [
                 'section' => 'Configuration',
                 'kind' => 'feature_flags',
@@ -90,7 +90,7 @@ final readonly class VendoringFeatureFlagsConfigService
     {
         $payload = $this->assertData($data);
         $patch = $this->runtimePatch($payload);
-        $path = $this->projectDir.'/config/component/runtime.yaml';
+        $path = $this->projectDir.'/config/component/vendor_runtime.yaml';
         $backupPath = is_file($path) ? $path.'.bak' : null;
 
         if (null !== $backupPath && !copy($path, $backupPath)) {
@@ -126,7 +126,7 @@ final readonly class VendoringFeatureFlagsConfigService
     /** @return array<string, mixed> */
     private function runtimeManifest(): array
     {
-        $path = $this->projectDir.'/../Vendoring/config/component/runtime.yaml';
+        $path = $this->projectDir.'/../Vendoring/config/component/vendor_runtime.yaml';
         $parsed = is_file($path) ? Yaml::parseFile($path) : [];
         if (!is_array($parsed)) {
             return [];

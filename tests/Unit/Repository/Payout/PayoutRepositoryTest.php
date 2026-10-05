@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Repository\Payout;
 
 use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
-use App\Vendoring\Repository\Vendor\VendorPayoutRepository;
+use App\Vendoring\Repository\VendorPayoutRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +29,7 @@ final class PayoutRepositoryTest extends TestCase
 
     public function testMarkProcessedUpdatesEntityAndFlushes(): void
     {
-        $payout = $this->payout(status: 'pending', meta: ['tenantId' => 'tenant-1']);
+        $payout = $this->payout(status: 'pending', meta: ['source' => 'scheduled']);
         $this->entityManager->method('find')->willReturn($payout);
         $this->entityManager->expects(self::once())->method('flush');
 
@@ -37,7 +37,7 @@ final class PayoutRepositoryTest extends TestCase
 
         self::assertSame('processed', $payout->status);
         self::assertSame('2026-03-30 11:00:00', $payout->processedAt);
-        self::assertSame('tenant-1', $payout->meta['tenantId']);
+        self::assertSame('scheduled', $payout->meta['source']);
         self::assertSame('bank_ref_123', $payout->meta['providerRef']);
     }
 

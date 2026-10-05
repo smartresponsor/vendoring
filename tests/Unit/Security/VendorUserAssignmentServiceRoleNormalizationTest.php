@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Security;
 
 use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use App\Vendoring\Service\Assignment\VendorUserAssignmentService;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorUserAssignmentServiceRoleNormalizationTest extends TestCase
 {
     private VendorUserAssignmentRepositoryInterface&MockObject $repository;
-    private EntityManagerInterface&MockObject $entityManager;
 
     protected function setUp(): void
     {
         $this->repository = $this->createMock(VendorUserAssignmentRepositoryInterface::class);
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
     }
 
     public function testAssignRoleNormalizesCanonicalRole(): void
@@ -35,7 +32,7 @@ final class VendorUserAssignmentServiceRoleNormalizationTest extends TestCase
                 return $assignment instanceof VendorUserAssignmentEntity;
             }), true);
 
-        $service = new VendorUserAssignmentService($this->repository, $this->entityManager);
+        $service = new VendorUserAssignmentService($this->repository);
         $assignment = $service->assignRole(42, 7, 'FINANCE');
 
         self::assertSame('finance', $assignment->getRole());
@@ -45,7 +42,7 @@ final class VendorUserAssignmentServiceRoleNormalizationTest extends TestCase
 
     public function testAssignRoleRejectsUnknownRole(): void
     {
-        $service = new VendorUserAssignmentService($this->repository, $this->entityManager);
+        $service = new VendorUserAssignmentService($this->repository);
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unsupported vendor role');

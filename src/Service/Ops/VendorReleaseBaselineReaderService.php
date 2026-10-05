@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Ops;
 
-use App\Vendoring\Projection\Vendor\VendorReleaseBaselineProjection;
+use App\Vendoring\BuilderInterface\Ops\VendorRuntimeStatusProjectionBuilderInterface;
+use App\Vendoring\Projection\VendorReleaseBaselineProjection;
 use App\Vendoring\ServiceInterface\Ops\VendorReleaseBaselineReaderServiceInterface;
-use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServiceInterface;
 
 /**
  * Builds a calm release baseline snapshot on top of the aggregated runtime
@@ -15,19 +15,17 @@ use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServi
 final readonly class VendorReleaseBaselineReaderService implements VendorReleaseBaselineReaderServiceInterface
 {
     public function __construct(
-        private VendorRuntimeStatusProjectionBuilderServiceInterface $runtimeStatusProjectionBuilder,
+        private VendorRuntimeStatusProjectionBuilderInterface $runtimeStatusProjectionBuilder,
     ) {
     }
 
     public function build(
-        string $tenantId,
         string $vendorId,
         ?string $from = null,
         ?string $to = null,
         string $currency = 'USD',
     ): VendorReleaseBaselineProjection {
         $runtimeStatus = $this->runtimeStatusProjectionBuilder->build(
-            tenantId: $tenantId,
             vendorId: $vendorId,
             from: $from,
             to: $to,
@@ -37,7 +35,7 @@ final readonly class VendorReleaseBaselineReaderService implements VendorRelease
         $projectRoot = dirname(__DIR__, 3);
         $artifactStatus = [
             'runtimeStatusCommand' => file_exists($projectRoot.'/src/Command/VendorRuntimeStatusCommand.php'),
-            'runtimeStatusHttpService' => file_exists($projectRoot.'/src/Service/Vendor/Runtime/Status/VendorRuntimeStatusShowService.php'),
+            'runtimeStatusHttpService' => file_exists($projectRoot.'/src/Service/Runtime/Status/VendorRuntimeStatusShowService.php'),
             'runtimeStatusCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_RUNTIME_STATUS_CANON.md'),
             'ownerCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_OWNER_IDENTITY_CANON.md'),
             'userAssignmentCanon' => file_exists($projectRoot.'/docs/internal/VENDOR_USER_ASSIGNMENT_CANON.md'),
@@ -66,7 +64,6 @@ final readonly class VendorReleaseBaselineReaderService implements VendorRelease
         $generatedAt = new \DateTimeImmutable();
 
         return new VendorReleaseBaselineProjection(
-            tenantId: $tenantId,
             vendorId: $vendorId,
             runtimeStatus: $runtimeStatus,
             artifactStatus: $artifactStatus,

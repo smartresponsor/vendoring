@@ -8,7 +8,7 @@ namespace App\Vendoring\Service\Ledger;
 
 use App\Vendoring\DTO\Ledger\VendorDoubleEntryDTO;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorDoubleEntryServiceInterface;
 use Doctrine\DBAL\Exception;
 
@@ -26,7 +26,6 @@ final readonly class VendorDoubleEntryService implements VendorDoubleEntryServic
     public function post(VendorDoubleEntryDTO $dto): array
     {
         $entry = new VendorLedgerEntity(
-            tenantId: $dto->tenantId,
             vendorId: $dto->vendorId,
             referenceType: $dto->referenceType,
             referenceId: $dto->referenceId,

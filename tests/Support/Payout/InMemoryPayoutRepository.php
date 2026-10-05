@@ -6,7 +6,7 @@ namespace App\Vendoring\Tests\Support\Payout;
 
 use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
 use App\Vendoring\Entity\Vendor\VendorPayoutItemEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorPayoutRepositoryInterface;
 
 final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
 {

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Contract;
 
+use App\Vendoring\BuilderInterface\Finance\VendorFinanceRuntimeProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Ownership\VendorOwnershipProjectionBuilderInterface;
 use App\Vendoring\Contract\VendoringIntegrationContract;
-use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeProjectionBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Payout\VendorPayoutProviderServiceInterface;
+use App\Vendoring\ProviderInterface\Payout\VendorPayoutProviderInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use App\Vendoring\ServiceInterface\Transaction\VendorTransactionLifecycleServiceInterface;
 use App\Vendoring\VendoringBundle;
@@ -32,19 +32,19 @@ final class VendoringIntegrationContractTest extends TestCase
             permissionPrefix: 'vendoring.',
             routeMapPrefix: 'vendor',
             bundleClass: VendoringBundle::class,
-            ownershipProjectionBuilderInterface: VendorOwnershipProjectionBuilderServiceInterface::class,
+            ownershipProjectionBuilderInterface: VendorOwnershipProjectionBuilderInterface::class,
             transactionLifecycleInterface: VendorTransactionLifecycleServiceInterface::class,
-            payoutProviderInterface: VendorPayoutProviderServiceInterface::class,
+            payoutProviderInterface: VendorPayoutProviderInterface::class,
             statementInterface: VendorStatementServiceInterface::class,
-            financeRuntimeProjectionBuilderInterface: VendorFinanceRuntimeProjectionBuilderServiceInterface::class,
-            externalIntegrationRuntimeProjectionBuilderInterface: VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface::class,
+            financeRuntimeProjectionBuilderInterface: VendorFinanceRuntimeProjectionBuilderInterface::class,
+            externalIntegrationRuntimeProjectionBuilderInterface: VendorExternalIntegrationRuntimeProjectionBuilderInterface::class,
             surfaces: [
-                'ownership.projection' => VendorOwnershipProjectionBuilderServiceInterface::class,
+                'ownership.projection' => VendorOwnershipProjectionBuilderInterface::class,
                 'transaction.lifecycle' => VendorTransactionLifecycleServiceInterface::class,
-                'payout.transfer' => VendorPayoutProviderServiceInterface::class,
+                'payout.transfer' => VendorPayoutProviderInterface::class,
                 'statement.build' => VendorStatementServiceInterface::class,
-                'finance.runtime' => VendorFinanceRuntimeProjectionBuilderServiceInterface::class,
-                'integration.runtime' => VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface::class,
+                'finance.runtime' => VendorFinanceRuntimeProjectionBuilderInterface::class,
+                'integration.runtime' => VendorExternalIntegrationRuntimeProjectionBuilderInterface::class,
             ],
         );
     }

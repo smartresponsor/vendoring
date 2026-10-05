@@ -15,12 +15,12 @@ final class VendorStatementServiceTest extends TestCase
     public function testBuildAggregatesEarningsRefundsAndClosingBalance(): void
     {
         $repository = new InMemoryLedgerEntryRepository();
-        $repository->insert(new VendorLedgerEntity('1', 'tenant-1', 'REVENUE', 'CASH', 200.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
-        $repository->insert(new VendorLedgerEntity('2', 'tenant-1', 'REFUNDS_PAYABLE', 'CASH', 35.0, 'USD', 'refund', 'ref-1', 'vendor-1', '2026-03-12 10:00:00'));
-        $repository->insert(new VendorLedgerEntity('3', 'tenant-1', 'REVENUE', 'CASH', 999.0, 'EUR', 'invoice', 'inv-2', 'vendor-1', '2026-03-13 10:00:00'));
+        $repository->insert(new VendorLedgerEntity('vendor-1', 'invoice', 'inv-1', 'REVENUE', 'CASH', 200.0, 'USD', '2026-03-10 10:00:00'));
+        $repository->insert(new VendorLedgerEntity('vendor-1', 'refund', 'ref-1', 'REFUNDS_PAYABLE', 'CASH', 35.0, 'USD', '2026-03-12 10:00:00'));
+        $repository->insert(new VendorLedgerEntity('vendor-1', 'invoice', 'inv-2', 'REVENUE', 'CASH', 999.0, 'EUR', '2026-03-13 10:00:00'));
 
         $service = new VendorStatementService($repository);
-        $dto = new VendorStatementRequestDTO('tenant-1', 'vendor-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD');
+        $dto = new VendorStatementRequestDTO('vendor-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD');
 
         $result = $service->build($dto);
 
@@ -35,10 +35,10 @@ final class VendorStatementServiceTest extends TestCase
     public function testExportCsvWritesStatementRows(): void
     {
         $repository = new InMemoryLedgerEntryRepository();
-        $repository->insert(new VendorLedgerEntity('1', 'tenant-1', 'REVENUE', 'CASH', 120.0, 'USD', 'invoice', 'inv-1', 'vendor-1', '2026-03-10 10:00:00'));
+        $repository->insert(new VendorLedgerEntity('vendor-1', 'invoice', 'inv-1', 'REVENUE', 'CASH', 120.0, 'USD', '2026-03-10 10:00:00'));
 
         $service = new VendorStatementService($repository);
-        $dto = new VendorStatementRequestDTO('tenant-1', 'vendor-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD');
+        $dto = new VendorStatementRequestDTO('vendor-1', '2026-03-01 00:00:00', '2026-03-31 23:59:59', 'USD');
 
         $path = $service->exportCsv($dto);
         $csv = file_get_contents($path);

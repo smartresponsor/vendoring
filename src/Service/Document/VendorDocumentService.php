@@ -7,34 +7,36 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Document;
 
 use App\Vendoring\DTO\VendorDocumentDTO;
-use App\Vendoring\Entity\Vendor\VendorEntity;
-use App\Vendoring\Entity\Vendor\VendorDocumentEntity;
 use App\Vendoring\Entity\Vendor\VendorDocumentAttachmentEntity;
-use App\Vendoring\Event\Vendor\VendorDocumentUploadedEvent;
+use App\Vendoring\Entity\Vendor\VendorDocumentEntity;
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Event\VendorDocumentUploadedEvent;
+use App\Vendoring\RepositoryInterface\VendorDocumentAttachmentRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorDocumentRepositoryInterface;
 use App\Vendoring\ServiceInterface\Document\VendorDocumentServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final readonly class VendorDocumentService implements VendorDocumentServiceInterface
 {
     public function __construct(
-        private EntityManagerInterface   $em,
+        private VendorDocumentRepositoryInterface $documentRepository,
+        private VendorDocumentAttachmentRepositoryInterface $attachmentRepository,
         private EventDispatcherInterface $dispatcher,
-    ) {}
-
+    ) {
+    }
 
     private function synchronizeDocumentAttachment(VendorDocumentEntity $document, string $filePath): void
     {
-        $repository = $this->em->getRepository(VendorDocumentAttachmentEntity::class);
-        $existing = $repository->findOneBy(['document' => $document]);
+        $existing = $this->attachmentRepository->findOneBy(['document' => $document]);
 
         if ($existing instanceof VendorDocumentAttachmentEntity) {
             $existing->update($filePath);
+            $this->attachmentRepository->save($existing, true);
 
             return;
         }
 
-        $this->em->persist(new VendorDocumentAttachmentEntity($document, $filePath));
+        $this->attachmentRepository->save(new VendorDocumentAttachmentEntity($document, $filePath), true);
     }
 
     public function upload(VendorEntity $vendor, VendorDocumentDTO $dto): VendorDocumentEntity
@@ -42,10 +44,8 @@ final readonly class VendorDocumentService implements VendorDocumentServiceInter
         $document = new VendorDocumentEntity($vendor, $dto->type, $dto->filePath);
         $document->assignMetadata($dto->expiresAt, $dto->uploaderId);
 
-        $this->em->persist($document);
-        $this->em->flush();
+        $this->documentRepository->save($document, true);
         $this->synchronizeDocumentAttachment($document, $dto->filePath);
-        $this->em->flush();
 
         $this->dispatcher->dispatch(new VendorDocumentUploadedEvent($document));
 

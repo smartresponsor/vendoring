@@ -11,9 +11,9 @@ $checks = [
     'config/packages/doctrine.yaml exists' => is_file($root.'/config/packages/doctrine.yaml'),
     'config/component/services.yaml exists' => is_file($root.'/config/component/services.yaml'),
     'config/component/routes.yaml exists' => is_file($root.'/config/component/routes.yaml'),
-    'config/platform/routes.platform.yaml exists' => is_file($root.'/config/platform/routes.platform.yaml'),
-    'config/platform/routes.crud.yaml exists' => is_file($root.'/config/platform/routes.crud.yaml'),
-    'config/platform/routes.business.yaml exists' => is_file($root.'/config/platform/routes.business.yaml'),
+    'config/platform/vendor_routes_platform.yaml exists' => is_file($root.'/config/platform/vendor_routes_platform.yaml'),
+    'config/platform/vendor_routes_crud.yaml exists' => is_file($root.'/config/platform/vendor_routes_crud.yaml'),
+    'config/platform/vendor_routes_business.yaml exists' => is_file($root.'/config/platform/vendor_routes_business.yaml'),
     'bin/console exists' => is_file($root.'/bin/console'),
     'public/index.php exists' => is_file($root.'/public/index.php'),
 ];

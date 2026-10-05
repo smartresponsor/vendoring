@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\CategoryEntity;
 
 use App\Vendoring\DTO\CatalogSyndication\VendorCatalogSyndicationGovernanceTrailRequestDTO;
-use App\Vendoring\Policy\Vendor\VendorCategorySyndicationGovernanceTrailPolicy;
+use App\Vendoring\Policy\VendorCategorySyndicationGovernanceTrailPolicy;
 use App\Vendoring\Service\Syndication\VendorCatalogSyndicationGovernanceTrailService;
 use PHPUnit\Framework\TestCase;
 

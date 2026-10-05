@@ -83,7 +83,7 @@ foreach (array_keys($formTargets) as $fqcn) {
     }
 }
 
-$responseService = $root.'/src/Service/Vendor/VendorHttpRouteResponseService.php';
+$responseService = $root.'/src/Service/VendorHttpRouteResponseService.php';
 if (!is_file($responseService)) {
     $errors[] = 'Missing VendorHttpRouteResponseService.php';
 } else {
@@ -103,13 +103,13 @@ if (!is_file($responseService)) {
     }
 }
 
-$abstractService = $root.'/src/Service/Vendor/AbstractVendorCrudRouteService.php';
+$abstractService = $root.'/src/Service/VendorAbstractCrudRouteService.php';
 if (!is_file($abstractService)) {
-    $errors[] = 'Missing AbstractVendorCrudRouteService.php';
+    $errors[] = 'Missing VendorAbstractCrudRouteService.php';
 } else {
     $source = file_get_contents($abstractService) ?: '';
     if (!str_contains($source, 'extends AbstractCrudService')) {
-        $errors[] = 'AbstractVendorCrudRouteService must extend AbstractCrudService.';
+        $errors[] = 'VendorAbstractCrudRouteService must extend AbstractCrudService.';
     }
 }
 
@@ -125,7 +125,7 @@ foreach (wave13PhpFiles($root.'/src/Service/Vendor') as $file) {
         $errors[] = 'Vendoring HTTP surface must not render directly: '.$relative;
     }
 
-    if (str_ends_with($relative, 'AbstractVendorCrudRouteService.php')) {
+    if (str_ends_with($relative, 'VendorAbstractCrudRouteService.php')) {
         if (!preg_match('/\babstract\s+class\s+AbstractVendor[A-Za-z0-9_]*Service\b/', $source)) {
             $errors[] = 'Abstract support service must stay AbstractVendor*Service: '.$relative;
         }

@@ -17,7 +17,7 @@ final class OpenApiDocumentationContractTest extends TestCase
 
     public function testVendorTransactionHttpServiceContainsDocblockContractMarkers(): void
     {
-        $contents = (string) file_get_contents(__DIR__.'/../../../src/Service/Vendor/Transaction/VendorTransactionHttpService.php');
+        $contents = (string) file_get_contents(__DIR__.'/../../../src/Service/Transaction/VendorTransactionHttpService.php');
 
         self::assertStringContainsString('Create a vendor transaction from a JSON payload.', $contents);
         self::assertStringContainsString('List all transactions for a single vendor.', $contents);

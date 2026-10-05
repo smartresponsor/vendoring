@@ -75,7 +75,7 @@ foreach ($files as $file) {
     }
 }
 
-foreach (['config/platform/routes.crud.yaml', 'config/platform/routes.business.yaml', 'config/platform/routes.platform.yaml'] as $aggregate) {
+foreach (['config/platform/vendor_routes_crud.yaml', 'config/platform/vendor_routes_business.yaml', 'config/platform/vendor_routes_platform.yaml'] as $aggregate) {
     if (!is_file($root.'/'.$aggregate)) {
         $failures[] = 'Missing aggregate registry file: '.$aggregate;
     }

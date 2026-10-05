@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Vendoring\Resolver\Runtime\VendorAppEnvResolver;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
 use App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService;
-use App\Vendoring\Service\Runtime\VendorAppEnvResolverService;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -24,7 +24,7 @@ $request->attributes->set('_route', 'app_vendor_transaction_create');
 $requestStack->push($request);
 
 $logger = new VendorRuntimeLoggerService(new NullLogger(), $correlationContext, $requestStack, $exporter);
-$metrics = new VendorRuntimeMetricCollectorService($correlationContext, new VendorAppEnvResolverService(), $exporter);
+$metrics = new VendorRuntimeMetricCollectorService($correlationContext, new VendorAppEnvResolver(), $exporter);
 
 $logger->info('observability_backend_smoke', ['vendor_id' => 'vendor-1']);
 $metrics->increment('observability_backend_smoke_total', ['scope' => 'synthetic']);

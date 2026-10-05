@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Media;
 
-use App\Vendoring\Event\Vendor\VendorCategoryDestinationMediaFallbackEvaluatedEvent;
-use App\Vendoring\EventInterface\Vendor\VendorCategoryDestinationMediaFallbackEvaluatedEventInterface;
+use App\Vendoring\Event\VendorCategoryDestinationMediaFallbackEvaluatedEvent;
+use App\Vendoring\EventInterface\VendorCategoryDestinationMediaFallbackEvaluatedEventInterface;
 use App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaFallbackServiceInterface;
-use DateTimeImmutable;
 
 final class VendorCatalogDestinationMediaFallbackService implements VendorCatalogDestinationMediaFallbackServiceInterface
 {
@@ -23,6 +22,6 @@ final class VendorCatalogDestinationMediaFallbackService implements VendorCatalo
             'fallbackMatchedBindingIds' => [],
             'actorId' => trim($actorId),
             'reason' => trim($reason),
-        ], new DateTimeImmutable());
+        ], new \DateTimeImmutable());
     }
 }

@@ -8,7 +8,7 @@ namespace App\Vendoring\Service\Ledger;
 
 use App\Vendoring\DTO\Ledger\VendorLedgerDTO;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface;
 use Doctrine\DBAL\Exception;
 
@@ -32,7 +32,6 @@ final readonly class VendorLedgerService implements VendorLedgerServiceInterface
         };
 
         $entry = new VendorLedgerEntity(
-            tenantId: $dto->tenantId,
             vendorId: $dto->vendorId,
             referenceType: $dto->type,
             referenceId: $dto->entityId,

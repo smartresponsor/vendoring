@@ -15,6 +15,7 @@ interface VendorCommandJsonFileWriterServiceInterface
 
     /**
      * @param array<string, mixed> $payload
+     *
      * @throws VendorCommandIoException
      */
     public function writePayload(string $path, array $payload): void;

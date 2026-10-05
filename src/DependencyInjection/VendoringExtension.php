@@ -54,7 +54,7 @@ final class VendoringExtension extends Extension implements PrependExtensionInte
         $container->setParameter('vendoring_observability_dir', $observabilityDir);
         $container->setParameter('vendoring_fault_tolerance_dir', $faultToleranceDir);
 
-        $runtimeFile = __DIR__.'/../../config/component/runtime.yaml';
+        $runtimeFile = __DIR__.'/../../config/component/vendor_runtime.yaml';
         if (is_file($runtimeFile)) {
             $runtime = Yaml::parseFile($runtimeFile);
             if (is_array($runtime)) {

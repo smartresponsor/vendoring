@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Rollout;
 
+use App\Vendoring\ResolverInterface\Rollout\VendorTrafficCohortResolverInterface;
 use App\Vendoring\ServiceInterface\Rollout\VendorFeatureFlagServiceInterface;
-use App\Vendoring\ServiceInterface\Rollout\VendorTrafficCohortResolverServiceInterface;
 
 /**
  * In-memory feature-flag evaluator for controlled rollout decisions.
@@ -23,19 +23,19 @@ final readonly class VendorFeatureFlagService implements VendorFeatureFlagServic
      * @param array<string, array{enabled?:bool, cohorts?:list<string>}> $flags
      */
     public function __construct(
-        private VendorTrafficCohortResolverServiceInterface $trafficCohortResolver,
+        private VendorTrafficCohortResolverInterface $trafficCohortResolver,
         private array $flags = [],
     ) {
     }
 
-    public function isEnabled(string $flagName, ?string $tenantId = null, ?string $vendorId = null): bool
+    public function isEnabled(string $flagName, ?string $vendorId = null): bool
     {
-        return $this->explain($flagName, $tenantId, $vendorId)['enabled'];
+        return $this->explain($flagName, $vendorId)['enabled'];
     }
 
-    public function explain(string $flagName, ?string $tenantId = null, ?string $vendorId = null): array
+    public function explain(string $flagName, ?string $vendorId = null): array
     {
-        $cohort = $this->trafficCohortResolver->resolve($tenantId, $vendorId);
+        $cohort = $this->trafficCohortResolver->resolve($vendorId);
         $flag = $this->flags[$flagName] ?? null;
 
         if (!is_array($flag)) {

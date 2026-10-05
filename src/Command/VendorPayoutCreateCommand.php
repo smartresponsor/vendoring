@@ -7,7 +7,7 @@ namespace App\Vendoring\Command;
 
 use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
-use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorPayoutRepositoryInterface;
 use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
 use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
@@ -47,7 +47,6 @@ final class VendorPayoutCreateCommand extends Command
     {
         parent::configure();
         $this
-            ->addOption('tenantId', null, InputOption::VALUE_REQUIRED, 'Tenant ID')
             ->addOption('vendorId', null, InputOption::VALUE_REQUIRED, 'Vendor ID')
             ->addOption('currency', null, InputOption::VALUE_OPTIONAL, 'Currency', 'USD')
             ->addOption('thresholdCents', null, InputOption::VALUE_OPTIONAL, 'Minimum balance in cents required to create payout', '1000')
@@ -59,7 +58,6 @@ final class VendorPayoutCreateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $payload = [
-            'tenantId' => $input->getOption('tenantId'),
             'vendorId' => $input->getOption('vendorId'),
             'currency' => $input->getOption('currency'),
             'thresholdCents' => $input->getOption('thresholdCents'),

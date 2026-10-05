@@ -9,7 +9,7 @@
 ## Modified
 
 - `src/DependencyInjection/VendoringExtension.php`
-- `config/component/component.yaml`
+- `config/component/vendor_component.yaml`
 
 ## Retired by apply script
 

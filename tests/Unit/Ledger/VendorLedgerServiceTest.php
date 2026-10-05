@@ -6,7 +6,7 @@ namespace App\Vendoring\Tests\Unit\Ledger;
 
 use App\Vendoring\DTO\Ledger\VendorLedgerDTO;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 use App\Vendoring\Service\Ledger\VendorLedgerService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +26,6 @@ final class VendorLedgerServiceTest extends TestCase
             ->expects(self::once())
             ->method('insert')
             ->with(self::callback(function (VendorLedgerEntity $entry): bool {
-                self::assertSame('tenant-1', $entry->tenantId);
                 self::assertSame('order_paid', $entry->debitAccount);
                 self::assertSame('VENDOR_PAYABLE', $entry->creditAccount);
                 self::assertSame(12.5, $entry->amount);
@@ -47,7 +46,6 @@ final class VendorLedgerServiceTest extends TestCase
             amountCents: 1250,
             currency: 'USD',
             direction: 'debit',
-            tenantId: 'tenant-1',
             occurredAt: '2026-03-31 10:00:00',
         ));
 

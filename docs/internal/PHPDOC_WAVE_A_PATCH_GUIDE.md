@@ -6,7 +6,7 @@ This guide contains the exact PHPDoc intent that should be applied to the first 
 
 The goal is to keep the edits architecture-first and avoid low-value format churn.
 
-## 1. `src/ServiceInterface/Ops/VendorRuntimeStatusProjectionBuilderServiceInterface.php`
+## 1. `src/BuilderInterface/Ops/VendorRuntimeStatusProjectionBuilderInterface.php`
 
 ### Class intent
 
@@ -36,7 +36,7 @@ The goal is to keep the edits architecture-first and avoid low-value format chur
  */
 ```
 
-## 2. `src/Service/Ops/VendorRuntimeStatusProjectionBuilderService.php`
+## 2. `src/Builder/Ops/VendorRuntimeStatusProjectionBuilder.php`
 
 ### Class intent
 
@@ -123,7 +123,7 @@ Use this runtime shape in a local PHPDoc when needed:
 /** @var list<string> $issues */
 ```
 
-## 4. `src/Service/VendorFinanceRuntimeProjectionBuilderService.php`
+## 4. `src/Service/VendorFinanceRuntimeProjectionBuilder.php`
 
 ### Class intent
 
@@ -169,7 +169,7 @@ Use this runtime shape in a local PHPDoc when needed:
  */
 ```
 
-## 5. `src/Service/Statement/VendorStatementDeliveryRuntimeProjectionBuilderService.php`
+## 5. `src/Builder/Statement/VendorStatementDeliveryRuntimeProjectionBuilder.php`
 
 ### Class intent
 
@@ -209,7 +209,7 @@ Use this runtime shape in a local PHPDoc when needed:
 /** @var list<array{tenantId:string, vendorId:string, email:string, currency:string}> $recipients */
 ```
 
-## 6. `src/Service/Integration/VendorExternalIntegrationRuntimeProjectionBuilderService.php`
+## 6. `src/Builder/Integration/VendorExternalIntegrationRuntimeProjectionBuilder.php`
 
 ### Method intent
 

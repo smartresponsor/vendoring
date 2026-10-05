@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Entity;
 
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
-use App\Vendoring\EntityInterface\Vendor\VendorTransactionEntityInterface;
+use App\Vendoring\EntityInterface\VendorTransactionEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +20,7 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
         $entityAttributes = $reflection->getAttributes(ORM\Entity::class);
         self::assertCount(1, $entityAttributes);
         self::assertSame(
-            'App\Vendoring\\Repository\\Vendor\\VendorTransactionRepository',
+            'App\Vendoring\\Repository\\VendorTransactionRepository',
             $entityAttributes[0]->getArguments()['repositoryClass'] ?? null,
         );
 
@@ -53,7 +53,7 @@ final class VendorTransactionDoctrineMappingTest extends TestCase
 
     public function testRepositoryOrdersVendorTransactionsByNewestFirst(): void
     {
-        $repositorySource = file_get_contents(__DIR__.'/../../../src/Repository/Vendor/VendorTransactionRepository.php');
+        $repositorySource = file_get_contents(__DIR__.'/../../../src/Repository/VendorTransactionRepository.php');
         self::assertIsString($repositorySource);
         self::assertStringContainsString("['createdAt' => 'DESC', 'id' => 'DESC']", $repositorySource);
     }

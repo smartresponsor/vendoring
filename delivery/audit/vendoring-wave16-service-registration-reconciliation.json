@@ -5,6 +5,6 @@
   "form_resource_active": true,
   "persistence_bound_services_reactivated": 47,
   "optional_attaching_bridge_isolated": true,
-  "default_profile_attachment_resolver": "App\\Vendoring\\Service\\Profile\\NullVendorProfileAttachmentResolverService",
+  "default_profile_attachment_resolver": "App\\Vendoring\\Resolver\\Profile\\VendorNullProfileAttachmentResolver",
   "deletions": []
 }

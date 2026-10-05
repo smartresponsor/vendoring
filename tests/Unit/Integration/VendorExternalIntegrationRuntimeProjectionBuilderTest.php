@@ -4,29 +4,28 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Integration;
 
-use App\Vendoring\Projection\Vendor\VendorOwnershipProjection;
-use App\Vendoring\Service\Integration\VendorExternalIntegrationRuntimeProjectionBuilderService;
-use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Payout\VendorPayoutProviderServiceInterface;
+use App\Vendoring\Builder\Integration\VendorExternalIntegrationRuntimeProjectionBuilder;
+use App\Vendoring\BuilderInterface\Ownership\VendorOwnershipProjectionBuilderInterface;
+use App\Vendoring\Projection\VendorOwnershipProjection;
+use App\Vendoring\ProviderInterface\Payout\VendorPayoutProviderInterface;
 use App\Vendoring\ServiceInterface\Integration\VendorCrmServiceInterface;
-use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface;
 use App\Vendoring\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorExternalIntegrationRuntimeProjectionBuilderTest extends TestCase
 {
-    private VendorOwnershipProjectionBuilderServiceInterface&MockObject $ownership;
+    private VendorOwnershipProjectionBuilderInterface&MockObject $ownership;
     private VendorCrmServiceInterface&MockObject $crm;
     private VendorWebhooksConsumerServiceInterface&MockObject $webhooks;
-    private VendorPayoutProviderServiceInterface&MockObject $payoutBridge;
+    private VendorPayoutProviderInterface&MockObject $payoutBridge;
 
     protected function setUp(): void
     {
-        $this->ownership = $this->createMock(VendorOwnershipProjectionBuilderServiceInterface::class);
+        $this->ownership = $this->createMock(VendorOwnershipProjectionBuilderInterface::class);
         $this->crm = $this->createMock(VendorCrmServiceInterface::class);
         $this->webhooks = $this->createMock(VendorWebhooksConsumerServiceInterface::class);
-        $this->payoutBridge = $this->createMock(VendorPayoutProviderServiceInterface::class);
+        $this->payoutBridge = $this->createMock(VendorPayoutProviderInterface::class);
     }
 
     public function testBuildIncludesOwnershipForNumericVendorIdAndWebhookReadiness(): void
@@ -46,14 +45,13 @@ final class VendorExternalIntegrationRuntimeProjectionBuilderTest extends TestCa
             ]]));
         $this->webhooks->expects(self::once())->method('ok')->willReturn(true);
 
-        $payload = (new VendorExternalIntegrationRuntimeProjectionBuilderService(
+        $payload = (new VendorExternalIntegrationRuntimeProjectionBuilder(
             $this->ownership,
             $this->crm,
             $this->webhooks,
             $this->payoutBridge,
-        ))->build('tenant-1', '101')->toArray();
+        ))->build('101')->toArray();
 
-        self::assertSame('tenant-1', $payload['tenantId']);
         self::assertSame('101', $payload['vendorId']);
         self::assertIsArray($payload['ownership'] ?? null);
         self::assertSame(5001, $payload['ownership']['ownerUserId'] ?? null);
@@ -75,12 +73,12 @@ final class VendorExternalIntegrationRuntimeProjectionBuilderTest extends TestCa
         $this->ownership->expects(self::never())->method('buildForVendorId');
         $this->webhooks->expects(self::once())->method('ok')->willReturn(false);
 
-        $payload = (new VendorExternalIntegrationRuntimeProjectionBuilderService(
+        $payload = (new VendorExternalIntegrationRuntimeProjectionBuilder(
             $this->ownership,
             $this->crm,
             $this->webhooks,
             $this->payoutBridge,
-        ))->build('tenant-1', 'vendor-alpha')->toArray();
+        ))->build('vendor-alpha')->toArray();
 
         self::assertNull($payload['ownership']);
         self::assertSame('vendor-alpha', $payload['vendorId']);
