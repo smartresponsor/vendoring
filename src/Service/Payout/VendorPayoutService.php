@@ -9,6 +9,7 @@ namespace App\Vendoring\Service\Payout;
 use App\Vendoring\DTO\Ledger\VendorLedgerDTO;
 use App\Vendoring\DTO\Payout\VendorCreatePayoutDTO;
 use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
+use App\Vendoring\Exception\Payout\VendorPayoutProviderNotConfiguredException;
 use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 use App\Vendoring\RepositoryInterface\VendorPayoutRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorLedgerServiceInterface;
@@ -107,6 +108,7 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
 
     /**
      * @throws Exception
+     * @throws VendorPayoutProviderNotConfiguredException
      * @throws RandomException
      */
     public function process(string $payoutId): bool
@@ -121,41 +123,8 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
             return false;
         }
 
-        // РўСѓС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РѕРІ РІРЅРµС€РЅРµРіРѕ РїР»Р°С‚С‘Р¶РЅРѕРіРѕ Р°РґР°РїС‚РµСЂР° РґР»СЏ РїРµСЂРµРІРѕРґР° СЃСЂРµРґСЃС‚РІ РІРµРЅРґРѕСЂСѓ (bank/stripe connect)
-        // Р”Р»СЏ РґРµРјРѕ СЃС‡РёС‚Р°РµРј СѓСЃРїРµС€РЅС‹Рј Рё Р·Р°РїРёСЃС‹РІР°РµРј ledger: payout_processed (debit fee), payout_fee
-        $this->ledger->record(new VendorLedgerDTO(
-            type: 'payout_processed',
-            entityId: $payoutId,
-            sagaId: Uuid::v4()->toRfc4122(),
-            vendorId: $payout->vendorId,
-            amountCents: $payout->netCents,
-            currency: $payout->currency,
-            direction: 'debit',
-            meta: ['payoutId' => $payoutId],
-        ));
-        if ($payout->feeCents > 0) {
-            $this->ledger->record(new VendorLedgerDTO(
-                type: 'payout_fee',
-                entityId: $payoutId,
-                sagaId: Uuid::v4()->toRfc4122(),
-                vendorId: $payout->vendorId,
-                amountCents: $payout->feeCents,
-                currency: $payout->currency,
-                direction: 'debit',
-                meta: ['payoutId' => $payoutId],
-            ));
-        }
-
-        $processedAt = new \DateTimeImmutable();
-        $this->repo->markProcessed($payoutId, $processedAt->format('Y-m-d H:i:s'));
-        $this->metrics->increment('payout_processed_total', ['currency' => $payout->currency]);
-        $this->runtimeLogger->info('vendor_payout_processed', [
-            'vendor_id' => $payout->vendorId,
-            'payout_id' => $payoutId,
-            'currency' => $payout->currency,
-            'net_cents' => (string) $payout->netCents,
-        ]);
-
-        return true;
+        // Fail closed: no external transfer confirmation exists in this service.
+        // Never mutate ledger or payout state based on a fabricated success.
+        throw new VendorPayoutProviderNotConfiguredException('vendor_payout');
     }
 }

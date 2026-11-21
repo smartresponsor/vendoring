@@ -20,6 +20,7 @@ interface VendorPayoutServiceInterface
     /**
      * @throws Exception
      * @throws \JsonException
+     * @throws \App\Vendoring\Exception\Payout\VendorPayoutProviderNotConfiguredException
      * @throws RandomException
      */
     public function process(string $payoutId): bool;

@@ -60,25 +60,20 @@ final class VendorPayoutServiceTest extends TestCase
         self::assertSame('VENDOR_PAYABLE', $entriesAfterCreate[1]->creditAccount);
         self::assertSame(13.5, $entriesAfterCreate[1]->amount);
 
-        self::assertTrue($service->process($payoutId));
+        try {
+            $service->process($payoutId);
+            self::fail('Payout must not be marked processed without a real provider.');
+        } catch (\App\Vendoring\Exception\Payout\VendorPayoutProviderNotConfiguredException $exception) {
+            self::assertStringContainsString('not configured', $exception->getMessage());
+        }
 
-        $processedPayout = $payoutRepository->byId($payoutId);
-        self::assertNotNull($processedPayout);
-        self::assertSame('processed', $processedPayout->status);
-        self::assertNotNull($processedPayout->processedAt);
-
-        $entriesAfterProcess = $ledgerRepository->all();
-        self::assertCount(4, $entriesAfterProcess);
-        self::assertSame('payout_processed', $entriesAfterProcess[2]->debitAccount);
-        self::assertSame(13.5, $entriesAfterProcess[2]->amount);
-        self::assertSame('payout_fee', $entriesAfterProcess[3]->debitAccount);
-        self::assertSame(1.5, $entriesAfterProcess[3]->amount);
-
+        $stillPending = $payoutRepository->byId($payoutId);
+        self::assertNotNull($stillPending);
+        self::assertSame('pending', $stillPending->status);
+        self::assertNull($stillPending->processedAt);
+        self::assertCount(2, $ledgerRepository->all());
         self::assertSame(
-            [
-                ['name' => 'payout_created_total', 'tags' => ['currency' => 'USD']],
-                ['name' => 'payout_processed_total', 'tags' => ['currency' => 'USD']],
-            ],
+            [['name' => 'payout_created_total', 'tags' => ['currency' => 'USD']]],
             $metrics->snapshot(),
         );
     }
