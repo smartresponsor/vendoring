@@ -159,6 +159,24 @@ final class VendorRouteServicesTest extends TestCase
         self::assertInstanceOf(CrudResourceContract::class, $response);
     }
 
+    public function testUpdateRejectsWhitespaceOnlyBrandNameAfterNormalization(): void
+    {
+        $vendor = new VendorEntity('Existing');
+        $this->vendorRepository->expects(self::never())->method('save');
+        $service = new VendorUpdateService(
+            $this->responseService,
+            $this->vendorRepository,
+            $this->dispatcher,
+            $this->assignmentService,
+            $this->validator,
+        );
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('brand_name_required');
+        $service->post($this->context('update', object: $vendor, identifierValue: 1, requestData: [
+            'brandName' => '   ',
+        ]));
+    }
+
     public function testDeleteRemovesVendorEntity(): void
     {
         $vendor = new VendorEntity('Old');

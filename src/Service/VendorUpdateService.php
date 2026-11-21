@@ -57,7 +57,7 @@ final class VendorUpdateService extends VendorAbstractCrudRouteService
         $input = $context->request->request->all();
         $vendor = $this->resolveVendor($context);
         $updated = $this->updateVendor($vendor, new VendorUpdateDTO(
-            brandName: $this->nullableStringValue($input['brandName'] ?? null),
+            brandName: array_key_exists('brandName', $input) && is_string($input['brandName']) ? $input['brandName'] : null,
             status: $this->nullableStringValue($input['status'] ?? null),
             ownerUserId: $this->nullableIntValue($input['ownerUserId'] ?? null),
         ));
