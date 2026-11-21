@@ -196,7 +196,8 @@ final readonly class VendorMonitoringSnapshotBuilder implements VendorMonitoring
 
         $records = [];
         foreach ($lines as $line) {
-            $decoded = json_decode((string) $line, true);
+            $normalized = preg_replace('/^\\xEF\\xBB\\xBF/', '', (string) $line);
+            $decoded = json_decode($normalized ?? (string) $line, true);
             if (!is_array($decoded)) {
                 continue;
             }

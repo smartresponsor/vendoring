@@ -54,4 +54,29 @@ final class VendorMonitoringSnapshotBuilderTest extends TestCase
         self::assertTrue($snapshot['probeSummary']['payout']);
         self::assertTrue($snapshot['probeSummary']['postDeploy']);
     }
+
+    public function testBuildAcceptsUtf8BomPrefixedNdjsonStreams(): void
+    {
+        $root = sys_get_temp_dir().'/vendoring-monitoring-bom-'.bin2hex(random_bytes(4));
+        $observabilityDir = $root.'/observability';
+        $projectDir = $root.'/project';
+        self::assertTrue(mkdir($observabilityDir, 0777, true));
+        self::assertTrue(mkdir($projectDir, 0777, true));
+        $bom = "\xEF\xBB\xBF";
+        file_put_contents($observabilityDir.'/runtime_logs.ndjson', $bom.json_encode([
+            'timestamp' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'level' => 'error',
+            'route' => 'vendor_bom_route',
+        ], JSON_THROW_ON_ERROR).PHP_EOL);
+        file_put_contents($observabilityDir.'/runtime_metrics.ndjson', $bom.json_encode([
+            'timestamp' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'nameEntity' => 'vendor_bom_metric',
+        ], JSON_THROW_ON_ERROR).PHP_EOL);
+        $snapshot = (new VendorMonitoringSnapshotBuilder($observabilityDir, $root.'/fault-tolerance', $projectDir))->build();
+        self::assertSame(1, $snapshot['logSummary']['total']);
+        self::assertSame(1, $snapshot['logSummary']['error']);
+        self::assertContains('vendor_bom_route', $snapshot['logSummary']['routes']);
+        self::assertSame(1, $snapshot['metricSummary']['total']);
+        self::assertSame(1, $snapshot['metricSummary']['names']['vendor_bom_metric']);
+    }
 }
