@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * position    → sort order within the category
  *
  * Schema is stable: no JSON payload, no code/payload split.
- * schema:update --force is safe on this entity.
+ * Legacy code/payload layouts require the explicit preservation repair before schema changes.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'vendor_catalog_category_pin')]

@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * object_published_at → publication timestamp
  *
  * Schema is stable: no JSON payload.
- * schema:update --force is safe on this entity.
+ * Legacy code/payload layouts require the explicit preservation repair before schema changes.
  */
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorCatalogCategoryBannerRepository::class)]
 #[ORM\Table(name: 'vendor_catalog_category_banner')]
