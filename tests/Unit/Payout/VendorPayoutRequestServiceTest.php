@@ -15,6 +15,7 @@ final class VendorPayoutRequestServiceTest extends TestCase
     {
         $service = new VendorPayoutRequestService();
         $dto = $service->toCreateDto([
+            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => '1000',
@@ -35,6 +36,7 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $this->expectExceptionMessage('vendorId required');
 
         $service->toCreateDto([
+            'tenantId' => 'tenant-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
             'retentionFeePercent' => 0.05,
@@ -46,6 +48,7 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $service = new VendorPayoutRequestService();
         $payout = new VendorPayoutEntity(
             id: 'payout-1',
+            tenantId: 'tenant-1',
             vendorId: 'vendor-1',
             currency: 'USD',
             grossCents: 1000,
@@ -72,6 +75,7 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $this->expectExceptionMessage('retentionFeePercent out_of_range');
 
         $service->toCreateDto([
+            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
@@ -84,12 +88,14 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $service = new VendorPayoutRequestService();
 
         $zeroFeeDto = $service->toCreateDto([
+            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
             'retentionFeePercent' => 0.0,
         ]);
         $fullFeeDto = $service->toCreateDto([
+            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
@@ -105,6 +111,7 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $service = new VendorPayoutRequestService();
 
         $dto = $service->toCreateDto([
+            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => ' 1000 ',
@@ -123,6 +130,7 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $this->expectExceptionMessage('retentionFeePercent required');
 
         $service->toCreateDto([
+            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => 1000,
@@ -138,6 +146,7 @@ final class VendorPayoutRequestServiceTest extends TestCase
         $this->expectExceptionMessage('thresholdCents required');
 
         $service->toCreateDto([
+            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'currency' => 'USD',
             'thresholdCents' => '   ',

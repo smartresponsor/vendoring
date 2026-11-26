@@ -47,6 +47,7 @@ final class VendorPayoutCreateCommand extends Command
     {
         parent::configure();
         $this
+            ->addOption('tenantId', null, InputOption::VALUE_REQUIRED, 'Tenant ID')
             ->addOption('vendorId', null, InputOption::VALUE_REQUIRED, 'Vendor ID')
             ->addOption('currency', null, InputOption::VALUE_OPTIONAL, 'Currency', 'USD')
             ->addOption('thresholdCents', null, InputOption::VALUE_OPTIONAL, 'Minimum balance in cents required to create payout', '1000')
@@ -58,6 +59,7 @@ final class VendorPayoutCreateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $payload = [
+            'tenantId' => $input->getOption('tenantId'),
             'vendorId' => $input->getOption('vendorId'),
             'currency' => $input->getOption('currency'),
             'thresholdCents' => $input->getOption('thresholdCents'),
@@ -98,7 +100,7 @@ final class VendorPayoutCreateCommand extends Command
         }
 
         try {
-            $payout = $this->payoutRepository->byId($payoutId);
+            $payout = $this->payoutRepository->byId($dto->tenantId, $payoutId);
         } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to load payout', $throwable, [
                 'payoutId' => $payoutId,

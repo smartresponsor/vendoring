@@ -69,8 +69,11 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
         }
     }
 
-    public function byId(mixed $id): ?VendorPayoutEntity
+    public function byId(string $tenantId, mixed $id): ?VendorPayoutEntity
     {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
         if (!is_scalar($id)) {
             return null;
         }
@@ -80,7 +83,7 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
             return null;
         }
 
-        return $this->find($identifier);
+        return $this->findOneBy(['tenantId' => $tenantId, 'payoutId' => $identifier]);
     }
 
     public function insert(VendorPayoutEntity $payout): void
@@ -88,9 +91,9 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
         $this->em()->persist($payout);
     }
 
-    public function markProcessed(string $id, string $processedAt, array $meta = []): void
+    public function markProcessed(string $tenantId, string $id, string $processedAt, array $meta = []): void
     {
-        $payout = $this->byId($id);
+        $payout = $this->byId($tenantId, $id);
         if ($payout instanceof VendorPayoutEntity) {
             $payout->status = 'processed';
             $payout->processedAt = $processedAt;
@@ -100,9 +103,9 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
     }
 
     /** @param array<string, mixed> $meta */
-    public function markFailed(string $id, string $processedAt, array $meta = []): void
+    public function markFailed(string $tenantId, string $id, string $processedAt, array $meta = []): void
     {
-        $payout = $this->byId($id);
+        $payout = $this->byId($tenantId, $id);
         if ($payout instanceof VendorPayoutEntity) {
             $payout->status = 'failed';
             $payout->processedAt = $processedAt;

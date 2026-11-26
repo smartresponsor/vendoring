@@ -34,7 +34,7 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
             return null;
         }
 
-        return $this->byId((string) $id);
+        return $this->payouts[(string) $id] ?? null;
     }
 
     public function findOneBy(array $criteria): ?VendorPayoutEntity
@@ -69,15 +69,18 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
         $this->insert($entity);
     }
 
-    public function byId(mixed $id): ?VendorPayoutEntity
+    public function byId(string $tenantId, mixed $id): ?VendorPayoutEntity
     {
         if (!is_scalar($id)) {
             return null;
         }
 
-        $id = (string) $id;
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
+        $payout = $this->payouts[(string) $id] ?? null;
 
-        return $this->payouts[$id] ?? null;
+        return null !== $payout && $payout->tenantId === $tenantId ? $payout : null;
     }
 
     /** @return list<VendorPayoutItemEntity> */
@@ -89,9 +92,9 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
     /**
      * @param array<string, mixed> $meta
      */
-    public function markProcessed(string $id, string $processedAt, array $meta = []): void
+    public function markProcessed(string $tenantId, string $id, string $processedAt, array $meta = []): void
     {
-        if (!isset($this->payouts[$id])) {
+        if (null === $this->byId($tenantId, $id)) {
             return;
         }
 
@@ -103,9 +106,9 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
     /**
      * @param array<string, mixed> $meta
      */
-    public function markFailed(string $id, string $processedAt, array $meta = []): void
+    public function markFailed(string $tenantId, string $id, string $processedAt, array $meta = []): void
     {
-        if (!isset($this->payouts[$id])) {
+        if (null === $this->byId($tenantId, $id)) {
             return;
         }
 

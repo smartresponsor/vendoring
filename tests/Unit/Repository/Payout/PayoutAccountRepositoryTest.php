@@ -28,16 +28,16 @@ final class PayoutAccountRepositoryTest extends TestCase
     public function testGetReturnsDoctrineEntityWhenFound(): void
     {
         $account = $this->account(active: true);
-        $this->objectRepository->expects(self::once())->method('findOneBy')->with(['vendorId' => 'vendor-1'])->willReturn($account);
+        $this->objectRepository->expects(self::once())->method('findOneBy')->with(['tenantId' => 'tenant-1', 'vendorId' => 'vendor-1'])->willReturn($account);
 
-        self::assertSame($account, (new VendorPayoutAccountRepository($this->entityManager))->get('vendor-1'));
+        self::assertSame($account, (new VendorPayoutAccountRepository($this->entityManager))->get('tenant-1', 'vendor-1'));
     }
 
     public function testUpsertUpdatesExistingVendorAccount(): void
     {
         $existing = $this->account(provider: 'old', active: true);
         $incoming = $this->account(provider: 'bank', active: false);
-        $this->objectRepository->method('findOneBy')->willReturn($existing);
+        $this->objectRepository->expects(self::once())->method('findOneBy')->with(['tenantId' => 'tenant-1', 'vendorId' => 'vendor-1'])->willReturn($existing);
         $this->entityManager->expects(self::never())->method('persist');
         $this->entityManager->expects(self::once())->method('flush');
 
@@ -50,7 +50,7 @@ final class PayoutAccountRepositoryTest extends TestCase
     public function testUpsertPersistsNewVendorAccountWhenItDoesNotExist(): void
     {
         $account = $this->account(active: true);
-        $this->objectRepository->method('findOneBy')->willReturn(null);
+        $this->objectRepository->expects(self::once())->method('findOneBy')->with(['tenantId' => 'tenant-1', 'vendorId' => 'vendor-1'])->willReturn(null);
         $this->entityManager->expects(self::once())->method('persist')->with($account);
         $this->entityManager->expects(self::once())->method('flush');
 
@@ -59,6 +59,6 @@ final class PayoutAccountRepositoryTest extends TestCase
 
     private function account(string $provider = 'bank', bool $active = true): VendorPayoutAccountEntity
     {
-        return new VendorPayoutAccountEntity('acc-1', 'vendor-1', $provider, 'iban-123', 'USD', $active, '2026-03-30 10:00:00');
+        return new VendorPayoutAccountEntity('acc-1', 'tenant-1', 'vendor-1', $provider, 'iban-123', 'USD', $active, '2026-03-30 10:00:00');
     }
 }

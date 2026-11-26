@@ -21,10 +21,11 @@ final class VendorPayoutProcessCommandTest extends TestCase
 
     public function testExecuteShowsSuccessWhenPayoutWasProcessed(): void
     {
-        $this->payouts->expects(self::once())->method('process')->with('payout-1')->willReturn(true);
+        $this->payouts->expects(self::once())->method('process')->with('tenant-1', 'payout-1')->willReturn(true);
 
         $tester = new CommandTester(new VendorPayoutProcessCommand($this->payouts));
         $exitCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             'payoutId' => 'payout-1',
         ]);
 
@@ -34,10 +35,11 @@ final class VendorPayoutProcessCommandTest extends TestCase
 
     public function testExecuteShowsWarningWhenPayoutWasNotProcessed(): void
     {
-        $this->payouts->expects(self::once())->method('process')->with('payout-1')->willReturn(false);
+        $this->payouts->expects(self::once())->method('process')->with('tenant-1', 'payout-1')->willReturn(false);
 
         $tester = new CommandTester(new VendorPayoutProcessCommand($this->payouts));
         $exitCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             'payoutId' => 'payout-1',
         ]);
 
@@ -47,10 +49,11 @@ final class VendorPayoutProcessCommandTest extends TestCase
 
     public function testExecuteCanEmitJsonOutput(): void
     {
-        $this->payouts->expects(self::once())->method('process')->with('payout-1')->willReturn(false);
+        $this->payouts->expects(self::once())->method('process')->with('tenant-1', 'payout-1')->willReturn(false);
 
         $tester = new CommandTester(new VendorPayoutProcessCommand($this->payouts));
         $exitCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             'payoutId' => 'payout-1',
             '--json' => true,
         ]);

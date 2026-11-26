@@ -25,7 +25,7 @@ interface VendorPayoutAccountRepositoryInterface
 
     public function save(object $entity, bool $flush = false): void;
 
-    public function get(string $vendorId): ?VendorPayoutAccountEntity;
+    public function get(string $tenantId, string $vendorId): ?VendorPayoutAccountEntity;
 
     public function upsert(VendorPayoutAccountEntity $account): VendorPayoutAccountEntity;
 }

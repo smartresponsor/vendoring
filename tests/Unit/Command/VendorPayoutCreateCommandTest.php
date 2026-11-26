@@ -28,7 +28,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
         $ledgerService = new VendorLedgerService($ledgerRepository);
         $metrics = new VendorMetricEmitterService();
 
-        $ledgerRepository->insert(new VendorLedgerEntity('vendor-1', 'invoice', 'inv-1', 'VENDOR_PAYABLE', 'REVENUE', 25.0, 'USD', '2026-03-20 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntity('tenant-1', 'vendor-1', 'invoice', 'inv-1', 'VENDOR_PAYABLE', 'REVENUE', 25.0, 'USD', '2026-03-20 10:00:00'));
 
         $command = new VendorPayoutCreateCommand(
             new VendorPayoutRequestService(),
@@ -38,6 +38,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $exitCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             '--vendorId' => 'vendor-1',
             '--currency' => 'USD',
             '--thresholdCents' => '1000',
@@ -57,7 +58,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
         $ledgerService = new VendorLedgerService($ledgerRepository);
         $metrics = new VendorMetricEmitterService();
 
-        $ledgerRepository->insert(new VendorLedgerEntity('vendor-1', 'invoice', 'inv-1', 'VENDOR_PAYABLE', 'REVENUE', 2.5, 'USD', '2026-03-20 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntity('tenant-1', 'vendor-1', 'invoice', 'inv-1', 'VENDOR_PAYABLE', 'REVENUE', 2.5, 'USD', '2026-03-20 10:00:00'));
 
         $command = new VendorPayoutCreateCommand(
             new VendorPayoutRequestService(),
@@ -67,6 +68,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $exitCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             '--vendorId' => 'vendor-1',
             '--currency' => 'USD',
             '--thresholdCents' => '1000',
@@ -92,6 +94,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $exitCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             '--currency' => 'USD',
             '--thresholdCents' => '1000',
             '--retentionFeePercent' => '0.1',
@@ -108,7 +111,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
         $ledgerService = new VendorLedgerService($ledgerRepository);
         $metrics = new VendorMetricEmitterService();
 
-        $ledgerRepository->insert(new VendorLedgerEntity('vendor-1', 'invoice', 'inv-1', 'VENDOR_PAYABLE', 'REVENUE', 20.0, 'USD', '2026-03-20 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntity('tenant-1', 'vendor-1', 'invoice', 'inv-1', 'VENDOR_PAYABLE', 'REVENUE', 20.0, 'USD', '2026-03-20 10:00:00'));
 
         $command = new VendorPayoutCreateCommand(
             new VendorPayoutRequestService(),
@@ -118,6 +121,7 @@ final class VendorPayoutCreateCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $exitCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             '--vendorId' => 'vendor-1',
             '--currency' => 'USD',
             '--thresholdCents' => '1000',

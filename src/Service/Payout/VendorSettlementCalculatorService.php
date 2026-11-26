@@ -20,9 +20,10 @@ final readonly class VendorSettlementCalculatorService implements VendorSettleme
      *
      * @throws Exception
      */
-    public function netForPeriod(string $vendorId, string $from, string $to, string $currency): float
+    public function netForPeriod(string $tenantId, string $vendorId, string $from, string $to, string $currency): float
     {
         return max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
+            tenantId: $tenantId,
             vendorId: $vendorId,
             accountCode: 'VENDOR_PAYABLE',
             from: $from,

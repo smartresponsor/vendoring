@@ -26,9 +26,9 @@ final class VendorPayoutServiceTest extends TestCase
         $ledgerService = new VendorLedgerService($ledgerRepository);
         $metrics = new VendorMetricEmitterService();
         $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger());
-        $ledgerRepository->insert(new VendorLedgerEntity('vendor-1', 'invoice', 'inv-1', 'VENDOR_PAYABLE', 'REVENUE', 5.0, 'USD', '2026-03-10 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntity('tenant-1', 'vendor-1', 'invoice', 'inv-1', 'VENDOR_PAYABLE', 'REVENUE', 5.0, 'USD', '2026-03-10 10:00:00'));
 
-        $result = $service->create(new VendorCreatePayoutDTO('vendor-1', 'USD', 1000, 0.05));
+        $result = $service->create(new VendorCreatePayoutDTO('tenant-1', 'vendor-1', 'USD', 1000, 0.05));
 
         self::assertNull($result);
         self::assertSame([], $payoutRepository->all());
@@ -42,12 +42,12 @@ final class VendorPayoutServiceTest extends TestCase
         $ledgerService = new VendorLedgerService($ledgerRepository);
         $metrics = new VendorMetricEmitterService();
         $service = new VendorPayoutService($payoutRepository, $ledgerRepository, $ledgerService, $metrics, $this->runtimeLogger());
-        $ledgerRepository->insert(new VendorLedgerEntity('vendor-1', 'invoice', 'inv-1', 'VENDOR_PAYABLE', 'REVENUE', 15.0, 'USD', '2026-03-10 10:00:00'));
+        $ledgerRepository->insert(new VendorLedgerEntity('tenant-1', 'vendor-1', 'invoice', 'inv-1', 'VENDOR_PAYABLE', 'REVENUE', 15.0, 'USD', '2026-03-10 10:00:00'));
 
-        $payoutId = $service->create(new VendorCreatePayoutDTO('vendor-1', 'USD', 1000, 0.10));
+        $payoutId = $service->create(new VendorCreatePayoutDTO('tenant-1', 'vendor-1', 'USD', 1000, 0.10));
 
         self::assertNotNull($payoutId);
-        $payout = $payoutRepository->byId($payoutId);
+        $payout = $payoutRepository->byId('tenant-1', $payoutId);
         self::assertNotNull($payout);
         self::assertSame(1500, $payout->grossCents);
         self::assertSame(150, $payout->feeCents);
@@ -60,25 +60,22 @@ final class VendorPayoutServiceTest extends TestCase
         self::assertSame('VENDOR_PAYABLE', $entriesAfterCreate[1]->creditAccount);
         self::assertSame(13.5, $entriesAfterCreate[1]->amount);
 
-        self::assertTrue($service->process($payoutId));
+        self::assertNull($payoutRepository->byId('tenant-2', $payoutId));
+        self::assertFalse($service->process('tenant-2', $payoutId));
+        try {
+            $service->process('tenant-1', $payoutId);
+            self::fail('Payout must not be marked processed without a real provider.');
+        } catch (\App\Vendoring\Exception\Payout\VendorPayoutProviderNotConfiguredException $exception) {
+            self::assertStringContainsString('not configured', $exception->getMessage());
+        }
 
-        $processedPayout = $payoutRepository->byId($payoutId);
-        self::assertNotNull($processedPayout);
-        self::assertSame('processed', $processedPayout->status);
-        self::assertNotNull($processedPayout->processedAt);
-
-        $entriesAfterProcess = $ledgerRepository->all();
-        self::assertCount(4, $entriesAfterProcess);
-        self::assertSame('payout_processed', $entriesAfterProcess[2]->debitAccount);
-        self::assertSame(13.5, $entriesAfterProcess[2]->amount);
-        self::assertSame('payout_fee', $entriesAfterProcess[3]->debitAccount);
-        self::assertSame(1.5, $entriesAfterProcess[3]->amount);
-
+        $stillPending = $payoutRepository->byId('tenant-1', $payoutId);
+        self::assertNotNull($stillPending);
+        self::assertSame('pending', $stillPending->status);
+        self::assertNull($stillPending->processedAt);
+        self::assertCount(2, $ledgerRepository->all());
         self::assertSame(
-            [
-                ['name' => 'payout_created_total', 'tags' => ['currency' => 'USD']],
-                ['name' => 'payout_processed_total', 'tags' => ['currency' => 'USD']],
-            ],
+            [['name' => 'payout_created_total', 'tags' => ['currency' => 'USD']]],
             $metrics->snapshot(),
         );
     }

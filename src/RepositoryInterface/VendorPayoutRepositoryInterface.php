@@ -10,7 +10,7 @@ interface VendorPayoutRepositoryInterface
 {
     public function find(mixed $id): ?VendorPayoutEntity;
 
-    public function byId(mixed $id): ?VendorPayoutEntity;
+    public function byId(string $tenantId, mixed $id): ?VendorPayoutEntity;
 
     /** @param array<string,mixed> $criteria */
     public function findOneBy(array $criteria): ?VendorPayoutEntity;
@@ -28,8 +28,8 @@ interface VendorPayoutRepositoryInterface
     public function insert(VendorPayoutEntity $payout): void;
 
     /** @param array<string, mixed> $meta */
-    public function markProcessed(string $id, string $processedAt, array $meta = []): void;
+    public function markProcessed(string $tenantId, string $id, string $processedAt, array $meta = []): void;
 
     /** @param array<string, mixed> $meta */
-    public function markFailed(string $id, string $processedAt, array $meta = []): void;
+    public function markFailed(string $tenantId, string $id, string $processedAt, array $meta = []): void;
 }

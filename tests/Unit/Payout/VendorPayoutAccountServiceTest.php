@@ -25,6 +25,7 @@ final class VendorPayoutAccountServiceTest extends TestCase
             ->expects(self::once())
             ->method('upsert')
             ->with(self::callback(function (VendorPayoutAccountEntity $account): bool {
+                self::assertSame('tenant-1', $account->tenantId);
                 self::assertSame('vendor-1', $account->vendorId);
                 self::assertSame('bank', $account->provider);
                 self::assertSame('iban-123', $account->accountRef);
@@ -32,10 +33,11 @@ final class VendorPayoutAccountServiceTest extends TestCase
                 self::assertFalse($account->active);
 
                 return true;
-            }));
+            }))->willReturnArgument(0);
 
         $service = new VendorPayoutAccountService($this->accounts);
         $account = $service->upsertFromPayload([
+            'tenantId' => 'tenant-1',
             'vendorId' => ' vendor-1 ',
             'provider' => ' bank ',
             'accountRef' => ' iban-123 ',
@@ -60,6 +62,7 @@ final class VendorPayoutAccountServiceTest extends TestCase
         $this->expectExceptionMessage('accountRef required');
 
         $service->upsertFromPayload([
+            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'provider' => 'bank',
             'accountRef' => '   ',

@@ -53,14 +53,22 @@ final class VendorPayoutAccountRepository extends ServiceEntityRepository implem
         return parent::findOneBy($criteria, $orderBy);
     }
 
-    public function get(string $vendorId): ?VendorPayoutAccountEntity
+    public function get(string $tenantId, string $vendorId): ?VendorPayoutAccountEntity
     {
-        return $this->findOneBy(['vendorId' => $vendorId]);
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
+        $account = $this->findOneBy(['tenantId' => $tenantId, 'vendorId' => $vendorId]);
+
+        return $account instanceof VendorPayoutAccountEntity ? $account : null;
     }
 
     public function upsert(VendorPayoutAccountEntity $account): VendorPayoutAccountEntity
     {
-        $existing = $this->findOneBy(['vendorId' => $account->vendorId]);
+        if (null === $account->tenantId || '' === trim($account->tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
+        $existing = $this->get($account->tenantId, $account->vendorId);
 
         if ($existing instanceof VendorPayoutAccountEntity && $existing !== $account) {
             $existing->provider = $account->provider;

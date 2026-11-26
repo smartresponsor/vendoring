@@ -24,7 +24,7 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
      */
     public function upsertFromPayload(array $payload): VendorPayoutAccountEntity
     {
-        foreach (['vendorId', 'provider', 'accountRef', 'currency'] as $field) {
+        foreach (['tenantId', 'vendorId', 'provider', 'accountRef', 'currency'] as $field) {
             if (!isset($payload[$field])) {
                 throw new \InvalidArgumentException(sprintf('%s required', $field));
             }
@@ -32,6 +32,7 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
 
         $account = new VendorPayoutAccountEntity(
             Uuid::v4()->toRfc4122(),
+            $this->requiredString($payload, 'tenantId'),
             $this->requiredString($payload, 'vendorId'),
             $this->requiredString($payload, 'provider'),
             $this->requiredString($payload, 'accountRef'),
@@ -39,9 +40,7 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
             $this->boolValue($payload['active'] ?? true),
         );
 
-        $this->accounts->upsert($account);
-
-        return $account;
+        return $this->accounts->upsert($account);
     }
 
     /** @param array<string, mixed> $payload */
