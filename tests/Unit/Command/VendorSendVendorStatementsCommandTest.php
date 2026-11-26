@@ -26,7 +26,7 @@ final class VendorSendVendorStatementsCommandTest extends TestCase
             new FakeStatementExporterPdf($pdf),
             new FakeVendorStatementMailerService(true, 'sent'),
             new FakeVendorStatementRecipientProvider([
-                new VendorStatementRecipientDTO('vendor-a', 'vendor@example.com', 'USD'),
+                new VendorStatementRecipientDTO('tenant-1', 'vendor-a', 'vendor@example.com', 'USD'),
             ]),
         );
 
@@ -55,6 +55,7 @@ final class VendorSendVendorStatementsCommandTest extends TestCase
 
         $tester = new CommandTester($command);
         $status = $tester->execute([
+            '--tenant-id' => 'tenant-1',
             '--vendor-id' => 'vendor-cli',
             '--email' => 'cli@example.com',
             '--currency' => 'EUR',

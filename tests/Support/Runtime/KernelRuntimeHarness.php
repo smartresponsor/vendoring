@@ -7,6 +7,8 @@ namespace App\Vendoring\Tests\Support\Runtime;
 
 use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
 use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorLedgerBindingEntity;
+use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
 use App\Vendoring\Kernel;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -177,6 +179,26 @@ final class KernelRuntimeHarness
         $entityManager->flush();
 
         return $plainToken;
+    }
+
+    public static function seedFinancialApiKey(KernelInterface $kernel, string $tenantId, string $ledgerVendorId, string $permissions): string
+    {
+        $em = self::entityManager($kernel);
+        $vendor = self::seedActiveVendor($kernel);
+        $token = bin2hex(random_bytes(16));
+        $em->persist(new VendorLedgerBindingEntity($vendor, $tenantId, $ledgerVendorId));
+        $em->persist(new VendorApiKeyEntity($vendor, hash('sha256', $token), $permissions));
+        $em->flush();
+
+        return $token;
+    }
+
+    public static function seedFinancialLedgerEntry(KernelInterface $kernel, string $tenantId, string $ledgerVendorId, float $amount, string $date): void
+    {
+        $em = self::entityManager($kernel);
+        $em->persist(new VendorLedgerEntity($tenantId, $ledgerVendorId, 'invoice', 'shared-reference', 'REVENUE', 'CASH', $amount, 'USD', $date));
+        $em->flush();
+        $em->clear();
     }
 
     public static function seedActiveVendor(KernelInterface $kernel, ?string $nameEntity = null): VendorEntity

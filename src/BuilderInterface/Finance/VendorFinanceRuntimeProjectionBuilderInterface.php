@@ -11,6 +11,7 @@ interface VendorFinanceRuntimeProjectionBuilderInterface
 {
     /** @throws Exception */
     public function build(
+        string $tenantId,
         string $vendorId,
         ?string $from = null,
         ?string $to = null,

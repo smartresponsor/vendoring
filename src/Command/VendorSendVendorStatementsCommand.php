@@ -48,6 +48,7 @@ final class VendorSendVendorStatementsCommand extends Command
     {
         parent::configure();
         $this
+            ->addOption('tenant-id', null, InputOption::VALUE_REQUIRED)
             ->addOption('vendor-id', null, InputOption::VALUE_REQUIRED)
             ->addOption('email', null, InputOption::VALUE_REQUIRED)
             ->addOption('currency', null, InputOption::VALUE_REQUIRED, 'Statement currency', 'USD')
@@ -99,7 +100,7 @@ final class VendorSendVendorStatementsCommand extends Command
 
         foreach ($recipients as $recipient) {
             try {
-                $dto = new VendorStatementRequestDTO($recipient->vendorId, $from, $to, $recipient->currency);
+                $dto = new VendorStatementRequestDTO($recipient->tenantId, $recipient->vendorId, $from, $to, $recipient->currency);
                 $data = $this->svc->build($dto);
                 $pdfPath = $this->pdf->export($dto, $data);
                 $result = $this->mailer->send($recipient->vendorId, $recipient->email, $pdfPath, $period);
@@ -164,16 +165,17 @@ final class VendorSendVendorStatementsCommand extends Command
     /** @return list<VendorStatementRecipientDTO> */
     private function resolveRecipients(InputInterface $input, string $from, string $to): array
     {
+        $tenantId = trim($this->stringOption($input, 'tenant-id'));
         $vendorId = trim($this->stringOption($input, 'vendor-id'));
         $email = trim($this->stringOption($input, 'email'));
         $currency = strtoupper(trim($this->stringOption($input, 'currency')));
 
-        if ('' !== $vendorId || '' !== $email) {
-            if ('' === $vendorId || '' === $email) {
-                return [];
+        if ('' !== $tenantId || '' !== $vendorId || '' !== $email) {
+            if ('' === $tenantId || '' === $vendorId || '' === $email) {
+                throw new \InvalidArgumentException('Explicit recipient requires tenant-id, vendor-id and email');
             }
 
-            return [new VendorStatementRecipientDTO($vendorId, $email, '' !== $currency ? $currency : 'USD')];
+            return [new VendorStatementRecipientDTO($tenantId, $vendorId, $email, '' !== $currency ? $currency : 'USD')];
         }
 
         return $this->recipientProvider->forPeriod($from, $to);

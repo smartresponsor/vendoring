@@ -32,11 +32,15 @@ final readonly class VendorFinanceRuntimeProjectionBuilder implements VendorFina
      * @throws Exception
      */
     public function build(
+        string $tenantId,
         string $vendorId,
         ?string $from = null,
         ?string $to = null,
         string $currency = 'USD',
     ): VendorFinanceRuntimeProjection {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
         $ownership = null;
         if (ctype_digit($vendorId)) {
             $ownershipProjection = $this->ownershipProjectionBuilder->buildForVendorId((int) $vendorId);
@@ -44,13 +48,14 @@ final readonly class VendorFinanceRuntimeProjectionBuilder implements VendorFina
         }
 
         $metricOverview = $this->metricService->overview(new VendorMetricOverviewRequestDTO(
+            tenantId: $tenantId,
             vendorId: $vendorId,
             from: $from,
             to: $to,
             currency: $currency,
         ));
 
-        $payoutAccountEntity = $this->payoutAccountRepository->get($vendorId);
+        $payoutAccountEntity = $this->payoutAccountRepository->get($tenantId, $vendorId);
         $payoutAccount = null;
         if (null !== $payoutAccountEntity) {
             $payoutAccount = [
@@ -65,7 +70,7 @@ final readonly class VendorFinanceRuntimeProjectionBuilder implements VendorFina
         $statement = null;
         if (null !== $from && null !== $to && '' !== $from && '' !== $to) {
             $statement = $this->statementService->build(
-                new VendorStatementRequestDTO($vendorId, $from, $to, $currency),
+                new VendorStatementRequestDTO($tenantId, $vendorId, $from, $to, $currency),
             );
         }
 

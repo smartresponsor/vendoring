@@ -67,8 +67,8 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
             return true;
         }))
             ->willReturn($metricOverview);
-        $this->accounts->expects(self::once())->method('get')->with('101')
-            ->willReturn(new VendorPayoutAccountEntity('acc-1', '101', 'bank', 'iban-123', 'USD', true, '2026-03-01 10:00:00'));
+        $this->accounts->expects(self::once())->method('get')->with('tenant-1', '101')
+            ->willReturn(new VendorPayoutAccountEntity('acc-1', 'tenant-1', '101', 'bank', 'iban-123', 'USD', true, '2026-03-01 10:00:00'));
         $this->statements->expects(self::once())->method('build')->with(self::callback(function (VendorStatementRequestDTO $dto): bool {
             self::assertSame('101', $dto->vendorId);
             self::assertSame('2026-03-01', $dto->from);
@@ -83,7 +83,7 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
             $this->metrics,
             $this->accounts,
             $this->statements,
-        ))->build('101', '2026-03-01', '2026-03-31', 'USD')->toArray();
+        ))->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')->toArray();
 
         self::assertSame('101', $view['vendorId']);
         self::assertSame('USD', $view['currency']);
@@ -119,7 +119,7 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
             return true;
         }))
             ->willReturn($metricOverview);
-        $this->accounts->expects(self::once())->method('get')->with('vendor-alpha')->willReturn(null);
+        $this->accounts->expects(self::once())->method('get')->with('tenant-1', 'vendor-alpha')->willReturn(null);
         $this->statements->expects(self::never())->method('build');
 
         $view = (new VendorFinanceRuntimeProjectionBuilder(
@@ -127,7 +127,7 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
             $this->metrics,
             $this->accounts,
             $this->statements,
-        ))->build('vendor-alpha', null, null, 'EUR')->toArray();
+        ))->build('tenant-1', 'vendor-alpha', null, null, 'EUR')->toArray();
 
         self::assertNull($view['ownership']);
         self::assertSame($metricOverview, $view['metricOverview']);

@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 final readonly class VendorRuntimeWindowInputDTO
 {
     public function __construct(
+        public string $tenantId,
         public string $vendorId,
         public ?string $from,
         public ?string $to,
@@ -19,6 +20,7 @@ final readonly class VendorRuntimeWindowInputDTO
 
     public static function fromInput(InputInterface $input): self
     {
+        $tenantIdOption = $input->getOption('tenantId');
         $vendorIdOption = $input->getOption('vendorId');
         $fromOption = $input->getOption('from');
         $toOption = $input->getOption('to');
@@ -26,6 +28,7 @@ final readonly class VendorRuntimeWindowInputDTO
         $formatOption = $input->getOption('format');
 
         return new self(
+            tenantId: \is_string($tenantIdOption) ? trim($tenantIdOption) : '',
             vendorId: \is_scalar($vendorIdOption) ? (string) $vendorIdOption : '',
             from: \is_string($fromOption) ? $fromOption : null,
             to: \is_string($toOption) ? $toOption : null,
@@ -36,6 +39,6 @@ final readonly class VendorRuntimeWindowInputDTO
 
     public function hasRequiredScope(): bool
     {
-        return '' !== $this->vendorId;
+        return '' !== $this->tenantId && '' !== trim($this->vendorId);
     }
 }

@@ -36,7 +36,7 @@ final class VendorRuntimeFinanceConsistencyTest extends TestCase
     {
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(101)
             ->willReturn(new VendorOwnershipProjection(101, 5001, []));
-        $this->finance->expects(self::once())->method('build')->with('101', '2026-03-01', '2026-03-31', 'USD')
+        $this->finance->expects(self::once())->method('build')->with('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')
             ->willReturn(new VendorFinanceRuntimeProjection(
                 vendorId: '101',
                 currency: 'USD',
@@ -46,6 +46,7 @@ final class VendorRuntimeFinanceConsistencyTest extends TestCase
                 statement: null,
             ));
         $this->statementDelivery->expects(self::once())->method('build')->with(self::callback(function (VendorStatementDeliveryRuntimeRequestDTO $dto): bool {
+            self::assertSame('tenant-1', $dto->tenantId);
             self::assertSame('101', $dto->vendorId);
             self::assertSame('2026-03-01', $dto->from);
             self::assertSame('2026-03-31', $dto->to);
@@ -76,7 +77,7 @@ final class VendorRuntimeFinanceConsistencyTest extends TestCase
             $this->finance,
             $this->statementDelivery,
             $this->externalIntegration,
-        ))->build('101', '2026-03-01', '2026-03-31', 'USD')->toArray();
+        ))->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')->toArray();
 
         self::assertSame(['revenue' => 100.0, 'refunds' => 10.0, 'payouts' => 0.0, 'balance' => 90.0], $payload['finance']['metricOverview']);
         self::assertNull($payload['finance']['payoutAccount']);

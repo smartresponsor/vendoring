@@ -7,12 +7,13 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Runtime\Status;
 
 use App\Vendoring\BuilderInterface\Ops\VendorRuntimeStatusProjectionBuilderInterface;
+use App\Vendoring\ResolverInterface\Security\VendorFinancialScopeResolverInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 final readonly class VendorRuntimeStatusShowService
 {
-    public function __construct(private VendorRuntimeStatusProjectionBuilderInterface $runtimeStatusProjectionBuilder)
+    public function __construct(private VendorRuntimeStatusProjectionBuilderInterface $runtimeStatusProjectionBuilder, private VendorFinancialScopeResolverInterface $financialScope)
     {
     }
 
@@ -27,8 +28,18 @@ final readonly class VendorRuntimeStatusShowService
             return new JsonResponse(['error' => 'vendor_identifier_required'], 422);
         }
 
+        $scope = $this->financialScope->resolve($request, 'read:finance', $vendorId);
+        if (null === $scope || null === $scope->getTenantId()) {
+            return new JsonResponse(['error' => 'financial_scope_denied'], 403);
+        }
+
+        if (ctype_digit($scope->getLedgerVendorId()) && $scope->getLedgerVendorId() !== (string) $scope->getVendor()->getId()) {
+            return new JsonResponse(['error' => 'financial_identity_mismatch'], 403);
+        }
+
         $projection = $this->runtimeStatusProjectionBuilder->build(
-            vendorId: $vendorId,
+            tenantId: $scope->getTenantId(),
+            vendorId: $scope->getLedgerVendorId(),
             from: $request->query->get('from'),
             to: $request->query->get('to'),
             currency: (string) $request->query->get('currency', 'USD'),

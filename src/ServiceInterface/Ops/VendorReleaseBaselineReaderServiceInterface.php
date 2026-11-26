@@ -9,6 +9,7 @@ use App\Vendoring\Projection\VendorReleaseBaselineProjection;
 interface VendorReleaseBaselineReaderServiceInterface
 {
     public function build(
+        string $tenantId,
         string $vendorId,
         ?string $from = null,
         ?string $to = null,

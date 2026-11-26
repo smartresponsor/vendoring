@@ -248,6 +248,7 @@ services:
   App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPdfServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementExporterPdfService'
   App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementMailerService'
   App\Vendoring\ProviderInterface\Statement\VendorStatementRecipientProviderInterface: '@App\Vendoring\Provider\Statement\VendorStatementRecipientProvider'
+  App\Vendoring\ResolverInterface\Security\VendorFinancialScopeResolverInterface: '@App\Vendoring\Resolver\Security\VendorFinancialScopeResolver'
   App\Vendoring\ResolverInterface\Statement\VendorStatementRequestResolverInterface: '@App\Vendoring\Resolver\Statement\VendorStatementRequestResolver'
   App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface: '@App\Vendoring\Service\Statement\VendorStatementService'
   App\Vendoring\ServiceInterface\WebhooksConsumer\VendorWebhooksConsumerServiceInterface: '@App\Vendoring\Service\WebhooksConsumer\VendorNullWebhooksConsumerService'

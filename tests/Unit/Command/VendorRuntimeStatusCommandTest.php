@@ -26,7 +26,7 @@ final class VendorRuntimeStatusCommandTest extends TestCase
         $this->runtimeStatusProjectionBuilder
             ->expects(self::once())
             ->method('build')
-            ->with('42', '2025-01-01', '2025-01-31', 'USD')
+            ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')
             ->willReturn(new VendorRuntimeStatusProjection(
                 vendorId: '42',
                 currency: 'USD',
@@ -45,6 +45,7 @@ final class VendorRuntimeStatusCommandTest extends TestCase
 
         $tester = new CommandTester(new VendorRuntimeStatusCommand($this->runtimeStatusProjectionBuilder));
         $statusCode = $tester->execute([
+            '--tenantId' => 'tenant-1',
             '--vendorId' => '42',
             '--from' => '2025-01-01',
             '--to' => '2025-01-31',

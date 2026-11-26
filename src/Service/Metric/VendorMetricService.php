@@ -20,6 +20,7 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
     public function overview(VendorMetricOverviewRequestDTO $request): array
     {
         $revenue = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
+            tenantId: $request->tenantId,
             vendorId: $request->vendorId,
             accountCode: 'REVENUE',
             from: $request->from,
@@ -27,6 +28,7 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
             currency: $request->currency,
         )));
         $refunds = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
+            tenantId: $request->tenantId,
             vendorId: $request->vendorId,
             accountCode: 'REFUNDS_PAYABLE',
             from: $request->from,
@@ -34,6 +36,7 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
             currency: $request->currency,
         )));
         $payouts = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
+            tenantId: $request->tenantId,
             vendorId: $request->vendorId,
             accountCode: 'VENDOR_PAYABLE',
             from: $request->from,
@@ -43,6 +46,7 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
         $balance = $revenue - $refunds - $payouts;
 
         return [
+            'tenantId' => $request->tenantId,
             'vendorId' => $request->vendorId,
             'from' => $request->from,
             'to' => $request->to,
@@ -57,6 +61,7 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
     public function trends(VendorMetricTrendRequestDTO $request): array
     {
         $overview = $this->overview(new VendorMetricOverviewRequestDTO(
+            tenantId: $request->tenantId,
             vendorId: $request->vendorId,
             from: $request->from,
             to: $request->to,
@@ -64,6 +69,7 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
         ));
 
         return [[
+            'tenantId' => $request->tenantId,
             'vendorId' => $request->vendorId,
             'from' => $request->from,
             'to' => $request->to,

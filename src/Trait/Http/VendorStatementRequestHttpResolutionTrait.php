@@ -11,6 +11,7 @@ use App\Vendoring\ResolverInterface\Api\VendorStatementWindowQueryRequestResolve
 use App\Vendoring\ResolverInterface\Statement\VendorStatementRequestResolverInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 trait VendorStatementRequestHttpResolutionTrait
 {
@@ -26,7 +27,11 @@ trait VendorStatementRequestHttpResolutionTrait
             return $this->validationErrorResponse($exception->errorCode(), $exception->hint());
         }
 
-        $dto = $requestResolver->resolveStatementRequest($vendorId, $request);
+        try {
+            $dto = $requestResolver->resolveStatementRequest($vendorId, $request);
+        } catch (AccessDeniedHttpException) {
+            return new JsonResponse(['error' => 'financial_scope_denied'], 403);
+        }
         if (null === $dto) {
             return $this->validationErrorResponse(
                 'statement_params_required',

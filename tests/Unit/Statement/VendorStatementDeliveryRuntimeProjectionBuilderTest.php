@@ -80,8 +80,8 @@ final class VendorStatementDeliveryRuntimeProjectionBuilderTest extends TestCase
             ->method('forPeriod')
             ->with('2026-03-01', '2026-03-31')
             ->willReturn([
-                new VendorStatementRecipientDTO('101', 'keep@example.com', 'USD'),
-                new VendorStatementRecipientDTO('999', 'skip-vendor@example.com', 'USD'),
+                new VendorStatementRecipientDTO('tenant-1', '101', 'keep@example.com', 'USD'),
+                new VendorStatementRecipientDTO('tenant-1', '999', 'skip-vendor@example.com', 'USD'),
             ]);
 
         $view = (new VendorStatementDeliveryRuntimeProjectionBuilder(
@@ -89,7 +89,7 @@ final class VendorStatementDeliveryRuntimeProjectionBuilderTest extends TestCase
             $this->statements,
             $this->exporter,
             $this->recipients,
-        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('101', '2026-03-01', '2026-03-31', 'USD', true))->toArray();
+        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', true))->toArray();
 
         self::assertSame('101', $view['vendorId']);
         self::assertSame('USD', $view['currency']);
@@ -134,7 +134,7 @@ final class VendorStatementDeliveryRuntimeProjectionBuilderTest extends TestCase
             $this->statements,
             $this->exporter,
             $this->recipients,
-        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('vendor-alpha', '2026-03-01', '2026-03-31', 'EUR', false))->toArray();
+        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('tenant-1', 'vendor-alpha', '2026-03-01', '2026-03-31', 'EUR', false))->toArray();
 
         self::assertNull($view['ownership']);
         self::assertNull($view['export']);

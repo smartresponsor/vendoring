@@ -24,7 +24,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
         $this->runtimeStatus
             ->expects(self::once())
             ->method('build')
-            ->with('101', '2026-03-01', '2026-03-31', 'USD')
+            ->with('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')
             ->willReturn(new VendorRuntimeStatusProjection(
                 vendorId: '101',
                 currency: 'USD',
@@ -42,7 +42,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
             ));
 
         $payload = (new VendorReleaseBaselineReaderService($this->runtimeStatus))
-            ->build('101', '2026-03-01', '2026-03-31', 'USD')
+            ->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')
             ->toArray();
 
         self::assertSame('warn', $payload['status']);
@@ -57,7 +57,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
         $this->runtimeStatus
             ->expects(self::once())
             ->method('build')
-            ->with('vendor-alpha', null, null, 'EUR')
+            ->with('tenant-1', 'vendor-alpha', null, null, 'EUR')
             ->willReturn(new VendorRuntimeStatusProjection(
                 vendorId: 'vendor-alpha',
                 currency: 'EUR',
@@ -75,7 +75,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
             ));
 
         $payload = (new VendorReleaseBaselineReaderService($this->runtimeStatus))
-            ->build('vendor-alpha', null, null, 'EUR')
+            ->build('tenant-1', 'vendor-alpha', null, null, 'EUR')
             ->toArray();
 
         self::assertSame('warn', $payload['status']);

@@ -32,6 +32,7 @@ final readonly class VendorStatementDeliveryRuntimeProjectionBuilder implements 
     public function build(VendorStatementDeliveryRuntimeRequestDTO $request): VendorStatementDeliveryRuntimeProjection
     {
         $dto = new VendorStatementRequestDTO(
+            $request->tenantId,
             $request->vendorId,
             $request->from,
             $request->to,
@@ -57,7 +58,7 @@ final readonly class VendorStatementDeliveryRuntimeProjectionBuilder implements 
 
         $recipients = [];
         foreach ($this->recipientProvider->forPeriod($request->from, $request->to) as $candidate) {
-            if ($candidate->vendorId !== $request->vendorId) {
+            if ($candidate->tenantId !== $request->tenantId || $candidate->vendorId !== $request->vendorId) {
                 continue;
             }
 

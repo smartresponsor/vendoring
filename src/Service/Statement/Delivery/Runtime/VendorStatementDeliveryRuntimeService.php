@@ -12,6 +12,7 @@ use App\Vendoring\ResolverInterface\Statement\VendorStatementRequestResolverInte
 use App\Vendoring\Trait\Http\VendorApiErrorResponseTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final class VendorStatementDeliveryRuntimeService
 {
@@ -32,7 +33,11 @@ final class VendorStatementDeliveryRuntimeService
             return $this->validationErrorResponse($exception->errorCode(), $exception->hint());
         }
 
-        $runtimeRequest = $this->requestResolver->resolveDeliveryRuntimeRequest($vendorId, $request);
+        try {
+            $runtimeRequest = $this->requestResolver->resolveDeliveryRuntimeRequest($vendorId, $request);
+        } catch (AccessDeniedHttpException) {
+            return new JsonResponse(['error' => 'financial_scope_denied'], 403);
+        }
         if (null === $runtimeRequest) {
             return $this->validationErrorResponse(
                 'statement_runtime_params_required',

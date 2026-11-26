@@ -9,6 +9,7 @@ use App\Vendoring\Projection\VendorRuntimeStatusProjection;
 interface VendorRuntimeStatusProjectionBuilderInterface
 {
     public function build(
+        string $tenantId,
         string $vendorId,
         ?string $from = null,
         ?string $to = null,

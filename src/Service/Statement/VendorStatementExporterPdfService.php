@@ -14,13 +14,14 @@ final class VendorStatementExporterPdfService implements VendorStatementExporter
     {
         $fromTs = $this->safeTimestamp($dto->from);
         $toTs = $this->safeTimestamp($dto->to);
-        $dir = sprintf('var/statements/%s/%s/%s', date('Y', $fromTs), date('m', $fromTs), $dto->vendorId);
+        $dir = sprintf('var/statements/%s/%s/%s/%s', date('Y', $fromTs), date('m', $fromTs), hash('sha256', $dto->tenantId), hash('sha256', $dto->vendorId));
 
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
+        if (!is_dir($dir) && !mkdir($dir, 0700, true) && !is_dir($dir)) {
+            throw new \RuntimeException('Unable to create statement directory.');
         }
 
-        $file = $dir.'/statement_'.date('Ymd', $fromTs).'_'.date('Ymd', $toTs).'.pdf';
+        // Each request gets a unique path so concurrent exports cannot overwrite each other.
+        $file = $dir.'/statement_'.date('Ymd', $fromTs).'_'.date('Ymd', $toTs).'_'.bin2hex(random_bytes(16)).'.pdf';
         $text = sprintf(
             "Vendor Statement\nVendor: %s\nPeriod: %s .. %s\nCurrency: %s\n---\nOpening: %.2f\nEarnings: %.2f\nRefunds: %.2f\nFees: %.2f\nClosing: %.2f\n",
             $dto->vendorId,
@@ -59,7 +60,20 @@ final class VendorStatementExporterPdfService implements VendorStatementExporter
         $xrefPos = strlen($content);
         $content .= "xref\n0 6\n0000000000 65535 f \n";
         $content .= "trailer<</Size 6/Root 1 0 R>>\nstartxref\n$xrefPos\n%%EOF";
-        file_put_contents($path, $content);
+        $handle = fopen($path, 'x');
+        if (false === $handle) {
+            throw new \RuntimeException('Unable to create statement export.');
+        }
+        try {
+            if (!chmod($path, 0600) || fwrite($handle, $content) !== strlen($content)) {
+                throw new \RuntimeException('Unable to write statement export.');
+            }
+        } catch (\Throwable $error) {
+            fclose($handle);
+            @unlink($path);
+            throw $error;
+        }
+        fclose($handle);
     }
 
     private function escape(string $s): string

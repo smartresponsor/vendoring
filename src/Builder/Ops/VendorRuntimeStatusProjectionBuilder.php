@@ -29,24 +29,30 @@ final readonly class VendorRuntimeStatusProjectionBuilder implements VendorRunti
 
     /** @throws Exception */
     public function build(
+        string $tenantId,
         string $vendorId,
         ?string $from = null,
         ?string $to = null,
         string $currency = 'USD',
     ): VendorRuntimeStatusProjection {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
         $ownership = null;
         if (ctype_digit($vendorId)) {
             $ownership = $this->ownershipProjectionBuilder->buildForVendorId((int) $vendorId)?->toArray();
         }
 
         $finance = $this->financeRuntimeProjectionBuilder->build(
+            tenantId: $tenantId,
             vendorId: $vendorId,
-            from: $from ?? '',
-            to: $to ?? '',
+            from: $from,
+            to: $to,
             currency: $currency,
         )->toArray();
 
         $statementDelivery = $this->statementDeliveryRuntimeProjectionBuilder->build(new VendorStatementDeliveryRuntimeRequestDTO(
+            tenantId: $tenantId,
             vendorId: $vendorId,
             from: $from ?? '',
             to: $to ?? '',

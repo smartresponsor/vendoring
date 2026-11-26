@@ -6,12 +6,18 @@ namespace App\Vendoring\Resolver\Statement;
 
 use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
+use App\Vendoring\ResolverInterface\Security\VendorFinancialScopeResolverInterface;
 use App\Vendoring\ResolverInterface\Statement\VendorStatementRequestResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final readonly class VendorStatementRequestResolver implements VendorStatementRequestResolverInterface
 {
     private const string DEFAULT_CURRENCY = 'USD';
+
+    public function __construct(private VendorFinancialScopeResolverInterface $financialScope)
+    {
+    }
 
     public function resolveStatementRequest(string $vendorId, Request $request): ?VendorStatementRequestDTO
     {
@@ -22,8 +28,17 @@ final readonly class VendorStatementRequestResolver implements VendorStatementRe
             return null;
         }
 
+        $scope = $this->financialScope->resolve($request, 'read:finance', $vendorId);
+        if (null === $scope || null === $scope->getTenantId()) {
+            throw new AccessDeniedHttpException('financial_scope_denied');
+        }
+        if (ctype_digit($scope->getLedgerVendorId()) && $scope->getLedgerVendorId() !== (string) $scope->getVendor()->getId()) {
+            throw new AccessDeniedHttpException('financial_identity_mismatch');
+        }
+
         return new VendorStatementRequestDTO(
-            $vendorId,
+            $scope->getTenantId(),
+            $scope->getLedgerVendorId(),
             $from,
             $to,
             $this->resolveCurrency($request),
@@ -38,6 +53,7 @@ final readonly class VendorStatementRequestResolver implements VendorStatementRe
         }
 
         return new VendorStatementDeliveryRuntimeRequestDTO(
+            tenantId: $statementRequest->tenantId,
             vendorId: $statementRequest->vendorId,
             from: $statementRequest->from,
             to: $statementRequest->to,

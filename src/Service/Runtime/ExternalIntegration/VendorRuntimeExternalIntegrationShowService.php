@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Runtime\ExternalIntegration;
 
 use App\Vendoring\BuilderInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderInterface;
+use App\Vendoring\ResolverInterface\Security\VendorFinancialScopeResolverInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,6 +15,7 @@ final readonly class VendorRuntimeExternalIntegrationShowService
 {
     public function __construct(
         private VendorExternalIntegrationRuntimeProjectionBuilderInterface $runtimeProjectionBuilder,
+        private VendorFinancialScopeResolverInterface $financialScope,
     ) {
     }
 
@@ -28,7 +30,12 @@ final readonly class VendorRuntimeExternalIntegrationShowService
             return $this->validationErrorResponse('vendor_identifier_required', 'Provide id, slug, item, or vendorId.');
         }
 
-        $projection = $this->runtimeProjectionBuilder->build($vendorId);
+        $scope = $this->financialScope->resolve($request, 'read:finance', $vendorId);
+        if (null === $scope || null === $scope->getTenantId() || (ctype_digit($scope->getLedgerVendorId()) && $scope->getLedgerVendorId() !== (string) $scope->getVendor()->getId())) {
+            return new JsonResponse(['error' => 'financial_scope_denied'], 403);
+        }
+
+        $projection = $this->runtimeProjectionBuilder->build($scope->getLedgerVendorId());
 
         return new JsonResponse(['data' => $projection->toArray()], 200);
     }

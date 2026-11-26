@@ -17,7 +17,7 @@ final readonly class VendorStatementService implements VendorStatementServiceInt
     }
 
     /**
-     * @return array{vendorId:string, from:string, to:string, currency:string, opening:float, earnings:float, refunds:float, fees:float, closing:float, items:list<array{type:string, amount:float, currency:string}>}
+     * @return array{tenantId:string, vendorId:string, from:string, to:string, currency:string, opening:float, earnings:float, refunds:float, fees:float, closing:float, items:list<array{type:string, amount:float, currency:string}>}
      *
      * @throws Exception
      */
@@ -25,6 +25,7 @@ final readonly class VendorStatementService implements VendorStatementServiceInt
     {
         $opening = 0.0;
         $earnings = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
+            tenantId: $dto->tenantId,
             vendorId: $dto->vendorId,
             accountCode: 'REVENUE',
             from: $dto->from,
@@ -32,6 +33,7 @@ final readonly class VendorStatementService implements VendorStatementServiceInt
             currency: $dto->currency,
         )));
         $refunds = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
+            tenantId: $dto->tenantId,
             vendorId: $dto->vendorId,
             accountCode: 'REFUNDS_PAYABLE',
             from: $dto->from,
@@ -47,6 +49,7 @@ final readonly class VendorStatementService implements VendorStatementServiceInt
         ];
 
         return [
+            'tenantId' => $dto->tenantId,
             'vendorId' => $dto->vendorId,
             'from' => $dto->from,
             'to' => $dto->to,
@@ -64,11 +67,15 @@ final readonly class VendorStatementService implements VendorStatementServiceInt
     public function exportCsv(VendorStatementRequestDTO $dto): string
     {
         $data = $this->build($dto);
-        $path = sys_get_temp_dir().'/statement_'.$dto->vendorId.'_'.date('YmdHis').'.csv';
+        $path = tempnam(sys_get_temp_dir(), 'vendoring_statement_');
+        if (false === $path) {
+            throw new \RuntimeException('Failed to allocate private statement CSV.');
+        }
         $stream = fopen($path, 'w');
 
         if (false === $stream) {
-            throw new \RuntimeException(sprintf('Failed to open csv stream: %s', $path));
+            @unlink($path);
+            throw new \RuntimeException('Failed to open private statement CSV.');
         }
 
         fputcsv($stream, ['Section', 'Amount', 'Currency']);

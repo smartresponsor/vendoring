@@ -27,6 +27,8 @@ final class VendorMetricServiceTest extends TestCase
             ->expects(self::exactly(3))
             ->method('sumByAccount')
             ->willReturnCallback(static function (VendorLedgerAccountSumCriteriaDTO $criteria): float {
+                self::assertSame('tenant-1', $criteria->tenantId);
+
                 return match ($criteria->accountCode) {
                     'REVENUE' => 120.0,
                     'REFUNDS_PAYABLE' => 15.0,
@@ -36,9 +38,10 @@ final class VendorMetricServiceTest extends TestCase
             });
 
         $payload = (new VendorMetricService($this->ledger))
-            ->overview(new VendorMetricOverviewRequestDTO('vendor-1', '2026-03-01', '2026-03-31', 'USD'));
+            ->overview(new VendorMetricOverviewRequestDTO('tenant-1', 'vendor-1', '2026-03-01', '2026-03-31', 'USD'));
 
         self::assertSame([
+            'tenantId' => 'tenant-1',
             'vendorId' => 'vendor-1',
             'from' => '2026-03-01',
             'to' => '2026-03-31',
@@ -58,7 +61,7 @@ final class VendorMetricServiceTest extends TestCase
             ->willReturnCallback(static fn (): float => -100.0);
 
         $payload = (new VendorMetricService($this->ledger))
-            ->overview(new VendorMetricOverviewRequestDTO('vendor-1'));
+            ->overview(new VendorMetricOverviewRequestDTO('tenant-1', 'vendor-1'));
 
         self::assertSame(0.0, $payload['revenue']);
         self::assertSame(0.0, $payload['refunds']);
@@ -72,6 +75,8 @@ final class VendorMetricServiceTest extends TestCase
             ->expects(self::exactly(3))
             ->method('sumByAccount')
             ->willReturnCallback(static function (VendorLedgerAccountSumCriteriaDTO $criteria): float {
+                self::assertSame('tenant-1', $criteria->tenantId);
+
                 return match ($criteria->accountCode) {
                     'REVENUE' => 200.0,
                     'REFUNDS_PAYABLE' => 50.0,
@@ -81,10 +86,11 @@ final class VendorMetricServiceTest extends TestCase
             });
 
         $payload = (new VendorMetricService($this->ledger))
-            ->trends(new VendorMetricTrendRequestDTO('vendor-1', '2026-01-01', '2026-03-31', 'quarter', 'EUR'));
+            ->trends(new VendorMetricTrendRequestDTO('tenant-1', 'vendor-1', '2026-01-01', '2026-03-31', 'quarter', 'EUR'));
 
         self::assertSame([
             [
+                'tenantId' => 'tenant-1',
                 'vendorId' => 'vendor-1',
                 'from' => '2026-01-01',
                 'to' => '2026-03-31',

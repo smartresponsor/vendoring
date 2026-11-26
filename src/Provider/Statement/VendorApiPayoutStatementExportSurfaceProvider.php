@@ -12,6 +12,7 @@ use App\Vendoring\ResolverInterface\Api\VendorStatementWindowQueryRequestResolve
 use App\Vendoring\ResolverInterface\Statement\VendorStatementRequestResolverInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPdfServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final readonly class VendorApiPayoutStatementExportSurfaceProvider implements CrudResourceProviderInterface
 {
@@ -41,7 +42,11 @@ final readonly class VendorApiPayoutStatementExportSurfaceProvider implements Cr
             return $this->errorContract($request, 'statement_vendor_required', 'Provide a vendor identifier in the route.', 422);
         }
 
-        $dto = $this->requestResolver->resolveStatementRequest((string) $vendorId, $httpRequest);
+        try {
+            $dto = $this->requestResolver->resolveStatementRequest((string) $vendorId, $httpRequest);
+        } catch (AccessDeniedHttpException) {
+            return $this->errorContract($request, 'financial_scope_denied', 'Finance access is not authorized.', 403);
+        }
         if (null === $dto) {
             return $this->errorContract(
                 $request,

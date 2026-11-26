@@ -48,6 +48,7 @@ final class VendorRuntimeStatusCommand extends Command
     {
         parent::configure();
         $this
+            ->addOption('tenantId', null, InputOption::VALUE_REQUIRED, 'Tenant ID')
             ->addOption('vendorId', null, InputOption::VALUE_REQUIRED, 'Vendor ID')
             ->addOption('from', null, InputOption::VALUE_OPTIONAL, 'Statement period start')
             ->addOption('to', null, InputOption::VALUE_OPTIONAL, 'Statement period end')
@@ -63,7 +64,7 @@ final class VendorRuntimeStatusCommand extends Command
         $runtimeInput = VendorRuntimeWindowInputDTO::fromInput($input);
 
         if (!$runtimeInput->hasRequiredScope()) {
-            $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'invalid', '--vendorId is required.', [
+            $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'invalid', 'Both --tenantId and --vendorId are required.', [
                 'vendorId' => $runtimeInput->vendorId,
             ]);
 
@@ -72,6 +73,7 @@ final class VendorRuntimeStatusCommand extends Command
 
         try {
             $projection = $this->runtimeStatusProjectionBuilder->build(
+                tenantId: $runtimeInput->tenantId,
                 vendorId: $runtimeInput->vendorId,
                 from: $runtimeInput->from,
                 to: $runtimeInput->to,

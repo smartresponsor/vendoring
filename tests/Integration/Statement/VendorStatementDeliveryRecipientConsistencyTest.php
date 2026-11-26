@@ -51,8 +51,8 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
         $this->exporter->expects(self::never())->method('export');
         $this->recipients->expects(self::once())->method('forPeriod')->with('2026-03-01', '2026-03-31')
             ->willReturn([
-                new VendorStatementRecipientDTO('202', 'skip-vendor-202@example.com', 'USD'),
-                new VendorStatementRecipientDTO('999', 'skip-vendor-999@example.com', 'USD'),
+                new VendorStatementRecipientDTO('tenant-1', '202', 'skip-vendor-202@example.com', 'USD'),
+                new VendorStatementRecipientDTO('tenant-1', '999', 'skip-vendor-999@example.com', 'USD'),
             ]);
 
         $payload = (new VendorStatementDeliveryRuntimeProjectionBuilder(
@@ -60,7 +60,7 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
             $this->statements,
             $this->exporter,
             $this->recipients,
-        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('101', '2026-03-01', '2026-03-31', 'USD', false))->toArray();
+        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', false))->toArray();
 
         self::assertSame([], $payload['recipients']);
         self::assertNull($payload['export']);
@@ -92,8 +92,8 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
         $this->exporter->expects(self::once())->method('export')->willReturn($pdf);
         $this->recipients->expects(self::once())->method('forPeriod')->with('2026-03-01', '2026-03-31')
             ->willReturn([
-                new VendorStatementRecipientDTO('101', 'billing@example.com', 'USD'),
-                new VendorStatementRecipientDTO('999', 'skip@example.com', 'USD'),
+                new VendorStatementRecipientDTO('tenant-1', '101', 'billing@example.com', 'USD'),
+                new VendorStatementRecipientDTO('tenant-1', '999', 'skip@example.com', 'USD'),
             ]);
 
         $payload = (new VendorStatementDeliveryRuntimeProjectionBuilder(
@@ -101,7 +101,7 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
             $this->statements,
             $this->exporter,
             $this->recipients,
-        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('101', '2026-03-01', '2026-03-31', 'USD', true))->toArray();
+        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', true))->toArray();
 
         self::assertSame([
             ['vendorId' => '101', 'email' => 'billing@example.com', 'currency' => 'USD'],

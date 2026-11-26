@@ -24,7 +24,7 @@ final class VendorReleaseBaselineReaderTest extends TestCase
         $this->runtimeStatusProjectionBuilder
             ->expects(self::once())
             ->method('build')
-            ->with('42', '2025-01-01', '2025-01-31', 'USD')
+            ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')
             ->willReturn(new VendorRuntimeStatusProjection(
                 vendorId: '42',
                 currency: 'USD',
@@ -41,7 +41,7 @@ final class VendorReleaseBaselineReaderTest extends TestCase
                 generatedAt: '2025-01-31T00:00:00+00:00',
             ));
 
-        $payload = $this->buildReader()->build('42', '2025-01-01', '2025-01-31', 'USD')->toArray();
+        $payload = $this->buildReader()->build('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')->toArray();
 
         self::assertSame('warn', $payload['status']);
         self::assertContains('surface.finance.missing', $payload['issues']);
@@ -69,7 +69,7 @@ final class VendorReleaseBaselineReaderTest extends TestCase
                 generatedAt: '2025-01-31T00:00:00+00:00',
             ));
 
-        $payload = $this->buildReader()->build('vendor-abc')->toArray();
+        $payload = $this->buildReader()->build('tenant-1', 'vendor-abc')->toArray();
 
         self::assertNull($payload['runtimeStatus']['ownership']);
         self::assertContains('surface.ownership.missing', $payload['issues']);

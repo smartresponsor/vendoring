@@ -20,12 +20,14 @@ final readonly class VendorReleaseBaselineReaderService implements VendorRelease
     }
 
     public function build(
+        string $tenantId,
         string $vendorId,
         ?string $from = null,
         ?string $to = null,
         string $currency = 'USD',
     ): VendorReleaseBaselineProjection {
         $runtimeStatus = $this->runtimeStatusProjectionBuilder->build(
+            tenantId: $tenantId,
             vendorId: $vendorId,
             from: $from,
             to: $to,
