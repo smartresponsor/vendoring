@@ -76,6 +76,7 @@ final readonly class VendorFinanceRuntimeProjectionBuilder implements VendorFina
         }
 
         return new VendorFinanceRuntimeProjection(
+            tenantId: $tenantId,
             vendorId: $vendorId,
             currency: $currency,
             ownership: $ownership,

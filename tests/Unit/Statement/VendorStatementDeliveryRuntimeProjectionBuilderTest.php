@@ -82,6 +82,7 @@ final class VendorStatementDeliveryRuntimeProjectionBuilderTest extends TestCase
             ->willReturn([
                 new VendorStatementRecipientDTO('tenant-1', '101', 'keep@example.com', 'USD'),
                 new VendorStatementRecipientDTO('tenant-1', '999', 'skip-vendor@example.com', 'USD'),
+                new VendorStatementRecipientDTO('tenant-2', '101', 'skip-tenant@example.com', 'USD'),
             ]);
 
         $view = (new VendorStatementDeliveryRuntimeProjectionBuilder(
@@ -91,6 +92,7 @@ final class VendorStatementDeliveryRuntimeProjectionBuilderTest extends TestCase
             $this->recipients,
         ))->build(new VendorStatementDeliveryRuntimeRequestDTO('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', true, 101))->toArray();
 
+        self::assertSame('tenant-1', $view['tenantId']);
         self::assertSame('101', $view['vendorId']);
         self::assertSame('USD', $view['currency']);
         self::assertIsArray($view['ownership']);
@@ -101,7 +103,7 @@ final class VendorStatementDeliveryRuntimeProjectionBuilderTest extends TestCase
         self::assertTrue($view['export']['exists']);
         self::assertTrue($view['export']['readable']);
         self::assertSame([
-            ['vendorId' => '101', 'email' => 'keep@example.com', 'currency' => 'USD'],
+            ['tenantId' => 'tenant-1', 'vendorId' => '101', 'email' => 'keep@example.com', 'currency' => 'USD'],
         ], $view['recipients']);
 
         if (is_file($pdf)) {

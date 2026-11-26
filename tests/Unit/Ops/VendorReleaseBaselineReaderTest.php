@@ -26,6 +26,7 @@ final class VendorReleaseBaselineReaderTest extends TestCase
             ->method('build')
             ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')
             ->willReturn(new VendorRuntimeStatusProjection(
+                tenantId: 'tenant-1',
                 vendorId: '42',
                 currency: 'USD',
                 ownership: ['ownerUserId' => 7],
@@ -54,6 +55,7 @@ final class VendorReleaseBaselineReaderTest extends TestCase
             ->expects(self::once())
             ->method('build')
             ->willReturn(new VendorRuntimeStatusProjection(
+                tenantId: 'tenant-1',
                 vendorId: 'vendor-abc',
                 currency: 'USD',
                 ownership: null,

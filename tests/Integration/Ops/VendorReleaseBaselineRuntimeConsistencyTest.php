@@ -26,6 +26,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
             ->method('build')
             ->with('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')
             ->willReturn(new VendorRuntimeStatusProjection(
+                tenantId: 'tenant-1',
                 vendorId: '101',
                 currency: 'USD',
                 ownership: null,
@@ -59,6 +60,7 @@ final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
             ->method('build')
             ->with('tenant-1', 'vendor-alpha', null, null, 'EUR')
             ->willReturn(new VendorRuntimeStatusProjection(
+                tenantId: 'tenant-1',
                 vendorId: 'vendor-alpha',
                 currency: 'EUR',
                 ownership: null,

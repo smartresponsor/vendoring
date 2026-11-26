@@ -18,6 +18,7 @@ final readonly class VendorRuntimeStatusProjection
      * @param array<string, bool>       $surfaceStatus
      */
     public function __construct(
+        private string $tenantId,
         private string $vendorId,
         private string $currency,
         private ?array $ownership,
@@ -27,10 +28,14 @@ final readonly class VendorRuntimeStatusProjection
         private array $surfaceStatus,
         private string $generatedAt,
     ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
     }
 
     /**
      * @return array{
+     *   tenantId:string,
      *   vendorId:string,
      *   currency:string,
      *   ownership:array<string,mixed>|null,
@@ -44,6 +49,7 @@ final readonly class VendorRuntimeStatusProjection
     public function toArray(): array
     {
         return [
+            'tenantId' => $this->tenantId,
             'vendorId' => $this->vendorId,
             'currency' => $this->currency,
             'ownership' => $this->ownership,

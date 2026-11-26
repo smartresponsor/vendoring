@@ -132,6 +132,37 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
         }
     }
 
+    public function testKernelRuntimeEnforcesConfiguredWriteRateLimit(): void
+    {
+        if (!extension_loaded('pdo_sqlite')) {
+            self::markTestSkipped('pdo_sqlite is required for kernel runtime integration test');
+        }
+
+        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+        try {
+            $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
+            $headers = ['Authorization' => 'Bearer '.$token];
+            for ($attempt = 0; $attempt < 5; ++$attempt) {
+                $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', [
+                    'vendorId' => 'vendor-1',
+                    'orderId' => 'rate-order-'.$attempt,
+                    'amount' => '10.50',
+                ], $headers);
+                self::assertSame(201, $response->getStatusCode());
+            }
+            $response = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', [
+                'vendorId' => 'vendor-1',
+                'orderId' => 'rate-order-denied',
+                'amount' => '10.50',
+            ], $headers);
+            self::assertSame(429, $response->getStatusCode());
+            self::assertSame('rate_limit_exceeded', KernelRuntimeHarness::decodeJson($response)['error']);
+            self::assertGreaterThan(0, (int) $response->headers->get('Retry-After'));
+        } finally {
+            KernelRuntimeHarness::cleanupRuntimeState($kernel);
+        }
+    }
+
     public function testKernelRuntimePropagatesCorrelationHeaderForAuthenticatedCreate(): void
     {
         if (!extension_loaded('pdo_sqlite')) {

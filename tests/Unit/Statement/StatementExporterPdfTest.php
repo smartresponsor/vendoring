@@ -63,6 +63,7 @@ final class StatementExporterPdfTest extends TestCase
         $content = file_get_contents($path);
         self::assertNotFalse($content);
 
+        self::assertStringContainsString('Tenant: tenant-1', $content);
         self::assertStringContainsString('Vendor: vendor-a', $content);
         self::assertStringContainsString('Currency: EUR', $content);
         self::assertStringContainsString('Opening: 100.50', $content);
@@ -84,6 +85,9 @@ final class StatementExporterPdfTest extends TestCase
             self::assertNotSame(dirname($a), dirname($b));
             self::assertNotSame($a, $again);
             self::assertStringNotContainsString('..', $a);
+            self::assertStringContainsString('Tenant: tenant-a', (string) file_get_contents($a));
+            self::assertStringContainsString('Tenant: tenant-b', (string) file_get_contents($b));
+            self::assertStringNotContainsString('Tenant: tenant-b', (string) file_get_contents($a));
             self::assertStringContainsString('Earnings: 1.00', (string) file_get_contents($a));
             self::assertStringContainsString('Earnings: 200.00', (string) file_get_contents($b));
         } finally {

@@ -54,6 +54,7 @@ final class VendorReleaseBaselineCommand extends Command
 
         if (!$runtimeInput->hasRequiredScope()) {
             $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'invalid', 'Both --tenantId and --vendorId are required.', [
+                'tenantId' => $runtimeInput->tenantId,
                 'vendorId' => $runtimeInput->vendorId,
             ]);
 
@@ -79,6 +80,7 @@ final class VendorReleaseBaselineCommand extends Command
                 'Failed to build vendor release baseline',
                 $throwable,
                 [
+                    'tenantId' => $runtimeInput->tenantId,
                     'vendorId' => $runtimeInput->vendorId,
                     'from' => $runtimeInput->from,
                     'to' => $runtimeInput->to,
@@ -98,6 +100,7 @@ final class VendorReleaseBaselineCommand extends Command
             );
         } catch (VendorCommandIoException $exception) {
             $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'failed', $exception->getMessage(), [
+                'tenantId' => $runtimeInput->tenantId,
                 'vendorId' => $runtimeInput->vendorId,
                 'from' => $runtimeInput->from,
                 'to' => $runtimeInput->to,
@@ -114,7 +117,8 @@ final class VendorReleaseBaselineCommand extends Command
         }
 
         $output->writeln(sprintf(
-            'vendorId=%s status=%s',
+            'tenantId=%s vendorId=%s status=%s',
+            $runtimeInput->tenantId,
             $runtimeInput->vendorId,
             $projection['status'],
         ));

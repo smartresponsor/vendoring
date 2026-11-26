@@ -60,3 +60,20 @@ The private inventories retain individual paths and hashes. Unverified semantic 
 ## Remote CI blocker
 
 GitHub Actions is enabled and the account is blocked at job initialization by a billing issue. The check annotation explicitly reports that the job was not started because the account is locked due to billing. Repository and available organization secret metadata do not contain GATING_READ_TOKEN. Neither billing nor credentials were modified. Remote acceptance and merge remain blocked until these conditions and the outstanding reconciliation are resolved.
+
+## Historical semantic checkpoint — e3b6673
+
+The pinned normalized inventories were reused. Pass 2 maps every formerly unmapped path or explicitly retires generated configuration residue. All 65 retained deletion candidates have a conservative disposition: retain four CI gates, 42 referenced contracts, ten published interfaces whose external consumers cannot be excluded, and nine current regression contracts. No deletion was performed. An additional 45 normalized executable-token and docblock matches and nine token matches requiring docblock review were identified. Normalization is comparison evidence, not proof of behavioral equivalence.
+
+Pass 3 records 21 contract-specific reviews, with current target hashes and review boundaries. The restored contracts cover mandatory tenant metadata in five runtime projections, nested scopes, CLI output, direct statement export, PDF tenant provenance, recipient projections, and local sliding-window write enforcement. Rate-limit state is private to the runtime, serialized by a lock and replaced atomically; unavailable/corrupt state fails closed. The external backend remains injectable. Local state is not distributed and can reset with runtime cache cleanup. Multi-host deployments require an appropriate shared backend. The external integration builder's required tenant argument changes the public signature; host consumers must synchronize before integration.
+
+Targeted regression: 116 tests, 795 assertions, zero skips, five deprecations and one PHPUnit deprecation. Includes real Chromium/Panther, authenticated kernel HTTP 429 and Retry-After, tenant-isolated statement delivery and PDF provenance. PHPStan: 832 files, zero errors; code style: 834 files, zero fixes; DI: 4 tests, 7 assertions, interface alias smoke PASS. No repeat of unchanged Windows, PostgreSQL, dependency audit or other previously accepted gates.
+
+Private evidence in vendoring-history-disposition-a4c73c6a66d046f88d1ff3844f12fe41:
+- historical-semantic-closure-pass3.json SHA256 53522d0e465288d3a65d429f2d1f410f0d51d79f4fde2ea705d48e082a0d67a2
+- crud-semantic-closure-pass3.json SHA256 620a6e1b7a78a2f5d5e3510fcb5d7c2909a7e4eb3b84309ebca1695e57dfc030
+- dx-semantic-closure-pass3.json SHA256 76d7e3fdefb94d47440b476a317a88dbf3545bd6c17adae9e69f33f39dba21dc
+
+Residual: 314 historical, 37 CRUD and six DX pending semantic rows, plus nine docblock reviews. The 21 reviewed contract checkpoints do not assert whole-file equivalence. Historical tenant rollout fallback requires trusted identity design; transaction write authorization requires separate confirmation of vendor ownership rather than permission alone. Do not reintroduce untrusted query-derived identity or legacy unscoped ledger operations. Full semantic closure remains unproven.
+
+Remote metadata at e3b6673856d3b3cbc24d3503758550fc03e09b27: all four workflow runs failed (Quality 45761823219, Security 45761823804, Runtime 45761823217, Docs 45761823305); all five checks report billing lock before execution. Actions enabled, allowed actions all. GATING_READ_TOKEN absent from both repository and available organization secret name inventories. No credentials read or modified. PR remains draft; no merge, canonical synchronization or deployment until complete acceptance.

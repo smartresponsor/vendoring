@@ -44,7 +44,7 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
             ->expects(self::once())
             ->method('build')
             ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD', 42)
-            ->willReturn(new VendorFinanceRuntimeProjection('42', 'USD', ['ownerUserId' => 7], ['gmv' => 1000], ['provider' => 'bank'], ['closing' => 900]));
+            ->willReturn(new VendorFinanceRuntimeProjection('tenant-1', '42', 'USD', ['ownerUserId' => 7], ['gmv' => 1000], ['provider' => 'bank'], ['closing' => 900]));
 
         $this->statementDeliveryRuntimeProjectionBuilder
             ->expects(self::once())
@@ -57,17 +57,21 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
 
                 return true;
             }))
-            ->willReturn(new VendorStatementDeliveryRuntimeProjection('42', 'USD', ['ownerUserId' => 7], ['closing' => 900], ['path' => '/tmp/statement.csv'], [['email' => 'ops@example.com']]));
+            ->willReturn(new VendorStatementDeliveryRuntimeProjection('tenant-1', '42', 'USD', ['ownerUserId' => 7], ['closing' => 900], ['path' => '/tmp/statement.csv'], [['email' => 'ops@example.com']]));
 
         $this->externalIntegrationRuntimeProjectionBuilder
             ->expects(self::once())
             ->method('build')
-            ->with('42', 42)
-            ->willReturn(new VendorExternalIntegrationRuntimeProjection('42', ['ownerUserId' => 7], ['crm' => 'hubspot'], ['webhook' => 'ok'], ['payoutProvider' => 'bank'], ['crm', 'webhooks']));
+            ->with('tenant-1', '42', 42)
+            ->willReturn(new VendorExternalIntegrationRuntimeProjection('tenant-1', '42', ['ownerUserId' => 7], ['crm' => 'hubspot'], ['webhook' => 'ok'], ['payoutProvider' => 'bank'], ['crm', 'webhooks']));
 
         $payload = $this->buildService()->build('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD', 42)->toArray();
         $ownership = self::assertArrayPayload($payload['ownership'] ?? null);
 
+        self::assertSame('tenant-1', $payload['tenantId']);
+        self::assertSame('tenant-1', $payload['finance']['tenantId']);
+        self::assertSame('tenant-1', $payload['statementDelivery']['tenantId']);
+        self::assertSame('tenant-1', $payload['externalIntegration']['tenantId']);
         self::assertTrue($payload['surfaceStatus']['ownership']);
         self::assertSame(7, $ownership['ownerUserId']);
         $finance = self::assertArrayPayload($payload['finance']);
@@ -85,7 +89,7 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
             ->expects(self::once())
             ->method('build')
             ->with('tenant-1', 'vendor-abc', null, null, 'USD')
-            ->willReturn(new VendorFinanceRuntimeProjection('vendor-abc', 'USD', null, [], null, null));
+            ->willReturn(new VendorFinanceRuntimeProjection('tenant-1', 'vendor-abc', 'USD', null, [], null, null));
 
         $this->statementDeliveryRuntimeProjectionBuilder
             ->expects(self::once())
@@ -98,13 +102,13 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
 
                 return true;
             }))
-            ->willReturn(new VendorStatementDeliveryRuntimeProjection('vendor-abc', 'USD', null, [], null, []));
+            ->willReturn(new VendorStatementDeliveryRuntimeProjection('tenant-1', 'vendor-abc', 'USD', null, [], null, []));
 
         $this->externalIntegrationRuntimeProjectionBuilder
             ->expects(self::once())
             ->method('build')
-            ->with('vendor-abc')
-            ->willReturn(new VendorExternalIntegrationRuntimeProjection('vendor-abc', null, [], [], [], []));
+            ->with('tenant-1', 'vendor-abc')
+            ->willReturn(new VendorExternalIntegrationRuntimeProjection('tenant-1', 'vendor-abc', null, [], [], [], []));
 
         $payload = $this->buildService()->build('tenant-1', 'vendor-abc')->toArray();
 

@@ -31,6 +31,7 @@ final class VendorRuntimeStatusCommandTest extends TestCase
             ->method('build')
             ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD', 7)
             ->willReturn(new VendorRuntimeStatusProjection(
+                tenantId: 'tenant-1',
                 vendorId: '42',
                 currency: 'USD',
                 ownership: ['ownerUserId' => 7],
@@ -61,7 +62,7 @@ final class VendorRuntimeStatusCommandTest extends TestCase
         ]);
 
         self::assertSame(Command::SUCCESS, $statusCode);
-        self::assertStringContainsString('vendorId=42 currency=USD', $tester->getDisplay());
+        self::assertStringContainsString('tenantId=tenant-1 vendorId=42 currency=USD', $tester->getDisplay());
         self::assertStringContainsString('ownership=ready finance=ready statementDelivery=ready externalIntegration=ready', $tester->getDisplay());
     }
 }

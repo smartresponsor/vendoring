@@ -68,6 +68,7 @@ final readonly class VendorReleaseBaselineReaderService implements VendorRelease
         $generatedAt = new \DateTimeImmutable();
 
         return new VendorReleaseBaselineProjection(
+            tenantId: $tenantId,
             vendorId: $vendorId,
             runtimeStatus: $runtimeStatus,
             artifactStatus: $artifactStatus,

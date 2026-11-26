@@ -23,7 +23,8 @@ final class VendorStatementExporterPdfService implements VendorStatementExporter
         // Each request gets a unique path so concurrent exports cannot overwrite each other.
         $file = $dir.'/statement_'.date('Ymd', $fromTs).'_'.date('Ymd', $toTs).'_'.bin2hex(random_bytes(16)).'.pdf';
         $text = sprintf(
-            "Vendor Statement\nVendor: %s\nPeriod: %s .. %s\nCurrency: %s\n---\nOpening: %.2f\nEarnings: %.2f\nRefunds: %.2f\nFees: %.2f\nClosing: %.2f\n",
+            "Vendor Statement\nTenant: %s\nVendor: %s\nPeriod: %s .. %s\nCurrency: %s\n---\nOpening: %.2f\nEarnings: %.2f\nRefunds: %.2f\nFees: %.2f\nClosing: %.2f\n",
+            $dto->tenantId,
             $dto->vendorId,
             $dto->from,
             $dto->to,

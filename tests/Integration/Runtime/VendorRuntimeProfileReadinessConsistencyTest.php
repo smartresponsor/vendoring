@@ -36,6 +36,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(101)
             ->willReturn(new VendorOwnershipProjection(101, 5001, []));
         $this->finance->expects(self::once())->method('build')->willReturn(new VendorFinanceRuntimeProjection(
+            tenantId: 'tenant-1',
             vendorId: '101',
             currency: 'USD',
             ownership: ['ownerUserId' => 5001],
@@ -44,6 +45,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             statement: null,
         ));
         $this->statementDelivery->expects(self::once())->method('build')->willReturn(new VendorStatementDeliveryRuntimeProjection(
+            tenantId: 'tenant-1',
             vendorId: '101',
             currency: 'USD',
             ownership: ['ownerUserId' => 5001],
@@ -52,6 +54,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             recipients: [],
         ));
         $this->externalIntegration->expects(self::once())->method('build')->willReturn(new VendorExternalIntegrationRuntimeProjection(
+            tenantId: 'tenant-1',
             vendorId: '101',
             ownership: ['ownerUserId' => 5001],
             crm: [],
@@ -75,6 +78,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(202)
             ->willReturn(new VendorOwnershipProjection(202, 5001, []));
         $this->finance->expects(self::once())->method('build')->willReturn(new VendorFinanceRuntimeProjection(
+            tenantId: 'tenant-1',
             vendorId: '202',
             currency: 'USD',
             ownership: ['ownerUserId' => 5001],
@@ -83,6 +87,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             statement: ['closing' => 85.0],
         ));
         $this->statementDelivery->expects(self::once())->method('build')->willReturn(new VendorStatementDeliveryRuntimeProjection(
+            tenantId: 'tenant-1',
             vendorId: '202',
             currency: 'USD',
             ownership: ['ownerUserId' => 5001],
@@ -91,6 +96,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             recipients: [['email' => 'billing@example.com']],
         ));
         $this->externalIntegration->expects(self::once())->method('build')->willReturn(new VendorExternalIntegrationRuntimeProjection(
+            tenantId: 'tenant-1',
             vendorId: '202',
             ownership: ['ownerUserId' => 5001],
             crm: [],

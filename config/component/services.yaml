@@ -294,11 +294,10 @@ services:
         - '@App\Vendoring\Service\Observability\VendorMetricEmitterService'
         - '@App\Vendoring\Service\Observability\VendorRuntimeMetricCollectorService'
 
-  # VendorWriteRateLimiterService uses fail-open by default (no backend configured).
-  # To enable real rate limiting, inject a backend callable from the host application:
-  #   App\Vendoring\Service\Traffic\VendorWriteRateLimiterService:
-  #       arguments:
-  #           $backendFactory: '@your_rate_limiter_adapter'
+  # Private per-runtime store; host may inject a shared backend for multi-host deployments.
+  App\Vendoring\Service\Traffic\VendorWriteRateLimiterService:
+    arguments:
+      $stateDir: '%kernel.cache_dir%/vendoring-rate-limit'
 
   App\Vendoring\Service\Rollout\VendorFeatureFlagService:
     arguments:

@@ -63,6 +63,7 @@ final readonly class VendorRuntimeStatusProjectionBuilder implements VendorRunti
         ))->toArray();
 
         $externalIntegration = $this->externalIntegrationRuntimeProjectionBuilder->build(
+            tenantId: $tenantId,
             vendorId: $vendorId,
             canonicalVendorId: $canonicalVendorId,
         )->toArray();
@@ -82,6 +83,7 @@ final readonly class VendorRuntimeStatusProjectionBuilder implements VendorRunti
         $generatedAt = $generatedAtObject->format(DATE_ATOM);
 
         return new VendorRuntimeStatusProjection(
+            tenantId: $tenantId,
             vendorId: $vendorId,
             currency: $currency,
             ownership: $ownership,

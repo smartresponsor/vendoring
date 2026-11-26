@@ -39,7 +39,7 @@ final readonly class VendorRuntimeStatusShowService
             canonicalVendorId: $scope->getVendor()->getId(),
         );
 
-        return new JsonResponse(['data' => ['tenantId' => $scope->getTenantId()] + $projection->toArray()], 200);
+        return new JsonResponse(['data' => $projection->toArray()], 200);
     }
 
     private function attribute(Request $request, string $nameEntity): ?string

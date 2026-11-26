@@ -133,7 +133,8 @@ final class VendorSendVendorStatementsCommand extends Command
 
             if (!VendorCommandOutputFormatEnum::isJson($format)) {
                 $output->writeln(sprintf(
-                    '[%s] %s email=%s period=%s currency=%s pdf=%s attached=%s message=%s',
+                    '[%s/%s] %s email=%s period=%s currency=%s pdf=%s attached=%s message=%s',
+                    $recipient->tenantId,
                     $recipient->vendorId,
                     $result['ok'] ? 'SENT' : 'FAIL',
                     $result['email'],

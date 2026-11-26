@@ -20,6 +20,7 @@ final readonly class VendorExternalIntegrationRuntimeProjection
      * @param list<string>             $surfaces
      */
     public function __construct(
+        private string $tenantId,
         private string $vendorId,
         private ?array $ownership,
         private array $crm,
@@ -27,10 +28,14 @@ final readonly class VendorExternalIntegrationRuntimeProjection
         private array $payoutBridge,
         private array $surfaces,
     ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
     }
 
     /**
      * @return array{
+     *   tenantId:string,
      *   vendorId:string,
      *   ownership:array<string,mixed>|null,
      *   crm:array<string,mixed>,
@@ -42,6 +47,7 @@ final readonly class VendorExternalIntegrationRuntimeProjection
     public function toArray(): array
     {
         return [
+            'tenantId' => $this->tenantId,
             'vendorId' => $this->vendorId,
             'ownership' => $this->ownership,
             'crm' => $this->crm,

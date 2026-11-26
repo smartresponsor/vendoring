@@ -68,6 +68,7 @@ final class VendorRuntimeStatusCommand extends Command
 
         if (!$runtimeInput->hasRequiredScope()) {
             $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'invalid', 'Both --tenantId and --vendorId are required.', [
+                'tenantId' => $runtimeInput->tenantId,
                 'vendorId' => $runtimeInput->vendorId,
             ]);
 
@@ -93,6 +94,7 @@ final class VendorRuntimeStatusCommand extends Command
                 'Failed to build runtime status',
                 $throwable,
                 [
+                    'tenantId' => $runtimeInput->tenantId,
                     'vendorId' => $runtimeInput->vendorId,
                     'from' => $runtimeInput->from,
                     'to' => $runtimeInput->to,
@@ -112,6 +114,7 @@ final class VendorRuntimeStatusCommand extends Command
             );
         } catch (VendorCommandIoException $exception) {
             $this->commandResultEmitter->emitError($output, $runtimeInput->format, 'failed', $exception->getMessage(), [
+                'tenantId' => $runtimeInput->tenantId,
                 'vendorId' => $runtimeInput->vendorId,
                 'from' => $runtimeInput->from,
                 'to' => $runtimeInput->to,
@@ -128,7 +131,7 @@ final class VendorRuntimeStatusCommand extends Command
         }
 
         $surfaceStatus = $projection['surfaceStatus'];
-        $output->writeln(sprintf('vendorId=%s currency=%s', $runtimeInput->vendorId, $runtimeInput->currency));
+        $output->writeln(sprintf('tenantId=%s vendorId=%s currency=%s', $runtimeInput->tenantId, $runtimeInput->vendorId, $runtimeInput->currency));
         $output->writeln(sprintf(
             'ownership=%s finance=%s statementDelivery=%s externalIntegration=%s',
             $surfaceStatus['ownership'] ? 'ready' : 'missing',

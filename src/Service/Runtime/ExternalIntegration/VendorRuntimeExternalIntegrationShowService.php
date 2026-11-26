@@ -35,7 +35,7 @@ final readonly class VendorRuntimeExternalIntegrationShowService
             return new JsonResponse(['error' => 'financial_scope_denied'], 403);
         }
 
-        $projection = $this->runtimeProjectionBuilder->build($scope->getLedgerVendorId(), $scope->getVendor()->getId());
+        $projection = $this->runtimeProjectionBuilder->build($scope->getTenantId(), $scope->getLedgerVendorId(), $scope->getVendor()->getId());
 
         return new JsonResponse(['data' => $projection->toArray()], 200);
     }

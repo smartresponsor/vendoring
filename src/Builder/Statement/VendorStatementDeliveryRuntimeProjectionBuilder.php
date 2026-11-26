@@ -63,6 +63,7 @@ final readonly class VendorStatementDeliveryRuntimeProjectionBuilder implements 
             }
 
             $recipients[] = [
+                'tenantId' => $candidate->tenantId,
                 'vendorId' => $candidate->vendorId,
                 'email' => $candidate->email,
                 'currency' => $candidate->currency,
@@ -70,6 +71,7 @@ final readonly class VendorStatementDeliveryRuntimeProjectionBuilder implements 
         }
 
         return new VendorStatementDeliveryRuntimeProjection(
+            tenantId: $request->tenantId,
             vendorId: $request->vendorId,
             currency: $request->currency,
             ownership: $ownership,

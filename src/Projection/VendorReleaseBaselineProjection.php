@@ -16,6 +16,7 @@ final readonly class VendorReleaseBaselineProjection
      * @param list<string>        $issues
      */
     public function __construct(
+        private string $tenantId,
         private string $vendorId,
         private array $runtimeStatus,
         private array $artifactStatus,
@@ -23,10 +24,14 @@ final readonly class VendorReleaseBaselineProjection
         private string $status,
         private string $generatedAt,
     ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
     }
 
     /**
      * @return array{
+     *   tenantId:string,
      *   vendorId:string,
      *   runtimeStatus:array<string,mixed>,
      *   artifactStatus:array<string,bool>,
@@ -38,6 +43,7 @@ final readonly class VendorReleaseBaselineProjection
     public function toArray(): array
     {
         return [
+            'tenantId' => $this->tenantId,
             'vendorId' => $this->vendorId,
             'runtimeStatus' => $this->runtimeStatus,
             'artifactStatus' => $this->artifactStatus,

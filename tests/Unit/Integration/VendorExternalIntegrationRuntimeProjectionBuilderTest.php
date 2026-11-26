@@ -50,7 +50,7 @@ final class VendorExternalIntegrationRuntimeProjectionBuilderTest extends TestCa
             $this->crm,
             $this->webhooks,
             $this->payoutBridge,
-        ))->build('101', 101)->toArray();
+        ))->build('tenant-1', '101', 101)->toArray();
 
         self::assertSame('101', $payload['vendorId']);
         self::assertIsArray($payload['ownership'] ?? null);
@@ -78,9 +78,10 @@ final class VendorExternalIntegrationRuntimeProjectionBuilderTest extends TestCa
             $this->crm,
             $this->webhooks,
             $this->payoutBridge,
-        ))->build('vendor-alpha')->toArray();
+        ))->build('tenant-2', 'vendor-alpha')->toArray();
 
         self::assertNull($payload['ownership']);
+        self::assertSame('tenant-2', $payload['tenantId']);
         self::assertSame('vendor-alpha', $payload['vendorId']);
         self::assertFalse($payload['webhooks']['consumerReady']);
     }

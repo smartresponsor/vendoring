@@ -82,6 +82,7 @@ final class VendorStatementExportService
         }
 
         return new JsonResponse(['data' => [
+            'tenantId' => $dto->tenantId,
             'vendorId' => $dto->vendorId,
             'from' => $dto->from,
             'to' => $dto->to,

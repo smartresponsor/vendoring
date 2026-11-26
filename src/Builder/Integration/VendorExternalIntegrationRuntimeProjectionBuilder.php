@@ -28,8 +28,11 @@ final readonly class VendorExternalIntegrationRuntimeProjectionBuilder implement
     ) {
     }
 
-    public function build(string $vendorId, ?int $canonicalVendorId = null): VendorExternalIntegrationRuntimeProjection
+    public function build(string $tenantId, string $vendorId, ?int $canonicalVendorId = null): VendorExternalIntegrationRuntimeProjection
     {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
         $ownership = null;
         if (null !== $canonicalVendorId) {
             $ownershipProjection = $this->ownershipProjectionBuilder->buildForVendorId($canonicalVendorId);
@@ -56,6 +59,7 @@ final readonly class VendorExternalIntegrationRuntimeProjectionBuilder implement
         ];
 
         return new VendorExternalIntegrationRuntimeProjection(
+            tenantId: $tenantId,
             vendorId: $vendorId,
             ownership: $ownership,
             crm: $crm,
