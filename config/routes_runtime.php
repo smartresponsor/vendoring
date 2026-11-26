@@ -20,7 +20,7 @@ return static function (RoutingConfigurator $routes): void {
 
     $reflection = new ReflectionClass(NelmioApiDocBundle::class);
     $bundleRoot = dirname($reflection->getFileName(), 2);
-    $swaggerUiRoute = $bundleRoot.'/Resources/config/routing/swaggerui.xml';
+    $swaggerUiRoute = $bundleRoot.'/config/routing/swaggerui.php';
 
     if (!is_file($swaggerUiRoute)) {
         return;

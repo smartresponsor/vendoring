@@ -549,7 +549,7 @@ final class VendorMonitoringHistoricalCompatibilityTest extends TestCase
         self::assertTrue(mkdir($projectDir.'/docs', 0777, true) || is_dir($projectDir.'/docs'));
 
         try {
-            $scientificEpoch = sprintf('%.6E', (float) time());
+            $scientificEpoch = sprintf('%.12E', (float) (time() - 1));
             self::assertNotFalse(file_put_contents(
                 $observabilityDir.'/runtime_logs.ndjson',
                 $this->encodeJson([

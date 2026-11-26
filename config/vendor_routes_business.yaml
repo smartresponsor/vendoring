@@ -80,3 +80,13 @@ vendor_payout_show:
     path: /api/vendor/payout/{payoutId}
     controller: App\Vendoring\Service\Payout\VendorPayoutHttpService::getOne
     methods: [GET]
+
+vendor_runtime_status_show:
+    path: /api/vendor/runtime/status/{id}
+    controller: App\Vendoring\Service\Runtime\Status\VendorRuntimeStatusShowService
+    methods: [GET]
+
+vendor_release_baseline_show:
+    path: /api/vendor/release/baseline/{id}
+    controller: App\Vendoring\Service\Release\Baseline\VendorReleaseBaselineShowService
+    methods: [GET]

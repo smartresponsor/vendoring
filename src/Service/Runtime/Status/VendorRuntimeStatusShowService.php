@@ -11,18 +11,15 @@ use App\Vendoring\ResolverInterface\Security\VendorFinancialScopeResolverInterfa
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+#[\Symfony\Component\HttpKernel\Attribute\AsController]
 final readonly class VendorRuntimeStatusShowService
 {
     public function __construct(private VendorRuntimeStatusProjectionBuilderInterface $runtimeStatusProjectionBuilder, private VendorFinancialScopeResolverInterface $financialScope)
     {
     }
 
-    public function __invoke(object $request): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
-        if (!$request instanceof Request) {
-            return new JsonResponse(['error' => 'request_required'], 400);
-        }
-
         $vendorId = $this->attribute($request, 'id') ?? $this->attribute($request, 'slug') ?? $this->attribute($request, 'item') ?? (string) $request->query->get('vendorId', '');
         if ('' === $vendorId) {
             return new JsonResponse(['error' => 'vendor_identifier_required'], 422);
@@ -42,7 +39,7 @@ final readonly class VendorRuntimeStatusShowService
             canonicalVendorId: $scope->getVendor()->getId(),
         );
 
-        return new JsonResponse(['data' => $projection->toArray()], 200);
+        return new JsonResponse(['data' => ['tenantId' => $scope->getTenantId()] + $projection->toArray()], 200);
     }
 
     private function attribute(Request $request, string $nameEntity): ?string

@@ -64,9 +64,14 @@ final class LocalDevPantherTest extends PantherTestCase
         $client = $this->createLocalDevClient();
 
         try {
-            $client->request('GET', self::CANONICAL_TRANSACTION_CREATE_PATH);
+            $client->request('GET', '/healthz');
+            $result = $client->executeAsyncScript(
+                'const done = arguments[arguments.length - 1]; fetch(arguments[0]).then(r => done({status: r.status})).catch(e => done({error: String(e)}));',
+                [self::CANONICAL_TRANSACTION_CREATE_PATH],
+            );
 
-            self::assertSame(self::METHOD_NOT_ALLOWED_STATUS, $client->getInternalResponse()->getStatusCode());
+            self::assertIsArray($result);
+            self::assertSame(self::METHOD_NOT_ALLOWED_STATUS, $result['status'] ?? null);
         } finally {
             self::quitClient($client);
         }
@@ -158,7 +163,12 @@ final class LocalDevPantherTest extends PantherTestCase
     private static function configurePantherEnvironment(): void
     {
         self::setPantherEnv('PANTHER_NO_SANDBOX', '1');
-        self::prependPath(self::projectRoot().'/drivers');
+        $configured = getenv('PANTHER_TEST_DRIVER_DIR');
+        if (is_string($configured) && '' !== $configured) {
+            self::prependPath($configured);
+        } else {
+            self::prependPath(self::projectRoot().'/drivers');
+        }
     }
 
     private static function allocatePort(): int
@@ -221,11 +231,11 @@ final class LocalDevPantherTest extends PantherTestCase
         $process->setTimeout(self::CHROMEDRIVER_CHECK_TIMEOUT_SECONDS);
         $process->run();
 
-        if ($process->isSuccessful()) {
+        if ($process->isSuccessful() && preg_match('/^ChromeDriver\s+\d+\./', $process->getOutput())) {
             return;
         }
 
-        self::markTestSkipped(self::CHROMEDRIVER_SKIP_MESSAGE);
+        self::markTestSkipped(self::CHROMEDRIVER_SKIP_MESSAGE.': '.$driver.' did not identify itself as ChromeDriver');
     }
 
     private static function quitClient(Client $client): void

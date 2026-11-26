@@ -35,8 +35,29 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
+      - name: Verify locked dependencies
+        run: composer audit --locked
+
       - name: Runtime tests
         run: composer quality:runtime
+
+      - name: Isolated browser acceptance
+        env:
+          PANTHER_ISOLATED_ACCEPTANCE: '1'
+          PANTHER_NO_SANDBOX: '1'
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable)"
+          driver="$(command -v chromedriver)"
+          chrome_version="$("$chrome" --version)"
+          driver_version="$("$driver" --version)"
+          [[ "$chrome_version" =~ ^Google\ Chrome\ ([0-9]+\.[0-9]+\.[0-9]+)\. ]]
+          chrome_build="${BASH_REMATCH[1]}"
+          [[ "$driver_version" =~ ^ChromeDriver\ ([0-9]+\.[0-9]+\.[0-9]+)\. ]]
+          [[ "${BASH_REMATCH[1]}" == "$chrome_build" ]]
+          export PANTHER_CHROME_BINARY="$chrome"
+          export PANTHER_TEST_DRIVER_DIR="$(dirname "$driver")"
+          php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional --fail-on-skipped --display-skipped
 
       - name: Persistence tests
         run: composer quality:persistence
