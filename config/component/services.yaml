@@ -261,7 +261,8 @@ services:
 
   App\Vendoring\Service\Observability\VendorRuntimeLoggerService:
     arguments:
-      $logger: '@Psr\Log\NullLogger'
+      $logger: '@logger'
+      $channelLogger: '@?monolog.logger.vendoring'
 
   App\Vendoring\Service\Observability\VendorObservabilityRecordExporterService:
     arguments:

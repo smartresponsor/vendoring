@@ -7,10 +7,12 @@ namespace App\Vendoring\Tests\Unit\Service;
 use App\Vendoring\Entity\Vendor\VendorCatalogCategoryBannerEntity;
 use App\Vendoring\Entity\Vendor\VendorCatalogCategoryHtmlBlockEntity;
 use App\Vendoring\Entity\Vendor\VendorCatalogCategoryPinEntity;
+use App\Vendoring\Repository\VendorCatalogCategoryPinRepository;
 use App\Vendoring\Service\Catalog\VendorCatalogMerchService;
 use App\Vendoring\Tests\Support\CatalogMerchDoctrineRepositoryHarness;
 use App\Vendoring\Tests\Support\CatalogMerchEntityManagerFactory;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
 
 final class CatalogMerchServiceTest extends TestCase
@@ -25,15 +27,20 @@ final class CatalogMerchServiceTest extends TestCase
         ));
 
         $repository = new CatalogMerchDoctrineRepositoryHarness($entityManager);
-        $service = new VendorCatalogMerchService($repository, $repository, $repository);
+        $registry = $this->createMock(ManagerRegistry::class);
+        $registry->method('getManagerForClass')->with(VendorCatalogCategoryPinEntity::class)->willReturn($entityManager);
+        $pins = new VendorCatalogCategoryPinRepository($registry);
+        $service = new VendorCatalogMerchService($pins, $repository, $repository);
+        $service->pinCreate('cat-2', 'record-a', 99);
         $service->pinCreate('cat-1', 'record-a', 10);
         $service->pinCreate('cat-1', 'record-b', 20);
         $service->orderSet('cat-1', ['record-b', 'record-a']);
 
-        /** @var VendorCatalogCategoryPinEntity|null $first */
-        $first = $repository->findOneByCategoryAndRecord('cat-1', 'record-a');
+        /* @var VendorCatalogCategoryPinEntity|null $first */
+        $entityManager->clear();
+        $first = $pins->findOneByCategoryAndRecord('cat-1', 'record-a');
         /** @var VendorCatalogCategoryPinEntity|null $second */
-        $second = $repository->findOneByCategoryAndRecord('cat-1', 'record-b');
+        $second = $pins->findOneByCategoryAndRecord('cat-1', 'record-b');
 
         self::assertNotNull($first);
         self::assertNotNull($second);
@@ -42,9 +49,11 @@ final class CatalogMerchServiceTest extends TestCase
 
         $service->pinDelete('cat-1', 'record-a');
 
-        $deleted = $repository->findOneByCategoryAndRecord('cat-1', 'record-a');
+        $entityManager->clear();
+        $deleted = $pins->findOneByCategoryAndRecord('cat-1', 'record-a');
 
         self::assertNull($deleted);
+        self::assertSame(99, $pins->findOneByCategoryAndRecord('cat-2', 'record-a')?->position());
     }
 
     public function testBannerAndHtmlPublishPersistPublishedState(): void

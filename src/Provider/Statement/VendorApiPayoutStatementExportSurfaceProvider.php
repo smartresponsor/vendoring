@@ -79,6 +79,7 @@ final readonly class VendorApiPayoutStatementExportSurfaceProvider implements Cr
         }
 
         $export = [
+            'tenantId' => $dto->tenantId,
             'vendorId' => $dto->vendorId,
             'from' => $dto->from,
             'to' => $dto->to,
@@ -97,6 +98,7 @@ final readonly class VendorApiPayoutStatementExportSurfaceProvider implements Cr
                         'type' => 'export',
                         'data' => $export,
                         'meta' => [
+                            'tenantId' => $dto->tenantId,
                             'vendorId' => $dto->vendorId,
                             'from' => $dto->from,
                             'to' => $dto->to,
@@ -149,7 +151,7 @@ final readonly class VendorApiPayoutStatementExportSurfaceProvider implements Cr
         }
 
         if (is_string($value) && '' !== trim($value)) {
-            return ctype_digit($value) ? (int) $value : $value;
+            return $value;
         }
 
         return null;

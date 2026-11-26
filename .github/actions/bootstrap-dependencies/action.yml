@@ -1,0 +1,88 @@
+name: Vendoring pinned dependencies
+description: Provision the exact sibling repositories required by Composer path packages
+inputs:
+  gating-read-token:
+    description: Read-only credential restricted to the private Gating repository
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Require private dependency access
+      shell: bash
+      env:
+        GATING_READ_TOKEN: ${{ inputs.gating-read-token }}
+      run: |
+        if [[ -z "$GATING_READ_TOKEN" ]]; then
+          echo '::error::GATING_READ_TOKEN is required for the private Gating dependency.'
+          exit 1
+        fi
+    - name: Checkout Collectioning
+      uses: actions/checkout@v4
+      with:
+        repository: smartresponsor/collectioning
+        ref: 5b99393934a76a25df89e0785147ea6010099a18
+        path: Collectioning
+        persist-credentials: false
+    - name: Checkout Objecting
+      uses: actions/checkout@v4
+      with:
+        repository: smartresponsor/objecting
+        ref: e318b6be0a7acebb1bb6d7499ae076752cc0b76f
+        path: Objecting
+        persist-credentials: false
+    - name: Checkout Cruding
+      uses: actions/checkout@v4
+      with:
+        repository: smartresponsor/cruding
+        ref: f4bac830274f1599ef537e2e4cc98ca875d89925
+        path: Cruding
+        persist-credentials: false
+    - name: Checkout Failing
+      uses: actions/checkout@v4
+      with:
+        repository: smartresponsor/failing
+        ref: 64923640c4f277e57458b4b1b5dfde9ea93a2b8d
+        path: Failing
+        persist-credentials: false
+    - name: Checkout Interfacing
+      uses: actions/checkout@v4
+      with:
+        repository: smartresponsor/interfacing
+        ref: 15ced56faf040f6982d33929904a669649ad3d11
+        path: Interfacing
+        persist-credentials: false
+    - name: Checkout Tabling
+      uses: actions/checkout@v4
+      with:
+        repository: smartresponsor/tabling-
+        ref: 646c32bd2f12fa5303e9382a4af83275c47d190c
+        path: Tabling
+        persist-credentials: false
+    - name: Checkout Viewing
+      uses: actions/checkout@v4
+      with:
+        repository: smartresponsor/viewing
+        ref: e671ad8433fefe9169848efb705f9f97302a70e2
+        path: Viewing
+        persist-credentials: false
+    - name: Checkout Gating
+      uses: actions/checkout@v4
+      with:
+        repository: smartresponsor/gating
+        ref: 4c69c0a953bbc15e298bada15056683f7dc46800
+        path: Gating
+        persist-credentials: false
+        token: ${{ inputs.gating-read-token }}
+    - name: Verify exact dependency commits
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        set -euo pipefail
+        test "$(git -C Collectioning rev-parse HEAD)" = '5b99393934a76a25df89e0785147ea6010099a18'
+        test "$(git -C Objecting rev-parse HEAD)" = 'e318b6be0a7acebb1bb6d7499ae076752cc0b76f'
+        test "$(git -C Cruding rev-parse HEAD)" = 'f4bac830274f1599ef537e2e4cc98ca875d89925'
+        test "$(git -C Failing rev-parse HEAD)" = '64923640c4f277e57458b4b1b5dfde9ea93a2b8d'
+        test "$(git -C Interfacing rev-parse HEAD)" = '15ced56faf040f6982d33929904a669649ad3d11'
+        test "$(git -C Tabling rev-parse HEAD)" = '646c32bd2f12fa5303e9382a4af83275c47d190c'
+        test "$(git -C Viewing rev-parse HEAD)" = 'e671ad8433fefe9169848efb705f9f97302a70e2'
+        test "$(git -C Gating rev-parse HEAD)" = '4c69c0a953bbc15e298bada15056683f7dc46800'

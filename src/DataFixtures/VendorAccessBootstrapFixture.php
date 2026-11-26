@@ -64,10 +64,13 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
                 $this->vendorRepository->save($vendor, true);
             }
 
-            $assignment = $this->assignmentRepository->findOneBy([
-                'vendor' => $vendor,
-                'userId' => $userId,
-            ]);
+            $vendorId = $vendor->getId();
+
+            if (null === $vendorId) {
+                throw new \LogicException('Persisted vendor identifier required');
+            }
+
+            $assignment = $this->assignmentRepository->findOneByVendorIdAndUserId($vendorId, $userId);
 
             if (!$assignment instanceof VendorUserAssignmentEntity) {
                 $assignment = new VendorUserAssignmentEntity(
@@ -101,10 +104,13 @@ final class VendorAccessBootstrapFixture extends Fixture implements FixtureGroup
 
         $vendor->deactivate();
 
-        $assignment = $this->assignmentRepository->findOneBy([
-            'vendor' => $vendor,
-            'userId' => $userId,
-        ]);
+        $vendorId = $vendor->getId();
+
+        if (null === $vendorId) {
+            throw new \LogicException('Persisted vendor identifier required');
+        }
+
+        $assignment = $this->assignmentRepository->findOneByVendorIdAndUserId($vendorId, $userId);
         if ($assignment instanceof VendorUserAssignmentEntity) {
             $assignment->revoke()->clearPrimary();
             $this->assignmentRepository->save($assignment);

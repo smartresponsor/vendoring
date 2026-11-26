@@ -38,12 +38,14 @@ final class VendorCatalogCategoryPinRepository extends ServiceEntityRepository i
         $this->getEntityManager()->flush();
     }
 
-    public function findOneByCategoryAndRecord(string $categoryId, string $recordId): ?object
+    public function findOneByCategoryAndRecord(string $categoryId, string $recordId): ?VendorCatalogCategoryPinEntity
     {
-        return $this->findOneBy([
-            'objectCode.objectCode' => $categoryId,
+        $pin = $this->findOneBy([
+            'objectCode.code' => $categoryId,
             'recordId' => $recordId,
         ]);
+
+        return $pin instanceof VendorCatalogCategoryPinEntity ? $pin : null;
     }
 
     public function byId(mixed $id): ?object

@@ -6,6 +6,7 @@ namespace App\Vendoring\Tests\Functional;
 
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
+use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
 final class LocalDevPantherTest extends PantherTestCase
@@ -17,7 +18,6 @@ final class LocalDevPantherTest extends PantherTestCase
     private const METHOD_NOT_ALLOWED_STATUS = 405;
     private const CHROMEDRIVER_SKIP_MESSAGE = 'chromedriver is not available on this host';
     private const CHROME_SKIP_MESSAGE = 'Chrome binary is not available on this host';
-    private const CHROMEDRIVER_BINARY = 'drivers/chromedriver';
     private const CHROME_BINARY_CANDIDATES = [
         'google-chrome',
         'google-chrome-stable',
@@ -44,6 +44,17 @@ final class LocalDevPantherTest extends PantherTestCase
     public static function tearDownAfterClass(): void
     {
         self::stopLocalServer();
+    }
+
+    public function testLocalHealthEndpointReturnsReady(): void
+    {
+        $context = stream_context_create(['http' => ['timeout' => 5, 'ignore_errors' => true]]);
+        $body = file_get_contents(self::serverBaseUri().'/healthz', false, $context);
+        self::assertIsString($body);
+        self::assertMatchesRegularExpression('/^HTTP\/\S+ 200\b/', http_get_last_response_headers()[0] ?? '');
+        $payload = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+        self::assertIsArray($payload);
+        self::assertSame('ok', $payload['status'] ?? null);
     }
 
     public function testCanonicalTransactionRouteIsReachableInChromium(): void
@@ -126,10 +137,10 @@ final class LocalDevPantherTest extends PantherTestCase
                 throw new \RuntimeException(sprintf('Local PHP server stopped before accepting connections: %s', self::$serverProcess->getErrorOutput()));
             }
 
-            $socket = @fsockopen(self::SERVER_HOST, self::$serverPort, $errorCode, $errorMessage, 0.2);
-            if (is_resource($socket)) {
-                fclose($socket);
-
+            $context = stream_context_create(['http' => ['timeout' => 1, 'ignore_errors' => true]]);
+            $body = @file_get_contents(self::serverBaseUri().'/healthz', false, $context);
+            $payload = is_string($body) ? json_decode($body, true) : null;
+            if (is_array($payload) && 'ok' === ($payload['status'] ?? null)) {
                 return;
             }
 
@@ -202,7 +213,11 @@ final class LocalDevPantherTest extends PantherTestCase
 
     private static function requireChromeDriver(): void
     {
-        $process = new Process([self::chromeDriverBinaryPath(), '--version'], self::projectRoot());
+        $driver = (new ExecutableFinder())->find('chromedriver', null, [self::projectRoot().'/drivers', self::projectRoot().'/vendor/bin']);
+        if (null === $driver) {
+            self::markTestSkipped(self::CHROMEDRIVER_SKIP_MESSAGE);
+        }
+        $process = new Process([$driver, '--version'], self::projectRoot());
         $process->setTimeout(self::CHROMEDRIVER_CHECK_TIMEOUT_SECONDS);
         $process->run();
 
@@ -225,7 +240,11 @@ final class LocalDevPantherTest extends PantherTestCase
     private static function requireChromeBinary(): void
     {
         foreach (self::CHROME_BINARY_CANDIDATES as $candidate) {
-            $process = new Process([$candidate, '--version'], self::projectRoot());
+            $binary = (new ExecutableFinder())->find($candidate);
+            if (null === $binary) {
+                continue;
+            }
+            $process = new Process([$binary, '--version'], self::projectRoot());
             $process->setTimeout(self::CHROMEDRIVER_CHECK_TIMEOUT_SECONDS);
             $process->run();
 
@@ -256,10 +275,5 @@ final class LocalDevPantherTest extends PantherTestCase
     private static function projectPath(string $relativePath): string
     {
         return self::projectRoot().'/'.ltrim($relativePath, '/');
-    }
-
-    private static function chromeDriverBinaryPath(): string
-    {
-        return self::projectPath(self::CHROMEDRIVER_BINARY);
     }
 }

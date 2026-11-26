@@ -6,6 +6,10 @@ use Nelmio\ApiDocBundle\NelmioApiDocBundle;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 return static function (RoutingConfigurator $routes): void {
+    $routes->add('vendor_local_healthz', '/healthz')
+        ->controller([App\Vendoring\Service\LocalDev\VendorLocalDevService::class, 'healthz'])
+        ->methods(['GET']);
+
     if ('1' === ($_ENV['VENDOR_RUNTIME_HARNESS'] ?? $_SERVER['VENDOR_RUNTIME_HARNESS'] ?? null)) {
         return;
     }

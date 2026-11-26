@@ -383,7 +383,7 @@
       "php tests/bin/smoke.php",
       "php tests/bin/vendor-route-map-coverage-smoke.php"
     ],
-    "test:transaction": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter VendorTransactionEntity",
+    "test:transaction": "php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite integration --filter VendorTransactionKernelRuntimeTest",
     "test:transaction-amount": "php tests/bin/transaction-amount-smoke.php",
     "test:transaction-doctrine": "php tests/bin/transaction-doctrine-smoke.php",
     "test:transaction-error-surface": "php tests/bin/transaction-error-surface-smoke.php",

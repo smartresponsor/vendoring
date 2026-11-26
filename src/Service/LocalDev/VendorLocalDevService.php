@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
+#[\Symfony\Component\HttpKernel\Attribute\AsController]
 final class VendorLocalDevService
 {
     public function __construct(

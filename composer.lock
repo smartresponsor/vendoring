@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Collectioning",
-                "reference": "d364b3ec8f648491088543a168c76b2298cb6283"
+                "reference": "5b99393934a76a25df89e0785147ea6010099a18"
             },
             "require": {
                 "doctrine/doctrine-bundle": "^3.2",
@@ -27,11 +27,8 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.95",
-                "gating/gate": "dev-master",
                 "phpstan/phpstan": "^2.2",
-                "phpunit/phpunit": "^13.3",
-                "symfony/panther": "^2.4",
-                "symfony/test-pack": "^1.2"
+                "phpunit/phpunit": "^13.3"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -65,30 +62,10 @@
                 ],
                 "cs:fix": [
                     "php-cs-fixer fix"
-                ],
-                "gate": [
-                    "@php vendor/bin/gating check --target=."
-                ],
-                "scan": [
-                    "@php vendor/bin/gating scan --target=."
-                ],
-                "quality:ui": [
-                    "npm test"
-                ],
-                "test:behavioral-coverage": [
-                    "@php tool/behavioral-coverage.php"
-                ],
-                "quality": [
-                    "@cs:check",
-                    "@phpstan",
-                    "@test",
-                    "@quality:ui",
-                    "@test:behavioral-coverage",
-                    "@gate"
                 ]
             },
             "license": [
-                "PolyForm-Noncommercial-1.0.0"
+                "proprietary"
             ],
             "description": "Symfony collection-query primitive for filtering, sorting, pagination, projection, counts and realtime collection invalidation.",
             "transport-options": {
@@ -179,7 +156,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Cruding",
-                "reference": "506f4cf8766c730a636637b28830970103e62a8c"
+                "reference": "f4bac830274f1599ef537e2e4cc98ca875d89925"
             },
             "require": {
                 "collectioning/collection": "dev-master",
@@ -1671,7 +1648,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Interfacing",
-                "reference": "0f3353dc5a4d06bd2c2b04fa46b918e8e42f4c84"
+                "reference": "15ced56faf040f6982d33929904a669649ad3d11"
             },
             "require": {
                 "collectioning/collection": "dev-master",
@@ -2004,7 +1981,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Objecting",
-                "reference": "0dba011e5bb54ad79b66f06e42d8aa614ee4c189"
+                "reference": "e318b6be0a7acebb1bb6d7499ae076752cc0b76f"
             },
             "require": {
                 "doctrine/orm": "^3.3",
@@ -7941,7 +7918,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Tabling",
-                "reference": "83469a1499bf63e008d087251c6661d2b1019694"
+                "reference": "646c32bd2f12fa5303e9382a4af83275c47d190c"
             },
             "require": {
                 "collectioning/collection": "dev-master",
@@ -8246,7 +8223,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Viewing",
-                "reference": "1086d4c3354b0eaa280433a9658f6a97b1223fef"
+                "reference": "e671ad8433fefe9169848efb705f9f97302a70e2"
             },
             "require": {
                 "collectioning/collection": "dev-master",
@@ -9229,7 +9206,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Gating",
-                "reference": "5eb9562cd1063d05b0271ffdfa836477c567ad66"
+                "reference": "4c69c0a953bbc15e298bada15056683f7dc46800"
             },
             "require": {
                 "php": "^8.4",

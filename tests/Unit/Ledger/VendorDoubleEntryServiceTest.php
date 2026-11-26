@@ -40,7 +40,8 @@ final class VendorDoubleEntryServiceTest extends TestCase
         self::assertSame('tenant-1', $result[0]->tenantId);
         self::assertSame('vendor-1', $result[0]->vendorId);
         self::assertSame('2026-03-15 08:30:00', $result[0]->createdAt);
-        self::assertMatchesRegularExpression('/^[0-9A-HJKMNP-TV-Z]{26}$/', $result[0]->getObjectUuid());
+        self::assertMatchesRegularExpression('/^[0-7][0-9A-HJKMNP-TV-Z]{25}$/D', $result[0]->getObjectUuid());
+        self::assertInstanceOf(\Symfony\Component\Uid\UuidV7::class, \Symfony\Component\Uid\Uuid::fromString($result[0]->getObjectUuid()));
     }
 
     public function testPostCreatesTimestampWhenDtoDoesNotProvideOne(): void

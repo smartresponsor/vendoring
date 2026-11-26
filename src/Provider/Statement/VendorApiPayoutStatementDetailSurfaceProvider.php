@@ -66,6 +66,7 @@ readonly class VendorApiPayoutStatementDetailSurfaceProvider implements CrudReso
                         'type' => 'statement',
                         'data' => $statement,
                         'meta' => [
+                            'tenantId' => $dto->tenantId,
                             'vendorId' => $dto->vendorId,
                             'from' => $dto->from,
                             'to' => $dto->to,
@@ -80,6 +81,7 @@ readonly class VendorApiPayoutStatementDetailSurfaceProvider implements CrudReso
                 'status_code' => 200,
                 'statement' => $statement,
                 'request' => [
+                    'tenantId' => $dto->tenantId,
                     'vendorId' => $dto->vendorId,
                     'from' => $dto->from,
                     'to' => $dto->to,
@@ -123,7 +125,7 @@ readonly class VendorApiPayoutStatementDetailSurfaceProvider implements CrudReso
         }
 
         if (is_string($value) && '' !== trim($value)) {
-            return ctype_digit($value) ? (int) $value : $value;
+            return $value;
         }
 
         return null;

@@ -45,7 +45,7 @@ final class VendorTransactionHttpService
      */
     public function create(Request $request): JsonResponse
     {
-        if ($authenticationResponse = $this->enforceTransactionWriteAuthentication($request, null, null)) {
+        if ($authenticationResponse = $this->enforceWriteAuthentication($request, null, null)) {
             return $authenticationResponse;
         }
 
@@ -133,7 +133,7 @@ final class VendorTransactionHttpService
      */
     public function updateStatus(string $vendorId, int $id, Request $request): JsonResponse
     {
-        if ($authenticationResponse = $this->enforceTransactionWriteAuthentication($request, $vendorId, $id)) {
+        if ($authenticationResponse = $this->enforceWriteAuthentication($request, $vendorId, $id)) {
             return $authenticationResponse;
         }
 
@@ -217,14 +217,6 @@ final class VendorTransactionHttpService
     /**
      * @throws ManagerException
      */
-    private function enforceTransactionWriteAuthentication(Request $request, ?string $vendorId, ?int $transactionId): ?JsonResponse
-    {
-        return $this->enforceWriteAuthentication($request, $vendorId, $transactionId);
-    }
-
-    /**
-     * @throws ManagerException
-     */
     private function enforceWriteAuthentication(Request $request, ?string $vendorId, ?int $transactionId): ?JsonResponse
     {
         $requiredPermission = self::WRITE_TRANSACTIONS_PERMISSION;
@@ -241,6 +233,11 @@ final class VendorTransactionHttpService
             return $this->authenticationResponse('authentication_required', 401, $requiredPermission);
         }
 
+        $authorizedVendor = $this->apiKeyService->validateAuthorizationHeader($authorization, $requiredPermission);
+        if (null !== $authorizedVendor) {
+            return null;
+        }
+
         $authenticatedVendor = $this->apiKeyService->resolveVendorFromAuthHeader($authorization);
         if (null === $authenticatedVendor) {
             $this->runtimeLogger->warning('vendor_transaction_authentication_rejected', [
@@ -253,19 +250,14 @@ final class VendorTransactionHttpService
             return $this->authenticationResponse('invalid_api_token', 401, $requiredPermission);
         }
 
-        $authorizedVendor = $this->apiKeyService->validateAuthorizationHeader($authorization, $requiredPermission);
-        if (null === $authorizedVendor) {
-            $this->runtimeLogger->warning('vendor_transaction_authorization_rejected', [
-                'vendor_id' => $vendorId,
-                'transaction_id' => null !== $transactionId ? (string) $transactionId : null,
-                'error_code' => 'permission_denied',
-                'required_permission' => $requiredPermission,
-            ]);
+        $this->runtimeLogger->warning('vendor_transaction_authorization_rejected', [
+            'vendor_id' => $vendorId,
+            'transaction_id' => null !== $transactionId ? (string) $transactionId : null,
+            'error_code' => 'permission_denied',
+            'required_permission' => $requiredPermission,
+        ]);
 
-            return $this->authenticationResponse('permission_denied', 403, $requiredPermission);
-        }
-
-        return null;
+        return $this->authenticationResponse('permission_denied', 403, $requiredPermission);
     }
 
     private function authenticationResponse(string $errorCode, int $statusCode, string $requiredPermission): JsonResponse
@@ -275,7 +267,9 @@ final class VendorTransactionHttpService
             'requiredPermission' => $requiredPermission,
         ], $statusCode);
 
-        $response->headers->set('WWW-Authenticate', 'Bearer');
+        if (401 === $statusCode) {
+            $response->headers->set('WWW-Authenticate', 'Bearer');
+        }
         $response->headers->set('X-Auth-Required-Permission', $requiredPermission);
 
         return $response;
@@ -325,20 +319,18 @@ final class VendorTransactionHttpService
 
     private function writeActorKey(Request $request, ?string $vendorId = null): string
     {
-        $explicitTestKey = trim((string) $request->headers->get('X-Rate-Limit-Key', ''));
-        if ('' !== $explicitTestKey) {
-            return sha1($explicitTestKey.'|'.(null === $vendorId ? '' : $vendorId));
+        if (defined('PHPUNIT_COMPOSER_INSTALL')) {
+            $explicitTestKey = trim((string) $request->headers->get('X-Rate-Limit-Key', ''));
+            if ('' !== $explicitTestKey) {
+                return sha1($explicitTestKey.'|'.($vendorId ?? ''));
+            }
         }
 
         $authorization = trim((string) $request->headers->get('Authorization', ''));
         $clientIp = $request->getClientIp() ?? 'unknown';
 
-        if (defined('PHPUNIT_COMPOSER_INSTALL')) {
-            return sha1(uniqid('vendoring_phpunit_rate_', true).'|'.(null === $vendorId ? '' : $vendorId));
-        }
-
         if ('' === $authorization && 'unknown' === $clientIp) {
-            return sha1(uniqid('vendoring_test_rate_', true).'|'.(null === $vendorId ? '' : $vendorId));
+            return sha1('vendoring_anonymous_rate|'.$request->getMethod().'|'.$request->getPathInfo().'|'.($vendorId ?? ''));
         }
 
         return sha1($authorization.'|'.$clientIp.'|'.(null === $vendorId ? '' : $vendorId));
