@@ -48,6 +48,12 @@ final class VendorPayoutProviderTest extends TestCase
         }
     }
 
+    public function testHistoricalConcreteProviderCannotFabricateSuccess(): void
+    {
+        $this->expectException(VendorPayoutProviderNotConfiguredException::class);
+        (new \App\Vendoring\Provider\Payout\VendorPayoutProvider())->transfer(new VendorPayoutTransferDTO('vendor-1', 'bank', 'test-account', 10.0, 'USD'));
+    }
+
     public function testNullProviderImplementsPayoutProviderInterface(): void
     {
         self::assertInstanceOf(

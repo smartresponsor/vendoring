@@ -165,6 +165,12 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
             self::assertCount(1, $rows);
             self::assertIsArray($rows[0]);
             self::assertSame('pending', $rows[0]['status']);
+            $mobile = '/api/vendor/transaction/list/'.$vendorB;
+            self::assertSame(401, KernelRuntimeHarness::requestJson($kernel, 'GET', $mobile)->getStatusCode());
+            self::assertSame(403, KernelRuntimeHarness::requestJson($kernel, 'GET', $mobile, null, $headersA)->getStatusCode());
+            $mobileResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', $mobile, null, $headersB);
+            self::assertSame(200, $mobileResponse->getStatusCode());
+            self::assertSame($rows, KernelRuntimeHarness::decodeJson($mobileResponse)['data']);
             self::assertSame(200, KernelRuntimeHarness::requestJson($kernel, 'POST', $path, ['status' => 'authorized'], $headersB)->getStatusCode());
         } finally {
             KernelRuntimeHarness::cleanupRuntimeState($kernel);

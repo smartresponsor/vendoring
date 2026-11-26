@@ -92,3 +92,26 @@ Pass 4 reused the exact Pass 3 SHA256-pinned inventories and resolved PHP ASTs w
 - dx-semantic-closure-pass5.json SHA256 624e09ad92d8f011f1205fb66361bdc3a6afd9d66d9dd599f8783e00a1187a4a
 
 Do not mark ready or merge until remaining semantic reviews and all remote gates pass. The optional legacy standalone Playwright script is not the authenticated acceptance gate; the actual Chromium/Panther tests replace its evidence, and its stale fixture requires synchronization if used. No dependency audit repeated, since composer manifests/lock are unchanged.
+
+## Pass 6 — residual disposition and host boundary
+
+Baseline: 74fdef4d6aae2e0d60200208402861a2024700c0.
+
+The three Pass 5 inventories were verified by SHA256 before deriving 342 individual rows. Private evidence:
+- pass6-residual-deltas.json SHA256 b293d1fbf435d1c7ae546245120989d6859d01b3bb99d556e576fbc91295e61b
+- pass6-method-audit.json SHA256 c90636216c10b763a87cd93a3c0d15cb91cf6d569ccb19d785a9c08d71a939d3
+- pass6-disposition.json SHA256 246d143d9eb2365cb19ea8adc3c99e606cb293b165f14a859b10fd0a814c53e5
+
+The method audit resolves class names using 360 explicit mappings and compares method bodies, signatures, properties, attributes and traits. The disposition records source, target, both baseline hashes, current target hash and reason for every row. 166 retained current contracts, five ported/tested rows and 171 pending semantic rows. Method inventory alone is not proof of behavior; unexpected historical public-method omissions (including renamed test methods) remain pending. The retained decisions do not assert historical data conversion or whole-file equivalence.
+
+Ported functionality:
+- Feature flag configuration reads and writes the same component-owned runtime manifest; validate flags, lock updates, preserve unrelated alert/rollback keys, retain a backup and replace atomically. DI defaults no longer overwrite the runtime manifest and configured runtime directories. This does not restore the former Administering audit-service integration.
+- Legacy concrete payout provider now fails closed rather than synthesizing a successful financial transfer; no provider is enabled.
+- Restore authenticated mobile transaction list alias with a positive integer canonical vendor ID, retaining persisted ownership and bearer permissions.
+- Restore historical CRUD create/update brand normalization and constraint failure regressions in the canonical repository-based service.
+
+Targeted PHPUnit: 33 tests, 157 assertions, zero skips, one PHPUnit deprecation. PHPStan: 834 files, zero errors. No dependency, schema or production changes; unchanged gates were not repeated.
+
+Host boundary: App remains on its existing canonical dependency, not this unmerged candidate. The mobile route and explicit service registration use the historical Service\\Vendor\\Transaction namespace and the mobile route accepts nonnumeric identifiers. AccessBearerAuthenticator treats bearer tokens as mobile access tokens, so Vendoring API-key propagation through the host firewall is not proven and can fail before the Vendoring service is called. Do not disable the main firewall or trust raw query identifiers. After dependency synchronization, migrate the exact route/service registration and numeric canonical ID contract together; explicitly separate machine Vendor API-key authentication from human Accessing bearer authentication using native Symfony security configuration, verifying that protected endpoints retain their own ownership and permissions. Exercise real host HTTP 401/403/404/200 responses and cross-owner access. Human mobile-token authorization requires a verified persisted actor-to-vendor binding, not token interchange. The host payout read service also requires separate review of its vendor/tenant scope. No host runtime acceptance or host canonical modification is claimed.
+
+Keep PR draft until the 171 pending rows, host contract verification and remote checks are resolved. No merge, canonical synchronization or deployment.

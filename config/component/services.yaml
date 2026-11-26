@@ -255,7 +255,7 @@ services:
 
   App\Vendoring\Service\Config\VendoringFeatureFlagsConfigService:
     arguments:
-      $projectDir: '%kernel.project_dir%'
+      $projectDir: '%vendoring_component_dir%'
 
   Psr\Log\NullLogger: ~
 
