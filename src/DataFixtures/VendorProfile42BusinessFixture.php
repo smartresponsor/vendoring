@@ -48,7 +48,7 @@ final class VendorProfile42BusinessFixture extends Fixture implements FixtureGro
         $vendor = $this->vendorRepository->find(42);
 
         if (!$vendor instanceof VendorEntity) {
-            return;
+            throw new \RuntimeException('Deterministic vendor 42 was not persisted');
         }
 
         $vendor->rename($brandName);

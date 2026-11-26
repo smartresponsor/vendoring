@@ -29,24 +29,37 @@ final readonly class VendorOutboundCircuitBreakerService implements VendorOutbou
      */
     public function currentState(string $operation, string $scopeKey, int $threshold, int $cooldownSeconds): array
     {
-        $payload = $this->readState($operation, $scopeKey);
+        $lock = $this->lock($operation, $scopeKey);
+        try {
+            $payload = $this->readState($operation, $scopeKey);
+            if ('closed' !== $payload['state']) {
+                if (null !== $payload['openedAt'] && time() - $payload['openedAt'] >= max(1, $cooldownSeconds)) {
+                    $payload['state'] = 'half_open';
+                    $payload['openedAt'] = time();
+                    $this->writeState($operation, $scopeKey, $payload);
 
-        if ('open' === $payload['state'] && null !== $payload['openedAt']) {
-            if ((time() - $payload['openedAt']) >= $cooldownSeconds) {
-                return $this->dto($operation, $scopeKey, 'half_open', $payload['failureCount'], $threshold, $cooldownSeconds, true);
+                    return $this->dto($operation, $scopeKey, 'half_open', $payload['failureCount'], $threshold, $cooldownSeconds, true);
+                }
+
+                return $this->dto($operation, $scopeKey, $payload['state'], $payload['failureCount'], $threshold, $cooldownSeconds, false);
             }
 
-            return $this->dto($operation, $scopeKey, 'open', $payload['failureCount'], $threshold, $cooldownSeconds, false);
+            return $this->dto($operation, $scopeKey, 'closed', $payload['failureCount'], $threshold, $cooldownSeconds, true);
+        } finally {
+            fclose($lock);
         }
-
-        return $this->dto($operation, $scopeKey, 'closed', $payload['failureCount'], $threshold, $cooldownSeconds, true);
     }
 
     public function recordSuccess(string $operation, string $scopeKey): void
     {
-        $path = $this->filePath($operation, $scopeKey);
-        if (is_file($path)) {
-            @unlink($path);
+        $lock = $this->lock($operation, $scopeKey);
+        try {
+            $path = $this->filePath($operation, $scopeKey);
+            if (is_file($path) && !unlink($path)) {
+                throw new \RuntimeException('Unable to reset circuit-breaker state');
+            }
+        } finally {
+            fclose($lock);
         }
     }
 
@@ -55,18 +68,22 @@ final readonly class VendorOutboundCircuitBreakerService implements VendorOutbou
      */
     public function recordFailure(string $operation, string $scopeKey, int $threshold, int $cooldownSeconds): array
     {
-        $current = $this->readState($operation, $scopeKey);
-        $failureCount = max(0, $current['failureCount']) + 1;
-        $open = $failureCount >= $threshold;
-        $state = $open ? 'open' : 'closed';
+        $lock = $this->lock($operation, $scopeKey);
+        try {
+            $current = $this->readState($operation, $scopeKey);
+            $failureCount = min(PHP_INT_MAX - 1, max(0, $current['failureCount'])) + 1;
+            $open = 'closed' !== $current['state'] || $failureCount >= $threshold;
+            $state = $open ? 'open' : 'closed';
+            $this->writeState($operation, $scopeKey, [
+                'failureCount' => $failureCount,
+                'state' => $state,
+                'openedAt' => $open ? time() : null,
+            ]);
 
-        $this->writeState($operation, $scopeKey, [
-            'failureCount' => $failureCount,
-            'state' => $state,
-            'openedAt' => $open ? time() : null,
-        ]);
-
-        return $this->dto($operation, $scopeKey, $state, $failureCount, $threshold, $cooldownSeconds, !$open);
+            return $this->dto($operation, $scopeKey, $state, $failureCount, $threshold, $cooldownSeconds, !$open);
+        } finally {
+            fclose($lock);
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -86,13 +103,13 @@ final readonly class VendorOutboundCircuitBreakerService implements VendorOutbou
 
         $contents = @file_get_contents($path);
         if (false === $contents || '' === $contents) {
-            return $this->emptyPayload();
+            throw new \RuntimeException('Unreadable circuit-breaker state');
         }
 
         $decoded = json_decode($contents, true);
 
         if (!is_array($decoded)) {
-            return $this->emptyPayload();
+            throw new \RuntimeException('Invalid circuit-breaker state');
         }
 
         $payload = [];
@@ -120,7 +137,7 @@ final readonly class VendorOutboundCircuitBreakerService implements VendorOutbou
         }
 
         $target = $this->filePath($operation, $scopeKey);
-        $tmp = $target.'.tmp.'.getmypid();
+        $tmp = $target.'.tmp.'.bin2hex(random_bytes(12));
 
         $json = json_encode($payload, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 
@@ -132,6 +149,26 @@ final readonly class VendorOutboundCircuitBreakerService implements VendorOutbou
             @unlink($tmp);
             throw new \RuntimeException(sprintf('Unable to atomically commit circuit-breaker state to "%s".', $target));
         }
+    }
+
+    /** @return resource */
+    private function lock(string $operation, string $scopeKey)
+    {
+        $dir = rtrim($this->stateDir, DIRECTORY_SEPARATOR);
+        if (!is_dir($dir) && !@mkdir($dir, 0700, true) && !is_dir($dir)) {
+            throw new \RuntimeException('Unable to create circuit-breaker state directory');
+        }
+        // Persistent lock inode: never unlink it while other workers may be waiting.
+        $lock = fopen($this->filePath($operation, $scopeKey).'.lock', 'c');
+        if (false === $lock) {
+            throw new \RuntimeException('Unable to open circuit-breaker lock');
+        }
+        if (!flock($lock, LOCK_EX)) {
+            fclose($lock);
+            throw new \RuntimeException('Unable to acquire circuit-breaker lock');
+        }
+
+        return $lock;
     }
 
     private function filePath(string $operation, string $scopeKey): string
@@ -155,7 +192,7 @@ final readonly class VendorOutboundCircuitBreakerService implements VendorOutbou
 
         return [
             'failureCount' => is_numeric($fc) ? max(0, (int) $fc) : 0,
-            'state' => is_string($st) && '' !== trim($st) ? trim($st) : 'closed',
+            'state' => is_string($st) && in_array($st, ['closed', 'open', 'half_open'], true) ? $st : 'open',
             'openedAt' => is_numeric($oa) ? (int) $oa : null,
         ];
     }

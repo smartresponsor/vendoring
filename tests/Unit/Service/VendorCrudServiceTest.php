@@ -81,6 +81,33 @@ final class VendorCrudServiceTest extends TestCase
         (new VendorCrudService($repository, $dispatcher, $assignment, $validator))->create(new VendorCreateDTO('invalid'));
     }
 
+    public function testIndexDoesNotMaskRepositoryFailure(): void
+    {
+        $repo = $this->createMock(VendorRepositoryInterface::class);
+        $repo->method('findBy')->willThrowException(new \RuntimeException('database_unavailable'));
+        $this->expectExceptionMessage('database_unavailable');
+        $this->service($repo)->index();
+    }
+
+    public function testFindDoesNotMaskRepositoryFailure(): void
+    {
+        $repo = $this->createMock(VendorRepositoryInterface::class);
+        $repo->method('find')->willThrowException(new \RuntimeException('database_unavailable'));
+        $this->expectExceptionMessage('database_unavailable');
+        $this->service($repo)->find(42);
+    }
+
+    public function testBrandAndObjectingFirstTitleStayAligned(): void
+    {
+        $vendor = new VendorEntity('Old');
+        $vendor->rename(' New ');
+        self::assertSame('New', $vendor->getFirstTitle());
+        $vendor->setFirstTitle(' Next ');
+        self::assertSame('Next', $vendor->getBrandName());
+        self::assertSame('Next', $vendor->getTitle());
+        self::assertSame('Next', $vendor->getFirstTitle());
+    }
+
     private function service(VendorRepositoryInterface $repository): VendorCrudService
     {
         $validator = $this->createMock(ValidatorInterface::class);

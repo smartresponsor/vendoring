@@ -6,7 +6,7 @@ parameters:
   vendoring_observability_dir: '%kernel.project_dir%/var/observability'
   vendoring_fault_tolerance_dir: '%kernel.project_dir%/var/fault-tolerance'
   vendoring_alert_thresholds:
-    errorLogThreshold: 5
+    errorLogThreshold: 1
     openBreakerThreshold: 1
     missingProbeThreshold: 1
   vendoring_public_profile_path_template: '/vendor/{vendorId}'

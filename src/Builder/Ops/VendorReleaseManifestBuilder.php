@@ -73,10 +73,15 @@ final readonly class VendorReleaseManifestBuilder implements VendorReleaseManife
      */
     private function releaseDocs(): array
     {
+        $runtime = is_file($this->projectDir.'/docs/release/RC_RUNTIME_SURFACES.md');
+        $operator = is_file($this->projectDir.'/docs/release/RC_OPERATOR_SURFACE.md');
+
         return [
             'rcBaseline' => is_file($this->projectDir.'/docs/release/RC_BASELINE.md'),
-            'rcRuntimeSurfaces' => is_file($this->projectDir.'/docs/release/RC_RUNTIME_SURFACES.md'),
-            'rcOperatorSurface' => is_file($this->projectDir.'/docs/release/RC_OPERATOR_SURFACE.md'),
+            'rcRuntimeSurfaces' => $runtime,
+            'rcRuntimes' => $runtime,
+            'rcOperatorSurface' => $operator,
+            'rcOperator' => $operator,
             'rcEvidencePack' => is_file($this->projectDir.'/docs/release/RC_EVIDENCE_PACK.md'),
             'rcRollbackManifest' => is_file($this->projectDir.'/docs/release/RC_ROLLBACK_MANIFEST.md'),
             'rcReleaseManifest' => is_file($this->projectDir.'/docs/release/RC_RELEASE_MANIFEST.md'),

@@ -8,7 +8,8 @@ use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\RepositoryInterface\VendorOwnershipProjectionRepositoryInterface;
 use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Types\Types;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Doctrine\Persistence\ManagerRegistry;
 
 /** @extends ServiceEntityRepository<VendorEntity> */
@@ -98,43 +99,39 @@ final class VendorRepository extends ServiceEntityRepository implements VendorRe
 
     public function seedDeterministicVendor(int $id, string $brandName, int $ownerUserId): void
     {
-        $connection = $this->getEntityManager()->getConnection();
-        $createdAt = new \DateTimeImmutable();
+        if ($id <= 0 || $ownerUserId <= 0 || '' === trim($brandName)) {
+            throw new \InvalidArgumentException('Invalid deterministic fixture identity');
+        }
+        $em = $this->getEntityManager();
+        $connection = $em->getConnection();
+        $platform = $connection->getDatabasePlatform();
+        if (!$platform instanceof PostgreSQLPlatform && !$platform instanceof SQLitePlatform) {
+            throw new \LogicException('Unsupported deterministic fixture platform');
+        }
+        $existing = $this->find($id);
+        if (null !== $existing) {
+            $existing->rename($brandName)->changeOwnerUserId($ownerUserId)->activate();
+            $this->save($existing, true);
 
-        $connection->executeStatement(
-            <<<'SQL'
-INSERT INTO vendor (id, brand_name, owner_user_id, status, created_at)
-VALUES (:id, :brand_name, :owner_user_id, :status, :created_at)
-ON CONFLICT (id) DO UPDATE SET
-    brand_name = EXCLUDED.brand_name,
-    owner_user_id = EXCLUDED.owner_user_id,
-    status = EXCLUDED.status
-SQL,
-            [
-                'id' => $id,
-                'brand_name' => $brandName,
-                'owner_user_id' => $ownerUserId,
-                'status' => 'active',
-                'created_at' => $createdAt,
-            ],
-            [
-                'id' => Types::INTEGER,
-                'brand_name' => Types::STRING,
-                'owner_user_id' => Types::INTEGER,
-                'status' => Types::STRING,
-                'created_at' => Types::DATETIME_IMMUTABLE,
-            ],
-        );
+            return;
+        }
 
-        $connection->executeStatement(
-            <<<'SQL'
-SELECT setval(
-    pg_get_serial_sequence('vendor', 'id'),
-    GREATEST((SELECT COALESCE(MAX(id), 1) FROM vendor), 1),
-    true
-)
-SQL
-        );
+        $vendor = new VendorEntity($brandName, $ownerUserId);
+        $vendor->activate();
+        $metadata = $em->getClassMetadata(VendorEntity::class);
+        $data = [];
+        $types = [];
+        foreach ($metadata->getFieldNames() as $field) {
+            $column = $metadata->getColumnName($field);
+            $data[$column] = 'id' === $field ? $id : $metadata->getFieldValue($vendor, $field);
+            $types[$column] = $metadata->getTypeOfField($field) ?? throw new \LogicException('Missing fixture column type');
+        }
+        $connection->transactional(static function ($connection) use ($metadata, $data, $types, $platform): void {
+            $connection->insert($metadata->getTableName(), $data, $types);
+            if ($platform instanceof PostgreSQLPlatform) {
+                $connection->executeStatement("SELECT setval(pg_get_serial_sequence('vendor', 'id'), GREATEST((SELECT COALESCE(MAX(id), 1) FROM vendor), 1), true)");
+            }
+        });
     }
 
     public function relationCounts(VendorEntity $vendor): array

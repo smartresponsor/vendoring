@@ -12,7 +12,6 @@ use App\Vendoring\Event\VendorCreatedEvent;
 use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
 use App\Vendoring\ServiceInterface\Assignment\VendorUserAssignmentServiceInterface;
 use App\Vendoring\ServiceInterface\Crud\VendorCrudServiceInterface;
-use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -31,26 +30,12 @@ final readonly class VendorCrudService implements VendorCrudServiceInterface
      */
     public function index(): array
     {
-        try {
-            return $this->vendorRepository->findBy([]);
-        } catch (TableNotFoundException) {
-            return [];
-        } catch (\Throwable) {
-            return [];
-        }
+        return $this->vendorRepository->findBy([]);
     }
 
     public function find(int|string $id): ?VendorEntity
     {
-        try {
-            $vendor = $this->vendorRepository->find($id);
-        } catch (TableNotFoundException) {
-            return null;
-        } catch (\Throwable) {
-            return null;
-        }
-
-        return $vendor;
+        return $this->vendorRepository->find($id);
     }
 
     public function create(VendorCreateDTO $dto): VendorEntity

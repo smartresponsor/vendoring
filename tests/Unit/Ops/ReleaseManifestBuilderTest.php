@@ -51,6 +51,8 @@ final class ReleaseManifestBuilderTest extends TestCase
         $manifest = $builder->build(600);
 
         self::assertSame('warn', $manifest['status']);
+        self::assertSame($manifest['releaseDocs']['rcRuntimeSurfaces'], $manifest['releaseDocs']['rcRuntimes']);
+        self::assertSame($manifest['releaseDocs']['rcOperatorSurface'], $manifest['releaseDocs']['rcOperator']);
         self::assertSame(1, $manifest['monitoring']['alertCount']);
         self::assertSame(['outbound_circuit_open'], $manifest['monitoring']['alertCodes']);
         self::assertSame(1, $manifest['monitoring']['openBreakers']);

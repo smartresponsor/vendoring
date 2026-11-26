@@ -15,7 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'idx_vendor_owner_user_id', columns: ['owner_user_id'])]
 class VendorEntity extends VendorAbstractEntity implements ObjectEntityInterface
 {
-    use ObjectTitleEmbeddableTrait;
+    use ObjectTitleEmbeddableTrait {
+        setFirstTitle as private setObjectFirstTitle;
+    }
     #[ORM\Column(type: 'string', length: 255)]
     private string $brandName;
 
@@ -123,9 +125,18 @@ class VendorEntity extends VendorAbstractEntity implements ObjectEntityInterface
     public function rename(string $brandName): self
     {
         $this->brandName = trim($brandName);
+        $this->setObjectFirstTitle($this->brandName);
         $this->touchModified();
 
         return $this;
+    }
+
+    public function setFirstTitle(?string $firstTitle): void
+    {
+        if (null === $firstTitle || '' === trim($firstTitle)) {
+            throw new \InvalidArgumentException('brand_name_required');
+        }
+        $this->rename($firstTitle);
     }
 
     public function getOwnerUserId(): ?int

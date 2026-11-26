@@ -50,10 +50,6 @@ final class VendorIndexService extends VendorAbstractCrudRouteService
     /** @return list<array{id: int, brandName: string, ownerUserId: int|null}> */
     private function vendors(): array
     {
-        try {
-            return $this->vendorRepository->findIndexRows();
-        } catch (\Throwable) {
-            return [];
-        }
+        return $this->vendorRepository->findIndexRows();
     }
 }
