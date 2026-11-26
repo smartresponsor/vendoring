@@ -41,8 +41,9 @@ final class VendorOwnershipProjectionBuilderTest extends TestCase
     public function testBuildForVendorIdBuildsOwnershipProjectionFromActiveAssignments(): void
     {
         $vendor = new VendorEntity('Vendor Example', 5001);
+        (new \ReflectionProperty($vendor, 'id'))->setValue($vendor, 101);
         $assignmentA = new VendorUserAssignmentEntity(
-            vendorId: 101,
+            vendorId: $vendor,
             userId: 5002,
             role: 'manager',
             status: 'active',
@@ -51,7 +52,7 @@ final class VendorOwnershipProjectionBuilderTest extends TestCase
             revokedAt: null,
         );
         $assignmentB = new VendorUserAssignmentEntity(
-            vendorId: 101,
+            vendorId: $vendor,
             userId: 5003,
             role: 'viewer',
             status: 'active',

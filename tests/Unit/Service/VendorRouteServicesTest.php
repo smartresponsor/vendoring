@@ -194,6 +194,23 @@ final class VendorRouteServicesTest extends TestCase
         self::assertInstanceOf(CrudResourceContract::class, $response);
     }
 
+    public function testReadRoutesBlockUnsupportedMutationWithoutUninitializedParentState(): void
+    {
+        $this->vendorRepository->expects(self::never())->method('save');
+        $this->vendorRepository->expects(self::never())->method('remove');
+        $services = [
+            new VendorIndexService($this->responseService, $this->vendorRepository),
+            new VendorShowService($this->responseService, $this->vendorRepository),
+            new \App\Vendoring\Service\VendorNewService($this->responseService),
+            new \App\Vendoring\Service\VendorEditService($this->responseService, $this->vendorRepository),
+        ];
+        foreach ($services as $service) {
+            foreach (['post', 'put', 'patch', 'delete'] as $method) {
+                self::assertInstanceOf(CrudResourceContract::class, $service->{$method}($this->context('show')));
+            }
+        }
+    }
+
     /**
      * @param array<string, mixed> $requestData
      */

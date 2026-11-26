@@ -177,6 +177,32 @@ final class VendorTransactionKernelRuntimeTest extends TestCase
         }
     }
 
+    public function testMachineFirewallRejectsForeignBearerAndInsufficientPermission(): void
+    {
+        $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 3));
+        try {
+            $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'read:transactions', $vendorId);
+            $path = '/api/vendor/transaction/list/'.$vendorId;
+            $foreign = KernelRuntimeHarness::requestJson($kernel, 'GET', $path, null, ['Authorization' => 'Bearer foreign-human-session']);
+            self::assertSame(401, $foreign->getStatusCode());
+            self::assertSame('invalid_api_token', KernelRuntimeHarness::decodeJson($foreign)['error']);
+            self::assertSame('Bearer', $foreign->headers->get('WWW-Authenticate'));
+            $headers = ['Authorization' => 'Bearer '.$token];
+            self::assertSame(200, KernelRuntimeHarness::requestJson($kernel, 'GET', $path, null, $headers)->getStatusCode());
+            $denied = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', [
+                'vendorId' => $vendorId,
+                'orderId' => 'must-not-create',
+                'amount' => '10.50',
+            ], $headers);
+            self::assertSame(403, $denied->getStatusCode());
+            self::assertSame('permission_denied', KernelRuntimeHarness::decodeJson($denied)['error']);
+            self::assertSame([], KernelRuntimeHarness::decodeJson(KernelRuntimeHarness::requestJson($kernel, 'GET', $path, null, $headers))['data']);
+            self::assertSame(404, KernelRuntimeHarness::requestForm($kernel, 'GET', '/api/vendor/transaction/list/0042', [], $headers)->getStatusCode());
+        } finally {
+            KernelRuntimeHarness::cleanupRuntimeState($kernel);
+        }
+    }
+
     public function testKernelRuntimeEnforcesConfiguredWriteRateLimit(): void
     {
         if (!extension_loaded('pdo_sqlite')) {

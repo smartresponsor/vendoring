@@ -59,6 +59,7 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
         $this->ownership->expects(self::once())->method('buildForVendorId')->with(101)
             ->willReturn(new VendorOwnershipProjection(101, 5001, [['userId' => 5002, 'role' => 'manager', 'status' => 'active', 'isPrimary' => false, 'grantedAt' => '2026-03-01T00:00:00+00:00', 'revokedAt' => null, 'capabilities' => []]]));
         $this->metrics->expects(self::once())->method('overview')->with(self::callback(function (VendorMetricOverviewRequestDTO $request): bool {
+            self::assertSame('tenant-1', $request->tenantId);
             self::assertSame('101', $request->vendorId);
             self::assertSame('2026-03-01', $request->from);
             self::assertSame('2026-03-31', $request->to);
@@ -70,6 +71,7 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
         $this->accounts->expects(self::once())->method('get')->with('tenant-1', '101')
             ->willReturn(new VendorPayoutAccountEntity('acc-1', 'tenant-1', '101', 'bank', 'iban-123', 'USD', true, '2026-03-01 10:00:00'));
         $this->statements->expects(self::once())->method('build')->with(self::callback(function (VendorStatementRequestDTO $dto): bool {
+            self::assertSame('tenant-1', $dto->tenantId);
             self::assertSame('101', $dto->vendorId);
             self::assertSame('2026-03-01', $dto->from);
             self::assertSame('2026-03-31', $dto->to);
@@ -85,6 +87,7 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
             $this->statements,
         ))->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', 101)->toArray();
 
+        self::assertSame('tenant-1', $view['tenantId']);
         self::assertSame('101', $view['vendorId']);
         self::assertSame('USD', $view['currency']);
         self::assertIsArray($view['ownership']);
@@ -111,6 +114,7 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
 
         $this->ownership->expects(self::never())->method('buildForVendorId');
         $this->metrics->expects(self::once())->method('overview')->with(self::callback(function (VendorMetricOverviewRequestDTO $request): bool {
+            self::assertSame('tenant-1', $request->tenantId);
             self::assertSame('vendor-alpha', $request->vendorId);
             self::assertNull($request->from);
             self::assertNull($request->to);

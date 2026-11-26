@@ -22,8 +22,8 @@ if (!is_file($canonical)) {
     exit(1);
 }
 
-if (is_file($forbidden)) {
-    fwrite(STDERR, "Forbidden root-level VendorTransactionSurfaceBuilder.php still exists\n");
+if (is_file($forbidden) || is_file($root.'/VendorTransactionBuilder.php')) {
+    fwrite(STDERR, "Forbidden root-level transaction builder still exists\n");
     exit(1);
 }
 

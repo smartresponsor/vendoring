@@ -50,6 +50,7 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
             ->expects(self::once())
             ->method('build')
             ->with(self::callback(function (VendorStatementDeliveryRuntimeRequestDTO $request): bool {
+                self::assertSame('tenant-1', $request->tenantId);
                 self::assertSame('42', $request->vendorId);
                 self::assertSame('2025-01-01', $request->from);
                 self::assertSame('2025-01-31', $request->to);
@@ -95,6 +96,7 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
             ->expects(self::once())
             ->method('build')
             ->with(self::callback(function (VendorStatementDeliveryRuntimeRequestDTO $request): bool {
+                self::assertSame('tenant-1', $request->tenantId);
                 self::assertSame('vendor-abc', $request->vendorId);
                 self::assertSame('', $request->from);
                 self::assertSame('', $request->to);

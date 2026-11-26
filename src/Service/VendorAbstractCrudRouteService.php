@@ -144,9 +144,14 @@ abstract class VendorAbstractCrudRouteService extends CrudAbstractService
         return $vendor;
     }
 
+    protected function routeResponseService(): VendorHttpRouteResponseService
+    {
+        return $this->responseService;
+    }
+
     private function blocked(CrudServiceContextDTO $context): CrudResourceContract
     {
-        return $this->responseService->blocked(
+        return $this->routeResponseService()->blocked(
             $context,
             $this->resourcePath(),
             $this->operation(),

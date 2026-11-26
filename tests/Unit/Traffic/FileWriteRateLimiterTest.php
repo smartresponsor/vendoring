@@ -36,6 +36,7 @@ final class FileWriteRateLimiterTest extends TestCase
             self::assertTrue($second->consume('create', 'actor-a', 2, 60)->allowed());
             $denied = $first->consume('create', 'actor-a', 2, 60);
             self::assertFalse($denied->allowed());
+            self::assertSame(0, $denied->remaining());
             self::assertGreaterThan(0, $denied->retryAfterSeconds());
             self::assertTrue($second->consume('create', 'actor-b', 2, 60)->allowed());
             self::assertTrue($second->consume('update', 'actor-a', 2, 60)->allowed());

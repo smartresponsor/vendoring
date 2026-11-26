@@ -11,4 +11,9 @@ services:
     arguments:
       $attachmentPrimaryLinkResolver: '@App\Attaching\ServiceInterface\Linking\Attachment\AttachmentPrimaryLinkServiceInterface'
 
-  App\Vendoring\ResolverInterface\Profile\VendorProfileAttachmentResolverInterface: '@App\Vendoring\Resolver\Profile\Bridge\VendorAttachingProfileAttachmentResolver'
+  App\Vendoring\Resolver\Profile\VendorChainedProfileAttachmentResolver:
+    arguments:
+      $primaryResolver: '@App\Vendoring\Resolver\Profile\Bridge\VendorAttachingProfileAttachmentResolver'
+      $fallbackResolver: '@App\Vendoring\Resolver\Profile\VendorLegacyProfileAttachmentResolver'
+
+  App\Vendoring\ResolverInterface\Profile\VendorProfileAttachmentResolverInterface: '@App\Vendoring\Resolver\Profile\VendorChainedProfileAttachmentResolver'

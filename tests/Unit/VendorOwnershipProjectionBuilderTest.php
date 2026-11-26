@@ -28,11 +28,12 @@ final class VendorOwnershipProjectionBuilderTest extends TestCase
     public function testBuildForVendorIdIncludesCapabilitiesPerAssignment(): void
     {
         $vendor = new VendorEntity(brandName: 'Acme', ownerUserId: 7);
+        (new \ReflectionProperty($vendor, 'id'))->setValue($vendor, 42);
 
         $this->vendorRepository->method('find')->with(42)->willReturn($vendor);
         $this->assignmentRepository->method('findActiveByVendorId')->with(42)->willReturn([
-            new VendorUserAssignmentEntity(42, 7, 'owner', isPrimary: true),
-            new VendorUserAssignmentEntity(42, 9, 'viewer'),
+            new VendorUserAssignmentEntity($vendor, 7, 'owner', isPrimary: true),
+            new VendorUserAssignmentEntity($vendor, 9, 'viewer'),
         ]);
 
         $builder = new VendorOwnershipProjectionBuilder(

@@ -1,7 +1,19 @@
 security:
     access_decision_manager:
         strategy: affirmative
+    providers:
+        vendoring_machine_users:
+            memory: ~
     firewalls:
+        vendoring_transaction_machine:
+            request_matcher: App\Vendoring\Security\VendorTransactionMachineRequestMatcher
+            stateless: true
+            provider: vendoring_machine_users
+            custom_authenticators:
+                - App\Vendoring\Authenticator\VendorTransactionMachineAuthenticator
+            entry_point: App\Vendoring\Authenticator\VendorTransactionMachineAuthenticator
         vendoring_bootstrap:
             pattern: '^$'
             security: false
+    access_control:
+        - { request_matcher: App\Vendoring\Security\VendorTransactionMachineRequestMatcher, roles: ROLE_VENDOR_MACHINE }

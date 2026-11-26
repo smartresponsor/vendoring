@@ -52,6 +52,7 @@ final class VendorExternalIntegrationRuntimeProjectionBuilderTest extends TestCa
             $this->payoutBridge,
         ))->build('tenant-1', '101', 101)->toArray();
 
+        self::assertSame('tenant-1', $payload['tenantId']);
         self::assertSame('101', $payload['vendorId']);
         self::assertIsArray($payload['ownership'] ?? null);
         self::assertSame(5001, $payload['ownership']['ownerUserId'] ?? null);

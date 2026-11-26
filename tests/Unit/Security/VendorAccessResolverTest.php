@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Security;
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
 use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use App\Vendoring\Resolver\Security\VendorAccessResolver;
@@ -15,9 +16,13 @@ final class VendorAccessResolverTest extends TestCase
 {
     private VendorUserAssignmentRepositoryInterface&MockObject $repository;
 
+    private VendorEntity $vendor;
+
     protected function setUp(): void
     {
         $this->repository = $this->createMock(VendorUserAssignmentRepositoryInterface::class);
+        $this->vendor = new VendorEntity('Fixture');
+        (new \ReflectionProperty($this->vendor, 'id'))->setValue($this->vendor, 42);
     }
 
     public function testCapabilityGrantedWhenAnyActiveRoleMatches(): void
@@ -26,8 +31,8 @@ final class VendorAccessResolverTest extends TestCase
             ->method('findActiveByVendorId')
             ->with(42)
             ->willReturn([
-                new VendorUserAssignmentEntity(42, 7, 'viewer'),
-                new VendorUserAssignmentEntity(42, 7, 'finance'),
+                new VendorUserAssignmentEntity($this->vendor, 7, 'viewer'),
+                new VendorUserAssignmentEntity($this->vendor, 7, 'finance'),
             ]);
 
         $resolver = new VendorAccessResolver($this->repository, new VendorAuthorizationMatrixService());
@@ -54,7 +59,7 @@ final class VendorAccessResolverTest extends TestCase
             ->method('findActiveByVendorId')
             ->with(42)
             ->willReturn([
-                new VendorUserAssignmentEntity(42, 7, 'viewer'),
+                new VendorUserAssignmentEntity($this->vendor, 7, 'viewer'),
             ]);
 
         $resolver = new VendorAccessResolver($this->repository, new VendorAuthorizationMatrixService());

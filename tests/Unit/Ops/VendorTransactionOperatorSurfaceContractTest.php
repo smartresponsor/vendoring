@@ -33,6 +33,7 @@ final class VendorTransactionOperatorSurfaceContractTest extends TestCase
         self::assertStringContainsString('vendorId: $vendorId,', $source);
         self::assertStringNotContainsString('vendorId: trim($input->vendorId)', $source);
         self::assertStringContainsString("'statusLabels' => VendorTransactionStatusValueObject::labels()", $source);
+        self::assertDoesNotMatchRegularExpression('/class\s+VendorTransactionOperatorService\s+extends\b/', $source);
         self::assertNotSame('Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController', get_parent_class(\App\Vendoring\Service\Transaction\Operator\VendorTransactionOperatorService::class));
     }
 }

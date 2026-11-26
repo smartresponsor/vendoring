@@ -12,20 +12,23 @@ use App\Vendoring\Service\Rollout\VendorFeatureFlagService;
 
 require dirname(__DIR__, 2).'/vendor/autoload.php';
 
-$root = dirname(__DIR__, 2);
 $smokeStateDir = sys_get_temp_dir().'/vendoring-canary-smoke-'.bin2hex(random_bytes(4));
+$root = $smokeStateDir.'/fixture-root';
+register_shutdown_function(static function () use ($smokeStateDir): void {
+    (new Symfony\Component\Filesystem\Filesystem())->remove($smokeStateDir);
+});
 $observabilityDir = $smokeStateDir.'/observability';
 $faultToleranceDir = $smokeStateDir.'/fault-tolerance';
 
-@mkdir($observabilityDir, 0777, true);
-@mkdir($faultToleranceDir.'/circuit-breakers', 0777, true);
-@mkdir($root.'/docs/release', 0777, true);
-@mkdir($root.'/build/release', 0777, true);
-@mkdir($root.'/build/docs/phpdocumentor', 0777, true);
-@mkdir($root.'/docs', 0777, true);
+@mkdir($observabilityDir, 0700, true);
+@mkdir($faultToleranceDir.'/circuit-breakers', 0700, true);
+@mkdir($root.'/docs/release', 0700, true);
+@mkdir($root.'/build/release', 0700, true);
+@mkdir($root.'/build/docs/phpdocumentor', 0700, true);
+@mkdir($root.'/docs', 0700, true);
 
 file_put_contents($observabilityDir.'/runtime_logs.ndjson', json_encode(['timestamp' => date(DATE_ATOM), 'level' => 'info', 'message' => 'canary smoke']).PHP_EOL);
-file_put_contents($observabilityDir.'/runtime_metrics.ndjson', json_encode(['timestamp' => date(DATE_ATOM), 'type' => 'counter', 'nameEntity' => 'canary_smoke_metric', 'tags' => ['scope' => 'smoke'], 'request_id' => 'smoke', 'correlation_id' => 'smoke']).PHP_EOL);
+file_put_contents($observabilityDir.'/runtime_metrics.ndjson', json_encode(['timestamp' => date(DATE_ATOM), 'type' => 'counter', 'name' => 'canary_smoke_metric', 'tags' => ['scope' => 'smoke'], 'request_id' => 'smoke', 'correlation_id' => 'smoke']).PHP_EOL);
 
 foreach ([
     $root.'/docs/release/RC_BASELINE.md',
@@ -45,7 +48,7 @@ foreach ([
     $root.'/build/docs/phpdocumentor/index.html',
 ] as $file) {
     if (!is_file($file)) {
-        file_put_contents($file, 'placeholder');
+        file_put_contents($file, 'Isolated synthetic readiness fixture');
     }
 }
 
@@ -67,7 +70,7 @@ $coordinator = new VendorCanaryRolloutCoordinatorService(
     new VendorRollbackDecisionEvaluatorService(),
 );
 
-$report = $coordinator->evaluate('transaction_canary', '42', 900);
+$report = $coordinator->evaluate('transaction_canary', '42', 900, tenantId: 'tenant-1');
 
 if ('proceed' !== $report['canary']['decision']) {
     throw new RuntimeException('Canary rollout coordinator did not return proceed for a green vendor canary.');
@@ -75,8 +78,8 @@ if ('proceed' !== $report['canary']['decision']) {
 if ('expand_canary_scope' !== $report['canary']['recommendedAction']) {
     throw new RuntimeException('Canary rollout coordinator did not recommend expansion.');
 }
-if (($report['canary']['nextCohort'] ?? null) !== 'global') {
-    throw new RuntimeException('Canary rollout coordinator did not suggest global expansion.');
+if (($report['canary']['nextCohort'] ?? null) !== 'tenant:tenant-1') {
+    throw new RuntimeException('Canary rollout coordinator did not suggest tenant expansion.');
 }
 if ('vendor:42' !== $report['flagDecision']['cohort']) {
     throw new RuntimeException('Canary rollout coordinator did not preserve vendor cohort.');

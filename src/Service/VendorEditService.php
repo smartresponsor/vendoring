@@ -29,6 +29,11 @@ final class VendorEditService extends VendorAbstractCrudRouteService
         );
     }
 
+    protected function routeResponseService(): VendorHttpRouteResponseService
+    {
+        return $this->responseService;
+    }
+
     protected function resourcePath(): string
     {
         return 'vendor';

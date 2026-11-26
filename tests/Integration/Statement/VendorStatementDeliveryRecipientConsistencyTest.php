@@ -51,6 +51,7 @@ final class VendorStatementDeliveryRecipientConsistencyTest extends TestCase
         $this->exporter->expects(self::never())->method('export');
         $this->recipients->expects(self::once())->method('forPeriod')->with('2026-03-01', '2026-03-31')
             ->willReturn([
+                new VendorStatementRecipientDTO('tenant-2', '101', 'skip-tenant@example.com', 'USD'),
                 new VendorStatementRecipientDTO('tenant-1', '202', 'skip-vendor-202@example.com', 'USD'),
                 new VendorStatementRecipientDTO('tenant-1', '999', 'skip-vendor-999@example.com', 'USD'),
             ]);

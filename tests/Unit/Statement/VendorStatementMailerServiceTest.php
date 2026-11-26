@@ -38,6 +38,11 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertCount(1, $mailer->messages());
         self::assertSame('statement_mail_sent_total', $metrics->snapshot()[0]['name']);
 
+        $message = $mailer->messages()[0];
+        self::assertInstanceOf(\Symfony\Component\Mime\Email::class, $message);
+        self::assertStringContainsString('Tenant: tenant-1, Vendor: vendor-1', (string) $message->getTextBody());
+        self::assertSame('tenant-1', $metrics->snapshot()[0]['tags']['tenantId']);
+
         unlink($pdf);
     }
 

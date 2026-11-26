@@ -39,6 +39,6 @@ final readonly class VendorRuntimeWindowInputDTO
 
     public function hasRequiredScope(): bool
     {
-        return '' !== $this->tenantId && '' !== trim($this->vendorId);
+        return '' !== trim($this->tenantId) && '' !== trim($this->vendorId);
     }
 }

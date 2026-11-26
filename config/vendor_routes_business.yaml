@@ -31,12 +31,15 @@ vendor_transaction_list:
     path: /api/vendor/transaction/{id}
     controller: App\Vendoring\Service\Transaction\VendorTransactionHttpService::listByVendor
     methods: [GET]
+    requirements:
+        id: '[1-9][0-9]*'
 
 vendor_transaction_status_update:
     path: /api/vendor/transaction/status/{vendorId}/{id}
     controller: App\Vendoring\Service\Transaction\VendorTransactionHttpService::updateStatus
     methods: [POST]
     requirements:
+        vendorId: '[1-9][0-9]*'
         id: '[1-9][0-9]*'
 
 vendor_transaction_status_update_by_id:

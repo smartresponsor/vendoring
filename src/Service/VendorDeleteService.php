@@ -79,6 +79,11 @@ final class VendorDeleteService extends VendorAbstractCrudRouteService
         return $vendor;
     }
 
+    protected function routeResponseService(): VendorHttpRouteResponseService
+    {
+        return $this->responseService;
+    }
+
     protected function resourcePath(): string
     {
         return 'vendor';

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
 use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use App\Vendoring\Resolver\Security\VendorAccessResolver;
@@ -27,7 +28,10 @@ $repository = new class implements VendorUserAssignmentRepositoryInterface {
 
     public function findActiveByVendorId(int $vendorId): array
     {
-        return [new VendorUserAssignmentEntity($vendorId, 7, 'finance')];
+        $vendor = new VendorEntity('Fixture');
+        (new ReflectionProperty($vendor, 'id'))->setValue($vendor, $vendorId);
+
+        return [new VendorUserAssignmentEntity($vendor, 7, 'finance')];
     }
 
     public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?VendorUserAssignmentEntity

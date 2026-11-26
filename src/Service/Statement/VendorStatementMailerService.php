@@ -61,6 +61,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
 
         if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->metrics->increment('statement_mail_invalid_email_total', [
+                'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
             ]);
             $this->runtimeLogger->warning('vendor_statement_mail_rejected', [
@@ -85,6 +86,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
 
         if (true !== $breaker['allowRequest']) {
             $this->metrics->increment('statement_mail_circuit_open_total', [
+                'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
             ]);
             $this->runtimeLogger->warning('vendor_statement_mail_short_circuited', [
@@ -106,8 +108,9 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             ->to($email)
             ->subject(sprintf('Monthly Vendor Statement for %s', $periodLabel))
             ->text(sprintf(
-                "Hello,\nPlease find attached your statement for %s.\nVendor: %s",
+                "Hello,\nPlease find attached your statement for %s.\nTenant: %s, Vendor: %s",
                 $periodLabel,
+                $tenantId,
                 $vendorId,
             ));
 
@@ -116,6 +119,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             $message->attachFromPath($pdfPath, 'statement.pdf', 'application/pdf');
         } elseif ('' !== $pdfPath) {
             $this->metrics->increment('statement_mail_attachment_missing_total', [
+                'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
             ]);
             $this->runtimeLogger->warning('vendor_statement_mail_attachment_missing', [
@@ -136,6 +140,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             );
 
             $this->metrics->increment('statement_mail_failed_total', [
+                'tenantId' => $tenantId,
                 'vendorId' => $vendorId,
                 'errorClass' => $transportException::class,
             ]);
@@ -161,6 +166,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
 
         $this->circuitBreaker->recordSuccess('statement_mail_send', $scopeKey);
         $this->metrics->increment('statement_mail_sent_total', [
+            'tenantId' => $tenantId,
             'vendorId' => $vendorId,
         ]);
         $this->runtimeLogger->info('vendor_statement_mail_sent', [

@@ -20,7 +20,7 @@ class VendorUserAssignmentEntity extends VendorAbstractEntity implements VendorU
     #[ORM\Column(type: 'datetime_immutable')] private \DateTimeImmutable $grantedAt;
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] private ?\DateTimeImmutable $revokedAt = null;
     public function __construct(
-        VendorEntity|int $vendorId,
+        VendorEntity $vendorId,
         int $userId,
         string $role,
         string $status = 'active',
@@ -29,9 +29,10 @@ class VendorUserAssignmentEntity extends VendorAbstractEntity implements VendorU
         ?\DateTimeImmutable $revokedAt = null,
     ) {
         parent::__construct('active');
-        $this->vendor = $vendorId instanceof VendorEntity
-            ? $vendorId
-            : new VendorEntity('unresolved-vendor-'.$vendorId);
+        if (null === $vendorId->getId() || $vendorId->getId() < 1 || $userId < 1) {
+            throw new \InvalidArgumentException('Persisted vendor and positive user identifiers required');
+        }
+        $this->vendor = $vendorId;
         $this->userId = $userId;
         $this->role = $role;
         $this->status = $status;

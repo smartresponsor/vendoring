@@ -28,7 +28,7 @@ final class CanaryRolloutCoordinatorTest extends TestCase
         self::assertSame('keep_flag_disabled', $report['canary']['recommendedAction']);
     }
 
-    public function testProceedingVendorCanarySuggestsGlobalExpansion(): void
+    public function testProceedingVendorCanarySuggestsTenantExpansion(): void
     {
         $coordinator = new VendorCanaryRolloutCoordinatorService(
             $this->featureFlagService(['flag' => 'test_flag', 'enabled' => true, 'cohort' => 'vendor:42', 'reason' => 'cohort_enabled', 'decision' => 'proceed', 'severity' => 'info', 'reasons' => [], 'actions' => []]),

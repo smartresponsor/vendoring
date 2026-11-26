@@ -25,7 +25,7 @@ final class VendorCategoryRuleEngineService implements VendorCategoryRuleEngineS
     private function evalNode(array $node, array $payload): bool
     {
         foreach (['all', 'any', 'none'] as $operator) {
-            if (array_key_exists($operator, $node)) {
+            if (isset($node[$operator])) {
                 return $this->evalGroup($operator, $node[$operator], $payload);
             }
         }

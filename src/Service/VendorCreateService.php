@@ -101,6 +101,11 @@ final class VendorCreateService extends VendorAbstractCrudRouteService
         return $normalized;
     }
 
+    protected function routeResponseService(): VendorHttpRouteResponseService
+    {
+        return $this->responseService;
+    }
+
     protected function resourcePath(): string
     {
         return 'vendor';
