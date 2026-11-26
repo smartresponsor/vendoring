@@ -20,7 +20,16 @@ final class Version20260821054500 extends AbstractMigration
     {
         $this->abortIf(!$this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform, 'Vendoring production schema requires PostgreSQL.');
         $this->abortIf(!$schema->hasTable('vendor_service'), 'vendor_service table is required before Retailing capability adoption.');
-        $this->abortIf(!$schema->hasTable('retail'), 'retail table is required before Retailing capability adoption.');
+        if (!$schema->hasTable('retail')) {
+            $active = (int) $this->connection->fetchOne("SELECT COUNT(*) FROM vendor_service WHERE payload->>'source' = 'retailing' AND object_status = 'active'");
+            $this->abortIf($active > 0, 'retail table is required before Retailing capability adoption.');
+            $column = $schema->getTable('vendor_service')->getColumn('category_id');
+            if (($column->getLength() ?? 0) < 255) {
+                $this->addSql('ALTER TABLE vendor_service ALTER COLUMN category_id TYPE VARCHAR(255)');
+            }
+
+            return;
+        }
 
         $unresolvable = (int) $this->connection->fetchOne(<<<'SQL'
 SELECT COUNT(*)

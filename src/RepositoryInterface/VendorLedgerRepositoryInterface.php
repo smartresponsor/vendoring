@@ -27,10 +27,10 @@ interface VendorLedgerRepositoryInterface
     public function insert(VendorLedgerEntity $entry): void;
 
     /** @return list<VendorLedgerEntity> */
-    public function listByRef(string $vendorId, string $referenceType, string $referenceId): array;
+    public function listByRef(string $tenantId, string $vendorId, string $referenceType, string $referenceId): array;
 
     public function sumByAccount(VendorLedgerAccountSumCriteriaDTO $criteria): float;
 
     /** @return list<VendorLedgerBalanceDTO> */
-    public function balancesForVendor(string $vendorId): array;
+    public function balancesForVendor(string $tenantId, string $vendorId): array;
 }

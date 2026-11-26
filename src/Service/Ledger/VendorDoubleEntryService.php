@@ -26,6 +26,7 @@ final readonly class VendorDoubleEntryService implements VendorDoubleEntryServic
     public function post(VendorDoubleEntryDTO $dto): array
     {
         $entry = new VendorLedgerEntity(
+            tenantId: $dto->tenantId,
             vendorId: $dto->vendorId,
             referenceType: $dto->referenceType,
             referenceId: $dto->referenceId,

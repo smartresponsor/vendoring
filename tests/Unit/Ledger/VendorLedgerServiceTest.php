@@ -39,6 +39,7 @@ final class VendorLedgerServiceTest extends TestCase
             }));
 
         $entry = (new VendorLedgerService($this->repository))->record(new VendorLedgerDTO(
+            tenantId: 'tenant-1',
             type: 'order_paid',
             entityId: 'entity-1',
             sagaId: 'saga-1',
@@ -67,6 +68,7 @@ final class VendorLedgerServiceTest extends TestCase
             }));
 
         $entry = (new VendorLedgerService($this->repository))->record(new VendorLedgerDTO(
+            tenantId: 'tenant-1',
             type: 'refund',
             entityId: 'entity-2',
             sagaId: 'saga-2',
@@ -90,6 +92,7 @@ final class VendorLedgerServiceTest extends TestCase
         $this->expectExceptionMessage('Unsupported ledger direction "sideways".');
 
         $service->record(new VendorLedgerDTO(
+            tenantId: 'tenant-1',
             type: 'refund',
             entityId: 'entity-2',
             sagaId: 'saga-2',

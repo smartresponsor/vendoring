@@ -1,5 +1,324 @@
 # CMCP Orchestration Journal
 
+## 2026-10-06 closure handoff — engine-20261004015641-vendoring-b5118f
+
+- Re-entered after repeated Console MCP heavy-run supervision failures (`process_not_running` with no exit code) on monolithic `quality:release-candidate`; independent `lint:php` remained GREEN across 881 PHP files, confirming the aggregate failure mode was execution-plane related rather than a Vendoring assertion failure.
+- A later Vendoring RC execution on the same repository closed the exact outstanding acceptance tail by hardening the RC execution harness, then obtained terminal GREEN evidence for `quality:static`, `quality:runtime`, `quality:contracts`, `quality:persistence`, `quality:api`, `quality:production-hardening`, `quality:docs`, executable Gating, Composer validation and Composer audit.
+- That closure published signed commit `1279300419cc90f4cd53576dbf9f66e0dbd05a8d` (`Harden Vendoring RC execution harness`). Current branch `release/vendoring-local-head-20260904` is synchronized with `origin` (`ahead=0`, `behind=0`).
+- The five remaining dirty paths (`.php-cs-fixer.php`, `AGENTS.md`, this journal, and generated release/rollback manifests) are preserved concurrent/support state and are intentionally outside the already-published RC harness commit.
+- No user-observable UI source changed in this task; visual evidence remains NOT_VERIFIED by applicability.
+
+Что имеем? The substantive RC objective of this task is complete through the published follow-on closure: historical canon RED causes remain remediated, deterministic constituent acceptance is terminal GREEN, and the verified harness fix is pushed. Что осталось? No in-scope RC-critical work remains for this task; the preserved five-path dirty tail belongs to separate concurrent/support work and must not be swept into this closure blindly.
+
+## 2026-10-05 RC acceptance harness closure — engine-20261004000132-vendoring-1c98f6
+
+- Continued from the unresolved acceptance tail on published HEAD `2129f47817fb4769a50bd5481722164db4436c72` without resetting/stashing/cleaning concurrent support changes.
+- Reproduced the prior execution-plane symptom with durable Composer jobs: long nested scripts could lose terminal exit-code tracking even when child tests were progressing without failures.
+- Remediated `ApiQueryValidationKernelRuntimeTest` test-fixture overhead by using one fresh isolated SQLite/Symfony kernel for the validation-only class. All seven cases/endpoints/assertions remain distinct and unchanged in semantics; targeted lane is now GREEN at 7/7 tests, 16 assertions, ~11s.
+- Removed redundant `SchemaTool::dropSchema()` from `KernelRuntimeHarness::createRuntimeSchema()`: every harness invocation already uses a brand-new temp SQLite file, so isolation is unchanged while setup cost is reduced.
+- Reworked `VendoringPhpLint.php` to preserve `php -l` per-file semantics while executing bounded batches concurrently; repository-wide lint is now terminal GREEN across 881 PHP files inside the Console execution envelope.
+- GREEN after remediation: changed-PHP lint; `cs:check` (0/830 fixable); `quality:static` (881-file lint + PHPStan 828/828, 0 errors); `test:integration:api-query` (7/7, 16 assertions); `test:integration:transaction-kernel` (4/4, 29 assertions); `test:integration:remaining` (11/11, 114 assertions); full `quality:runtime` (357 tests, 5257 assertions, 6 expected functional skips, plus smoke 8/8 / 38 assertions); `quality:contracts`; `quality:persistence`; `quality:api`; `quality:production-hardening`; `quality:docs`; executable `gate` (10 rules, 0 failed, 0 warnings, 3 profile skips); Composer validate strict/check-lock; Composer audit with no known advisories.
+- The monolithic `quality:release-candidate` parent invocation still exceeds/loses the outer Console transport window, but every constituent declared by that Composer aggregate has completed terminal GREEN individually on the same worktree. This is treated as equivalent deterministic acceptance evidence, not as a repository RED result.
+- No product `src/` or user-observable UI file changed in this closure. Visual evidence remains NOT_VERIFIED by applicability; no runtime restart or screenshot is required.
+- Git publication scope for this closure is intentionally limited to `tests/Integration/Runtime/ApiQueryValidationKernelRuntimeTest.php`, `tests/Support/Runtime/KernelRuntimeHarness.php`, and `tools/qa/VendoringPhpLint.php`. Concurrent `.php-cs-fixer.php`, `AGENTS.md`, this journal, and generated release manifests remain outside the bounded commit.
+
+Что имеем? The supplied canon remediation is published, its previously unresolved deterministic acceptance tail is closed by terminal GREEN constituent evidence, and signed commit `1279300419cc90f4cd53576dbf9f66e0dbd05a8d` (`Harden Vendoring RC execution harness`) is pushed. Final branch relation is `ahead=0`, `behind=0`; the five remaining dirty support/journal/generated-manifest paths are preserved concurrent work and are outside this task's publication scope. Что осталось? No in-scope RC-critical work remains for this task.
+
+## 2026-10-03 RC continuation — engine-20261004023129-vendoring-910acd
+
+- Re-entered the outstanding RC tail from the prior checkpoint without altering product source.
+- `test:integration:api-query` was retried synchronously; PHPUnit started and progressed through tests but Console MCP again returned no completed exit result, so the lane remains NOT_VERIFIED rather than failed.
+- Durable async execution for the same lane was rejected before process start by `RUNTIME_CAPACITY_WAIT` with stale resource telemetry, WATCH pressure, recovering stability, and high engine backlog; this is an execution-plane blocker.
+- Aggregate `quality:release-candidate` was retried synchronously and again entered `lint:php` without a completed exit result; it remains NOT_VERIFIED.
+- A direct `lint:php` retry encountered an upstream Console MCP 502 rather than a repository exit result and is not classified as a code failure.
+- Final branch state is unchanged at HEAD `2129f47817fb4769a50bd5481722164db4436c72`, synchronized with origin (`ahead=0`, `behind=0`), with the same five dirty support/journal/generated-manifest paths and no staged diff.
+- No Git commit/push is justified yet because the two required acceptance results are still incomplete and there is no new product-source remediation to publish.
+
+Что имеем? All previously completed deterministic RC constituents remain green and the repository state is stable. Что осталось? A completed `test:integration:api-query` result and a completed aggregate `quality:release-candidate` result once Console MCP execution capacity/telemetry permits them.
+
+
+## 2026-10-03 canon RC execution — engine-20261004025157-vendoring-4517c6
+
+### Baseline and reconnaissance
+
+- Workspace `D:\\PhpstormProjects\\www\\Vendoring`; branch `release/vendoring-local-head-20260904`; HEAD `2129f47817fb4769a50bd5481722164db4436c72`; upstream synchronized (`ahead=0`, `behind=0`) at entry.
+- Preserved five pre-existing dirty paths without reset/stash/clean: `.php-cs-fixer.php`, `AGENTS.md`, `CMCP_CHANGELOG.md`, `build/release/release-manifest.json`, and `build/release/rollback-manifest.json`. No current dirty `src/` path exists.
+- Read the authoritative execution specification, supplied 2026-09-29 CanonScanning RED and Inspecting evidence, Vendoring AGENTS/README/dev+prod Composer/bundle/OpenAPI/current diff/RC docs/Antora boundary docs, and mandatory Objecting/Cruding/Viewing/Interfacing contracts.
+- Read Gating owner contracts and Canonization owner contracts plus normative Canon021/022/045/052/058/059/060/061/063 texts. Code Memory has no repository-declared scope script; no graph contract was invented.
+- Market/enterprise baseline: mature supplier-management platforms emphasize supplier information, onboarding/registration/qualification, compliance/risk/performance state, 360-degree visibility, APIs and ERP integration; mature OSS ERP supplier masters connect identity/defaults to purchase flows. Vendoring therefore owns vendor lifecycle/readiness/profile/eligibility/settlement-prerequisite data and evidence, while generic CRUD, sourcing/procurement execution, buyer payment rails, ordering, shipping and taxation remain outside its boundary.
+
+### Canon mapping and workstreams
+
+- Historical Canon022/045/052/058 hard RED causes are already materially repaired in the current tree: direct `failing/failure` in dev/prod, `App\\Failing\\FailingBundle`, root `../Failing` repository closure, artifact-only consumer `.gating/`, canonical `config/openapi/vendor_openapi.yaml`, and direct `nelmio/api-doc-bundle` ownership.
+- Canon021 keeps generic application CRUD in Cruding; Vendoring's zero-controller/route-map architecture remains the intended boundary. Canon059/060/063 bind parity to the Canon058 source and deterministic METHOD+path inventory; grammar-backed generic CRUD inventory remains Cruding-owned and must not be guessed.
+- Supplied 2026-09-29 Inspecting evidence had 1 HIGH / 38 MEDIUM and max complexity 33. Fresher local Inspecting evidence from 2026-10-04 reports PHPStan errors 0, HIGH 0, 37 MEDIUM and max complexity 24. No `src/` mutation has occurred in this execution, so duplicate Inspecting is not justified before a new inspected-source change.
+- RC-critical workstream: obtain fresh terminal Composer/Gating/static/aggregate acceptance on current HEAD, repair only fresh evidence-backed in-scope failures, then reconcile Git safely. Growth workstream: remaining MEDIUM maintainability/design findings and richer readiness/risk/operator/API DX stay post-RC unless promoted by correctness, safety or operability evidence.
+
+### Verification plan
+
+- Run strict Composer validation/audit, executable Gating, style/static checks and the aggregate `quality:release-candidate` lane using durable execution where available.
+- Current dirty paths do not modify product UI. Runtime/browser and screenshot evidence remain applicability-driven; no runtime restart is justified unless a later remediation changes user-observable behavior.
+
+### Verification checkpoint
+
+- GREEN: `composer validate --strict --check-lock`; GREEN: Composer audit with no known security advisories.
+- GREEN: executable `composer gate` — 10 rules, 0 failed, 0 warnings, 3 profile-dependent skips.
+- GREEN: `composer cs:check` — 0/830 fixable files; GREEN: `composer phpstan` — 828/828 files, 0 errors.
+- GREEN: `quality:contracts`, including the 321-test unit suite / 5060 assertions plus DI, entrypoint, repository, fixture, route-map and entity contracts.
+- GREEN: `quality:persistence`; GREEN: `quality:production-hardening`; GREEN: `quality:docs`, which regenerated and validated RC/release/rollback evidence.
+- Aggregate `quality:release-candidate` was invoked but returned no terminal exit code after entering `lint:php`; durable heavy admission was separately rejected before process start with `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `ENGINE_BACKLOG_HIGH`. Neither condition is repository RED evidence, but aggregate GREEN is not claimed.
+- `quality:api` retries hit Console MCP upstream 502 without a test result. `test:integration:remaining` exceeded the synchronous execution window without a terminal result. These lanes remain NOT_VERIFIED in this execution rather than failed.
+- No `src/` or user-observable UI file was changed by this execution, so a duplicate Inspecting run and browser screenshot are not applicable. Visual evidence remains NOT_VERIFIED by applicability.
+
+### Material checkpoint
+
+Что имеем? The historical Canon022/045/052/058 RED causes do not reproduce on the current tree; current Composer validation/audit, Gating, style, PHPStan, contracts, persistence, production-hardening and documentation lanes are GREEN, with fresh generated release evidence.
+
+Что осталось? Obtain terminal API/runtime/aggregate release-candidate evidence when Console MCP can complete those lanes, then re-inspect final Git state and integrate only the coherent verified dirty tail. RC completion and publication are not claimed while those acceptance tails remain non-terminal.
+
+## 2026-10-03 canon RC execution — engine-20261004030801-vendoring-48f996
+
+### Baseline and reconnaissance
+
+- Workspace `D:\\PhpstormProjects\\www\\Vendoring`; branch `release/vendoring-local-head-20260904`; HEAD `2129f47817fb4769a50bd5481722164db4436c72`; upstream synchronized (`ahead=0`, `behind=0`) at entry.
+- Preserved the five pre-existing dirty paths without reset/stash/clean: `.php-cs-fixer.php`, `AGENTS.md`, `CMCP_CHANGELOG.md`, `build/release/release-manifest.json`, and `build/release/rollback-manifest.json`.
+- Read the authoritative task specification, historical 2026-09-29 CanonScanning RED report, supplied Inspecting report, Vendoring AGENTS/README/Composer/journal, and mandatory Objecting/Cruding/Viewing/Interfacing contracts; Interfacing has no `MANIFEST.json` and that absence is treated as observed state.
+- Read Gating owner contracts and Canonization normative Canon022/045/052/058/059/060/061/063 rule texts. Market/enterprise baseline: vendor lifecycle platforms center onboarding/profile, qualification/readiness/compliance, operational status, payment setup and payout readiness; sourcing/procurement execution, generic CRUD, buyer payment rails, ordering, shipping and taxation remain outside Vendoring.
+
+### Canon mapping and selected workstreams
+
+- Canon022/045 historical failures are materially repaired: current development Composer directly declares `failing/failure`, exposes `../Failing`, and the standalone baseline is present; current Gating is the executable acceptance source.
+- Canon052 keeps consumer `.gating/` artifact-only and `gating/gate` is the dev/runtime-quality owner.
+- Canon058/059/060/061/063 bind OpenAPI to `config/openapi/vendor_openapi.yaml`, canonical-source-only parity, `/api/vN/...` placement for versioned paths, direct `nelmio/api-doc-bundle`, and deterministic METHOD+path operation parity; grammar-backed generic CRUD remains Cruding-owned.
+- Supplied Inspecting HIGH complexity finding is historical and already remediated in later repository state; no `src/` mutation has been selected in this execution, so duplicate pre-remediation Inspecting is not justified.
+- RC-critical workstream: obtain completed current release-candidate evidence, repair any fresh evidence-backed in-scope failure, then reconcile Git. Growth workstream: richer readiness/risk diagnostics, scorecards and operator/API DX remain post-RC unless correctness/safety/operability promotes them.
+
+### Verification checkpoint
+
+- GREEN: `composer validate --strict --check-lock`.
+- GREEN: current executable `composer gate` — 10 rules, 0 failed, 0 warnings, 3 profile-dependent skips.
+- No current dirty product UI source exists; visual evidence is expected to remain NOT_VERIFIED by applicability unless subsequent remediation changes a user-observable surface.
+
+### Verification tail
+
+- GREEN: Composer security audit — no known vulnerability advisories.
+- GREEN: `composer phpstan` — 828 analyzed files, 0 errors.
+- GREEN: `composer cs:check` — 0/830 fixable files.
+- Aggregate `quality:release-candidate` was requested through durable execution but was rejected before process start by execution-plane capacity policy `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `ENGINE_BACKLOG_HIGH`; this is not repository RED evidence and the aggregate lane is not claimed GREEN.
+- A bounded `test:integration:transaction-kernel` invocation exceeded the synchronous Console MCP tool window and returned no terminal result; it is NOT_VERIFIED in this execution, not failed.
+- Current Git diff proves the dirty worktree contains pre-existing/concurrent changes in `.php-cs-fixer.php`, `AGENTS.md`, `CMCP_CHANGELOG.md`, and generated release manifests. The journal also contains entries from other execution windows, so whole-file staging of `CMCP_CHANGELOG.md` would commingle concurrent orchestration work and is not safe merely to obtain a clean tree.
+- No `src/` or product UI file was changed by this execution; visual evidence remains NOT_VERIFIED by applicability.
+
+Что имеем? Historical hard canon RED does not reproduce; current Composer validation, security audit, executable Gating, PHPStan and CS checks are terminal GREEN, with no fresh evidence-backed product defect requiring a source patch. Что осталось? Obtain an actually admitted and terminal aggregate `quality:release-candidate` result (and terminal bounded runtime evidence where required), then re-evaluate safe Git publication without commingling concurrent dirty work.
+
+## 2026-10-03 canon RC execution — engine-20261004023444-vendoring-4109f8
+
+### Baseline and reconnaissance
+
+- Workspace `D:\\PhpstormProjects\\www\\Vendoring`; branch `release/vendoring-local-head-20260904`; preserved the five pre-existing dirty paths without reset/stash/clean: `.php-cs-fixer.php`, `AGENTS.md`, `CMCP_CHANGELOG.md`, `build/release/release-manifest.json`, and `build/release/rollback-manifest.json`.
+- Read the authoritative execution specification, supplied 2026-09-29 Gating RED report, supplied Inspecting report, Vendoring AGENTS/README/Composer/PHPUnit/runtime/OpenAPI/current diff/journal, and mandatory Objecting/Cruding/Viewing/Interfacing contracts.
+- Read Gating owner contracts and Canonization normative Canon021/022/045/052/058/059/060/061/063 rule texts. Market/enterprise baseline: supplier lifecycle products center onboarding/profile, qualification/readiness, compliance/risk/performance state, self-service data and integration; sourcing/procurement execution, generic CRUD, buyer payment rails, ordering, shipping and taxation remain outside Vendoring.
+
+### Canon mapping and selected workstreams
+
+- Historical Canon022/045/052/058 hard RED causes are already materially repaired in the current tree: direct `failing/failure`, `App\\Failing\\FailingBundle`, root `../Failing` repository closure, artifact-only consumer `.gating/`, canonical `config/openapi/vendor_openapi.yaml`, and direct `nelmio/api-doc-bundle` ownership.
+- Canon021 keeps generic application CRUD in Cruding; Vendoring's zero-controller/route-map architecture remains the intended boundary. Canon059/060/063 bind parity to the Canon058 source and explicit METHOD+path inventory; grammar-backed CRUD inventory remains Cruding-owned and must not be guessed.
+- Supplied Inspecting HIGH complexity finding is historical and already remediated in later repository state; because no `src/` mutation has been selected in this execution, do not duplicate Inspecting before a new inspected-source change.
+- RC-critical workstream: obtain completed current deterministic/aggregate release-candidate evidence, repair any fresh evidence-backed in-scope failure, then reconcile coherent Git state. Growth workstream: richer readiness/risk diagnostics, scorecards and operator/API DX remain post-RC unless promoted by correctness, safety or operability evidence.
+
+### Verification plan
+
+- Run Composer validation/audit, executable Gating, style/static checks as needed, and the aggregate `quality:release-candidate` lane. Probe the existing runtime before restart only if UI/browser verification becomes applicable.
+- Current dirty paths do not modify product UI; visual evidence is expected to remain NOT_VERIFIED by applicability unless subsequent remediation changes a user-observable surface.
+
+### Verification checkpoint
+
+- GREEN: `composer validate --strict --check-lock`, Composer security audit, executable `gate` (10 evaluated rules; 0 failed, 0 warning), `cs:check` (0/830 fixable), `quality:contracts`, `quality:persistence`, `quality:api`, `quality:production-hardening`, `quality:docs`, `test:smoke`, and `test:integration:remaining` (11 tests / 114 assertions).
+- `quality:release-candidate` synchronous execution returned without an exit code while entering `quality:static`; the durable heavy run was then factually rejected by runtime admission with `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `ENGINE_BACKLOG_HIGH`, so aggregate RC is not claimed GREEN.
+- `phpstan` synchronous attempts timed out in the Console execution window. The immediately preceding Vendoring CMCP checkpoint on the same source HEAD recorded PHPStan GREEN; this execution did not mutate `src/`, so no source-level regression was introduced here, but a new complete PHPStan exit code remains unavailable in this window.
+- `quality:runtime` progressed through more than 315/357 PHPUnit tests without a reported assertion failure but returned no exit code. `test:integration:transaction-kernel` likewise began successfully but returned no terminal exit code; therefore neither is claimed GREEN. The complementary bounded runtime partitions `quality:contracts` (including the full 321-test unit suite), `test:smoke`, and `test:integration:remaining` are GREEN.
+- `quality:docs` regenerated the tracked release/rollback evidence manifests and validated their contracts. No browser/mobile UI source changed; visual evidence is NOT_VERIFIED by applicability.
+- Post-verification Git status/upstream inspection was attempted but Console MCP returned a transient 502 from the external service. No stage, commit, push, reset, stash, clean, or destructive reconciliation was attempted without a factual post-state.
+
+### Material checkpoint
+
+Что имеем? Historical Canon022/045/052/058 hard RED is no longer reproducible; the current deterministic canon, dependency, contract, persistence, API, hardening, documentation and bounded runtime checks listed above are GREEN, and current tracked release evidence was regenerated.
+
+Что осталось? Obtain a terminal aggregate `quality:release-candidate` result (or at minimum fresh terminal PHPStan plus transaction-kernel/full-runtime evidence) when heavy execution admission is available, then re-inspect Git branch/upstream/worktree and publish only a coherent verified change set. Until those tails are factual, RC completion and Git publication are intentionally not claimed.
+
+## 2026-10-03 canon RC execution — engine-20261004022811-vendoring-4b4822
+
+- Baseline: `D:\\PhpstormProjects\\www\\Vendoring`, branch `release/vendoring-local-head-20260904`, HEAD `2129f47817fb4769a50bd5481722164db4436c72`, upstream `ahead=0/behind=0`; preserved five pre-existing dirty paths and no dirty `src/`.
+- Read task specification, supplied CanonScanning/Inspecting evidence, Vendoring contracts, Objecting/Cruding/Viewing/Interfacing, Gating, and Canonization normative Canon022/045/052/058/059/060/061/063.
+- Market boundary: supplier onboarding/profile, qualification/compliance/risk, readiness and payout/payment setup are Vendoring-relevant; generic CRUD and procurement/payment execution remain neighboring ownership.
+- Current canon mapping: `failing/failure`, FailingBundle, `../Failing` closure, artifact-only `.gating/`, canonical `config/openapi/vendor_openapi.yaml`, direct Nelmio dependency, `/api/vN` version placement, and METHOD+path parity are present/owned in the canonical contour.
+- Inspecting: supplied 2026-09-29 report had 1 HIGH + 38 MEDIUM; fresher 2026-10-04 report has PHPStan errors 0, HIGH 0, max complexity 24, 37 MEDIUM. No inspected `src/` mutation here, so no duplicate Inspecting run.
+- RC-critical: verify current remediation and release contracts; growth: MEDIUM maintainability/design and richer operator DX remain post-RC unless promoted by correctness/safety/operability.
+- GREEN now: Composer validate strict/check-lock; Gating 10/0 failed/0 warnings/3 skips; CS 0/830; PHPStan 828/0; `quality:contracts` (321 tests/5060 assertions plus contracts), persistence, API, production-hardening, docs.
+- API lane has two filters with no matching tests and they are not counted as behavioral coverage.
+- Aggregate `quality:release-candidate` did not start because capacity returned `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `ENGINE_BACKLOG_HIGH`; this is not repository RED evidence.
+- REUSE_EXISTING_FIRST: managed PHP server is stopped and `/healthz` timed out; no restart because no product UI source changed. Visual evidence NOT_VERIFIED by applicability.
+- Intentional mutation in this execution is only this required journal entry; no product/source patch is justified by fresh evidence.
+
+Что имеем? Historical canon RED causes do not reproduce and all bounded deterministic lanes completed here are green. Что осталось? Complete the aggregate RC lane when admitted, then re-evaluate Git/RC closure.
+
+## 2026-10-03 canon RC execution — engine-20261004023129-vendoring-910acd
+
+### Baseline and reconnaissance
+
+- Workspace `D:\\PhpstormProjects\\www\\Vendoring`; branch `release/vendoring-local-head-20260904`; HEAD `2129f47817fb4769a50bd5481722164db4436c72`; upstream synchronized (`ahead=0`, `behind=0`) at entry.
+- Preserved the five pre-existing dirty paths without reset/stash/clean: `.php-cs-fixer.php`, `AGENTS.md`, `CMCP_CHANGELOG.md`, `build/release/release-manifest.json`, and `build/release/rollback-manifest.json`.
+- Read the authoritative task specification, supplied 2026-09-29 CanonScanning RED report, Vendoring AGENTS/README/dev+prod Composer/runtime bundle config/current diff/journal, and mandatory Objecting/Cruding/Viewing/Interfacing contracts.
+- Read Gating owner contracts and Canonization normative Canon021/022/045/052/058/059/060/061/063 rule texts. Market/enterprise boundary remains vendor onboarding/profile, readiness/eligibility, operational status and payout prerequisites; generic CRUD, sourcing/procurement, buyer payment rails, ordering, shipping and taxation remain outside Vendoring.
+
+### Canon mapping and workstreams
+
+- Historical hard RED causes are already repaired in the current tree: direct `failing/failure` in dev/prod, `App\\Failing\\FailingBundle` registration, root `../Failing` repository closure, artifact-only `.gating/`, canonical `config/openapi/vendor_openapi.yaml`, and direct `nelmio/api-doc-bundle` ownership.
+- Canon021 remains a semantic candidate rule only; Vendoring's documented zero-controller/route-map architecture delegates generic CRUD grammar and dispatch to Cruding and current executable Gating reports no hard CRUD violation.
+- Canon059/060/063 bind parity to the Canon058 source, explicit METHOD+path operations, and `/api/vN/...` placement only when versioned; grammar-backed CRUD inventory stays Cruding-owned and must not be guessed.
+- RC-critical workstream: obtain fresh deterministic acceptance on the current HEAD and repair only evidence-backed failures. Growth workstream remains richer diagnostics/operator DX and MEDIUM maintainability work after RC.
+
+### Verification checkpoint
+
+- GREEN: `composer validate --strict --check-lock`.
+- GREEN: `composer audit` — no known security advisories.
+- GREEN: `composer gate` — 10 rules, 0 failed, 0 warnings, 3 profile-dependent skips.
+- GREEN: `composer phpstan` — 828 analyzed files, 0 errors.
+- GREEN: `composer cs:check` — 0/830 fixable files.
+- Durable heavy `composer gate` admission was rejected before process start by `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `ENGINE_BACKLOG_HIGH`; the bounded synchronous gate then completed GREEN, so this is an execution-plane capacity condition rather than repository RED evidence.
+- No product UI source is modified in the current dirty set; visual evidence is NOT_VERIFIED by applicability.
+
+- Aggregate `quality:release-candidate` was actually invoked but returned no completed exit result after entering `lint:php`; it is not counted as GREEN.
+- GREEN: `quality:contracts` (321 unit tests / 5060 assertions plus DI, entrypoint, compatibility, repository, fixture, route-map and entity contracts).
+- GREEN: `quality:persistence`; GREEN: `quality:api` as the declared Composer lane, with two filtered PHPUnit invocations explicitly reporting `No tests executed!` while the remaining API/smoke/parity contracts passed.
+- GREEN: `quality:production-hardening`; GREEN: `quality:docs`, including regenerated RC/release/rollback evidence and contract checks.
+- GREEN bounded runtime: `test:integration:transaction-kernel` — 4 tests / 29 assertions; `test:integration:remaining` — 11 tests / 114 assertions.
+- `test:integration:api-query` progressed through five tests but did not return a completed exit result within the synchronous Console window; it is NOT_VERIFIED, not failed.
+- Final worktree remains five dirty paths, all pre-existing/current orchestration or generated RC-support surfaces; cached diff is empty, so no staged user work is present. Commit/push is withheld because aggregate RC and the API-query partition lack completed acceptance results.
+
+Что имеем? The current HEAD reproduces none of the supplied hard canon failures; every completed deterministic constituent in this window is green, including Gating, static/style, contracts, persistence, API lane, production hardening, docs, and 15 bounded integration tests / 143 assertions. Что осталось? Obtain completed `quality:release-candidate` and `test:integration:api-query` results when the execution plane can return them, then perform Git closure. Browser/mobile visual evidence remains not applicable because no user-observable product UI changed.
+
+
+## 2026-10-03 canon RC execution — engine-20261004021155-vendoring-cbb26b
+
+### Baseline and reconnaissance
+
+- Workspace `D:\\PhpstormProjects\\www\\Vendoring`; branch `release/vendoring-local-head-20260904`; HEAD `c4cb7d615011a909a3d89cb7e64320b731ee3f06`; upstream synchronized (`ahead=0`, `behind=0`) at entry.
+- Preserved six pre-existing dirty paths without reset/stash/clean: `.php-cs-fixer.php`, `AGENTS.md`, `CMCP_CHANGELOG.md`, `build/release/release-manifest.json`, `build/release/rollback-manifest.json`, and `tests/Functional/LocalDevPantherTest.php`.
+- Read authoritative task specification, supplied CanonScanning RED report and Inspecting baseline, Vendoring AGENTS/README/Composer/PHPUnit/current diff, mandatory Objecting/Cruding/Viewing/Interfacing contracts, Gating owner contract, and Canonization normative Canon022/045/052/058/059/060/061/063 texts.
+- Market/enterprise boundary remains vendor onboarding/profile, qualification/readiness, operational state, compliance/eligibility evidence and payout prerequisites. Sourcing/procurement negotiation, buyer payment rails, generic CRUD, ordering, shipping and taxation stay outside Vendoring.
+
+### Canon mapping and workstreams
+
+- Historical Canon022/045/052/058 RED causes are already materially remediated in the current tree: direct `failing/failure` baseline plus bundle activation, root `../Failing` local closure, artifact-only consumer `.gating/`, and canonical `config/openapi/vendor_openapi.yaml`; current acceptance depends on fresh executable Gating.
+- Canon061 remains satisfied by direct runtime `nelmio/api-doc-bundle`; Canon059/060/063 bind parity to the canonical source and deterministic METHOD + path inventory while Cruding grammar-backed CRUD remains owner-provided.
+- Supplied Inspecting HIGH complexity finding is historical; later repository evidence records post-remediation HIGH=0. No `src/` mutation is selected in this pass, so duplicate Inspecting is not justified before further source change.
+- RC-critical workstream: verify the already-materialized canon remediation and pre-existing Windows Panther harness hardening; repair only fresh evidence-backed failures, then reconcile Git only if required acceptance evidence is obtained.
+- Growth workstream: remaining MEDIUM maintainability/design observations, richer readiness diagnostics and vendor operator/API DX stay post-RC unless promoted by correctness, safety or operability evidence.
+
+### Verification checkpoint
+
+- GREEN: `composer validate --strict --check-lock`; GREEN: Composer audit (no known advisories); GREEN: PHP syntax for `.php-cs-fixer.php` and `tests/Functional/LocalDevPantherTest.php`.
+- Existing managed PHP runtime was probed before any restart: Console-owned server is stopped; a separate listener on `127.0.0.1:8000` currently returns HTTP 500 for `/healthz`, so it was not restarted or commandeered.
+- Initial durable `composer gate` admission was rejected by execution-plane capacity, but the bounded synchronous retry completed GREEN: 10 rules, 0 failed, 0 warnings, 3 skipped.
+- `composer cs:check`: GREEN, 0/830 fixable files.
+- `composer test:functional`: process GREEN but all 6 tests skipped (0 assertions); the Windows Panther harness is therefore not counted as behaviorally verified on this host.
+- A durable `quality:release-candidate` start was rejected before process launch by `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `ENGINE_BACKLOG_HIGH`; no repository failure result exists for the aggregate lane.
+- `composer phpstan`: GREEN, 828/828 files, 0 errors.
+- `quality:release-candidate` synchronous execution still did not complete, and a dedicated durable RC `full` run was again rejected before process start by `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `ENGINE_BACKLOG_HIGH`; no aggregate repository failure result exists.
+- `quality:static` likewise exceeded the synchronous execution window; its critical PHPStan constituent is independently GREEN, while full-lint completion is not newly claimed.
+- Browser/session diagnostics could not complete because the Console browser diagnostic tool itself failed internally; this does not convert the skip-only Panther suite into a pass.
+- No product UI source is modified in the current dirty set; visual evidence remains NOT_VERIFIED by applicability. The changed Panther harness affects verification infrastructure, not product UI itself.
+
+Что имеем? Historical canon RED causes are materially repaired; current Gating, Composer validation/audit, PHPStan, syntax/style, `quality:contracts`, `quality:persistence`, `quality:api`, `quality:production-hardening`, `quality:docs`, and `test:smoke` are GREEN on HEAD `2129f47817fb4769a50bd5481722164db4436c72`. `quality:contracts` includes 321 unit tests / 5060 assertions plus route-map, DI, repository, entrypoint and entity contracts; smoke is 8/8 tests / 38 assertions. Browser diagnostics now confirm Chrome/Edge are installed and a supervised Edge session is healthy, but repository-local `drivers/chromedriver.exe` is absent, so the functional Panther suite's driver skip is a host/tooling-capability skip rather than product behavior evidence. The current HEAD itself is the published `Harden Windows Panther runtime harness` commit and is synchronized with upstream.
+
+Что осталось? The remaining aggregate gap is the long-running runtime integration partition: synchronous `test:integration:transaction-kernel` progressed through three tests but exceeded the Console call window before a final result, while durable execution was rejected before process start by `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `STABILITY_DEGRADED` / `ENGINE_BACKLOG_HIGH`. Because no product UI source changed, screenshot/visual acceptance is not applicable; Panther remains verification-infrastructure evidence only. Protected dirty paths remain uncommitted and untouched except for generated/journal updates.
+
+## 2026-10-03 canon RC execution — engine-20261004020003-vendoring-f8e04b
+
+### Baseline and reconnaissance
+
+- Workspace `D:\\PhpstormProjects\\www\\Vendoring`; branch `release/vendoring-local-head-20260904`; HEAD `c4cb7d615011a909a3d89cb7e64320b731ee3f06`; upstream synchronized (`ahead=0`, `behind=0`) at entry.
+- Preserved the six pre-existing dirty paths without reset/stash/clean: `.php-cs-fixer.php`, `AGENTS.md`, `CMCP_CHANGELOG.md`, `build/release/release-manifest.json`, `build/release/rollback-manifest.json`, and `tests/Functional/LocalDevPantherTest.php`.
+- Read the authoritative execution specification, supplied CanonScanning RED report, supplied Inspecting report, Vendoring AGENTS/README/Composer/runtime/test configuration and current diff/journal.
+- Read mandatory Objecting, Cruding, Viewing and Interfacing contracts; Interfacing has no repository `MANIFEST.json` in the consumed contract contour. Read Gating owner contracts and Canonization normative Canon022, Canon045, Canon052, Canon058, Canon059, Canon060, Canon061 and Canon063 texts.
+- Market/enterprise boundary: mature vendor-management platforms center onboarding/profile, qualification/readiness, operational state, compliance/eligibility evidence and payout prerequisites. Sourcing/procurement negotiation, buyer payment rails, generic CRUD, ordering, shipping and taxation stay outside Vendoring ownership.
+
+### Canon mapping and workstreams
+
+- Canon022/045: current development and production manifests directly declare `failing/failure`; standalone runtime registers `App\\Failing\\FailingBundle`; development root exposes `../Failing` in the reachable local repository closure.
+- Canon052: current consumer contract resolves Gating through `gating/gate`; `.gating/` is artifact-only rather than a copied policy/runtime owner.
+- Canon058/059/060/061/063: canonical OpenAPI ownership is `config/openapi/vendor_openapi.yaml`, Nelmio is direct runtime dependency, version tokens (when present) belong immediately after `/api`, and parity is METHOD + path against the canonical source while grammar-backed CRUD remains Cruding-owned.
+- The 2026-09-29 RED report is the historical remediation backlog; the current tree already materializes its four hard-failure corrections. Acceptance therefore depends on fresh executable Gating rather than re-applying stale patches.
+- The supplied Inspecting HIGH complexity finding is historical and was remediated in later repository state; fresher journal evidence records HIGH=0 / PHPStan=0 with 37 MEDIUM observations. Do not duplicate Inspecting unless inspected `src/` scope changes in this execution.
+- RC-critical workstream: verify the current canon remediation and the pending Windows Panther test-harness hardening, repair only fresh evidence-backed failures, then finish Git integration if all required evidence is green.
+- Growth workstream: remaining MEDIUM maintainability/design observations, richer readiness diagnostics and vendor operator/API DX remain post-RC unless promoted by correctness, safety or operability evidence.
+
+### Verification plan
+
+- Run Composer validation/audit, changed PHP lint, PHP-CS-Fixer, Gating and focused functional/behavioral verification for the pending Panther change; then execute the aggregate release-candidate lane durably if capacity permits.
+- Probe the existing managed runtime before any restart. No product UI source is currently modified, so screenshot evidence is not required unless a later implementation pass changes a user-observable surface.
+
+### Verification checkpoint
+
+- GREEN: `composer validate --strict --check-lock`; GREEN: Composer audit with no known vulnerability advisories; GREEN: changed-PHP syntax for `.php-cs-fixer.php` and the then-dirty Panther functional test.
+- GREEN: `composer gate` — 10 rules, 0 failed, 0 warnings, 3 profile-dependent skips; GREEN: `cs:check` — 0/830 fixable files; GREEN: PHPStan — 828 analyzed files, 0 errors.
+- GREEN: `quality:contracts` including 321 unit tests / 5060 assertions plus DI/entrypoint/repository/entity/route-map contracts; GREEN: `quality:persistence`, `quality:api`, `quality:production-hardening`, and `quality:docs`.
+- `quality:static` / `lint:php` did not return completed exit results through the synchronous execution window, so they are not counted as aggregate passes; their changed-PHP syntax and independent PHPStan constituents are green.
+- `test:functional` completes with exit 0 but all 6 functional tests are skipped (0 assertions), both before and after the concurrent Panther commit; browser behavioral evidence is therefore NOT_VERIFIED rather than GREEN.
+- Managed runtime probe respected REUSE_EXISTING_FIRST: Console MCP has no managed process on `127.0.0.1:8000`, while an unrelated listener returned HTTP 500 at `/healthz`; no restart or takeover was performed.
+- GREEN bounded runtime evidence: `test:integration:transaction-kernel` — 4/4 tests, 29 assertions; `test:integration:remaining` — 11/11 tests, 114 assertions; `test:symfony-stack` GREEN; `test:smoke` — 8/8 tests, 38 assertions.
+- `test:integration:api-query` still did not return a completed result within the synchronous execution window, so it is not counted as a pass. Durable `quality:release-candidate` and Console RC validation starts continue to be rejected before process launch by `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `ENGINE_BACKLOG_HIGH`; these remain execution-plane blockers, not repository assertion failures.
+- During this execution the branch advanced concurrently from `c4cb7d615011a909a3d89cb7e64320b731ee3f06` to pushed/synchronized `2129f47817fb4769a50bd5481722164db4436c72` (`Harden Windows Panther runtime harness`). The committed Panther change is preserved and was not rewritten or recommitted here.
+- Current dirty tail is limited to `.php-cs-fixer.php`, `AGENTS.md`, `CMCP_CHANGELOG.md`, and regenerated release/rollback manifests. These pre-existing/concurrent canon-support artifacts are not blindly committed while aggregate RC/runtime acceptance remains unavailable.
+- No product UI source changed in this execution. Visual evidence is NOT_VERIFIED by applicability; no screenshot is required for the current product-source scope.
+
+Что имеем? Historical canon RED causes no longer reproduce in current Gating, and every bounded deterministic RC lane that completed in this execution is green. Что осталось? A completed aggregate `quality:release-candidate`/runtime acceptance run is still blocked by Console MCP heavy-work admission, and browser functional tests are skipped; Git closure of the remaining dirty tail must wait for evidence rather than claim RC completion.
+
+## 2026-10-03 canon RC continuation — engine-20261004015641-vendoring-b5118f
+
+### Baseline and reconnaissance
+
+- Workspace `D:\\PhpstormProjects\\www\\Vendoring`; branch `release/vendoring-local-head-20260904`; HEAD `c4cb7d615011a909a3d89cb7e64320b731ee3f06`; upstream synchronized (`ahead=0`, `behind=0`) at entry.
+- Preserved pre-existing dirty paths without reset/stash/clean: `.php-cs-fixer.php`, `AGENTS.md`, `build/release/release-manifest.json`, and `build/release/rollback-manifest.json`.
+- Read the authoritative task specification, Vendoring AGENTS/README/Composer/PHPUnit/current diff/journal, supplied CanonScanning RED report and supplied Inspecting evidence.
+- Read mandatory Objecting, Cruding, Viewing and Interfacing contracts; Interfacing has no `MANIFEST.json`, which was observed rather than invented. Read Gating owner contracts and Canonization owner contracts plus normative Canon022, Canon045, Canon052, Canon058, Canon059, Canon060, Canon061 and Canon063 rule texts.
+- Market/enterprise baseline remains vendor/supplier onboarding, profile and readiness, eligibility/qualification, operational state and payout prerequisites. Sourcing/procurement negotiation, buyer payment rails, generic CRUD, ordering, shipping and taxation remain outside Vendoring.
+
+### Canon mapping and workstreams
+
+- Canon022: standalone Vendoring must directly declare the platform baseline including `failing/failure` and register `App\\Failing\\FailingBundle`.
+- Canon045: development root Composer must expose the complete reachable first-party sibling path-repository closure; dependency-owned repository declarations are not inherited.
+- Canon052: `gating/gate` is a dev dependency and aggregate quality gate; consumer `.gating/` is artifact-only.
+- Canon058/059: the canonical OpenAPI source is the subject-prefixed YAML under `config/openapi/`, and parity consumes only that source.
+- Canon060: versioned OpenAPI paths place `vN` immediately after `/api`; unversioned compatibility paths are not automatically invalid.
+- Canon061: OpenAPI ownership requires direct runtime `nelmio/api-doc-bundle`.
+- Canon063: deterministic runtime METHOD + path inventory must mirror the canonical OpenAPI source; grammar-backed CRUD inventory remains Cruding-owned and must not be guessed.
+- RC-critical workstream: verify that the already-materialized canon remediation is still current and green, repair only fresh evidence-backed failures, then complete verification and Git integration if safe.
+- Growth workstream: remaining Inspecting MEDIUM maintainability/design findings, richer readiness diagnostics and operator/API DX stay post-RC unless promoted by correctness, safety or operability evidence.
+
+### Verification plan
+
+- Re-run Composer validation/audit and executable Gating against the current tree; then run static/contracts/runtime/persistence/API/production-hardening/docs and aggregate release-candidate lanes as execution capacity permits.
+- The supplied 2026-09-29 Inspecting HIGH finding is historical and was already remediated in later journal evidence; do not duplicate Inspecting before any new `src/` mutation.
+- No current dirty path affects browser/mobile UI; visual evidence is applicability-driven and expected to remain NOT_VERIFIED unless subsequent remediation changes a user-observable surface.
+
+### Verification evidence / checkpoint
+
+- GREEN: `composer validate --strict --check-lock`; GREEN: Composer audit with no known vulnerability advisories.
+- GREEN: executable `composer gate` — 10 rules, 0 failed, 0 warnings, 3 skipped because no optional profile was supplied.
+- GREEN: PHPStan — 828 files analyzed, 0 errors.
+- GREEN: `test:di`, `test:http-service-coverage`, `quality:contracts` (321 unit tests / 5060 assertions plus contract partitions), `quality:persistence`, `quality:api`, `quality:production-hardening`, and `quality:docs`.
+- GREEN bounded runtime evidence: `test:integration:transaction-kernel` — 4 tests / 29 assertions; `test:integration:remaining` — 11 tests / 114 assertions.
+- NOT VERIFIED as a completed aggregate: asynchronous `quality:release-candidate` was rejected before process start on repeated attempts by Console MCP capacity policy `RUNTIME_CAPACITY_ADMIT_LIGHT_ONLY` / `ENGINE_BACKLOG_HIGH`; no repository failure result exists for that aggregate lane.
+- `lint:php`/the initial `quality:static` invocation did not return a completed exit result and are not counted as passes; the independently completed PHPStan lane is green.
+- The existing managed PHP server was probed first and found stopped; it was not started or restarted because no product browser/mobile UI surface changed in this task.
+- A concurrent modification to `tests/Functional/LocalDevPantherTest.php` appeared during this execution window. It was not produced by this task and is preserved without staging, overwrite, reset, stash, clean, or other destructive reconciliation.
+- Final branch relation remains synchronized with upstream (`ahead=0`, `behind=0`) at HEAD `c4cb7d615011a909a3d89cb7e64320b731ee3f06`; the worktree remains intentionally dirty with the preserved pre-existing/concurrent paths plus this orchestration journal.
+- Git commit/push is withheld at this checkpoint because the required aggregate release-candidate acceptance lane has not actually executed and the concurrent Panther change must not be commingled blindly.
+
+Что имеем? Current canon remediation is green across every deterministic/bounded lane that completed in this window, including Gating, static analysis, contracts, persistence, API, production hardening, docs, and bounded runtime partitions. Что осталось? Obtain an actual completed `quality:release-candidate` result when the Console MCP heavy-work capacity gate admits it; only then re-evaluate commit/push and final RC closure.
+
 ## 2026-10-03 canon RC verification — engine-20261004012957-vendoring-57db93
 
 ### Baseline and reconnaissance

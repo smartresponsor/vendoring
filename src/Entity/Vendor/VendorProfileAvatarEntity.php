@@ -7,10 +7,8 @@ namespace App\Vendoring\Entity\Vendor;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorProfileAvatarRepository::class)]
-#[ORM\Table(
-    name: 'vendor_profile_avatar',
-    uniqueConstraints: [new ORM\UniqueConstraint(name: 'uniq_vendor_profile_avatar_vendor_id', columns: ['vendor_id'])],
-)]
+#[ORM\Table(name: 'vendor_profile_avatar')]
+#[ORM\UniqueConstraint(name: 'uniq_vendor_profile_avatar_vendor_id', columns: ['vendor_id'])]
 class VendorProfileAvatarEntity extends VendorAbstractEntity
 {
     #[ORM\OneToOne(inversedBy: 'profileAvatar', targetEntity: VendorEntity::class)]

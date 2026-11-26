@@ -16,6 +16,7 @@ final class VendorDoubleEntryServiceTest extends TestCase
         $repository = new InMemoryLedgerEntryRepository();
         $service = new VendorDoubleEntryService($repository);
         $dto = new VendorDoubleEntryDTO(
+            'tenant-1',
             'vendor-1',
             'VENDOR_PAYABLE',
             'REVENUE',
@@ -36,6 +37,7 @@ final class VendorDoubleEntryServiceTest extends TestCase
         self::assertSame('USD', $result[0]->currency);
         self::assertSame('invoice', $result[0]->referenceType);
         self::assertSame('inv-100', $result[0]->referenceId);
+        self::assertSame('tenant-1', $result[0]->tenantId);
         self::assertSame('vendor-1', $result[0]->vendorId);
         self::assertSame('2026-03-15 08:30:00', $result[0]->createdAt);
         self::assertMatchesRegularExpression('/^[0-9A-HJKMNP-TV-Z]{26}$/', $result[0]->getObjectUuid());
@@ -45,7 +47,7 @@ final class VendorDoubleEntryServiceTest extends TestCase
     {
         $repository = new InMemoryLedgerEntryRepository();
         $service = new VendorDoubleEntryService($repository);
-        $dto = new VendorDoubleEntryDTO('vendor-1', 'VENDOR_PAYABLE', 'REVENUE', 10.0, 'USD', 'invoice', 'inv-101');
+        $dto = new VendorDoubleEntryDTO('tenant-1', 'vendor-1', 'VENDOR_PAYABLE', 'REVENUE', 10.0, 'USD', 'invoice', 'inv-101');
 
         $result = $service->post($dto);
 

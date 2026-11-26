@@ -7,12 +7,8 @@ namespace App\Vendoring\Entity\Vendor;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorPayoutItemRepository::class)]
-#[ORM\Table(
-    name: 'vendor_payout_item',
-    indexes: [
-        new ORM\Index(name: 'idx_vendor_payout_item_payout_id', columns: ['payout_id']),
-    ],
-)]
+#[ORM\Table(name: 'vendor_payout_item')]
+#[ORM\Index(name: 'idx_vendor_payout_item_payout_id', columns: ['payout_id'])]
 class VendorPayoutItemEntity extends VendorAbstractEntity
 {
     #[ORM\ManyToOne(targetEntity: VendorPayoutEntity::class)] #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')] public VendorPayoutEntity $payout;

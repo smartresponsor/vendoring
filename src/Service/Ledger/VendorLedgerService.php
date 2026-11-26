@@ -32,6 +32,7 @@ final readonly class VendorLedgerService implements VendorLedgerServiceInterface
         };
 
         $entry = new VendorLedgerEntity(
+            tenantId: $dto->tenantId,
             vendorId: $dto->vendorId,
             referenceType: $dto->type,
             referenceId: $dto->entityId,

@@ -8,8 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorLedgerRepository::class)]
 #[ORM\Table(name: 'vendor_ledger_entries')]
+#[ORM\Index(name: 'idx_vendor_ledger_tenant_vendor', columns: ['tenant_id', 'vendor_id'])]
 class VendorLedgerEntity extends VendorAbstractEntity
 {
+    #[ORM\Column(type: 'string', length: 64, nullable: true)] public ?string $tenantId = null;
     #[ORM\Column(type: 'string', length: 64)] public string $vendorId;
     #[ORM\Column(type: 'string', length: 64)] public string $referenceType;
     #[ORM\Column(type: 'string', length: 64)] public string $referenceId;
@@ -20,6 +22,7 @@ class VendorLedgerEntity extends VendorAbstractEntity
     public string $createdAt;
 
     public function __construct(
+        string $tenantId,
         string $vendorId,
         string $referenceType,
         string $referenceId,
@@ -29,7 +32,11 @@ class VendorLedgerEntity extends VendorAbstractEntity
         string $currency,
         ?string $occurredAt = null,
     ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
         parent::__construct();
+        $this->tenantId = $tenantId;
 
         $this->createdAt = $occurredAt ?? date('Y-m-d H:i:s');
         if (null !== $occurredAt) {

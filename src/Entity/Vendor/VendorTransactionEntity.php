@@ -8,12 +8,8 @@ use App\Vendoring\EntityInterface\VendorTransactionEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorTransactionRepository::class)]
-#[ORM\Table(
-    name: 'vendor_transaction',
-    indexes: [
-        new ORM\Index(name: 'idx_vendor_transaction_vendor_created', columns: ['vendor_id', 'transaction_created_at']),
-    ],
-)]
+#[ORM\Table(name: 'vendor_transaction')]
+#[ORM\Index(name: 'idx_vendor_transaction_vendor_created', columns: ['vendor_id', 'transaction_created_at'])]
 class VendorTransactionEntity extends VendorAbstractEntity implements VendorTransactionEntityInterface
 {
     #[ORM\Column(type: 'string', length: 64, name: 'vendor_id')] private string $vendorId;

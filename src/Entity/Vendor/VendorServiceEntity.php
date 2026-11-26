@@ -7,15 +7,9 @@ namespace App\Vendoring\Entity\Vendor;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorServiceRepository::class)]
-#[ORM\Table(
-    name: 'vendor_service',
-    uniqueConstraints: [
-        new ORM\UniqueConstraint(name: 'uniq_vendor_service_vendor_category', columns: ['vendor_id', 'category_id']),
-    ],
-    indexes: [
-        new ORM\Index(name: 'idx_vendor_service_category', columns: ['category_id']),
-    ],
-)]
+#[ORM\Table(name: 'vendor_service')]
+#[ORM\UniqueConstraint(name: 'uniq_vendor_service_vendor_category', columns: ['vendor_id', 'category_id'])]
+#[ORM\Index(name: 'idx_vendor_service_category', columns: ['category_id'])]
 class VendorServiceEntity extends VendorAbstractEntity
 {
     #[ORM\ManyToOne(targetEntity: VendorEntity::class)]

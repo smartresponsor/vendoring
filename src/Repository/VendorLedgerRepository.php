@@ -33,9 +33,12 @@ final class VendorLedgerRepository extends ServiceEntityRepository implements Ve
         $this->getEntityManager()->persist($entry);
     }
 
-    public function listByRef(string $vendorId, string $referenceType, string $referenceId): array
+    public function listByRef(string $tenantId, string $vendorId, string $referenceType, string $referenceId): array
     {
+        self::requireTenant($tenantId);
         $queryBuilder = $this->createQueryBuilder('ledger')
+            ->andWhere('ledger.tenantId = :tenantId')
+            ->setParameter('tenantId', $tenantId)
             ->andWhere('ledger.vendorId = :vendorId')
             ->andWhere('ledger.referenceType = :referenceType')
             ->andWhere('ledger.referenceId = :referenceId')
@@ -59,8 +62,12 @@ final class VendorLedgerRepository extends ServiceEntityRepository implements Ve
     {
         $sum = 0.0;
 
-        foreach ($this->findBy(['vendorId' => $criteria->vendorId]) as $entry) {
+        foreach ($this->findBy(['tenantId' => $criteria->tenantId, 'vendorId' => $criteria->vendorId]) as $entry) {
             if (null !== $criteria->currency && $entry->currency !== $criteria->currency) {
+                continue;
+            }
+
+            if (!$criteria->includesOccurredAt($entry->getCreatedAt())) {
                 continue;
             }
 
@@ -76,11 +83,12 @@ final class VendorLedgerRepository extends ServiceEntityRepository implements Ve
         return $sum;
     }
 
-    public function balancesForVendor(string $vendorId): array
+    public function balancesForVendor(string $tenantId, string $vendorId): array
     {
+        self::requireTenant($tenantId);
         $balances = [];
 
-        foreach ($this->findBy(['vendorId' => $vendorId]) as $entry) {
+        foreach ($this->findBy(['tenantId' => $tenantId, 'vendorId' => $vendorId]) as $entry) {
             $balances[$entry->currency] ??= 0;
             $balances[$entry->currency] += (int) round($entry->amount * 100);
         }
@@ -93,5 +101,12 @@ final class VendorLedgerRepository extends ServiceEntityRepository implements Ve
             array_keys($balances),
             array_values($balances),
         );
+    }
+
+    private static function requireTenant(string $tenantId): void
+    {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
     }
 }

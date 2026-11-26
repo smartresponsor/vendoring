@@ -11,12 +11,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorRepository::class)]
-#[ORM\Table(
-    name: 'vendor',
-    indexes: [
-        new ORM\Index(name: 'idx_vendor_owner_user_id', columns: ['owner_user_id']),
-    ],
-)]
+#[ORM\Table(name: 'vendor')]
+#[ORM\Index(name: 'idx_vendor_owner_user_id', columns: ['owner_user_id'])]
 class VendorEntity extends VendorAbstractEntity implements ObjectEntityInterface
 {
     use ObjectTitleEmbeddableTrait;

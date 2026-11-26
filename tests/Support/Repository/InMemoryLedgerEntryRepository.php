@@ -19,16 +19,18 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
         $this->entries[] = $entry;
     }
 
-    public function listByRef(string $vendorId, string $referenceType, string $referenceId): array
+    public function listByRef(string $tenantId, string $vendorId, string $referenceType, string $referenceId): array
     {
+        self::requireTenant($tenantId);
+
         return array_values(array_filter(
             $this->entries,
-            static function (VendorLedgerEntity $entry) use ($vendorId, $referenceType, $referenceId): bool {
+            static function (VendorLedgerEntity $entry) use ($tenantId, $vendorId, $referenceType, $referenceId): bool {
                 if ($entry->referenceType !== $referenceType || $entry->referenceId !== $referenceId) {
                     return false;
                 }
 
-                if ($entry->vendorId !== $vendorId) {
+                if ($entry->tenantId !== $tenantId || $entry->vendorId !== $vendorId) {
                     return false;
                 }
 
@@ -85,7 +87,7 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
         $sum = 0.0;
 
         foreach ($this->entries as $entry) {
-            if ($entry->vendorId !== $criteria->vendorId) {
+            if ($entry->tenantId !== $criteria->tenantId || $entry->vendorId !== $criteria->vendorId) {
                 continue;
             }
 
@@ -93,11 +95,7 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
                 continue;
             }
 
-            if (null !== $criteria->from && $entry->createdAt < $criteria->from) {
-                continue;
-            }
-
-            if (null !== $criteria->to && $entry->createdAt > $criteria->to) {
+            if (!$criteria->includesOccurredAt($entry->getCreatedAt())) {
                 continue;
             }
 
@@ -113,12 +111,13 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
         return $sum;
     }
 
-    public function balancesForVendor(string $vendorId): array
+    public function balancesForVendor(string $tenantId, string $vendorId): array
     {
+        self::requireTenant($tenantId);
         $balances = [];
 
         foreach ($this->entries as $entry) {
-            if ($entry->vendorId !== $vendorId) {
+            if ($entry->tenantId !== $tenantId || $entry->vendorId !== $vendorId) {
                 continue;
             }
 
@@ -142,5 +141,12 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
     public function all(): array
     {
         return $this->entries;
+    }
+
+    private static function requireTenant(string $tenantId): void
+    {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
     }
 }

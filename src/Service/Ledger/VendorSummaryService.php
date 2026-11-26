@@ -20,11 +20,12 @@ final class VendorSummaryService implements VendorSummaryServiceInterface
     }
 
     /** @throws Exception */
-    public function build(string $vendorId, string $from, string $to, string $currency): array
+    public function build(string $tenantId, string $vendorId, string $from, string $to, string $currency): array
     {
         $balances = [];
         foreach (self::ACCOUNTS as $account) {
             $balances[$account] = $this->ledgerEntries->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
+                tenantId: $tenantId,
                 vendorId: $vendorId,
                 accountCode: $account,
                 from: $this->normalizeBoundary($from, false),
