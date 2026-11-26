@@ -86,6 +86,39 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
         return $this->findOneBy(['tenantId' => $tenantId, 'payoutId' => $identifier]);
     }
 
+    /**
+     * @template T
+     *
+     * @param callable(): T $operation
+     *
+     * @return T
+     */
+    public function reserveAtomically(string $tenantId, string $vendorId, string $currency, callable $operation): mixed
+    {
+        if ('' === trim($tenantId) || '' === trim($vendorId) || '' === trim($currency)) {
+            throw new \InvalidArgumentException('Complete payout scope required');
+        }
+        $em = $this->em();
+        $connection = $em->getConnection();
+        if ($connection->isTransactionActive()) {
+            throw new \LogicException('Payout reservation requires an independent transaction');
+        }
+
+        return $em->wrapInTransaction(static function () use ($connection, $tenantId, $vendorId, $currency, $operation): mixed {
+            if ($connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform) {
+                // A transaction-scoped lock serializes reservations even when there are no existing payout rows.
+                $connection->executeStatement('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
+                $connection->executeStatement("SET LOCAL lock_timeout = '10s'");
+                $key = json_encode([$tenantId, $vendorId, $currency], JSON_THROW_ON_ERROR);
+                $connection->executeQuery('SELECT pg_advisory_xact_lock(hashtextextended(?, 0))', [$key])->free();
+            } elseif (!$connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\SQLitePlatform) {
+                throw new \LogicException('Unsupported payout reservation database');
+            }
+
+            return $operation();
+        });
+    }
+
     public function insert(VendorPayoutEntity $payout): void
     {
         $this->em()->persist($payout);
@@ -96,6 +129,7 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
         $payout = $this->byId($tenantId, $id);
         if ($payout instanceof VendorPayoutEntity) {
             $payout->status = 'processed';
+            $payout->pendingSlot = null;
             $payout->processedAt = $processedAt;
             $payout->meta = array_merge($payout->meta, $meta);
             $this->em()->flush();
@@ -108,6 +142,7 @@ final class VendorPayoutRepository extends ServiceEntityRepository implements Ve
         $payout = $this->byId($tenantId, $id);
         if ($payout instanceof VendorPayoutEntity) {
             $payout->status = 'failed';
+            $payout->pendingSlot = null;
             $payout->processedAt = $processedAt;
             $payout->meta = array_merge($payout->meta, $meta);
             $this->em()->flush();

@@ -25,6 +25,7 @@ final readonly class VendorReleaseBaselineReaderService implements VendorRelease
         ?string $from = null,
         ?string $to = null,
         string $currency = 'USD',
+        ?int $canonicalVendorId = null,
     ): VendorReleaseBaselineProjection {
         $runtimeStatus = $this->runtimeStatusProjectionBuilder->build(
             tenantId: $tenantId,
@@ -32,6 +33,7 @@ final readonly class VendorReleaseBaselineReaderService implements VendorRelease
             from: $from,
             to: $to,
             currency: $currency,
+            canonicalVendorId: $canonicalVendorId,
         )->toArray();
 
         $projectRoot = dirname(__DIR__, 3);

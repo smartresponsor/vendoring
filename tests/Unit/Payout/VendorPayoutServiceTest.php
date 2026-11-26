@@ -58,7 +58,9 @@ final class VendorPayoutServiceTest extends TestCase
         self::assertCount(2, $entriesAfterCreate);
         self::assertSame('payout_reserve', $entriesAfterCreate[1]->debitAccount);
         self::assertSame('VENDOR_PAYABLE', $entriesAfterCreate[1]->creditAccount);
-        self::assertSame(13.5, $entriesAfterCreate[1]->amount);
+        self::assertSame(15.0, $entriesAfterCreate[1]->amount);
+        self::assertSame(0, $ledgerRepository->balancesForVendor('tenant-1', 'vendor-1')[0]->balanceCents);
+        self::assertNull($service->create(new VendorCreatePayoutDTO('tenant-1', 'vendor-1', 'USD', 1000, 0.10)));
 
         self::assertNull($payoutRepository->byId('tenant-2', $payoutId));
         self::assertFalse($service->process('tenant-2', $payoutId));

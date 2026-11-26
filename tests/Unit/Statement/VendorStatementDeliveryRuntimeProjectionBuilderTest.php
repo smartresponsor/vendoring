@@ -89,7 +89,7 @@ final class VendorStatementDeliveryRuntimeProjectionBuilderTest extends TestCase
             $this->statements,
             $this->exporter,
             $this->recipients,
-        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', true))->toArray();
+        ))->build(new VendorStatementDeliveryRuntimeRequestDTO('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', true, 101))->toArray();
 
         self::assertSame('101', $view['vendorId']);
         self::assertSame('USD', $view['currency']);

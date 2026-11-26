@@ -103,11 +103,12 @@ final class VendorSendVendorStatementsCommand extends Command
                 $dto = new VendorStatementRequestDTO($recipient->tenantId, $recipient->vendorId, $from, $to, $recipient->currency);
                 $data = $this->svc->build($dto);
                 $pdfPath = $this->pdf->export($dto, $data);
-                $result = $this->mailer->send($recipient->vendorId, $recipient->email, $pdfPath, $period);
+                $result = $this->mailer->send($recipient->tenantId, $recipient->vendorId, $recipient->email, $pdfPath, $period);
             } catch (\Throwable $throwable) {
                 $result = [
                     'ok' => false,
                     'message' => 'statement_generation_failed',
+                    'tenantId' => $recipient->tenantId,
                     'vendorId' => $recipient->vendorId,
                     'email' => $recipient->email,
                     'pdfPath' => '',

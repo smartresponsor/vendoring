@@ -8,5 +8,5 @@ use App\Vendoring\Projection\VendorExternalIntegrationRuntimeProjection;
 
 interface VendorExternalIntegrationRuntimeProjectionBuilderInterface
 {
-    public function build(string $vendorId): VendorExternalIntegrationRuntimeProjection;
+    public function build(string $vendorId, ?int $canonicalVendorId = null): VendorExternalIntegrationRuntimeProjection;
 }

@@ -41,8 +41,8 @@ final readonly class VendorStatementDeliveryRuntimeProjectionBuilder implements 
         $statement = $this->statementService->build($dto);
 
         $ownership = null;
-        if (ctype_digit($request->vendorId)) {
-            $ownershipProjection = $this->ownershipProjectionBuilder->buildForVendorId((int) $request->vendorId);
+        if (null !== $request->canonicalVendorId) {
+            $ownershipProjection = $this->ownershipProjectionBuilder->buildForVendorId($request->canonicalVendorId);
             $ownership = $ownershipProjection?->toArray();
         }
 

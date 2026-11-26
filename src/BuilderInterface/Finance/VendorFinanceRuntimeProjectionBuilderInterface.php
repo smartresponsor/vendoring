@@ -16,5 +16,6 @@ interface VendorFinanceRuntimeProjectionBuilderInterface
         ?string $from = null,
         ?string $to = null,
         string $currency = 'USD',
+        ?int $canonicalVendorId = null,
     ): VendorFinanceRuntimeProjection;
 }

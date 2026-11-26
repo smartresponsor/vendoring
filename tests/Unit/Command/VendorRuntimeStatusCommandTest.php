@@ -6,7 +6,10 @@ namespace App\Vendoring\Tests\Unit\Command;
 
 use App\Vendoring\BuilderInterface\Ops\VendorRuntimeStatusProjectionBuilderInterface;
 use App\Vendoring\Command\VendorRuntimeStatusCommand;
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorLedgerBindingEntity;
 use App\Vendoring\Projection\VendorRuntimeStatusProjection;
+use App\Vendoring\RepositoryInterface\VendorLedgerBindingRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
@@ -26,7 +29,7 @@ final class VendorRuntimeStatusCommandTest extends TestCase
         $this->runtimeStatusProjectionBuilder
             ->expects(self::once())
             ->method('build')
-            ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')
+            ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD', 7)
             ->willReturn(new VendorRuntimeStatusProjection(
                 vendorId: '42',
                 currency: 'USD',
@@ -43,7 +46,12 @@ final class VendorRuntimeStatusCommandTest extends TestCase
                 generatedAt: '2025-01-31T00:00:00+00:00',
             ));
 
-        $tester = new CommandTester(new VendorRuntimeStatusCommand($this->runtimeStatusProjectionBuilder));
+        $vendor = new VendorEntity('Fixture');
+        $id = new \ReflectionProperty($vendor, 'id');
+        $id->setValue($vendor, 7);
+        $bindings = $this->createMock(VendorLedgerBindingRepositoryInterface::class);
+        $bindings->expects(self::once())->method('findOneBy')->with(['tenantId' => 'tenant-1', 'ledgerVendorId' => '42'])->willReturn(new VendorLedgerBindingEntity($vendor, 'tenant-1', '42'));
+        $tester = new CommandTester(new VendorRuntimeStatusCommand($this->runtimeStatusProjectionBuilder, $bindings));
         $statusCode = $tester->execute([
             '--tenantId' => 'tenant-1',
             '--vendorId' => '42',

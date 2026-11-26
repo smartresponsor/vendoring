@@ -8,16 +8,17 @@ use App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterfa
 
 final class FakeVendorStatementMailerService implements VendorStatementMailerServiceInterface
 {
-    /** @var list<array{vendorId:string,email:string,pdfPath:string,periodLabel:string}> */
+    /** @var list<array{tenantId:string,vendorId:string,email:string,pdfPath:string,periodLabel:string}> */
     private array $calls = [];
 
     public function __construct(private readonly bool $ok = true, private readonly string $message = 'sent')
     {
     }
 
-    public function send(string $vendorId, string $email, string $pdfPath, string $periodLabel): array
+    public function send(string $tenantId, string $vendorId, string $email, string $pdfPath, string $periodLabel): array
     {
         $this->calls[] = [
+            'tenantId' => $tenantId,
             'vendorId' => $vendorId,
             'email' => $email,
             'pdfPath' => $pdfPath,
@@ -27,6 +28,7 @@ final class FakeVendorStatementMailerService implements VendorStatementMailerSer
         return [
             'ok' => $this->ok,
             'message' => $this->message,
+            'tenantId' => $tenantId,
             'vendorId' => $vendorId,
             'email' => $email,
             'pdfPath' => $pdfPath,
@@ -41,7 +43,7 @@ final class FakeVendorStatementMailerService implements VendorStatementMailerSer
         ];
     }
 
-    /** @return list<array{vendorId:string,email:string,pdfPath:string,periodLabel:string}> */
+    /** @return list<array{tenantId:string,vendorId:string,email:string,pdfPath:string,periodLabel:string}> */
     public function calls(): array
     {
         return $this->calls;

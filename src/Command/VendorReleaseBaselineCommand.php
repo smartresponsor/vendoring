@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Vendoring\Command;
 
 use App\Vendoring\DTO\Command\VendorRuntimeWindowInputDTO;
+use App\Vendoring\Entity\Vendor\VendorLedgerBindingEntity;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
 use App\Vendoring\Exception\Command\VendorCommandIoException;
+use App\Vendoring\RepositoryInterface\VendorLedgerBindingRepositoryInterface;
 use App\Vendoring\ServiceInterface\Command\VendorCommandJsonArtifactWriterServiceInterface;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Ops\VendorReleaseBaselineReaderServiceInterface;
@@ -24,6 +26,7 @@ final class VendorReleaseBaselineCommand extends Command
 {
     public function __construct(
         private readonly VendorReleaseBaselineReaderServiceInterface $releaseBaselineReader,
+        private readonly VendorLedgerBindingRepositoryInterface $bindings,
         private readonly VendorCommandJsonArtifactWriterServiceInterface $commandJsonArtifactWriter,
         private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter,
     ) {
@@ -58,12 +61,15 @@ final class VendorReleaseBaselineCommand extends Command
         }
 
         try {
+            $binding = $this->bindings->findOneBy(['tenantId' => $runtimeInput->tenantId, 'ledgerVendorId' => $runtimeInput->vendorId]);
+            $canonicalVendorId = $binding instanceof VendorLedgerBindingEntity ? $binding->getVendor()->getId() : null;
             $projection = $this->releaseBaselineReader->build(
                 tenantId: $runtimeInput->tenantId,
                 vendorId: $runtimeInput->vendorId,
                 from: $runtimeInput->from,
                 to: $runtimeInput->to,
                 currency: $runtimeInput->currency,
+                canonicalVendorId: $canonicalVendorId,
             )->toArray();
         } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError(

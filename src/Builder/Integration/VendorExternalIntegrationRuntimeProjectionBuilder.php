@@ -28,11 +28,11 @@ final readonly class VendorExternalIntegrationRuntimeProjectionBuilder implement
     ) {
     }
 
-    public function build(string $vendorId): VendorExternalIntegrationRuntimeProjection
+    public function build(string $vendorId, ?int $canonicalVendorId = null): VendorExternalIntegrationRuntimeProjection
     {
         $ownership = null;
-        if (ctype_digit($vendorId)) {
-            $ownershipProjection = $this->ownershipProjectionBuilder->buildForVendorId((int) $vendorId);
+        if (null !== $canonicalVendorId) {
+            $ownershipProjection = $this->ownershipProjectionBuilder->buildForVendorId($canonicalVendorId);
             $ownership = $ownershipProjection?->toArray();
         }
 

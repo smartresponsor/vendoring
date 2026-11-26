@@ -19,6 +19,7 @@ interface VendorStatementMailerServiceInterface
      * @return array{
      *   ok:bool,
      *   message:string,
+     *   tenantId:string,
      *   vendorId:string,
      *   email:string,
      *   pdfPath:string,
@@ -34,5 +35,5 @@ interface VendorStatementMailerServiceInterface
      *   errorMessage?:string
      * }
      */
-    public function send(string $vendorId, string $email, string $pdfPath, string $periodLabel): array;
+    public function send(string $tenantId, string $vendorId, string $email, string $pdfPath, string $periodLabel): array;
 }

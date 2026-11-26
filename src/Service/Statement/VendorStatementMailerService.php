@@ -34,14 +34,18 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
     /**
      * @throws \JsonException
      */
-    public function send(string $vendorId, string $email, string $pdfPath, string $periodLabel): array
+    public function send(string $tenantId, string $vendorId, string $email, string $pdfPath, string $periodLabel): array
     {
         $policy = $this->outboundPolicy->forOperation('statement_mail_send');
-        $scopeKey = $vendorId;
+        if ('' === trim($tenantId) || '' === trim($vendorId)) {
+            throw new \InvalidArgumentException('Statement delivery requires tenant and vendor scope');
+        }
+        $scopeKey = hash('sha256', json_encode([$tenantId, $vendorId], JSON_THROW_ON_ERROR));
 
         $result = [
             'ok' => false,
             'message' => 'statement_mail_send_failed',
+            'tenantId' => $tenantId,
             'vendorId' => $vendorId,
             'email' => $email,
             'pdfPath' => $pdfPath,
@@ -60,6 +64,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
                 'vendorId' => $vendorId,
             ]);
             $this->runtimeLogger->warning('vendor_statement_mail_rejected', [
+                'tenant_id' => $tenantId,
                 'vendor_id' => $vendorId,
                 'email' => $email,
                 'error_code' => 'statement_mail_invalid_email',
@@ -83,6 +88,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
                 'vendorId' => $vendorId,
             ]);
             $this->runtimeLogger->warning('vendor_statement_mail_short_circuited', [
+                'tenant_id' => $tenantId,
                 'vendor_id' => $vendorId,
                 'email' => $email,
                 'error_code' => 'statement_mail_circuit_open',
@@ -113,6 +119,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
                 'vendorId' => $vendorId,
             ]);
             $this->runtimeLogger->warning('vendor_statement_mail_attachment_missing', [
+                'tenant_id' => $tenantId,
                 'vendor_id' => $vendorId,
                 'pdf_path' => $pdfPath,
             ]);
@@ -133,6 +140,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
                 'errorClass' => $transportException::class,
             ]);
             $this->runtimeLogger->error('vendor_statement_mail_failed', [
+                'tenant_id' => $tenantId,
                 'vendor_id' => $vendorId,
                 'email' => $email,
                 'error_class' => $transportException::class,
@@ -156,6 +164,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
             'vendorId' => $vendorId,
         ]);
         $this->runtimeLogger->info('vendor_statement_mail_sent', [
+            'tenant_id' => $tenantId,
             'vendor_id' => $vendorId,
             'email' => $email,
             'attached' => $attached,
@@ -164,6 +173,7 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
         return [
             'ok' => true,
             'message' => 'sent',
+            'tenantId' => $tenantId,
             'vendorId' => $vendorId,
             'email' => $email,
             'pdfPath' => $pdfPath,

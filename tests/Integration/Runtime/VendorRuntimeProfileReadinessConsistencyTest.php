@@ -60,7 +60,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             surfaces: [],
         ));
 
-        $payload = $this->buildRuntimeStatus()->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')->toArray();
+        $payload = $this->buildRuntimeStatus()->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', 101)->toArray();
 
         self::assertArrayHasKey('ownership', $payload);
         $ownership = $payload['ownership'] ?? null;
@@ -99,7 +99,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             surfaces: [],
         ));
 
-        $payload = $this->buildRuntimeStatus()->build('tenant-1', '202', '2026-03-01', '2026-03-31', 'USD')->toArray();
+        $payload = $this->buildRuntimeStatus()->build('tenant-1', '202', '2026-03-01', '2026-03-31', 'USD', 202)->toArray();
 
         self::assertArrayHasKey('ownership', $payload);
         $ownership = $payload['ownership'] ?? null;

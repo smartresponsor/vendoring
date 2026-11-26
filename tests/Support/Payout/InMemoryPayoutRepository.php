@@ -16,6 +16,24 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
     /** @var array<string,list<VendorPayoutItemEntity>> */
     private array $items = [];
 
+    /**
+     * @template T
+     *
+     * @param callable(): T $operation
+     *
+     * @return T
+     */
+    public function reserveAtomically(string $tenantId, string $vendorId, string $currency, callable $operation): mixed
+    {
+        $before = $this->payouts;
+        try {
+            return $operation();
+        } catch (\Throwable $error) {
+            $this->payouts = $before;
+            throw $error;
+        }
+    }
+
     public function insert(VendorPayoutEntity $payout): void
     {
         $this->payouts[$payout->payoutId] = $payout;
@@ -99,6 +117,7 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
         }
 
         $this->payouts[$id]->status = 'processed';
+        $this->payouts[$id]->pendingSlot = null;
         $this->payouts[$id]->processedAt = $processedAt;
         $this->payouts[$id]->meta = [...$this->payouts[$id]->meta, ...$meta];
     }
@@ -113,6 +132,7 @@ final class InMemoryPayoutRepository implements VendorPayoutRepositoryInterface
         }
 
         $this->payouts[$id]->status = 'failed';
+        $this->payouts[$id]->pendingSlot = null;
         $this->payouts[$id]->processedAt = $processedAt;
         $this->payouts[$id]->meta = [...$this->payouts[$id]->meta, ...$meta];
     }

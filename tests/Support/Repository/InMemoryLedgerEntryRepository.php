@@ -122,7 +122,13 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
             }
 
             $balances[$entry->currency] ??= 0;
-            $balances[$entry->currency] += (int) round($entry->amount * 100);
+            $cents = (int) round($entry->amount * 100);
+            if ('VENDOR_PAYABLE' === $entry->debitAccount) {
+                $balances[$entry->currency] += $cents;
+            }
+            if ('VENDOR_PAYABLE' === $entry->creditAccount) {
+                $balances[$entry->currency] -= $cents;
+            }
         }
 
         return array_map(

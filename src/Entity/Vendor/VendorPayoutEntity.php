@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'idx_vendor_payout_tenant_vendor', columns: ['tenant_id', 'vendor_id'])]
 #[ORM\Index(name: 'idx_vendor_payout_status', columns: ['payout_status'])]
 #[ORM\UniqueConstraint(name: 'uniq_vendor_payout_business_id', columns: ['payout_id'])]
+#[ORM\UniqueConstraint(name: 'uniq_vendor_payout_pending_scope', columns: ['tenant_id', 'vendor_id', 'currency', 'pending_slot'])]
 class VendorPayoutEntity extends VendorAbstractEntity
 {
     #[ORM\Column(type: 'string', length: 64)] public string $payoutId;
@@ -22,6 +23,7 @@ class VendorPayoutEntity extends VendorAbstractEntity
     #[ORM\Column(type: 'integer')] public int $feeCents;
     #[ORM\Column(type: 'integer')] public int $netCents;
     #[ORM\Column(name: 'payout_status', type: 'string', length: 32)] public string $status;
+    #[ORM\Column(type: 'integer', nullable: true)] public ?int $pendingSlot = null;
     #[ORM\Column(type: 'string', length: 32, nullable: true)] public ?string $processedAt = null;
     /** @var array<array-key, mixed> */
     #[ORM\Column(type: 'json')] public array $meta = [];
@@ -51,6 +53,7 @@ class VendorPayoutEntity extends VendorAbstractEntity
         $this->netCents = $netCents;
         unset($createdAt);
         $this->status = $status;
+        $this->pendingSlot = 'pending' === $status ? 1 : null;
         $this->processedAt = is_scalar($processedAt) ? (string) $processedAt : null;
         $this->meta = is_array($meta) ? $meta : [];
     }
@@ -63,6 +66,7 @@ class VendorPayoutEntity extends VendorAbstractEntity
     public function markProcessed(): self
     {
         $this->status = 'processed';
+        $this->pendingSlot = null;
         $this->processedAt = date('Y-m-d H:i:s');
 
         return $this;

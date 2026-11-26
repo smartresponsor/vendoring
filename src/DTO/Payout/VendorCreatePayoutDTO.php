@@ -16,5 +16,8 @@ final class VendorCreatePayoutDTO
         if ('' === trim($tenantId)) {
             throw new \InvalidArgumentException('Tenant scope required');
         }
+        if ('' === trim($vendorId) || '' === trim($currency) || $thresholdCents <= 0 || !is_finite($retentionFeePercent) || $retentionFeePercent < 0 || $retentionFeePercent > 1) {
+            throw new \InvalidArgumentException('Invalid payout scope or financial parameters');
+        }
     }
 }

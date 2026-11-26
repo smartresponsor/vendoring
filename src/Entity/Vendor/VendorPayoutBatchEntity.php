@@ -8,6 +8,7 @@ final class VendorPayoutBatchEntity
 {
     public function __construct(
         public string $id,
+        public string $tenantId,
         public string $vendorId,
         public string $periodStart, // Y-m-d
         public string $periodEnd,   // Y-m-d
@@ -19,5 +20,8 @@ final class VendorPayoutBatchEntity
         public ?string $providerRef,
         public string $createdAt,
     ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
     }
 }

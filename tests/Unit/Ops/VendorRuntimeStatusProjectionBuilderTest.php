@@ -43,7 +43,7 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
         $this->financeRuntimeProjectionBuilder
             ->expects(self::once())
             ->method('build')
-            ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')
+            ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD', 42)
             ->willReturn(new VendorFinanceRuntimeProjection('42', 'USD', ['ownerUserId' => 7], ['gmv' => 1000], ['provider' => 'bank'], ['closing' => 900]));
 
         $this->statementDeliveryRuntimeProjectionBuilder
@@ -62,10 +62,10 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
         $this->externalIntegrationRuntimeProjectionBuilder
             ->expects(self::once())
             ->method('build')
-            ->with('42')
+            ->with('42', 42)
             ->willReturn(new VendorExternalIntegrationRuntimeProjection('42', ['ownerUserId' => 7], ['crm' => 'hubspot'], ['webhook' => 'ok'], ['payoutProvider' => 'bank'], ['crm', 'webhooks']));
 
-        $payload = $this->buildService()->build('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')->toArray();
+        $payload = $this->buildService()->build('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD', 42)->toArray();
         $ownership = self::assertArrayPayload($payload['ownership'] ?? null);
 
         self::assertTrue($payload['surfaceStatus']['ownership']);

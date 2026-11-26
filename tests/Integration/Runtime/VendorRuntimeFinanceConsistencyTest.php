@@ -77,7 +77,7 @@ final class VendorRuntimeFinanceConsistencyTest extends TestCase
             $this->finance,
             $this->statementDelivery,
             $this->externalIntegration,
-        ))->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')->toArray();
+        ))->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', 101)->toArray();
 
         self::assertSame(['revenue' => 100.0, 'refunds' => 10.0, 'payouts' => 0.0, 'balance' => 90.0], $payload['finance']['metricOverview']);
         self::assertNull($payload['finance']['payoutAccount']);

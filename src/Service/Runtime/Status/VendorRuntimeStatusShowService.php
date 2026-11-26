@@ -33,16 +33,13 @@ final readonly class VendorRuntimeStatusShowService
             return new JsonResponse(['error' => 'financial_scope_denied'], 403);
         }
 
-        if (ctype_digit($scope->getLedgerVendorId()) && $scope->getLedgerVendorId() !== (string) $scope->getVendor()->getId()) {
-            return new JsonResponse(['error' => 'financial_identity_mismatch'], 403);
-        }
-
         $projection = $this->runtimeStatusProjectionBuilder->build(
             tenantId: $scope->getTenantId(),
             vendorId: $scope->getLedgerVendorId(),
             from: $request->query->get('from'),
             to: $request->query->get('to'),
             currency: (string) $request->query->get('currency', 'USD'),
+            canonicalVendorId: $scope->getVendor()->getId(),
         );
 
         return new JsonResponse(['data' => $projection->toArray()], 200);

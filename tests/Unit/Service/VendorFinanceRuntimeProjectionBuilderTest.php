@@ -83,7 +83,7 @@ final class VendorFinanceRuntimeProjectionBuilderTest extends TestCase
             $this->metrics,
             $this->accounts,
             $this->statements,
-        ))->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')->toArray();
+        ))->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', 101)->toArray();
 
         self::assertSame('101', $view['vendorId']);
         self::assertSame('USD', $view['currency']);

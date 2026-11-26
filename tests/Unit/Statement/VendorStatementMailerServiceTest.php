@@ -29,7 +29,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertNotFalse($pdf);
         file_put_contents($pdf, 'pdf');
 
-        $result = $service->send('vendor-1', 'vendor@example.com', $pdf, 'March 2026');
+        $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', $pdf, 'March 2026');
 
         self::assertTrue($result['ok']);
         self::assertSame('sent', $result['message']);
@@ -47,7 +47,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         $metrics = new VendorMetricEmitterService();
         $service = $this->service($mailer, $metrics);
 
-        $result = $service->send('vendor-1', 'not-an-email', '/tmp/missing.pdf', 'March 2026');
+        $result = $service->send('tenant-1', 'vendor-1', 'not-an-email', '/tmp/missing.pdf', 'March 2026');
 
         self::assertFalse($result['ok']);
         self::assertSame('statement_mail_invalid_email', $result['message']);
@@ -61,7 +61,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         $metrics = new VendorMetricEmitterService();
         $service = $this->service($mailer, $metrics);
 
-        $result = $service->send('vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
+        $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
 
         self::assertFalse($result['ok']);
         self::assertSame('statement_mail_send_failed', $result['message']);
@@ -80,17 +80,21 @@ final class VendorStatementMailerServiceTest extends TestCase
         $mailer = new FakeMailer();
         $metrics = new VendorMetricEmitterService();
         $breaker = $this->breaker();
-        $breaker->recordFailure('statement_mail_send', 'vendor-1', 2, 60);
-        $breaker->recordFailure('statement_mail_send', 'vendor-1', 2, 60);
+        $breaker->recordFailure('statement_mail_send', hash('sha256', json_encode(['tenant-1', 'vendor-1'], JSON_THROW_ON_ERROR)), 2, 60);
+        $breaker->recordFailure('statement_mail_send', hash('sha256', json_encode(['tenant-1', 'vendor-1'], JSON_THROW_ON_ERROR)), 2, 60);
 
         $service = $this->service($mailer, $metrics, $breaker);
-        $result = $service->send('vendor-1', 'vendor@example.com', '', 'March 2026');
+        $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '', 'March 2026');
 
         self::assertFalse($result['ok']);
         self::assertSame('statement_mail_circuit_open', $result['message']);
         self::assertSame('open', $result['circuitState']);
         self::assertCount(0, $mailer->messages());
         self::assertSame('statement_mail_circuit_open_total', $metrics->snapshot()[0]['name']);
+        $otherTenant = $service->send('tenant-2', 'vendor-1', 'vendor@example.com', '', 'March 2026');
+        self::assertTrue($otherTenant['ok']);
+        self::assertSame('tenant-2', $otherTenant['tenantId']);
+        self::assertCount(1, $mailer->messages());
     }
 
     public function testSendDoesNotSwallowNonTransportExceptions(): void
@@ -108,7 +112,7 @@ final class VendorStatementMailerServiceTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('unexpected mailer state');
 
-        $service->send('vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
+        $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '/tmp/missing.pdf', 'March 2026');
     }
 
     private function service(MailerInterface $mailer, VendorMetricEmitterService $metrics, ?VendorOutboundCircuitBreakerService $breaker = null): VendorStatementMailerService

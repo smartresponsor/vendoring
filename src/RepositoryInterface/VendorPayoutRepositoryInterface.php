@@ -27,6 +27,15 @@ interface VendorPayoutRepositoryInterface
 
     public function insert(VendorPayoutEntity $payout): void;
 
+    /**
+     * @template T
+     *
+     * @param callable(): T $operation
+     *
+     * @return T
+     */
+    public function reserveAtomically(string $tenantId, string $vendorId, string $currency, callable $operation): mixed;
+
     /** @param array<string, mixed> $meta */
     public function markProcessed(string $tenantId, string $id, string $processedAt, array $meta = []): void;
 

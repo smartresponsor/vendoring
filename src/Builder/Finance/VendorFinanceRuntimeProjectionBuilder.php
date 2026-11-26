@@ -37,13 +37,14 @@ final readonly class VendorFinanceRuntimeProjectionBuilder implements VendorFina
         ?string $from = null,
         ?string $to = null,
         string $currency = 'USD',
+        ?int $canonicalVendorId = null,
     ): VendorFinanceRuntimeProjection {
         if ('' === trim($tenantId)) {
             throw new \InvalidArgumentException('Tenant scope required');
         }
         $ownership = null;
-        if (ctype_digit($vendorId)) {
-            $ownershipProjection = $this->ownershipProjectionBuilder->buildForVendorId((int) $vendorId);
+        if (null !== $canonicalVendorId) {
+            $ownershipProjection = $this->ownershipProjectionBuilder->buildForVendorId($canonicalVendorId);
             $ownership = $ownershipProjection?->toArray();
         }
 

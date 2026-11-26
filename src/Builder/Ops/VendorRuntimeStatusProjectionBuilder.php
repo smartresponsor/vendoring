@@ -34,13 +34,14 @@ final readonly class VendorRuntimeStatusProjectionBuilder implements VendorRunti
         ?string $from = null,
         ?string $to = null,
         string $currency = 'USD',
+        ?int $canonicalVendorId = null,
     ): VendorRuntimeStatusProjection {
         if ('' === trim($tenantId)) {
             throw new \InvalidArgumentException('Tenant scope required');
         }
         $ownership = null;
-        if (ctype_digit($vendorId)) {
-            $ownership = $this->ownershipProjectionBuilder->buildForVendorId((int) $vendorId)?->toArray();
+        if (null !== $canonicalVendorId) {
+            $ownership = $this->ownershipProjectionBuilder->buildForVendorId($canonicalVendorId)?->toArray();
         }
 
         $finance = $this->financeRuntimeProjectionBuilder->build(
@@ -49,6 +50,7 @@ final readonly class VendorRuntimeStatusProjectionBuilder implements VendorRunti
             from: $from,
             to: $to,
             currency: $currency,
+            canonicalVendorId: $canonicalVendorId,
         )->toArray();
 
         $statementDelivery = $this->statementDeliveryRuntimeProjectionBuilder->build(new VendorStatementDeliveryRuntimeRequestDTO(
@@ -57,10 +59,12 @@ final readonly class VendorRuntimeStatusProjectionBuilder implements VendorRunti
             from: $from ?? '',
             to: $to ?? '',
             currency: $currency,
+            canonicalVendorId: $canonicalVendorId,
         ))->toArray();
 
         $externalIntegration = $this->externalIntegrationRuntimeProjectionBuilder->build(
             vendorId: $vendorId,
+            canonicalVendorId: $canonicalVendorId,
         )->toArray();
 
         $statement = $statementDelivery['statement'];

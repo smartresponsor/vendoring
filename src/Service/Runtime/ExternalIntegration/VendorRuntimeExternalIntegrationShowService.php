@@ -31,11 +31,11 @@ final readonly class VendorRuntimeExternalIntegrationShowService
         }
 
         $scope = $this->financialScope->resolve($request, 'read:finance', $vendorId);
-        if (null === $scope || null === $scope->getTenantId() || (ctype_digit($scope->getLedgerVendorId()) && $scope->getLedgerVendorId() !== (string) $scope->getVendor()->getId())) {
+        if (null === $scope || null === $scope->getTenantId()) {
             return new JsonResponse(['error' => 'financial_scope_denied'], 403);
         }
 
-        $projection = $this->runtimeProjectionBuilder->build($scope->getLedgerVendorId());
+        $projection = $this->runtimeProjectionBuilder->build($scope->getLedgerVendorId(), $scope->getVendor()->getId());
 
         return new JsonResponse(['data' => $projection->toArray()], 200);
     }

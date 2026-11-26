@@ -32,9 +32,6 @@ final readonly class VendorStatementRequestResolver implements VendorStatementRe
         if (null === $scope || null === $scope->getTenantId()) {
             throw new AccessDeniedHttpException('financial_scope_denied');
         }
-        if (ctype_digit($scope->getLedgerVendorId()) && $scope->getLedgerVendorId() !== (string) $scope->getVendor()->getId()) {
-            throw new AccessDeniedHttpException('financial_identity_mismatch');
-        }
 
         return new VendorStatementRequestDTO(
             $scope->getTenantId(),
@@ -42,6 +39,7 @@ final readonly class VendorStatementRequestResolver implements VendorStatementRe
             $from,
             $to,
             $this->resolveCurrency($request),
+            $scope->getVendor()->getId(),
         );
     }
 
@@ -59,6 +57,7 @@ final readonly class VendorStatementRequestResolver implements VendorStatementRe
             to: $statementRequest->to,
             currency: $statementRequest->currency,
             includeExport: filter_var($request->query->get('includeExport', true), FILTER_VALIDATE_BOOL),
+            canonicalVendorId: $statementRequest->canonicalVendorId,
         );
     }
 

@@ -14,5 +14,6 @@ interface VendorReleaseBaselineReaderServiceInterface
         ?string $from = null,
         ?string $to = null,
         string $currency = 'USD',
+        ?int $canonicalVendorId = null,
     ): VendorReleaseBaselineProjection;
 }

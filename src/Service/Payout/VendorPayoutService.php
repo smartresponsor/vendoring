@@ -38,63 +38,63 @@ final readonly class VendorPayoutService implements VendorPayoutServiceInterface
      */
     public function create(VendorCreatePayoutDTO $dto): ?string
     {
-        // 1) РџРѕР»СѓС‡Р°РµРј Р±Р°Р»Р°РЅСЃ РІ РІР°Р»СЋС‚Рµ
-        $balances = $this->ledgerRepo->balancesForVendor($dto->tenantId, $dto->vendorId);
-        $matchedBalance = null;
-        foreach ($balances as $balance) {
-            if ($balance->currency === $dto->currency) {
-                $matchedBalance = $balance;
-                break;
+        $payout = $this->repo->reserveAtomically($dto->tenantId, $dto->vendorId, $dto->currency, function () use ($dto): ?VendorPayoutEntity {
+            if (null !== $this->repo->findOneBy(['tenantId' => $dto->tenantId, 'vendorId' => $dto->vendorId, 'currency' => $dto->currency, 'status' => 'pending'])) {
+                return null;
             }
+
+            $balanceCents = 0;
+            foreach ($this->ledgerRepo->balancesForVendor($dto->tenantId, $dto->vendorId) as $balance) {
+                if ($balance->currency === $dto->currency) {
+                    $balanceCents = $balance->balanceCents;
+                    break;
+                }
+            }
+            if ($balanceCents <= 0 || $balanceCents < $dto->thresholdCents) {
+                return null;
+            }
+
+            $fee = (int) round($balanceCents * $dto->retentionFeePercent);
+            $net = $balanceCents - $fee;
+            if ($net <= 0) {
+                return null;
+            }
+
+            $payoutId = Uuid::v4()->toRfc4122();
+            $payout = new VendorPayoutEntity(
+                id: $payoutId,
+                tenantId: $dto->tenantId,
+                vendorId: $dto->vendorId,
+                currency: $dto->currency,
+                grossCents: $balanceCents,
+                feeCents: $fee,
+                netCents: $net,
+                status: 'pending',
+                meta: ['threshold' => $dto->thresholdCents, 'retention' => $dto->retentionFeePercent],
+            );
+            $this->repo->insert($payout);
+            // Reserve gross (net plus retention), not merely the eventual transfer.
+            $this->ledger->record(new VendorLedgerDTO(
+                tenantId: $dto->tenantId,
+                type: 'payout_reserve',
+                entityId: $payoutId,
+                sagaId: Uuid::v4()->toRfc4122(),
+                vendorId: $dto->vendorId,
+                amountCents: $balanceCents,
+                currency: $dto->currency,
+                direction: 'debit',
+                meta: ['payoutId' => $payoutId],
+            ));
+
+            return $payout;
+        });
+        if (null === $payout) {
+            return null;
         }
-        $balanceCents = null === $matchedBalance ? 0 : $matchedBalance->balanceCents;
 
-        if ($balanceCents < $dto->thresholdCents) {
-            $this->runtimeLogger->info('vendor_payout_skipped_insufficient_balance', [
-                'vendor_id' => $dto->vendorId,
-                'currency' => $dto->currency,
-                'balance_cents' => (string) $balanceCents,
-                'threshold_cents' => (string) $dto->thresholdCents,
-            ]);
-
-            return null; // РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ СЃСЂРµРґСЃС‚РІ РґР»СЏ РІС‹РїР»Р°С‚С‹
-        }
-
-        // 2) Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РєРѕРјРёСЃСЃРёРё/РЅРµС‚С‚Рѕ
-        $fee = (int) round($balanceCents * $dto->retentionFeePercent);
-        $net = max(0, $balanceCents - $fee);
-
-        // 3) РЎРѕР·РґР°С‘Рј payout
-        $payoutId = Uuid::v4()->toRfc4122();
-
-        $payout = new VendorPayoutEntity(
-            id: $payoutId,
-            tenantId: $dto->tenantId,
-            vendorId: $dto->vendorId,
-            currency: $dto->currency,
-            grossCents: $balanceCents,
-            feeCents: $fee,
-            netCents: $net,
-            status: 'pending',
-            meta: [
-                'threshold' => $dto->thresholdCents,
-                'retention' => $dto->retentionFeePercent,
-            ],
-        );
-        $this->repo->insert($payout);
-
-        // 4) Р—Р°РїРёСЃС‹РІР°РµРј РґРµР±РµС‚ РІ Ledger (СЂРµР·РµСЂРІ РїРѕРґ РІС‹РїР»Р°С‚Сѓ)
-        $this->ledger->record(new VendorLedgerDTO(
-            tenantId: $dto->tenantId,
-            type: 'payout_reserve',
-            entityId: $payoutId,
-            sagaId: Uuid::v4()->toRfc4122(),
-            vendorId: $dto->vendorId,
-            amountCents: $net,
-            currency: $dto->currency,
-            direction: 'debit',
-            meta: ['payoutId' => $payoutId],
-        ));
+        $payoutId = $payout->payoutId;
+        $balanceCents = $payout->grossCents;
+        $net = $payout->netCents;
 
         $this->metrics->increment('payout_created_total', ['currency' => $dto->currency]);
         $this->runtimeLogger->info('vendor_payout_created', [

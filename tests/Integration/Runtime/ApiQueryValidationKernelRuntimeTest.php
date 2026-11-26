@@ -197,4 +197,23 @@ final class ApiQueryValidationKernelRuntimeTest extends TestCase
         $spoof = KernelRuntimeHarness::requestJson(self::$kernel, 'GET', $uri.'&tenantId=tenant-2', null, ['Authorization' => 'Bearer '.self::$financeToken]);
         self::assertSame(403, $spoof->getStatusCode());
     }
+
+    public function testNumericLedgerIdentifierDoesNotSelectUnrelatedCanonicalOwnership(): void
+    {
+        if (!extension_loaded('pdo_sqlite')) {
+            self::markTestSkipped('pdo_sqlite required');
+        }
+        $token = KernelRuntimeHarness::seedFinancialApiKey(self::$kernel, 'tenant-numeric', '987654321', 'read:finance');
+        $response = KernelRuntimeHarness::requestJson(self::$kernel, 'GET', '/api/vendor/runtime/finance/987654321', null, ['Authorization' => 'Bearer '.$token]);
+        self::assertSame(200, $response->getStatusCode());
+        $data = KernelRuntimeHarness::decodeJson($response)['data'];
+        self::assertIsArray($data);
+        self::assertSame('987654321', $data['vendorId']);
+        $ownership = $data['ownership'];
+        self::assertIsArray($ownership);
+        self::assertIsInt($ownership['vendorId']);
+        self::assertNotSame(987654321, $ownership['vendorId']);
+        $wrong = KernelRuntimeHarness::requestJson(self::$kernel, 'GET', '/api/vendor/runtime/finance/987654322', null, ['Authorization' => 'Bearer '.$token]);
+        self::assertSame(403, $wrong->getStatusCode());
+    }
 }
