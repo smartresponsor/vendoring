@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\ServiceInterface\Assignment;
 
-use App\Vendoring\EntityInterface\Vendor\VendorUserAssignmentEntityInterface;
+use App\Vendoring\EntityInterface\VendorUserAssignmentEntityInterface;
 
 /**
  * Write-side service for vendor-local human role assignments.
@@ -18,10 +18,10 @@ interface VendorUserAssignmentServiceInterface
     /**
      * Assign or update one canonical role for one vendor/user pair.
      *
-     * @param int    $vendorId  Canonical numeric vendor identifier.
-     * @param int    $userId    Canonical numeric user identifier.
-     * @param string $role      Canonical RBAC role such as `owner` or `finance`.
-     * @param bool   $isPrimary When true, the assignment becomes the primary active assignment for the vendor.
+     * @param int    $vendorId  canonical numeric vendor identifier
+     * @param int    $userId    canonical numeric user identifier
+     * @param string $role      canonical RBAC role such as `owner` or `finance`
+     * @param bool   $isPrimary when true, the assignment becomes the primary active assignment for the vendor
      */
     public function assignRole(int $vendorId, int $userId, string $role, bool $isPrimary = false): VendorUserAssignmentEntityInterface;
 

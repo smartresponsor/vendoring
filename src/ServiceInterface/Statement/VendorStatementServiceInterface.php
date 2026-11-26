@@ -11,7 +11,6 @@ interface VendorStatementServiceInterface
 {
     /**
      * @return array{
-     *   tenantId:string,
      *   vendorId:string,
      *   from:string,
      *   to:string,
@@ -23,6 +22,7 @@ interface VendorStatementServiceInterface
      *   closing:float,
      *   items:list<array{type:string, amount:float, currency:string}>
      * }
+     *
      * @throws Exception
      */
     public function build(VendorStatementRequestDTO $dto): array;

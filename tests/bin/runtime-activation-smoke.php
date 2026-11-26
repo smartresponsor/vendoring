@@ -22,7 +22,7 @@ $forbidden = [
 ];
 
 foreach ($required as $path) {
-    if (!is_file($root . '/' . $path)) {
+    if (!is_file($root.'/'.$path)) {
         fwrite(STDERR, sprintf('Missing runtime activation artifact: %s
 ', $path));
         exit(1);
@@ -30,7 +30,7 @@ foreach ($required as $path) {
 }
 
 foreach ($forbidden as $path) {
-    if (file_exists($root . '/' . $path)) {
+    if (file_exists($root.'/'.$path)) {
         fwrite(STDERR, sprintf('Legacy runtime activation artifact must not exist: %s
 ', $path));
         exit(1);

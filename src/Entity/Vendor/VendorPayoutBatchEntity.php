@@ -19,5 +19,9 @@ final class VendorPayoutBatchEntity
         public string $currency,
         public ?string $providerRef,
         public string $createdAt,
-    ) {}
+    ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
+    }
 }

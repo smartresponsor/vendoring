@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Ledger;
 
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorSummaryServiceInterface;
 use Doctrine\DBAL\Exception;
 
@@ -26,10 +26,10 @@ final class VendorSummaryService implements VendorSummaryServiceInterface
         foreach (self::ACCOUNTS as $account) {
             $balances[$account] = $this->ledgerEntries->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
                 tenantId: $tenantId,
+                vendorId: $vendorId,
                 accountCode: $account,
                 from: $this->normalizeBoundary($from, false),
                 to: $this->normalizeBoundary($to, true),
-                vendorId: $vendorId,
                 currency: '' !== $currency ? $currency : null,
             ));
         }

@@ -7,9 +7,12 @@ namespace App\Vendoring\Tests\Unit\Service;
 use App\Vendoring\Entity\Vendor\VendorCatalogCategoryBannerEntity;
 use App\Vendoring\Entity\Vendor\VendorCatalogCategoryHtmlBlockEntity;
 use App\Vendoring\Entity\Vendor\VendorCatalogCategoryPinEntity;
+use App\Vendoring\Repository\VendorCatalogCategoryPinRepository;
 use App\Vendoring\Service\Catalog\VendorCatalogMerchService;
+use App\Vendoring\Tests\Support\CatalogMerchDoctrineRepositoryHarness;
 use App\Vendoring\Tests\Support\CatalogMerchEntityManagerFactory;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
 
 final class CatalogMerchServiceTest extends TestCase
@@ -23,33 +26,21 @@ final class CatalogMerchServiceTest extends TestCase
             CatalogMerchEntityManagerFactory::catalogMerchClasses(),
         ));
 
-        $service = new VendorCatalogMerchService($entityManager);
+        $repository = new CatalogMerchDoctrineRepositoryHarness($entityManager);
+        $registry = $this->createMock(ManagerRegistry::class);
+        $registry->method('getManagerForClass')->with(VendorCatalogCategoryPinEntity::class)->willReturn($entityManager);
+        $pins = new VendorCatalogCategoryPinRepository($registry);
+        $service = new VendorCatalogMerchService($pins, $repository, $repository);
+        $service->pinCreate('cat-2', 'record-a', 99);
         $service->pinCreate('cat-1', 'record-a', 10);
         $service->pinCreate('cat-1', 'record-b', 20);
         $service->orderSet('cat-1', ['record-b', 'record-a']);
 
-        // DQL query via embeddable path: objectCode.objectCode
-        /** @var VendorCatalogCategoryPinEntity|null $first */
-        $first = $entityManager->createQueryBuilder()
-            ->select('p')
-            ->from(VendorCatalogCategoryPinEntity::class, 'p')
-            ->where('p.objectCode.objectCode = :cat')
-            ->andWhere('p.recordId = :rec')
-            ->setParameter('cat', 'cat-1')
-            ->setParameter('rec', 'record-a')
-            ->getQuery()
-            ->getOneOrNullResult();
-
+        /* @var VendorCatalogCategoryPinEntity|null $first */
+        $entityManager->clear();
+        $first = $pins->findOneByCategoryAndRecord('cat-1', 'record-a');
         /** @var VendorCatalogCategoryPinEntity|null $second */
-        $second = $entityManager->createQueryBuilder()
-            ->select('p')
-            ->from(VendorCatalogCategoryPinEntity::class, 'p')
-            ->where('p.objectCode.objectCode = :cat')
-            ->andWhere('p.recordId = :rec')
-            ->setParameter('cat', 'cat-1')
-            ->setParameter('rec', 'record-b')
-            ->getQuery()
-            ->getOneOrNullResult();
+        $second = $pins->findOneByCategoryAndRecord('cat-1', 'record-b');
 
         self::assertNotNull($first);
         self::assertNotNull($second);
@@ -58,17 +49,11 @@ final class CatalogMerchServiceTest extends TestCase
 
         $service->pinDelete('cat-1', 'record-a');
 
-        $deleted = $entityManager->createQueryBuilder()
-            ->select('p')
-            ->from(VendorCatalogCategoryPinEntity::class, 'p')
-            ->where('p.objectCode.objectCode = :cat')
-            ->andWhere('p.recordId = :rec')
-            ->setParameter('cat', 'cat-1')
-            ->setParameter('rec', 'record-a')
-            ->getQuery()
-            ->getOneOrNullResult();
+        $entityManager->clear();
+        $deleted = $pins->findOneByCategoryAndRecord('cat-1', 'record-a');
 
         self::assertNull($deleted);
+        self::assertSame(99, $pins->findOneByCategoryAndRecord('cat-2', 'record-a')?->position());
     }
 
     public function testBannerAndHtmlPublishPersistPublishedState(): void
@@ -80,7 +65,8 @@ final class CatalogMerchServiceTest extends TestCase
             CatalogMerchEntityManagerFactory::catalogMerchClasses(),
         ));
 
-        $service = new VendorCatalogMerchService($entityManager);
+        $repository = new CatalogMerchDoctrineRepositoryHarness($entityManager);
+        $service = new VendorCatalogMerchService($repository, $repository, $repository);
         $bannerId = $service->bannerPublish('cat-2', 'Top banner', 'Banner content');
         $htmlId = $service->htmlPublish('cat-2', '<p>Hello</p>');
 

@@ -8,7 +8,7 @@ namespace App\Vendoring\Service\Ledger;
 
 use App\Vendoring\DTO\Ledger\VendorDoubleEntryDTO;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 use App\Vendoring\ServiceInterface\Ledger\VendorDoubleEntryServiceInterface;
 use Doctrine\DBAL\Exception;
 

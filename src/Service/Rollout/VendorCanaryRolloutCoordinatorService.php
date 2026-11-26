@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Rollout;
 
-use App\Vendoring\ServiceInterface\Ops\VendorReleaseManifestBuilderServiceInterface;
+use App\Vendoring\BuilderInterface\Ops\VendorReleaseManifestBuilderInterface;
+use App\Vendoring\ResolverInterface\Rollout\VendorTrafficCohortResolverInterface;
 use App\Vendoring\ServiceInterface\Ops\VendorRollbackDecisionEvaluatorServiceInterface;
 use App\Vendoring\ServiceInterface\Rollout\VendorCanaryRolloutCoordinatorServiceInterface;
 use App\Vendoring\ServiceInterface\Rollout\VendorFeatureFlagServiceInterface;
-use App\Vendoring\ServiceInterface\Rollout\VendorTrafficCohortResolverServiceInterface;
-use DateTimeImmutable;
 
 /**
  * Read-side coordinator that turns rollout flags, cohorts, probes, and rollback signals into one
@@ -18,24 +17,25 @@ use DateTimeImmutable;
 final readonly class VendorCanaryRolloutCoordinatorService implements VendorCanaryRolloutCoordinatorServiceInterface
 {
     public function __construct(
-        private VendorFeatureFlagServiceInterface        $featureFlagService,
-        private VendorTrafficCohortResolverServiceInterface     $trafficCohortResolver,
-        private VendorReleaseManifestBuilderServiceInterface    $releaseManifestBuilder,
+        private VendorFeatureFlagServiceInterface $featureFlagService,
+        private VendorTrafficCohortResolverInterface $trafficCohortResolver,
+        private VendorReleaseManifestBuilderInterface $releaseManifestBuilder,
         private VendorRollbackDecisionEvaluatorServiceInterface $rollbackDecisionEvaluator,
-    ) {}
+    ) {
+    }
 
-    public function evaluate(string $flagName, ?string $tenantId = null, ?string $vendorId = null, int $windowSeconds = 900): array
+    public function evaluate(string $flagName, ?string $vendorId = null, int $windowSeconds = 900, ?string $tenantId = null): array
     {
         $windowSeconds = max(1, $windowSeconds);
-        $flagDecision = $this->featureFlagService->explain($flagName, $tenantId, $vendorId);
-        $cohort = $this->trafficCohortResolver->resolve($tenantId, $vendorId);
+        $flagDecision = $this->featureFlagService->explain($flagName, $vendorId, $tenantId);
+        $cohort = $this->trafficCohortResolver->resolve($vendorId, $tenantId);
         $manifest = $this->releaseManifestBuilder->build($windowSeconds);
         $rollback = $this->rollbackDecisionEvaluator->evaluate($manifest);
         $probeGate = $this->probeGate($manifest);
 
         [$decision, $recommendedAction, $reason] = $this->rolloutDecision($flagDecision, $rollback, $probeGate);
 
-        $generatedAt = new DateTimeImmutable();
+        $generatedAt = new \DateTimeImmutable();
 
         return [
             'generatedAt' => $generatedAt->format(DATE_ATOM),
@@ -54,8 +54,8 @@ final readonly class VendorCanaryRolloutCoordinatorService implements VendorCana
     }
 
     /**
-     * @param array{flag:string, enabled:bool, cohort:string, reason:string} $flagDecision
-     * @param array<string,mixed> $rollback
+     * @param array{flag:string, enabled:bool, cohort:string, reason:string}      $flagDecision
+     * @param array<string,mixed>                                                 $rollback
      * @param array{transaction:bool, finance:bool, payout:bool, postDeploy:bool} $probeGate
      *
      * @return array{string,string,string}
@@ -116,13 +116,9 @@ final readonly class VendorCanaryRolloutCoordinatorService implements VendorCana
     private function nextCohort(string $currentCohort, ?string $tenantId): ?string
     {
         if (str_starts_with($currentCohort, 'vendor:')) {
-            return null !== $tenantId && '' !== trim($tenantId) ? 'tenant:' . trim($tenantId) : 'global';
+            return null !== $tenantId && '' !== trim($tenantId) ? 'tenant:'.trim($tenantId) : 'global';
         }
 
-        if (str_starts_with($currentCohort, 'tenant:')) {
-            return 'global';
-        }
-
-        return null;
+        return str_starts_with($currentCohort, 'tenant:') ? 'global' : null;
     }
 }

@@ -51,10 +51,20 @@ final class VendoringExtension extends Extension implements PrependExtensionInte
         /** @var string $faultToleranceDir */
         $faultToleranceDir = $config['fault_tolerance_dir'];
 
+        $container->setParameter('vendoring_component_dir', dirname(__DIR__, 2));
+        $configDirectory = __DIR__.'/../../config';
+        $servicesFile = $configDirectory.'/component/services.yaml';
+
+        if (!is_file($servicesFile)) {
+            return;
+        }
+
+        $loader = new YamlFileLoader($container, new FileLocator($configDirectory));
+        $loader->load('component/services.yaml');
         $container->setParameter('vendoring_observability_dir', $observabilityDir);
         $container->setParameter('vendoring_fault_tolerance_dir', $faultToleranceDir);
 
-        $runtimeFile = __DIR__.'/../../config/component/runtime.yaml';
+        $runtimeFile = __DIR__.'/../../config/component/vendor_runtime.yaml';
         if (is_file($runtimeFile)) {
             $runtime = Yaml::parseFile($runtimeFile);
             if (is_array($runtime)) {
@@ -69,16 +79,6 @@ final class VendoringExtension extends Extension implements PrependExtensionInte
                 }
             }
         }
-
-        $configDirectory = __DIR__.'/../../config';
-        $servicesFile = $configDirectory.'/component/services.yaml';
-
-        if (!is_file($servicesFile)) {
-            return;
-        }
-
-        $loader = new YamlFileLoader($container, new FileLocator($configDirectory));
-        $loader->load('component/services.yaml');
     }
 
     public function getAlias(): string

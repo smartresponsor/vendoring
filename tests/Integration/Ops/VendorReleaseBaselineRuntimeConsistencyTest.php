@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Integration\Ops;
 
-use App\Vendoring\Projection\Vendor\VendorRuntimeStatusProjection;
+use App\Vendoring\BuilderInterface\Ops\VendorRuntimeStatusProjectionBuilderInterface;
+use App\Vendoring\Projection\VendorRuntimeStatusProjection;
 use App\Vendoring\Service\Ops\VendorReleaseBaselineReaderService;
-use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorReleaseBaselineRuntimeConsistencyTest extends TestCase
 {
-    private VendorRuntimeStatusProjectionBuilderServiceInterface&MockObject $runtimeStatus;
+    private VendorRuntimeStatusProjectionBuilderInterface&MockObject $runtimeStatus;
 
     protected function setUp(): void
     {
-        $this->runtimeStatus = $this->createMock(VendorRuntimeStatusProjectionBuilderServiceInterface::class);
+        $this->runtimeStatus = $this->createMock(VendorRuntimeStatusProjectionBuilderInterface::class);
     }
 
     public function testBuildMarksBaselineWarnWhenRuntimeSurfacesAreMissing(): void

@@ -4,32 +4,31 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Integration\Runtime;
 
-use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\Vendoring\Projection\Vendor\VendorExternalIntegrationRuntimeProjection;
-use App\Vendoring\Projection\Vendor\VendorFinanceRuntimeProjection;
-use App\Vendoring\Projection\Vendor\VendorOwnershipProjection;
-use App\Vendoring\Projection\Vendor\VendorStatementDeliveryRuntimeProjection;
-use App\Vendoring\Service\Ops\VendorRuntimeStatusProjectionBuilderService;
-use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeProjectionBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface;
+use App\Vendoring\Builder\Ops\VendorRuntimeStatusProjectionBuilder;
+use App\Vendoring\BuilderInterface\Finance\VendorFinanceRuntimeProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Ownership\VendorOwnershipProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Statement\VendorStatementDeliveryRuntimeProjectionBuilderInterface;
+use App\Vendoring\Projection\VendorExternalIntegrationRuntimeProjection;
+use App\Vendoring\Projection\VendorFinanceRuntimeProjection;
+use App\Vendoring\Projection\VendorOwnershipProjection;
+use App\Vendoring\Projection\VendorStatementDeliveryRuntimeProjection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
 {
-    private VendorOwnershipProjectionBuilderServiceInterface&MockObject $ownership;
-    private VendorFinanceRuntimeProjectionBuilderServiceInterface&MockObject $finance;
-    private VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface&MockObject $statementDelivery;
-    private VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface&MockObject $externalIntegration;
+    private VendorOwnershipProjectionBuilderInterface&MockObject $ownership;
+    private VendorFinanceRuntimeProjectionBuilderInterface&MockObject $finance;
+    private VendorStatementDeliveryRuntimeProjectionBuilderInterface&MockObject $statementDelivery;
+    private VendorExternalIntegrationRuntimeProjectionBuilderInterface&MockObject $externalIntegration;
 
     protected function setUp(): void
     {
-        $this->ownership = $this->createMock(VendorOwnershipProjectionBuilderServiceInterface::class);
-        $this->finance = $this->createMock(VendorFinanceRuntimeProjectionBuilderServiceInterface::class);
-        $this->statementDelivery = $this->createMock(VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface::class);
-        $this->externalIntegration = $this->createMock(VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface::class);
+        $this->ownership = $this->createMock(VendorOwnershipProjectionBuilderInterface::class);
+        $this->finance = $this->createMock(VendorFinanceRuntimeProjectionBuilderInterface::class);
+        $this->statementDelivery = $this->createMock(VendorStatementDeliveryRuntimeProjectionBuilderInterface::class);
+        $this->externalIntegration = $this->createMock(VendorExternalIntegrationRuntimeProjectionBuilderInterface::class);
     }
 
     public function testBuildKeepsIncompleteProfileNotReadyForPublishing(): void
@@ -64,7 +63,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             surfaces: [],
         ));
 
-        $payload = $this->buildRuntimeStatus()->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD')->toArray();
+        $payload = $this->buildRuntimeStatus()->build('tenant-1', '101', '2026-03-01', '2026-03-31', 'USD', 101)->toArray();
 
         self::assertArrayHasKey('ownership', $payload);
         $ownership = $payload['ownership'] ?? null;
@@ -106,7 +105,7 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
             surfaces: [],
         ));
 
-        $payload = $this->buildRuntimeStatus()->build('tenant-1', '202', '2026-03-01', '2026-03-31', 'USD')->toArray();
+        $payload = $this->buildRuntimeStatus()->build('tenant-1', '202', '2026-03-01', '2026-03-31', 'USD', 202)->toArray();
 
         self::assertArrayHasKey('ownership', $payload);
         $ownership = $payload['ownership'] ?? null;
@@ -115,9 +114,9 @@ final class VendorRuntimeProfileReadinessConsistencyTest extends TestCase
         self::assertTrue($payload['surfaceStatus']['ownership']);
     }
 
-    private function buildRuntimeStatus(): VendorRuntimeStatusProjectionBuilderService
+    private function buildRuntimeStatus(): VendorRuntimeStatusProjectionBuilder
     {
-        return new VendorRuntimeStatusProjectionBuilderService(
+        return new VendorRuntimeStatusProjectionBuilder(
             $this->ownership,
             $this->finance,
             $this->statementDelivery,

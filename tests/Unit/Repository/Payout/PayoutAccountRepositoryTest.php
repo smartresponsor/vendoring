@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Repository\Payout;
 
 use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
-use App\Vendoring\Repository\Vendor\VendorPayoutAccountRepository;
+use App\Vendoring\Repository\VendorPayoutAccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -33,11 +33,11 @@ final class PayoutAccountRepositoryTest extends TestCase
         self::assertSame($account, (new VendorPayoutAccountRepository($this->entityManager))->get('tenant-1', 'vendor-1'));
     }
 
-    public function testUpsertUpdatesExistingTenantVendorAccount(): void
+    public function testUpsertUpdatesExistingVendorAccount(): void
     {
         $existing = $this->account(provider: 'old', active: true);
         $incoming = $this->account(provider: 'bank', active: false);
-        $this->objectRepository->method('findOneBy')->willReturn($existing);
+        $this->objectRepository->expects(self::once())->method('findOneBy')->with(['tenantId' => 'tenant-1', 'vendorId' => 'vendor-1'])->willReturn($existing);
         $this->entityManager->expects(self::never())->method('persist');
         $this->entityManager->expects(self::once())->method('flush');
 
@@ -47,10 +47,10 @@ final class PayoutAccountRepositoryTest extends TestCase
         self::assertFalse($existing->active);
     }
 
-    public function testUpsertPersistsNewTenantVendorAccountWhenItDoesNotExist(): void
+    public function testUpsertPersistsNewVendorAccountWhenItDoesNotExist(): void
     {
         $account = $this->account(active: true);
-        $this->objectRepository->method('findOneBy')->willReturn(null);
+        $this->objectRepository->expects(self::once())->method('findOneBy')->with(['tenantId' => 'tenant-1', 'vendorId' => 'vendor-1'])->willReturn(null);
         $this->entityManager->expects(self::once())->method('persist')->with($account);
         $this->entityManager->expects(self::once())->method('flush');
 

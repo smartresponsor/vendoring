@@ -7,12 +7,12 @@ namespace App\Vendoring\Command;
 use App\Vendoring\DTO\Statement\VendorStatementRecipientDTO;
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
+use App\Vendoring\ProviderInterface\Statement\VendorStatementRecipientProviderInterface;
 use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
 use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementExporterPdfServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementRecipientProviderServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -26,14 +26,14 @@ final class VendorSendVendorStatementsCommand extends Command
     private readonly VendorStatementServiceInterface $svc;
     private readonly VendorStatementExporterPdfServiceInterface $pdf;
     private readonly VendorStatementMailerServiceInterface $mailer;
-    private readonly VendorStatementRecipientProviderServiceInterface $recipientProvider;
+    private readonly VendorStatementRecipientProviderInterface $recipientProvider;
     private readonly VendorCommandResultEmitterServiceInterface $commandResultEmitter;
 
     public function __construct(
         VendorStatementServiceInterface $svc,
         VendorStatementExporterPdfServiceInterface $pdf,
         VendorStatementMailerServiceInterface $mailer,
-        VendorStatementRecipientProviderServiceInterface $recipientProvider,
+        VendorStatementRecipientProviderInterface $recipientProvider,
         ?VendorCommandResultEmitterServiceInterface $commandResultEmitter = null,
     ) {
         $this->svc = $svc;
@@ -174,7 +174,7 @@ final class VendorSendVendorStatementsCommand extends Command
 
         if ('' !== $tenantId || '' !== $vendorId || '' !== $email) {
             if ('' === $tenantId || '' === $vendorId || '' === $email) {
-                return [];
+                throw new \InvalidArgumentException('Explicit recipient requires tenant-id, vendor-id and email');
             }
 
             return [new VendorStatementRecipientDTO($tenantId, $vendorId, $email, '' !== $currency ? $currency : 'USD')];

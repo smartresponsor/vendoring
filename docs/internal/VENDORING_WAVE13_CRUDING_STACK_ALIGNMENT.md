@@ -22,7 +22,7 @@ Observed files:
 
 Relevant contract:
 
-- Service-layer entrypoints are `App\Vendoring\Service\Vendor\...`.
+- Service-layer entrypoints are `App\Vendoring\Service\...`.
 - Entrypoints may be small, per-operation classes.
 - Supported hooks are `get`, `post`, `put`, `patch`, `delete`.
 - Entrypoints may return `CrudSurfaceContract`.
@@ -65,15 +65,15 @@ Relevant contract:
 
 All route-map service targets under `config/platform/routes/**` now have physical classes under:
 
-- `src/Service/Vendor/**`
+- `src/Service/**`
 
 These classes use the route-map namespace expected by Cruding:
 
-- `App\Vendoring\Service\Vendor\...`
+- `App\Vendoring\Service\...`
 
 They extend:
 
-- `App\Vendoring\Service\Vendor\AbstractVendorCrudRouteService`
+- `App\Vendoring\Service\VendorAbstractCrudRouteService`
 
 The abstract base extends:
 
@@ -83,11 +83,11 @@ The abstract base extends:
 
 All route-map form type targets now have physical classes under:
 
-- `src/Form/Vendor/**`
+- `src/Form/**`
 
 These classes use:
 
-- `App\Vendoring\Form\Vendor\...`
+- `App\Vendoring\Form\...`
 
 and extend Symfony `AbstractType`.
 
@@ -131,7 +131,7 @@ and form entrypoints as:
 
 The only support base is:
 
-- `AbstractVendorCrudRouteService`
+- `VendorAbstractCrudRouteService`
 
 ### Interfacing boundary
 

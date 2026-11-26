@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\ServiceInterface\Media;
 
-use App\Vendoring\EventInterface\Vendor\VendorCategoryDestinationMediaReadinessEvaluatedEventInterface;
+use App\Vendoring\EventInterface\VendorCategoryDestinationMediaReadinessEvaluatedEventInterface;
 
 interface VendorCatalogDestinationMediaReadinessServiceInterface
 {

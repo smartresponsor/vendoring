@@ -12,5 +12,10 @@ final class VendorStatementRequestDTO
         public string $from,   // Y-m-d
         public string $to,     // Y-m-d
         public string $currency,
-    ) {}
+        public ?int $canonicalVendorId = null,
+    ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
+    }
 }

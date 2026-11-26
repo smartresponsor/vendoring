@@ -8,6 +8,7 @@ final class VendorLedgerDTO
 {
     /** @param array<string, mixed> $meta */
     public function __construct(
+        public string $tenantId,
         public string $type,
         public string $entityId,
         public string $sagaId,
@@ -16,8 +17,10 @@ final class VendorLedgerDTO
         public string $currency,
         public string $direction,
         public array $meta = [],
-        public string $tenantId = 'default',
         public ?string $occurredAt = null,
     ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
     }
 }

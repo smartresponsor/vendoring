@@ -7,7 +7,7 @@ namespace App\Vendoring\Command;
 
 use App\Vendoring\Entity\Vendor\VendorPayoutEntity;
 use App\Vendoring\Enum\Command\VendorCommandOutputFormatEnum;
-use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorPayoutRepositoryInterface;
 use App\Vendoring\Service\Command\VendorCommandJsonEncoderService;
 use App\Vendoring\Service\Command\VendorCommandResultEmitterService;
 use App\Vendoring\ServiceInterface\Command\VendorCommandResultEmitterServiceInterface;
@@ -100,7 +100,7 @@ final class VendorPayoutCreateCommand extends Command
         }
 
         try {
-            $payout = $this->payoutRepository->byId($payoutId);
+            $payout = $this->payoutRepository->byId($dto->tenantId, $payoutId);
         } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to load payout', $throwable, [
                 'payoutId' => $payoutId,

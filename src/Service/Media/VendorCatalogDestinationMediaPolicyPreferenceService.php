@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Media;
 
-use App\Vendoring\Event\Vendor\VendorCategoryDestinationMediaPolicyPreferenceEvaluatedEvent;
-use App\Vendoring\EventInterface\Vendor\VendorCategoryDestinationMediaPolicyPreferenceEvaluatedEventInterface;
+use App\Vendoring\Event\VendorCategoryDestinationMediaPolicyPreferenceEvaluatedEvent;
+use App\Vendoring\EventInterface\VendorCategoryDestinationMediaPolicyPreferenceEvaluatedEventInterface;
 use App\Vendoring\ServiceInterface\Media\VendorCatalogDestinationMediaPolicyPreferenceServiceInterface;
-use DateTimeImmutable;
 
 final class VendorCatalogDestinationMediaPolicyPreferenceService implements VendorCatalogDestinationMediaPolicyPreferenceServiceInterface
 {
@@ -26,6 +25,6 @@ final class VendorCatalogDestinationMediaPolicyPreferenceService implements Vend
             'checks' => ['resolvedPublishable' => true],
             'actorId' => trim($actorId),
             'reason' => trim($reason),
-        ], new DateTimeImmutable());
+        ], new \DateTimeImmutable());
     }
 }

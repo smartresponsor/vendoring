@@ -1,0 +1,36 @@
+component:
+  schema_version: 1
+  name: vendoring
+  title: Vendoring
+  package: vendoring/vendor
+  status: rc
+  namespace: App\Vendoring
+  responsibility: "vendor, supplier, and partner registry surfaces"
+  export_contract:
+    services: config/component/services.yaml
+    routes: config/component/routes.yaml
+    api_platform: config/component/api_platform.yaml
+    doctrine: config/component/doctrine.yaml
+    messenger: config/component/messenger.yaml
+    security: config/component/security.yaml
+    env: config/component/vendor_env.yaml
+    smoke: config/component/vendor_smoke.yaml
+    optional_attaching_profile_bridge: config/component/optional/vendor_attaching_profile_bridge.yaml
+  host_policy:
+    business_logic_owner: component
+    composition_owner: host_application
+    glue_layer_goal: near_zero
+    transport_contracts: dto_api_resource_first
+    entities_as_transport_contracts: false
+
+  symfony_bundle:
+    class: App\Vendoring\VendoringBundle
+    extension: App\Vendoring\DependencyInjection\VendoringExtension
+    services_loaded_by_extension: config/component/services.yaml
+    configuration_class: App\Vendoring\DependencyInjection\VendorConfiguration
+    routes_import_required_by_host: null
+
+  zero_controller_runtime:
+    enabled: true
+    owner: cruding
+    service_convention: App\Vendoring\Service\*

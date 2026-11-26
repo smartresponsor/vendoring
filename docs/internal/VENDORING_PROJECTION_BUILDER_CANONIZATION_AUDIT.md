@@ -23,13 +23,13 @@ Interfaces mirror the same service name under `src/ServiceInterface`.
 
 ## Files renamed
 
-- `VendorFinanceRuntimeViewBuilderService*` -> `VendorFinanceRuntimeProjectionBuilderService*`
-- `VendorExternalIntegrationRuntimeViewBuilderService*` -> `VendorExternalIntegrationRuntimeProjectionBuilderService*`
-- `VendorOwnershipViewBuilderService*` -> `VendorOwnershipProjectionBuilderService*`
-- `VendorProfileViewBuilderService*` -> `VendorProfileProjectionBuilderService*`
-- `VendorRuntimeStatusViewBuilderService*` -> `VendorRuntimeStatusProjectionBuilderService*`
-- `VendorSecurityStateViewBuilderService*` -> `VendorSecurityStateProjectionBuilderService*`
-- `VendorStatementDeliveryRuntimeViewBuilderService*` -> `VendorStatementDeliveryRuntimeProjectionBuilderService*`
+- `VendorFinanceRuntimeViewBuilderService*` -> `VendorFinanceRuntimeProjectionBuilder*`
+- `VendorExternalIntegrationRuntimeViewBuilderService*` -> `VendorExternalIntegrationRuntimeProjectionBuilder*`
+- `VendorOwnershipViewBuilderService*` -> `VendorOwnershipProjectionBuilder*`
+- `VendorProfileViewBuilderService*` -> `VendorProfileProjectionBuilder*`
+- `VendorRuntimeStatusViewBuilderService*` -> `VendorRuntimeStatusProjectionBuilder*`
+- `VendorSecurityStateViewBuilderService*` -> `VendorSecurityStateProjectionBuilder*`
+- `VendorStatementDeliveryRuntimeViewBuilderService*` -> `VendorStatementDeliveryRuntimeProjectionBuilder*`
 
 ## Remaining cleanup candidates
 

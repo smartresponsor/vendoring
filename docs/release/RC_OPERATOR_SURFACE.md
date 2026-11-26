@@ -10,6 +10,12 @@ The operator surface is intentionally narrow:
 - `POST /ops/vendor/transaction/create/{vendorId}` submits a minimal create form.
 - `POST /ops/vendor/transaction/status/{id}` submits a minimal status-update form.
 
+## Authorization and ownership
+
+All transaction operator routes require an explicit bearer API key for the active canonical vendor. GET requires read:transactions; POST requires write:transactions. The canonical vendor identifier is the persisted integer ID encoded as a string, not a tenant-local ledger identifier. Both list and status lookup require the persisted owner association. Historical rows without an independently verified owner are not exposed or mutable. The migration does not guess owners. Vendor deletion is restricted while owned transactions remain.
+
+Native browser navigation and form submission require a trusted host authentication integration that supplies the bearer header for the same origin. Do not put API keys in query strings, cookies or form fields. Ordinary unauthenticated navigation is intentionally denied. The isolated browser acceptance uses ephemeral fixture credentials.
+
 ## What this proves for release-candidate hardening
 
 This slice demonstrates a live server-rendered runtime chain that complements the JSON API runtime proofs:

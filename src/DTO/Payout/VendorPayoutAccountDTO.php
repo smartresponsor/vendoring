@@ -13,5 +13,9 @@ final class VendorPayoutAccountDTO
         public string $accountRef,
         public string $currency,
         public bool $active,
-    ) {}
+    ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
+    }
 }

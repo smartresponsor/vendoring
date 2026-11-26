@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Statement;
 
+use App\Vendoring\PolicyInterface\VendorOutboundOperationPolicyInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorMetricCollectorServiceInterface;
 use App\Vendoring\ServiceInterface\Observability\VendorRuntimeLoggerServiceInterface;
-use App\Vendoring\ServiceInterface\Policy\VendorOutboundOperationPolicyServiceInterface;
 use App\Vendoring\ServiceInterface\Reliability\VendorOutboundCircuitBreakerServiceInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementMailerServiceInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -23,12 +23,13 @@ use Symfony\Component\Mime\Email;
 final readonly class VendorStatementMailerService implements VendorStatementMailerServiceInterface
 {
     public function __construct(
-        private MailerInterface                  $mailer,
-        private VendorMetricCollectorServiceInterface         $metrics,
-        private VendorRuntimeLoggerServiceInterface           $runtimeLogger,
-        private VendorOutboundOperationPolicyServiceInterface $outboundPolicy,
-        private VendorOutboundCircuitBreakerServiceInterface  $circuitBreaker,
-    ) {}
+        private MailerInterface $mailer,
+        private VendorMetricCollectorServiceInterface $metrics,
+        private VendorRuntimeLoggerServiceInterface $runtimeLogger,
+        private VendorOutboundOperationPolicyInterface $outboundPolicy,
+        private VendorOutboundCircuitBreakerServiceInterface $circuitBreaker,
+    ) {
+    }
 
     /**
      * @throws \JsonException
@@ -36,7 +37,10 @@ final readonly class VendorStatementMailerService implements VendorStatementMail
     public function send(string $tenantId, string $vendorId, string $email, string $pdfPath, string $periodLabel): array
     {
         $policy = $this->outboundPolicy->forOperation('statement_mail_send');
-        $scopeKey = $tenantId . ':' . $vendorId;
+        if ('' === trim($tenantId) || '' === trim($vendorId)) {
+            throw new \InvalidArgumentException('Statement delivery requires tenant and vendor scope');
+        }
+        $scopeKey = hash('sha256', json_encode([$tenantId, $vendorId], JSON_THROW_ON_ERROR));
 
         $result = [
             'ok' => false,

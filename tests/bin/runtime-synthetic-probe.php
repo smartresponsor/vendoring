@@ -16,10 +16,10 @@ if (!extension_loaded('pdo_sqlite')) {
 $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($projectRoot);
 
 try {
-    $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
+    $vendorId = null;
+    $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions,read:transactions', $vendorId);
     $authHeaders = ['Authorization' => 'Bearer '.$token];
     $suffix = bin2hex(random_bytes(4));
-    $vendorId = 'probe-vendor-'.$suffix;
     $orderId = 'probe-order-'.$suffix;
 
     $createResponse = KernelRuntimeHarness::requestJson(

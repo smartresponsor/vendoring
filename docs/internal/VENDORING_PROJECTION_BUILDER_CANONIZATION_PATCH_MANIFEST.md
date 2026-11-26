@@ -14,21 +14,21 @@
 - `src/Controller/Vendor/VendorProfileSurfaceBuilder.php`
 - `src/Controller/Vendor/VendorRuntimeStatusSurfaceBuilder.php`
 - `src/Controller/Vendor/VendorStatementDeliveryRuntimeSurfaceBuilder.php`
-- `src/Service/Finance/VendorFinanceRuntimeProjectionBuilderService.php`
-- `src/Service/Integration/VendorExternalIntegrationRuntimeProjectionBuilderService.php`
+- `src/Builder/Finance/VendorFinanceRuntimeProjectionBuilder.php`
+- `src/Builder/Integration/VendorExternalIntegrationRuntimeProjectionBuilder.php`
 - `src/Service/Ops/VendorReleaseBaselineReaderService.php`
-- `src/Service/Ops/VendorRuntimeStatusProjectionBuilderService.php`
-- `src/Service/Ownership/VendorOwnershipProjectionBuilderService.php`
-- `src/Service/Profile/VendorProfileProjectionBuilderService.php`
-- `src/Service/Security/VendorSecurityStateProjectionBuilderService.php`
-- `src/Service/Statement/VendorStatementDeliveryRuntimeProjectionBuilderService.php`
-- `src/ServiceInterface/Finance/VendorFinanceRuntimeProjectionBuilderServiceInterface.php`
-- `src/ServiceInterface/Integration/VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface.php`
-- `src/ServiceInterface/Ops/VendorRuntimeStatusProjectionBuilderServiceInterface.php`
-- `src/ServiceInterface/Ownership/VendorOwnershipProjectionBuilderServiceInterface.php`
-- `src/ServiceInterface/Profile/VendorProfileProjectionBuilderServiceInterface.php`
-- `src/ServiceInterface/Security/VendorSecurityStateProjectionBuilderServiceInterface.php`
-- `src/ServiceInterface/Statement/VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface.php`
+- `src/Builder/Ops/VendorRuntimeStatusProjectionBuilder.php`
+- `src/Builder/Ownership/VendorOwnershipProjectionBuilder.php`
+- `src/Builder/Profile/VendorProfileProjectionBuilder.php`
+- `src/Builder/Security/VendorSecurityStateProjectionBuilder.php`
+- `src/Builder/Statement/VendorStatementDeliveryRuntimeProjectionBuilder.php`
+- `src/BuilderInterface/Finance/VendorFinanceRuntimeProjectionBuilderInterface.php`
+- `src/BuilderInterface/Integration/VendorExternalIntegrationRuntimeProjectionBuilderInterface.php`
+- `src/BuilderInterface/Ops/VendorRuntimeStatusProjectionBuilderInterface.php`
+- `src/BuilderInterface/Ownership/VendorOwnershipProjectionBuilderInterface.php`
+- `src/BuilderInterface/Profile/VendorProfileProjectionBuilderInterface.php`
+- `src/BuilderInterface/Security/VendorSecurityStateProjectionBuilderInterface.php`
+- `src/BuilderInterface/Statement/VendorStatementDeliveryRuntimeProjectionBuilderInterface.php`
 
 ## Removed files
 

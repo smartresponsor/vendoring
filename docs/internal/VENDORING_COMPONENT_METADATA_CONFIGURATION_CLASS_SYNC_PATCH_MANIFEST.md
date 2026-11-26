@@ -2,7 +2,7 @@
 
 ## Touched files
 
-- `config/component/component.yaml`
+- `config/component/vendor_component.yaml`
 - `docs/internal/VENDORING_COMPONENT_METADATA_CONFIGURATION_CLASS_SYNC_AUDIT.md`
 - `docs/internal/VENDORING_COMPONENT_METADATA_CONFIGURATION_CLASS_SYNC_PATCH_MANIFEST.md`
 

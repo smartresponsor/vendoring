@@ -7,13 +7,11 @@ namespace App\Vendoring\Service\Crud;
 use App\Vendoring\DTO\VendorCreateDTO;
 use App\Vendoring\DTO\VendorUpdateDTO;
 use App\Vendoring\Entity\Vendor\VendorEntity;
-use App\Vendoring\Event\Vendor\VendorActivatedEvent;
-use App\Vendoring\Event\Vendor\VendorCreatedEvent;
-use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
+use App\Vendoring\Event\VendorActivatedEvent;
+use App\Vendoring\Event\VendorCreatedEvent;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
 use App\Vendoring\ServiceInterface\Assignment\VendorUserAssignmentServiceInterface;
 use App\Vendoring\ServiceInterface\Crud\VendorCrudServiceInterface;
-use Doctrine\DBAL\Exception\TableNotFoundException;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -21,7 +19,6 @@ final readonly class VendorCrudService implements VendorCrudServiceInterface
 {
     public function __construct(
         private VendorRepositoryInterface $vendorRepository,
-        private EntityManagerInterface $entityManager,
         private EventDispatcherInterface $dispatcher,
         private VendorUserAssignmentServiceInterface $vendorUserAssignmentService,
         private ValidatorInterface $validator,
@@ -33,26 +30,12 @@ final readonly class VendorCrudService implements VendorCrudServiceInterface
      */
     public function index(): array
     {
-        try {
-            return $this->vendorRepository->findBy([]);
-        } catch (TableNotFoundException) {
-            return [];
-        } catch (\Throwable) {
-            return [];
-        }
+        return $this->vendorRepository->findBy([]);
     }
 
     public function find(int|string $id): ?VendorEntity
     {
-        try {
-            $vendor = $this->vendorRepository->find($id);
-        } catch (TableNotFoundException) {
-            return null;
-        } catch (\Throwable) {
-            return null;
-        }
-
-        return $vendor;
+        return $this->vendorRepository->find($id);
     }
 
     public function create(VendorCreateDTO $dto): VendorEntity
@@ -63,8 +46,7 @@ final readonly class VendorCrudService implements VendorCrudServiceInterface
         $brandName = $this->normalizeRequiredBrandName($dto->brandName);
         $vendor = new VendorEntity($brandName, $ownerUserId);
 
-        $this->entityManager->persist($vendor);
-        $this->entityManager->flush();
+        $this->vendorRepository->save($vendor, true);
 
         if (null !== $ownerUserId && null !== $vendor->getId()) {
             $this->vendorUserAssignmentService->assignOwner($vendor->getId(), $ownerUserId);
@@ -96,7 +78,7 @@ final readonly class VendorCrudService implements VendorCrudServiceInterface
             $vendor->deactivate();
         }
 
-        $this->entityManager->flush();
+        $this->vendorRepository->save($vendor, true);
 
         if (null !== $resolvedOwnerUserId && null !== $vendor->getId()) {
             $this->vendorUserAssignmentService->assignOwner($vendor->getId(), $resolvedOwnerUserId);

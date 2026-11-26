@@ -13,5 +13,10 @@ final readonly class VendorStatementDeliveryRuntimeRequestDTO
         public string $to,
         public string $currency = 'USD',
         public bool $includeExport = true,
-    ) {}
+        public ?int $canonicalVendorId = null,
+    ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
+    }
 }

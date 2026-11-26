@@ -28,7 +28,7 @@ foreach ($iterator as $file) {
 
     if (preg_match_all('/service:\s*([^,\}\s]+)/', $contents, $matches) > 0) {
         foreach ($matches[1] as $fqcn) {
-            if (str_starts_with($fqcn, 'App\\Vendoring\\Service\\Vendor\\')) {
+            if (str_starts_with($fqcn, 'App\\Vendoring\\Service\\')) {
                 $services[$fqcn] = true;
             }
         }
@@ -36,7 +36,7 @@ foreach ($iterator as $file) {
 
     if (preg_match_all('/type:\s*([^,\}\s]+)/', $contents, $matches) > 0) {
         foreach ($matches[1] as $fqcn) {
-            if (str_starts_with($fqcn, 'App\\Vendoring\\Form\\Vendor\\')) {
+            if (str_starts_with($fqcn, 'App\\Vendoring\\Form\\')) {
                 $types[$fqcn] = true;
             }
         }
@@ -77,15 +77,15 @@ foreach (array_keys($services) as $fqcn) {
         $errors[] = sprintf('%s must end with Service.php', $relative);
     }
 
-    if (!str_contains($contents, 'namespace App\\Vendoring\\Service\\Vendor')) {
-        $errors[] = sprintf('%s must use App\\Vendoring\\Service\\Vendor namespace', $relative);
+    if (!str_contains($contents, 'namespace App\\Vendoring\\Service')) {
+        $errors[] = sprintf('%s must use App\\Vendoring\\Service namespace', $relative);
     }
 
     if (!preg_match('/final\s+(?:readonly\s+)?class\s+'.preg_quote($shortName, '/').'\b/', $contents)) {
         $errors[] = sprintf('%s must define final class %s', $relative, $shortName);
     }
 
-    $hasCrudingVerbEntrypoint = str_contains($contents, 'extends AbstractVendorCrudRouteService')
+    $hasCrudingVerbEntrypoint = str_contains($contents, 'extends VendorAbstractCrudRouteService')
         || str_contains($contents, 'extends AbstractCrudService')
         || 1 === preg_match('/function\s+(?:get|post|put|patch|delete|show|update|create|process|getOne|build|summary|listByVendor|updateStatus|calculate|overview)\s*\(/', $contents);
     $hasInvokableEntrypoint = str_contains($contents, 'function __invoke(');
@@ -134,8 +134,8 @@ foreach (array_keys($types) as $fqcn) {
         $errors[] = sprintf('%s must end with Type.php', $relative);
     }
 
-    if (!str_contains($contents, 'namespace App\\Vendoring\\Form\\Vendor')) {
-        $errors[] = sprintf('%s must use App\\Vendoring\\Form\\Vendor namespace', $relative);
+    if (!str_contains($contents, 'namespace App\\Vendoring\\Form')) {
+        $errors[] = sprintf('%s must use App\\Vendoring\\Form namespace', $relative);
     }
 
     if (!str_contains($contents, 'extends AbstractType')) {

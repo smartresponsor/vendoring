@@ -7,8 +7,8 @@ declare(strict_types=1);
 namespace App\Vendoring\ServiceInterface\Document;
 
 use App\Vendoring\DTO\VendorDocumentDTO;
-use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorDocumentEntity;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 

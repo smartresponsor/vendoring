@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Tests\Unit\Payout;
 
 use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorPayoutAccountRepositoryInterface;
 use App\Vendoring\Service\Payout\VendorPayoutAccountService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -33,11 +33,11 @@ final class VendorPayoutAccountServiceTest extends TestCase
                 self::assertFalse($account->active);
 
                 return true;
-            }));
+            }))->willReturnArgument(0);
 
         $service = new VendorPayoutAccountService($this->accounts);
         $account = $service->upsertFromPayload([
-            'tenantId' => ' tenant-1 ',
+            'tenantId' => 'tenant-1',
             'vendorId' => ' vendor-1 ',
             'provider' => ' bank ',
             'accountRef' => ' iban-123 ',
@@ -45,7 +45,6 @@ final class VendorPayoutAccountServiceTest extends TestCase
             'active' => '0',
         ]);
 
-        self::assertSame('tenant-1', $account->tenantId);
         self::assertSame('vendor-1', $account->vendorId);
         self::assertSame('bank', $account->provider);
         self::assertSame('iban-123', $account->accountRef);

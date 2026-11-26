@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Vendoring\Builder\Observability\VendorMonitoringSnapshotBuilder;
+use App\Vendoring\Builder\Ops\VendorReleaseManifestBuilder;
 use App\Vendoring\Service\Observability\VendorAlertRuleEvaluatorService;
-use App\Vendoring\Service\Observability\VendorMonitoringSnapshotBuilderService;
-use App\Vendoring\Service\Ops\VendorReleaseManifestBuilderService;
 use App\Vendoring\Service\Ops\VendorRollbackDecisionEvaluatorService;
 
 require dirname(__DIR__, 2).'/vendor/autoload.php';
@@ -51,8 +51,8 @@ file_put_contents($projectDir.'/build/release/rc-evidence.json', '{}');
 file_put_contents($projectDir.'/build/release/rc-evidence.md', '# ok');
 file_put_contents($projectDir.'/build/docs/phpdocumentor/index.html', '<html></html>');
 
-$builder = new VendorReleaseManifestBuilderService(
-    new VendorMonitoringSnapshotBuilderService($observabilityDir, $faultToleranceDir, $projectDir),
+$builder = new VendorReleaseManifestBuilder(
+    new VendorMonitoringSnapshotBuilder($observabilityDir, $faultToleranceDir, $projectDir),
     new VendorAlertRuleEvaluatorService(),
     $projectDir,
 );

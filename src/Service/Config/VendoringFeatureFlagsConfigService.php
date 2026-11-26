@@ -6,6 +6,7 @@ namespace App\Vendoring\Service\Config;
 
 use App\Vendoring\Form\Config\VendoringFeatureFlagsConfigFormType;
 use App\Vendoring\Value\Form\Config\VendoringFeatureFlagsConfigData;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
 final readonly class VendoringFeatureFlagsConfigService
@@ -44,8 +45,8 @@ final readonly class VendoringFeatureFlagsConfigService
             'requiredPermission' => 'administration.config.update',
             'editableFields' => ['featureFlagsJson'],
             'sensitiveFields' => [],
-            'readableFiles' => ['config/component/runtime.yaml'],
-            'writableFiles' => ['config/component/runtime.yaml'],
+            'readableFiles' => ['config/component/vendor_runtime.yaml'],
+            'writableFiles' => ['config/component/vendor_runtime.yaml'],
             'metadata' => [
                 'section' => 'Configuration',
                 'kind' => 'feature_flags',
@@ -72,6 +73,7 @@ final readonly class VendoringFeatureFlagsConfigService
     public function save(object $data, array $context = []): array
     {
         $payload = $this->assertData($data);
+        $this->validatedFlags($payload);
         $actor = $context['actor'] ?? 'system';
 
         return [
@@ -89,17 +91,35 @@ final readonly class VendoringFeatureFlagsConfigService
     public function apply(object $data, array $context = []): array
     {
         $payload = $this->assertData($data);
-        $patch = $this->runtimePatch($payload);
-        $path = $this->projectDir.'/config/component/runtime.yaml';
-        $backupPath = is_file($path) ? $path.'.bak' : null;
-
-        if (null !== $backupPath && !copy($path, $backupPath)) {
-            throw new \RuntimeException('Unable to back up Vendoring runtime manifest.');
+        $flags = $this->validatedFlags($payload);
+        $path = $this->manifestPath();
+        if (is_link($path.'.lock')) {
+            throw new \RuntimeException('Refusing symlinked manifest lock.');
         }
-
-        $encoded = Yaml::dump($patch, 4, 2);
-        if (false === file_put_contents($path, $encoded, LOCK_EX)) {
-            throw new \RuntimeException('Unable to write Vendoring runtime manifest.');
+        $lock = fopen($path.'.lock', 'c');
+        if (false === $lock) {
+            throw new \RuntimeException('Unable to lock Vendoring runtime manifest.');
+        }
+        try {
+            if (!flock($lock, LOCK_EX)) {
+                throw new \RuntimeException('Unable to lock Vendoring runtime manifest.');
+            }
+            $manifest = $this->runtimeManifest();
+            $manifest['vendoring_feature_flags'] = $flags;
+            $backupPath = $path.'.bak';
+            $filesystem = new Filesystem();
+            if (is_link($backupPath)) {
+                throw new \RuntimeException('Refusing symlinked manifest state.');
+            }
+            $original = file_get_contents($path);
+            if (false === $original) {
+                throw new \RuntimeException('Unable to read manifest for backup.');
+            }
+            $filesystem->dumpFile($backupPath, $original);
+            $filesystem->dumpFile($path, Yaml::dump($manifest, 8, 2));
+        } finally {
+            flock($lock, LOCK_UN);
+            fclose($lock);
         }
 
         $actor = $context['actor'] ?? 'system';
@@ -126,44 +146,68 @@ final readonly class VendoringFeatureFlagsConfigService
     /** @return array<string, mixed> */
     private function runtimeManifest(): array
     {
-        $path = $this->projectDir.'/../Vendoring/config/component/runtime.yaml';
-        $parsed = is_file($path) ? Yaml::parseFile($path) : [];
+        $parsed = Yaml::parseFile($this->manifestPath());
         if (!is_array($parsed)) {
-            return [];
+            throw new \RuntimeException('Invalid Vendoring runtime manifest.');
         }
 
         $manifest = [];
         foreach ($parsed as $key => $value) {
-            if (is_string($key)) {
-                $manifest[$key] = $value;
+            if (!is_string($key)) {
+                throw new \RuntimeException('Runtime manifest must contain named keys.');
             }
+            $manifest[$key] = $value;
         }
 
         return $manifest;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function runtimePatch(VendoringFeatureFlagsConfigData $data): array
+    private function manifestPath(): string
     {
-        $decoded = json_decode($data->featureFlagsJson, true);
-        if (!is_array($decoded)) {
-            throw new \InvalidArgumentException('VENDORING_FEATURE_FLAGS_JSON must be valid JSON object or array.');
+        $path = $this->projectDir.'/config/component/vendor_runtime.yaml';
+        if (!is_file($path) || is_link($path)) {
+            throw new \RuntimeException('Vendoring runtime manifest is missing or is not a regular file.');
         }
 
-        return [
-            'vendoring_feature_flags' => $decoded,
-            'vendoring_alert_thresholds' => [
-                'errorLogThreshold' => 1,
-                'openBreakerThreshold' => 1,
-                'missingProbeThreshold' => 1,
-            ],
-            'vendoring_rollback_thresholds' => [
-                'criticalAlertCodes' => ['outbound_circuit_open'],
-                'warningAlertCodes' => ['runtime_error_spike', 'probe_artifacts_missing', 'observability_metrics_empty'],
-            ],
-        ];
+        return $path;
+    }
+
+    /** @return array<string, array{enabled?:bool, cohorts?:list<string>}> */
+    private function validatedFlags(VendoringFeatureFlagsConfigData $data): array
+    {
+        $decoded = json_decode($data->featureFlagsJson, true, flags: JSON_THROW_ON_ERROR);
+        if (!is_array($decoded) || ([] !== $decoded && array_is_list($decoded))) {
+            throw new \InvalidArgumentException('Feature flags must be a name-keyed object.');
+        }
+        $flags = [];
+        foreach ($decoded as $name => $flag) {
+            if (!is_string($name) || '' === trim($name) || !is_array($flag) || [] !== array_diff(array_keys($flag), ['enabled', 'cohorts'])) {
+                throw new \InvalidArgumentException('Invalid feature flag definition.');
+            }
+            $definition = [];
+            if (array_key_exists('enabled', $flag)) {
+                if (!is_bool($flag['enabled'])) {
+                    throw new \InvalidArgumentException('Feature flag enabled must be boolean.');
+                }
+                $definition['enabled'] = $flag['enabled'];
+            }
+            if (array_key_exists('cohorts', $flag)) {
+                if (!is_array($flag['cohorts']) || !array_is_list($flag['cohorts'])) {
+                    throw new \InvalidArgumentException('Feature flag cohorts must be a list.');
+                }
+                $cohorts = [];
+                foreach ($flag['cohorts'] as $cohort) {
+                    if (!is_string($cohort) || 1 !== preg_match('/^(?:global|vendor:[1-9][0-9]*|tenant:[^\s:]+)$/D', $cohort)) {
+                        throw new \InvalidArgumentException('Invalid feature flag cohort.');
+                    }
+                    $cohorts[] = $cohort;
+                }
+                $definition['cohorts'] = $cohorts;
+            }
+            $flags[$name] = $definition;
+        }
+
+        return $flags;
     }
 
     /**

@@ -11,5 +11,6 @@ final class VendorTransactionCreateInputDTO
         public string $orderId = '',
         public ?string $projectId = null,
         public string $amount = '',
-    ) {}
+    ) {
+    }
 }

@@ -11,5 +11,9 @@ final readonly class VendorStatementRecipientDTO
         public string $vendorId,
         public string $email,
         public string $currency = 'USD',
-    ) {}
+    ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
+    }
 }

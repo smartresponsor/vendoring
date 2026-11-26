@@ -107,6 +107,26 @@ final class VendorRuntimeLoggerServiceTest extends TestCase
         self::assertCount(3, $logger->snapshot());
     }
 
+    public function testHistoricalEnvelopeAndBooleanNormalizationWithoutRequest(): void
+    {
+        $logger = new VendorRuntimeLoggerService(new NullLogger(), new VendorCorrelationContextService(), new RequestStack());
+        $logger->warning('probe_status', ['vendor_id' => 'vendor-42', 'probe_active' => true, 'fallback' => false]);
+        $records = $logger->snapshot();
+        self::assertCount(1, $records);
+        $record = $records[0];
+        self::assertSame('warning', $record['level']);
+        self::assertSame('probe_status', $record['message']);
+        self::assertSame('vendor-42', $record['vendor_id']);
+        self::assertSame('true', $record['probe_active']);
+        self::assertSame('false', $record['fallback']);
+        self::assertIsString($record['timestamp']);
+        self::assertNotFalse(\DateTimeImmutable::createFromFormat(DATE_ATOM, $record['timestamp']));
+        foreach (['request_id', 'correlation_id', 'route', 'path', 'transaction_id', 'error_code'] as $key) {
+            self::assertArrayHasKey($key, $record);
+            self::assertNull($record[$key]);
+        }
+    }
+
     public function testRuntimeLoggerSnapshotIsEmptyInitially(): void
     {
         $logger = new VendorRuntimeLoggerService(

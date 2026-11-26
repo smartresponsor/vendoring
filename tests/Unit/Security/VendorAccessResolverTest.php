@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Security;
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
-use App\Vendoring\Service\Security\VendorAccessResolverService;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Resolver\Security\VendorAccessResolver;
 use App\Vendoring\Service\Security\VendorAuthorizationMatrixService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -15,9 +16,13 @@ final class VendorAccessResolverTest extends TestCase
 {
     private VendorUserAssignmentRepositoryInterface&MockObject $repository;
 
+    private VendorEntity $vendor;
+
     protected function setUp(): void
     {
         $this->repository = $this->createMock(VendorUserAssignmentRepositoryInterface::class);
+        $this->vendor = new VendorEntity('Fixture');
+        (new \ReflectionProperty($this->vendor, 'id'))->setValue($this->vendor, 42);
     }
 
     public function testCapabilityGrantedWhenAnyActiveRoleMatches(): void
@@ -26,11 +31,11 @@ final class VendorAccessResolverTest extends TestCase
             ->method('findActiveByVendorId')
             ->with(42)
             ->willReturn([
-                new VendorUserAssignmentEntity(42, 7, 'viewer'),
-                new VendorUserAssignmentEntity(42, 7, 'finance'),
+                new VendorUserAssignmentEntity($this->vendor, 7, 'viewer'),
+                new VendorUserAssignmentEntity($this->vendor, 7, 'finance'),
             ]);
 
-        $resolver = new VendorAccessResolverService($this->repository, new VendorAuthorizationMatrixService());
+        $resolver = new VendorAccessResolver($this->repository, new VendorAuthorizationMatrixService());
 
         self::assertTrue($resolver->canUserAccessVendorCapability(42, 7, 'payouts.write'));
         self::assertSame('role_grants_capability', $resolver->explainUserAccessVendorCapability(42, 7, 'payouts.write')['reason']);
@@ -40,7 +45,7 @@ final class VendorAccessResolverTest extends TestCase
     {
         $this->repository->method('findActiveByVendorId')->with(42)->willReturn([]);
 
-        $resolver = new VendorAccessResolverService($this->repository, new VendorAuthorizationMatrixService());
+        $resolver = new VendorAccessResolver($this->repository, new VendorAuthorizationMatrixService());
         $explanation = $resolver->explainUserAccessVendorCapability(42, 7, 'ownership.read');
 
         self::assertFalse($explanation['granted']);
@@ -54,10 +59,10 @@ final class VendorAccessResolverTest extends TestCase
             ->method('findActiveByVendorId')
             ->with(42)
             ->willReturn([
-                new VendorUserAssignmentEntity(42, 7, 'viewer'),
+                new VendorUserAssignmentEntity($this->vendor, 7, 'viewer'),
             ]);
 
-        $resolver = new VendorAccessResolverService($this->repository, new VendorAuthorizationMatrixService());
+        $resolver = new VendorAccessResolver($this->repository, new VendorAuthorizationMatrixService());
         $explanation = $resolver->explainUserAccessVendorCapability(42, 7, 'ownership.write');
 
         self::assertFalse($explanation['granted']);

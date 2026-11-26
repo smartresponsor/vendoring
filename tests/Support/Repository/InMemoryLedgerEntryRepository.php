@@ -7,7 +7,7 @@ namespace App\Vendoring\Tests\Support\Repository;
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
 use App\Vendoring\DTO\Ledger\VendorLedgerBalanceDTO;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 
 final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInterface
 {
@@ -19,20 +19,18 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
         $this->entries[] = $entry;
     }
 
-    public function listByRef(string $tenantId, string $referenceType, string $referenceId, ?string $vendorId = null): array
+    public function listByRef(string $tenantId, string $vendorId, string $referenceType, string $referenceId): array
     {
+        self::requireTenant($tenantId);
+
         return array_values(array_filter(
             $this->entries,
-            static function (VendorLedgerEntity $entry) use ($tenantId, $referenceType, $referenceId, $vendorId): bool {
-                if ($entry->tenantId !== $tenantId) {
-                    return false;
-                }
-
+            static function (VendorLedgerEntity $entry) use ($tenantId, $vendorId, $referenceType, $referenceId): bool {
                 if ($entry->referenceType !== $referenceType || $entry->referenceId !== $referenceId) {
                     return false;
                 }
 
-                if (null !== $vendorId && $entry->vendorId !== $vendorId) {
+                if ($entry->tenantId !== $tenantId || $entry->vendorId !== $vendorId) {
                     return false;
                 }
 
@@ -89,11 +87,7 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
         $sum = 0.0;
 
         foreach ($this->entries as $entry) {
-            if ($entry->tenantId !== $criteria->tenantId) {
-                continue;
-            }
-
-            if (null !== $criteria->vendorId && $entry->vendorId !== $criteria->vendorId) {
+            if ($entry->tenantId !== $criteria->tenantId || $entry->vendorId !== $criteria->vendorId) {
                 continue;
             }
 
@@ -101,11 +95,7 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
                 continue;
             }
 
-            if (null !== $criteria->from && $entry->createdAt < $criteria->from) {
-                continue;
-            }
-
-            if (null !== $criteria->to && $entry->createdAt > $criteria->to) {
+            if (!$criteria->includesOccurredAt($entry->getCreatedAt())) {
                 continue;
             }
 
@@ -121,17 +111,24 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
         return $sum;
     }
 
-    public function balancesForVendor(string $vendorId): array
+    public function balancesForVendor(string $tenantId, string $vendorId): array
     {
+        self::requireTenant($tenantId);
         $balances = [];
 
         foreach ($this->entries as $entry) {
-            if ($entry->vendorId !== $vendorId) {
+            if ($entry->tenantId !== $tenantId || $entry->vendorId !== $vendorId) {
                 continue;
             }
 
             $balances[$entry->currency] ??= 0;
-            $balances[$entry->currency] += (int) round($entry->amount * 100);
+            $cents = (int) round($entry->amount * 100);
+            if ('VENDOR_PAYABLE' === $entry->debitAccount) {
+                $balances[$entry->currency] += $cents;
+            }
+            if ('VENDOR_PAYABLE' === $entry->creditAccount) {
+                $balances[$entry->currency] -= $cents;
+            }
         }
 
         return array_map(
@@ -150,5 +147,12 @@ final class InMemoryLedgerEntryRepository implements VendorLedgerRepositoryInter
     public function all(): array
     {
         return $this->entries;
+    }
+
+    private static function requireTenant(string $tenantId): void
+    {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
     }
 }

@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$statusCatalog = file_get_contents($root . '/src/ValueObject/VendorTransactionStatusValueObject.php');
-$policy = file_get_contents($root . '/src/Service/Policy/VendorTransactionStatusPolicyService.php');
-$pg = file_get_contents($root . '/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
-$sqlite = file_get_contents($root . '/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
-$entity = file_get_contents($root . '/src/Entity/Vendor/VendorTransactionEntity.php');
+$statusCatalog = file_get_contents($root.'/src/ValueObject/VendorTransactionStatusValueObject.php');
+$policy = file_get_contents($root.'/src/Policy/VendorTransactionStatusPolicy.php');
+$pg = file_get_contents($root.'/migrations/MigrationPg/20260321_000001_create_vendor_transaction.sql');
+$sqlite = file_get_contents($root.'/migrations/MigrationSqlite/20260321_000001_create_vendor_transaction.sql');
+$entity = file_get_contents($root.'/src/Entity/Vendor/VendorTransactionEntity.php');
 
 $checks = [
     'status catalog exists' => is_string($statusCatalog) && str_contains($statusCatalog, "public const string PENDING = 'pending';"),
@@ -19,7 +19,7 @@ $checks = [
 
 foreach ($checks as $label => $ok) {
     if (true !== $ok) {
-        fwrite(STDERR, $label . PHP_EOL);
+        fwrite(STDERR, $label.PHP_EOL);
         exit(1);
     }
 }

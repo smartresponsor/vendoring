@@ -2,29 +2,33 @@
 
 declare(strict_types=1);
 
+use App\Vendoring\Builder\Observability\VendorMonitoringSnapshotBuilder;
+use App\Vendoring\Builder\Ops\VendorReleaseManifestBuilder;
+use App\Vendoring\Resolver\Rollout\VendorTrafficCohortResolver;
 use App\Vendoring\Service\Observability\VendorAlertRuleEvaluatorService;
-use App\Vendoring\Service\Observability\VendorMonitoringSnapshotBuilderService;
-use App\Vendoring\Service\Ops\VendorReleaseManifestBuilderService;
 use App\Vendoring\Service\Ops\VendorRollbackDecisionEvaluatorService;
 use App\Vendoring\Service\Rollout\VendorCanaryRolloutCoordinatorService;
 use App\Vendoring\Service\Rollout\VendorFeatureFlagService;
-use App\Vendoring\Service\Rollout\VendorTrafficCohortResolverService;
 
 require dirname(__DIR__, 2).'/vendor/autoload.php';
 
-$root = dirname(__DIR__, 2);
-$observabilityDir = $root.'/var/observability';
-$faultToleranceDir = $root.'/var/fault-tolerance';
+$smokeStateDir = sys_get_temp_dir().'/vendoring-canary-smoke-'.bin2hex(random_bytes(4));
+$root = $smokeStateDir.'/fixture-root';
+register_shutdown_function(static function () use ($smokeStateDir): void {
+    (new Symfony\Component\Filesystem\Filesystem())->remove($smokeStateDir);
+});
+$observabilityDir = $smokeStateDir.'/observability';
+$faultToleranceDir = $smokeStateDir.'/fault-tolerance';
 
-@mkdir($observabilityDir, 0777, true);
-@mkdir($faultToleranceDir.'/circuit-breakers', 0777, true);
-@mkdir($root.'/docs/release', 0777, true);
-@mkdir($root.'/build/release', 0777, true);
-@mkdir($root.'/build/docs/phpdocumentor', 0777, true);
-@mkdir($root.'/docs', 0777, true);
+@mkdir($observabilityDir, 0700, true);
+@mkdir($faultToleranceDir.'/circuit-breakers', 0700, true);
+@mkdir($root.'/docs/release', 0700, true);
+@mkdir($root.'/build/release', 0700, true);
+@mkdir($root.'/build/docs/phpdocumentor', 0700, true);
+@mkdir($root.'/docs', 0700, true);
 
 file_put_contents($observabilityDir.'/runtime_logs.ndjson', json_encode(['timestamp' => date(DATE_ATOM), 'level' => 'info', 'message' => 'canary smoke']).PHP_EOL);
-file_put_contents($observabilityDir.'/runtime_metrics.ndjson', json_encode(['timestamp' => date(DATE_ATOM), 'type' => 'counter', 'nameEntity' => 'canary_smoke_metric', 'tags' => ['scope' => 'smoke'], 'request_id' => 'smoke', 'correlation_id' => 'smoke']).PHP_EOL);
+file_put_contents($observabilityDir.'/runtime_metrics.ndjson', json_encode(['timestamp' => date(DATE_ATOM), 'type' => 'counter', 'name' => 'canary_smoke_metric', 'tags' => ['scope' => 'smoke'], 'request_id' => 'smoke', 'correlation_id' => 'smoke']).PHP_EOL);
 
 foreach ([
     $root.'/docs/release/RC_BASELINE.md',
@@ -44,7 +48,7 @@ foreach ([
     $root.'/build/docs/phpdocumentor/index.html',
 ] as $file) {
     if (!is_file($file)) {
-        file_put_contents($file, 'placeholder');
+        file_put_contents($file, 'Isolated synthetic readiness fixture');
     }
 }
 
@@ -56,17 +60,17 @@ $featureFlags = [
 ];
 
 $coordinator = new VendorCanaryRolloutCoordinatorService(
-    new VendorFeatureFlagService(new VendorTrafficCohortResolverService(), $featureFlags),
-    new VendorTrafficCohortResolverService(),
-    new VendorReleaseManifestBuilderService(
-        new VendorMonitoringSnapshotBuilderService($observabilityDir, $faultToleranceDir, $root),
+    new VendorFeatureFlagService(new VendorTrafficCohortResolver(), $featureFlags),
+    new VendorTrafficCohortResolver(),
+    new VendorReleaseManifestBuilder(
+        new VendorMonitoringSnapshotBuilder($observabilityDir, $faultToleranceDir, $root),
         new VendorAlertRuleEvaluatorService(),
         $root,
     ),
     new VendorRollbackDecisionEvaluatorService(),
 );
 
-$report = $coordinator->evaluate('transaction_canary', 'tenant-1', '42', 900);
+$report = $coordinator->evaluate('transaction_canary', '42', 900, tenantId: 'tenant-1');
 
 if ('proceed' !== $report['canary']['decision']) {
     throw new RuntimeException('Canary rollout coordinator did not return proceed for a green vendor canary.');

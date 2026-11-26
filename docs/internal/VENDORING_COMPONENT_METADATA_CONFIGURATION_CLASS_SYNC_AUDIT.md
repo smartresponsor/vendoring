@@ -6,7 +6,7 @@ Wave AH synchronizes component metadata after the DependencyInjection configurat
 
 ## Finding
 
-`src/DependencyInjection/Configuration.php` was previously retired in favor of `VendorConfiguration.php`, but `config/component/component.yaml` still pointed at `App\Vendoring\DependencyInjection\Configuration`.
+`src/DependencyInjection/Configuration.php` was previously retired in favor of `VendorConfiguration.php`, but `config/component/vendor_component.yaml` still pointed at `App\Vendoring\DependencyInjection\Configuration`.
 
 ## Change
 

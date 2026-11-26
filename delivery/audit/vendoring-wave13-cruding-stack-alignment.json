@@ -32,12 +32,12 @@
       "vendor.show_slug"
     ],
     "read_services": [
-      "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentIndexService",
-      "App\\Vendoring\\Service\\Vendor\\Attachment\\Document\\VendorAttachmentDocumentShowService",
-      "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaIndexService",
-      "App\\Vendoring\\Service\\Vendor\\Attachment\\Media\\VendorAttachmentMediaShowService",
-      "App\\Vendoring\\Service\\Vendor\\VendorIndexService",
-      "App\\Vendoring\\Service\\Vendor\\VendorShowService"
+      "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentIndexService",
+      "App\\Vendoring\\Service\\Attachment\\Document\\VendorAttachmentDocumentShowService",
+      "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaIndexService",
+      "App\\Vendoring\\Service\\Attachment\\Media\\VendorAttachmentMediaShowService",
+      "App\\Vendoring\\Service\\VendorIndexService",
+      "App\\Vendoring\\Service\\VendorShowService"
     ],
     "controller_files_added": 0,
     "persistence_restored": false,

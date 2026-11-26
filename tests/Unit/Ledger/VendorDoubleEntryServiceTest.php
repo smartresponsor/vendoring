@@ -17,13 +17,13 @@ final class VendorDoubleEntryServiceTest extends TestCase
         $service = new VendorDoubleEntryService($repository);
         $dto = new VendorDoubleEntryDTO(
             'tenant-1',
+            'vendor-1',
             'VENDOR_PAYABLE',
             'REVENUE',
             125.50,
             'USD',
             'invoice',
             'inv-100',
-            'vendor-1',
             '2026-03-15 08:30:00',
         );
 
@@ -31,23 +31,24 @@ final class VendorDoubleEntryServiceTest extends TestCase
 
         self::assertCount(1, $result);
         self::assertSame($repository->all(), $result);
-        self::assertSame('tenant-1', $result[0]->tenantId);
         self::assertSame('VENDOR_PAYABLE', $result[0]->debitAccount);
         self::assertSame('REVENUE', $result[0]->creditAccount);
         self::assertSame(125.50, $result[0]->amount);
         self::assertSame('USD', $result[0]->currency);
         self::assertSame('invoice', $result[0]->referenceType);
         self::assertSame('inv-100', $result[0]->referenceId);
+        self::assertSame('tenant-1', $result[0]->tenantId);
         self::assertSame('vendor-1', $result[0]->vendorId);
         self::assertSame('2026-03-15 08:30:00', $result[0]->createdAt);
-        self::assertMatchesRegularExpression('/^[0-9a-f-]{36}$/', $result[0]->getObjectUuid());
+        self::assertMatchesRegularExpression('/^[0-7][0-9A-HJKMNP-TV-Z]{25}$/D', $result[0]->getObjectUuid());
+        self::assertInstanceOf(\Symfony\Component\Uid\UuidV7::class, \Symfony\Component\Uid\Uuid::fromString($result[0]->getObjectUuid()));
     }
 
     public function testPostCreatesTimestampWhenDtoDoesNotProvideOne(): void
     {
         $repository = new InMemoryLedgerEntryRepository();
         $service = new VendorDoubleEntryService($repository);
-        $dto = new VendorDoubleEntryDTO('tenant-1', 'VENDOR_PAYABLE', 'REVENUE', 10.0, 'USD', 'invoice', 'inv-101');
+        $dto = new VendorDoubleEntryDTO('tenant-1', 'vendor-1', 'VENDOR_PAYABLE', 'REVENUE', 10.0, 'USD', 'invoice', 'inv-101');
 
         $result = $service->post($dto);
 

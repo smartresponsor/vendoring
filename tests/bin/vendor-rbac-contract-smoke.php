@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
-use App\Vendoring\Service\Security\VendorAccessResolverService;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\Resolver\Security\VendorAccessResolver;
 use App\Vendoring\Service\Security\VendorAuthorizationMatrixService;
 use App\Vendoring\ValueObject\VendorRoleValueObject;
 
@@ -27,10 +28,18 @@ $repository = new class implements VendorUserAssignmentRepositoryInterface {
 
     public function findActiveByVendorId(int $vendorId): array
     {
-        return [new VendorUserAssignmentEntity($vendorId, 7, 'finance')];
+        $vendor = new VendorEntity('Fixture');
+        (new ReflectionProperty($vendor, 'id'))->setValue($vendor, $vendorId);
+
+        return [new VendorUserAssignmentEntity($vendor, 7, 'finance')];
     }
 
     public function findOneByVendorIdAndUserId(int $vendorId, int $userId): ?VendorUserAssignmentEntity
+    {
+        return null;
+    }
+
+    public function findOneBy(array $criteria): ?VendorUserAssignmentEntity
     {
         return null;
     }
@@ -39,9 +48,13 @@ $repository = new class implements VendorUserAssignmentRepositoryInterface {
     {
         return null;
     }
+
+    public function flush(): void
+    {
+    }
 };
 
-$resolver = new VendorAccessResolverService($repository, $matrix);
+$resolver = new VendorAccessResolver($repository, $matrix);
 $explanation = $resolver->explainUserAccessVendorCapability(42, 7, 'payouts.write');
 
 if (!$explanation['granted'] || 'role_grants_capability' !== $explanation['reason']) {

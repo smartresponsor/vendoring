@@ -6,20 +6,17 @@ namespace App\Vendoring\Tests\Unit\Service;
 
 use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
 use App\Vendoring\Entity\Vendor\VendorEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorApiKeyRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorApiKeyRepositoryInterface;
 use App\Vendoring\Service\Security\VendorApiKeyService;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorApiKeyServiceTest extends TestCase
 {
-    private EntityManagerInterface&MockObject $entityManager;
     private VendorApiKeyRepositoryInterface&MockObject $repository;
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->repository = $this->createMock(VendorApiKeyRepositoryInterface::class);
     }
 
@@ -40,9 +37,8 @@ final class VendorApiKeyServiceTest extends TestCase
 
                 return true;
             }), true);
-        $this->entityManager->expects(self::never())->method('flush');
 
-        $service = new VendorApiKeyService($this->entityManager, $this->repository);
+        $service = new VendorApiKeyService($this->repository);
         $plainToken = $service->createKey($vendor, 'read,write');
 
         self::assertSame(64, strlen($plainToken));
@@ -63,9 +59,8 @@ final class VendorApiKeyServiceTest extends TestCase
             ->willReturnCallback(function (VendorApiKeyEntity $apiKey, bool $flush = false) use (&$savedKeys): void {
                 $savedKeys[] = [$apiKey, $flush];
             });
-        $this->entityManager->expects(self::once())->method('flush');
 
-        $service = new VendorApiKeyService($this->entityManager, $this->repository);
+        $service = new VendorApiKeyService($this->repository);
         $newPlainToken = $service->rotateKey($existingKey);
 
         self::assertSame(64, strlen($newPlainToken));
@@ -75,7 +70,7 @@ final class VendorApiKeyServiceTest extends TestCase
         self::assertFalse($savedKeys[0][1]);
         self::assertSame('inactive', $savedKeys[0][0]->getStatus());
         self::assertInstanceOf(VendorApiKeyEntity::class, $savedKeys[1][0]);
-        self::assertFalse($savedKeys[1][1]);
+        self::assertTrue($savedKeys[1][1]);
         self::assertSame($vendor, $savedKeys[1][0]->getVendor());
         self::assertSame($existingKey->getPermissions(), $savedKeys[1][0]->getPermissions());
         self::assertSame('active', $savedKeys[1][0]->getStatus());
@@ -92,9 +87,8 @@ final class VendorApiKeyServiceTest extends TestCase
             ->method('findActiveByTokenHash')
             ->with(hash('sha256', 'plain-token'))
             ->willReturn($apiKey);
-        $this->entityManager->expects(self::once())->method('flush');
 
-        $service = new VendorApiKeyService($this->entityManager, $this->repository);
+        $service = new VendorApiKeyService($this->repository);
 
         self::assertNull($service->validateToken('plain-token', 'admin'));
         $resolvedVendor = $service->validateToken('plain-token', 'read');
@@ -113,9 +107,8 @@ final class VendorApiKeyServiceTest extends TestCase
             ->method('findActiveByTokenHash')
             ->with(hash('sha256', 'plain-token'))
             ->willReturn($apiKey);
-        $this->entityManager->expects(self::once())->method('flush');
 
-        $service = new VendorApiKeyService($this->entityManager, $this->repository);
+        $service = new VendorApiKeyService($this->repository);
 
         self::assertNull($service->resolveVendorFromAuthHeader('   '));
         self::assertSame($vendor, $service->resolveVendorFromAuthHeader('  Bearer plain-token  '));
@@ -133,8 +126,7 @@ final class VendorApiKeyServiceTest extends TestCase
 
                 return true;
             }), true);
-        $this->entityManager->expects(self::never())->method('flush');
 
-        (new VendorApiKeyService($this->entityManager, $this->repository))->revokeKey($apiKey);
+        (new VendorApiKeyService($this->repository))->revokeKey($apiKey);
     }
 }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Service\Api;
 
-use App\Vendoring\Service\Api\VendorStatementWindowQueryRequestResolverService;
 use App\Vendoring\Exception\Api\VendorApiQueryValidationException;
+use App\Vendoring\Resolver\Api\VendorStatementWindowQueryRequestResolver;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validation;
@@ -15,16 +15,14 @@ final class StatementWindowQueryRequestResolverTest extends TestCase
 {
     public function testResolveReturnsDtoForValidStatementWindowQuery(): void
     {
-        $resolver = new VendorStatementWindowQueryRequestResolverService(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
+        $resolver = new VendorStatementWindowQueryRequestResolver(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
 
         $dto = $resolver->resolve(new Request([
-            'tenantId' => 'tenant-1',
             'from' => '2026-03-01',
             'to' => '2026-03-31',
             'currency' => 'USD',
         ]));
 
-        self::assertSame('tenant-1', $dto->tenantId);
         self::assertSame('2026-03-01', $dto->from);
         self::assertSame('2026-03-31', $dto->to);
         self::assertSame('USD', $dto->currency);
@@ -32,10 +30,10 @@ final class StatementWindowQueryRequestResolverTest extends TestCase
 
     public function testResolveThrowsWhenStatementWindowQueryIsMissing(): void
     {
-        $resolver = new VendorStatementWindowQueryRequestResolverService(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
+        $resolver = new VendorStatementWindowQueryRequestResolver(Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator());
 
         $this->expectException(VendorApiQueryValidationException::class);
-        $this->expectExceptionMessage('tenant_id_required');
+        $this->expectExceptionMessage('statement_from_required');
 
         $resolver->resolve(new Request());
     }

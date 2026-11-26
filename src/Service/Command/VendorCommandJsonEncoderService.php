@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Command;
 
 use App\Vendoring\ServiceInterface\Command\VendorCommandJsonEncoderServiceInterface;
-use JsonException;
 
 final class VendorCommandJsonEncoderService implements VendorCommandJsonEncoderServiceInterface
 {
     /**
      * @param array<string, mixed> $payload
-     * @throws JsonException
+     *
+     * @throws \JsonException
      */
     public function encode(array $payload): string
     {

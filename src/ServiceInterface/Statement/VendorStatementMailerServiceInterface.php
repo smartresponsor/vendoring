@@ -14,7 +14,7 @@ namespace App\Vendoring\ServiceInterface\Statement;
 interface VendorStatementMailerServiceInterface
 {
     /**
-     * Send one statement email for the supplied tenant/vendor period.
+     * Send one statement email for the supplied vendor period.
      *
      * @return array{
      *   ok:bool,

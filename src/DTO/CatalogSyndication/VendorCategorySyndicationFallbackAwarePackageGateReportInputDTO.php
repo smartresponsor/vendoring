@@ -25,5 +25,6 @@ final readonly class VendorCategorySyndicationFallbackAwarePackageGateReportInpu
         public array $fallbackChecks,
         public array $exactMatchedBindingIds,
         public array $fallbackMatchedBindingIds,
-    ) {}
+    ) {
+    }
 }

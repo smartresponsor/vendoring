@@ -11,13 +11,16 @@ final class VendorLedgerEntryDTO
         public string $type,
         public string $entityId,
         public string $sagaId,
+        public string $tenantId,
         public string $vendorId,
         public int $amountCents,
         public string $currency,
         public string $direction,
         public array $meta = [],
-        public string $tenantId = 'default',
         public ?string $occurredAt = null,
     ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
     }
 }

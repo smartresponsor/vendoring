@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Vendoring\ServiceInterface\Reliability;
 
-use JsonException;
-use RuntimeException;
-
 /**
  * Stateful contract for outbound circuit-breaker decisions.
  *
@@ -40,8 +37,9 @@ interface VendorOutboundCircuitBreakerServiceInterface
      *   cooldownSeconds:int,
      *   allowRequest:bool
      * }
-     * @throws JsonException
-     * @throws RuntimeException
+     *
+     * @throws \JsonException
+     * @throws \RuntimeException
      */
     public function recordFailure(string $operation, string $scopeKey, int $threshold, int $cooldownSeconds): array;
 }

@@ -1,0 +1,97 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Vendoring\Builder\Ops;
+
+use App\Vendoring\BuilderInterface\Finance\VendorFinanceRuntimeProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Ops\VendorRuntimeStatusProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Ownership\VendorOwnershipProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Statement\VendorStatementDeliveryRuntimeProjectionBuilderInterface;
+use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
+use App\Vendoring\Projection\VendorRuntimeStatusProjection;
+use Doctrine\DBAL\Exception;
+
+/**
+ * Builds a release-facing vendor runtime status projection that aggregates existing
+ * vendor-local surfaces into one ops/admin-friendly payload.
+ */
+final readonly class VendorRuntimeStatusProjectionBuilder implements VendorRuntimeStatusProjectionBuilderInterface
+{
+    public function __construct(
+        private VendorOwnershipProjectionBuilderInterface $ownershipProjectionBuilder,
+        private VendorFinanceRuntimeProjectionBuilderInterface $financeRuntimeProjectionBuilder,
+        private VendorStatementDeliveryRuntimeProjectionBuilderInterface $statementDeliveryRuntimeProjectionBuilder,
+        private VendorExternalIntegrationRuntimeProjectionBuilderInterface $externalIntegrationRuntimeProjectionBuilder,
+    ) {
+    }
+
+    /** @throws Exception */
+    public function build(
+        string $tenantId,
+        string $vendorId,
+        ?string $from = null,
+        ?string $to = null,
+        string $currency = 'USD',
+        ?int $canonicalVendorId = null,
+    ): VendorRuntimeStatusProjection {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
+        $ownership = null;
+        if (null !== $canonicalVendorId) {
+            $ownership = $this->ownershipProjectionBuilder->buildForVendorId($canonicalVendorId)?->toArray();
+        }
+
+        $finance = $this->financeRuntimeProjectionBuilder->build(
+            tenantId: $tenantId,
+            vendorId: $vendorId,
+            from: $from,
+            to: $to,
+            currency: $currency,
+            canonicalVendorId: $canonicalVendorId,
+        )->toArray();
+
+        $statementDelivery = $this->statementDeliveryRuntimeProjectionBuilder->build(new VendorStatementDeliveryRuntimeRequestDTO(
+            tenantId: $tenantId,
+            vendorId: $vendorId,
+            from: $from ?? '',
+            to: $to ?? '',
+            currency: $currency,
+            canonicalVendorId: $canonicalVendorId,
+        ))->toArray();
+
+        $externalIntegration = $this->externalIntegrationRuntimeProjectionBuilder->build(
+            tenantId: $tenantId,
+            vendorId: $vendorId,
+            canonicalVendorId: $canonicalVendorId,
+        )->toArray();
+
+        $statement = $statementDelivery['statement'];
+        $export = $statementDelivery['export'];
+        $recipients = $statementDelivery['recipients'];
+
+        $surfaceStatus = [
+            'ownership' => null !== $ownership,
+            'finance' => true,
+            'statementDelivery' => [] !== $statement || null !== $export || [] !== $recipients,
+            'externalIntegration' => true,
+        ];
+
+        $generatedAtObject = new \DateTimeImmutable();
+        $generatedAt = $generatedAtObject->format(DATE_ATOM);
+
+        return new VendorRuntimeStatusProjection(
+            tenantId: $tenantId,
+            vendorId: $vendorId,
+            currency: $currency,
+            ownership: $ownership,
+            finance: $finance,
+            statementDelivery: $statementDelivery,
+            externalIntegration: $externalIntegration,
+            surfaceStatus: $surfaceStatus,
+            generatedAt: $generatedAt,
+        );
+    }
+}

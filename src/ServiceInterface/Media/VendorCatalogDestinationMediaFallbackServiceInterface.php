@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\ServiceInterface\Media;
 
-use App\Vendoring\EventInterface\Vendor\VendorCategoryDestinationMediaFallbackEvaluatedEventInterface;
+use App\Vendoring\EventInterface\VendorCategoryDestinationMediaFallbackEvaluatedEventInterface;
 
 interface VendorCatalogDestinationMediaFallbackServiceInterface
 {

@@ -13,17 +13,47 @@ use PHPUnit\Framework\TestCase;
  *
  * The service uses a pluggable backend callable strategy — no hard dependency
  * on symfony/rate-limiter or any specific cache package is required in Vendoring.
- * The host application injects a backend callable when real rate limiting is needed.
+ * The runtime configures a private local store; a host may inject a shared backend.
  */
 final class FileWriteRateLimiterTest extends TestCase
 {
-    public function testConsumeAllowsRequestWhenNoBackendConfigured(): void
+    public function testConsumeDeniesRequestWhenNoBackendOrStoreConfigured(): void
     {
         $service = new VendorWriteRateLimiterService();
         $decision = $service->consume('transaction.create', 'vendor-1', 10, 60);
 
         self::assertInstanceOf(VendorWriteRateLimitDecisionValueObject::class, $decision);
-        self::assertTrue($decision->allowed());
+        self::assertFalse($decision->allowed());
+    }
+
+    public function testLocalStoreEnforcesWindowAcrossInstancesAndIsolatesActors(): void
+    {
+        $dir = sys_get_temp_dir().'/vendoring-rate-test-'.bin2hex(random_bytes(12));
+        try {
+            $first = new VendorWriteRateLimiterService(stateDir: $dir);
+            $second = new VendorWriteRateLimiterService(stateDir: $dir);
+            self::assertTrue($first->consume('create', 'actor-a', 2, 60)->allowed());
+            self::assertTrue($second->consume('create', 'actor-a', 2, 60)->allowed());
+            $denied = $first->consume('create', 'actor-a', 2, 60);
+            self::assertFalse($denied->allowed());
+            self::assertSame(0, $denied->remaining());
+            self::assertGreaterThan(0, $denied->retryAfterSeconds());
+            self::assertTrue($second->consume('create', 'actor-b', 2, 60)->allowed());
+            self::assertTrue($second->consume('update', 'actor-a', 2, 60)->allowed());
+            $files = glob($dir.'/*.json') ?: [];
+            self::assertCount(3, $files);
+            foreach ($files as $file) {
+                file_put_contents($file, 'corrupt');
+            }
+            self::assertFalse($first->consume('create', 'actor-a', 2, 60)->allowed());
+        } finally {
+            foreach (glob($dir.'/*') ?: [] as $file) {
+                unlink($file);
+            }
+            if (is_dir($dir)) {
+                rmdir($dir);
+            }
+        }
     }
 
     public function testConsumeAllowsRequestWhenScopeIsBlank(): void

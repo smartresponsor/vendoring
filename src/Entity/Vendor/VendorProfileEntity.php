@@ -6,16 +6,10 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorProfileRepository::class)]
-#[ORM\Table(
-    name: 'vendor_profile',
-    uniqueConstraints: [
-        new ORM\UniqueConstraint(name: 'uniq_vendor_profile_vendor_id', columns: ['vendor_id']),
-    ],
-    indexes: [
-        new ORM\Index(name: 'idx_vendor_profile_public_status', columns: ['public_profile_status']),
-    ],
-)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorProfileRepository::class)]
+#[ORM\Table(name: 'vendor_profile')]
+#[ORM\UniqueConstraint(name: 'uniq_vendor_profile_vendor_id', columns: ['vendor_id'])]
+#[ORM\Index(name: 'idx_vendor_profile_public_status', columns: ['public_profile_status'])]
 class VendorProfileEntity extends VendorAbstractEntity
 {
     #[ORM\OneToOne(inversedBy: 'profile', targetEntity: VendorEntity::class)]

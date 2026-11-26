@@ -12,5 +12,9 @@ final class VendorPayoutInitDTO
         public string $periodStart,
         public string $periodEnd,
         public string $currency,
-    ) {}
+    ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
+    }
 }

@@ -13,5 +13,9 @@ final readonly class VendorMetricTrendRequestDTO
         public string $to,
         public string $bucket = 'month',
         public string $currency = 'USD',
-    ) {}
+    ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
+    }
 }

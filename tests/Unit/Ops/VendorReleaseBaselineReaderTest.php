@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Ops;
 
-use App\Vendoring\Projection\Vendor\VendorRuntimeStatusProjection;
+use App\Vendoring\BuilderInterface\Ops\VendorRuntimeStatusProjectionBuilderInterface;
+use App\Vendoring\Projection\VendorRuntimeStatusProjection;
 use App\Vendoring\Service\Ops\VendorReleaseBaselineReaderService;
-use App\Vendoring\ServiceInterface\Ops\VendorRuntimeStatusProjectionBuilderServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorReleaseBaselineReaderTest extends TestCase
 {
-    private VendorRuntimeStatusProjectionBuilderServiceInterface&MockObject $runtimeStatusProjectionBuilder;
+    private VendorRuntimeStatusProjectionBuilderInterface&MockObject $runtimeStatusProjectionBuilder;
 
     protected function setUp(): void
     {
-        $this->runtimeStatusProjectionBuilder = $this->createMock(VendorRuntimeStatusProjectionBuilderServiceInterface::class);
+        $this->runtimeStatusProjectionBuilder = $this->createMock(VendorRuntimeStatusProjectionBuilderInterface::class);
     }
 
     public function testBuildAddsProfileSummaryAndProfileIssueWhenIncomplete(): void

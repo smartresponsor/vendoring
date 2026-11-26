@@ -7,13 +7,13 @@ namespace App\Vendoring\Service\Command;
 use App\Vendoring\Exception\Command\VendorCommandIoException;
 use App\Vendoring\ServiceInterface\Command\VendorCommandJsonEncoderServiceInterface;
 use App\Vendoring\ServiceInterface\Command\VendorCommandJsonFileWriterServiceInterface;
-use JsonException;
 
 final readonly class VendorCommandJsonFileWriterService implements VendorCommandJsonFileWriterServiceInterface
 {
     public function __construct(
         private VendorCommandJsonEncoderServiceInterface $commandJsonEncoder,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws VendorCommandIoException
@@ -39,13 +39,14 @@ final readonly class VendorCommandJsonFileWriterService implements VendorCommand
 
     /**
      * @param array<string, mixed> $payload
+     *
      * @throws VendorCommandIoException
      */
     public function writePayload(string $path, array $payload): void
     {
         try {
             $this->write($path, $this->commandJsonEncoder->encode($payload));
-        } catch (JsonException $exception) {
+        } catch (\JsonException $exception) {
             throw new VendorCommandIoException(sprintf('Unable to encode JSON payload for output path: %s', trim($path)), 0, $exception);
         }
     }

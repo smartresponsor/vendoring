@@ -13,7 +13,7 @@ Wave Z cleans up the remaining non-prefixed component class under `src/Dependenc
 - `Configuration` -> `VendorConfiguration`
 - `src/DependencyInjection/Configuration.php` -> `src/DependencyInjection/VendorConfiguration.php`
 - `VendoringExtension` now instantiates `VendorConfiguration`.
-- `config/component/component.yaml` now points to `App\\Vendoring\\DependencyInjection\\VendorConfiguration`.
+- `config/component/vendor_component.yaml` now points to `App\\Vendoring\\DependencyInjection\\VendorConfiguration`.
 
 ## Boundary
 

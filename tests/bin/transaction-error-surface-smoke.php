@@ -9,9 +9,9 @@ function vendoring_load_file_or_empty(string $path): string
     return false === $contents ? '' : $contents;
 }
 
-$transactionHttpService = vendoring_load_file_or_empty(__DIR__.'/../../src/Service/Vendor/Transaction/VendorTransactionHttpService.php');
+$transactionHttpService = vendoring_load_file_or_empty(__DIR__.'/../../src/Service/Transaction/VendorTransactionHttpService.php');
 $manager = vendoring_load_file_or_empty(__DIR__.'/../../src/Service/Transaction/VendorTransactionLifecycleService.php');
-$amountPolicy = vendoring_load_file_or_empty(__DIR__.'/../../src/Service/Policy/VendorTransactionAmountPolicyService.php');
+$amountPolicy = vendoring_load_file_or_empty(__DIR__.'/../../src/Policy/VendorTransactionAmountPolicy.php');
 $errorCodes = vendoring_load_file_or_empty(__DIR__.'/../../src/ValueObject/VendorTransactionErrorCodeValueObject.php');
 
 $checks = [

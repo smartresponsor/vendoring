@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Statement;
 
+use App\Vendoring\Policy\VendorOutboundOperationPolicy;
 use App\Vendoring\Service\Observability\VendorCorrelationContextService;
 use App\Vendoring\Service\Observability\VendorMetricEmitterService;
 use App\Vendoring\Service\Observability\VendorRuntimeLoggerService;
-use App\Vendoring\Service\Policy\VendorOutboundOperationPolicyService;
 use App\Vendoring\Service\Reliability\VendorOutboundCircuitBreakerService;
 use App\Vendoring\Service\Statement\VendorStatementMailerService;
 use App\Vendoring\Tests\Support\Statement\FakeMailer;
@@ -37,6 +37,11 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertSame('closed', $result['circuitState']);
         self::assertCount(1, $mailer->messages());
         self::assertSame('statement_mail_sent_total', $metrics->snapshot()[0]['name']);
+
+        $message = $mailer->messages()[0];
+        self::assertInstanceOf(\Symfony\Component\Mime\Email::class, $message);
+        self::assertStringContainsString('Tenant: tenant-1, Vendor: vendor-1', (string) $message->getTextBody());
+        self::assertSame('tenant-1', $metrics->snapshot()[0]['tags']['tenantId']);
 
         unlink($pdf);
     }
@@ -80,8 +85,8 @@ final class VendorStatementMailerServiceTest extends TestCase
         $mailer = new FakeMailer();
         $metrics = new VendorMetricEmitterService();
         $breaker = $this->breaker();
-        $breaker->recordFailure('statement_mail_send', 'tenant-1:vendor-1', 2, 60);
-        $breaker->recordFailure('statement_mail_send', 'tenant-1:vendor-1', 2, 60);
+        $breaker->recordFailure('statement_mail_send', hash('sha256', json_encode(['tenant-1', 'vendor-1'], JSON_THROW_ON_ERROR)), 2, 60);
+        $breaker->recordFailure('statement_mail_send', hash('sha256', json_encode(['tenant-1', 'vendor-1'], JSON_THROW_ON_ERROR)), 2, 60);
 
         $service = $this->service($mailer, $metrics, $breaker);
         $result = $service->send('tenant-1', 'vendor-1', 'vendor@example.com', '', 'March 2026');
@@ -91,6 +96,10 @@ final class VendorStatementMailerServiceTest extends TestCase
         self::assertSame('open', $result['circuitState']);
         self::assertCount(0, $mailer->messages());
         self::assertSame('statement_mail_circuit_open_total', $metrics->snapshot()[0]['name']);
+        $otherTenant = $service->send('tenant-2', 'vendor-1', 'vendor@example.com', '', 'March 2026');
+        self::assertTrue($otherTenant['ok']);
+        self::assertSame('tenant-2', $otherTenant['tenantId']);
+        self::assertCount(1, $mailer->messages());
     }
 
     public function testSendDoesNotSwallowNonTransportExceptions(): void
@@ -117,7 +126,7 @@ final class VendorStatementMailerServiceTest extends TestCase
             $mailer,
             $metrics,
             $this->runtimeLogger(),
-            new VendorOutboundOperationPolicyService(),
+            new VendorOutboundOperationPolicy(),
             $breaker ?? $this->breaker(),
         );
     }

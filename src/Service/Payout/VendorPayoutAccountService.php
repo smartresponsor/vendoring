@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Payout;
 
 use App\Vendoring\Entity\Vendor\VendorPayoutAccountEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorPayoutAccountRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorPayoutAccountRepositoryInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorPayoutAccountServiceInterface;
 use Doctrine\DBAL\Exception;
 use Symfony\Component\Uid\Uuid;
@@ -40,9 +40,7 @@ final readonly class VendorPayoutAccountService implements VendorPayoutAccountSe
             $this->boolValue($payload['active'] ?? true),
         );
 
-        $this->accounts->upsert($account);
-
-        return $account;
+        return $this->accounts->upsert($account);
     }
 
     /** @param array<string, mixed> $payload */

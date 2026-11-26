@@ -15,17 +15,18 @@ final readonly class VendorCategorySyndicationGovernanceTrailReportValueObject
         private string $destinationId,
         private string $categoryId,
         private string $mediaPolicyMode,
-        private bool   $strictPublishable,
-        private bool   $fallbackPublishable,
-        private bool   $resolvedPublishable,
-        private bool   $fallbackUsed,
+        private bool $strictPublishable,
+        private bool $fallbackPublishable,
+        private bool $resolvedPublishable,
+        private bool $fallbackUsed,
         private string $deliveryStatus,
-        private bool   $retryable,
-        private bool   $retryScheduled,
-        private array  $historyCounts,
-        private array  $warnings,
-        private array  $checks,
-    ) {}
+        private bool $retryable,
+        private bool $retryScheduled,
+        private array $historyCounts,
+        private array $warnings,
+        private array $checks,
+    ) {
+    }
 
     public function destinationId(): string
     {

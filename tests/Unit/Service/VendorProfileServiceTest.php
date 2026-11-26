@@ -7,22 +7,19 @@ namespace App\Vendoring\Tests\Unit\Service;
 use App\Vendoring\DTO\VendorProfileDTO;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorProfileEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorProfileRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorProfileRepositoryInterface;
 use App\Vendoring\Service\Profile\VendorProfileService;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class VendorProfileServiceTest extends TestCase
 {
-    private EntityManagerInterface&MockObject $entityManager;
     private VendorProfileRepositoryInterface&MockObject $repository;
     private EventDispatcherInterface&MockObject $dispatcher;
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->repository = $this->createMock(VendorProfileRepositoryInterface::class);
         $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
     }
@@ -46,8 +43,7 @@ final class VendorProfileServiceTest extends TestCase
             ->with(['vendor' => $vendor])
             ->willReturn(null);
 
-        $this->entityManager->expects(self::once())->method('persist')->with(self::isInstanceOf(VendorProfileEntity::class));
-        $this->entityManager->expects(self::once())->method('flush');
+        $this->repository->expects(self::once())->method('save')->with(self::isInstanceOf(VendorProfileEntity::class), true);
         $this->dispatcher->expects(self::once())->method('dispatch');
 
         $service = $this->buildService();
@@ -76,8 +72,7 @@ final class VendorProfileServiceTest extends TestCase
             ->with(['vendor' => $vendor])
             ->willReturn($existing);
 
-        $this->entityManager->expects(self::once())->method('persist')->with($existing);
-        $this->entityManager->expects(self::once())->method('flush');
+        $this->repository->expects(self::once())->method('save')->with($existing, true);
         $this->dispatcher->expects(self::once())->method('dispatch');
 
         $profile = $this->buildService()->upsert($vendor, $dto);
@@ -102,8 +97,7 @@ final class VendorProfileServiceTest extends TestCase
         );
 
         $this->repository->expects(self::once())->method('findOneBy')->with(['vendor' => $vendor])->willReturn(null);
-        $this->entityManager->expects(self::once())->method('persist')->with(self::isInstanceOf(VendorProfileEntity::class));
-        $this->entityManager->expects(self::once())->method('flush');
+        $this->repository->expects(self::once())->method('save')->with(self::isInstanceOf(VendorProfileEntity::class), true);
         $this->dispatcher->expects(self::once())->method('dispatch');
 
         $profile = $this->buildService()->upsert($vendor, $dto);
@@ -118,8 +112,7 @@ final class VendorProfileServiceTest extends TestCase
         $dto = new VendorProfileDTO(vendorId: 1, displayName: 'Vendor Profile', publicationAction: 'publish');
 
         $this->repository->expects(self::once())->method('findOneBy')->with(['vendor' => $vendor])->willReturn(null);
-        $this->entityManager->expects(self::never())->method('persist');
-        $this->entityManager->expects(self::never())->method('flush');
+        $this->repository->expects(self::never())->method('save');
         $this->dispatcher->expects(self::never())->method('dispatch');
 
         $this->expectException(\InvalidArgumentException::class);
@@ -130,6 +123,6 @@ final class VendorProfileServiceTest extends TestCase
 
     private function buildService(): VendorProfileService
     {
-        return new VendorProfileService($this->entityManager, $this->repository, $this->dispatcher);
+        return new VendorProfileService($this->repository, $this->dispatcher);
     }
 }

@@ -1,0 +1,12 @@
+# ---------------------------------------------------------------------------
+# Vendoring route-map registry
+# ---------------------------------------------------------------------------
+# Registry-only file. Not a native Symfony controller route file.
+# Cruding owns runtime catch-all routes and resolves App\Vendoring\Service\* by FQCN convention.
+# ---------------------------------------------------------------------------
+
+imports:
+    - { resource: 'routes.crud.yaml' }
+    - { resource: 'routes.business.yaml' }
+    - { resource: 'routes.api.yaml' }
+    - { resource: 'routes.my.yaml' }

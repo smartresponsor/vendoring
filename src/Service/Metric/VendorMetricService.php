@@ -7,7 +7,7 @@ namespace App\Vendoring\Service\Metric;
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
 use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 use App\Vendoring\ServiceInterface\Metric\VendorMetricServiceInterface;
 
 final readonly class VendorMetricService implements VendorMetricServiceInterface
@@ -21,26 +21,26 @@ final readonly class VendorMetricService implements VendorMetricServiceInterface
     {
         $revenue = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
             tenantId: $request->tenantId,
+            vendorId: $request->vendorId,
             accountCode: 'REVENUE',
             from: $request->from,
             to: $request->to,
-            vendorId: $request->vendorId,
             currency: $request->currency,
         )));
         $refunds = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
             tenantId: $request->tenantId,
+            vendorId: $request->vendorId,
             accountCode: 'REFUNDS_PAYABLE',
             from: $request->from,
             to: $request->to,
-            vendorId: $request->vendorId,
             currency: $request->currency,
         )));
         $payouts = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
             tenantId: $request->tenantId,
+            vendorId: $request->vendorId,
             accountCode: 'VENDOR_PAYABLE',
             from: $request->from,
             to: $request->to,
-            vendorId: $request->vendorId,
             currency: $request->currency,
         )));
         $balance = $revenue - $refunds - $payouts;

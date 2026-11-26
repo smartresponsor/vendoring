@@ -1,0 +1,88 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Vendoring\Provider\Profile;
+
+use App\Vendoring\Entity\Vendor\VendorEntity;
+use App\Vendoring\Entity\Vendor\VendorProfileEntity;
+use App\Vendoring\Projection\VendorPublicProfileSummary;
+use App\Vendoring\ProviderInterface\Profile\VendorPublicProfileSummaryProviderInterface;
+use App\Vendoring\RepositoryInterface\VendorProfileRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\ResolverInterface\Profile\VendorProfileAttachmentResolverInterface;
+use App\Vendoring\ServiceInterface\Profile\VendorPublicProfileUrlGeneratorServiceInterface;
+use App\Vendoring\ValueObject\VendorProfileAttachmentSlotValueObject;
+
+/**
+ * Builds the canonical public identity summary for external UI surfaces.
+ */
+final readonly class VendorPublicProfileSummaryProvider implements VendorPublicProfileSummaryProviderInterface
+{
+    public function __construct(
+        private VendorRepositoryInterface $vendorRepository,
+        private VendorProfileRepositoryInterface $profileRepository,
+        private VendorProfileAttachmentResolverInterface $attachmentResolver,
+        private VendorPublicProfileUrlGeneratorServiceInterface $profileUrlGenerator,
+    ) {
+    }
+
+    public function provideForVendorId(int $vendorId): ?VendorPublicProfileSummary
+    {
+        $vendor = $this->vendorRepository->find($vendorId);
+
+        if (!$vendor instanceof VendorEntity) {
+            return null;
+        }
+
+        $profile = $this->profileRepository->findOneBy(['vendor' => $vendor]);
+        if (!$profile instanceof VendorProfileEntity) {
+            $profile = null;
+        }
+
+        $brandName = trim($vendor->getBrandName());
+        $displayName = null === $profile?->getDisplayName() ? null : trim($profile->getDisplayName());
+        $publicName = null !== $displayName && '' !== $displayName ? $displayName : $brandName;
+
+        return new VendorPublicProfileSummary(
+            vendorId: $vendorId,
+            publicName: $publicName,
+            brandName: $brandName,
+            firstTitle: $vendor->getFirstTitle(),
+            middleTitle: $vendor->getMiddleTitle(),
+            lastTitle: $vendor->getLastTitle(),
+            vendorStatus: $vendor->getStatus(),
+            profileStatus: $profile?->getPublicProfileStatus() ?? 'draft',
+            publishedAt: $profile?->getPublicProfilePublishedAt()?->format(DATE_ATOM),
+            avatar: $this->attachmentResolver->resolvePrimaryForVendorSlot(
+                $vendorId,
+                VendorProfileAttachmentSlotValueObject::SLOT_AVATAR,
+            ),
+            cover: $this->attachmentResolver->resolvePrimaryForVendorSlot(
+                $vendorId,
+                VendorProfileAttachmentSlotValueObject::SLOT_COVER,
+            ),
+            profileUrl: $this->profileUrlGenerator->generateForVendorId($vendorId),
+        );
+    }
+
+    public function provideForCurrentActor(?int $actorId): ?VendorPublicProfileSummary
+    {
+        if (null === $actorId || $actorId <= 0) {
+            return null;
+        }
+
+        $vendor = $this->vendorRepository->findOneBy(['ownerUserId' => $actorId]);
+        if (!$vendor instanceof VendorEntity) {
+            return null;
+        }
+
+        $vendorId = $vendor->getId();
+
+        if (!is_int($vendorId)) {
+            return null;
+        }
+
+        return $this->provideForVendorId($vendorId);
+    }
+}

@@ -28,6 +28,8 @@ $spec = [
                 'tags' => ['Vendor Transactions'],
                 'summary' => 'Create a vendor transaction',
                 'operationId' => 'createVendorTransaction',
+                'security' => [['vendorBearer' => []]],
+                'description' => 'Requires write:transactions and canonical vendor ownership.',
                 'requestBody' => [
                     'required' => true,
                     'content' => [
@@ -80,6 +82,8 @@ $spec = [
                 'tags' => ['Vendor Transactions'],
                 'summary' => 'List transactions by vendor',
                 'operationId' => 'listVendorTransactionsByVendor',
+                'security' => [['vendorBearer' => []]],
+                'description' => 'Requires read:transactions and verified persisted ownership.',
                 'parameters' => [[
                     'nameEntity' => 'vendorId',
                     'in' => 'path',
@@ -103,6 +107,8 @@ $spec = [
                 'tags' => ['Vendor Transactions'],
                 'summary' => 'Update transaction status',
                 'operationId' => 'updateVendorTransactionStatus',
+                'security' => [['vendorBearer' => []]],
+                'description' => 'Requires write:transactions and verified transaction ownership.',
                 'parameters' => [
                     [
                         'nameEntity' => 'vendorId',
@@ -154,6 +160,7 @@ $spec = [
                 'tags' => ['Operator Surface'],
                 'summary' => 'Render operator transaction page',
                 'operationId' => 'renderVendorTransactionOperatorPage',
+                'security' => [['vendorBearer' => []]],
                 'parameters' => [[
                     'nameEntity' => 'vendorId',
                     'in' => 'path',
@@ -170,12 +177,13 @@ $spec = [
         ],
     ],
     'components' => [
+        'securitySchemes' => ['vendorBearer' => ['type' => 'http', 'scheme' => 'bearer']],
         'schemas' => [
             'VendorTransactionCreateRequest' => [
                 'type' => 'object',
                 'required' => ['vendorId', 'orderId', 'amount'],
                 'properties' => [
-                    'vendorId' => ['type' => 'string'],
+                    'vendorId' => ['type' => 'string', 'description' => 'Persisted canonical Vendor ID encoded as a string.'],
                     'orderId' => ['type' => 'string'],
                     'projectId' => ['type' => ['string', 'null']],
                     'amount' => ['type' => 'string', 'description' => 'Decimal amount represented as a string.'],
@@ -233,6 +241,10 @@ $spec = [
                     'error' => [
                         'type' => 'string',
                         'enum' => [
+                            'authentication_required',
+                            'invalid_api_token',
+                            'permission_denied',
+                            'vendor_scope_denied',
                             'duplicate_transaction',
                             'vendor_id_required',
                             'order_id_required',
@@ -264,7 +276,9 @@ function yaml_encode(mixed $value, int $indent = 0): string
 
         foreach ($value as $key => $item) {
             if ($isList) {
-                if (is_array($item)) {
+                if ([] === $item) {
+                    $lines[] = $spaces . '- []';
+                } elseif (is_array($item)) {
                     $lines[] = $spaces . '-';
                     $lines[] = yaml_encode($item, $indent + 1);
                 } else {
@@ -274,7 +288,9 @@ function yaml_encode(mixed $value, int $indent = 0): string
                 continue;
             }
 
-            if (is_array($item)) {
+            if ([] === $item) {
+                $lines[] = $spaces . $key . ': []';
+            } elseif (is_array($item)) {
                 $lines[] = $spaces . $key . ':';
                 $lines[] = yaml_encode($item, $indent + 1);
             } else {

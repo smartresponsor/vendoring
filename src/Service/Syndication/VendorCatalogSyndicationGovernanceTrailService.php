@@ -6,17 +6,17 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Syndication;
 
 use App\Vendoring\DTO\CatalogSyndication\VendorCatalogSyndicationGovernanceTrailRequestDTO;
-use App\Vendoring\Event\Vendor\VendorCategorySyndicationGovernanceTrailRecordedEvent;
-use App\Vendoring\EventInterface\Vendor\VendorCategorySyndicationGovernanceTrailRecordedEventInterface;
-use App\Vendoring\PolicyInterface\Vendor\VendorCategorySyndicationGovernanceTrailPolicyInterface;
+use App\Vendoring\Event\VendorCategorySyndicationGovernanceTrailRecordedEvent;
+use App\Vendoring\EventInterface\VendorCategorySyndicationGovernanceTrailRecordedEventInterface;
+use App\Vendoring\PolicyInterface\VendorCategorySyndicationGovernanceTrailPolicyInterface;
 use App\Vendoring\ServiceInterface\Syndication\VendorCatalogSyndicationGovernanceTrailServiceInterface;
-use DateTimeImmutable;
 
 final readonly class VendorCatalogSyndicationGovernanceTrailService implements VendorCatalogSyndicationGovernanceTrailServiceInterface
 {
     public function __construct(
         private VendorCategorySyndicationGovernanceTrailPolicyInterface $policy,
-    ) {}
+    ) {
+    }
 
     public function recordTrail(VendorCatalogSyndicationGovernanceTrailRequestDTO $request): VendorCategorySyndicationGovernanceTrailRecordedEventInterface
     {
@@ -45,7 +45,7 @@ final readonly class VendorCatalogSyndicationGovernanceTrailService implements V
                 'actorId' => trim($request->actorId),
                 'reason' => trim($request->reason),
             ],
-            new DateTimeImmutable(),
+            new \DateTimeImmutable(),
         );
     }
 }

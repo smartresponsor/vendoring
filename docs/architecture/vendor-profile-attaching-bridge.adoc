@@ -17,7 +17,7 @@ The `avatar` and `cover` assets must not be stored as canonical `file_path` fiel
 
 == Standalone mode
 
-Vendoring defaults `VendorProfileAttachmentResolverServiceInterface` to `NullVendorProfileAttachmentResolverService`. This keeps the component usable without Attaching installed.
+Vendoring defaults `VendorProfileAttachmentResolverInterface` to `VendorNullProfileAttachmentResolver`. This keeps the component usable without Attaching installed.
 
 == Host bridge mode
 
@@ -26,14 +26,14 @@ When a host application installs both Vendoring and Attaching, import:
 [source,yaml]
 ----
 imports:
-  - { resource: 'vendor/vendoring/vendor/config/component/optional/attaching_profile_bridge.yaml' }
+  - { resource: 'vendor/vendoring/vendor/config/component/optional/vendor_attaching_profile_bridge.yaml' }
 ----
 
-The optional bridge wires `VendorProfileAttachmentResolverServiceInterface` to `VendorAttachingProfileAttachmentResolverService`, which delegates primary slot lookup to Attaching.
+The optional bridge wires `VendorProfileAttachmentResolverInterface` to `VendorAttachingProfileAttachmentResolver`, which delegates primary slot lookup to Attaching.
 
 == UI summary contract
 
-`VendorPublicProfileSummaryProviderService` returns:
+`VendorPublicProfileSummaryProvider` returns:
 
 [source,text]
 ----

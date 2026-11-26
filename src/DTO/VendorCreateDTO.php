@@ -10,7 +10,8 @@ final readonly class VendorCreateDTO
         public string $brandName,
         public ?int $ownerUserId = null,
         public ?int $userId = null,
-    ) {}
+    ) {
+    }
 
     public function resolveOwnerUserId(): ?int
     {

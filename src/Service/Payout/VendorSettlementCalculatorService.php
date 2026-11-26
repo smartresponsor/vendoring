@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Vendoring\Service\Payout;
 
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 use App\Vendoring\ServiceInterface\Payout\VendorSettlementCalculatorServiceInterface;
 use Doctrine\DBAL\Exception;
 
@@ -24,10 +24,10 @@ final readonly class VendorSettlementCalculatorService implements VendorSettleme
     {
         return max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
             tenantId: $tenantId,
+            vendorId: $vendorId,
             accountCode: 'VENDOR_PAYABLE',
             from: $from,
             to: $to,
-            vendorId: $vendorId,
             currency: $currency,
         )));
     }

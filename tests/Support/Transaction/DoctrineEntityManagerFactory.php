@@ -13,7 +13,7 @@ final class DoctrineEntityManagerFactory
     public static function createSqliteMemoryEntityManager(string $projectRoot): EntityManager
     {
         $config = ORMSetup::createAttributeMetadataConfig(
-            paths: [$projectRoot . '/src/Entity'],
+            paths: [$projectRoot.'/src/Entity'],
             isDevMode: true,
         );
         $config->enableNativeLazyObjects(true);

@@ -7,7 +7,7 @@ namespace App\Vendoring\Tests\Unit\Metric;
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
 use App\Vendoring\DTO\Metric\VendorMetricOverviewRequestDTO;
 use App\Vendoring\DTO\Metric\VendorMetricTrendRequestDTO;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 use App\Vendoring\Service\Metric\VendorMetricService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -27,6 +27,8 @@ final class VendorMetricServiceTest extends TestCase
             ->expects(self::exactly(3))
             ->method('sumByAccount')
             ->willReturnCallback(static function (VendorLedgerAccountSumCriteriaDTO $criteria): float {
+                self::assertSame('tenant-1', $criteria->tenantId);
+
                 return match ($criteria->accountCode) {
                     'REVENUE' => 120.0,
                     'REFUNDS_PAYABLE' => 15.0,
@@ -73,6 +75,8 @@ final class VendorMetricServiceTest extends TestCase
             ->expects(self::exactly(3))
             ->method('sumByAccount')
             ->willReturnCallback(static function (VendorLedgerAccountSumCriteriaDTO $criteria): float {
+                self::assertSame('tenant-1', $criteria->tenantId);
+
                 return match ($criteria->accountCode) {
                     'REVENUE' => 200.0,
                     'REFUNDS_PAYABLE' => 50.0,

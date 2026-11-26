@@ -6,22 +6,20 @@ namespace App\Vendoring\Entity\Vendor;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\Vendor\VendorPayoutAccountRepository::class)]
-#[ORM\Table(
-    name: 'vendor_payout_account',
-    indexes: [
-        new ORM\Index(name: 'idx_vendor_payout_account_vendor_id', columns: ['vendor_id']),
-    ],
-)]
+#[ORM\Entity(repositoryClass: \App\Vendoring\Repository\VendorPayoutAccountRepository::class)]
+#[ORM\Table(name: 'vendor_payout_account')]
+#[ORM\Index(name: 'idx_vendor_payout_account_vendor_id', columns: ['vendor_id'])]
+#[ORM\UniqueConstraint(name: 'uniq_vendor_payout_account_business_id', columns: ['account_id'])]
+#[ORM\UniqueConstraint(name: 'uniq_vendor_payout_account_tenant_vendor', columns: ['tenant_id', 'vendor_id'])]
 class VendorPayoutAccountEntity extends VendorAbstractEntity
 {
-    public string $accountId;
-    #[ORM\Column(type: 'string', length: 64)] public string $tenantId;
+    #[ORM\Column(type: 'string', length: 64)] public string $accountId;
+    #[ORM\Column(type: 'string', length: 64, nullable: true)] public ?string $tenantId = null;
     #[ORM\Column(type: 'string', length: 64)] public string $vendorId;
     #[ORM\Column(type: 'string', length: 64)] public string $provider;
     #[ORM\Column(type: 'string', length: 128)] public string $accountRef;
     #[ORM\Column(type: 'string', length: 8)] public string $currency;
-    #[ORM\Column(type: 'boolean')] public bool $active = true;
+    #[ORM\Column(name: 'account_active', type: 'boolean')] public bool $active = true;
     public function __construct(
         string $id,
         string $tenantId,
@@ -32,6 +30,9 @@ class VendorPayoutAccountEntity extends VendorAbstractEntity
         bool $active = true,
         mixed $createdAt = null,
     ) {
+        if ('' === trim($tenantId)) {
+            throw new \InvalidArgumentException('Tenant scope required');
+        }
         parent::__construct('active');
         $this->accountId = $id;
         unset($createdAt);

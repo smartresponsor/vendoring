@@ -10,16 +10,16 @@ The ownership write layer is therefore not a safe runtime surface in this slice.
 
 - `src/DTO/Ownership/*`
 - `src/Service/Ownership/VendorOwnershipWriteService.php`
-- `src/Service/Ownership/VendorOwnershipWriteRequestResolverService.php`
+- `src/Resolver/Ownership/VendorOwnershipWriteRequestResolver.php`
 - `src/ServiceInterface/Ownership/VendorOwnershipWriteServiceInterface.php`
-- `src/ServiceInterface/Ownership/VendorOwnershipWriteRequestResolverServiceInterface.php`
+- `src/ResolverInterface/Ownership/VendorOwnershipWriteRequestResolverInterface.php`
 - `src/DataFixtures/VendorOwnershipDemoFixture.php`
 
 ## Service graph
 
 The aliases for the ownership write service and write request resolver were removed from `config/component/services.yaml`.
 
-The read-side ownership projection service was not removed in this wave because other runtime projection builders still depend on `VendorOwnershipProjectionBuilderServiceInterface`.
+The read-side ownership projection service was not removed in this wave because other runtime projection builders still depend on `VendorOwnershipProjectionBuilderInterface`.
 
 ## Next wave candidate
 

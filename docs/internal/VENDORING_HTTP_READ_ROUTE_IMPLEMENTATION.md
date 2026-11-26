@@ -4,13 +4,13 @@ Wave 12C implements only the Wave 12B `real_read_candidate` HTTP services.
 
 ## Implemented services
 
-- `App\Vendoring\Service\Vendor\VendorIndexService`
-- `App\Vendoring\Service\Vendor\VendorShowService`
-- `App\Vendoring\Service\Vendor\Attachment\Document\VendorAttachmentDocumentIndexService`
-- `App\Vendoring\Service\Vendor\Attachment\Document\VendorAttachmentDocumentShowService`
-- `App\Vendoring\Service\Vendor\Attachment\Media\VendorAttachmentMediaIndexService`
-- `App\Vendoring\Service\Vendor\Attachment\Media\VendorAttachmentMediaShowService`
-- `App\Vendoring\Service\Vendor\VendorHttpRouteResponseService`
+- `App\Vendoring\Service\VendorIndexService`
+- `App\Vendoring\Service\VendorShowService`
+- `App\Vendoring\Service\Attachment\Document\VendorAttachmentDocumentIndexService`
+- `App\Vendoring\Service\Attachment\Document\VendorAttachmentDocumentShowService`
+- `App\Vendoring\Service\Attachment\Media\VendorAttachmentMediaIndexService`
+- `App\Vendoring\Service\Attachment\Media\VendorAttachmentMediaShowService`
+- `App\Vendoring\Service\VendorHttpRouteResponseService`
 
 ## Runtime contract
 

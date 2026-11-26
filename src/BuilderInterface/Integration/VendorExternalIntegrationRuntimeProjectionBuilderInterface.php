@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Vendoring\BuilderInterface\Integration;
+
+use App\Vendoring\Projection\VendorExternalIntegrationRuntimeProjection;
+
+interface VendorExternalIntegrationRuntimeProjectionBuilderInterface
+{
+    public function build(string $tenantId, string $vendorId, ?int $canonicalVendorId = null): VendorExternalIntegrationRuntimeProjection;
+}

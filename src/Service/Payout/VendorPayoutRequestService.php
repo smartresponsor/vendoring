@@ -21,11 +21,11 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
         }
 
         return new VendorCreatePayoutDTO(
+            tenantId: $this->requiredString($payload, 'tenantId'),
             vendorId: $this->requiredString($payload, 'vendorId'),
             currency: $this->requiredString($payload, 'currency'),
             thresholdCents: $this->requiredThresholdCents($payload),
             retentionFeePercent: $this->requiredRetentionFeePercent($payload),
-            tenantId: $this->requiredString($payload, 'tenantId'),
         );
     }
 
@@ -33,6 +33,7 @@ final class VendorPayoutRequestService implements VendorPayoutRequestServiceInte
     {
         return [
             'id' => $payout->getPayoutId(),
+            'tenantId' => $payout->tenantId,
             'vendorId' => $payout->vendorId,
             'currency' => $payout->currency,
             'grossCents' => $payout->grossCents,

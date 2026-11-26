@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit;
 
+use App\Vendoring\Builder\Ownership\VendorOwnershipProjectionBuilder;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorUserAssignmentEntity;
-use App\Vendoring\RepositoryInterface\Vendor\VendorRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorUserAssignmentRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorOwnershipProjectionRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorUserAssignmentRepositoryInterface;
 use App\Vendoring\Service\Security\VendorAuthorizationMatrixService;
-use App\Vendoring\Service\Ownership\VendorOwnershipProjectionBuilderService;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -29,14 +28,15 @@ final class VendorOwnershipProjectionBuilderTest extends TestCase
     public function testBuildForVendorIdIncludesCapabilitiesPerAssignment(): void
     {
         $vendor = new VendorEntity(brandName: 'Acme', ownerUserId: 7);
+        (new \ReflectionProperty($vendor, 'id'))->setValue($vendor, 42);
 
         $this->vendorRepository->method('find')->with(42)->willReturn($vendor);
         $this->assignmentRepository->method('findActiveByVendorId')->with(42)->willReturn([
-            new VendorUserAssignmentEntity(42, 7, 'owner', isPrimary: true),
-            new VendorUserAssignmentEntity(42, 9, 'viewer'),
+            new VendorUserAssignmentEntity($vendor, 7, 'owner', isPrimary: true),
+            new VendorUserAssignmentEntity($vendor, 9, 'viewer'),
         ]);
 
-        $builder = new VendorOwnershipProjectionBuilderService(
+        $builder = new VendorOwnershipProjectionBuilder(
             $this->vendorRepository,
             $this->assignmentRepository,
             new VendorAuthorizationMatrixService(),
@@ -49,14 +49,12 @@ final class VendorOwnershipProjectionBuilderTest extends TestCase
         self::assertSame(['transactions.read', 'transactions.write', 'payouts.read', 'payouts.write', 'statements.read', 'statements.send', 'ownership.read', 'ownership.write'], $payload['assignments'][0]['capabilities']);
         self::assertSame(['transactions.read', 'payouts.read', 'statements.read', 'ownership.read'], $payload['assignments'][1]['capabilities']);
     }
-    private function entityManagerWithZeroCounts(): EntityManagerInterface
+
+    private function entityManagerWithZeroCounts(): VendorOwnershipProjectionRepositoryInterface
     {
-        $repository = $this->createMock(EntityRepository::class);
-        $repository->method('count')->willReturn(0);
+        $repository = $this->createMock(VendorOwnershipProjectionRepositoryInterface::class);
+        $repository->method('relationCounts')->willReturn([]);
 
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->method('getRepository')->willReturn($repository);
-
-        return $entityManager;
+        return $repository;
     }
 }

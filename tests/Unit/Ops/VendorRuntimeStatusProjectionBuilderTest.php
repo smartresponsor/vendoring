@@ -4,32 +4,32 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Unit\Ops;
 
-use App\Vendoring\Projection\Vendor\VendorExternalIntegrationRuntimeProjection;
-use App\Vendoring\Projection\Vendor\VendorFinanceRuntimeProjection;
-use App\Vendoring\Projection\Vendor\VendorOwnershipProjection;
+use App\Vendoring\Builder\Ops\VendorRuntimeStatusProjectionBuilder;
+use App\Vendoring\BuilderInterface\Finance\VendorFinanceRuntimeProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Ownership\VendorOwnershipProjectionBuilderInterface;
+use App\Vendoring\BuilderInterface\Statement\VendorStatementDeliveryRuntimeProjectionBuilderInterface;
 use App\Vendoring\DTO\Statement\VendorStatementDeliveryRuntimeRequestDTO;
-use App\Vendoring\Projection\Vendor\VendorStatementDeliveryRuntimeProjection;
-use App\Vendoring\Service\Ops\VendorRuntimeStatusProjectionBuilderService;
-use App\Vendoring\ServiceInterface\Integration\VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Statement\VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Finance\VendorFinanceRuntimeProjectionBuilderServiceInterface;
-use App\Vendoring\ServiceInterface\Ownership\VendorOwnershipProjectionBuilderServiceInterface;
+use App\Vendoring\Projection\VendorExternalIntegrationRuntimeProjection;
+use App\Vendoring\Projection\VendorFinanceRuntimeProjection;
+use App\Vendoring\Projection\VendorOwnershipProjection;
+use App\Vendoring\Projection\VendorStatementDeliveryRuntimeProjection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
 {
-    private VendorOwnershipProjectionBuilderServiceInterface&MockObject $ownershipProjectionBuilder;
-    private VendorFinanceRuntimeProjectionBuilderServiceInterface&MockObject $financeRuntimeProjectionBuilder;
-    private VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface&MockObject $statementDeliveryRuntimeProjectionBuilder;
-    private VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface&MockObject $externalIntegrationRuntimeProjectionBuilder;
+    private VendorOwnershipProjectionBuilderInterface&MockObject $ownershipProjectionBuilder;
+    private VendorFinanceRuntimeProjectionBuilderInterface&MockObject $financeRuntimeProjectionBuilder;
+    private VendorStatementDeliveryRuntimeProjectionBuilderInterface&MockObject $statementDeliveryRuntimeProjectionBuilder;
+    private VendorExternalIntegrationRuntimeProjectionBuilderInterface&MockObject $externalIntegrationRuntimeProjectionBuilder;
 
     protected function setUp(): void
     {
-        $this->ownershipProjectionBuilder = $this->createMock(VendorOwnershipProjectionBuilderServiceInterface::class);
-        $this->financeRuntimeProjectionBuilder = $this->createMock(VendorFinanceRuntimeProjectionBuilderServiceInterface::class);
-        $this->statementDeliveryRuntimeProjectionBuilder = $this->createMock(VendorStatementDeliveryRuntimeProjectionBuilderServiceInterface::class);
-        $this->externalIntegrationRuntimeProjectionBuilder = $this->createMock(VendorExternalIntegrationRuntimeProjectionBuilderServiceInterface::class);
+        $this->ownershipProjectionBuilder = $this->createMock(VendorOwnershipProjectionBuilderInterface::class);
+        $this->financeRuntimeProjectionBuilder = $this->createMock(VendorFinanceRuntimeProjectionBuilderInterface::class);
+        $this->statementDeliveryRuntimeProjectionBuilder = $this->createMock(VendorStatementDeliveryRuntimeProjectionBuilderInterface::class);
+        $this->externalIntegrationRuntimeProjectionBuilder = $this->createMock(VendorExternalIntegrationRuntimeProjectionBuilderInterface::class);
     }
 
     public function testBuildIncludesOwnershipSurfaceForNumericVendorId(): void
@@ -43,7 +43,7 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
         $this->financeRuntimeProjectionBuilder
             ->expects(self::once())
             ->method('build')
-            ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')
+            ->with('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD', 42)
             ->willReturn(new VendorFinanceRuntimeProjection('tenant-1', '42', 'USD', ['ownerUserId' => 7], ['gmv' => 1000], ['provider' => 'bank'], ['closing' => 900]));
 
         $this->statementDeliveryRuntimeProjectionBuilder
@@ -63,12 +63,16 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
         $this->externalIntegrationRuntimeProjectionBuilder
             ->expects(self::once())
             ->method('build')
-            ->with('tenant-1', '42')
+            ->with('tenant-1', '42', 42)
             ->willReturn(new VendorExternalIntegrationRuntimeProjection('tenant-1', '42', ['ownerUserId' => 7], ['crm' => 'hubspot'], ['webhook' => 'ok'], ['payoutProvider' => 'bank'], ['crm', 'webhooks']));
 
-        $payload = $this->buildService()->build('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD')->toArray();
+        $payload = $this->buildService()->build('tenant-1', '42', '2025-01-01', '2025-01-31', 'USD', 42)->toArray();
         $ownership = self::assertArrayPayload($payload['ownership'] ?? null);
 
+        self::assertSame('tenant-1', $payload['tenantId']);
+        self::assertSame('tenant-1', $payload['finance']['tenantId']);
+        self::assertSame('tenant-1', $payload['statementDelivery']['tenantId']);
+        self::assertSame('tenant-1', $payload['externalIntegration']['tenantId']);
         self::assertTrue($payload['surfaceStatus']['ownership']);
         self::assertSame(7, $ownership['ownerUserId']);
         $finance = self::assertArrayPayload($payload['finance']);
@@ -117,9 +121,9 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
         self::assertTrue($payload['surfaceStatus']['externalIntegration']);
     }
 
-    private function buildService(): VendorRuntimeStatusProjectionBuilderService
+    private function buildService(): VendorRuntimeStatusProjectionBuilder
     {
-        return new VendorRuntimeStatusProjectionBuilderService(
+        return new VendorRuntimeStatusProjectionBuilder(
             $this->ownershipProjectionBuilder,
             $this->financeRuntimeProjectionBuilder,
             $this->statementDeliveryRuntimeProjectionBuilder,
@@ -134,7 +138,14 @@ final class VendorRuntimeStatusProjectionBuilderTest extends TestCase
             self::fail('Expected array payload.');
         }
 
-        /** @var array<string, mixed> $value */
-        return $value;
+        $normalized = [];
+        foreach ($value as $key => $item) {
+            if (!is_string($key)) {
+                self::fail('Expected string-keyed array payload.');
+            }
+            $normalized[$key] = $item;
+        }
+
+        return $normalized;
     }
 }

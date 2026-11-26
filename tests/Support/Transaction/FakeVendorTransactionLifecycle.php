@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Tests\Support\Transaction;
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\ServiceInterface\Transaction\VendorTransactionLifecycleServiceInterface;
 use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
@@ -15,9 +16,11 @@ final class FakeVendorTransactionLifecycle implements VendorTransactionLifecycle
     public ?VendorTransactionDataValueObject $createdData = null;
     public ?\InvalidArgumentException $exceptionToThrow = null;
 
-    public function __construct(private readonly VendorTransactionEntity $transaction) {}
+    public function __construct(private readonly VendorTransactionEntity $transaction)
+    {
+    }
 
-    public function createTransaction(VendorTransactionDataValueObject $data): VendorTransactionEntity
+    public function createTransaction(VendorTransactionDataValueObject $data, ?VendorEntity $ownerVendor = null): VendorTransactionEntity
     {
         if ($this->exceptionToThrow instanceof \InvalidArgumentException) {
             throw $this->exceptionToThrow;

@@ -10,7 +10,7 @@ namespace App\Vendoring\DTO\Ownership;
 final readonly class VendorConversationUpsertDTO
 {
     /** @param array<string, mixed> $conversationMeta
-     *  @param array<string, mixed> $messageMeta
+     * @param array<string, mixed> $messageMeta
      */
     public function __construct(
         public int $vendorId,
@@ -25,5 +25,6 @@ final readonly class VendorConversationUpsertDTO
         public ?string $firstMessageDirection = null,
         public ?string $externalMessageId = null,
         public array $messageMeta = [],
-    ) {}
+    ) {
+    }
 }

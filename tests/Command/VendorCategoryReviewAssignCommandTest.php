@@ -11,9 +11,9 @@ namespace App\Vendoring\Tests\Command;
 
 use App\Vendoring\Command\VendorCategoryReviewAssignCommand;
 use App\Vendoring\Entity\Vendor\VendorCatalogCategoryChangeRequestEntity;
-use App\Vendoring\Policy\Vendor\VendorCategoryReviewAssignmentPolicy;
-use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogCategoryChangeRequestRepositoryInterface;
-use App\Vendoring\RepositoryInterface\Vendor\VendorCatalogReviewAssignmentRepositoryInterface;
+use App\Vendoring\Policy\VendorCategoryReviewAssignmentPolicy;
+use App\Vendoring\RepositoryInterface\VendorCatalogCategoryChangeRequestRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorCatalogReviewAssignmentRepositoryInterface;
 use App\Vendoring\Service\Catalog\VendorCatalogReviewAssignmentService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;

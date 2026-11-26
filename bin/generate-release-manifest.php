@@ -10,10 +10,14 @@ if (!is_dir($releaseDir) && !mkdir($releaseDir, 0777, true) && !is_dir($releaseD
     exit(1);
 }
 
+$runtime = file_exists($root.'/docs/release/RC_RUNTIME_SURFACES.md');
+$operator = file_exists($root.'/docs/release/RC_OPERATOR_SURFACE.md');
 $releaseDocs = [
     'rcBaseline' => file_exists($root.'/docs/release/RC_BASELINE.md'),
-    'rcRuntimeSurfaces' => file_exists($root.'/docs/release/RC_RUNTIME_SURFACES.md'),
-    'rcOperatorSurface' => file_exists($root.'/docs/release/RC_OPERATOR_SURFACE.md'),
+    'rcRuntimeSurfaces' => $runtime,
+    'rcRuntimes' => $runtime,
+    'rcOperatorSurface' => $operator,
+    'rcOperator' => $operator,
     'rcEvidencePack' => file_exists($root.'/docs/release/RC_EVIDENCE_PACK.md'),
     'rcRollbackManifest' => file_exists($root.'/docs/release/RC_ROLLBACK_MANIFEST.md'),
     'rcReleaseManifest' => file_exists($root.'/docs/release/RC_RELEASE_MANIFEST.md'),

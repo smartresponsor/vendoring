@@ -16,17 +16,18 @@ final readonly class VendorCategorySyndicationPolicyAwarePackageGateReportValueO
      */
     public function __construct(
         private string $mediaPolicyMode,
-        private array  $packageMissingRequiredFields,
-        private array  $requiredMissing,
-        private array  $warnings,
-        private array  $checks,
-        private array  $exactMatchedBindingIds,
-        private array  $fallbackMatchedBindingIds,
-        private bool   $strictPublishable,
-        private bool   $fallbackPublishable,
-        private bool   $resolvedPublishable,
-        private bool   $fallbackUsed,
-    ) {}
+        private array $packageMissingRequiredFields,
+        private array $requiredMissing,
+        private array $warnings,
+        private array $checks,
+        private array $exactMatchedBindingIds,
+        private array $fallbackMatchedBindingIds,
+        private bool $strictPublishable,
+        private bool $fallbackPublishable,
+        private bool $resolvedPublishable,
+        private bool $fallbackUsed,
+    ) {
+    }
 
     public function mediaPolicyMode(): string
     {

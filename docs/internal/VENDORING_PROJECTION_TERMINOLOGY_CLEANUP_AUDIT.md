@@ -8,7 +8,7 @@ This wave removes remaining `View` terminology from active projection-facing cod
 
 - Active PHP classes under `src/Projection` already use the `Vendor*Projection` suffix.
 - Several projection-builder services still used local variable names such as `$ownershipView`, which no longer matched the returned projection payloads.
-- Current machine-readable docs still described `src/Projection/Vendor/Vendor*View.php` as canonical.
+- Current machine-readable docs still described `src/Projection/Vendor*View.php` as canonical.
 - Older PHPDoc guide snippets still referenced deleted `Vendor*View` classes.
 
 ## Changes

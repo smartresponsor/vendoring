@@ -43,13 +43,16 @@ final class VendorRuntimeLoggerService implements VendorRuntimeLoggerServiceInte
 {
     /** @var list<array<string, scalar|null>> */
     private array $records = [];
+    private readonly LoggerInterface $logger;
 
     public function __construct(
-        private readonly LoggerInterface $logger,
+        LoggerInterface $logger,
         private readonly VendorCorrelationContextServiceInterface $correlationContext,
         private readonly RequestStack $requestStack,
         private readonly ?VendorObservabilityRecordExporterServiceInterface $exporter = null,
+        ?LoggerInterface $channelLogger = null,
     ) {
+        $this->logger = $channelLogger ?? $logger;
     }
 
     public function info(string $message, array $context = []): void

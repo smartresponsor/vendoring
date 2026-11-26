@@ -6,7 +6,7 @@ namespace App\Vendoring\Service\Statement;
 
 use App\Vendoring\DTO\Ledger\VendorLedgerAccountSumCriteriaDTO;
 use App\Vendoring\DTO\Statement\VendorStatementRequestDTO;
-use App\Vendoring\RepositoryInterface\Vendor\VendorLedgerRepositoryInterface;
+use App\Vendoring\RepositoryInterface\VendorLedgerRepositoryInterface;
 use App\Vendoring\ServiceInterface\Statement\VendorStatementServiceInterface;
 use Doctrine\DBAL\Exception;
 
@@ -26,18 +26,18 @@ final readonly class VendorStatementService implements VendorStatementServiceInt
         $opening = 0.0;
         $earnings = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
             tenantId: $dto->tenantId,
+            vendorId: $dto->vendorId,
             accountCode: 'REVENUE',
             from: $dto->from,
             to: $dto->to,
-            vendorId: $dto->vendorId,
             currency: $dto->currency,
         )));
         $refunds = max(0.0, $this->ledger->sumByAccount(new VendorLedgerAccountSumCriteriaDTO(
             tenantId: $dto->tenantId,
+            vendorId: $dto->vendorId,
             accountCode: 'REFUNDS_PAYABLE',
             from: $dto->from,
             to: $dto->to,
-            vendorId: $dto->vendorId,
             currency: $dto->currency,
         )));
         $fees = 0.0;
@@ -67,11 +67,15 @@ final readonly class VendorStatementService implements VendorStatementServiceInt
     public function exportCsv(VendorStatementRequestDTO $dto): string
     {
         $data = $this->build($dto);
-        $path = sys_get_temp_dir().'/statement_'.$dto->vendorId.'_'.date('YmdHis').'.csv';
+        $path = tempnam(sys_get_temp_dir(), 'vendoring_statement_');
+        if (false === $path) {
+            throw new \RuntimeException('Failed to allocate private statement CSV.');
+        }
         $stream = fopen($path, 'w');
 
         if (false === $stream) {
-            throw new \RuntimeException(sprintf('Failed to open csv stream: %s', $path));
+            @unlink($path);
+            throw new \RuntimeException('Failed to open private statement CSV.');
         }
 
         fputcsv($stream, ['Section', 'Amount', 'Currency']);

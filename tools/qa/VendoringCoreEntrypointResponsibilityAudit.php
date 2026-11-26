@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$routeFile = $root.'/config/platform/routes/crud/vendor.yaml';
+$routeFile = $root.'/config/platform/routes/crud/vendor_crud.yaml';
 $source = file_get_contents($routeFile) ?: '';
 $errors = [];
 
@@ -46,15 +46,15 @@ foreach ($forbiddenRoutes as $route) {
 }
 
 foreach ([
-    'App\\Vendoring\\Service\\Vendor\\VendorIndexService',
-    'App\\Vendoring\\Service\\Vendor\\VendorShowService',
-    'App\\Vendoring\\Service\\Vendor\\VendorNewService',
-    'App\\Vendoring\\Service\\Vendor\\VendorCreateService',
-    'App\\Vendoring\\Service\\Vendor\\VendorEditService',
-    'App\\Vendoring\\Service\\Vendor\\VendorUpdateService',
-    'App\\Vendoring\\Service\\Vendor\\VendorDeleteService',
-    'App\\Vendoring\\Form\\Vendor\\VendorCreateType',
-    'App\\Vendoring\\Form\\Vendor\\VendorUpdateType',
+    'App\\Vendoring\\Service\\VendorIndexService',
+    'App\\Vendoring\\Service\\VendorShowService',
+    'App\\Vendoring\\Service\\VendorNewService',
+    'App\\Vendoring\\Service\\VendorCreateService',
+    'App\\Vendoring\\Service\\VendorEditService',
+    'App\\Vendoring\\Service\\VendorUpdateService',
+    'App\\Vendoring\\Service\\VendorDeleteService',
+    'App\\Vendoring\\Form\\VendorCreateType',
+    'App\\Vendoring\\Form\\VendorUpdateType',
 ] as $fqcn) {
     $relative = preg_replace('/^App\\\\Vendoring\\\\/', 'src/', $fqcn);
     $path = $root.'/'.str_replace('\\', '/', (string) $relative).'.php';
@@ -69,7 +69,7 @@ if (preg_match('/\\$slug\\b|function\\s+getSlug\\s*\\(/', $entity)) {
     $errors[] = 'VendorEntity now has slug support; route policy must be reviewed.';
 }
 
-$response = file_get_contents($root.'/src/Service/Vendor/VendorHttpRouteResponseService.php') ?: '';
+$response = file_get_contents($root.'/src/Service/VendorHttpRouteResponseService.php') ?: '';
 foreach ([
     'vendor/index.html.twig',
     'vendor/show.html.twig',

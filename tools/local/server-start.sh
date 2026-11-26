@@ -41,6 +41,11 @@ for _ in $(seq 1 50); do
   sleep 0.2
 done
 
+# Only stop the process created by this invocation, never an unrelated listener.
+if local_server_pid_is_running "$PID"; then
+  kill "$PID" 2>/dev/null || true
+  wait "$PID" 2>/dev/null || true
+fi
 rm -f "$PID_FILE"
 echo "Local server failed to become ready; see ${LOG_FILE}."
 exit 1

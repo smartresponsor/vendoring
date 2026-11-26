@@ -37,6 +37,7 @@ final class VendorPayoutProcessCommand extends Command
         parent::configure();
         $this
             ->addArgument('payoutId', InputArgument::REQUIRED)
+            ->addOption('tenantId', null, InputOption::VALUE_REQUIRED, 'Tenant ID')
             ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Output format: text|json', 'text')
             ->addOption('json', null, InputOption::VALUE_NONE, 'Deprecated alias for --format=json.');
     }
@@ -44,14 +45,16 @@ final class VendorPayoutProcessCommand extends Command
     /** @noinspection PhpMissingParentCallCommonInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $tenantOption = $input->getOption('tenantId');
+        $tenantId = is_string($tenantOption) ? trim($tenantOption) : '';
         $argument = $input->getArgument('payoutId');
         $payoutId = is_scalar($argument) ? trim((string) $argument) : '';
         $format = true === $input->getOption('json')
             ? VendorCommandOutputFormatEnum::JSON
             : VendorCommandOutputFormatEnum::normalize($input->getOption('format'));
 
-        if ('' === $payoutId) {
-            $this->commandResultEmitter->emitError($output, $format, 'invalid', 'Invalid payoutId', [
+        if ('' === $tenantId || '' === $payoutId) {
+            $this->commandResultEmitter->emitError($output, $format, 'invalid', 'Tenant ID and payout ID required', [
                 'payoutId' => $payoutId,
             ]);
 
@@ -59,7 +62,7 @@ final class VendorPayoutProcessCommand extends Command
         }
 
         try {
-            $processed = $this->payouts->process($payoutId);
+            $processed = $this->payouts->process($tenantId, $payoutId);
         } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError($output, $format, 'failed', 'Failed to process payout', $throwable, [
                 'payoutId' => $payoutId,
