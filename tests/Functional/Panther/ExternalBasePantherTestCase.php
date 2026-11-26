@@ -16,6 +16,7 @@ abstract class ExternalBasePantherTestCase extends PantherTestCase
     private static ?KernelInterface $ownedKernel = null;
     private static string $ownedBaseUri = '';
     private static string $token = '';
+    protected static string $transactionVendorId = '';
     private ?Client $isolatedClient = null;
 
     public static function setUpBeforeClass(): void
@@ -26,7 +27,8 @@ abstract class ExternalBasePantherTestCase extends PantherTestCase
         $root = dirname(__DIR__, 3);
         $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase($root);
         self::$ownedKernel = $kernel;
-        self::$token = KernelRuntimeHarness::seedFinancialApiKey($kernel, 'tenant-1', '42', 'read:finance,write:transactions');
+        self::$token = KernelRuntimeHarness::seedFinancialApiKey($kernel, 'tenant-1', '42', 'read:finance,write:transactions,read:transactions', $vendorId);
+        self::$transactionVendorId = (string) $vendorId;
         $dsn = $_ENV['VENDOR_DSN'] ?? null;
         if (!is_string($dsn) || !str_starts_with($dsn, 'sqlite:///')) {
             throw new \RuntimeException('Isolated SQLite database required.');
@@ -121,11 +123,11 @@ abstract class ExternalBasePantherTestCase extends PantherTestCase
     /** @param array<string, mixed>|null $payload
      * @return array{status:int, body:string}
      */
-    protected static function browserRequest(Client $client, string $method, string $path, ?array $payload = null, bool $authenticated = true): array
+    protected static function browserRequest(Client $client, string $method, string $path, ?array $payload = null, bool $authenticated = true, bool $form = false): array
     {
         $result = $client->executeAsyncScript(
-            'const done = arguments[arguments.length - 1]; const [url, method, token, payload] = arguments; const headers = {}; if (token) headers.Authorization = "Bearer " + token; const options = {method, headers, signal: AbortSignal.timeout(15000)}; if (payload !== null) {headers["Content-Type"] = "application/json"; options.body = JSON.stringify(payload);} fetch(url, options).then(async r => done({status: r.status, body: await r.text()})).catch(() => done({status: 0, body: ""}));',
-            [$path, $method, $authenticated ? self::$token : '', $payload],
+            'const done = arguments[arguments.length - 1]; const [url, method, token, payload, form] = arguments; const headers = {}; if (token) headers.Authorization = "Bearer " + token; const options = {method, headers, signal: AbortSignal.timeout(15000)}; if (payload !== null) {headers["Content-Type"] = form ? "application/x-www-form-urlencoded" : "application/json"; options.body = form ? new URLSearchParams(payload) : JSON.stringify(payload);} fetch(url, options).then(async r => done({status: r.status, body: await r.text()})).catch(() => done({status: 0, body: ""}));',
+            [$path, $method, $authenticated ? self::$token : '', $payload, $form],
         );
         self::assertIsArray($result);
         self::assertIsInt($result['status'] ?? null);

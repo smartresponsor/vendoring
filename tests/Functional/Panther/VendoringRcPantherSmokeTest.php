@@ -39,7 +39,7 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
     public function testVendorTransactionCreateListAndStatusFlowWorksThroughExternalBase(): void
     {
         $client = $this->createExternalBaseClient();
-        $vendorId = '42';
+        $vendorId = self::$transactionVendorId;
         $orderId = 'panther-order-'.bin2hex(random_bytes(6));
         $input = ['vendorId' => $vendorId, 'orderId' => $orderId, 'projectId' => 'panther-project', 'amount' => '15.00'];
         self::decodeJsonResponse(self::browserRequest($client, 'POST', '/api/vendor/transaction', $input, false), 401);
@@ -54,10 +54,35 @@ final class VendoringRcPantherSmokeTest extends ExternalBasePantherTestCase
         self::assertSame('authorized', $updated['status'] ?? null);
     }
 
+    public function testAuthenticatedOperatorFormThroughRealBrowser(): void
+    {
+        $client = $this->createExternalBaseClient();
+        $vendorId = self::$transactionVendorId;
+        $url = '/ops/vendor/transaction/'.$vendorId;
+        self::assertSame(403, self::browserRequest($client, 'GET', $url, authenticated: false)['status']);
+        $page = self::browserRequest($client, 'GET', $url);
+        self::assertSame(200, $page['status']);
+        self::assertStringContainsString('Vendor transaction operator surface', $page['body']);
+        self::assertStringContainsString('/ops/vendor/transaction/create/'.$vendorId, $page['body']);
+        $orderId = 'panther-operator-'.bin2hex(random_bytes(6));
+        $created = self::browserRequest($client, 'POST', '/ops/vendor/transaction/create/'.$vendorId, [
+            'orderId' => $orderId,
+            'amount' => '11.25',
+        ], form: true);
+        self::assertSame(200, $created['status']);
+        self::assertStringContainsString($orderId, $created['body']);
+        self::assertStringContainsString('Transaction created.', $created['body']);
+        $foreign = self::browserRequest($client, 'POST', '/ops/vendor/transaction/create/999999', [
+            'orderId' => 'foreign-order',
+            'amount' => '11.25',
+        ], form: true);
+        self::assertSame(403, $foreign['status']);
+    }
+
     public function testVendorTransactionDuplicatePayloadReturnsConflict(): void
     {
         $client = $this->createExternalBaseClient();
-        $input = ['vendorId' => '42', 'orderId' => 'panther-dup-'.bin2hex(random_bytes(6)), 'projectId' => 'panther-project', 'amount' => '20.00'];
+        $input = ['vendorId' => self::$transactionVendorId, 'orderId' => 'panther-dup-'.bin2hex(random_bytes(6)), 'projectId' => 'panther-project', 'amount' => '20.00'];
         self::decodeJsonResponse(self::browserRequest($client, 'POST', '/api/vendor/transaction', $input), 201);
         $duplicate = self::decodeJsonResponse(self::browserRequest($client, 'POST', '/api/vendor/transaction', $input), 409);
         self::assertSame('duplicate_transaction', $duplicate['error'] ?? null);

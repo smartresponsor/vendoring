@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Transaction;
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
 use App\Vendoring\ResolverInterface\Transaction\VendorTransactionInputResolverInterface;
@@ -45,8 +46,9 @@ final class VendorTransactionHttpService
      */
     public function create(Request $request): JsonResponse
     {
-        if ($authenticationResponse = $this->enforceWriteAuthentication($request, null, null)) {
-            return $authenticationResponse;
+        $actor = $this->authenticate($request, self::WRITE_TRANSACTIONS_PERMISSION);
+        if ($actor instanceof JsonResponse) {
+            return $actor;
         }
 
         $rateLimitDecision = $this->writeRateLimiter->consume(
@@ -69,10 +71,10 @@ final class VendorTransactionHttpService
                 'error_code' => VendorTransactionErrorCodeValueObject::MALFORMED_JSON,
             ]);
 
-            return new JsonResponse([
+            return $this->response([
                 'error' => VendorTransactionErrorCodeValueObject::MALFORMED_JSON,
                 'jsonErrorCode' => $exception->getCode(),
-            ], 400);
+            ], 400, $rateLimitDecision);
         } catch (\InvalidArgumentException $exception) {
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
             $statusCode = VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
@@ -84,11 +86,15 @@ final class VendorTransactionHttpService
                 'status_code' => (string) $statusCode,
             ]);
 
-            return new JsonResponse(['error' => $errorCode], $statusCode);
+            return $this->response(['error' => $errorCode], $statusCode, $rateLimitDecision);
+        }
+
+        if ((string) $actor->getId() !== $data->vendorId) {
+            return $this->authenticationResponse('vendor_scope_denied', 403, self::WRITE_TRANSACTIONS_PERMISSION);
         }
 
         try {
-            $tx = $this->transactionLifecycle->createTransaction($data);
+            $tx = $this->transactionLifecycle->createTransaction($data, $actor);
         } catch (\InvalidArgumentException $exception) {
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
             $statusCode = VendorTransactionErrorCodeValueObject::DUPLICATE_TRANSACTION === $errorCode ? 409 : 422;
@@ -100,10 +106,10 @@ final class VendorTransactionHttpService
                 'status_code' => (string) $statusCode,
             ]);
 
-            return new JsonResponse(['error' => $errorCode], $statusCode);
+            return $this->response(['error' => $errorCode], $statusCode, $rateLimitDecision);
         }
 
-        return new JsonResponse(['id' => $tx->getId(), 'status' => $tx->getStatus()], 201);
+        return $this->response(['id' => $tx->getId(), 'status' => $tx->getStatus()], 201, $rateLimitDecision);
     }
 
     /**
@@ -111,14 +117,21 @@ final class VendorTransactionHttpService
      *
      * Response schema: {data: VendorTransactionResource[]}.
      */
-    public function listByVendor(string $id): JsonResponse
+    public function listByVendor(string $id, Request $request): JsonResponse
     {
+        $actor = $this->authenticate($request, 'read:transactions');
+        if ($actor instanceof JsonResponse) {
+            return $actor;
+        }
+        if ((string) $actor->getId() !== $id) {
+            return $this->authenticationResponse('vendor_scope_denied', 403, 'read:transactions');
+        }
         $items = [];
-        foreach ($this->repo->findByVendorId($id) as $tx) {
+        foreach ($this->repo->findBy(['vendorId' => $id, 'ownerVendor' => $actor], ['createdAt' => 'DESC', 'id' => 'DESC']) as $tx) {
             $items[] = $this->normalize($tx);
         }
 
-        return new JsonResponse(['data' => $items], 200);
+        return $this->response(['data' => $items], 200);
     }
 
     /**
@@ -133,9 +146,20 @@ final class VendorTransactionHttpService
      */
     public function updateStatus(string $vendorId, int $id, Request $request): JsonResponse
     {
-        if ($authenticationResponse = $this->enforceWriteAuthentication($request, $vendorId, $id)) {
-            return $authenticationResponse;
+        $actor = $this->authenticate($request, self::WRITE_TRANSACTIONS_PERMISSION, $vendorId, $id);
+        if ($actor instanceof JsonResponse) {
+            return $actor;
         }
+        if ((string) $actor->getId() !== $vendorId) {
+            return $this->authenticationResponse('vendor_scope_denied', 403, self::WRITE_TRANSACTIONS_PERMISSION);
+        }
+
+        return $this->updateOwnedStatus($actor, $id, $request);
+    }
+
+    private function updateOwnedStatus(VendorEntity $actor, int $id, Request $request): JsonResponse
+    {
+        $vendorId = (string) $actor->getId();
 
         $rateLimitDecision = $this->writeRateLimiter->consume(
             'vendor_transaction_status_update',
@@ -148,7 +172,7 @@ final class VendorTransactionHttpService
             return $this->rateLimitResponse('vendor_transaction_status_rate_limited', $rateLimitDecision, $request, $vendorId, $id);
         }
 
-        $transaction = $this->repo->findOneByIdAndVendorId($id, $vendorId);
+        $transaction = $this->repo->findOneBy(['id' => $id, 'vendorId' => $vendorId, 'ownerVendor' => $actor]);
 
         if (!$transaction instanceof VendorTransactionEntity) {
             $this->runtimeLogger->warning('vendor_transaction_status_update_rejected', [
@@ -157,7 +181,7 @@ final class VendorTransactionHttpService
                 'error_code' => VendorTransactionErrorCodeValueObject::NOT_FOUND,
             ]);
 
-            return new JsonResponse(['error' => VendorTransactionErrorCodeValueObject::NOT_FOUND], 404);
+            return $this->response(['error' => VendorTransactionErrorCodeValueObject::NOT_FOUND], 404, $rateLimitDecision);
         }
 
         try {
@@ -170,10 +194,10 @@ final class VendorTransactionHttpService
                 'error_code' => VendorTransactionErrorCodeValueObject::MALFORMED_JSON,
             ]);
 
-            return new JsonResponse([
+            return $this->response([
                 'error' => VendorTransactionErrorCodeValueObject::MALFORMED_JSON,
                 'jsonErrorCode' => $exception->getCode(),
-            ], 400);
+            ], 400, $rateLimitDecision);
         } catch (\InvalidArgumentException $exception) {
             $errorCode = $this->inputResolver->normalizeErrorCode($exception->getMessage());
             $this->runtimeLogger->warning('vendor_transaction_status_update_rejected', [
@@ -182,21 +206,20 @@ final class VendorTransactionHttpService
                 'error_code' => $errorCode,
             ]);
 
-            return new JsonResponse(['error' => $errorCode], 422);
+            return $this->response(['error' => $errorCode], 422, $rateLimitDecision);
         }
 
-        return new JsonResponse(['id' => $updated->getId(), 'status' => $updated->getStatus()]);
+        return $this->response(['id' => $updated->getId(), 'status' => $updated->getStatus()], 200, $rateLimitDecision);
     }
 
     public function updateStatusById(int $id, Request $request): JsonResponse
     {
-        $transaction = $this->repo->byId($id);
-
-        if (!$transaction instanceof VendorTransactionEntity) {
-            return new JsonResponse(['error' => VendorTransactionErrorCodeValueObject::NOT_FOUND], 404);
+        $actor = $this->authenticate($request, self::WRITE_TRANSACTIONS_PERMISSION, transactionId: $id);
+        if ($actor instanceof JsonResponse) {
+            return $actor;
         }
 
-        return $this->updateStatus($transaction->getVendorId(), $id, $request);
+        return $this->updateOwnedStatus($actor, $id, $request);
     }
 
     /**
@@ -217,9 +240,8 @@ final class VendorTransactionHttpService
     /**
      * @throws ManagerException
      */
-    private function enforceWriteAuthentication(Request $request, ?string $vendorId, ?int $transactionId): ?JsonResponse
+    private function authenticate(Request $request, string $requiredPermission, ?string $vendorId = null, ?int $transactionId = null): VendorEntity|JsonResponse
     {
-        $requiredPermission = self::WRITE_TRANSACTIONS_PERMISSION;
         $authorization = trim((string) $request->headers->get('Authorization', ''));
 
         if ('' === $authorization) {
@@ -233,9 +255,12 @@ final class VendorTransactionHttpService
             return $this->authenticationResponse('authentication_required', 401, $requiredPermission);
         }
 
+        if (1 !== preg_match('/^Bearer\\s+\\S+$/iD', $authorization)) {
+            return $this->authenticationResponse('invalid_api_token', 401, $requiredPermission);
+        }
         $authorizedVendor = $this->apiKeyService->validateAuthorizationHeader($authorization, $requiredPermission);
-        if (null !== $authorizedVendor) {
-            return null;
+        if (null !== $authorizedVendor && null !== $authorizedVendor->getId() && $authorizedVendor->getId() > 0 && 'active' === $authorizedVendor->getStatus()) {
+            return $authorizedVendor;
         }
 
         $authenticatedVendor = $this->apiKeyService->resolveVendorFromAuthHeader($authorization);
@@ -260,9 +285,22 @@ final class VendorTransactionHttpService
         return $this->authenticationResponse('permission_denied', 403, $requiredPermission);
     }
 
+    /** @param array<string, mixed> $payload */
+    private function response(array $payload, int $statusCode, ?VendorWriteRateLimitDecisionValueObject $decision = null): JsonResponse
+    {
+        $response = new JsonResponse($payload, $statusCode);
+        $response->headers->set('X-API-Version', '1');
+        if (null !== $decision) {
+            $response->headers->set('X-RateLimit-Limit', (string) $decision->limit());
+            $response->headers->set('X-RateLimit-Remaining', (string) $decision->remaining());
+        }
+
+        return $response;
+    }
+
     private function authenticationResponse(string $errorCode, int $statusCode, string $requiredPermission): JsonResponse
     {
-        $response = new JsonResponse([
+        $response = $this->response([
             'error' => $errorCode,
             'requiredPermission' => $requiredPermission,
         ], $statusCode);
@@ -285,10 +323,10 @@ final class VendorTransactionHttpService
             'retry_after_seconds' => (string) $decision->retryAfterSeconds(),
         ]);
 
-        $response = new JsonResponse([
+        $response = $this->response([
             'error' => 'rate_limit_exceeded',
             'retryAfterSeconds' => $decision->retryAfterSeconds(),
-        ], 429);
+        ], 429, $decision);
         $response->headers->set('Retry-After', (string) $decision->retryAfterSeconds());
 
         return $response;

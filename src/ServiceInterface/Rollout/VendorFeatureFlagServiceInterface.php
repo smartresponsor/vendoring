@@ -20,7 +20,7 @@ interface VendorFeatureFlagServiceInterface
      *
      * @return bool true when the flag is enabled for the resolved cohort
      */
-    public function isEnabled(string $flagName, ?string $vendorId = null): bool;
+    public function isEnabled(string $flagName, ?string $vendorId = null, ?string $tenantId = null): bool;
 
     /**
      * Explain the rollout decision for a named feature flag.
@@ -31,5 +31,5 @@ interface VendorFeatureFlagServiceInterface
      * @return array{flag:string, enabled:bool, cohort:string, reason:string} stable decision payload
      *                                                                        suitable for docs, smoke, and runtime inspection
      */
-    public function explain(string $flagName, ?string $vendorId = null): array;
+    public function explain(string $flagName, ?string $vendorId = null, ?string $tenantId = null): array;
 }

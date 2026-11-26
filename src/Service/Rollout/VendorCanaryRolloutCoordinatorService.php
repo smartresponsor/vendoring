@@ -24,11 +24,11 @@ final readonly class VendorCanaryRolloutCoordinatorService implements VendorCana
     ) {
     }
 
-    public function evaluate(string $flagName, ?string $vendorId = null, int $windowSeconds = 900): array
+    public function evaluate(string $flagName, ?string $vendorId = null, int $windowSeconds = 900, ?string $tenantId = null): array
     {
         $windowSeconds = max(1, $windowSeconds);
-        $flagDecision = $this->featureFlagService->explain($flagName, $vendorId);
-        $cohort = $this->trafficCohortResolver->resolve($vendorId);
+        $flagDecision = $this->featureFlagService->explain($flagName, $vendorId, $tenantId);
+        $cohort = $this->trafficCohortResolver->resolve($vendorId, $tenantId);
         $manifest = $this->releaseManifestBuilder->build($windowSeconds);
         $rollback = $this->rollbackDecisionEvaluator->evaluate($manifest);
         $probeGate = $this->probeGate($manifest);
@@ -46,7 +46,7 @@ final readonly class VendorCanaryRolloutCoordinatorService implements VendorCana
                 'cohort' => $cohort,
                 'decision' => $decision,
                 'recommendedAction' => $recommendedAction,
-                'nextCohort' => $this->nextCohort($cohort),
+                'nextCohort' => $this->nextCohort($cohort, $tenantId),
                 'reason' => $reason,
                 'probeGate' => $probeGate,
             ],
@@ -113,8 +113,12 @@ final readonly class VendorCanaryRolloutCoordinatorService implements VendorCana
         ];
     }
 
-    private function nextCohort(string $currentCohort): ?string
+    private function nextCohort(string $currentCohort, ?string $tenantId): ?string
     {
-        return str_starts_with($currentCohort, 'vendor:') ? 'global' : null;
+        if (str_starts_with($currentCohort, 'vendor:')) {
+            return null !== $tenantId && '' !== trim($tenantId) ? 'tenant:'.trim($tenantId) : 'global';
+        }
+
+        return str_starts_with($currentCohort, 'tenant:') ? 'global' : null;
     }
 }

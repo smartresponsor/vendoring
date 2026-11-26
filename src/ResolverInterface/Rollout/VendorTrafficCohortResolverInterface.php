@@ -17,7 +17,7 @@ interface VendorTrafficCohortResolverInterface
      *
      * @param string|null $vendorId canonical Vendor scope
      *
-     * @return string stable cohort identifier: `global` or `vendor:<id>`
+     * @return string stable cohort identifier: `global`, `tenant:<id>` or `vendor:<id>`
      */
-    public function resolve(?string $vendorId = null): string;
+    public function resolve(?string $vendorId = null, ?string $tenantId = null): string;
 }

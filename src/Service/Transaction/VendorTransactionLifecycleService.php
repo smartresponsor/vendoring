@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\Service\Transaction;
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\Event\VendorTransactionEvent;
 use App\Vendoring\PolicyInterface\VendorTransactionAmountPolicyInterface;
@@ -30,9 +31,12 @@ final readonly class VendorTransactionLifecycleService implements VendorTransact
     /**
      * @throws \Throwable
      */
-    public function createTransaction(VendorTransactionDataValueObject $data): VendorTransactionEntity
+    public function createTransaction(VendorTransactionDataValueObject $data, ?VendorEntity $ownerVendor = null): VendorTransactionEntity
     {
         $vendorId = $this->normalizeRequiredIdentity($data->vendorId, VendorTransactionErrorCodeValueObject::VENDOR_ID_REQUIRED);
+        if (null !== $ownerVendor && (null === $ownerVendor->getId() || (string) $ownerVendor->getId() !== $vendorId)) {
+            throw new \InvalidArgumentException('Transaction owner does not match canonical vendor');
+        }
         $orderId = $this->normalizeRequiredIdentity($data->orderId, VendorTransactionErrorCodeValueObject::ORDER_ID_REQUIRED);
         $projectId = $this->normalizeProjectId($data->projectId);
 
@@ -52,6 +56,7 @@ final readonly class VendorTransactionLifecycleService implements VendorTransact
             orderId: $orderId,
             projectId: $projectId,
             amount: $this->amountPolicy->normalize($data->amount),
+            ownerVendor: $ownerVendor,
         );
 
         try {

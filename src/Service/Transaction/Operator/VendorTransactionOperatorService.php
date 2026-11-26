@@ -8,10 +8,12 @@ namespace App\Vendoring\Service\Transaction\Operator;
 
 use App\Vendoring\DTO\Ops\VendorTransactionCreateInputDTO;
 use App\Vendoring\DTO\Ops\VendorTransactionStatusUpdateInputDTO;
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\EntityInterface\VendorTransactionEntityInterface;
 use App\Vendoring\Form\Ops\VendorTransactionCreateForm;
 use App\Vendoring\Form\Ops\VendorTransactionStatusUpdateForm;
 use App\Vendoring\RepositoryInterface\VendorTransactionRepositoryInterface;
+use App\Vendoring\ServiceInterface\Security\VendorApiKeyServiceInterface;
 use App\Vendoring\ServiceInterface\Transaction\VendorTransactionLifecycleServiceInterface;
 use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
 use App\Vendoring\ValueObject\VendorTransactionStatusValueObject;
@@ -20,6 +22,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Twig\Environment;
 
 final class VendorTransactionOperatorService
@@ -29,6 +32,7 @@ final class VendorTransactionOperatorService
         private readonly VendorTransactionLifecycleServiceInterface $transactionLifecycle,
         private readonly FormFactoryInterface $formFactory,
         private readonly Environment $twig,
+        private readonly VendorApiKeyServiceInterface $apiKeys,
     ) {
     }
 
@@ -37,7 +41,8 @@ final class VendorTransactionOperatorService
      */
     public function index(string $vendorId, Request $request): Response
     {
-        $transactions = $this->transactions->findByVendorId($vendorId);
+        $actor = $this->requireVendor($request, 'read:transactions', $vendorId);
+        $transactions = $this->transactions->findBy(['vendorId' => $vendorId, 'ownerVendor' => $actor], ['createdAt' => 'DESC', 'id' => 'DESC']);
         $flashMessage = $this->nullableTrimmedQueryValue($request, 'message');
         $errorMessage = $this->nullableTrimmedQueryValue($request, 'error');
 
@@ -51,13 +56,14 @@ final class VendorTransactionOperatorService
      */
     public function create(string $vendorId, Request $request): RedirectResponse
     {
+        $actor = $this->requireVendor($request, 'write:transactions', $vendorId);
         if ($this->hasFlatCreatePayload($request)) {
-            return $this->handleFlatCreateSubmission($vendorId, $request);
+            return $this->handleFlatCreateSubmission($vendorId, $request, $actor);
         }
 
         $input = new VendorTransactionCreateInputDTO(vendorId: $vendorId);
         $form = $this->formFactory->create(VendorTransactionCreateForm::class, $input, [
-            'action' => sprintf('/ops/vendor/transaction/%s/create', rawurlencode($vendorId)),
+            'action' => sprintf('/ops/vendor/transaction/create/%s', rawurlencode($vendorId)),
             'method' => 'POST',
             'csrf_protection' => false,
         ]);
@@ -77,7 +83,7 @@ final class VendorTransactionOperatorService
                 orderId: trim($input->orderId),
                 projectId: $this->normalizeNullableString($input->projectId),
                 amount: trim($input->amount),
-            ));
+            ), $actor);
         } catch (\InvalidArgumentException $exception) {
             return $this->redirectWithQuery($vendorId, 'error', $exception->getMessage());
         }
@@ -87,13 +93,9 @@ final class VendorTransactionOperatorService
 
     public function updateStatusById(int $id, Request $request): RedirectResponse
     {
-        $transaction = $this->transactions->byId($id);
+        $actor = $this->requireVendor($request, 'write:transactions');
 
-        if (null === $transaction) {
-            return new RedirectResponse('/ops/vendor/transaction?error=not_found');
-        }
-
-        return $this->updateStatus($transaction->getVendorId(), $id, $request);
+        return $this->updateOwnedStatus($actor, $id, $request);
     }
 
     /**
@@ -101,7 +103,15 @@ final class VendorTransactionOperatorService
      */
     public function updateStatus(string $vendorId, int $id, Request $request): RedirectResponse
     {
-        $transaction = $this->transactions->findOneByIdAndVendorId($id, $vendorId);
+        $actor = $this->requireVendor($request, 'write:transactions', $vendorId);
+
+        return $this->updateOwnedStatus($actor, $id, $request);
+    }
+
+    private function updateOwnedStatus(VendorEntity $actor, int $id, Request $request): RedirectResponse
+    {
+        $vendorId = (string) $actor->getId();
+        $transaction = $this->transactions->findOneBy(['id' => $id, 'vendorId' => $vendorId, 'ownerVendor' => $actor]);
 
         if (null === $transaction) {
             return $this->redirectWithQuery($vendorId, 'error', 'not_found');
@@ -109,7 +119,7 @@ final class VendorTransactionOperatorService
 
         $input = new VendorTransactionStatusUpdateInputDTO($transaction->getStatus());
         $form = $this->formFactory->create(VendorTransactionStatusUpdateForm::class, $input, [
-            'action' => sprintf('/ops/vendor/transaction/%s/%d/status', rawurlencode($vendorId), $id),
+            'action' => sprintf('/ops/vendor/transaction/status/%d', $id),
             'method' => 'POST',
             'csrf_protection' => false,
         ]);
@@ -135,7 +145,7 @@ final class VendorTransactionOperatorService
     {
         $template = sprintf('%s.%s', 'ops/vendor_transactions/index', 'html.twig');
         $createForm = $this->formFactory->create(VendorTransactionCreateForm::class, new VendorTransactionCreateInputDTO(vendorId: $vendorId), [
-            'action' => sprintf('/ops/vendor/transaction/%s/create', rawurlencode($vendorId)),
+            'action' => sprintf('/ops/vendor/transaction/create/%s', rawurlencode($vendorId)),
             'method' => 'POST',
             'csrf_protection' => false,
         ]);
@@ -147,7 +157,7 @@ final class VendorTransactionOperatorService
                 VendorTransactionStatusUpdateForm::class,
                 new VendorTransactionStatusUpdateInputDTO($transaction->getStatus()),
                 [
-                    'action' => sprintf('/ops/vendor/transaction/%s/%d/status', rawurlencode($vendorId), $transaction->getId()),
+                    'action' => sprintf('/ops/vendor/transaction/status/%d', $transaction->getId()),
                     'method' => 'POST',
                     'csrf_protection' => false,
                 ],
@@ -211,7 +221,7 @@ final class VendorTransactionOperatorService
     /**
      * @throws \Throwable
      */
-    private function handleFlatCreateSubmission(string $vendorId, Request $request): RedirectResponse
+    private function handleFlatCreateSubmission(string $vendorId, Request $request, VendorEntity $actor): RedirectResponse
     {
         $orderId = trim((string) $request->request->get('orderId', ''));
         $amount = trim((string) $request->request->get('amount', ''));
@@ -230,7 +240,7 @@ final class VendorTransactionOperatorService
                 orderId: $orderId,
                 projectId: $this->nullableTrimmedProjectId($request),
                 amount: $amount,
-            ));
+            ), $actor);
         } catch (\InvalidArgumentException $exception) {
             return $this->redirectWithQuery($vendorId, 'error', $exception->getMessage());
         }
@@ -272,6 +282,18 @@ final class VendorTransactionOperatorService
         $value = trim((string) $request->request->get('projectId', ''));
 
         return '' === $value ? null : $value;
+    }
+
+    private function requireVendor(Request $request, string $permission, ?string $expected = null): VendorEntity
+    {
+        $header = trim((string) $request->headers->get('Authorization', ''));
+        $vendor = 1 === preg_match('/^Bearer\s+\S+$/iD', $header) ? $this->apiKeys->validateAuthorizationHeader($header, $permission) : null;
+        $id = $vendor?->getId();
+        if (null === $vendor || null === $id || $id <= 0 || 'active' !== $vendor->getStatus() || (null !== $expected && (string) $id !== $expected)) {
+            throw new AccessDeniedHttpException('transaction_vendor_scope_denied');
+        }
+
+        return $vendor;
     }
 
     private function nullableTrimmedQueryValue(Request $request, string $key): ?string

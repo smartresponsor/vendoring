@@ -34,6 +34,7 @@ final class VendorCanaryRolloutCommand extends Command
         parent::configure();
         $this
             ->addOption('flag', null, InputOption::VALUE_REQUIRED, 'Canonical feature flag identifier')
+            ->addOption('tenantId', null, InputOption::VALUE_OPTIONAL, 'Trusted operator tenant scope')
             ->addOption('vendorId', null, InputOption::VALUE_OPTIONAL, 'Optional Vendor scope')
             ->addOption('windowSeconds', null, InputOption::VALUE_OPTIONAL, 'Lookback window in seconds', '900')
             ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Output format: text|json', 'text')
@@ -54,6 +55,8 @@ final class VendorCanaryRolloutCommand extends Command
             return Command::INVALID;
         }
 
+        $tenantOption = $input->getOption('tenantId');
+        $tenantId = is_string($tenantOption) && '' !== trim($tenantOption) ? trim($tenantOption) : null;
         $vendorOption = $input->getOption('vendorId');
         $windowOption = $input->getOption('windowSeconds');
 
@@ -61,7 +64,7 @@ final class VendorCanaryRolloutCommand extends Command
         $windowSeconds = is_scalar($windowOption) ? max(1, (int) $windowOption) : 900;
 
         try {
-            $report = $this->canaryRolloutCoordinator->evaluate($flagName, $vendorId, $windowSeconds);
+            $report = $this->canaryRolloutCoordinator->evaluate($flagName, $vendorId, $windowSeconds, $tenantId);
         } catch (\Throwable $throwable) {
             $this->commandResultEmitter->emitThrowableError(
                 $output,

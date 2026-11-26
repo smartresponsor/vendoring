@@ -16,6 +16,9 @@ tags:
 paths:
   /api/vendor/transaction:
     post:
+      security:
+        - vendorBearer: []
+      description: "Requires write:transactions and canonical vendor ownership."
       tags:
         - "Vendor Transactions"
       summary: "Create a vendor transaction"
@@ -57,6 +60,9 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
   /api/vendor/transaction/{id}:
     get:
+      security:
+        - vendorBearer: []
+      description: "Requires read:transactions; only transactions with verified persisted ownership are returned."
       tags:
         - "Vendor Transactions"
       summary: "List transactions by vendor"
@@ -77,6 +83,9 @@ paths:
                 $ref: "#/components/schemas/VendorTransactionCollectionResponse"
   /api/vendor/transaction/status/{vendorId}/{id}:
     post:
+      security:
+        - vendorBearer: []
+      description: "Requires write:transactions and verified transaction ownership."
       tags:
         - "Vendor Transactions"
       summary: "Update transaction status"
@@ -127,6 +136,9 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
   /api/vendor/transaction/status/{id}:
     post:
+      security:
+        - vendorBearer: []
+      description: "Requires write:transactions; foreign and unowned IDs are indistinguishable from missing IDs."
       summary: "Update vendor transaction status by transaction id"
       operationId: updateVendorTransactionStatusById
       parameters:
@@ -239,6 +251,9 @@ paths:
           description: "Vendor payout."
   /ops/vendor/transaction/{vendorId}:
     get:
+      security:
+        - vendorBearer: []
+      description: "Requires read:transactions for the canonical vendor."
       tags:
         - "Operator Surface"
       summary: "Render operator transaction page"
@@ -258,6 +273,10 @@ paths:
               schema:
                 type: string
 components:
+  securitySchemes:
+    vendorBearer:
+      type: http
+      scheme: bearer
   schemas:
     VendorTransactionCreateRequest:
       type: object
@@ -268,6 +287,7 @@ components:
       properties:
         vendorId:
           type: string
+          description: "Persisted canonical Vendor ID encoded as a string."
         orderId:
           type: string
         projectId:

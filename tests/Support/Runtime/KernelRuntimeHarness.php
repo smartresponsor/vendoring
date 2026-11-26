@@ -9,6 +9,7 @@ use App\Vendoring\Entity\Vendor\VendorApiKeyEntity;
 use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorLedgerBindingEntity;
 use App\Vendoring\Entity\Vendor\VendorLedgerEntity;
+use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\Kernel;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -122,10 +123,16 @@ final class KernelRuntimeHarness
         return $response;
     }
 
-    /** @param array<string, scalar|array<string, scalar>|null> $payload */
-    public static function requestForm(KernelInterface $kernel, string $method, string $uri, array $payload = []): Response
+    /** @param array<string, scalar|array<string, scalar>|null> $payload
+     * @param array<string, string> $headers
+     */
+    public static function requestForm(KernelInterface $kernel, string $method, string $uri, array $payload = [], array $headers = []): Response
     {
-        $request = Request::create($uri, $method, $payload);
+        $server = [];
+        foreach ($headers as $name => $value) {
+            $server['HTTP_'.strtoupper(str_replace('-', '_', $name))] = $value;
+        }
+        $request = Request::create($uri, $method, $payload, server: $server);
         $response = $kernel->handle($request);
 
         if ($kernel instanceof Kernel) {
@@ -168,10 +175,12 @@ final class KernelRuntimeHarness
         return $payload;
     }
 
-    public static function seedActiveApiKey(KernelInterface $kernel, string $permissions = 'write:transactions'): string
+    /** @param-out string $vendorId */
+    public static function seedActiveApiKey(KernelInterface $kernel, string $permissions = 'write:transactions', ?string &$vendorId = null): string
     {
         $entityManager = self::entityManager($kernel);
         $vendor = self::seedActiveVendor($kernel);
+        $vendorId = (string) $vendor->getId();
 
         $plainToken = bin2hex(random_bytes(16));
         $apiKey = new VendorApiKeyEntity($vendor, hash('sha256', $plainToken), $permissions);
@@ -181,16 +190,28 @@ final class KernelRuntimeHarness
         return $plainToken;
     }
 
-    public static function seedFinancialApiKey(KernelInterface $kernel, string $tenantId, string $ledgerVendorId, string $permissions): string
+    /** @param-out string $canonicalVendorId */
+    public static function seedFinancialApiKey(KernelInterface $kernel, string $tenantId, string $ledgerVendorId, string $permissions, ?string &$canonicalVendorId = null): string
     {
         $em = self::entityManager($kernel);
         $vendor = self::seedActiveVendor($kernel);
+        $canonicalVendorId = (string) $vendor->getId();
         $token = bin2hex(random_bytes(16));
         $em->persist(new VendorLedgerBindingEntity($vendor, $tenantId, $ledgerVendorId));
         $em->persist(new VendorApiKeyEntity($vendor, hash('sha256', $token), $permissions));
         $em->flush();
 
         return $token;
+    }
+
+    public static function seedUnownedTransaction(KernelInterface $kernel, string $vendorId): int
+    {
+        $em = self::entityManager($kernel);
+        $transaction = new VendorTransactionEntity($vendorId, 'unverified-legacy-order', null, '9.99');
+        $em->persist($transaction);
+        $em->flush();
+
+        return $transaction->getId() ?? throw new \RuntimeException('Missing transaction ID');
     }
 
     public static function seedFinancialLedgerEntry(KernelInterface $kernel, string $tenantId, string $ledgerVendorId, float $amount, string $date): void

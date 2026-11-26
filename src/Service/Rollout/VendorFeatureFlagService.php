@@ -28,14 +28,14 @@ final readonly class VendorFeatureFlagService implements VendorFeatureFlagServic
     ) {
     }
 
-    public function isEnabled(string $flagName, ?string $vendorId = null): bool
+    public function isEnabled(string $flagName, ?string $vendorId = null, ?string $tenantId = null): bool
     {
-        return $this->explain($flagName, $vendorId)['enabled'];
+        return $this->explain($flagName, $vendorId, $tenantId)['enabled'];
     }
 
-    public function explain(string $flagName, ?string $vendorId = null): array
+    public function explain(string $flagName, ?string $vendorId = null, ?string $tenantId = null): array
     {
-        $cohort = $this->trafficCohortResolver->resolve($vendorId);
+        $cohort = $this->trafficCohortResolver->resolve($vendorId, $tenantId);
         $flag = $this->flags[$flagName] ?? null;
 
         if (!is_array($flag)) {

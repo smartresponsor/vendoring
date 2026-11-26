@@ -14,7 +14,9 @@ if (!extension_loaded('pdo_sqlite')) {
 $kernel = KernelRuntimeHarness::createKernelWithFreshSqliteDatabase(dirname(__DIR__, 2), environment: 'prod', debug: false);
 
 try {
-    $transactionResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor/transaction/vendor-fresh');
+    $vendorId = null;
+    $token = KernelRuntimeHarness::seedActiveApiKey($kernel, 'read:transactions', $vendorId);
+    $transactionResponse = KernelRuntimeHarness::requestJson($kernel, 'GET', '/api/vendor/transaction/'.$vendorId, null, ['Authorization' => 'Bearer '.$token]);
     $transactionPayload = KernelRuntimeHarness::decodeJson($transactionResponse);
 
     if (200 !== $transactionResponse->getStatusCode() || ($transactionPayload['data'] ?? null) !== []) {

@@ -13,10 +13,10 @@ use App\Vendoring\ResolverInterface\Rollout\VendorTrafficCohortResolverInterface
  */
 final class VendorTrafficCohortResolver implements VendorTrafficCohortResolverInterface
 {
-    public function resolve(?string $vendorId = null): string
+    public function resolve(?string $vendorId = null, ?string $tenantId = null): string
     {
         return null !== $vendorId && '' !== trim($vendorId)
             ? 'vendor:'.trim($vendorId)
-            : 'global';
+            : (null !== $tenantId && '' !== trim($tenantId) ? 'tenant:'.trim($tenantId) : 'global');
     }
 }

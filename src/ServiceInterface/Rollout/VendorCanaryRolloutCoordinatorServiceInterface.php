@@ -37,5 +37,5 @@ interface VendorCanaryRolloutCoordinatorServiceInterface
      *   }
      * }
      */
-    public function evaluate(string $flagName, ?string $vendorId = null, int $windowSeconds = 900): array;
+    public function evaluate(string $flagName, ?string $vendorId = null, int $windowSeconds = 900, ?string $tenantId = null): array;
 }

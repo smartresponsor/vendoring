@@ -37,11 +37,11 @@ final class CanaryRolloutCoordinatorTest extends TestCase
             $this->rollbackEvaluator(['decision' => 'proceed']),
         );
 
-        $report = $coordinator->evaluate('test_flag', '42');
+        $report = $coordinator->evaluate('test_flag', '42', tenantId: 'tenant-1');
 
         self::assertSame('proceed', $report['canary']['decision']);
         self::assertSame('expand_canary_scope', $report['canary']['recommendedAction']);
-        self::assertSame('global', $report['canary']['nextCohort']);
+        self::assertSame('tenant:tenant-1', $report['canary']['nextCohort']);
     }
 
     public function testRollbackDecisionWinsOverEnabledFlag(): void
@@ -86,12 +86,12 @@ final class CanaryRolloutCoordinatorTest extends TestCase
             {
             }
 
-            public function isEnabled(string $flagName, ?string $vendorId = null): bool
+            public function isEnabled(string $flagName, ?string $vendorId = null, ?string $tenantId = null): bool
             {
                 return $this->decision['enabled'];
             }
 
-            public function explain(string $flagName, ?string $vendorId = null): array
+            public function explain(string $flagName, ?string $vendorId = null, ?string $tenantId = null): array
             {
                 return [
                     'flag' => (string) $this->decision['flag'],
@@ -110,7 +110,7 @@ final class CanaryRolloutCoordinatorTest extends TestCase
             {
             }
 
-            public function resolve(?string $vendorId = null): string
+            public function resolve(?string $vendorId = null, ?string $tenantId = null): string
             {
                 return $this->cohort;
             }

@@ -43,9 +43,10 @@ try {
         throw new RuntimeException('Write API auth contract smoke expected permission_denied on under-scoped token.');
     }
 
-    $writeToken = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions');
+    $vendorId = null;
+    $writeToken = KernelRuntimeHarness::seedActiveApiKey($kernel, 'write:transactions', $vendorId);
     $writeResponse = KernelRuntimeHarness::requestJson($kernel, 'POST', '/api/vendor/transaction', [
-        'vendorId' => 'auth-vendor',
+        'vendorId' => $vendorId,
         'orderId' => 'auth-order-write',
         'amount' => '10.00',
     ], ['Authorization' => 'Bearer '.$writeToken]);

@@ -16,6 +16,14 @@ final class TrafficCohortResolverTest extends TestCase
         self::assertSame('vendor:42', $resolver->resolve('42'));
     }
 
+    public function testResolveFallsBackToExplicitTenantScope(): void
+    {
+        $resolver = new VendorTrafficCohortResolver();
+        self::assertSame('tenant:tenant-a', $resolver->resolve(null, 'tenant-a'));
+        self::assertSame('tenant:tenant-b', $resolver->resolve(null, 'tenant-b'));
+        self::assertSame('vendor:42', $resolver->resolve('42', 'tenant-a'));
+    }
+
     public function testResolveFallsBackToGlobalScope(): void
     {
         $resolver = new VendorTrafficCohortResolver();

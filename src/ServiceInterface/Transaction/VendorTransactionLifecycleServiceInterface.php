@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace App\Vendoring\ServiceInterface\Transaction;
 
+use App\Vendoring\Entity\Vendor\VendorEntity;
 use App\Vendoring\Entity\Vendor\VendorTransactionEntity;
 use App\Vendoring\ValueObject\VendorTransactionDataValueObject;
 
@@ -14,7 +15,7 @@ interface VendorTransactionLifecycleServiceInterface
     /**
      * @throws \Throwable
      */
-    public function createTransaction(VendorTransactionDataValueObject $data): VendorTransactionEntity;
+    public function createTransaction(VendorTransactionDataValueObject $data, ?VendorEntity $ownerVendor = null): VendorTransactionEntity;
 
     public function updateStatus(VendorTransactionEntity $tx, string $status): VendorTransactionEntity;
 }

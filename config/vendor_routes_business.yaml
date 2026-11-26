@@ -90,3 +90,8 @@ vendor_release_baseline_show:
     path: /api/vendor/release/baseline/{id}
     controller: App\Vendoring\Service\Release\Baseline\VendorReleaseBaselineShowService
     methods: [GET]
+
+vendor_canary_rollout_overview:
+    path: /api/vendor/canary/rollout/overview
+    controller: App\Vendoring\Service\Canary\Rollout\VendorCanaryRolloutOverviewService
+    methods: [GET]

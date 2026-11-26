@@ -31,6 +31,16 @@ final class FeatureFlagServiceTest extends TestCase
         self::assertSame('globally_enabled', $decision['reason']);
     }
 
+    public function testTenantCohortCannotEnableAnotherTenant(): void
+    {
+        $service = new VendorFeatureFlagService(new VendorTrafficCohortResolver(), [
+            'tenant_canary' => ['enabled' => false, 'cohorts' => ['tenant:tenant-a']],
+        ]);
+        self::assertTrue($service->isEnabled('tenant_canary', null, 'tenant-a'));
+        self::assertFalse($service->isEnabled('tenant_canary', null, 'tenant-b'));
+        self::assertFalse($service->isEnabled('tenant_canary'));
+    }
+
     public function testCohortFlagEnablesOnlyMatchingScope(): void
     {
         $service = new VendorFeatureFlagService(new VendorTrafficCohortResolver(), [
